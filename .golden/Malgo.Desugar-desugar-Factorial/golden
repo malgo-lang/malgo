@@ -1,1048 +1,343 @@
-Program
- { topVars = [], topFuns =
-  [
-   ( Meta
-    { meta =
-     [ AnyT, AnyT ] :-> AnyT, id = Id
-     { name = "factAcc_curry", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 166 } },
-    [ Meta
-     { meta = AnyT, id = Id
-      { name = "n", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 167 } }, Meta
-     { meta = AnyT, id = Id
-      { name = "acc", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 168 } } ],
-    [ AnyT, AnyT ] :-> AnyT, Assign
-    ( Meta
-     { meta =
-      [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, id = Id
-      { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 181 } } )
-    ( Assign
-     ( Meta
-      { meta =
-       [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
-       ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ), id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 176 } } )
-     ( Assign
-      ( Meta
-       { meta = AnyT, id = Id
-        { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 174 } } )
-      ( Assign
-       ( Meta
-        { meta = [ AnyT ] :-> AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 170 } } )
-       ( Assign
-        ( Meta
-         { meta = [ AnyT ] :-> AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 169 } } )
-        ( Call
-         ( Var
-          ( Meta
-           { meta = [ AnyT ] :->
-            ( [ AnyT ] :-> AnyT ), id = Id
-            { name = "==", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = External } } ) )
-         [ Var
-          ( Meta
-           { meta = AnyT, id = Id
-            { name = "n", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 167 } } ) ] )
-        ( Cast
-         ( [ AnyT ] :-> AnyT )
-         ( Var
-          ( Meta
-           { meta = [ AnyT ] :-> AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 169 } } ) ) ) )
-       ( Assign
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 172 } } )
-        ( Assign
-         ( Meta
-          { meta = AnyT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 171 } } )
-         ( Call
-          ( Var
-           ( Meta
-            { meta = [ Int64T ] :-> AnyT, id = Id
-             { name = "Int64#", moduleName = Artifact
-              ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-          [ Unboxed ( Int64 0 ) ] )
-         ( Cast AnyT
-          ( Var
-           ( Meta
-            { meta = AnyT, id = Id
-             { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 171 } } ) ) ) )
-        ( Assign
-         ( Meta
-          { meta = AnyT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 173 } } )
-         ( Call
-          ( Var
-           ( Meta
-            { meta = [ AnyT ] :-> AnyT, id = Id
-             { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 170 } } ) )
-          [ Var
-           ( Meta
-            { meta = AnyT, id = Id
-             { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 172 } } ) ] )
-         ( Cast AnyT
-          ( Var
-           ( Meta
-            { meta = AnyT, id = Id
-             { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 173 } } ) ) ) ) ) )
-      ( Assign
-       ( Meta
-        { meta =
-         [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
-         ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ), id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 175 } } )
-       ( Call
-        ( Var
-         ( Meta
-          { meta = [ AnyT ] :->
-           (
-            [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
-            ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ) ), id = Id
-           { name = "if", moduleName = Artifact
-            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
-        [ Var
-         ( Meta
-          { meta = AnyT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 174 } } ) ] )
-       ( Cast
-        (
-         [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
-         ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ) )
-        ( Var
-         ( Meta
-          { meta =
-           [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
-           ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ), id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 175 } } ) ) ) ) )
-     ( Assign
-      ( Meta
-       { meta =
-        [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
-        { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 179 } } )
-      ( Let
-       [ LocalDef
-        { _variable = Meta
-         { meta =
-          [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
-          { name = "fun", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 177 } }, typ =
-         [ SumT [ Con Tuple [] ] ] :-> AnyT, _object = Fun
-         [ Meta
-          { meta = SumT
-           [ Con Tuple [] ], id = Id
-           { name = "$_", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 178 } } ]
-         ( Atom
-          ( Var
-           ( Meta
-            { meta = AnyT, id = Id
-             { name = "acc", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 168 } } ) ) ) } ]
-       ( Atom
-        ( Var
-         ( Meta
-          { meta =
-           [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
-           { name = "fun", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 177 } } ) ) ) )
-      ( Assign
-       ( Meta
-        { meta =
-         [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 180 } } )
-       ( Call
-        ( Var
-         ( Meta
-          { meta =
-           [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :->
-           ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT ), id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 176 } } ) )
-        [ Var
-         ( Meta
-          { meta =
-           [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 179 } } ) ] )
-       ( Cast
-        ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT )
-        ( Var
-         ( Meta
-          { meta =
-           [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 180 } } ) ) ) ) ) )
-    ( Assign
-     ( Meta
-      { meta =
-       [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 197 } } )
-     ( Let
-      [ LocalDef
-       { _variable = Meta
-        { meta =
-         [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
-         { name = "fun", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 182 } }, typ =
-        [ SumT [ Con Tuple [] ] ] :-> AnyT, _object = Fun
-        [ Meta
-         { meta = SumT
-          [ Con Tuple [] ], id = Id
-          { name = "$_", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 183 } } ]
-        ( Assign
-         ( Meta
-          { meta = [ AnyT ] :-> AnyT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 191 } } )
-         ( Assign
-          ( Meta
-           { meta = AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 189 } } )
-          ( Assign
-           ( Meta
-            { meta = [ AnyT ] :-> AnyT, id = Id
-             { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 185 } } )
-           ( Assign
-            ( Meta
-             { meta = [ AnyT ] :-> AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 184 } } )
-            ( Call
-             ( Var
-              ( Meta
-               { meta = [ AnyT ] :->
-                ( [ AnyT ] :-> AnyT ), id = Id
-                { name = "-", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = External } } ) )
-             [ Var
-              ( Meta
-               { meta = AnyT, id = Id
-                { name = "n", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 167 } } ) ] )
-            ( Cast
-             ( [ AnyT ] :-> AnyT )
-             ( Var
-              ( Meta
-               { meta = [ AnyT ] :-> AnyT, id = Id
-                { name = "d", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 184 } } ) ) ) )
-           ( Assign
-            ( Meta
-             { meta = AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 187 } } )
-            ( Assign
-             ( Meta
-              { meta = AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 186 } } )
-             ( Call
-              ( Var
-               ( Meta
-                { meta = [ Int64T ] :-> AnyT, id = Id
-                 { name = "Int64#", moduleName = Artifact
-                  ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-              [ Unboxed ( Int64 1 ) ] )
-             ( Cast AnyT
-              ( Var
-               ( Meta
-                { meta = AnyT, id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 186 } } ) ) ) )
-            ( Assign
-             ( Meta
-              { meta = AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 188 } } )
-             ( Call
-              ( Var
-               ( Meta
-                { meta = [ AnyT ] :-> AnyT, id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 185 } } ) )
-              [ Var
-               ( Meta
-                { meta = AnyT, id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 187 } } ) ] )
-             ( Cast AnyT
-              ( Var
-               ( Meta
-                { meta = AnyT, id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 188 } } ) ) ) ) ) )
-          ( Assign
-           ( Meta
-            { meta = [ AnyT ] :-> AnyT, id = Id
-             { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 190 } } )
-           ( Call
-            ( Var
-             ( Meta
-              { meta = [ AnyT ] :->
-               ( [ AnyT ] :-> AnyT ), id = Id
-               { name = "factAcc", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = External } } ) )
-            [ Var
-             ( Meta
-              { meta = AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 189 } } ) ] )
-           ( Cast
-            ( [ AnyT ] :-> AnyT )
-            ( Var
-             ( Meta
-              { meta = [ AnyT ] :-> AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 190 } } ) ) ) ) )
-         ( Assign
-          ( Meta
-           { meta = AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 195 } } )
-          ( Assign
-           ( Meta
-            { meta = [ AnyT ] :-> AnyT, id = Id
-             { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 193 } } )
-           ( Assign
-            ( Meta
-             { meta = [ AnyT ] :-> AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 192 } } )
-            ( Call
-             ( Var
-              ( Meta
-               { meta = [ AnyT ] :->
-                ( [ AnyT ] :-> AnyT ), id = Id
-                { name = "*", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = External } } ) )
-             [ Var
-              ( Meta
-               { meta = AnyT, id = Id
-                { name = "n", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 167 } } ) ] )
-            ( Cast
-             ( [ AnyT ] :-> AnyT )
-             ( Var
-              ( Meta
-               { meta = [ AnyT ] :-> AnyT, id = Id
-                { name = "d", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 192 } } ) ) ) )
-           ( Assign
-            ( Meta
-             { meta = AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 194 } } )
-            ( Call
-             ( Var
-              ( Meta
-               { meta = [ AnyT ] :-> AnyT, id = Id
-                { name = "d", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 193 } } ) )
-             [ Var
-              ( Meta
-               { meta = AnyT, id = Id
-                { name = "acc", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 168 } } ) ] )
-            ( Cast AnyT
-             ( Var
-              ( Meta
-               { meta = AnyT, id = Id
-                { name = "d", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 194 } } ) ) ) ) )
-          ( Assign
-           ( Meta
-            { meta = AnyT, id = Id
-             { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 196 } } )
-           ( Call
-            ( Var
-             ( Meta
-              { meta = [ AnyT ] :-> AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 191 } } ) )
-            [ Var
-             ( Meta
-              { meta = AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 195 } } ) ] )
-           ( Cast AnyT
-            ( Var
-             ( Meta
-              { meta = AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 196 } } ) ) ) ) ) ) } ]
-      ( Atom
-       ( Var
-        ( Meta
-         { meta =
-          [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
-          { name = "fun", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 182 } } ) ) ) )
-     ( Assign
-      ( Meta
-       { meta = AnyT, id = Id
-        { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 198 } } )
-      ( Call
-       ( Var
-        ( Meta
-         { meta =
-          [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 181 } } ) )
-       [ Var
-        ( Meta
-         { meta =
-          [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 197 } } ) ] )
-      ( Cast AnyT
-       ( Var
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 198 } } ) ) ) ) ) ),
-   ( Meta
-    { meta =
-     [ AnyT, AnyT ] :-> AnyT, id = Id
-     { name = "*_curry", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 127 } },
-    [ Meta
-     { meta = AnyT, id = Id
-      { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 128 } }, Meta
-     { meta = AnyT, id = Id
-      { name = "y", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 129 } } ],
-    [ AnyT, AnyT ] :-> AnyT, Assign
-    ( Meta
-     { meta = [ AnyT ] :-> AnyT, id = Id
-      { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 131 } } )
-    ( Assign
-     ( Meta
-      { meta = [ AnyT ] :-> AnyT, id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 130 } } )
-     ( Call
-      ( Var
-       ( Meta
-        { meta = [ AnyT ] :->
-         ( [ AnyT ] :-> AnyT ), id = Id
-         { name = "mulInt64", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-      [ Var
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "x", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 128 } } ) ] )
-     ( Cast
-      ( [ AnyT ] :-> AnyT )
-      ( Var
-       ( Meta
-        { meta = [ AnyT ] :-> AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 130 } } ) ) ) )
-    ( Assign
-     ( Meta
-      { meta = AnyT, id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 132 } } )
-     ( Call
-      ( Var
-       ( Meta
-        { meta = [ AnyT ] :-> AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 131 } } ) )
-      [ Var
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "y", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 129 } } ) ] )
-     ( Cast AnyT
-      ( Var
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 132 } } ) ) ) ) ),
-   ( Meta
-    { meta =
-     [ AnyT, AnyT ] :-> AnyT, id = Id
-     { name = "-_curry", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 115 } },
-    [ Meta
-     { meta = AnyT, id = Id
-      { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 116 } }, Meta
-     { meta = AnyT, id = Id
-      { name = "y", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 117 } } ],
-    [ AnyT, AnyT ] :-> AnyT, Assign
-    ( Meta
-     { meta = [ AnyT ] :-> AnyT, id = Id
-      { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 119 } } )
-    ( Assign
-     ( Meta
-      { meta = [ AnyT ] :-> AnyT, id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 118 } } )
-     ( Call
-      ( Var
-       ( Meta
-        { meta = [ AnyT ] :->
-         ( [ AnyT ] :-> AnyT ), id = Id
-         { name = "subInt64", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-      [ Var
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "x", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 116 } } ) ] )
-     ( Cast
-      ( [ AnyT ] :-> AnyT )
-      ( Var
-       ( Meta
-        { meta = [ AnyT ] :-> AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 118 } } ) ) ) )
-    ( Assign
-     ( Meta
-      { meta = AnyT, id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 120 } } )
-     ( Call
-      ( Var
-       ( Meta
-        { meta = [ AnyT ] :-> AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 119 } } ) )
-      [ Var
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "y", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 117 } } ) ] )
-     ( Cast AnyT
-      ( Var
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 120 } } ) ) ) ) ),
-   ( Meta
-    { meta =
-     [ AnyT, AnyT ] :-> AnyT, id = Id
-     { name = "==_curry", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 103 } },
-    [ Meta
-     { meta = AnyT, id = Id
-      { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 104 } }, Meta
-     { meta = AnyT, id = Id
-      { name = "y", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 105 } } ],
-    [ AnyT, AnyT ] :-> AnyT, Assign
-    ( Meta
-     { meta = [ AnyT ] :-> AnyT, id = Id
-      { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 107 } } )
-    ( Assign
-     ( Meta
-      { meta = [ AnyT ] :-> AnyT, id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 106 } } )
-     ( Call
-      ( Var
-       ( Meta
-        { meta = [ AnyT ] :->
-         ( [ AnyT ] :-> AnyT ), id = Id
-         { name = "eqInt64", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-      [ Var
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "x", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 104 } } ) ] )
-     ( Cast
-      ( [ AnyT ] :-> AnyT )
-      ( Var
-       ( Meta
-        { meta = [ AnyT ] :-> AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 106 } } ) ) ) )
-    ( Assign
-     ( Meta
-      { meta = AnyT, id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 108 } } )
-     ( Call
-      ( Var
-       ( Meta
-        { meta = [ AnyT ] :-> AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 107 } } ) )
-      [ Var
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "y", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 105 } } ) ] )
-     ( Cast AnyT
-      ( Var
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 108 } } ) ) ) ) ),
-   ( Meta
-    { meta = [ AnyT ] :->
-     ( [ AnyT ] :-> AnyT ), id = Id
-     { name = "==", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = External } },
-    [ Meta
-     { meta = AnyT, id = Id
-      { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 98 } } ], [ AnyT ] :->
-    ( [ AnyT ] :-> AnyT ), Let
-    [ LocalDef
-     { _variable = Meta
-      { meta = [ AnyT ] :-> AnyT, id = Id
-       { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 109 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
-      [ Meta
-       { meta = AnyT, id = Id
-        { name = "y", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 99 } } ]
-      ( CallDirect
-       ( Meta
-        { meta =
-         [ AnyT, AnyT ] :-> AnyT, id = Id
-         { name = "==_curry", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 103 } } )
-       [ Var
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "x", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 98 } } ), Var
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "y", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 99 } } ) ] ) } ]
-    ( Atom
-     ( Var
-      ( Meta
-       { meta = [ AnyT ] :-> AnyT, id = Id
-        { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 109 } } ) ) ) ),
-   ( Meta
-    { meta = [ AnyT ] :->
-     ( [ AnyT ] :-> AnyT ), id = Id
-     { name = "-", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = External } },
-    [ Meta
-     { meta = AnyT, id = Id
-      { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 110 } } ], [ AnyT ] :->
-    ( [ AnyT ] :-> AnyT ), Let
-    [ LocalDef
-     { _variable = Meta
-      { meta = [ AnyT ] :-> AnyT, id = Id
-       { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 121 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
-      [ Meta
-       { meta = AnyT, id = Id
-        { name = "y", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 111 } } ]
-      ( CallDirect
-       ( Meta
-        { meta =
-         [ AnyT, AnyT ] :-> AnyT, id = Id
-         { name = "-_curry", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 115 } } )
-       [ Var
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "x", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 110 } } ), Var
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "y", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 111 } } ) ] ) } ]
-    ( Atom
-     ( Var
-      ( Meta
-       { meta = [ AnyT ] :-> AnyT, id = Id
-        { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 121 } } ) ) ) ),
-   ( Meta
-    { meta = [ AnyT ] :->
-     ( [ AnyT ] :-> AnyT ), id = Id
-     { name = "*", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = External } },
-    [ Meta
-     { meta = AnyT, id = Id
-      { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 122 } } ], [ AnyT ] :->
-    ( [ AnyT ] :-> AnyT ), Let
-    [ LocalDef
-     { _variable = Meta
-      { meta = [ AnyT ] :-> AnyT, id = Id
-       { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 133 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
-      [ Meta
-       { meta = AnyT, id = Id
-        { name = "y", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 123 } } ]
-      ( CallDirect
-       ( Meta
-        { meta =
-         [ AnyT, AnyT ] :-> AnyT, id = Id
-         { name = "*_curry", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 127 } } )
-       [ Var
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "x", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 122 } } ), Var
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "y", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 123 } } ) ] ) } ]
-    ( Atom
-     ( Var
-      ( Meta
-       { meta = [ AnyT ] :-> AnyT, id = Id
-        { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 133 } } ) ) ) ),
-   ( Meta
-    { meta = [ AnyT ] :->
-     ( [ AnyT ] :-> AnyT ), id = Id
-     { name = "factAcc", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = External } },
-    [ Meta
-     { meta = AnyT, id = Id
-      { name = "n", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 134 } } ], [ AnyT ] :->
-    ( [ AnyT ] :-> AnyT ), Let
-    [ LocalDef
-     { _variable = Meta
-      { meta = [ AnyT ] :-> AnyT, id = Id
-       { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 199 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
-      [ Meta
-       { meta = AnyT, id = Id
-        { name = "acc", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 135 } } ]
-      ( CallDirect
-       ( Meta
-        { meta =
-         [ AnyT, AnyT ] :-> AnyT, id = Id
-         { name = "factAcc_curry", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 166 } } )
-       [ Var
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "n", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 134 } } ), Var
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "acc", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 135 } } ) ] ) } ]
-    ( Atom
-     ( Var
-      ( Meta
-       { meta = [ AnyT ] :-> AnyT, id = Id
-        { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 199 } } ) ) ) ),
-   ( Meta
-    { meta = [ AnyT ] :-> AnyT, id = Id
-     { name = "fact", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = External } },
-    [ Meta
-     { meta = AnyT, id = Id
-      { name = "n", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 200 } } ], [ AnyT ] :-> AnyT, Assign
-    ( Meta
-     { meta = [ AnyT ] :-> AnyT, id = Id
-      { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 202 } } )
-    ( Assign
-     ( Meta
-      { meta = [ AnyT ] :-> AnyT, id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 201 } } )
-     ( Call
-      ( Var
-       ( Meta
-        { meta = [ AnyT ] :->
-         ( [ AnyT ] :-> AnyT ), id = Id
-         { name = "factAcc", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = External } } ) )
-      [ Var
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "n", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 200 } } ) ] )
-     ( Cast
-      ( [ AnyT ] :-> AnyT )
-      ( Var
-       ( Meta
-        { meta = [ AnyT ] :-> AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 201 } } ) ) ) )
-    ( Assign
-     ( Meta
-      { meta = AnyT, id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 204 } } )
-     ( Assign
-      ( Meta
-       { meta = AnyT, id = Id
-        { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 203 } } )
-      ( Call
-       ( Var
-        ( Meta
-         { meta = [ Int64T ] :-> AnyT, id = Id
-          { name = "Int64#", moduleName = Artifact
-           ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-       [ Unboxed ( Int64 1 ) ] )
-      ( Cast AnyT
-       ( Var
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 203 } } ) ) ) )
-     ( Assign
-      ( Meta
-       { meta = AnyT, id = Id
-        { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 205 } } )
-      ( Call
-       ( Var
-        ( Meta
-         { meta = [ AnyT ] :-> AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 202 } } ) )
-       [ Var
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 204 } } ) ] )
-      ( Cast AnyT
-       ( Var
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 205 } } ) ) ) ) ) ),
-   ( Meta
-    { meta =
-     [ SumT [ Con Tuple [] ] ] :-> SumT
-     [ Con Tuple [] ], id = Id
-     { name = "main", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = External } },
-    [ Meta
-     { meta = SumT
-      [ Con Tuple [] ], id = Id
-      { name = "$_", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 206 } } ],
-    [ SumT [ Con Tuple [] ] ] :-> SumT
-    [ Con Tuple [] ], Assign
-    ( Meta
-     { meta =
-      [ [ AnyT ] :-> SumT [ Con Tuple [] ] ] :-> SumT
-      [ Con Tuple [] ], id = Id
-      { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 216 } } )
-    ( Assign
-     ( Meta
-      { meta = AnyT, id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 214 } } )
-     ( Assign
-      ( Meta
-       { meta =
-        [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-        { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 212 } } )
-      ( Assign
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 210 } } )
-       ( Assign
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 208 } } )
-        ( Assign
-         ( Meta
-          { meta = AnyT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 207 } } )
-         ( Call
-          ( Var
-           ( Meta
-            { meta = [ Int64T ] :-> AnyT, id = Id
-             { name = "Int64#", moduleName = Artifact
-              ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-          [ Unboxed ( Int64 5 ) ] )
-         ( Cast AnyT
-          ( Var
-           ( Meta
-            { meta = AnyT, id = Id
-             { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 207 } } ) ) ) )
-        ( Assign
-         ( Meta
-          { meta = AnyT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 209 } } )
-         ( Call
-          ( Var
-           ( Meta
-            { meta = [ AnyT ] :-> AnyT, id = Id
-             { name = "fact", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = External } } ) )
-          [ Var
-           ( Meta
-            { meta = AnyT, id = Id
-             { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 208 } } ) ] )
-         ( Cast AnyT
-          ( Var
-           ( Meta
-            { meta = AnyT, id = Id
-             { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 209 } } ) ) ) ) )
-       ( Assign
-        ( Meta
-         { meta =
-          [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 211 } } )
-        ( Call
-         ( Var
-          ( Meta
-           { meta = [ AnyT ] :->
-            ( [ [ AnyT ] :-> AnyT ] :-> AnyT ), id = Id
-            { name = "|>", moduleName = Artifact
-             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
-         [ Var
-          ( Meta
-           { meta = AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 210 } } ) ] )
-        ( Cast
-         ( [ [ AnyT ] :-> AnyT ] :-> AnyT )
-         ( Var
-          ( Meta
-           { meta =
-            [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 211 } } ) ) ) ) )
-      ( Assign
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 213 } } )
-       ( Call
-        ( Var
-         ( Meta
-          { meta =
-           [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 212 } } ) )
-        [ Var
-         ( Meta
-          { meta = [ AnyT ] :-> AnyT, id = Id
-           { name = "toStringInt64", moduleName = Artifact
-            ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) ] )
-       ( Cast AnyT
-        ( Var
-         ( Meta
-          { meta = AnyT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 213 } } ) ) ) ) )
-     ( Assign
-      ( Meta
-       { meta =
-        [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-        { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 215 } } )
-      ( Call
-       ( Var
-        ( Meta
-         { meta = [ AnyT ] :->
-          ( [ [ AnyT ] :-> AnyT ] :-> AnyT ), id = Id
-          { name = "|>", moduleName = Artifact
-           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
-       [ Var
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 214 } } ) ] )
-      ( Cast
-       ( [ [ AnyT ] :-> SumT [ Con Tuple [] ] ] :-> SumT [ Con Tuple [] ] )
-       ( Var
-        ( Meta
-         { meta =
-          [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 215 } } ) ) ) ) )
-    ( Assign
-     ( Meta
-      { meta = SumT
-       [ Con Tuple [] ], id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 217 } } )
-     ( Call
-      ( Var
-       ( Meta
-        { meta =
-         [ [ AnyT ] :-> SumT [ Con Tuple [] ] ] :-> SumT
-         [ Con Tuple [] ], id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 216 } } ) )
-      [ Var
-       ( Meta
-        { meta = [ AnyT ] :-> SumT
-         [ Con Tuple [] ], id = Id
-         { name = "putStrLn", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) ] )
-     ( Cast
-      ( SumT [ Con Tuple [] ] )
-      ( Var
-       ( Meta
-        { meta = SumT
-         [ Con Tuple [] ], id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Factorial.mlg" ), sort = Temporal 217 } } ) ) ) ) ) ], extFuns = [] }
+(()
+   ((define
+      ($Factorial.factAcc_curry_166 $Factorial.n_167 $Factorial.acc_168)
+      (->
+         (Any# Any#)
+         Any#)
+      (=
+         $Factorial.d_181
+         (=
+            $Factorial.d_176
+            (=
+               $Factorial.d_174
+               (=
+                  $Factorial.d_170
+                  (=
+                     $Factorial.d_169
+                     (call == $Factorial.n_167)
+                     (cast
+                        (->
+                           (Any#)
+                           Any#)
+                        $Factorial.d_169))
+                  (=
+                     $Factorial.d_172
+                     (=
+                        $Factorial.d_171
+                        (call Int64# 0_i64)
+                        (cast Any# $Factorial.d_171))
+                     (=
+                        $Factorial.d_173
+                        (call $Factorial.d_170 $Factorial.d_172)
+                        (cast Any# $Factorial.d_173))))
+               (=
+                  $Factorial.d_175
+                  (call if $Factorial.d_174)
+                  (cast
+                     (->
+                        ((->
+                           ((sum
+                              (con Tuple#)))
+                           Any#))
+                        (->
+                           ((->
+                              ((sum
+                                 (con Tuple#)))
+                              Any#))
+                           Any#))
+                     $Factorial.d_175)))
+            (=
+               $Factorial.d_179
+               (let
+                  (($Factorial.fun_177
+                     (->
+                        ((sum
+                           (con Tuple#)))
+                        Any#)
+                     (fun
+                        ($Factorial.$__178)
+                        $Factorial.acc_168)))
+                  $Factorial.fun_177)
+               (=
+                  $Factorial.d_180
+                  (call $Factorial.d_176 $Factorial.d_179)
+                  (cast
+                     (->
+                        ((->
+                           ((sum
+                              (con Tuple#)))
+                           Any#))
+                        Any#)
+                     $Factorial.d_180))))
+         (=
+            $Factorial.d_197
+            (let
+               (($Factorial.fun_182
+                  (->
+                     ((sum
+                        (con Tuple#)))
+                     Any#)
+                  (fun
+                     ($Factorial.$__183)
+                     (=
+                        $Factorial.d_191
+                        (=
+                           $Factorial.d_189
+                           (=
+                              $Factorial.d_185
+                              (=
+                                 $Factorial.d_184
+                                 (call - $Factorial.n_167)
+                                 (cast
+                                    (->
+                                       (Any#)
+                                       Any#)
+                                    $Factorial.d_184))
+                              (=
+                                 $Factorial.d_187
+                                 (=
+                                    $Factorial.d_186
+                                    (call Int64# 1_i64)
+                                    (cast Any# $Factorial.d_186))
+                                 (=
+                                    $Factorial.d_188
+                                    (call $Factorial.d_185 $Factorial.d_187)
+                                    (cast Any# $Factorial.d_188))))
+                           (=
+                              $Factorial.d_190
+                              (call factAcc $Factorial.d_189)
+                              (cast
+                                 (->
+                                    (Any#)
+                                    Any#)
+                                 $Factorial.d_190)))
+                        (=
+                           $Factorial.d_195
+                           (=
+                              $Factorial.d_193
+                              (=
+                                 $Factorial.d_192
+                                 (call * $Factorial.n_167)
+                                 (cast
+                                    (->
+                                       (Any#)
+                                       Any#)
+                                    $Factorial.d_192))
+                              (=
+                                 $Factorial.d_194
+                                 (call $Factorial.d_193 $Factorial.acc_168)
+                                 (cast Any# $Factorial.d_194)))
+                           (=
+                              $Factorial.d_196
+                              (call $Factorial.d_191 $Factorial.d_195)
+                              (cast Any# $Factorial.d_196)))))))
+               $Factorial.fun_182)
+            (=
+               $Factorial.d_198
+               (call $Factorial.d_181 $Factorial.d_197)
+               (cast Any# $Factorial.d_198)))))
+      (define
+         ($Factorial.*_curry_127 $Factorial.x_128 $Factorial.y_129)
+         (->
+            (Any# Any#)
+            Any#)
+         (=
+            $Factorial.d_131
+            (=
+               $Factorial.d_130
+               (call mulInt64 $Factorial.x_128)
+               (cast
+                  (->
+                     (Any#)
+                     Any#)
+                  $Factorial.d_130))
+            (=
+               $Factorial.d_132
+               (call $Factorial.d_131 $Factorial.y_129)
+               (cast Any# $Factorial.d_132))))
+      (define
+         ($Factorial.-_curry_115 $Factorial.x_116 $Factorial.y_117)
+         (->
+            (Any# Any#)
+            Any#)
+         (=
+            $Factorial.d_119
+            (=
+               $Factorial.d_118
+               (call subInt64 $Factorial.x_116)
+               (cast
+                  (->
+                     (Any#)
+                     Any#)
+                  $Factorial.d_118))
+            (=
+               $Factorial.d_120
+               (call $Factorial.d_119 $Factorial.y_117)
+               (cast Any# $Factorial.d_120))))
+      (define
+         ($Factorial.==_curry_103 $Factorial.x_104 $Factorial.y_105)
+         (->
+            (Any# Any#)
+            Any#)
+         (=
+            $Factorial.d_107
+            (=
+               $Factorial.d_106
+               (call eqInt64 $Factorial.x_104)
+               (cast
+                  (->
+                     (Any#)
+                     Any#)
+                  $Factorial.d_106))
+            (=
+               $Factorial.d_108
+               (call $Factorial.d_107 $Factorial.y_105)
+               (cast Any# $Factorial.d_108))))
+      (define
+         (== $Factorial.x_98)
+         (->
+            (Any#)
+            (->
+               (Any#)
+               Any#))
+         (let
+            (($Factorial.let_109
+               (->
+                  (Any#)
+                  Any#)
+               (fun
+                  ($Factorial.y_99)
+                  (direct $Factorial.==_curry_103 $Factorial.x_98 $Factorial.y_99))))
+            $Factorial.let_109))
+      (define
+         (- $Factorial.x_110)
+         (->
+            (Any#)
+            (->
+               (Any#)
+               Any#))
+         (let
+            (($Factorial.let_121
+               (->
+                  (Any#)
+                  Any#)
+               (fun
+                  ($Factorial.y_111)
+                  (direct $Factorial.-_curry_115 $Factorial.x_110 $Factorial.y_111))))
+            $Factorial.let_121))
+      (define
+         (* $Factorial.x_122)
+         (->
+            (Any#)
+            (->
+               (Any#)
+               Any#))
+         (let
+            (($Factorial.let_133
+               (->
+                  (Any#)
+                  Any#)
+               (fun
+                  ($Factorial.y_123)
+                  (direct $Factorial.*_curry_127 $Factorial.x_122 $Factorial.y_123))))
+            $Factorial.let_133))
+      (define
+         (factAcc $Factorial.n_134)
+         (->
+            (Any#)
+            (->
+               (Any#)
+               Any#))
+         (let
+            (($Factorial.let_199
+               (->
+                  (Any#)
+                  Any#)
+               (fun
+                  ($Factorial.acc_135)
+                  (direct $Factorial.factAcc_curry_166 $Factorial.n_134 $Factorial.acc_135))))
+            $Factorial.let_199))
+      (define
+         (fact $Factorial.n_200)
+         (->
+            (Any#)
+            Any#)
+         (=
+            $Factorial.d_202
+            (=
+               $Factorial.d_201
+               (call factAcc $Factorial.n_200)
+               (cast
+                  (->
+                     (Any#)
+                     Any#)
+                  $Factorial.d_201))
+            (=
+               $Factorial.d_204
+               (=
+                  $Factorial.d_203
+                  (call Int64# 1_i64)
+                  (cast Any# $Factorial.d_203))
+               (=
+                  $Factorial.d_205
+                  (call $Factorial.d_202 $Factorial.d_204)
+                  (cast Any# $Factorial.d_205)))))
+      (define
+         (main $Factorial.$__206)
+         (->
+            ((sum
+               (con Tuple#)))
+            (sum
+               (con Tuple#)))
+         (=
+            $Factorial.d_216
+            (=
+               $Factorial.d_214
+               (=
+                  $Factorial.d_212
+                  (=
+                     $Factorial.d_210
+                     (=
+                        $Factorial.d_208
+                        (=
+                           $Factorial.d_207
+                           (call Int64# 5_i64)
+                           (cast Any# $Factorial.d_207))
+                        (=
+                           $Factorial.d_209
+                           (call fact $Factorial.d_208)
+                           (cast Any# $Factorial.d_209)))
+                     (=
+                        $Factorial.d_211
+                        (call |> $Factorial.d_210)
+                        (cast
+                           (->
+                              ((->
+                                 (Any#)
+                                 Any#))
+                              Any#)
+                           $Factorial.d_211)))
+                  (=
+                     $Factorial.d_213
+                     (call $Factorial.d_212 toStringInt64)
+                     (cast Any# $Factorial.d_213)))
+               (=
+                  $Factorial.d_215
+                  (call |> $Factorial.d_214)
+                  (cast
+                     (->
+                        ((->
+                           (Any#)
+                           (sum
+                              (con Tuple#))))
+                        (sum
+                           (con Tuple#)))
+                     $Factorial.d_215)))
+            (=
+               $Factorial.d_217
+               (call $Factorial.d_216 putStrLn)
+               (cast
+                  (sum
+                     (con Tuple#))
+                  $Factorial.d_217)))))
+   ())

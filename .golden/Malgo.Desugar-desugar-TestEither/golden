@@ -1,1702 +1,566 @@
-Program
- { topVars = [], topFuns =
-  [
-   ( Meta
-    { meta =
-     [ [ AnyT ] :-> AnyT, AnyT ] :-> AnyT, id = Id
-     { name = "andThen_curry", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 260 } },
-    [ Meta
-     { meta = [ AnyT ] :-> AnyT, id = Id
-      { name = "_", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 261 } }, Meta
-     { meta = AnyT, id = Id
-      { name = "left", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 262 } } ],
-    [ [ AnyT ] :-> AnyT, AnyT ] :-> AnyT, Match
-    ( Cast
-     ( SumT
-      [ Con
-       ( Data "test/testcases/malgo/TestEither.mlg.Left" ) [ AnyT ], Con
-       ( Data "test/testcases/malgo/TestEither.mlg.Right" ) [ AnyT ] ] )
-     ( Var
-      ( Meta
-       { meta = AnyT, id = Id
-        { name = "left", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 262 } } ) ) )
-    [ Unpack
-     ( Con ( Data "test/testcases/malgo/TestEither.mlg.Left" ) [ AnyT ] )
-     [ Meta
-      { meta = AnyT, id = Id
-       { name = "p", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 263 } } ]
-     ( Assign
-      ( Meta
-       { meta = AnyT, id = Id
-        { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 264 } } )
-      ( Call
-       ( Var
-        ( Meta
-         { meta = [ AnyT ] :-> AnyT, id = Id
-          { name = "Left", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External } } ) )
-       [ Var
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "p", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 263 } } ) ] )
-      ( Cast AnyT
-       ( Var
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 264 } } ) ) ) ), Unpack
-     ( Con ( Data "test/testcases/malgo/TestEither.mlg.Right" ) [ AnyT ] )
-     [ Meta
-      { meta = AnyT, id = Id
-       { name = "p", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 265 } } ]
-     ( Assign
-      ( Meta
-       { meta = AnyT, id = Id
-        { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 266 } } )
-      ( Call
-       ( Var
-        ( Meta
-         { meta = [ AnyT ] :-> AnyT, id = Id
-          { name = "_", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 261 } } ) )
-       [ Var
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "p", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 265 } } ) ] )
-      ( Cast AnyT
-       ( Var
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 266 } } ) ) ) ) ] ),
-   ( Meta
-    { meta = [ AnyT ] :-> AnyT, id = Id
-     { name = "Left", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External } },
-    [ Meta
-     { meta = AnyT, id = Id
-      { name = "p", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 249 } } ], [ AnyT ] :-> AnyT, Let
-    [ LocalDef
-     { _variable = Meta
-      { meta = SumT
-       [ Con
-        ( Data "test/testcases/malgo/TestEither.mlg.Left" ) [ AnyT ], Con
-        ( Data "test/testcases/malgo/TestEither.mlg.Right" ) [ AnyT ] ], id = Id
-       { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 250 } }, typ = SumT
-      [ Con
-       ( Data "test/testcases/malgo/TestEither.mlg.Left" ) [ AnyT ], Con
-       ( Data "test/testcases/malgo/TestEither.mlg.Right" ) [ AnyT ] ], _object = Pack
-      ( SumT
-       [ Con
-        ( Data "test/testcases/malgo/TestEither.mlg.Left" ) [ AnyT ], Con
-        ( Data "test/testcases/malgo/TestEither.mlg.Right" ) [ AnyT ] ] )
-      ( Con ( Data "test/testcases/malgo/TestEither.mlg.Left" ) [ AnyT ] )
-      [ Var
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "p", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 249 } } ) ] } ]
-    ( Cast AnyT
-     ( Var
-      ( Meta
-       { meta = SumT
-        [ Con
-         ( Data "test/testcases/malgo/TestEither.mlg.Left" ) [ AnyT ], Con
-         ( Data "test/testcases/malgo/TestEither.mlg.Right" ) [ AnyT ] ], id = Id
-        { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 250 } } ) ) ) ),
-   ( Meta
-    { meta = [ AnyT ] :-> AnyT, id = Id
-     { name = "Right", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External } },
-    [ Meta
-     { meta = AnyT, id = Id
-      { name = "p", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 251 } } ], [ AnyT ] :-> AnyT, Let
-    [ LocalDef
-     { _variable = Meta
-      { meta = SumT
-       [ Con
-        ( Data "test/testcases/malgo/TestEither.mlg.Left" ) [ AnyT ], Con
-        ( Data "test/testcases/malgo/TestEither.mlg.Right" ) [ AnyT ] ], id = Id
-       { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 252 } }, typ = SumT
-      [ Con
-       ( Data "test/testcases/malgo/TestEither.mlg.Left" ) [ AnyT ], Con
-       ( Data "test/testcases/malgo/TestEither.mlg.Right" ) [ AnyT ] ], _object = Pack
-      ( SumT
-       [ Con
-        ( Data "test/testcases/malgo/TestEither.mlg.Left" ) [ AnyT ], Con
-        ( Data "test/testcases/malgo/TestEither.mlg.Right" ) [ AnyT ] ] )
-      ( Con ( Data "test/testcases/malgo/TestEither.mlg.Right" ) [ AnyT ] )
-      [ Var
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "p", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 251 } } ) ] } ]
-    ( Cast AnyT
-     ( Var
-      ( Meta
-       { meta = SumT
-        [ Con
-         ( Data "test/testcases/malgo/TestEither.mlg.Left" ) [ AnyT ], Con
-         ( Data "test/testcases/malgo/TestEither.mlg.Right" ) [ AnyT ] ], id = Id
-        { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 252 } } ) ) ) ),
-   ( Meta
-    { meta = [ AnyT ] :-> AnyT, id = Id
-     { name = "id", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External } },
-    [ Meta
-     { meta = AnyT, id = Id
-      { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 253 } } ], [ AnyT ] :-> AnyT, Atom
-    ( Var
-     ( Meta
-      { meta = AnyT, id = Id
-       { name = "x", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 253 } } ) ) ),
-   ( Meta
-    { meta =
-     [ [ AnyT ] :-> AnyT ] :->
-     ( [ AnyT ] :-> AnyT ), id = Id
-     { name = "andThen", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External } },
-    [ Meta
-     { meta = [ AnyT ] :-> AnyT, id = Id
-      { name = "_", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 254 } } ],
-    [ [ AnyT ] :-> AnyT ] :->
-    ( [ AnyT ] :-> AnyT ), Let
-    [ LocalDef
-     { _variable = Meta
-      { meta = [ AnyT ] :-> AnyT, id = Id
-       { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 267 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
-      [ Meta
-       { meta = AnyT, id = Id
-        { name = "left", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 255 } } ]
-      ( CallDirect
-       ( Meta
-        { meta =
-         [ [ AnyT ] :-> AnyT, AnyT ] :-> AnyT, id = Id
-         { name = "andThen_curry", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 260 } } )
-       [ Var
-        ( Meta
-         { meta = [ AnyT ] :-> AnyT, id = Id
-          { name = "_", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 254 } } ), Var
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "left", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 255 } } ) ] ) } ]
-    ( Atom
-     ( Var
-      ( Meta
-       { meta = [ AnyT ] :-> AnyT, id = Id
-        { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 267 } } ) ) ) ),
-   ( Meta
-    { meta =
-     [ SumT [ Con Tuple [] ] ] :-> SumT
-     [ Con Tuple [] ], id = Id
-     { name = "main", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External } },
-    [ Meta
-     { meta = SumT
-      [ Con Tuple [] ], id = Id
-      { name = "$_", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 268 } } ],
-    [ SumT [ Con Tuple [] ] ] :-> SumT
-    [ Con Tuple [] ], Assign
-    ( Meta
-     { meta = SumT
-      [ Con Tuple [] ], id = Id
-      { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 287 } } )
-    ( Assign
-     ( Meta
-      { meta =
-       [ [ AnyT ] :-> SumT [ Con Tuple [] ] ] :-> SumT
-       [ Con Tuple [] ], id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 274 } } )
-     ( Assign
-      ( Meta
-       { meta = AnyT, id = Id
-        { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 272 } } )
-      ( Assign
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 270 } } )
-       ( Assign
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 269 } } )
-        ( Call
-         ( Var
-          ( Meta
-           { meta = [ Int32T ] :-> AnyT, id = Id
-            { name = "Int32#", moduleName = Artifact
-             ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-         [ Unboxed ( Int32 1 ) ] )
-        ( Cast AnyT
-         ( Var
-          ( Meta
-           { meta = AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 269 } } ) ) ) )
-       ( Assign
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 271 } } )
-        ( Call
-         ( Var
-          ( Meta
-           { meta = [ AnyT ] :-> AnyT, id = Id
-            { name = "Right", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External } } ) )
-         [ Var
-          ( Meta
-           { meta = AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 270 } } ) ] )
-        ( Cast AnyT
-         ( Var
-          ( Meta
-           { meta = AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 271 } } ) ) ) ) )
-      ( Assign
-       ( Meta
-        { meta =
-         [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 273 } } )
-       ( Call
-        ( Var
-         ( Meta
-          { meta = [ AnyT ] :->
-           ( [ [ AnyT ] :-> AnyT ] :-> AnyT ), id = Id
-           { name = "|>", moduleName = Artifact
-            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
-        [ Var
-         ( Meta
-          { meta = AnyT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 272 } } ) ] )
-       ( Cast
-        ( [ [ AnyT ] :-> SumT [ Con Tuple [] ] ] :-> SumT [ Con Tuple [] ] )
-        ( Var
-         ( Meta
-          { meta =
-           [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 273 } } ) ) ) ) )
-     ( Assign
-      ( Meta
-       { meta = [ AnyT ] :-> SumT
-        [ Con Tuple [] ], id = Id
-        { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 285 } } )
-      ( Let
-       [ LocalDef
-        { _variable = Meta
-         { meta = [ AnyT ] :-> SumT
-          [ Con Tuple [] ], id = Id
-          { name = "fun", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 284 } }, typ = [ AnyT ] :-> SumT
-         [ Con Tuple [] ], _object = Fun
-         [ Meta
-          { meta = AnyT, id = Id
-           { name = "right", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 275 } } ]
-         ( Match
-          ( Cast
-           ( SumT
-            [ Con
-             ( Data "test/testcases/malgo/TestEither.mlg.Left" ) [ AnyT ], Con
-             ( Data "test/testcases/malgo/TestEither.mlg.Right" ) [ AnyT ] ] )
-           ( Var
-            ( Meta
-             { meta = AnyT, id = Id
-              { name = "right", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 275 } } ) ) )
-          [ Unpack
-           ( Con ( Data "test/testcases/malgo/TestEither.mlg.Left" ) [ AnyT ] )
-           [ Meta
-            { meta = AnyT, id = Id
-             { name = "p", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 279 } } ]
-           ( Assign
-            ( Meta
-             { meta = AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 277 } } )
-            ( Assign
-             ( Meta
-              { meta = AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 276 } } )
-             ( Call
-              ( Var
-               ( Meta
-                { meta = [ StringT ] :-> AnyT, id = Id
-                 { name = "String#", moduleName = Artifact
-                  ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-              [ Unboxed ( String "unreachable" ) ] )
-             ( Cast AnyT
-              ( Var
-               ( Meta
-                { meta = AnyT, id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 276 } } ) ) ) )
-            ( Assign
-             ( Meta
-              { meta = SumT
-               [ Con Tuple [] ], id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 278 } } )
-             ( Call
-              ( Var
-               ( Meta
-                { meta = [ AnyT ] :-> SumT
-                 [ Con Tuple [] ], id = Id
-                 { name = "putStrLn", moduleName = Artifact
-                  ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
-              [ Var
-               ( Meta
-                { meta = AnyT, id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 277 } } ) ] )
-             ( Cast
-              ( SumT [ Con Tuple [] ] )
-              ( Var
-               ( Meta
-                { meta = SumT
-                 [ Con Tuple [] ], id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 278 } } ) ) ) ) ), Unpack
-           ( Con
-            ( Data "test/testcases/malgo/TestEither.mlg.Right" ) [ AnyT ] )
-           [ Meta
-            { meta = AnyT, id = Id
-             { name = "p", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 280 } } ]
-           ( Assign
-            ( Meta
-             { meta = AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 282 } } )
-            ( Assign
-             ( Meta
-              { meta = AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 281 } } )
-             ( Call
-              ( Var
-               ( Meta
-                { meta = [ AnyT ] :-> AnyT, id = Id
-                 { name = "toStringInt32", moduleName = Artifact
-                  ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-              [ Var
-               ( Meta
-                { meta = AnyT, id = Id
-                 { name = "p", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 280 } } ) ] )
-             ( Cast AnyT
-              ( Var
-               ( Meta
-                { meta = AnyT, id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 281 } } ) ) ) )
-            ( Assign
-             ( Meta
-              { meta = SumT
-               [ Con Tuple [] ], id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 283 } } )
-             ( Call
-              ( Var
-               ( Meta
-                { meta = [ AnyT ] :-> SumT
-                 [ Con Tuple [] ], id = Id
-                 { name = "putStr", moduleName = Artifact
-                  ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
-              [ Var
-               ( Meta
-                { meta = AnyT, id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 282 } } ) ] )
-             ( Cast
-              ( SumT [ Con Tuple [] ] )
-              ( Var
-               ( Meta
-                { meta = SumT
-                 [ Con Tuple [] ], id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 283 } } ) ) ) ) ) ] ) } ]
-       ( Atom
-        ( Var
-         ( Meta
-          { meta = [ AnyT ] :-> SumT
-           [ Con Tuple [] ], id = Id
-           { name = "fun", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 284 } } ) ) ) )
-      ( Assign
-       ( Meta
-        { meta = SumT
-         [ Con Tuple [] ], id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 286 } } )
-       ( Call
-        ( Var
-         ( Meta
-          { meta =
-           [ [ AnyT ] :-> SumT [ Con Tuple [] ] ] :-> SumT
-           [ Con Tuple [] ], id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 274 } } ) )
-        [ Var
-         ( Meta
-          { meta = [ AnyT ] :-> SumT
-           [ Con Tuple [] ], id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 285 } } ) ] )
-       ( Cast
-        ( SumT [ Con Tuple [] ] )
-        ( Var
-         ( Meta
-          { meta = SumT
-           [ Con Tuple [] ], id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 286 } } ) ) ) ) ) )
-    ( Match
-     ( Assign
-      ( Meta
-       { meta = AnyT, id = Id
-        { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 289 } } )
-      ( Assign
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 288 } } )
-       ( Call
-        ( Var
-         ( Meta
-          { meta = [ Int32T ] :-> AnyT, id = Id
-           { name = "Int32#", moduleName = Artifact
-            ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-        [ Unboxed ( Int32 1 ) ] )
-       ( Cast AnyT
-        ( Var
-         ( Meta
-          { meta = AnyT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 288 } } ) ) ) )
-      ( Assign
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 290 } } )
-       ( Call
-        ( Var
-         ( Meta
-          { meta = [ AnyT ] :-> AnyT, id = Id
-           { name = "Right", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External } } ) )
-        [ Var
-         ( Meta
-          { meta = AnyT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 289 } } ) ] )
-       ( Cast AnyT
-        ( Var
-         ( Meta
-          { meta = AnyT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 290 } } ) ) ) ) )
-     [ Bind
-      ( Meta
-       { meta = AnyT, id = Id
-        { name = "let_test/testcases/malgo/TestEither.mlg.#x_9", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 291 } } ) AnyT
-      ( Assign
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 329 } } )
-       ( Assign
-        ( Meta
-         { meta =
-          [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 309 } } )
-        ( Assign
-         ( Meta
-          { meta = AnyT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 307 } } )
-         ( Assign
-          ( Meta
-           { meta =
-            [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 293 } } )
-          ( Assign
-           ( Meta
-            { meta =
-             [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-             { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 292 } } )
-           ( Call
-            ( Var
-             ( Meta
-              { meta = [ AnyT ] :->
-               ( [ [ AnyT ] :-> AnyT ] :-> AnyT ), id = Id
-               { name = "|>", moduleName = Artifact
-                ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
-            [ Var
-             ( Meta
-              { meta = AnyT, id = Id
-               { name = "let_test/testcases/malgo/TestEither.mlg.#x_9", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 291 } } ) ] )
-           ( Cast
-            ( [ [ AnyT ] :-> AnyT ] :-> AnyT )
-            ( Var
-             ( Meta
-              { meta =
-               [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 292 } } ) ) ) )
-          ( Assign
-           ( Meta
-            { meta = [ AnyT ] :-> AnyT, id = Id
-             { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 305 } } )
-           ( Assign
-            ( Meta
-             { meta = [ AnyT ] :-> AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 303 } } )
-            ( Let
-             [ LocalDef
-              { _variable = Meta
-               { meta = [ AnyT ] :-> AnyT, id = Id
-                { name = "fun", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 302 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
-               [ Meta
-                { meta = AnyT, id = Id
-                 { name = "x", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 294 } } ]
-               ( Assign
-                ( Meta
-                 { meta = AnyT, id = Id
-                  { name = "d", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 300 } } )
-                ( Assign
-                 ( Meta
-                  { meta = [ AnyT ] :-> AnyT, id = Id
-                   { name = "d", moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 296 } } )
-                 ( Assign
-                  ( Meta
-                   { meta = [ AnyT ] :-> AnyT, id = Id
-                    { name = "d", moduleName = Artifact
-                     ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 295 } } )
-                  ( Call
-                   ( Var
-                    ( Meta
-                     { meta = [ AnyT ] :->
-                      ( [ AnyT ] :-> AnyT ), id = Id
-                      { name = "addInt32", moduleName = Artifact
-                       ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-                   [ Var
-                    ( Meta
-                     { meta = AnyT, id = Id
-                      { name = "x", moduleName = Artifact
-                       ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 294 } } ) ] )
-                  ( Cast
-                   ( [ AnyT ] :-> AnyT )
-                   ( Var
-                    ( Meta
-                     { meta = [ AnyT ] :-> AnyT, id = Id
-                      { name = "d", moduleName = Artifact
-                       ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 295 } } ) ) ) )
-                 ( Assign
-                  ( Meta
-                   { meta = AnyT, id = Id
-                    { name = "d", moduleName = Artifact
-                     ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 298 } } )
-                  ( Assign
-                   ( Meta
-                    { meta = AnyT, id = Id
-                     { name = "d", moduleName = Artifact
-                      ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 297 } } )
-                   ( Call
-                    ( Var
-                     ( Meta
-                      { meta = [ Int32T ] :-> AnyT, id = Id
-                       { name = "Int32#", moduleName = Artifact
-                        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-                    [ Unboxed ( Int32 1 ) ] )
-                   ( Cast AnyT
-                    ( Var
-                     ( Meta
-                      { meta = AnyT, id = Id
-                       { name = "d", moduleName = Artifact
-                        ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 297 } } ) ) ) )
-                  ( Assign
-                   ( Meta
-                    { meta = AnyT, id = Id
-                     { name = "d", moduleName = Artifact
-                      ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 299 } } )
-                   ( Call
-                    ( Var
-                     ( Meta
-                      { meta = [ AnyT ] :-> AnyT, id = Id
-                       { name = "d", moduleName = Artifact
-                        ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 296 } } ) )
-                    [ Var
-                     ( Meta
-                      { meta = AnyT, id = Id
-                       { name = "d", moduleName = Artifact
-                        ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 298 } } ) ] )
-                   ( Cast AnyT
-                    ( Var
-                     ( Meta
-                      { meta = AnyT, id = Id
-                       { name = "d", moduleName = Artifact
-                        ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 299 } } ) ) ) ) ) )
-                ( Assign
-                 ( Meta
-                  { meta = AnyT, id = Id
-                   { name = "d", moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 301 } } )
-                 ( Call
-                  ( Var
-                   ( Meta
-                    { meta = [ AnyT ] :-> AnyT, id = Id
-                     { name = "Right", moduleName = Artifact
-                      ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External } } ) )
-                  [ Var
-                   ( Meta
-                    { meta = AnyT, id = Id
-                     { name = "d", moduleName = Artifact
-                      ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 300 } } ) ] )
-                 ( Cast AnyT
-                  ( Var
-                   ( Meta
-                    { meta = AnyT, id = Id
-                     { name = "d", moduleName = Artifact
-                      ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 301 } } ) ) ) ) ) } ]
-             ( Atom
-              ( Var
-               ( Meta
-                { meta = [ AnyT ] :-> AnyT, id = Id
-                 { name = "fun", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 302 } } ) ) ) )
-            ( Assign
-             ( Meta
-              { meta = [ AnyT ] :-> AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 304 } } )
-             ( Call
-              ( Var
-               ( Meta
-                { meta =
-                 [ [ AnyT ] :-> AnyT ] :->
-                 ( [ AnyT ] :-> AnyT ), id = Id
-                 { name = "andThen", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External } } ) )
-              [ Var
-               ( Meta
-                { meta = [ AnyT ] :-> AnyT, id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 303 } } ) ] )
-             ( Cast
-              ( [ AnyT ] :-> AnyT )
-              ( Var
-               ( Meta
-                { meta = [ AnyT ] :-> AnyT, id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 304 } } ) ) ) ) )
-           ( Assign
-            ( Meta
-             { meta = AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 306 } } )
-            ( Call
-             ( Var
-              ( Meta
-               { meta =
-                [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-                { name = "d", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 293 } } ) )
-             [ Var
-              ( Meta
-               { meta = [ AnyT ] :-> AnyT, id = Id
-                { name = "d", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 305 } } ) ] )
-            ( Cast AnyT
-             ( Var
-              ( Meta
-               { meta = AnyT, id = Id
-                { name = "d", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 306 } } ) ) ) ) ) )
-         ( Assign
-          ( Meta
-           { meta =
-            [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 308 } } )
-          ( Call
-           ( Var
-            ( Meta
-             { meta = [ AnyT ] :->
-              ( [ [ AnyT ] :-> AnyT ] :-> AnyT ), id = Id
-              { name = "|>", moduleName = Artifact
-               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
-           [ Var
-            ( Meta
-             { meta = AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 307 } } ) ] )
-          ( Cast
-           ( [ [ AnyT ] :-> AnyT ] :-> AnyT )
-           ( Var
-            ( Meta
-             { meta =
-              [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 308 } } ) ) ) ) )
-        ( Assign
-         ( Meta
-          { meta = [ AnyT ] :-> AnyT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 327 } } )
-         ( Assign
-          ( Meta
-           { meta = [ AnyT ] :-> AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 325 } } )
-          ( Let
-           [ LocalDef
-            { _variable = Meta
-             { meta = [ AnyT ] :-> AnyT, id = Id
-              { name = "fun", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 324 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
-             [ Meta
-              { meta = AnyT, id = Id
-               { name = "y", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 310 } } ]
-             ( Assign
-              ( Meta
-               { meta =
-                [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, id = Id
-                { name = "d", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 321 } } )
-              ( Assign
-               ( Meta
-                { meta = SumT
-                 [ Con Tuple [] ], id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 318 } } )
-               ( Assign
-                ( Meta
-                 { meta =
-                  [ [ AnyT ] :-> SumT [ Con Tuple [] ] ] :-> SumT
-                  [ Con Tuple [] ], id = Id
-                  { name = "d", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 316 } } )
-                ( Assign
-                 ( Meta
-                  { meta = AnyT, id = Id
-                   { name = "d", moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 314 } } )
-                 ( Assign
-                  ( Meta
-                   { meta =
-                    [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-                    { name = "d", moduleName = Artifact
-                     ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 312 } } )
-                  ( Assign
-                   ( Meta
-                    { meta =
-                     [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-                     { name = "d", moduleName = Artifact
-                      ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 311 } } )
-                   ( Call
-                    ( Var
-                     ( Meta
-                      { meta = [ AnyT ] :->
-                       ( [ [ AnyT ] :-> AnyT ] :-> AnyT ), id = Id
-                       { name = "|>", moduleName = Artifact
-                        ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
-                    [ Var
-                     ( Meta
-                      { meta = AnyT, id = Id
-                       { name = "y", moduleName = Artifact
-                        ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 310 } } ) ] )
-                   ( Cast
-                    ( [ [ AnyT ] :-> AnyT ] :-> AnyT )
-                    ( Var
-                     ( Meta
-                      { meta =
-                       [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-                       { name = "d", moduleName = Artifact
-                        ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 311 } } ) ) ) )
-                  ( Assign
-                   ( Meta
-                    { meta = AnyT, id = Id
-                     { name = "d", moduleName = Artifact
-                      ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 313 } } )
-                   ( Call
-                    ( Var
-                     ( Meta
-                      { meta =
-                       [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-                       { name = "d", moduleName = Artifact
-                        ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 312 } } ) )
-                    [ Var
-                     ( Meta
-                      { meta = [ AnyT ] :-> AnyT, id = Id
-                       { name = "toStringInt32", moduleName = Artifact
-                        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) ] )
-                   ( Cast AnyT
-                    ( Var
-                     ( Meta
-                      { meta = AnyT, id = Id
-                       { name = "d", moduleName = Artifact
-                        ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 313 } } ) ) ) ) )
-                 ( Assign
-                  ( Meta
-                   { meta =
-                    [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-                    { name = "d", moduleName = Artifact
-                     ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 315 } } )
-                  ( Call
-                   ( Var
-                    ( Meta
-                     { meta = [ AnyT ] :->
-                      ( [ [ AnyT ] :-> AnyT ] :-> AnyT ), id = Id
-                      { name = "|>", moduleName = Artifact
-                       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
-                   [ Var
-                    ( Meta
-                     { meta = AnyT, id = Id
-                      { name = "d", moduleName = Artifact
-                       ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 314 } } ) ] )
-                  ( Cast
-                   (
-                    [ [ AnyT ] :-> SumT [ Con Tuple [] ] ] :-> SumT
-                    [ Con Tuple [] ] )
-                   ( Var
-                    ( Meta
-                     { meta =
-                      [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-                      { name = "d", moduleName = Artifact
-                       ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 315 } } ) ) ) ) )
-                ( Assign
-                 ( Meta
-                  { meta = SumT
-                   [ Con Tuple [] ], id = Id
-                   { name = "d", moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 317 } } )
-                 ( Call
-                  ( Var
-                   ( Meta
-                    { meta =
-                     [ [ AnyT ] :-> SumT [ Con Tuple [] ] ] :-> SumT
-                     [ Con Tuple [] ], id = Id
-                     { name = "d", moduleName = Artifact
-                      ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 316 } } ) )
-                  [ Var
-                   ( Meta
-                    { meta = [ AnyT ] :-> SumT
-                     [ Con Tuple [] ], id = Id
-                     { name = "putStr", moduleName = Artifact
-                      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) ] )
-                 ( Cast
-                  ( SumT [ Con Tuple [] ] )
-                  ( Var
-                   ( Meta
-                    { meta = SumT
-                     [ Con Tuple [] ], id = Id
-                     { name = "d", moduleName = Artifact
-                      ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 317 } } ) ) ) ) )
-               ( Assign
-                ( Meta
-                 { meta = AnyT, id = Id
-                  { name = "cast", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 319 } } )
-                ( Cast AnyT
-                 ( Var
-                  ( Meta
-                   { meta = SumT
-                    [ Con Tuple [] ], id = Id
-                    { name = "d", moduleName = Artifact
-                     ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 318 } } ) ) )
-                ( Assign
-                 ( Meta
-                  { meta =
-                   [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-                   { name = "d", moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 320 } } )
-                 ( Call
-                  ( Var
-                   ( Meta
-                    { meta = [ AnyT ] :->
-                     ( [ [ AnyT ] :-> AnyT ] :-> AnyT ), id = Id
-                     { name = "|>", moduleName = Artifact
-                      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
-                  [ Var
-                   ( Meta
-                    { meta = AnyT, id = Id
-                     { name = "cast", moduleName = Artifact
-                      ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 319 } } ) ] )
-                 ( Cast
-                  ( [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT )
-                  ( Var
-                   ( Meta
-                    { meta =
-                     [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-                     { name = "d", moduleName = Artifact
-                      ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 320 } } ) ) ) ) ) )
-              ( Assign
-               ( Meta
-                { meta =
-                 [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
-                 { name = "cast", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 322 } } )
-               ( Cast
-                ( [ SumT [ Con Tuple [] ] ] :-> AnyT )
-                ( Var
-                 ( Meta
-                  { meta = [ AnyT ] :-> AnyT, id = Id
-                   { name = "Right", moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External } } ) ) )
-               ( Assign
-                ( Meta
-                 { meta = AnyT, id = Id
-                  { name = "d", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 323 } } )
-                ( Call
-                 ( Var
-                  ( Meta
-                   { meta =
-                    [ [ SumT [ Con Tuple [] ] ] :-> AnyT ] :-> AnyT, id = Id
-                    { name = "d", moduleName = Artifact
-                     ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 321 } } ) )
-                 [ Var
-                  ( Meta
-                   { meta =
-                    [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
-                    { name = "cast", moduleName = Artifact
-                     ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 322 } } ) ] )
-                ( Cast AnyT
-                 ( Var
-                  ( Meta
-                   { meta = AnyT, id = Id
-                    { name = "d", moduleName = Artifact
-                     ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 323 } } ) ) ) ) ) ) } ]
-           ( Atom
-            ( Var
-             ( Meta
-              { meta = [ AnyT ] :-> AnyT, id = Id
-               { name = "fun", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 324 } } ) ) ) )
-          ( Assign
-           ( Meta
-            { meta = [ AnyT ] :-> AnyT, id = Id
-             { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 326 } } )
-           ( Call
-            ( Var
-             ( Meta
-              { meta =
-               [ [ AnyT ] :-> AnyT ] :->
-               ( [ AnyT ] :-> AnyT ), id = Id
-               { name = "andThen", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External } } ) )
-            [ Var
-             ( Meta
-              { meta = [ AnyT ] :-> AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 325 } } ) ] )
-           ( Cast
-            ( [ AnyT ] :-> AnyT )
-            ( Var
-             ( Meta
-              { meta = [ AnyT ] :-> AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 326 } } ) ) ) ) )
-         ( Assign
-          ( Meta
-           { meta = AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 328 } } )
-          ( Call
-           ( Var
-            ( Meta
-             { meta =
-              [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 309 } } ) )
-           [ Var
-            ( Meta
-             { meta = [ AnyT ] :-> AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 327 } } ) ] )
-          ( Cast AnyT
-           ( Var
-            ( Meta
-             { meta = AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 328 } } ) ) ) ) ) )
-       ( Assign
-        ( Meta
-         { meta =
-          [ [ AnyT ] :-> SumT [ Con Tuple [] ] ] :-> SumT
-          [ Con Tuple [] ], id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 359 } } )
-        ( Assign
-         ( Meta
-          { meta = AnyT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 357 } } )
-         ( Assign
-          ( Meta
-           { meta =
-            [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 343 } } )
-          ( Assign
-           ( Meta
-            { meta = AnyT, id = Id
-             { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 341 } } )
-           ( Assign
-            ( Meta
-             { meta =
-              [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 331 } } )
-            ( Assign
-             ( Meta
-              { meta =
-               [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 330 } } )
-             ( Call
-              ( Var
-               ( Meta
-                { meta = [ AnyT ] :->
-                 ( [ [ AnyT ] :-> AnyT ] :-> AnyT ), id = Id
-                 { name = "|>", moduleName = Artifact
-                  ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
-              [ Var
-               ( Meta
-                { meta = AnyT, id = Id
-                 { name = "let_test/testcases/malgo/TestEither.mlg.#x_9", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 291 } } ) ] )
-             ( Cast
-              ( [ [ AnyT ] :-> AnyT ] :-> AnyT )
-              ( Var
-               ( Meta
-                { meta =
-                 [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 330 } } ) ) ) )
-            ( Assign
-             ( Meta
-              { meta = [ AnyT ] :-> AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 339 } } )
-             ( Assign
-              ( Meta
-               { meta = [ AnyT ] :-> AnyT, id = Id
-                { name = "d", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 337 } } )
-              ( Let
-               [ LocalDef
-                { _variable = Meta
-                 { meta = [ AnyT ] :-> AnyT, id = Id
-                  { name = "fun", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 336 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
-                 [ Meta
-                  { meta = AnyT, id = Id
-                   { name = "_", moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 332 } } ]
-                 ( Assign
-                  ( Meta
-                   { meta = AnyT, id = Id
-                    { name = "d", moduleName = Artifact
-                     ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 334 } } )
-                  ( Assign
-                   ( Meta
-                    { meta = AnyT, id = Id
-                     { name = "d", moduleName = Artifact
-                      ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 333 } } )
-                   ( Call
-                    ( Var
-                     ( Meta
-                      { meta = [ StringT ] :-> AnyT, id = Id
-                       { name = "String#", moduleName = Artifact
-                        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-                    [ Unboxed ( String "error" ) ] )
-                   ( Cast AnyT
-                    ( Var
-                     ( Meta
-                      { meta = AnyT, id = Id
-                       { name = "d", moduleName = Artifact
-                        ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 333 } } ) ) ) )
-                  ( Assign
-                   ( Meta
-                    { meta = AnyT, id = Id
-                     { name = "d", moduleName = Artifact
-                      ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 335 } } )
-                   ( Call
-                    ( Var
-                     ( Meta
-                      { meta = [ AnyT ] :-> AnyT, id = Id
-                       { name = "Left", moduleName = Artifact
-                        ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External } } ) )
-                    [ Var
-                     ( Meta
-                      { meta = AnyT, id = Id
-                       { name = "d", moduleName = Artifact
-                        ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 334 } } ) ] )
-                   ( Cast AnyT
-                    ( Var
-                     ( Meta
-                      { meta = AnyT, id = Id
-                       { name = "d", moduleName = Artifact
-                        ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 335 } } ) ) ) ) ) } ]
-               ( Atom
-                ( Var
-                 ( Meta
-                  { meta = [ AnyT ] :-> AnyT, id = Id
-                   { name = "fun", moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 336 } } ) ) ) )
-              ( Assign
-               ( Meta
-                { meta = [ AnyT ] :-> AnyT, id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 338 } } )
-               ( Call
-                ( Var
-                 ( Meta
-                  { meta =
-                   [ [ AnyT ] :-> AnyT ] :->
-                   ( [ AnyT ] :-> AnyT ), id = Id
-                   { name = "andThen", moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External } } ) )
-                [ Var
-                 ( Meta
-                  { meta = [ AnyT ] :-> AnyT, id = Id
-                   { name = "d", moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 337 } } ) ] )
-               ( Cast
-                ( [ AnyT ] :-> AnyT )
-                ( Var
-                 ( Meta
-                  { meta = [ AnyT ] :-> AnyT, id = Id
-                   { name = "d", moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 338 } } ) ) ) ) )
-             ( Assign
-              ( Meta
-               { meta = AnyT, id = Id
-                { name = "d", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 340 } } )
-              ( Call
-               ( Var
-                ( Meta
-                 { meta =
-                  [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-                  { name = "d", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 331 } } ) )
-               [ Var
-                ( Meta
-                 { meta = [ AnyT ] :-> AnyT, id = Id
-                  { name = "d", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 339 } } ) ] )
-              ( Cast AnyT
-               ( Var
-                ( Meta
-                 { meta = AnyT, id = Id
-                  { name = "d", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 340 } } ) ) ) ) ) )
-           ( Assign
-            ( Meta
-             { meta =
-              [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 342 } } )
-            ( Call
-             ( Var
-              ( Meta
-               { meta = [ AnyT ] :->
-                ( [ [ AnyT ] :-> AnyT ] :-> AnyT ), id = Id
-                { name = "|>", moduleName = Artifact
-                 ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
-             [ Var
-              ( Meta
-               { meta = AnyT, id = Id
-                { name = "d", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 341 } } ) ] )
-            ( Cast
-             ( [ [ AnyT ] :-> AnyT ] :-> AnyT )
-             ( Var
-              ( Meta
-               { meta =
-                [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-                { name = "d", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 342 } } ) ) ) ) )
-          ( Assign
-           ( Meta
-            { meta = [ AnyT ] :-> AnyT, id = Id
-             { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 355 } } )
-           ( Assign
-            ( Meta
-             { meta = [ AnyT ] :-> AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 353 } } )
-            ( Let
-             [ LocalDef
-              { _variable = Meta
-               { meta = [ AnyT ] :-> AnyT, id = Id
-                { name = "fun", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 352 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
-               [ Meta
-                { meta = AnyT, id = Id
-                 { name = "x", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 344 } } ]
-               ( Assign
-                ( Meta
-                 { meta = AnyT, id = Id
-                  { name = "d", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 350 } } )
-                ( Assign
-                 ( Meta
-                  { meta = [ AnyT ] :-> AnyT, id = Id
-                   { name = "d", moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 346 } } )
-                 ( Assign
-                  ( Meta
-                   { meta = [ AnyT ] :-> AnyT, id = Id
-                    { name = "d", moduleName = Artifact
-                     ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 345 } } )
-                  ( Call
-                   ( Var
-                    ( Meta
-                     { meta = [ AnyT ] :->
-                      ( [ AnyT ] :-> AnyT ), id = Id
-                      { name = "addInt32", moduleName = Artifact
-                       ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-                   [ Var
-                    ( Meta
-                     { meta = AnyT, id = Id
-                      { name = "x", moduleName = Artifact
-                       ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 344 } } ) ] )
-                  ( Cast
-                   ( [ AnyT ] :-> AnyT )
-                   ( Var
-                    ( Meta
-                     { meta = [ AnyT ] :-> AnyT, id = Id
-                      { name = "d", moduleName = Artifact
-                       ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 345 } } ) ) ) )
-                 ( Assign
-                  ( Meta
-                   { meta = AnyT, id = Id
-                    { name = "d", moduleName = Artifact
-                     ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 348 } } )
-                  ( Assign
-                   ( Meta
-                    { meta = AnyT, id = Id
-                     { name = "d", moduleName = Artifact
-                      ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 347 } } )
-                   ( Call
-                    ( Var
-                     ( Meta
-                      { meta = [ Int32T ] :-> AnyT, id = Id
-                       { name = "Int32#", moduleName = Artifact
-                        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-                    [ Unboxed ( Int32 1 ) ] )
-                   ( Cast AnyT
-                    ( Var
-                     ( Meta
-                      { meta = AnyT, id = Id
-                       { name = "d", moduleName = Artifact
-                        ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 347 } } ) ) ) )
-                  ( Assign
-                   ( Meta
-                    { meta = AnyT, id = Id
-                     { name = "d", moduleName = Artifact
-                      ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 349 } } )
-                   ( Call
-                    ( Var
-                     ( Meta
-                      { meta = [ AnyT ] :-> AnyT, id = Id
-                       { name = "d", moduleName = Artifact
-                        ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 346 } } ) )
-                    [ Var
-                     ( Meta
-                      { meta = AnyT, id = Id
-                       { name = "d", moduleName = Artifact
-                        ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 348 } } ) ] )
-                   ( Cast AnyT
-                    ( Var
-                     ( Meta
-                      { meta = AnyT, id = Id
-                       { name = "d", moduleName = Artifact
-                        ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 349 } } ) ) ) ) ) )
-                ( Assign
-                 ( Meta
-                  { meta = AnyT, id = Id
-                   { name = "d", moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 351 } } )
-                 ( Call
-                  ( Var
-                   ( Meta
-                    { meta = [ AnyT ] :-> AnyT, id = Id
-                     { name = "Right", moduleName = Artifact
-                      ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External } } ) )
-                  [ Var
-                   ( Meta
-                    { meta = AnyT, id = Id
-                     { name = "d", moduleName = Artifact
-                      ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 350 } } ) ] )
-                 ( Cast AnyT
-                  ( Var
-                   ( Meta
-                    { meta = AnyT, id = Id
-                     { name = "d", moduleName = Artifact
-                      ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 351 } } ) ) ) ) ) } ]
-             ( Atom
-              ( Var
-               ( Meta
-                { meta = [ AnyT ] :-> AnyT, id = Id
-                 { name = "fun", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 352 } } ) ) ) )
-            ( Assign
-             ( Meta
-              { meta = [ AnyT ] :-> AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 354 } } )
-             ( Call
-              ( Var
-               ( Meta
-                { meta =
-                 [ [ AnyT ] :-> AnyT ] :->
-                 ( [ AnyT ] :-> AnyT ), id = Id
-                 { name = "andThen", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External } } ) )
-              [ Var
-               ( Meta
-                { meta = [ AnyT ] :-> AnyT, id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 353 } } ) ] )
-             ( Cast
-              ( [ AnyT ] :-> AnyT )
-              ( Var
-               ( Meta
-                { meta = [ AnyT ] :-> AnyT, id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 354 } } ) ) ) ) )
-           ( Assign
-            ( Meta
-             { meta = AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 356 } } )
-            ( Call
-             ( Var
-              ( Meta
-               { meta =
-                [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-                { name = "d", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 343 } } ) )
-             [ Var
-              ( Meta
-               { meta = [ AnyT ] :-> AnyT, id = Id
-                { name = "d", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 355 } } ) ] )
-            ( Cast AnyT
-             ( Var
-              ( Meta
-               { meta = AnyT, id = Id
-                { name = "d", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 356 } } ) ) ) ) ) )
-         ( Assign
-          ( Meta
-           { meta =
-            [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 358 } } )
-          ( Call
-           ( Var
-            ( Meta
-             { meta = [ AnyT ] :->
-              ( [ [ AnyT ] :-> AnyT ] :-> AnyT ), id = Id
-              { name = "|>", moduleName = Artifact
-               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
-           [ Var
-            ( Meta
-             { meta = AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 357 } } ) ] )
-          ( Cast
-           ( [ [ AnyT ] :-> SumT [ Con Tuple [] ] ] :-> SumT [ Con Tuple [] ] )
-           ( Var
-            ( Meta
-             { meta =
-              [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 358 } } ) ) ) ) )
-        ( Assign
-         ( Meta
-          { meta = [ AnyT ] :-> SumT
-           [ Con Tuple [] ], id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 372 } } )
-         ( Let
-          [ LocalDef
-           { _variable = Meta
-            { meta = [ AnyT ] :-> SumT
-             [ Con Tuple [] ], id = Id
-             { name = "fun", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 371 } }, typ = [ AnyT ] :-> SumT
-            [ Con Tuple [] ], _object = Fun
-            [ Meta
-             { meta = AnyT, id = Id
-              { name = "left", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 360 } } ]
-            ( Match
-             ( Cast
-              ( SumT
-               [ Con
-                ( Data "test/testcases/malgo/TestEither.mlg.Left" ) [ AnyT ], Con
-                ( Data "test/testcases/malgo/TestEither.mlg.Right" ) [ AnyT ] ] )
-              ( Var
-               ( Meta
-                { meta = AnyT, id = Id
-                 { name = "left", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 360 } } ) ) )
-             [ Unpack
-              ( Con
-               ( Data "test/testcases/malgo/TestEither.mlg.Left" ) [ AnyT ] )
-              [ Meta
-               { meta = AnyT, id = Id
-                { name = "p", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 361 } } ]
-              ( Assign
-               ( Meta
-                { meta = SumT
-                 [ Con Tuple [] ], id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 362 } } )
-               ( Call
-                ( Var
-                 ( Meta
-                  { meta = [ AnyT ] :-> SumT
-                   [ Con Tuple [] ], id = Id
-                   { name = "putStrLn", moduleName = Artifact
-                    ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
-                [ Var
-                 ( Meta
-                  { meta = AnyT, id = Id
-                   { name = "p", moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 361 } } ) ] )
-               ( Cast
-                ( SumT [ Con Tuple [] ] )
-                ( Var
-                 ( Meta
-                  { meta = SumT
-                   [ Con Tuple [] ], id = Id
-                   { name = "d", moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 362 } } ) ) ) ), Unpack
-              ( Con
-               ( Data "test/testcases/malgo/TestEither.mlg.Right" ) [ AnyT ] )
-              [ Meta
-               { meta = AnyT, id = Id
-                { name = "p", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 363 } } ]
-              ( Assign
-               ( Meta
-                { meta =
-                 [ [ AnyT ] :-> SumT [ Con Tuple [] ] ] :-> SumT
-                 [ Con Tuple [] ], id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 369 } } )
-               ( Assign
-                ( Meta
-                 { meta = AnyT, id = Id
-                  { name = "d", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 367 } } )
-                ( Assign
-                 ( Meta
-                  { meta =
-                   [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-                   { name = "d", moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 365 } } )
-                 ( Assign
-                  ( Meta
-                   { meta =
-                    [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-                    { name = "d", moduleName = Artifact
-                     ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 364 } } )
-                  ( Call
-                   ( Var
-                    ( Meta
-                     { meta = [ AnyT ] :->
-                      ( [ [ AnyT ] :-> AnyT ] :-> AnyT ), id = Id
-                      { name = "|>", moduleName = Artifact
-                       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
-                   [ Var
-                    ( Meta
-                     { meta = AnyT, id = Id
-                      { name = "p", moduleName = Artifact
-                       ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 363 } } ) ] )
-                  ( Cast
-                   ( [ [ AnyT ] :-> AnyT ] :-> AnyT )
-                   ( Var
-                    ( Meta
-                     { meta =
-                      [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-                      { name = "d", moduleName = Artifact
-                       ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 364 } } ) ) ) )
-                 ( Assign
-                  ( Meta
-                   { meta = AnyT, id = Id
-                    { name = "d", moduleName = Artifact
-                     ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 366 } } )
-                  ( Call
-                   ( Var
-                    ( Meta
-                     { meta =
-                      [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-                      { name = "d", moduleName = Artifact
-                       ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 365 } } ) )
-                   [ Var
-                    ( Meta
-                     { meta = [ AnyT ] :-> AnyT, id = Id
-                      { name = "toStringInt32", moduleName = Artifact
-                       ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) ] )
-                  ( Cast AnyT
-                   ( Var
-                    ( Meta
-                     { meta = AnyT, id = Id
-                      { name = "d", moduleName = Artifact
-                       ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 366 } } ) ) ) ) )
-                ( Assign
-                 ( Meta
-                  { meta =
-                   [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-                   { name = "d", moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 368 } } )
-                 ( Call
-                  ( Var
-                   ( Meta
-                    { meta = [ AnyT ] :->
-                     ( [ [ AnyT ] :-> AnyT ] :-> AnyT ), id = Id
-                     { name = "|>", moduleName = Artifact
-                      ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
-                  [ Var
-                   ( Meta
-                    { meta = AnyT, id = Id
-                     { name = "d", moduleName = Artifact
-                      ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 367 } } ) ] )
-                 ( Cast
-                  (
-                   [ [ AnyT ] :-> SumT [ Con Tuple [] ] ] :-> SumT
-                   [ Con Tuple [] ] )
-                  ( Var
-                   ( Meta
-                    { meta =
-                     [ [ AnyT ] :-> AnyT ] :-> AnyT, id = Id
-                     { name = "d", moduleName = Artifact
-                      ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 368 } } ) ) ) ) )
-               ( Assign
-                ( Meta
-                 { meta = SumT
-                  [ Con Tuple [] ], id = Id
-                  { name = "d", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 370 } } )
-                ( Call
-                 ( Var
-                  ( Meta
-                   { meta =
-                    [ [ AnyT ] :-> SumT [ Con Tuple [] ] ] :-> SumT
-                    [ Con Tuple [] ], id = Id
-                    { name = "d", moduleName = Artifact
-                     ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 369 } } ) )
-                 [ Var
-                  ( Meta
-                   { meta = [ AnyT ] :-> SumT
-                    [ Con Tuple [] ], id = Id
-                    { name = "putStrLn", moduleName = Artifact
-                     ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) ] )
-                ( Cast
-                 ( SumT [ Con Tuple [] ] )
-                 ( Var
-                  ( Meta
-                   { meta = SumT
-                    [ Con Tuple [] ], id = Id
-                    { name = "d", moduleName = Artifact
-                     ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 370 } } ) ) ) ) ) ] ) } ]
-          ( Atom
-           ( Var
-            ( Meta
-             { meta = [ AnyT ] :-> SumT
-              [ Con Tuple [] ], id = Id
-              { name = "fun", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 371 } } ) ) ) )
-         ( Assign
-          ( Meta
-           { meta = SumT
-            [ Con Tuple [] ], id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 373 } } )
-          ( Call
-           ( Var
-            ( Meta
-             { meta =
-              [ [ AnyT ] :-> SumT [ Con Tuple [] ] ] :-> SumT
-              [ Con Tuple [] ], id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 359 } } ) )
-           [ Var
-            ( Meta
-             { meta = [ AnyT ] :-> SumT
-              [ Con Tuple [] ], id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 372 } } ) ] )
-          ( Cast
-           ( SumT [ Con Tuple [] ] )
-           ( Var
-            ( Meta
-             { meta = SumT
-              [ Con Tuple [] ], id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Temporal 373 } } ) ) ) ) ) ) ) ] ) ) ], extFuns = [] }
+(()
+   ((define
+      ($TestEither.andThen_curry_260 $TestEither.__261 $TestEither.left_262)
+      (->
+         ((->
+            (Any#)
+            Any#)
+            Any#)
+         Any#)
+      (match
+         (cast
+            (sum
+               (con test/testcases/malgo/TestEither.mlg.Left Any#)
+               (con test/testcases/malgo/TestEither.mlg.Right Any#))
+            $TestEither.left_262)
+         (unpack
+            (con test/testcases/malgo/TestEither.mlg.Left Any#)
+            ($TestEither.p_263)
+            (=
+               $TestEither.d_264
+               (call Left $TestEither.p_263)
+               (cast Any# $TestEither.d_264)))
+         (unpack
+            (con test/testcases/malgo/TestEither.mlg.Right Any#)
+            ($TestEither.p_265)
+            (=
+               $TestEither.d_266
+               (call $TestEither.__261 $TestEither.p_265)
+               (cast Any# $TestEither.d_266)))))
+      (define
+         (Left $TestEither.p_249)
+         (->
+            (Any#)
+            Any#)
+         (let
+            (($TestEither.let_250
+               (sum
+                  (con test/testcases/malgo/TestEither.mlg.Left Any#)
+                  (con test/testcases/malgo/TestEither.mlg.Right Any#))
+               (pack
+                  (sum
+                     (con test/testcases/malgo/TestEither.mlg.Left Any#)
+                     (con test/testcases/malgo/TestEither.mlg.Right Any#))
+                  (con test/testcases/malgo/TestEither.mlg.Left Any#)
+                  $TestEither.p_249)))
+            (cast Any# $TestEither.let_250)))
+      (define
+         (Right $TestEither.p_251)
+         (->
+            (Any#)
+            Any#)
+         (let
+            (($TestEither.let_252
+               (sum
+                  (con test/testcases/malgo/TestEither.mlg.Left Any#)
+                  (con test/testcases/malgo/TestEither.mlg.Right Any#))
+               (pack
+                  (sum
+                     (con test/testcases/malgo/TestEither.mlg.Left Any#)
+                     (con test/testcases/malgo/TestEither.mlg.Right Any#))
+                  (con test/testcases/malgo/TestEither.mlg.Right Any#)
+                  $TestEither.p_251)))
+            (cast Any# $TestEither.let_252)))
+      (define
+         (id $TestEither.x_253)
+         (->
+            (Any#)
+            Any#)
+         $TestEither.x_253)
+      (define
+         (andThen $TestEither.__254)
+         (->
+            ((->
+               (Any#)
+               Any#))
+            (->
+               (Any#)
+               Any#))
+         (let
+            (($TestEither.let_267
+               (->
+                  (Any#)
+                  Any#)
+               (fun
+                  ($TestEither.left_255)
+                  (direct $TestEither.andThen_curry_260 $TestEither.__254 $TestEither.left_255))))
+            $TestEither.let_267))
+      (define
+         (main $TestEither.$__268)
+         (->
+            ((sum
+               (con Tuple#)))
+            (sum
+               (con Tuple#)))
+         (=
+            $TestEither.d_287
+            (=
+               $TestEither.d_274
+               (=
+                  $TestEither.d_272
+                  (=
+                     $TestEither.d_270
+                     (=
+                        $TestEither.d_269
+                        (call Int32# 1_i32)
+                        (cast Any# $TestEither.d_269))
+                     (=
+                        $TestEither.d_271
+                        (call Right $TestEither.d_270)
+                        (cast Any# $TestEither.d_271)))
+                  (=
+                     $TestEither.d_273
+                     (call |> $TestEither.d_272)
+                     (cast
+                        (->
+                           ((->
+                              (Any#)
+                              (sum
+                                 (con Tuple#))))
+                           (sum
+                              (con Tuple#)))
+                        $TestEither.d_273)))
+               (=
+                  $TestEither.d_285
+                  (let
+                     (($TestEither.fun_284
+                        (->
+                           (Any#)
+                           (sum
+                              (con Tuple#)))
+                        (fun
+                           ($TestEither.right_275)
+                           (match
+                              (cast
+                                 (sum
+                                    (con test/testcases/malgo/TestEither.mlg.Left Any#)
+                                    (con test/testcases/malgo/TestEither.mlg.Right Any#))
+                                 $TestEither.right_275)
+                              (unpack
+                                 (con test/testcases/malgo/TestEither.mlg.Left Any#)
+                                 ($TestEither.p_279)
+                                 (=
+                                    $TestEither.d_277
+                                    (=
+                                       $TestEither.d_276
+                                       (call String# "unreachable")
+                                       (cast Any# $TestEither.d_276))
+                                    (=
+                                       $TestEither.d_278
+                                       (call putStrLn $TestEither.d_277)
+                                       (cast
+                                          (sum
+                                             (con Tuple#))
+                                          $TestEither.d_278))))
+                              (unpack
+                                 (con test/testcases/malgo/TestEither.mlg.Right Any#)
+                                 ($TestEither.p_280)
+                                 (=
+                                    $TestEither.d_282
+                                    (=
+                                       $TestEither.d_281
+                                       (call toStringInt32 $TestEither.p_280)
+                                       (cast Any# $TestEither.d_281))
+                                    (=
+                                       $TestEither.d_283
+                                       (call putStr $TestEither.d_282)
+                                       (cast
+                                          (sum
+                                             (con Tuple#))
+                                          $TestEither.d_283))))))))
+                     $TestEither.fun_284)
+                  (=
+                     $TestEither.d_286
+                     (call $TestEither.d_274 $TestEither.d_285)
+                     (cast
+                        (sum
+                           (con Tuple#))
+                        $TestEither.d_286))))
+            (match
+               (=
+                  $TestEither.d_289
+                  (=
+                     $TestEither.d_288
+                     (call Int32# 1_i32)
+                     (cast Any# $TestEither.d_288))
+                  (=
+                     $TestEither.d_290
+                     (call Right $TestEither.d_289)
+                     (cast Any# $TestEither.d_290)))
+               (bind
+                  $TestEither.let_test/testcases/malgo/TestEither.mlg.#x_9_291
+                  Any#
+                  (=
+                     $TestEither.d_329
+                     (=
+                        $TestEither.d_309
+                        (=
+                           $TestEither.d_307
+                           (=
+                              $TestEither.d_293
+                              (=
+                                 $TestEither.d_292
+                                 (call |> $TestEither.let_test/testcases/malgo/TestEither.mlg.#x_9_291)
+                                 (cast
+                                    (->
+                                       ((->
+                                          (Any#)
+                                          Any#))
+                                       Any#)
+                                    $TestEither.d_292))
+                              (=
+                                 $TestEither.d_305
+                                 (=
+                                    $TestEither.d_303
+                                    (let
+                                       (($TestEither.fun_302
+                                          (->
+                                             (Any#)
+                                             Any#)
+                                          (fun
+                                             ($TestEither.x_294)
+                                             (=
+                                                $TestEither.d_300
+                                                (=
+                                                   $TestEither.d_296
+                                                   (=
+                                                      $TestEither.d_295
+                                                      (call addInt32 $TestEither.x_294)
+                                                      (cast
+                                                         (->
+                                                            (Any#)
+                                                            Any#)
+                                                         $TestEither.d_295))
+                                                   (=
+                                                      $TestEither.d_298
+                                                      (=
+                                                         $TestEither.d_297
+                                                         (call Int32# 1_i32)
+                                                         (cast Any# $TestEither.d_297))
+                                                      (=
+                                                         $TestEither.d_299
+                                                         (call $TestEither.d_296 $TestEither.d_298)
+                                                         (cast Any# $TestEither.d_299))))
+                                                (=
+                                                   $TestEither.d_301
+                                                   (call Right $TestEither.d_300)
+                                                   (cast Any# $TestEither.d_301))))))
+                                       $TestEither.fun_302)
+                                    (=
+                                       $TestEither.d_304
+                                       (call andThen $TestEither.d_303)
+                                       (cast
+                                          (->
+                                             (Any#)
+                                             Any#)
+                                          $TestEither.d_304)))
+                                 (=
+                                    $TestEither.d_306
+                                    (call $TestEither.d_293 $TestEither.d_305)
+                                    (cast Any# $TestEither.d_306))))
+                           (=
+                              $TestEither.d_308
+                              (call |> $TestEither.d_307)
+                              (cast
+                                 (->
+                                    ((->
+                                       (Any#)
+                                       Any#))
+                                    Any#)
+                                 $TestEither.d_308)))
+                        (=
+                           $TestEither.d_327
+                           (=
+                              $TestEither.d_325
+                              (let
+                                 (($TestEither.fun_324
+                                    (->
+                                       (Any#)
+                                       Any#)
+                                    (fun
+                                       ($TestEither.y_310)
+                                       (=
+                                          $TestEither.d_321
+                                          (=
+                                             $TestEither.d_318
+                                             (=
+                                                $TestEither.d_316
+                                                (=
+                                                   $TestEither.d_314
+                                                   (=
+                                                      $TestEither.d_312
+                                                      (=
+                                                         $TestEither.d_311
+                                                         (call |> $TestEither.y_310)
+                                                         (cast
+                                                            (->
+                                                               ((->
+                                                                  (Any#)
+                                                                  Any#))
+                                                               Any#)
+                                                            $TestEither.d_311))
+                                                      (=
+                                                         $TestEither.d_313
+                                                         (call $TestEither.d_312 toStringInt32)
+                                                         (cast Any# $TestEither.d_313)))
+                                                   (=
+                                                      $TestEither.d_315
+                                                      (call |> $TestEither.d_314)
+                                                      (cast
+                                                         (->
+                                                            ((->
+                                                               (Any#)
+                                                               (sum
+                                                                  (con Tuple#))))
+                                                            (sum
+                                                               (con Tuple#)))
+                                                         $TestEither.d_315)))
+                                                (=
+                                                   $TestEither.d_317
+                                                   (call $TestEither.d_316 putStr)
+                                                   (cast
+                                                      (sum
+                                                         (con Tuple#))
+                                                      $TestEither.d_317)))
+                                             (=
+                                                $TestEither.cast_319
+                                                (cast Any# $TestEither.d_318)
+                                                (=
+                                                   $TestEither.d_320
+                                                   (call |> $TestEither.cast_319)
+                                                   (cast
+                                                      (->
+                                                         ((->
+                                                            ((sum
+                                                               (con Tuple#)))
+                                                            Any#))
+                                                         Any#)
+                                                      $TestEither.d_320))))
+                                          (=
+                                             $TestEither.cast_322
+                                             (cast
+                                                (->
+                                                   ((sum
+                                                      (con Tuple#)))
+                                                   Any#)
+                                                Right)
+                                             (=
+                                                $TestEither.d_323
+                                                (call $TestEither.d_321 $TestEither.cast_322)
+                                                (cast Any# $TestEither.d_323)))))))
+                                 $TestEither.fun_324)
+                              (=
+                                 $TestEither.d_326
+                                 (call andThen $TestEither.d_325)
+                                 (cast
+                                    (->
+                                       (Any#)
+                                       Any#)
+                                    $TestEither.d_326)))
+                           (=
+                              $TestEither.d_328
+                              (call $TestEither.d_309 $TestEither.d_327)
+                              (cast Any# $TestEither.d_328))))
+                     (=
+                        $TestEither.d_359
+                        (=
+                           $TestEither.d_357
+                           (=
+                              $TestEither.d_343
+                              (=
+                                 $TestEither.d_341
+                                 (=
+                                    $TestEither.d_331
+                                    (=
+                                       $TestEither.d_330
+                                       (call |> $TestEither.let_test/testcases/malgo/TestEither.mlg.#x_9_291)
+                                       (cast
+                                          (->
+                                             ((->
+                                                (Any#)
+                                                Any#))
+                                             Any#)
+                                          $TestEither.d_330))
+                                    (=
+                                       $TestEither.d_339
+                                       (=
+                                          $TestEither.d_337
+                                          (let
+                                             (($TestEither.fun_336
+                                                (->
+                                                   (Any#)
+                                                   Any#)
+                                                (fun
+                                                   ($TestEither.__332)
+                                                   (=
+                                                      $TestEither.d_334
+                                                      (=
+                                                         $TestEither.d_333
+                                                         (call String# "error")
+                                                         (cast Any# $TestEither.d_333))
+                                                      (=
+                                                         $TestEither.d_335
+                                                         (call Left $TestEither.d_334)
+                                                         (cast Any# $TestEither.d_335))))))
+                                             $TestEither.fun_336)
+                                          (=
+                                             $TestEither.d_338
+                                             (call andThen $TestEither.d_337)
+                                             (cast
+                                                (->
+                                                   (Any#)
+                                                   Any#)
+                                                $TestEither.d_338)))
+                                       (=
+                                          $TestEither.d_340
+                                          (call $TestEither.d_331 $TestEither.d_339)
+                                          (cast Any# $TestEither.d_340))))
+                                 (=
+                                    $TestEither.d_342
+                                    (call |> $TestEither.d_341)
+                                    (cast
+                                       (->
+                                          ((->
+                                             (Any#)
+                                             Any#))
+                                          Any#)
+                                       $TestEither.d_342)))
+                              (=
+                                 $TestEither.d_355
+                                 (=
+                                    $TestEither.d_353
+                                    (let
+                                       (($TestEither.fun_352
+                                          (->
+                                             (Any#)
+                                             Any#)
+                                          (fun
+                                             ($TestEither.x_344)
+                                             (=
+                                                $TestEither.d_350
+                                                (=
+                                                   $TestEither.d_346
+                                                   (=
+                                                      $TestEither.d_345
+                                                      (call addInt32 $TestEither.x_344)
+                                                      (cast
+                                                         (->
+                                                            (Any#)
+                                                            Any#)
+                                                         $TestEither.d_345))
+                                                   (=
+                                                      $TestEither.d_348
+                                                      (=
+                                                         $TestEither.d_347
+                                                         (call Int32# 1_i32)
+                                                         (cast Any# $TestEither.d_347))
+                                                      (=
+                                                         $TestEither.d_349
+                                                         (call $TestEither.d_346 $TestEither.d_348)
+                                                         (cast Any# $TestEither.d_349))))
+                                                (=
+                                                   $TestEither.d_351
+                                                   (call Right $TestEither.d_350)
+                                                   (cast Any# $TestEither.d_351))))))
+                                       $TestEither.fun_352)
+                                    (=
+                                       $TestEither.d_354
+                                       (call andThen $TestEither.d_353)
+                                       (cast
+                                          (->
+                                             (Any#)
+                                             Any#)
+                                          $TestEither.d_354)))
+                                 (=
+                                    $TestEither.d_356
+                                    (call $TestEither.d_343 $TestEither.d_355)
+                                    (cast Any# $TestEither.d_356))))
+                           (=
+                              $TestEither.d_358
+                              (call |> $TestEither.d_357)
+                              (cast
+                                 (->
+                                    ((->
+                                       (Any#)
+                                       (sum
+                                          (con Tuple#))))
+                                    (sum
+                                       (con Tuple#)))
+                                 $TestEither.d_358)))
+                        (=
+                           $TestEither.d_372
+                           (let
+                              (($TestEither.fun_371
+                                 (->
+                                    (Any#)
+                                    (sum
+                                       (con Tuple#)))
+                                 (fun
+                                    ($TestEither.left_360)
+                                    (match
+                                       (cast
+                                          (sum
+                                             (con test/testcases/malgo/TestEither.mlg.Left Any#)
+                                             (con test/testcases/malgo/TestEither.mlg.Right Any#))
+                                          $TestEither.left_360)
+                                       (unpack
+                                          (con test/testcases/malgo/TestEither.mlg.Left Any#)
+                                          ($TestEither.p_361)
+                                          (=
+                                             $TestEither.d_362
+                                             (call putStrLn $TestEither.p_361)
+                                             (cast
+                                                (sum
+                                                   (con Tuple#))
+                                                $TestEither.d_362)))
+                                       (unpack
+                                          (con test/testcases/malgo/TestEither.mlg.Right Any#)
+                                          ($TestEither.p_363)
+                                          (=
+                                             $TestEither.d_369
+                                             (=
+                                                $TestEither.d_367
+                                                (=
+                                                   $TestEither.d_365
+                                                   (=
+                                                      $TestEither.d_364
+                                                      (call |> $TestEither.p_363)
+                                                      (cast
+                                                         (->
+                                                            ((->
+                                                               (Any#)
+                                                               Any#))
+                                                            Any#)
+                                                         $TestEither.d_364))
+                                                   (=
+                                                      $TestEither.d_366
+                                                      (call $TestEither.d_365 toStringInt32)
+                                                      (cast Any# $TestEither.d_366)))
+                                                (=
+                                                   $TestEither.d_368
+                                                   (call |> $TestEither.d_367)
+                                                   (cast
+                                                      (->
+                                                         ((->
+                                                            (Any#)
+                                                            (sum
+                                                               (con Tuple#))))
+                                                         (sum
+                                                            (con Tuple#)))
+                                                      $TestEither.d_368)))
+                                             (=
+                                                $TestEither.d_370
+                                                (call $TestEither.d_369 putStrLn)
+                                                (cast
+                                                   (sum
+                                                      (con Tuple#))
+                                                   $TestEither.d_370))))))))
+                              $TestEither.fun_371)
+                           (=
+                              $TestEither.d_373
+                              (call $TestEither.d_359 $TestEither.d_372)
+                              (cast
+                                 (sum
+                                    (con Tuple#))
+                                 $TestEither.d_373))))))))))
+   ())

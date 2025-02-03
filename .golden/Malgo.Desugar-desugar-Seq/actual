@@ -1,297 +1,88 @@
-Program
- { topVars =
-  [
-   ( Meta
-    { meta = AnyT, id = Id
-     { name = "executeWhenLoaded", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = External } }, AnyT, Assign
-    ( Meta
-     { meta = AnyT, id = Id
-      { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 42 } } )
-    ( Match
-     ( Assign
-      ( Meta
-       { meta = AnyT, id = Id
-        { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 27 } } )
-      ( Call
-       ( Var
-        ( Meta
-         { meta = [ Int32T ] :-> AnyT, id = Id
-          { name = "Int32#", moduleName = Artifact
-           ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-       [ Unboxed ( Int32 1 ) ] )
-      ( Cast AnyT
-       ( Var
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 27 } } ) ) ) )
-     [ Bind
-      ( Meta
-       { meta = AnyT, id = Id
-        { name = "let_test/testcases/malgo/Seq.mlg.#x_0", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 28 } } ) AnyT
-      ( Match
-       ( Assign
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 29 } } )
-        ( Call
-         ( Var
-          ( Meta
-           { meta = [ Int32T ] :-> AnyT, id = Id
-            { name = "Int32#", moduleName = Artifact
-             ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-         [ Unboxed ( Int32 2 ) ] )
-        ( Cast AnyT
-         ( Var
-          ( Meta
-           { meta = AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 29 } } ) ) ) )
-       [ Bind
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "let_test/testcases/malgo/Seq.mlg.#y_1", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 30 } } ) AnyT
-        ( Assign
-         ( Meta
-          { meta = SumT
-           [ Con Tuple [] ], id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 38 } } )
-         ( Assign
-          ( Meta
-           { meta = AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 36 } } )
-          ( Assign
-           ( Meta
-            { meta = AnyT, id = Id
-             { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 34 } } )
-           ( Assign
-            ( Meta
-             { meta = [ AnyT ] :-> AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 32 } } )
-            ( Assign
-             ( Meta
-              { meta = [ AnyT ] :-> AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 31 } } )
-             ( Call
-              ( Var
-               ( Meta
-                { meta = [ AnyT ] :->
-                 ( [ AnyT ] :-> AnyT ), id = Id
-                 { name = "addInt32", moduleName = Artifact
-                  ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-              [ Var
-               ( Meta
-                { meta = AnyT, id = Id
-                 { name = "let_test/testcases/malgo/Seq.mlg.#x_0", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 28 } } ) ] )
-             ( Cast
-              ( [ AnyT ] :-> AnyT )
-              ( Var
-               ( Meta
-                { meta = [ AnyT ] :-> AnyT, id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 31 } } ) ) ) )
-            ( Assign
-             ( Meta
-              { meta = AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 33 } } )
-             ( Call
-              ( Var
-               ( Meta
-                { meta = [ AnyT ] :-> AnyT, id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 32 } } ) )
-              [ Var
-               ( Meta
-                { meta = AnyT, id = Id
-                 { name = "let_test/testcases/malgo/Seq.mlg.#y_1", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 30 } } ) ] )
-             ( Cast AnyT
-              ( Var
-               ( Meta
-                { meta = AnyT, id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 33 } } ) ) ) ) )
-           ( Assign
-            ( Meta
-             { meta = AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 35 } } )
-            ( Call
-             ( Var
-              ( Meta
-               { meta = [ AnyT ] :-> AnyT, id = Id
-                { name = "toStringInt32", moduleName = Artifact
-                 ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-             [ Var
-              ( Meta
-               { meta = AnyT, id = Id
-                { name = "d", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 34 } } ) ] )
-            ( Cast AnyT
-             ( Var
-              ( Meta
-               { meta = AnyT, id = Id
-                { name = "d", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 35 } } ) ) ) ) )
-          ( Assign
-           ( Meta
-            { meta = SumT
-             [ Con Tuple [] ], id = Id
-             { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 37 } } )
-           ( Call
-            ( Var
-             ( Meta
-              { meta = [ AnyT ] :-> SumT
-               [ Con Tuple [] ], id = Id
-               { name = "printString", moduleName = Artifact
-                ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-            [ Var
-             ( Meta
-              { meta = AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 36 } } ) ] )
-           ( Cast
-            ( SumT [ Con Tuple [] ] )
-            ( Var
-             ( Meta
-              { meta = SumT
-               [ Con Tuple [] ], id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 37 } } ) ) ) ) )
-         ( Assign
-          ( Meta
-           { meta = [ AnyT ] :-> AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 40 } } )
-          ( Assign
-           ( Meta
-            { meta = [ AnyT ] :-> AnyT, id = Id
-             { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 39 } } )
-           ( Call
-            ( Var
-             ( Meta
-              { meta = [ AnyT ] :->
-               ( [ AnyT ] :-> AnyT ), id = Id
-               { name = "addInt32", moduleName = Artifact
-                ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-            [ Var
-             ( Meta
-              { meta = AnyT, id = Id
-               { name = "let_test/testcases/malgo/Seq.mlg.#x_0", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 28 } } ) ] )
-           ( Cast
-            ( [ AnyT ] :-> AnyT )
-            ( Var
-             ( Meta
-              { meta = [ AnyT ] :-> AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 39 } } ) ) ) )
-          ( Assign
-           ( Meta
-            { meta = AnyT, id = Id
-             { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 41 } } )
-           ( Call
-            ( Var
-             ( Meta
-              { meta = [ AnyT ] :-> AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 40 } } ) )
-            [ Var
-             ( Meta
-              { meta = AnyT, id = Id
-               { name = "let_test/testcases/malgo/Seq.mlg.#y_1", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 30 } } ) ] )
-           ( Cast AnyT
-            ( Var
-             ( Meta
-              { meta = AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 41 } } ) ) ) ) ) ) ] ) ] )
-    ( Atom
-     ( Var
-      ( Meta
-       { meta = AnyT, id = Id
-        { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 42 } } ) ) ) ) ], topFuns =
-  [
-   ( Meta
-    { meta =
-     [ SumT [ Con Tuple [] ] ] :-> SumT
-     [ Con Tuple [] ], id = Id
-     { name = "main", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = External } },
-    [ Meta
-     { meta = SumT
-      [ Con Tuple [] ], id = Id
-      { name = "$_", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 43 } } ],
-    [ SumT [ Con Tuple [] ] ] :-> SumT
-    [ Con Tuple [] ], Assign
-    ( Meta
-     { meta = AnyT, id = Id
-      { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 45 } } )
-    ( Assign
-     ( Meta
-      { meta = AnyT, id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 44 } } )
-     ( Call
-      ( Var
-       ( Meta
-        { meta = [ AnyT ] :-> AnyT, id = Id
-         { name = "toStringInt32", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-      [ Var
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "executeWhenLoaded", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = External } } ) ] )
-     ( Cast AnyT
-      ( Var
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 44 } } ) ) ) )
-    ( Assign
-     ( Meta
-      { meta = SumT
-       [ Con Tuple [] ], id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 46 } } )
-     ( Call
-      ( Var
-       ( Meta
-        { meta = [ AnyT ] :-> SumT
-         [ Con Tuple [] ], id = Id
-         { name = "printString", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-      [ Var
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 45 } } ) ] )
-     ( Cast
-      ( SumT [ Con Tuple [] ] )
-      ( Var
-       ( Meta
-        { meta = SumT
-         [ Con Tuple [] ], id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Seq.mlg" ), sort = Temporal 46 } } ) ) ) ) ) ], extFuns = [] }
+(((define
+   executeWhenLoaded
+   Any#
+   (=
+      $Seq.d_42
+      (match
+         (=
+            $Seq.d_27
+            (call Int32# 1_i32)
+            (cast Any# $Seq.d_27))
+         (bind
+            $Seq.let_test/testcases/malgo/Seq.mlg.#x_0_28
+            Any#
+            (match
+               (=
+                  $Seq.d_29
+                  (call Int32# 2_i32)
+                  (cast Any# $Seq.d_29))
+               (bind
+                  $Seq.let_test/testcases/malgo/Seq.mlg.#y_1_30
+                  Any#
+                  (=
+                     $Seq.d_38
+                     (=
+                        $Seq.d_36
+                        (=
+                           $Seq.d_34
+                           (=
+                              $Seq.d_32
+                              (=
+                                 $Seq.d_31
+                                 (call addInt32 $Seq.let_test/testcases/malgo/Seq.mlg.#x_0_28)
+                                 (cast
+                                    (->
+                                       (Any#)
+                                       Any#)
+                                    $Seq.d_31))
+                              (=
+                                 $Seq.d_33
+                                 (call $Seq.d_32 $Seq.let_test/testcases/malgo/Seq.mlg.#y_1_30)
+                                 (cast Any# $Seq.d_33)))
+                           (=
+                              $Seq.d_35
+                              (call toStringInt32 $Seq.d_34)
+                              (cast Any# $Seq.d_35)))
+                        (=
+                           $Seq.d_37
+                           (call printString $Seq.d_36)
+                           (cast
+                              (sum
+                                 (con Tuple#))
+                              $Seq.d_37)))
+                     (=
+                        $Seq.d_40
+                        (=
+                           $Seq.d_39
+                           (call addInt32 $Seq.let_test/testcases/malgo/Seq.mlg.#x_0_28)
+                           (cast
+                              (->
+                                 (Any#)
+                                 Any#)
+                              $Seq.d_39))
+                        (=
+                           $Seq.d_41
+                           (call $Seq.d_40 $Seq.let_test/testcases/malgo/Seq.mlg.#y_1_30)
+                           (cast Any# $Seq.d_41))))))))
+      $Seq.d_42)))
+   ((define
+      (main $Seq.$__43)
+      (->
+         ((sum
+            (con Tuple#)))
+         (sum
+            (con Tuple#)))
+      (=
+         $Seq.d_45
+         (=
+            $Seq.d_44
+            (call toStringInt32 executeWhenLoaded)
+            (cast Any# $Seq.d_44))
+         (=
+            $Seq.d_46
+            (call printString $Seq.d_45)
+            (cast
+               (sum
+                  (con Tuple#))
+               $Seq.d_46)))))
+   ())

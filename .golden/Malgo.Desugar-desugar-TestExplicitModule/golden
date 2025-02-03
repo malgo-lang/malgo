@@ -1,64 +1,22 @@
-Program
- { topVars = [], topFuns =
-  [
-   ( Meta
-    { meta =
-     [ SumT [ Con Tuple [] ] ] :-> SumT
-     [ Con Tuple [] ], id = Id
-     { name = "main", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TestExplicitModule.mlg" ), sort = External } },
-    [ Meta
-     { meta = SumT
-      [ Con Tuple [] ], id = Id
-      { name = "$_", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestExplicitModule.mlg" ), sort = Temporal 7 } } ],
-    [ SumT [ Con Tuple [] ] ] :-> SumT
-    [ Con Tuple [] ], Assign
-    ( Meta
-     { meta = AnyT, id = Id
-      { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestExplicitModule.mlg" ), sort = Temporal 9 } } )
-    ( Assign
-     ( Meta
-      { meta = AnyT, id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestExplicitModule.mlg" ), sort = Temporal 8 } } )
-     ( Call
-      ( Var
-       ( Meta
-        { meta = [ StringT ] :-> AnyT, id = Id
-         { name = "String#", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-      [ Unboxed ( String "Hello, world" ) ] )
-     ( Cast AnyT
-      ( Var
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestExplicitModule.mlg" ), sort = Temporal 8 } } ) ) ) )
-    ( Assign
-     ( Meta
-      { meta = SumT
-       [ Con Tuple [] ], id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestExplicitModule.mlg" ), sort = Temporal 10 } } )
-     ( Call
-      ( Var
-       ( Meta
-        { meta = [ AnyT ] :-> SumT
-         [ Con Tuple [] ], id = Id
-         { name = "putStrLn", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
-      [ Var
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestExplicitModule.mlg" ), sort = Temporal 9 } } ) ] )
-     ( Cast
-      ( SumT [ Con Tuple [] ] )
-      ( Var
-       ( Meta
-        { meta = SumT
-         [ Con Tuple [] ], id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestExplicitModule.mlg" ), sort = Temporal 10 } } ) ) ) ) ) ], extFuns = [] }
+(()
+   ((define
+      (main $TestExplicitModule.$__7)
+      (->
+         ((sum
+            (con Tuple#)))
+         (sum
+            (con Tuple#)))
+      (=
+         $TestExplicitModule.d_9
+         (=
+            $TestExplicitModule.d_8
+            (call String# "Hello, world")
+            (cast Any# $TestExplicitModule.d_8))
+         (=
+            $TestExplicitModule.d_10
+            (call putStrLn $TestExplicitModule.d_9)
+            (cast
+               (sum
+                  (con Tuple#))
+               $TestExplicitModule.d_10)))))
+   ())

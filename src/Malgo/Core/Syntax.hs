@@ -36,6 +36,7 @@ import Data.Aeson (FromJSON, ToJSON)
 import Data.Data (Data)
 import Data.Graph
 import Data.Map.Strict qualified as Map
+import Data.SCargot.Repr.Basic qualified as S
 import Data.Set qualified as Set
 import Data.Store.TH
 import Data.String.Conversions
@@ -50,6 +51,7 @@ import Malgo.Id
 import Malgo.Module
 import Malgo.MonadUniq
 import Malgo.Prelude
+import Malgo.SExpr qualified as S
 import Numeric (showHex)
 
 -- | toplevel function definitions
@@ -81,6 +83,18 @@ instance (Pretty a, Ord a) => Pretty (Program a) where
           ["; externals"],
           map (\(f, t) -> parens $ sep ["extern", "%" <> pretty f, pretty t]) extFuns
         ]
+
+instance (S.ToSExpr a) => S.ToSExpr (Program a) where
+  toSExpr Program {..} =
+    S.L
+      [ S.L $ map topVar topVars,
+        S.L $ map topFun topFuns,
+        S.L $ map extFun extFuns
+      ]
+    where
+      topVar (v, t, e) = S.L ["define", S.toSExpr v, S.toSExpr t, S.toSExpr e]
+      topFun (f, ps, t, e) = S.L ["define", S.L $ S.toSExpr f : map S.toSExpr ps, S.toSExpr t, S.toSExpr e]
+      extFun (f, t) = S.L ["extern", S.A $ S.Symbol f, S.toSExpr t]
 
 instance HasExpr Program where
   expr f Program {..} =
@@ -234,6 +248,21 @@ instance (Pretty a) => Pretty (Expr a) where
   pretty (Assign x v e) = parens $ vsep ["=" <+> pretty x <+> pretty v, pretty e]
   pretty (Error t) = parens $ "ERROR" <+> pretty t
 
+instance (S.ToSExpr a) => S.ToSExpr (Expr a) where
+  toSExpr (Atom atom) = S.toSExpr atom
+  toSExpr (Call f xs) = S.L $ S.A (S.Symbol "call") : S.toSExpr f : map S.toSExpr xs
+  toSExpr (CallDirect f xs) = S.L $ S.A (S.Symbol "direct") : S.toSExpr f : map S.toSExpr xs
+  toSExpr (RawCall p t xs) = S.L $ S.A (S.Symbol "raw") : S.toSExpr p : S.toSExpr t : map S.toSExpr xs
+  toSExpr (Cast ty x) = S.L [S.A $ S.Symbol "cast", S.toSExpr ty, S.toSExpr x]
+  toSExpr (Let xs e) = S.L $ S.A (S.Symbol "let") : S.L (map S.toSExpr xs) : [S.toSExpr e]
+  toSExpr (Match e cs) = S.L $ S.A (S.Symbol "match") : S.toSExpr e : map S.toSExpr cs
+  toSExpr (Switch v cs e) = S.L $ S.A (S.Symbol "switch") : S.toSExpr v : map S.toSExpr cs <> [S.toSExpr e]
+  toSExpr (SwitchUnboxed v cs e) = S.L $ S.A (S.Symbol "switch-unboxed") : S.toSExpr v : map S.toSExpr cs <> [S.toSExpr e]
+  toSExpr (Destruct v con xs e) = S.L [S.A $ S.Symbol "destruct", S.toSExpr v, S.toSExpr con, S.L $ map S.toSExpr xs, S.toSExpr e]
+  toSExpr (DestructRecord v kvs e) = S.L [S.A $ S.Symbol "destruct-record", S.toSExpr v, S.L $ map S.toSExpr $ Map.toList kvs, S.toSExpr e]
+  toSExpr (Assign x v e) = S.L [S.A $ S.Symbol "=", S.toSExpr x, S.toSExpr v, S.toSExpr e]
+  toSExpr (Error t) = S.L [S.A $ S.Symbol "ERROR", S.toSExpr t]
+
 instance HasFreeVar Expr where
   freevars (Atom x) = freevars x
   freevars (Call f xs) = freevars f <> foldMap freevars xs
@@ -343,6 +372,10 @@ instance (Pretty a) => Pretty (Atom a) where
   pretty (Var x) = pretty x
   pretty (Unboxed x) = pretty x
 
+instance (S.ToSExpr a) => S.ToSExpr (Atom a) where
+  toSExpr (Var x) = S.toSExpr x
+  toSExpr (Unboxed x) = S.toSExpr x
+
 instance HasFreeVar Atom where
   freevars (Var x) = Set.singleton x
   freevars Unboxed {} = mempty
@@ -386,6 +419,16 @@ instance Pretty Unboxed where
   pretty (Bool True) = "True#"
   pretty (Bool False) = "False#"
 
+instance S.ToSExpr Unboxed where
+  toSExpr (Int32 x) = S.A $ S.Int x (Just "i32")
+  toSExpr (Int64 x) = S.A $ S.Int x (Just "i64")
+  toSExpr (Float x) = S.A $ S.Float x
+  toSExpr (Double x) = S.A $ S.Double x
+  toSExpr (Char x) = S.A $ S.Char x
+  toSExpr (String x) = S.A $ S.String x
+  toSExpr (Bool True) = S.A $ S.Symbol "True#"
+  toSExpr (Bool False) = S.A $ S.Symbol "False#"
+
 -- | Let bindings
 data LocalDef a = LocalDef {_variable :: a, typ :: Type, _object :: Obj a}
   deriving stock (Eq, Ord, Show, Functor, Foldable, Generic, Data, Typeable)
@@ -407,6 +450,9 @@ instance HasVariable (LocalDef a) a where
 
 instance (Pretty a) => Pretty (LocalDef a) where
   pretty (LocalDef v t o) = parens $ vsep [pretty v <+> pretty t, pretty o]
+
+instance (S.ToSExpr a) => S.ToSExpr (LocalDef a) where
+  toSExpr (LocalDef v t o) = S.L [S.toSExpr v, S.toSExpr t, S.toSExpr o]
 
 instance HasAtom LocalDef where
   atom = object . atom
@@ -444,6 +490,11 @@ instance (Pretty a) => Pretty (Obj a) where
                     (Map.toList kvs)
               )
         ]
+
+instance (S.ToSExpr a) => S.ToSExpr (Obj a) where
+  toSExpr (Fun xs e) = S.L [S.A $ S.Symbol "fun", S.L $ map S.toSExpr xs, S.toSExpr e]
+  toSExpr (Pack ty c xs) = S.L $ S.A (S.Symbol "pack") : S.toSExpr ty : S.toSExpr c : map S.toSExpr xs
+  toSExpr (Record kvs) = S.L $ S.A (S.Symbol "record") : map S.toSExpr (Map.toList kvs)
 
 instance HasFreeVar Obj where
   freevars (Fun as e) = foldr sans (freevars e) as
@@ -485,6 +536,12 @@ instance (Pretty a) => Pretty (Case a) where
     parens $ sep ["open", parens $ sep $ map (\(k, v) -> pretty k <+> pretty v) $ Map.toList pat, pretty e]
   pretty (Exact u e) = parens $ sep ["exact" <+> pretty u, pretty e]
   pretty (Bind x t e) = parens $ sep ["bind", pretty x, pretty t, pretty e]
+
+instance (S.ToSExpr a) => S.ToSExpr (Case a) where
+  toSExpr (Unpack c xs e) = S.L [S.A $ S.Symbol "unpack", S.toSExpr c, S.L $ map S.toSExpr xs, S.toSExpr e]
+  toSExpr (OpenRecord pat e) = S.L [S.A $ S.Symbol "open", S.L $ map S.toSExpr $ Map.toList pat, S.toSExpr e]
+  toSExpr (Exact u e) = S.L [S.A $ S.Symbol "exact", S.toSExpr u, S.toSExpr e]
+  toSExpr (Bind x t e) = S.L [S.A $ S.Symbol "bind", S.toSExpr x, S.toSExpr t, S.toSExpr e]
 
 instance HasFreeVar Case where
   freevars (Unpack _ xs e) = foldr sans (freevars e) xs

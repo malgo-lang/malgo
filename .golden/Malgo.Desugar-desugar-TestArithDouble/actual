@@ -1,795 +1,258 @@
-Program
- { topVars = [], topFuns =
-  [
-   ( Meta
-    { meta =
-     [ DoubleT, DoubleT ] :-> DoubleT, id = Id
-     { name = "*_curry", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 145 } },
-    [ Meta
-     { meta = DoubleT, id = Id
-      { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 146 } }, Meta
-     { meta = DoubleT, id = Id
-      { name = "y", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 147 } } ],
-    [ DoubleT, DoubleT ] :-> DoubleT, Assign
-    ( Meta
-     { meta = [ DoubleT ] :-> DoubleT, id = Id
-      { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 149 } } )
-    ( Assign
-     ( Meta
-      { meta = [ DoubleT ] :-> DoubleT, id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 148 } } )
-     ( Call
-      ( Var
-       ( Meta
-        { meta = [ DoubleT ] :->
-         ( [ DoubleT ] :-> DoubleT ), id = Id
-         { name = "mulDouble#", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-      [ Var
-       ( Meta
-        { meta = DoubleT, id = Id
-         { name = "x", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 146 } } ) ] )
-     ( Cast
-      ( [ DoubleT ] :-> DoubleT )
-      ( Var
-       ( Meta
-        { meta = [ DoubleT ] :-> DoubleT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 148 } } ) ) ) )
-    ( Assign
-     ( Meta
-      { meta = DoubleT, id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 150 } } )
-     ( Call
-      ( Var
-       ( Meta
-        { meta = [ DoubleT ] :-> DoubleT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 149 } } ) )
-      [ Var
-       ( Meta
-        { meta = DoubleT, id = Id
-         { name = "y", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 147 } } ) ] )
-     ( Cast DoubleT
-      ( Var
-       ( Meta
-        { meta = DoubleT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 150 } } ) ) ) ) ),
-   ( Meta
-    { meta =
-     [ DoubleT, DoubleT ] :-> DoubleT, id = Id
-     { name = "+_curry", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 133 } },
-    [ Meta
-     { meta = DoubleT, id = Id
-      { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 134 } }, Meta
-     { meta = DoubleT, id = Id
-      { name = "y", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 135 } } ],
-    [ DoubleT, DoubleT ] :-> DoubleT, Assign
-    ( Meta
-     { meta = [ DoubleT ] :-> DoubleT, id = Id
-      { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 137 } } )
-    ( Assign
-     ( Meta
-      { meta = [ DoubleT ] :-> DoubleT, id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 136 } } )
-     ( Call
-      ( Var
-       ( Meta
-        { meta = [ DoubleT ] :->
-         ( [ DoubleT ] :-> DoubleT ), id = Id
-         { name = "addDouble#", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-      [ Var
-       ( Meta
-        { meta = DoubleT, id = Id
-         { name = "x", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 134 } } ) ] )
-     ( Cast
-      ( [ DoubleT ] :-> DoubleT )
-      ( Var
-       ( Meta
-        { meta = [ DoubleT ] :-> DoubleT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 136 } } ) ) ) )
-    ( Assign
-     ( Meta
-      { meta = DoubleT, id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 138 } } )
-     ( Call
-      ( Var
-       ( Meta
-        { meta = [ DoubleT ] :-> DoubleT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 137 } } ) )
-      [ Var
-       ( Meta
-        { meta = DoubleT, id = Id
-         { name = "y", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 135 } } ) ] )
-     ( Cast DoubleT
-      ( Var
-       ( Meta
-        { meta = DoubleT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 138 } } ) ) ) ) ),
-   ( Meta
-    { meta =
-     [ DoubleT, DoubleT ] :-> DoubleT, id = Id
-     { name = "add_curry", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 121 } },
-    [ Meta
-     { meta = DoubleT, id = Id
-      { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 122 } }, Meta
-     { meta = DoubleT, id = Id
-      { name = "y", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 123 } } ],
-    [ DoubleT, DoubleT ] :-> DoubleT, Assign
-    ( Meta
-     { meta = [ DoubleT ] :-> DoubleT, id = Id
-      { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 125 } } )
-    ( Assign
-     ( Meta
-      { meta = [ DoubleT ] :-> DoubleT, id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 124 } } )
-     ( Call
-      ( Var
-       ( Meta
-        { meta = [ DoubleT ] :->
-         ( [ DoubleT ] :-> DoubleT ), id = Id
-         { name = "addDouble#", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-      [ Var
-       ( Meta
-        { meta = DoubleT, id = Id
-         { name = "x", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 122 } } ) ] )
-     ( Cast
-      ( [ DoubleT ] :-> DoubleT )
-      ( Var
-       ( Meta
-        { meta = [ DoubleT ] :-> DoubleT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 124 } } ) ) ) )
-    ( Assign
-     ( Meta
-      { meta = DoubleT, id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 126 } } )
-     ( Call
-      ( Var
-       ( Meta
-        { meta = [ DoubleT ] :-> DoubleT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 125 } } ) )
-      [ Var
-       ( Meta
-        { meta = DoubleT, id = Id
-         { name = "y", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 123 } } ) ] )
-     ( Cast DoubleT
-      ( Var
-       ( Meta
-        { meta = DoubleT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 126 } } ) ) ) ) ),
-   ( Meta
-    { meta =
-     [ DoubleT, DoubleT ] :-> DoubleT, id = Id
-     { name = "mul_curry", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 109 } },
-    [ Meta
-     { meta = DoubleT, id = Id
-      { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 110 } }, Meta
-     { meta = DoubleT, id = Id
-      { name = "y", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 111 } } ],
-    [ DoubleT, DoubleT ] :-> DoubleT, Assign
-    ( Meta
-     { meta = [ DoubleT ] :-> DoubleT, id = Id
-      { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 113 } } )
-    ( Assign
-     ( Meta
-      { meta = [ DoubleT ] :-> DoubleT, id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 112 } } )
-     ( Call
-      ( Var
-       ( Meta
-        { meta = [ DoubleT ] :->
-         ( [ DoubleT ] :-> DoubleT ), id = Id
-         { name = "mulDouble#", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-      [ Var
-       ( Meta
-        { meta = DoubleT, id = Id
-         { name = "x", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 110 } } ) ] )
-     ( Cast
-      ( [ DoubleT ] :-> DoubleT )
-      ( Var
-       ( Meta
-        { meta = [ DoubleT ] :-> DoubleT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 112 } } ) ) ) )
-    ( Assign
-     ( Meta
-      { meta = DoubleT, id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 114 } } )
-     ( Call
-      ( Var
-       ( Meta
-        { meta = [ DoubleT ] :-> DoubleT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 113 } } ) )
-      [ Var
-       ( Meta
-        { meta = DoubleT, id = Id
-         { name = "y", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 111 } } ) ] )
-     ( Cast DoubleT
-      ( Var
-       ( Meta
-        { meta = DoubleT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 114 } } ) ) ) ) ),
-   ( Meta
-    { meta = [ DoubleT ] :-> AnyT, id = Id
-     { name = "show", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = External } },
-    [ Meta
-     { meta = DoubleT, id = Id
-      { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 91 } } ], [ DoubleT ] :-> AnyT, Assign
-    ( Meta
-     { meta = StringT, id = Id
-      { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 93 } } )
-    ( Assign
-     ( Meta
-      { meta = StringT, id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 92 } } )
-     ( Call
-      ( Var
-       ( Meta
-        { meta = [ DoubleT ] :-> StringT, id = Id
-         { name = "toStringDouble#", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-      [ Var
-       ( Meta
-        { meta = DoubleT, id = Id
-         { name = "x", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 91 } } ) ] )
-     ( Cast StringT
-      ( Var
-       ( Meta
-        { meta = StringT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 92 } } ) ) ) )
-    ( Assign
-     ( Meta
-      { meta = AnyT, id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 94 } } )
-     ( Call
-      ( Var
-       ( Meta
-        { meta = [ StringT ] :-> AnyT, id = Id
-         { name = "String#", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-      [ Var
-       ( Meta
-        { meta = StringT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 93 } } ) ] )
-     ( Cast AnyT
-      ( Var
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 94 } } ) ) ) ) ),
-   ( Meta
-    { meta = [ DoubleT ] :-> DoubleT, id = Id
-     { name = "traceShowId", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = External } },
-    [ Meta
-     { meta = DoubleT, id = Id
-      { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 95 } } ], [ DoubleT ] :-> DoubleT, Assign
-    ( Meta
-     { meta = SumT
-      [ Con Tuple [] ], id = Id
-      { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 99 } } )
-    ( Assign
-     ( Meta
-      { meta = AnyT, id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 97 } } )
-     ( Assign
-      ( Meta
-       { meta = AnyT, id = Id
-        { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 96 } } )
-      ( Call
-       ( Var
-        ( Meta
-         { meta = [ DoubleT ] :-> AnyT, id = Id
-          { name = "show", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = External } } ) )
-       [ Var
-        ( Meta
-         { meta = DoubleT, id = Id
-          { name = "x", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 95 } } ) ] )
-      ( Cast AnyT
-       ( Var
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 96 } } ) ) ) )
-     ( Assign
-      ( Meta
-       { meta = SumT
-        [ Con Tuple [] ], id = Id
-        { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 98 } } )
-      ( Call
-       ( Var
-        ( Meta
-         { meta = [ AnyT ] :-> SumT
-          [ Con Tuple [] ], id = Id
-          { name = "putStrLn", moduleName = Artifact
-           ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
-       [ Var
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 97 } } ) ] )
-      ( Cast
-       ( SumT [ Con Tuple [] ] )
-       ( Var
-        ( Meta
-         { meta = SumT
-          [ Con Tuple [] ], id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 98 } } ) ) ) ) )
-    ( Atom
-     ( Var
-      ( Meta
-       { meta = DoubleT, id = Id
-        { name = "x", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 95 } } ) ) ) ),
-   ( Meta
-    { meta = [ DoubleT ] :-> DoubleT, id = Id
-     { name = "neg", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = External } },
-    [ Meta
-     { meta = DoubleT, id = Id
-      { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 100 } } ], [ DoubleT ] :-> DoubleT, Assign
-    ( Meta
-     { meta = [ DoubleT ] :-> DoubleT, id = Id
-      { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 102 } } )
-    ( Assign
-     ( Meta
-      { meta = [ DoubleT ] :-> DoubleT, id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 101 } } )
-     ( Call
-      ( Var
-       ( Meta
-        { meta = [ DoubleT ] :->
-         ( [ DoubleT ] :-> DoubleT ), id = Id
-         { name = "subDouble#", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-      [ Unboxed ( Double 0.0 ) ] )
-     ( Cast
-      ( [ DoubleT ] :-> DoubleT )
-      ( Var
-       ( Meta
-        { meta = [ DoubleT ] :-> DoubleT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 101 } } ) ) ) )
-    ( Assign
-     ( Meta
-      { meta = DoubleT, id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 103 } } )
-     ( Call
-      ( Var
-       ( Meta
-        { meta = [ DoubleT ] :-> DoubleT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 102 } } ) )
-      [ Var
-       ( Meta
-        { meta = DoubleT, id = Id
-         { name = "x", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 100 } } ) ] )
-     ( Cast DoubleT
-      ( Var
-       ( Meta
-        { meta = DoubleT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 103 } } ) ) ) ) ),
-   ( Meta
-    { meta = [ DoubleT ] :->
-     ( [ DoubleT ] :-> DoubleT ), id = Id
-     { name = "mul", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = External } },
-    [ Meta
-     { meta = DoubleT, id = Id
-      { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 104 } } ], [ DoubleT ] :->
-    ( [ DoubleT ] :-> DoubleT ), Let
-    [ LocalDef
-     { _variable = Meta
-      { meta = [ DoubleT ] :-> DoubleT, id = Id
-       { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 115 } }, typ = [ DoubleT ] :-> DoubleT, _object = Fun
-      [ Meta
-       { meta = DoubleT, id = Id
-        { name = "y", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 105 } } ]
-      ( CallDirect
-       ( Meta
-        { meta =
-         [ DoubleT, DoubleT ] :-> DoubleT, id = Id
-         { name = "mul_curry", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 109 } } )
-       [ Var
-        ( Meta
-         { meta = DoubleT, id = Id
-          { name = "x", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 104 } } ), Var
-        ( Meta
-         { meta = DoubleT, id = Id
-          { name = "y", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 105 } } ) ] ) } ]
-    ( Atom
-     ( Var
-      ( Meta
-       { meta = [ DoubleT ] :-> DoubleT, id = Id
-        { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 115 } } ) ) ) ),
-   ( Meta
-    { meta = [ DoubleT ] :->
-     ( [ DoubleT ] :-> DoubleT ), id = Id
-     { name = "add", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = External } },
-    [ Meta
-     { meta = DoubleT, id = Id
-      { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 116 } } ], [ DoubleT ] :->
-    ( [ DoubleT ] :-> DoubleT ), Let
-    [ LocalDef
-     { _variable = Meta
-      { meta = [ DoubleT ] :-> DoubleT, id = Id
-       { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 127 } }, typ = [ DoubleT ] :-> DoubleT, _object = Fun
-      [ Meta
-       { meta = DoubleT, id = Id
-        { name = "y", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 117 } } ]
-      ( CallDirect
-       ( Meta
-        { meta =
-         [ DoubleT, DoubleT ] :-> DoubleT, id = Id
-         { name = "add_curry", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 121 } } )
-       [ Var
-        ( Meta
-         { meta = DoubleT, id = Id
-          { name = "x", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 116 } } ), Var
-        ( Meta
-         { meta = DoubleT, id = Id
-          { name = "y", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 117 } } ) ] ) } ]
-    ( Atom
-     ( Var
-      ( Meta
-       { meta = [ DoubleT ] :-> DoubleT, id = Id
-        { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 127 } } ) ) ) ),
-   ( Meta
-    { meta = [ DoubleT ] :->
-     ( [ DoubleT ] :-> DoubleT ), id = Id
-     { name = "+", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = External } },
-    [ Meta
-     { meta = DoubleT, id = Id
-      { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 128 } } ], [ DoubleT ] :->
-    ( [ DoubleT ] :-> DoubleT ), Let
-    [ LocalDef
-     { _variable = Meta
-      { meta = [ DoubleT ] :-> DoubleT, id = Id
-       { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 139 } }, typ = [ DoubleT ] :-> DoubleT, _object = Fun
-      [ Meta
-       { meta = DoubleT, id = Id
-        { name = "y", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 129 } } ]
-      ( CallDirect
-       ( Meta
-        { meta =
-         [ DoubleT, DoubleT ] :-> DoubleT, id = Id
-         { name = "+_curry", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 133 } } )
-       [ Var
-        ( Meta
-         { meta = DoubleT, id = Id
-          { name = "x", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 128 } } ), Var
-        ( Meta
-         { meta = DoubleT, id = Id
-          { name = "y", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 129 } } ) ] ) } ]
-    ( Atom
-     ( Var
-      ( Meta
-       { meta = [ DoubleT ] :-> DoubleT, id = Id
-        { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 139 } } ) ) ) ),
-   ( Meta
-    { meta = [ DoubleT ] :->
-     ( [ DoubleT ] :-> DoubleT ), id = Id
-     { name = "*", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = External } },
-    [ Meta
-     { meta = DoubleT, id = Id
-      { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 140 } } ], [ DoubleT ] :->
-    ( [ DoubleT ] :-> DoubleT ), Let
-    [ LocalDef
-     { _variable = Meta
-      { meta = [ DoubleT ] :-> DoubleT, id = Id
-       { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 151 } }, typ = [ DoubleT ] :-> DoubleT, _object = Fun
-      [ Meta
-       { meta = DoubleT, id = Id
-        { name = "y", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 141 } } ]
-      ( CallDirect
-       ( Meta
-        { meta =
-         [ DoubleT, DoubleT ] :-> DoubleT, id = Id
-         { name = "*_curry", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 145 } } )
-       [ Var
-        ( Meta
-         { meta = DoubleT, id = Id
-          { name = "x", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 140 } } ), Var
-        ( Meta
-         { meta = DoubleT, id = Id
-          { name = "y", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 141 } } ) ] ) } ]
-    ( Atom
-     ( Var
-      ( Meta
-       { meta = [ DoubleT ] :-> DoubleT, id = Id
-        { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 151 } } ) ) ) ),
-   ( Meta
-    { meta = [ DoubleT ] :-> DoubleT, id = Id
-     { name = "f", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = External } },
-    [ Meta
-     { meta = DoubleT, id = Id
-      { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 152 } } ], [ DoubleT ] :-> DoubleT, Assign
-    ( Meta
-     { meta = [ DoubleT ] :-> DoubleT, id = Id
-      { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 158 } } )
-    ( Assign
-     ( Meta
-      { meta = DoubleT, id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 156 } } )
-     ( Assign
-      ( Meta
-       { meta = [ DoubleT ] :-> DoubleT, id = Id
-        { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 154 } } )
-      ( Assign
-       ( Meta
-        { meta = [ DoubleT ] :-> DoubleT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 153 } } )
-       ( Call
-        ( Var
-         ( Meta
-          { meta = [ DoubleT ] :->
-           ( [ DoubleT ] :-> DoubleT ), id = Id
-           { name = "+", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = External } } ) )
-        [ Var
-         ( Meta
-          { meta = DoubleT, id = Id
-           { name = "x", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 152 } } ) ] )
-       ( Cast
-        ( [ DoubleT ] :-> DoubleT )
-        ( Var
-         ( Meta
-          { meta = [ DoubleT ] :-> DoubleT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 153 } } ) ) ) )
-      ( Assign
-       ( Meta
-        { meta = DoubleT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 155 } } )
-       ( Call
-        ( Var
-         ( Meta
-          { meta = [ DoubleT ] :-> DoubleT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 154 } } ) )
-        [ Unboxed ( Double 0.0 ) ] )
-       ( Cast DoubleT
-        ( Var
-         ( Meta
-          { meta = DoubleT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 155 } } ) ) ) ) )
-     ( Assign
-      ( Meta
-       { meta = [ DoubleT ] :-> DoubleT, id = Id
-        { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 157 } } )
-      ( Call
-       ( Var
-        ( Meta
-         { meta = [ DoubleT ] :->
-          ( [ DoubleT ] :-> DoubleT ), id = Id
-          { name = "*", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = External } } ) )
-       [ Var
-        ( Meta
-         { meta = DoubleT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 156 } } ) ] )
-      ( Cast
-       ( [ DoubleT ] :-> DoubleT )
-       ( Var
-        ( Meta
-         { meta = [ DoubleT ] :-> DoubleT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 157 } } ) ) ) ) )
-    ( Assign
-     ( Meta
-      { meta = DoubleT, id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 159 } } )
-     ( Call
-      ( Var
-       ( Meta
-        { meta = [ DoubleT ] :-> DoubleT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 158 } } ) )
-      [ Var
-       ( Meta
-        { meta = DoubleT, id = Id
-         { name = "x", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 152 } } ) ] )
-     ( Cast DoubleT
-      ( Var
-       ( Meta
-        { meta = DoubleT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 159 } } ) ) ) ) ),
-   ( Meta
-    { meta =
-     [ SumT [ Con Tuple [] ] ] :-> SumT
-     [ Con Tuple [] ], id = Id
-     { name = "main", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = External } },
-    [ Meta
-     { meta = SumT
-      [ Con Tuple [] ], id = Id
-      { name = "$_", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 160 } } ],
-    [ SumT [ Con Tuple [] ] ] :-> SumT
-    [ Con Tuple [] ], Assign
-    ( Meta
-     { meta = AnyT, id = Id
-      { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 164 } } )
-    ( Assign
-     ( Meta
-      { meta = DoubleT, id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 162 } } )
-     ( Assign
-      ( Meta
-       { meta = DoubleT, id = Id
-        { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 161 } } )
-      ( Call
-       ( Var
-        ( Meta
-         { meta = [ DoubleT ] :-> DoubleT, id = Id
-          { name = "f", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = External } } ) )
-       [ Unboxed ( Double 0.5 ) ] )
-      ( Cast DoubleT
-       ( Var
-        ( Meta
-         { meta = DoubleT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 161 } } ) ) ) )
-     ( Assign
-      ( Meta
-       { meta = AnyT, id = Id
-        { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 163 } } )
-      ( Call
-       ( Var
-        ( Meta
-         { meta = [ DoubleT ] :-> AnyT, id = Id
-          { name = "show", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = External } } ) )
-       [ Var
-        ( Meta
-         { meta = DoubleT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 162 } } ) ] )
-      ( Cast AnyT
-       ( Var
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 163 } } ) ) ) ) )
-    ( Assign
-     ( Meta
-      { meta = SumT
-       [ Con Tuple [] ], id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 165 } } )
-     ( Call
-      ( Var
-       ( Meta
-        { meta = [ AnyT ] :-> SumT
-         [ Con Tuple [] ], id = Id
-         { name = "putStrLn", moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
-      [ Var
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 164 } } ) ] )
-     ( Cast
-      ( SumT [ Con Tuple [] ] )
-      ( Var
-       ( Meta
-        { meta = SumT
-         [ Con Tuple [] ], id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" ), sort = Temporal 165 } } ) ) ) ) ) ], extFuns = [] }
+(()
+   ((define
+      ($TestArithDouble.*_curry_145 $TestArithDouble.x_146 $TestArithDouble.y_147)
+      (->
+         (Double# Double#)
+         Double#)
+      (=
+         $TestArithDouble.d_149
+         (=
+            $TestArithDouble.d_148
+            (call mulDouble# $TestArithDouble.x_146)
+            (cast
+               (->
+                  (Double#)
+                  Double#)
+               $TestArithDouble.d_148))
+         (=
+            $TestArithDouble.d_150
+            (call $TestArithDouble.d_149 $TestArithDouble.y_147)
+            (cast Double# $TestArithDouble.d_150))))
+      (define
+         ($TestArithDouble.+_curry_133 $TestArithDouble.x_134 $TestArithDouble.y_135)
+         (->
+            (Double# Double#)
+            Double#)
+         (=
+            $TestArithDouble.d_137
+            (=
+               $TestArithDouble.d_136
+               (call addDouble# $TestArithDouble.x_134)
+               (cast
+                  (->
+                     (Double#)
+                     Double#)
+                  $TestArithDouble.d_136))
+            (=
+               $TestArithDouble.d_138
+               (call $TestArithDouble.d_137 $TestArithDouble.y_135)
+               (cast Double# $TestArithDouble.d_138))))
+      (define
+         ($TestArithDouble.add_curry_121 $TestArithDouble.x_122 $TestArithDouble.y_123)
+         (->
+            (Double# Double#)
+            Double#)
+         (=
+            $TestArithDouble.d_125
+            (=
+               $TestArithDouble.d_124
+               (call addDouble# $TestArithDouble.x_122)
+               (cast
+                  (->
+                     (Double#)
+                     Double#)
+                  $TestArithDouble.d_124))
+            (=
+               $TestArithDouble.d_126
+               (call $TestArithDouble.d_125 $TestArithDouble.y_123)
+               (cast Double# $TestArithDouble.d_126))))
+      (define
+         ($TestArithDouble.mul_curry_109 $TestArithDouble.x_110 $TestArithDouble.y_111)
+         (->
+            (Double# Double#)
+            Double#)
+         (=
+            $TestArithDouble.d_113
+            (=
+               $TestArithDouble.d_112
+               (call mulDouble# $TestArithDouble.x_110)
+               (cast
+                  (->
+                     (Double#)
+                     Double#)
+                  $TestArithDouble.d_112))
+            (=
+               $TestArithDouble.d_114
+               (call $TestArithDouble.d_113 $TestArithDouble.y_111)
+               (cast Double# $TestArithDouble.d_114))))
+      (define
+         (show $TestArithDouble.x_91)
+         (->
+            (Double#)
+            Any#)
+         (=
+            $TestArithDouble.d_93
+            (=
+               $TestArithDouble.d_92
+               (call toStringDouble# $TestArithDouble.x_91)
+               (cast String# $TestArithDouble.d_92))
+            (=
+               $TestArithDouble.d_94
+               (call String# $TestArithDouble.d_93)
+               (cast Any# $TestArithDouble.d_94))))
+      (define
+         (traceShowId $TestArithDouble.x_95)
+         (->
+            (Double#)
+            Double#)
+         (=
+            $TestArithDouble.d_99
+            (=
+               $TestArithDouble.d_97
+               (=
+                  $TestArithDouble.d_96
+                  (call show $TestArithDouble.x_95)
+                  (cast Any# $TestArithDouble.d_96))
+               (=
+                  $TestArithDouble.d_98
+                  (call putStrLn $TestArithDouble.d_97)
+                  (cast
+                     (sum
+                        (con Tuple#))
+                     $TestArithDouble.d_98)))
+            $TestArithDouble.x_95))
+      (define
+         (neg $TestArithDouble.x_100)
+         (->
+            (Double#)
+            Double#)
+         (=
+            $TestArithDouble.d_102
+            (=
+               $TestArithDouble.d_101
+               (call subDouble# 0.0_f64)
+               (cast
+                  (->
+                     (Double#)
+                     Double#)
+                  $TestArithDouble.d_101))
+            (=
+               $TestArithDouble.d_103
+               (call $TestArithDouble.d_102 $TestArithDouble.x_100)
+               (cast Double# $TestArithDouble.d_103))))
+      (define
+         (mul $TestArithDouble.x_104)
+         (->
+            (Double#)
+            (->
+               (Double#)
+               Double#))
+         (let
+            (($TestArithDouble.let_115
+               (->
+                  (Double#)
+                  Double#)
+               (fun
+                  ($TestArithDouble.y_105)
+                  (direct $TestArithDouble.mul_curry_109 $TestArithDouble.x_104 $TestArithDouble.y_105))))
+            $TestArithDouble.let_115))
+      (define
+         (add $TestArithDouble.x_116)
+         (->
+            (Double#)
+            (->
+               (Double#)
+               Double#))
+         (let
+            (($TestArithDouble.let_127
+               (->
+                  (Double#)
+                  Double#)
+               (fun
+                  ($TestArithDouble.y_117)
+                  (direct $TestArithDouble.add_curry_121 $TestArithDouble.x_116 $TestArithDouble.y_117))))
+            $TestArithDouble.let_127))
+      (define
+         (+ $TestArithDouble.x_128)
+         (->
+            (Double#)
+            (->
+               (Double#)
+               Double#))
+         (let
+            (($TestArithDouble.let_139
+               (->
+                  (Double#)
+                  Double#)
+               (fun
+                  ($TestArithDouble.y_129)
+                  (direct $TestArithDouble.+_curry_133 $TestArithDouble.x_128 $TestArithDouble.y_129))))
+            $TestArithDouble.let_139))
+      (define
+         (* $TestArithDouble.x_140)
+         (->
+            (Double#)
+            (->
+               (Double#)
+               Double#))
+         (let
+            (($TestArithDouble.let_151
+               (->
+                  (Double#)
+                  Double#)
+               (fun
+                  ($TestArithDouble.y_141)
+                  (direct $TestArithDouble.*_curry_145 $TestArithDouble.x_140 $TestArithDouble.y_141))))
+            $TestArithDouble.let_151))
+      (define
+         (f $TestArithDouble.x_152)
+         (->
+            (Double#)
+            Double#)
+         (=
+            $TestArithDouble.d_158
+            (=
+               $TestArithDouble.d_156
+               (=
+                  $TestArithDouble.d_154
+                  (=
+                     $TestArithDouble.d_153
+                     (call + $TestArithDouble.x_152)
+                     (cast
+                        (->
+                           (Double#)
+                           Double#)
+                        $TestArithDouble.d_153))
+                  (=
+                     $TestArithDouble.d_155
+                     (call $TestArithDouble.d_154 0.0_f64)
+                     (cast Double# $TestArithDouble.d_155)))
+               (=
+                  $TestArithDouble.d_157
+                  (call * $TestArithDouble.d_156)
+                  (cast
+                     (->
+                        (Double#)
+                        Double#)
+                     $TestArithDouble.d_157)))
+            (=
+               $TestArithDouble.d_159
+               (call $TestArithDouble.d_158 $TestArithDouble.x_152)
+               (cast Double# $TestArithDouble.d_159))))
+      (define
+         (main $TestArithDouble.$__160)
+         (->
+            ((sum
+               (con Tuple#)))
+            (sum
+               (con Tuple#)))
+         (=
+            $TestArithDouble.d_164
+            (=
+               $TestArithDouble.d_162
+               (=
+                  $TestArithDouble.d_161
+                  (call f 0.5_f64)
+                  (cast Double# $TestArithDouble.d_161))
+               (=
+                  $TestArithDouble.d_163
+                  (call show $TestArithDouble.d_162)
+                  (cast Any# $TestArithDouble.d_163)))
+            (=
+               $TestArithDouble.d_165
+               (call putStrLn $TestArithDouble.d_164)
+               (cast
+                  (sum
+                     (con Tuple#))
+                  $TestArithDouble.d_165)))))
+   ())

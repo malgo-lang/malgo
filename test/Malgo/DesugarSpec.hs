@@ -10,6 +10,7 @@ import Malgo.Prelude
 import Malgo.Refine.Pass (refine)
 import Malgo.Rename.Pass (rename)
 import Malgo.Rename.RnEnv qualified as RnEnv
+import Malgo.SExpr (sShow)
 import Malgo.TestUtils
 import System.Directory
 import System.FilePath
@@ -40,4 +41,4 @@ driveDesugar srcPath = do
     (typed, tcEnv) <- infer rnEnv renamed
     refined <- refine tcEnv typed
     (_, core) <- desugar tcEnv refined
-    pure $ pShowCompact core
+    pure $ sShow core

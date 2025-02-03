@@ -17,6 +17,7 @@ module Malgo.Module
     ViaStore (..),
     ViaShow (..),
     moduleNameToString,
+    moduleNameDigest,
   )
 where
 
@@ -30,6 +31,7 @@ import Data.Store
 import Effectful
 import Effectful.Dispatch.Static
 import Effectful.Error.Static (prettyCallStack)
+import Extra (dropEnd)
 import GHC.Records
 import GHC.Stack (callStack)
 import Malgo.Prelude
@@ -53,6 +55,14 @@ instance Pretty ModuleName where
 moduleNameToString :: (ConvertibleStrings FilePath b, ConvertibleStrings Text b) => ModuleName -> b
 moduleNameToString (ModuleName raw) = convertString raw
 moduleNameToString (Artifact path) = convertString $ toFilePath path.relPath
+
+-- | Convert ModuleName to a digest string.
+-- This is used for debugging.
+moduleNameDigest :: (ConvertibleStrings Text b, ConvertibleStrings FilePath b) => ModuleName -> b
+moduleNameDigest (ModuleName raw) = convertString raw
+moduleNameDigest (Artifact path) = convertString $ toFilePath $ case splitExtension $ filename path.relPath of
+  Just (name, _) -> name
+  Nothing -> filename path.relPath
 
 type HasModuleName r = HasField "moduleName" r ModuleName
 

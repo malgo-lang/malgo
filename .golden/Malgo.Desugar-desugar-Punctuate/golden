@@ -1,1283 +1,385 @@
-Program
- { topVars = [], topFuns =
-  [
-   ( Meta
-    { meta = [ AnyT ] :-> AnyT, id = Id
-     { name = "Symbol", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = External } },
-    [ Meta
-     { meta = AnyT, id = Id
-      { name = "p", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 113 } } ], [ AnyT ] :-> AnyT, Let
-    [ LocalDef
-     { _variable = Meta
-      { meta = SumT
-       [ Con
-        ( Data "test/testcases/malgo/Punctuate.mlg.Symbol" ) [ AnyT ], Con
-        ( Data "test/testcases/malgo/Punctuate.mlg.SInt" ) [ AnyT ], Con
-        ( Data "test/testcases/malgo/Punctuate.mlg.SList" ) [ AnyT ] ], id = Id
-       { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 114 } }, typ = SumT
-      [ Con
-       ( Data "test/testcases/malgo/Punctuate.mlg.Symbol" ) [ AnyT ], Con
-       ( Data "test/testcases/malgo/Punctuate.mlg.SInt" ) [ AnyT ], Con
-       ( Data "test/testcases/malgo/Punctuate.mlg.SList" ) [ AnyT ] ], _object = Pack
-      ( SumT
-       [ Con
-        ( Data "test/testcases/malgo/Punctuate.mlg.Symbol" ) [ AnyT ], Con
-        ( Data "test/testcases/malgo/Punctuate.mlg.SInt" ) [ AnyT ], Con
-        ( Data "test/testcases/malgo/Punctuate.mlg.SList" ) [ AnyT ] ] )
-      ( Con ( Data "test/testcases/malgo/Punctuate.mlg.Symbol" ) [ AnyT ] )
-      [ Var
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "p", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 113 } } ) ] } ]
-    ( Cast AnyT
-     ( Var
-      ( Meta
-       { meta = SumT
-        [ Con
-         ( Data "test/testcases/malgo/Punctuate.mlg.Symbol" ) [ AnyT ], Con
-         ( Data "test/testcases/malgo/Punctuate.mlg.SInt" ) [ AnyT ], Con
-         ( Data "test/testcases/malgo/Punctuate.mlg.SList" ) [ AnyT ] ], id = Id
-        { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 114 } } ) ) ) ),
-   ( Meta
-    { meta = [ AnyT ] :-> AnyT, id = Id
-     { name = "SInt", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = External } },
-    [ Meta
-     { meta = AnyT, id = Id
-      { name = "p", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 115 } } ], [ AnyT ] :-> AnyT, Let
-    [ LocalDef
-     { _variable = Meta
-      { meta = SumT
-       [ Con
-        ( Data "test/testcases/malgo/Punctuate.mlg.Symbol" ) [ AnyT ], Con
-        ( Data "test/testcases/malgo/Punctuate.mlg.SInt" ) [ AnyT ], Con
-        ( Data "test/testcases/malgo/Punctuate.mlg.SList" ) [ AnyT ] ], id = Id
-       { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 116 } }, typ = SumT
-      [ Con
-       ( Data "test/testcases/malgo/Punctuate.mlg.Symbol" ) [ AnyT ], Con
-       ( Data "test/testcases/malgo/Punctuate.mlg.SInt" ) [ AnyT ], Con
-       ( Data "test/testcases/malgo/Punctuate.mlg.SList" ) [ AnyT ] ], _object = Pack
-      ( SumT
-       [ Con
-        ( Data "test/testcases/malgo/Punctuate.mlg.Symbol" ) [ AnyT ], Con
-        ( Data "test/testcases/malgo/Punctuate.mlg.SInt" ) [ AnyT ], Con
-        ( Data "test/testcases/malgo/Punctuate.mlg.SList" ) [ AnyT ] ] )
-      ( Con ( Data "test/testcases/malgo/Punctuate.mlg.SInt" ) [ AnyT ] )
-      [ Var
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "p", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 115 } } ) ] } ]
-    ( Cast AnyT
-     ( Var
-      ( Meta
-       { meta = SumT
-        [ Con
-         ( Data "test/testcases/malgo/Punctuate.mlg.Symbol" ) [ AnyT ], Con
-         ( Data "test/testcases/malgo/Punctuate.mlg.SInt" ) [ AnyT ], Con
-         ( Data "test/testcases/malgo/Punctuate.mlg.SList" ) [ AnyT ] ], id = Id
-        { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 116 } } ) ) ) ),
-   ( Meta
-    { meta = [ AnyT ] :-> AnyT, id = Id
-     { name = "SList", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = External } },
-    [ Meta
-     { meta = AnyT, id = Id
-      { name = "p", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 117 } } ], [ AnyT ] :-> AnyT, Let
-    [ LocalDef
-     { _variable = Meta
-      { meta = SumT
-       [ Con
-        ( Data "test/testcases/malgo/Punctuate.mlg.Symbol" ) [ AnyT ], Con
-        ( Data "test/testcases/malgo/Punctuate.mlg.SInt" ) [ AnyT ], Con
-        ( Data "test/testcases/malgo/Punctuate.mlg.SList" ) [ AnyT ] ], id = Id
-       { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 118 } }, typ = SumT
-      [ Con
-       ( Data "test/testcases/malgo/Punctuate.mlg.Symbol" ) [ AnyT ], Con
-       ( Data "test/testcases/malgo/Punctuate.mlg.SInt" ) [ AnyT ], Con
-       ( Data "test/testcases/malgo/Punctuate.mlg.SList" ) [ AnyT ] ], _object = Pack
-      ( SumT
-       [ Con
-        ( Data "test/testcases/malgo/Punctuate.mlg.Symbol" ) [ AnyT ], Con
-        ( Data "test/testcases/malgo/Punctuate.mlg.SInt" ) [ AnyT ], Con
-        ( Data "test/testcases/malgo/Punctuate.mlg.SList" ) [ AnyT ] ] )
-      ( Con ( Data "test/testcases/malgo/Punctuate.mlg.SList" ) [ AnyT ] )
-      [ Var
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "p", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 117 } } ) ] } ]
-    ( Cast AnyT
-     ( Var
-      ( Meta
-       { meta = SumT
-        [ Con
-         ( Data "test/testcases/malgo/Punctuate.mlg.Symbol" ) [ AnyT ], Con
-         ( Data "test/testcases/malgo/Punctuate.mlg.SInt" ) [ AnyT ], Con
-         ( Data "test/testcases/malgo/Punctuate.mlg.SList" ) [ AnyT ] ], id = Id
-        { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 118 } } ) ) ) ),
-   ( Meta
-    { meta = [ AnyT ] :->
-     ( [ AnyT ] :-> AnyT ), id = Id
-     { name = "<>", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = External } },
-    [ Meta
-     { meta = AnyT, id = Id
-      { name = "eta", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 119 } } ], [ AnyT ] :->
-    ( [ AnyT ] :-> AnyT ), Call
-    ( Var
-     ( Meta
-      { meta = [ AnyT ] :->
-       ( [ AnyT ] :-> AnyT ), id = Id
-       { name = "appendString", moduleName = Artifact
-        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-    [ Var
-     ( Meta
-      { meta = AnyT, id = Id
-       { name = "eta", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 119 } } ) ] ),
-   ( Meta
-    { meta = [ AnyT ] :-> AnyT, id = Id
-     { name = "show", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = External } },
-    [ Meta
-     { meta = AnyT, id = Id
-      { name = "symbol", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 120 } } ], [ AnyT ] :-> AnyT, Match
-    ( Cast
-     ( SumT
-      [ Con
-       ( Data "test/testcases/malgo/Punctuate.mlg.Symbol" ) [ AnyT ], Con
-       ( Data "test/testcases/malgo/Punctuate.mlg.SInt" ) [ AnyT ], Con
-       ( Data "test/testcases/malgo/Punctuate.mlg.SList" ) [ AnyT ] ] )
-     ( Var
-      ( Meta
-       { meta = AnyT, id = Id
-        { name = "symbol", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 120 } } ) ) )
-    [ Unpack
-     ( Con ( Data "test/testcases/malgo/Punctuate.mlg.Symbol" ) [ AnyT ] )
-     [ Meta
-      { meta = AnyT, id = Id
-       { name = "p", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 121 } } ]
-     ( Assign
-      ( Meta
-       { meta = [ AnyT ] :-> AnyT, id = Id
-        { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 125 } } )
-      ( Assign
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 123 } } )
-       ( Assign
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 122 } } )
-        ( Call
-         ( Var
-          ( Meta
-           { meta = [ StringT ] :-> AnyT, id = Id
-            { name = "String#", moduleName = Artifact
-             ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-         [ Unboxed ( String "Symbol " ) ] )
-        ( Cast AnyT
-         ( Var
-          ( Meta
-           { meta = AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 122 } } ) ) ) )
-       ( Assign
-        ( Meta
-         { meta = [ AnyT ] :-> AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 124 } } )
-        ( Call
-         ( Var
-          ( Meta
-           { meta = [ AnyT ] :->
-            ( [ AnyT ] :-> AnyT ), id = Id
-            { name = "<>", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = External } } ) )
-         [ Var
-          ( Meta
-           { meta = AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 123 } } ) ] )
-        ( Cast
-         ( [ AnyT ] :-> AnyT )
-         ( Var
-          ( Meta
-           { meta = [ AnyT ] :-> AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 124 } } ) ) ) ) )
-      ( Assign
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 126 } } )
-       ( Call
-        ( Var
-         ( Meta
-          { meta = [ AnyT ] :-> AnyT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 125 } } ) )
-        [ Var
-         ( Meta
-          { meta = AnyT, id = Id
-           { name = "p", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 121 } } ) ] )
-       ( Cast AnyT
-        ( Var
-         ( Meta
-          { meta = AnyT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 126 } } ) ) ) ) ), Unpack
-     ( Con ( Data "test/testcases/malgo/Punctuate.mlg.SInt" ) [ AnyT ] )
-     [ Meta
-      { meta = AnyT, id = Id
-       { name = "p", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 127 } } ]
-     ( Assign
-      ( Meta
-       { meta = [ AnyT ] :-> AnyT, id = Id
-        { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 131 } } )
-      ( Assign
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 129 } } )
-       ( Assign
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 128 } } )
-        ( Call
-         ( Var
-          ( Meta
-           { meta = [ StringT ] :-> AnyT, id = Id
-            { name = "String#", moduleName = Artifact
-             ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-         [ Unboxed ( String "SInt " ) ] )
-        ( Cast AnyT
-         ( Var
-          ( Meta
-           { meta = AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 128 } } ) ) ) )
-       ( Assign
-        ( Meta
-         { meta = [ AnyT ] :-> AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 130 } } )
-        ( Call
-         ( Var
-          ( Meta
-           { meta = [ AnyT ] :->
-            ( [ AnyT ] :-> AnyT ), id = Id
-            { name = "<>", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = External } } ) )
-         [ Var
-          ( Meta
-           { meta = AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 129 } } ) ] )
-        ( Cast
-         ( [ AnyT ] :-> AnyT )
-         ( Var
-          ( Meta
-           { meta = [ AnyT ] :-> AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 130 } } ) ) ) ) )
-      ( Assign
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 133 } } )
-       ( Assign
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 132 } } )
-        ( Call
-         ( Var
-          ( Meta
-           { meta = [ AnyT ] :-> AnyT, id = Id
-            { name = "toStringInt32", moduleName = Artifact
-             ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-         [ Var
-          ( Meta
-           { meta = AnyT, id = Id
-            { name = "p", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 127 } } ) ] )
-        ( Cast AnyT
-         ( Var
-          ( Meta
-           { meta = AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 132 } } ) ) ) )
-       ( Assign
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 134 } } )
-        ( Call
-         ( Var
-          ( Meta
-           { meta = [ AnyT ] :-> AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 131 } } ) )
-         [ Var
-          ( Meta
-           { meta = AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 133 } } ) ] )
-        ( Cast AnyT
-         ( Var
-          ( Meta
-           { meta = AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 134 } } ) ) ) ) ) ), Unpack
-     ( Con ( Data "test/testcases/malgo/Punctuate.mlg.SList" ) [ AnyT ] )
-     [ Meta
-      { meta = AnyT, id = Id
-       { name = "p", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 135 } } ]
-     ( Assign
-      ( Meta
-       { meta = [ AnyT ] :-> AnyT, id = Id
-        { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 139 } } )
-      ( Assign
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 137 } } )
-       ( Assign
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 136 } } )
-        ( Call
-         ( Var
-          ( Meta
-           { meta = [ StringT ] :-> AnyT, id = Id
-            { name = "String#", moduleName = Artifact
-             ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-         [ Unboxed ( String "SList [" ) ] )
-        ( Cast AnyT
-         ( Var
-          ( Meta
-           { meta = AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 136 } } ) ) ) )
-       ( Assign
-        ( Meta
-         { meta = [ AnyT ] :-> AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 138 } } )
-        ( Call
-         ( Var
-          ( Meta
-           { meta = [ AnyT ] :->
-            ( [ AnyT ] :-> AnyT ), id = Id
-            { name = "<>", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = External } } ) )
-         [ Var
-          ( Meta
-           { meta = AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 137 } } ) ] )
-        ( Cast
-         ( [ AnyT ] :-> AnyT )
-         ( Var
-          ( Meta
-           { meta = [ AnyT ] :-> AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 138 } } ) ) ) ) )
-      ( Assign
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 157 } } )
-       ( Assign
-        ( Meta
-         { meta = [ AnyT ] :-> AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 153 } } )
-        ( Assign
-         ( Meta
-          { meta = AnyT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 151 } } )
-         ( Assign
-          ( Meta
-           { meta = AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 149 } } )
-          ( Assign
-           ( Meta
-            { meta = [ AnyT ] :-> AnyT, id = Id
-             { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 143 } } )
-           ( Assign
-            ( Meta
-             { meta = AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 141 } } )
-            ( Assign
-             ( Meta
-              { meta = AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 140 } } )
-             ( Call
-              ( Var
-               ( Meta
-                { meta = [ StringT ] :-> AnyT, id = Id
-                 { name = "String#", moduleName = Artifact
-                  ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-              [ Unboxed ( String ", " ) ] )
-             ( Cast AnyT
-              ( Var
-               ( Meta
-                { meta = AnyT, id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 140 } } ) ) ) )
-            ( Assign
-             ( Meta
-              { meta = [ AnyT ] :-> AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 142 } } )
-             ( Call
-              ( Var
-               ( Meta
-                { meta = [ AnyT ] :->
-                 ( [ AnyT ] :-> AnyT ), id = Id
-                 { name = "punctuate", moduleName = Artifact
-                  ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
-              [ Var
-               ( Meta
-                { meta = AnyT, id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 141 } } ) ] )
-             ( Cast
-              ( [ AnyT ] :-> AnyT )
-              ( Var
-               ( Meta
-                { meta = [ AnyT ] :-> AnyT, id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 142 } } ) ) ) ) )
-           ( Assign
-            ( Meta
-             { meta = AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 147 } } )
-            ( Assign
-             ( Meta
-              { meta = [ AnyT ] :-> AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 145 } } )
-             ( Assign
-              ( Meta
-               { meta = [ AnyT ] :-> AnyT, id = Id
-                { name = "d", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 144 } } )
-              ( Call
-               ( Var
-                ( Meta
-                 { meta =
-                  [ [ AnyT ] :-> AnyT ] :->
-                  ( [ AnyT ] :-> AnyT ), id = Id
-                  { name = "mapList", moduleName = Artifact
-                   ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
-               [ Var
-                ( Meta
-                 { meta = [ AnyT ] :-> AnyT, id = Id
-                  { name = "show", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = External } } ) ] )
-              ( Cast
-               ( [ AnyT ] :-> AnyT )
-               ( Var
-                ( Meta
-                 { meta = [ AnyT ] :-> AnyT, id = Id
-                  { name = "d", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 144 } } ) ) ) )
-             ( Assign
-              ( Meta
-               { meta = AnyT, id = Id
-                { name = "d", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 146 } } )
-              ( Call
-               ( Var
-                ( Meta
-                 { meta = [ AnyT ] :-> AnyT, id = Id
-                  { name = "d", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 145 } } ) )
-               [ Var
-                ( Meta
-                 { meta = AnyT, id = Id
-                  { name = "p", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 135 } } ) ] )
-              ( Cast AnyT
-               ( Var
-                ( Meta
-                 { meta = AnyT, id = Id
-                  { name = "d", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 146 } } ) ) ) ) )
-            ( Assign
-             ( Meta
-              { meta = AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 148 } } )
-             ( Call
-              ( Var
-               ( Meta
-                { meta = [ AnyT ] :-> AnyT, id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 143 } } ) )
-              [ Var
-               ( Meta
-                { meta = AnyT, id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 147 } } ) ] )
-             ( Cast AnyT
-              ( Var
-               ( Meta
-                { meta = AnyT, id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 148 } } ) ) ) ) ) )
-          ( Assign
-           ( Meta
-            { meta = AnyT, id = Id
-             { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 150 } } )
-           ( Call
-            ( Var
-             ( Meta
-              { meta = [ AnyT ] :-> AnyT, id = Id
-               { name = "concatString", moduleName = Artifact
-                ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
-            [ Var
-             ( Meta
-              { meta = AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 149 } } ) ] )
-           ( Cast AnyT
-            ( Var
-             ( Meta
-              { meta = AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 150 } } ) ) ) ) )
-         ( Assign
-          ( Meta
-           { meta = [ AnyT ] :-> AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 152 } } )
-          ( Call
-           ( Var
-            ( Meta
-             { meta = [ AnyT ] :->
-              ( [ AnyT ] :-> AnyT ), id = Id
-              { name = "<>", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = External } } ) )
-           [ Var
-            ( Meta
-             { meta = AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 151 } } ) ] )
-          ( Cast
-           ( [ AnyT ] :-> AnyT )
-           ( Var
-            ( Meta
-             { meta = [ AnyT ] :-> AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 152 } } ) ) ) ) )
-        ( Assign
-         ( Meta
-          { meta = AnyT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 155 } } )
-         ( Assign
-          ( Meta
-           { meta = AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 154 } } )
-          ( Call
-           ( Var
-            ( Meta
-             { meta = [ StringT ] :-> AnyT, id = Id
-              { name = "String#", moduleName = Artifact
-               ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-           [ Unboxed ( String "]" ) ] )
-          ( Cast AnyT
-           ( Var
-            ( Meta
-             { meta = AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 154 } } ) ) ) )
-         ( Assign
-          ( Meta
-           { meta = AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 156 } } )
-          ( Call
-           ( Var
-            ( Meta
-             { meta = [ AnyT ] :-> AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 153 } } ) )
-           [ Var
-            ( Meta
-             { meta = AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 155 } } ) ] )
-          ( Cast AnyT
-           ( Var
-            ( Meta
-             { meta = AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 156 } } ) ) ) ) ) )
-       ( Assign
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 158 } } )
-        ( Call
-         ( Var
-          ( Meta
-           { meta = [ AnyT ] :-> AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 139 } } ) )
-         [ Var
-          ( Meta
-           { meta = AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 157 } } ) ] )
-        ( Cast AnyT
-         ( Var
-          ( Meta
-           { meta = AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 158 } } ) ) ) ) ) ) ] ),
-   ( Meta
-    { meta =
-     [ SumT [ Con Tuple [] ] ] :-> SumT
-     [ Con Tuple [] ], id = Id
-     { name = "main", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = External } },
-    [ Meta
-     { meta = SumT
-      [ Con Tuple [] ], id = Id
-      { name = "$_", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 159 } } ],
-    [ SumT [ Con Tuple [] ] ] :-> SumT
-    [ Con Tuple [] ], Match
-    ( Assign
-     ( Meta
-      { meta = AnyT, id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 198 } } )
-     ( Assign
-      ( Meta
-       { meta = [ AnyT ] :-> AnyT, id = Id
-        { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 165 } } )
-      ( Assign
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 163 } } )
-       ( Assign
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 161 } } )
-        ( Assign
-         ( Meta
-          { meta = AnyT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 160 } } )
-         ( Call
-          ( Var
-           ( Meta
-            { meta = [ StringT ] :-> AnyT, id = Id
-             { name = "String#", moduleName = Artifact
-              ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-          [ Unboxed ( String "x" ) ] )
-         ( Cast AnyT
-          ( Var
-           ( Meta
-            { meta = AnyT, id = Id
-             { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 160 } } ) ) ) )
-        ( Assign
-         ( Meta
-          { meta = AnyT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 162 } } )
-         ( Call
-          ( Var
-           ( Meta
-            { meta = [ AnyT ] :-> AnyT, id = Id
-             { name = "Symbol", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = External } } ) )
-          [ Var
-           ( Meta
-            { meta = AnyT, id = Id
-             { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 161 } } ) ] )
-         ( Cast AnyT
-          ( Var
-           ( Meta
-            { meta = AnyT, id = Id
-             { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 162 } } ) ) ) ) )
-       ( Assign
-        ( Meta
-         { meta = [ AnyT ] :-> AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 164 } } )
-        ( Call
-         ( Var
-          ( Meta
-           { meta = [ AnyT ] :->
-            ( [ AnyT ] :-> AnyT ), id = Id
-            { name = "Cons", moduleName = Artifact
-             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
-         [ Var
-          ( Meta
-           { meta = AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 163 } } ) ] )
-        ( Cast
-         ( [ AnyT ] :-> AnyT )
-         ( Var
-          ( Meta
-           { meta = [ AnyT ] :-> AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 164 } } ) ) ) ) )
-      ( Assign
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 196 } } )
-       ( Assign
-        ( Meta
-         { meta = [ AnyT ] :-> AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 193 } } )
-        ( Assign
-         ( Meta
-          { meta = AnyT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 191 } } )
-         ( Assign
-          ( Meta
-           { meta = AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 189 } } )
-          ( Assign
-           ( Meta
-            { meta = [ AnyT ] :-> AnyT, id = Id
-             { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 171 } } )
-           ( Assign
-            ( Meta
-             { meta = AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 169 } } )
-            ( Assign
-             ( Meta
-              { meta = AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 167 } } )
-             ( Assign
-              ( Meta
-               { meta = AnyT, id = Id
-                { name = "d", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 166 } } )
-              ( Call
-               ( Var
-                ( Meta
-                 { meta = [ StringT ] :-> AnyT, id = Id
-                  { name = "String#", moduleName = Artifact
-                   ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-               [ Unboxed ( String "y" ) ] )
-              ( Cast AnyT
-               ( Var
-                ( Meta
-                 { meta = AnyT, id = Id
-                  { name = "d", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 166 } } ) ) ) )
-             ( Assign
-              ( Meta
-               { meta = AnyT, id = Id
-                { name = "d", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 168 } } )
-              ( Call
-               ( Var
-                ( Meta
-                 { meta = [ AnyT ] :-> AnyT, id = Id
-                  { name = "Symbol", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = External } } ) )
-               [ Var
-                ( Meta
-                 { meta = AnyT, id = Id
-                  { name = "d", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 167 } } ) ] )
-              ( Cast AnyT
-               ( Var
-                ( Meta
-                 { meta = AnyT, id = Id
-                  { name = "d", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 168 } } ) ) ) ) )
-            ( Assign
-             ( Meta
-              { meta = [ AnyT ] :-> AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 170 } } )
-             ( Call
-              ( Var
-               ( Meta
-                { meta = [ AnyT ] :->
-                 ( [ AnyT ] :-> AnyT ), id = Id
-                 { name = "Cons", moduleName = Artifact
-                  ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
-              [ Var
-               ( Meta
-                { meta = AnyT, id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 169 } } ) ] )
-             ( Cast
-              ( [ AnyT ] :-> AnyT )
-              ( Var
-               ( Meta
-                { meta = [ AnyT ] :-> AnyT, id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 170 } } ) ) ) ) )
-           ( Assign
-            ( Meta
-             { meta = AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 187 } } )
-            ( Assign
-             ( Meta
-              { meta = [ AnyT ] :-> AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 184 } } )
-             ( Assign
-              ( Meta
-               { meta = AnyT, id = Id
-                { name = "d", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 182 } } )
-              ( Assign
-               ( Meta
-                { meta = AnyT, id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 180 } } )
-               ( Assign
-                ( Meta
-                 { meta = [ AnyT ] :-> AnyT, id = Id
-                  { name = "d", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 177 } } )
-                ( Assign
-                 ( Meta
-                  { meta = AnyT, id = Id
-                   { name = "d", moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 175 } } )
-                 ( Assign
-                  ( Meta
-                   { meta = AnyT, id = Id
-                    { name = "d", moduleName = Artifact
-                     ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 173 } } )
-                  ( Assign
-                   ( Meta
-                    { meta = AnyT, id = Id
-                     { name = "d", moduleName = Artifact
-                      ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 172 } } )
-                   ( Call
-                    ( Var
-                     ( Meta
-                      { meta = [ StringT ] :-> AnyT, id = Id
-                       { name = "String#", moduleName = Artifact
-                        ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-                    [ Unboxed ( String "z" ) ] )
-                   ( Cast AnyT
-                    ( Var
-                     ( Meta
-                      { meta = AnyT, id = Id
-                       { name = "d", moduleName = Artifact
-                        ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 172 } } ) ) ) )
-                  ( Assign
-                   ( Meta
-                    { meta = AnyT, id = Id
-                     { name = "d", moduleName = Artifact
-                      ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 174 } } )
-                   ( Call
-                    ( Var
-                     ( Meta
-                      { meta = [ AnyT ] :-> AnyT, id = Id
-                       { name = "Symbol", moduleName = Artifact
-                        ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = External } } ) )
-                    [ Var
-                     ( Meta
-                      { meta = AnyT, id = Id
-                       { name = "d", moduleName = Artifact
-                        ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 173 } } ) ] )
-                   ( Cast AnyT
-                    ( Var
-                     ( Meta
-                      { meta = AnyT, id = Id
-                       { name = "d", moduleName = Artifact
-                        ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 174 } } ) ) ) ) )
-                 ( Assign
-                  ( Meta
-                   { meta = [ AnyT ] :-> AnyT, id = Id
-                    { name = "d", moduleName = Artifact
-                     ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 176 } } )
-                  ( Call
-                   ( Var
-                    ( Meta
-                     { meta = [ AnyT ] :->
-                      ( [ AnyT ] :-> AnyT ), id = Id
-                      { name = "Cons", moduleName = Artifact
-                       ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
-                   [ Var
-                    ( Meta
-                     { meta = AnyT, id = Id
-                      { name = "d", moduleName = Artifact
-                       ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 175 } } ) ] )
-                  ( Cast
-                   ( [ AnyT ] :-> AnyT )
-                   ( Var
-                    ( Meta
-                     { meta = [ AnyT ] :-> AnyT, id = Id
-                      { name = "d", moduleName = Artifact
-                       ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 176 } } ) ) ) ) )
-                ( Assign
-                 ( Meta
-                  { meta = AnyT, id = Id
-                   { name = "d", moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 178 } } )
-                 ( CallDirect
-                  ( Meta
-                   { meta = [] :-> AnyT, id = Id
-                    { name = "Nil", moduleName = Artifact
-                     ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) [] )
-                 ( Assign
-                  ( Meta
-                   { meta = AnyT, id = Id
-                    { name = "d", moduleName = Artifact
-                     ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 179 } } )
-                  ( Call
-                   ( Var
-                    ( Meta
-                     { meta = [ AnyT ] :-> AnyT, id = Id
-                      { name = "d", moduleName = Artifact
-                       ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 177 } } ) )
-                   [ Var
-                    ( Meta
-                     { meta = AnyT, id = Id
-                      { name = "d", moduleName = Artifact
-                       ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 178 } } ) ] )
-                  ( Cast AnyT
-                   ( Var
-                    ( Meta
-                     { meta = AnyT, id = Id
-                      { name = "d", moduleName = Artifact
-                       ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 179 } } ) ) ) ) ) )
-               ( Assign
-                ( Meta
-                 { meta = AnyT, id = Id
-                  { name = "d", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 181 } } )
-                ( Call
-                 ( Var
-                  ( Meta
-                   { meta = [ AnyT ] :-> AnyT, id = Id
-                    { name = "SList", moduleName = Artifact
-                     ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = External } } ) )
-                 [ Var
-                  ( Meta
-                   { meta = AnyT, id = Id
-                    { name = "d", moduleName = Artifact
-                     ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 180 } } ) ] )
-                ( Cast AnyT
-                 ( Var
-                  ( Meta
-                   { meta = AnyT, id = Id
-                    { name = "d", moduleName = Artifact
-                     ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 181 } } ) ) ) ) )
-              ( Assign
-               ( Meta
-                { meta = [ AnyT ] :-> AnyT, id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 183 } } )
-               ( Call
-                ( Var
-                 ( Meta
-                  { meta = [ AnyT ] :->
-                   ( [ AnyT ] :-> AnyT ), id = Id
-                   { name = "Cons", moduleName = Artifact
-                    ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
-                [ Var
-                 ( Meta
-                  { meta = AnyT, id = Id
-                   { name = "d", moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 182 } } ) ] )
-               ( Cast
-                ( [ AnyT ] :-> AnyT )
-                ( Var
-                 ( Meta
-                  { meta = [ AnyT ] :-> AnyT, id = Id
-                   { name = "d", moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 183 } } ) ) ) ) )
-             ( Assign
-              ( Meta
-               { meta = AnyT, id = Id
-                { name = "d", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 185 } } )
-              ( CallDirect
-               ( Meta
-                { meta = [] :-> AnyT, id = Id
-                 { name = "Nil", moduleName = Artifact
-                  ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) [] )
-              ( Assign
-               ( Meta
-                { meta = AnyT, id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 186 } } )
-               ( Call
-                ( Var
-                 ( Meta
-                  { meta = [ AnyT ] :-> AnyT, id = Id
-                   { name = "d", moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 184 } } ) )
-                [ Var
-                 ( Meta
-                  { meta = AnyT, id = Id
-                   { name = "d", moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 185 } } ) ] )
-               ( Cast AnyT
-                ( Var
-                 ( Meta
-                  { meta = AnyT, id = Id
-                   { name = "d", moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 186 } } ) ) ) ) ) )
-            ( Assign
-             ( Meta
-              { meta = AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 188 } } )
-             ( Call
-              ( Var
-               ( Meta
-                { meta = [ AnyT ] :-> AnyT, id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 171 } } ) )
-              [ Var
-               ( Meta
-                { meta = AnyT, id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 187 } } ) ] )
-             ( Cast AnyT
-              ( Var
-               ( Meta
-                { meta = AnyT, id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 188 } } ) ) ) ) ) )
-          ( Assign
-           ( Meta
-            { meta = AnyT, id = Id
-             { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 190 } } )
-           ( Call
-            ( Var
-             ( Meta
-              { meta = [ AnyT ] :-> AnyT, id = Id
-               { name = "SList", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = External } } ) )
-            [ Var
-             ( Meta
-              { meta = AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 189 } } ) ] )
-           ( Cast AnyT
-            ( Var
-             ( Meta
-              { meta = AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 190 } } ) ) ) ) )
-         ( Assign
-          ( Meta
-           { meta = [ AnyT ] :-> AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 192 } } )
-          ( Call
-           ( Var
-            ( Meta
-             { meta = [ AnyT ] :->
-              ( [ AnyT ] :-> AnyT ), id = Id
-              { name = "Cons", moduleName = Artifact
-               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
-           [ Var
-            ( Meta
-             { meta = AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 191 } } ) ] )
-          ( Cast
-           ( [ AnyT ] :-> AnyT )
-           ( Var
-            ( Meta
-             { meta = [ AnyT ] :-> AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 192 } } ) ) ) ) )
-        ( Assign
-         ( Meta
-          { meta = AnyT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 194 } } )
-         ( CallDirect
-          ( Meta
-           { meta = [] :-> AnyT, id = Id
-            { name = "Nil", moduleName = Artifact
-             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) [] )
-         ( Assign
-          ( Meta
-           { meta = AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 195 } } )
-          ( Call
-           ( Var
-            ( Meta
-             { meta = [ AnyT ] :-> AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 193 } } ) )
-           [ Var
-            ( Meta
-             { meta = AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 194 } } ) ] )
-          ( Cast AnyT
-           ( Var
-            ( Meta
-             { meta = AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 195 } } ) ) ) ) ) )
-       ( Assign
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 197 } } )
-        ( Call
-         ( Var
-          ( Meta
-           { meta = [ AnyT ] :-> AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 165 } } ) )
-         [ Var
-          ( Meta
-           { meta = AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 196 } } ) ] )
-        ( Cast AnyT
-         ( Var
-          ( Meta
-           { meta = AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 197 } } ) ) ) ) ) )
-     ( Assign
-      ( Meta
-       { meta = AnyT, id = Id
-        { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 199 } } )
-      ( Call
-       ( Var
-        ( Meta
-         { meta = [ AnyT ] :-> AnyT, id = Id
-          { name = "SList", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = External } } ) )
-       [ Var
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 198 } } ) ] )
-      ( Cast AnyT
-       ( Var
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 199 } } ) ) ) ) )
-    [ Bind
-     ( Meta
-      { meta = AnyT, id = Id
-       { name = "let_test/testcases/malgo/Punctuate.mlg.#x_3", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 200 } } ) AnyT
-     ( Assign
-      ( Meta
-       { meta = AnyT, id = Id
-        { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 202 } } )
-      ( Assign
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 201 } } )
-       ( Call
-        ( Var
-         ( Meta
-          { meta = [ AnyT ] :-> AnyT, id = Id
-           { name = "show", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = External } } ) )
-        [ Var
-         ( Meta
-          { meta = AnyT, id = Id
-           { name = "let_test/testcases/malgo/Punctuate.mlg.#x_3", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 200 } } ) ] )
-       ( Cast AnyT
-        ( Var
-         ( Meta
-          { meta = AnyT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 201 } } ) ) ) )
-      ( Assign
-       ( Meta
-        { meta = SumT
-         [ Con Tuple [] ], id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 203 } } )
-       ( Call
-        ( Var
-         ( Meta
-          { meta = [ AnyT ] :-> SumT
-           [ Con Tuple [] ], id = Id
-           { name = "putStrLn", moduleName = Artifact
-            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } } ) )
-        [ Var
-         ( Meta
-          { meta = AnyT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 202 } } ) ] )
-       ( Cast
-        ( SumT [ Con Tuple [] ] )
-        ( Var
-         ( Meta
-          { meta = SumT
-           [ Con Tuple [] ], id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" ), sort = Temporal 203 } } ) ) ) ) ) ] ) ], extFuns = [] }
+(()
+   ((define
+      (Symbol $Punctuate.p_113)
+      (->
+         (Any#)
+         Any#)
+      (let
+         (($Punctuate.let_114
+            (sum
+               (con test/testcases/malgo/Punctuate.mlg.Symbol Any#)
+               (con test/testcases/malgo/Punctuate.mlg.SInt Any#)
+               (con test/testcases/malgo/Punctuate.mlg.SList Any#))
+            (pack
+               (sum
+                  (con test/testcases/malgo/Punctuate.mlg.Symbol Any#)
+                  (con test/testcases/malgo/Punctuate.mlg.SInt Any#)
+                  (con test/testcases/malgo/Punctuate.mlg.SList Any#))
+               (con test/testcases/malgo/Punctuate.mlg.Symbol Any#)
+               $Punctuate.p_113)))
+         (cast Any# $Punctuate.let_114)))
+      (define
+         (SInt $Punctuate.p_115)
+         (->
+            (Any#)
+            Any#)
+         (let
+            (($Punctuate.let_116
+               (sum
+                  (con test/testcases/malgo/Punctuate.mlg.Symbol Any#)
+                  (con test/testcases/malgo/Punctuate.mlg.SInt Any#)
+                  (con test/testcases/malgo/Punctuate.mlg.SList Any#))
+               (pack
+                  (sum
+                     (con test/testcases/malgo/Punctuate.mlg.Symbol Any#)
+                     (con test/testcases/malgo/Punctuate.mlg.SInt Any#)
+                     (con test/testcases/malgo/Punctuate.mlg.SList Any#))
+                  (con test/testcases/malgo/Punctuate.mlg.SInt Any#)
+                  $Punctuate.p_115)))
+            (cast Any# $Punctuate.let_116)))
+      (define
+         (SList $Punctuate.p_117)
+         (->
+            (Any#)
+            Any#)
+         (let
+            (($Punctuate.let_118
+               (sum
+                  (con test/testcases/malgo/Punctuate.mlg.Symbol Any#)
+                  (con test/testcases/malgo/Punctuate.mlg.SInt Any#)
+                  (con test/testcases/malgo/Punctuate.mlg.SList Any#))
+               (pack
+                  (sum
+                     (con test/testcases/malgo/Punctuate.mlg.Symbol Any#)
+                     (con test/testcases/malgo/Punctuate.mlg.SInt Any#)
+                     (con test/testcases/malgo/Punctuate.mlg.SList Any#))
+                  (con test/testcases/malgo/Punctuate.mlg.SList Any#)
+                  $Punctuate.p_117)))
+            (cast Any# $Punctuate.let_118)))
+      (define
+         (<> $Punctuate.eta_119)
+         (->
+            (Any#)
+            (->
+               (Any#)
+               Any#))
+         (call appendString $Punctuate.eta_119))
+      (define
+         (show $Punctuate.symbol_120)
+         (->
+            (Any#)
+            Any#)
+         (match
+            (cast
+               (sum
+                  (con test/testcases/malgo/Punctuate.mlg.Symbol Any#)
+                  (con test/testcases/malgo/Punctuate.mlg.SInt Any#)
+                  (con test/testcases/malgo/Punctuate.mlg.SList Any#))
+               $Punctuate.symbol_120)
+            (unpack
+               (con test/testcases/malgo/Punctuate.mlg.Symbol Any#)
+               ($Punctuate.p_121)
+               (=
+                  $Punctuate.d_125
+                  (=
+                     $Punctuate.d_123
+                     (=
+                        $Punctuate.d_122
+                        (call String# "Symbol ")
+                        (cast Any# $Punctuate.d_122))
+                     (=
+                        $Punctuate.d_124
+                        (call <> $Punctuate.d_123)
+                        (cast
+                           (->
+                              (Any#)
+                              Any#)
+                           $Punctuate.d_124)))
+                  (=
+                     $Punctuate.d_126
+                     (call $Punctuate.d_125 $Punctuate.p_121)
+                     (cast Any# $Punctuate.d_126))))
+            (unpack
+               (con test/testcases/malgo/Punctuate.mlg.SInt Any#)
+               ($Punctuate.p_127)
+               (=
+                  $Punctuate.d_131
+                  (=
+                     $Punctuate.d_129
+                     (=
+                        $Punctuate.d_128
+                        (call String# "SInt ")
+                        (cast Any# $Punctuate.d_128))
+                     (=
+                        $Punctuate.d_130
+                        (call <> $Punctuate.d_129)
+                        (cast
+                           (->
+                              (Any#)
+                              Any#)
+                           $Punctuate.d_130)))
+                  (=
+                     $Punctuate.d_133
+                     (=
+                        $Punctuate.d_132
+                        (call toStringInt32 $Punctuate.p_127)
+                        (cast Any# $Punctuate.d_132))
+                     (=
+                        $Punctuate.d_134
+                        (call $Punctuate.d_131 $Punctuate.d_133)
+                        (cast Any# $Punctuate.d_134)))))
+            (unpack
+               (con test/testcases/malgo/Punctuate.mlg.SList Any#)
+               ($Punctuate.p_135)
+               (=
+                  $Punctuate.d_139
+                  (=
+                     $Punctuate.d_137
+                     (=
+                        $Punctuate.d_136
+                        (call String# "SList [")
+                        (cast Any# $Punctuate.d_136))
+                     (=
+                        $Punctuate.d_138
+                        (call <> $Punctuate.d_137)
+                        (cast
+                           (->
+                              (Any#)
+                              Any#)
+                           $Punctuate.d_138)))
+                  (=
+                     $Punctuate.d_157
+                     (=
+                        $Punctuate.d_153
+                        (=
+                           $Punctuate.d_151
+                           (=
+                              $Punctuate.d_149
+                              (=
+                                 $Punctuate.d_143
+                                 (=
+                                    $Punctuate.d_141
+                                    (=
+                                       $Punctuate.d_140
+                                       (call String# ", ")
+                                       (cast Any# $Punctuate.d_140))
+                                    (=
+                                       $Punctuate.d_142
+                                       (call punctuate $Punctuate.d_141)
+                                       (cast
+                                          (->
+                                             (Any#)
+                                             Any#)
+                                          $Punctuate.d_142)))
+                                 (=
+                                    $Punctuate.d_147
+                                    (=
+                                       $Punctuate.d_145
+                                       (=
+                                          $Punctuate.d_144
+                                          (call mapList show)
+                                          (cast
+                                             (->
+                                                (Any#)
+                                                Any#)
+                                             $Punctuate.d_144))
+                                       (=
+                                          $Punctuate.d_146
+                                          (call $Punctuate.d_145 $Punctuate.p_135)
+                                          (cast Any# $Punctuate.d_146)))
+                                    (=
+                                       $Punctuate.d_148
+                                       (call $Punctuate.d_143 $Punctuate.d_147)
+                                       (cast Any# $Punctuate.d_148))))
+                              (=
+                                 $Punctuate.d_150
+                                 (call concatString $Punctuate.d_149)
+                                 (cast Any# $Punctuate.d_150)))
+                           (=
+                              $Punctuate.d_152
+                              (call <> $Punctuate.d_151)
+                              (cast
+                                 (->
+                                    (Any#)
+                                    Any#)
+                                 $Punctuate.d_152)))
+                        (=
+                           $Punctuate.d_155
+                           (=
+                              $Punctuate.d_154
+                              (call String# "]")
+                              (cast Any# $Punctuate.d_154))
+                           (=
+                              $Punctuate.d_156
+                              (call $Punctuate.d_153 $Punctuate.d_155)
+                              (cast Any# $Punctuate.d_156))))
+                     (=
+                        $Punctuate.d_158
+                        (call $Punctuate.d_139 $Punctuate.d_157)
+                        (cast Any# $Punctuate.d_158)))))))
+      (define
+         (main $Punctuate.$__159)
+         (->
+            ((sum
+               (con Tuple#)))
+            (sum
+               (con Tuple#)))
+         (match
+            (=
+               $Punctuate.d_198
+               (=
+                  $Punctuate.d_165
+                  (=
+                     $Punctuate.d_163
+                     (=
+                        $Punctuate.d_161
+                        (=
+                           $Punctuate.d_160
+                           (call String# "x")
+                           (cast Any# $Punctuate.d_160))
+                        (=
+                           $Punctuate.d_162
+                           (call Symbol $Punctuate.d_161)
+                           (cast Any# $Punctuate.d_162)))
+                     (=
+                        $Punctuate.d_164
+                        (call Cons $Punctuate.d_163)
+                        (cast
+                           (->
+                              (Any#)
+                              Any#)
+                           $Punctuate.d_164)))
+                  (=
+                     $Punctuate.d_196
+                     (=
+                        $Punctuate.d_193
+                        (=
+                           $Punctuate.d_191
+                           (=
+                              $Punctuate.d_189
+                              (=
+                                 $Punctuate.d_171
+                                 (=
+                                    $Punctuate.d_169
+                                    (=
+                                       $Punctuate.d_167
+                                       (=
+                                          $Punctuate.d_166
+                                          (call String# "y")
+                                          (cast Any# $Punctuate.d_166))
+                                       (=
+                                          $Punctuate.d_168
+                                          (call Symbol $Punctuate.d_167)
+                                          (cast Any# $Punctuate.d_168)))
+                                    (=
+                                       $Punctuate.d_170
+                                       (call Cons $Punctuate.d_169)
+                                       (cast
+                                          (->
+                                             (Any#)
+                                             Any#)
+                                          $Punctuate.d_170)))
+                                 (=
+                                    $Punctuate.d_187
+                                    (=
+                                       $Punctuate.d_184
+                                       (=
+                                          $Punctuate.d_182
+                                          (=
+                                             $Punctuate.d_180
+                                             (=
+                                                $Punctuate.d_177
+                                                (=
+                                                   $Punctuate.d_175
+                                                   (=
+                                                      $Punctuate.d_173
+                                                      (=
+                                                         $Punctuate.d_172
+                                                         (call String# "z")
+                                                         (cast Any# $Punctuate.d_172))
+                                                      (=
+                                                         $Punctuate.d_174
+                                                         (call Symbol $Punctuate.d_173)
+                                                         (cast Any# $Punctuate.d_174)))
+                                                   (=
+                                                      $Punctuate.d_176
+                                                      (call Cons $Punctuate.d_175)
+                                                      (cast
+                                                         (->
+                                                            (Any#)
+                                                            Any#)
+                                                         $Punctuate.d_176)))
+                                                (=
+                                                   $Punctuate.d_178
+                                                   (direct Nil)
+                                                   (=
+                                                      $Punctuate.d_179
+                                                      (call $Punctuate.d_177 $Punctuate.d_178)
+                                                      (cast Any# $Punctuate.d_179))))
+                                             (=
+                                                $Punctuate.d_181
+                                                (call SList $Punctuate.d_180)
+                                                (cast Any# $Punctuate.d_181)))
+                                          (=
+                                             $Punctuate.d_183
+                                             (call Cons $Punctuate.d_182)
+                                             (cast
+                                                (->
+                                                   (Any#)
+                                                   Any#)
+                                                $Punctuate.d_183)))
+                                       (=
+                                          $Punctuate.d_185
+                                          (direct Nil)
+                                          (=
+                                             $Punctuate.d_186
+                                             (call $Punctuate.d_184 $Punctuate.d_185)
+                                             (cast Any# $Punctuate.d_186))))
+                                    (=
+                                       $Punctuate.d_188
+                                       (call $Punctuate.d_171 $Punctuate.d_187)
+                                       (cast Any# $Punctuate.d_188))))
+                              (=
+                                 $Punctuate.d_190
+                                 (call SList $Punctuate.d_189)
+                                 (cast Any# $Punctuate.d_190)))
+                           (=
+                              $Punctuate.d_192
+                              (call Cons $Punctuate.d_191)
+                              (cast
+                                 (->
+                                    (Any#)
+                                    Any#)
+                                 $Punctuate.d_192)))
+                        (=
+                           $Punctuate.d_194
+                           (direct Nil)
+                           (=
+                              $Punctuate.d_195
+                              (call $Punctuate.d_193 $Punctuate.d_194)
+                              (cast Any# $Punctuate.d_195))))
+                     (=
+                        $Punctuate.d_197
+                        (call $Punctuate.d_165 $Punctuate.d_196)
+                        (cast Any# $Punctuate.d_197))))
+               (=
+                  $Punctuate.d_199
+                  (call SList $Punctuate.d_198)
+                  (cast Any# $Punctuate.d_199)))
+            (bind
+               $Punctuate.let_test/testcases/malgo/Punctuate.mlg.#x_3_200
+               Any#
+               (=
+                  $Punctuate.d_202
+                  (=
+                     $Punctuate.d_201
+                     (call show $Punctuate.let_test/testcases/malgo/Punctuate.mlg.#x_3_200)
+                     (cast Any# $Punctuate.d_201))
+                  (=
+                     $Punctuate.d_203
+                     (call putStrLn $Punctuate.d_202)
+                     (cast
+                        (sum
+                           (con Tuple#))
+                        $Punctuate.d_203)))))))
+   ())

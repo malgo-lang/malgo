@@ -20,6 +20,7 @@ where
 
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Data (Data)
+import Data.SCargot.Repr.Basic qualified as S
 import Data.Store ()
 import Data.Store.TH
 import Effectful (Eff, (:>))
@@ -28,6 +29,7 @@ import Effectful.State.Static.Local (State)
 import Malgo.Module
 import Malgo.MonadUniq
 import Malgo.Prelude hiding (toList)
+import Malgo.SExpr qualified as S
 
 -- | Identifier sort.
 data IdSort
@@ -64,6 +66,12 @@ instance Pretty Id where
   pretty Id {name, moduleName, sort = Temporal uniq} = "$" <> brackets (pretty moduleName <+> pretty name <+> pretty uniq)
   pretty Id {name, sort = Native} = "%" <> pretty name
 
+instance S.ToSExpr Id where
+  toSExpr Id {name, sort = External} = S.A $ S.Symbol name
+  toSExpr Id {name, moduleName, sort = Internal uniq} = S.A $ S.Symbol $ "#" <> moduleNameDigest moduleName <> "." <> name <> "_" <> convertString (show uniq)
+  toSExpr Id {name, moduleName, sort = Temporal uniq} = S.A $ S.Symbol $ "$" <> moduleNameDigest moduleName <> "." <> name <> "_" <> convertString (show uniq)
+  toSExpr Id {name, sort = Native} = S.A $ S.Symbol $ "%" <> name
+
 makeStore ''Id
 
 data Meta a = Meta
@@ -76,8 +84,11 @@ data Meta a = Meta
 withMeta :: a -> Id -> Meta a
 withMeta meta id = Meta {..}
 
-instance (Pretty a) => Pretty (Meta a) where
+instance Pretty (Meta a) where
   pretty Meta {id} = pretty id
+
+instance S.ToSExpr (Meta a) where
+  toSExpr Meta {id} = S.toSExpr id
 
 makeStore ''Meta
 

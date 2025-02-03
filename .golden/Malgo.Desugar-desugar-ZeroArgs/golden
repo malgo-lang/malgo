@@ -1,429 +1,147 @@
-Program
- { topVars =
-  [
-   ( Meta
-    { meta = AnyT, id = Id
-     { name = "one", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = External } }, AnyT, Assign
-    ( Meta
-     { meta = AnyT, id = Id
-      { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 35 } } )
-    ( Assign
-     ( Meta
-      { meta =
-       [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 31 } } )
-     ( Let
-      [ LocalDef
-       { _variable = Meta
-        { meta =
-         [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
-         { name = "fun", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 30 } }, typ =
-        [ SumT [ Con Tuple [] ] ] :-> AnyT, _object = Fun
-        [ Meta
-         { meta = SumT
-          [ Con Tuple [] ], id = Id
-          { name = "$_", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 28 } } ]
-        ( Assign
-         ( Meta
-          { meta = AnyT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 29 } } )
-         ( Call
-          ( Var
-           ( Meta
-            { meta = [ Int32T ] :-> AnyT, id = Id
-             { name = "Int32#", moduleName = Artifact
-              ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-          [ Unboxed ( Int32 1 ) ] )
-         ( Cast AnyT
-          ( Var
-           ( Meta
-            { meta = AnyT, id = Id
-             { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 29 } } ) ) ) ) } ]
-      ( Atom
-       ( Var
-        ( Meta
-         { meta =
-          [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
-          { name = "fun", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 30 } } ) ) ) )
-     ( Assign
-      ( Meta
-       { meta = SumT
-        [ Con Tuple [] ], id = Id
-        { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 33 } } )
-      ( Let
-       [ LocalDef
-        { _variable = Meta
-         { meta = SumT
-          [ Con Tuple [] ], id = Id
-          { name = "let", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 32 } }, typ = SumT
-         [ Con Tuple [] ], _object = Pack
-         ( SumT [ Con Tuple [] ] )
-         ( Con Tuple [] ) [] } ]
-       ( Atom
-        ( Var
-         ( Meta
-          { meta = SumT
-           [ Con Tuple [] ], id = Id
-           { name = "let", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 32 } } ) ) ) )
-      ( Assign
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 34 } } )
-       ( Call
-        ( Var
-         ( Meta
-          { meta =
-           [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 31 } } ) )
-        [ Var
-         ( Meta
-          { meta = SumT
-           [ Con Tuple [] ], id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 33 } } ) ] )
-       ( Cast AnyT
-        ( Var
-         ( Meta
-          { meta = AnyT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 34 } } ) ) ) ) ) )
-    ( Atom
-     ( Var
-      ( Meta
-       { meta = AnyT, id = Id
-        { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 35 } } ) ) ) ) ], topFuns =
-  [
-   ( Meta
-    { meta = [ AnyT ] :-> AnyT, id = Id
-     { name = "id", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = External } },
-    [ Meta
-     { meta = AnyT, id = Id
-      { name = "x", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 36 } } ], [ AnyT ] :-> AnyT, Assign
-    ( Meta
-     { meta =
-      [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
-      { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 39 } } )
-    ( Let
-     [ LocalDef
-      { _variable = Meta
-       { meta =
-        [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
-        { name = "fun", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 38 } }, typ =
-       [ SumT [ Con Tuple [] ] ] :-> AnyT, _object = Fun
-       [ Meta
-        { meta = SumT
-         [ Con Tuple [] ], id = Id
-         { name = "$_", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 37 } } ]
-       ( Atom
-        ( Var
-         ( Meta
-          { meta = AnyT, id = Id
-           { name = "x", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 36 } } ) ) ) } ]
-     ( Atom
-      ( Var
-       ( Meta
-        { meta =
-         [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
-         { name = "fun", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 38 } } ) ) ) )
-    ( Assign
-     ( Meta
-      { meta = SumT
-       [ Con Tuple [] ], id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 41 } } )
-     ( Let
-      [ LocalDef
-       { _variable = Meta
-        { meta = SumT
-         [ Con Tuple [] ], id = Id
-         { name = "let", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 40 } }, typ = SumT
-        [ Con Tuple [] ], _object = Pack
-        ( SumT [ Con Tuple [] ] )
-        ( Con Tuple [] ) [] } ]
-      ( Atom
-       ( Var
-        ( Meta
-         { meta = SumT
-          [ Con Tuple [] ], id = Id
-          { name = "let", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 40 } } ) ) ) )
-     ( Assign
-      ( Meta
-       { meta = AnyT, id = Id
-        { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 42 } } )
-      ( Call
-       ( Var
-        ( Meta
-         { meta =
-          [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 39 } } ) )
-       [ Var
-        ( Meta
-         { meta = SumT
-          [ Con Tuple [] ], id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 41 } } ) ] )
-      ( Cast AnyT
-       ( Var
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 42 } } ) ) ) ) ) ),
-   ( Meta
-    { meta =
-     [ SumT [ Con Tuple [] ] ] :-> SumT
-     [ Con Tuple [] ], id = Id
-     { name = "main", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = External } },
-    [ Meta
-     { meta = SumT
-      [ Con Tuple [] ], id = Id
-      { name = "eta", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 57 } } ],
-    [ SumT [ Con Tuple [] ] ] :-> SumT
-    [ Con Tuple [] ], Assign
-    ( Meta
-     { meta =
-      [ SumT [ Con Tuple [] ] ] :-> SumT
-      [ Con Tuple [] ], id = Id
-      { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 58 } } )
-    ( Assign
-     ( Meta
-      { meta =
-       [ SumT [ Con Tuple [] ] ] :-> SumT
-       [ Con Tuple [] ], id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 56 } } )
-     ( Assign
-      ( Meta
-       { meta =
-        [ SumT [ Con Tuple [] ] ] :->
-        ( [ SumT [ Con Tuple [] ] ] :-> SumT [ Con Tuple [] ] ), id = Id
-        { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 52 } } )
-      ( Let
-       [ LocalDef
-        { _variable = Meta
-         { meta =
-          [ SumT [ Con Tuple [] ] ] :->
-          ( [ SumT [ Con Tuple [] ] ] :-> SumT [ Con Tuple [] ] ), id = Id
-          { name = "fun", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 51 } }, typ =
-         [ SumT [ Con Tuple [] ] ] :->
-         ( [ SumT [ Con Tuple [] ] ] :-> SumT [ Con Tuple [] ] ), _object = Fun
-         [ Meta
-          { meta = SumT
-           [ Con Tuple [] ], id = Id
-           { name = "$_", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 43 } } ]
-         ( Let
-          [ LocalDef
-           { _variable = Meta
-            { meta =
-             [ SumT [ Con Tuple [] ] ] :-> SumT
-             [ Con Tuple [] ], id = Id
-             { name = "fun", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 50 } }, typ =
-            [ SumT [ Con Tuple [] ] ] :-> SumT
-            [ Con Tuple [] ], _object = Fun
-            [ Meta
-             { meta = SumT
-              [ Con Tuple [] ], id = Id
-              { name = "$_", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 44 } } ]
-            ( Assign
-             ( Meta
-              { meta = AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 48 } } )
-             ( Assign
-              ( Meta
-               { meta = AnyT, id = Id
-                { name = "d", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 46 } } )
-              ( Assign
-               ( Meta
-                { meta = AnyT, id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 45 } } )
-               ( Call
-                ( Var
-                 ( Meta
-                  { meta = [ AnyT ] :-> AnyT, id = Id
-                   { name = "id", moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = External } } ) )
-                [ Var
-                 ( Meta
-                  { meta = AnyT, id = Id
-                   { name = "one", moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = External } } ) ] )
-               ( Cast AnyT
-                ( Var
-                 ( Meta
-                  { meta = AnyT, id = Id
-                   { name = "d", moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 45 } } ) ) ) )
-              ( Assign
-               ( Meta
-                { meta = AnyT, id = Id
-                 { name = "d", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 47 } } )
-               ( Call
-                ( Var
-                 ( Meta
-                  { meta = [ AnyT ] :-> AnyT, id = Id
-                   { name = "toStringInt32", moduleName = Artifact
-                    ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-                [ Var
-                 ( Meta
-                  { meta = AnyT, id = Id
-                   { name = "d", moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 46 } } ) ] )
-               ( Cast AnyT
-                ( Var
-                 ( Meta
-                  { meta = AnyT, id = Id
-                   { name = "d", moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 47 } } ) ) ) ) )
-             ( Assign
-              ( Meta
-               { meta = SumT
-                [ Con Tuple [] ], id = Id
-                { name = "d", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 49 } } )
-              ( Call
-               ( Var
-                ( Meta
-                 { meta = [ AnyT ] :-> SumT
-                  [ Con Tuple [] ], id = Id
-                  { name = "printString", moduleName = Artifact
-                   ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } } ) )
-               [ Var
-                ( Meta
-                 { meta = AnyT, id = Id
-                  { name = "d", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 48 } } ) ] )
-              ( Cast
-               ( SumT [ Con Tuple [] ] )
-               ( Var
-                ( Meta
-                 { meta = SumT
-                  [ Con Tuple [] ], id = Id
-                  { name = "d", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 49 } } ) ) ) ) ) } ]
-          ( Atom
-           ( Var
-            ( Meta
-             { meta =
-              [ SumT [ Con Tuple [] ] ] :-> SumT
-              [ Con Tuple [] ], id = Id
-              { name = "fun", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 50 } } ) ) ) ) } ]
-       ( Atom
-        ( Var
-         ( Meta
-          { meta =
-           [ SumT [ Con Tuple [] ] ] :->
-           ( [ SumT [ Con Tuple [] ] ] :-> SumT [ Con Tuple [] ] ), id = Id
-           { name = "fun", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 51 } } ) ) ) )
-      ( Assign
-       ( Meta
-        { meta = SumT
-         [ Con Tuple [] ], id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 54 } } )
-       ( Let
-        [ LocalDef
-         { _variable = Meta
-          { meta = SumT
-           [ Con Tuple [] ], id = Id
-           { name = "let", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 53 } }, typ = SumT
-          [ Con Tuple [] ], _object = Pack
-          ( SumT [ Con Tuple [] ] )
-          ( Con Tuple [] ) [] } ]
-        ( Atom
-         ( Var
-          ( Meta
-           { meta = SumT
-            [ Con Tuple [] ], id = Id
-            { name = "let", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 53 } } ) ) ) )
-       ( Assign
-        ( Meta
-         { meta =
-          [ SumT [ Con Tuple [] ] ] :-> SumT
-          [ Con Tuple [] ], id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 55 } } )
-        ( Call
-         ( Var
-          ( Meta
-           { meta =
-            [ SumT [ Con Tuple [] ] ] :->
-            ( [ SumT [ Con Tuple [] ] ] :-> SumT [ Con Tuple [] ] ), id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 52 } } ) )
-         [ Var
-          ( Meta
-           { meta = SumT
-            [ Con Tuple [] ], id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 54 } } ) ] )
-        ( Cast
-         ( [ SumT [ Con Tuple [] ] ] :-> SumT [ Con Tuple [] ] )
-         ( Var
-          ( Meta
-           { meta =
-            [ SumT [ Con Tuple [] ] ] :-> SumT
-            [ Con Tuple [] ], id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 55 } } ) ) ) ) ) )
-     ( Atom
-      ( Var
-       ( Meta
-        { meta =
-         [ SumT [ Con Tuple [] ] ] :-> SumT
-         [ Con Tuple [] ], id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 56 } } ) ) ) )
-    ( Call
-     ( Var
-      ( Meta
-       { meta =
-        [ SumT [ Con Tuple [] ] ] :-> SumT
-        [ Con Tuple [] ], id = Id
-        { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 58 } } ) )
-     [ Var
-      ( Meta
-       { meta = SumT
-        [ Con Tuple [] ], id = Id
-        { name = "eta", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" ), sort = Temporal 57 } } ) ] ) ) ], extFuns = [] }
+(((define
+   one
+   Any#
+   (=
+      $ZeroArgs.d_35
+      (=
+         $ZeroArgs.d_31
+         (let
+            (($ZeroArgs.fun_30
+               (->
+                  ((sum
+                     (con Tuple#)))
+                  Any#)
+               (fun
+                  ($ZeroArgs.$__28)
+                  (=
+                     $ZeroArgs.d_29
+                     (call Int32# 1_i32)
+                     (cast Any# $ZeroArgs.d_29)))))
+            $ZeroArgs.fun_30)
+         (=
+            $ZeroArgs.d_33
+            (let
+               (($ZeroArgs.let_32
+                  (sum
+                     (con Tuple#))
+                  (pack
+                     (sum
+                        (con Tuple#))
+                     (con Tuple#))))
+               $ZeroArgs.let_32)
+            (=
+               $ZeroArgs.d_34
+               (call $ZeroArgs.d_31 $ZeroArgs.d_33)
+               (cast Any# $ZeroArgs.d_34))))
+      $ZeroArgs.d_35)))
+   ((define
+      (id $ZeroArgs.x_36)
+      (->
+         (Any#)
+         Any#)
+      (=
+         $ZeroArgs.d_39
+         (let
+            (($ZeroArgs.fun_38
+               (->
+                  ((sum
+                     (con Tuple#)))
+                  Any#)
+               (fun
+                  ($ZeroArgs.$__37)
+                  $ZeroArgs.x_36)))
+            $ZeroArgs.fun_38)
+         (=
+            $ZeroArgs.d_41
+            (let
+               (($ZeroArgs.let_40
+                  (sum
+                     (con Tuple#))
+                  (pack
+                     (sum
+                        (con Tuple#))
+                     (con Tuple#))))
+               $ZeroArgs.let_40)
+            (=
+               $ZeroArgs.d_42
+               (call $ZeroArgs.d_39 $ZeroArgs.d_41)
+               (cast Any# $ZeroArgs.d_42)))))
+      (define
+         (main $ZeroArgs.eta_57)
+         (->
+            ((sum
+               (con Tuple#)))
+            (sum
+               (con Tuple#)))
+         (=
+            $ZeroArgs.d_58
+            (=
+               $ZeroArgs.d_56
+               (=
+                  $ZeroArgs.d_52
+                  (let
+                     (($ZeroArgs.fun_51
+                        (->
+                           ((sum
+                              (con Tuple#)))
+                           (->
+                              ((sum
+                                 (con Tuple#)))
+                              (sum
+                                 (con Tuple#))))
+                        (fun
+                           ($ZeroArgs.$__43)
+                           (let
+                              (($ZeroArgs.fun_50
+                                 (->
+                                    ((sum
+                                       (con Tuple#)))
+                                    (sum
+                                       (con Tuple#)))
+                                 (fun
+                                    ($ZeroArgs.$__44)
+                                    (=
+                                       $ZeroArgs.d_48
+                                       (=
+                                          $ZeroArgs.d_46
+                                          (=
+                                             $ZeroArgs.d_45
+                                             (call id one)
+                                             (cast Any# $ZeroArgs.d_45))
+                                          (=
+                                             $ZeroArgs.d_47
+                                             (call toStringInt32 $ZeroArgs.d_46)
+                                             (cast Any# $ZeroArgs.d_47)))
+                                       (=
+                                          $ZeroArgs.d_49
+                                          (call printString $ZeroArgs.d_48)
+                                          (cast
+                                             (sum
+                                                (con Tuple#))
+                                             $ZeroArgs.d_49))))))
+                              $ZeroArgs.fun_50))))
+                     $ZeroArgs.fun_51)
+                  (=
+                     $ZeroArgs.d_54
+                     (let
+                        (($ZeroArgs.let_53
+                           (sum
+                              (con Tuple#))
+                           (pack
+                              (sum
+                                 (con Tuple#))
+                              (con Tuple#))))
+                        $ZeroArgs.let_53)
+                     (=
+                        $ZeroArgs.d_55
+                        (call $ZeroArgs.d_52 $ZeroArgs.d_54)
+                        (cast
+                           (->
+                              ((sum
+                                 (con Tuple#)))
+                              (sum
+                                 (con Tuple#)))
+                           $ZeroArgs.d_55))))
+               $ZeroArgs.d_56)
+            (call $ZeroArgs.d_58 $ZeroArgs.eta_57))))
+   ())

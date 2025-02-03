@@ -1,347 +1,151 @@
-Program
- { topVars = [], topFuns =
-  [
-   ( Meta
-    { meta =
-     [ AnyT, AnyT ] :-> AnyT, id = Id
-     { name = "Cons_curry", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 24 } },
-    [ Meta
-     { meta = AnyT, id = Id
-      { name = "p", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 25 } }, Meta
-     { meta = AnyT, id = Id
-      { name = "p", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 26 } } ],
-    [ AnyT, AnyT ] :-> AnyT, Let
-    [ LocalDef
-     { _variable = Meta
-      { meta = SumT
-       [ Con
-        ( Data "test/testcases/malgo/DataDef.mlg.Nil" ) [], Con
-        ( Data "test/testcases/malgo/DataDef.mlg.Cons" )
-        [ AnyT, AnyT ] ], id = Id
-       { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 27 } }, typ = SumT
-      [ Con
-       ( Data "test/testcases/malgo/DataDef.mlg.Nil" ) [], Con
-       ( Data "test/testcases/malgo/DataDef.mlg.Cons" )
-       [ AnyT, AnyT ] ], _object = Pack
-      ( SumT
-       [ Con
-        ( Data "test/testcases/malgo/DataDef.mlg.Nil" ) [], Con
-        ( Data "test/testcases/malgo/DataDef.mlg.Cons" )
-        [ AnyT, AnyT ] ] )
-      ( Con ( Data "test/testcases/malgo/DataDef.mlg.Cons" ) [ AnyT, AnyT ] )
-      [ Var
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "p", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 25 } } ), Var
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "p", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 26 } } ) ] } ]
-    ( Cast AnyT
-     ( Var
-      ( Meta
-       { meta = SumT
-        [ Con
-         ( Data "test/testcases/malgo/DataDef.mlg.Nil" ) [], Con
-         ( Data "test/testcases/malgo/DataDef.mlg.Cons" )
-         [ AnyT, AnyT ] ], id = Id
-        { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 27 } } ) ) ) ),
-   ( Meta
-    { meta = [ Int64T ] :-> AnyT, id = Id
-     { name = "Int#", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = External } },
-    [ Meta
-     { meta = Int64T, id = Id
-      { name = "p", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 18 } } ], [ Int64T ] :-> AnyT, Let
-    [ LocalDef
-     { _variable = Meta
-      { meta = SumT
-       [ Con
-        ( Data "test/testcases/malgo/DataDef.mlg.Int#" ) [ Int64T ] ], id = Id
-       { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 19 } }, typ = SumT
-      [ Con
-       ( Data "test/testcases/malgo/DataDef.mlg.Int#" ) [ Int64T ] ], _object = Pack
-      ( SumT
-       [ Con ( Data "test/testcases/malgo/DataDef.mlg.Int#" ) [ Int64T ] ] )
-      ( Con ( Data "test/testcases/malgo/DataDef.mlg.Int#" ) [ Int64T ] )
-      [ Var
-       ( Meta
-        { meta = Int64T, id = Id
-         { name = "p", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 18 } } ) ] } ]
-    ( Cast AnyT
-     ( Var
-      ( Meta
-       { meta = SumT
-        [ Con
-         ( Data "test/testcases/malgo/DataDef.mlg.Int#" ) [ Int64T ] ], id = Id
-        { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 19 } } ) ) ) ),
-   ( Meta
-    { meta = [] :-> AnyT, id = Id
-     { name = "Nil", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = External } }, [], [] :-> AnyT, Let
-    [ LocalDef
-     { _variable = Meta
-      { meta = SumT
-       [ Con
-        ( Data "test/testcases/malgo/DataDef.mlg.Nil" ) [], Con
-        ( Data "test/testcases/malgo/DataDef.mlg.Cons" )
-        [ AnyT, AnyT ] ], id = Id
-       { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 20 } }, typ = SumT
-      [ Con
-       ( Data "test/testcases/malgo/DataDef.mlg.Nil" ) [], Con
-       ( Data "test/testcases/malgo/DataDef.mlg.Cons" )
-       [ AnyT, AnyT ] ], _object = Pack
-      ( SumT
-       [ Con
-        ( Data "test/testcases/malgo/DataDef.mlg.Nil" ) [], Con
-        ( Data "test/testcases/malgo/DataDef.mlg.Cons" )
-        [ AnyT, AnyT ] ] )
-      ( Con ( Data "test/testcases/malgo/DataDef.mlg.Nil" ) [] ) [] } ]
-    ( Cast AnyT
-     ( Var
-      ( Meta
-       { meta = SumT
-        [ Con
-         ( Data "test/testcases/malgo/DataDef.mlg.Nil" ) [], Con
-         ( Data "test/testcases/malgo/DataDef.mlg.Cons" )
-         [ AnyT, AnyT ] ], id = Id
-        { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 20 } } ) ) ) ),
-   ( Meta
-    { meta = [ AnyT ] :->
-     ( [ AnyT ] :-> AnyT ), id = Id
-     { name = "Cons", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = External } },
-    [ Meta
-     { meta = AnyT, id = Id
-      { name = "p", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 21 } } ], [ AnyT ] :->
-    ( [ AnyT ] :-> AnyT ), Let
-    [ LocalDef
-     { _variable = Meta
-      { meta = [ AnyT ] :-> AnyT, id = Id
-       { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 28 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
-      [ Meta
-       { meta = AnyT, id = Id
-        { name = "p", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 22 } } ]
-      ( CallDirect
-       ( Meta
-        { meta =
-         [ AnyT, AnyT ] :-> AnyT, id = Id
-         { name = "Cons_curry", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 24 } } )
-       [ Var
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "p", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 21 } } ), Var
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "p", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 22 } } ) ] ) } ]
-    ( Atom
-     ( Var
-      ( Meta
-       { meta = [ AnyT ] :-> AnyT, id = Id
-        { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 28 } } ) ) ) ),
-   ( Meta
-    { meta = [ Int64T ] :-> StringT, id = Id
-     { name = "malgo_int64_t_to_string", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = External } },
-    [ Meta
-     { meta = Int64T, id = Id
-      { name = "p", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 29 } } ], [ Int64T ] :-> StringT, RawCall "malgo_int64_t_to_string"
-    ( [ Int64T ] :-> StringT )
-    [ Var
-     ( Meta
-      { meta = Int64T, id = Id
-       { name = "p", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 29 } } ) ] ),
-   ( Meta
-    { meta = [ StringT ] :-> SumT
-     [ Con Tuple [] ], id = Id
-     { name = "malgo_print_string", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = External } },
-    [ Meta
-     { meta = StringT, id = Id
-      { name = "p", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 30 } } ], [ StringT ] :-> SumT
-    [ Con Tuple [] ], RawCall "malgo_print_string"
-    ( [ StringT ] :-> SumT [ Con Tuple [] ] )
-    [ Var
-     ( Meta
-      { meta = StringT, id = Id
-       { name = "p", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 30 } } ) ] ),
-   ( Meta
-    { meta =
-     [ SumT [ Con Tuple [] ] ] :-> SumT
-     [ Con Tuple [] ], id = Id
-     { name = "main", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = External } },
-    [ Meta
-     { meta = SumT
-      [ Con Tuple [] ], id = Id
-      { name = "$_", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 31 } } ],
-    [ SumT [ Con Tuple [] ] ] :-> SumT
-    [ Con Tuple [] ], Assign
-    ( Meta
-     { meta = [ AnyT ] :-> SumT
-      [ Con Tuple [] ], id = Id
-      { name = "d", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 38 } } )
-    ( Let
-     [ LocalDef
-      { _variable = Meta
-       { meta = [ AnyT ] :-> SumT
-        [ Con Tuple [] ], id = Id
-        { name = "fun", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 37 } }, typ = [ AnyT ] :-> SumT
-       [ Con Tuple [] ], _object = Fun
-       [ Meta
-        { meta = AnyT, id = Id
-         { name = "int#", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 32 } } ]
-       ( Match
-        ( Cast
-         ( SumT
-          [ Con ( Data "test/testcases/malgo/DataDef.mlg.Int#" ) [ Int64T ] ] )
-         ( Var
-          ( Meta
-           { meta = AnyT, id = Id
-            { name = "int#", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 32 } } ) ) )
-        [ Unpack
-         ( Con ( Data "test/testcases/malgo/DataDef.mlg.Int#" ) [ Int64T ] )
-         [ Meta
-          { meta = Int64T, id = Id
-           { name = "p", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 33 } } ]
-         ( Assign
-          ( Meta
-           { meta = StringT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 35 } } )
-          ( Assign
-           ( Meta
-            { meta = StringT, id = Id
-             { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 34 } } )
-           ( Call
-            ( Var
-             ( Meta
-              { meta = [ Int64T ] :-> StringT, id = Id
-               { name = "malgo_int64_t_to_string", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = External } } ) )
-            [ Var
-             ( Meta
-              { meta = Int64T, id = Id
-               { name = "p", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 33 } } ) ] )
-           ( Cast StringT
-            ( Var
-             ( Meta
-              { meta = StringT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 34 } } ) ) ) )
-          ( Assign
-           ( Meta
-            { meta = SumT
-             [ Con Tuple [] ], id = Id
-             { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 36 } } )
-           ( Call
-            ( Var
-             ( Meta
-              { meta = [ StringT ] :-> SumT
-               [ Con Tuple [] ], id = Id
-               { name = "malgo_print_string", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = External } } ) )
-            [ Var
-             ( Meta
-              { meta = StringT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 35 } } ) ] )
-           ( Cast
-            ( SumT [ Con Tuple [] ] )
-            ( Var
-             ( Meta
-              { meta = SumT
-               [ Con Tuple [] ], id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 36 } } ) ) ) ) ) ] ) } ]
-     ( Atom
-      ( Var
-       ( Meta
-        { meta = [ AnyT ] :-> SumT
-         [ Con Tuple [] ], id = Id
-         { name = "fun", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 37 } } ) ) ) )
-    ( Assign
-     ( Meta
-      { meta = AnyT, id = Id
-       { name = "d", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 40 } } )
-     ( Assign
-      ( Meta
-       { meta = AnyT, id = Id
-        { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 39 } } )
-      ( Call
-       ( Var
-        ( Meta
-         { meta = [ Int64T ] :-> AnyT, id = Id
-          { name = "Int#", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = External } } ) )
-       [ Unboxed ( Int64 1 ) ] )
-      ( Cast AnyT
-       ( Var
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 39 } } ) ) ) )
-     ( Assign
-      ( Meta
-       { meta = SumT
-        [ Con Tuple [] ], id = Id
-        { name = "d", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 41 } } )
-      ( Call
-       ( Var
-        ( Meta
-         { meta = [ AnyT ] :-> SumT
-          [ Con Tuple [] ], id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 38 } } ) )
-       [ Var
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 40 } } ) ] )
-      ( Cast
-       ( SumT [ Con Tuple [] ] )
-       ( Var
-        ( Meta
-         { meta = SumT
-          [ Con Tuple [] ], id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/DataDef.mlg" ), sort = Temporal 41 } } ) ) ) ) ) ) ], extFuns =
-  [
-   ( "malgo_int64_t_to_string", [ Int64T ] :-> StringT ),
-   ( "malgo_print_string", [ StringT ] :-> SumT [ Con Tuple [] ] ) ] }
+(()
+   ((define
+      ($DataDef.Cons_curry_24 $DataDef.p_25 $DataDef.p_26)
+      (->
+         (Any# Any#)
+         Any#)
+      (let
+         (($DataDef.let_27
+            (sum
+               (con test/testcases/malgo/DataDef.mlg.Nil)
+               (con test/testcases/malgo/DataDef.mlg.Cons Any# Any#))
+            (pack
+               (sum
+                  (con test/testcases/malgo/DataDef.mlg.Nil)
+                  (con test/testcases/malgo/DataDef.mlg.Cons Any# Any#))
+               (con test/testcases/malgo/DataDef.mlg.Cons Any# Any#)
+               $DataDef.p_25
+               $DataDef.p_26)))
+         (cast Any# $DataDef.let_27)))
+      (define
+         (Int# $DataDef.p_18)
+         (->
+            (Int64#)
+            Any#)
+         (let
+            (($DataDef.let_19
+               (sum
+                  (con test/testcases/malgo/DataDef.mlg.Int# Int64#))
+               (pack
+                  (sum
+                     (con test/testcases/malgo/DataDef.mlg.Int# Int64#))
+                  (con test/testcases/malgo/DataDef.mlg.Int# Int64#)
+                  $DataDef.p_18)))
+            (cast Any# $DataDef.let_19)))
+      (define
+         (Nil)
+         (-> () Any#)
+         (let
+            (($DataDef.let_20
+               (sum
+                  (con test/testcases/malgo/DataDef.mlg.Nil)
+                  (con test/testcases/malgo/DataDef.mlg.Cons Any# Any#))
+               (pack
+                  (sum
+                     (con test/testcases/malgo/DataDef.mlg.Nil)
+                     (con test/testcases/malgo/DataDef.mlg.Cons Any# Any#))
+                  (con test/testcases/malgo/DataDef.mlg.Nil))))
+            (cast Any# $DataDef.let_20)))
+      (define
+         (Cons $DataDef.p_21)
+         (->
+            (Any#)
+            (->
+               (Any#)
+               Any#))
+         (let
+            (($DataDef.let_28
+               (->
+                  (Any#)
+                  Any#)
+               (fun
+                  ($DataDef.p_22)
+                  (direct $DataDef.Cons_curry_24 $DataDef.p_21 $DataDef.p_22))))
+            $DataDef.let_28))
+      (define
+         (malgo_int64_t_to_string $DataDef.p_29)
+         (->
+            (Int64#)
+            String#)
+         (raw
+            malgo_int64_t_to_string
+            (->
+               (Int64#)
+               String#)
+            $DataDef.p_29))
+      (define
+         (malgo_print_string $DataDef.p_30)
+         (->
+            (String#)
+            (sum
+               (con Tuple#)))
+         (raw
+            malgo_print_string
+            (->
+               (String#)
+               (sum
+                  (con Tuple#)))
+            $DataDef.p_30))
+      (define
+         (main $DataDef.$__31)
+         (->
+            ((sum
+               (con Tuple#)))
+            (sum
+               (con Tuple#)))
+         (=
+            $DataDef.d_38
+            (let
+               (($DataDef.fun_37
+                  (->
+                     (Any#)
+                     (sum
+                        (con Tuple#)))
+                  (fun
+                     ($DataDef.int#_32)
+                     (match
+                        (cast
+                           (sum
+                              (con test/testcases/malgo/DataDef.mlg.Int# Int64#))
+                           $DataDef.int#_32)
+                        (unpack
+                           (con test/testcases/malgo/DataDef.mlg.Int# Int64#)
+                           ($DataDef.p_33)
+                           (=
+                              $DataDef.d_35
+                              (=
+                                 $DataDef.d_34
+                                 (call malgo_int64_t_to_string $DataDef.p_33)
+                                 (cast String# $DataDef.d_34))
+                              (=
+                                 $DataDef.d_36
+                                 (call malgo_print_string $DataDef.d_35)
+                                 (cast
+                                    (sum
+                                       (con Tuple#))
+                                    $DataDef.d_36))))))))
+               $DataDef.fun_37)
+            (=
+               $DataDef.d_40
+               (=
+                  $DataDef.d_39
+                  (call Int# 1_i64)
+                  (cast Any# $DataDef.d_39))
+               (=
+                  $DataDef.d_41
+                  (call $DataDef.d_38 $DataDef.d_40)
+                  (cast
+                     (sum
+                        (con Tuple#))
+                     $DataDef.d_41))))))
+   ((extern
+      malgo_int64_t_to_string
+      (->
+         (Int64#)
+         String#))
+      (extern
+         malgo_print_string
+         (->
+            (String#)
+            (sum
+               (con Tuple#))))))
