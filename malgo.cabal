@@ -113,6 +113,7 @@ library
     , prettyprinter
     , raw-strings-qq
     , regex-tdfa
+    , s-cargot
     , store
     , string-conversions
     , syb
@@ -179,6 +180,7 @@ executable malgo
     , prettyprinter
     , raw-strings-qq
     , regex-tdfa
+    , s-cargot
     , store
     , string-conversions
     , syb
@@ -193,6 +195,7 @@ test-suite malgo-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      Malgo.Core.EvalSpec
       Malgo.DesugarSpec
       Malgo.DriverSpec
       Malgo.InferSpec
@@ -257,6 +260,7 @@ test-suite malgo-test
     , prettyprinter
     , raw-strings-qq
     , regex-tdfa
+    , s-cargot
     , silently
     , store
     , string-conversions
