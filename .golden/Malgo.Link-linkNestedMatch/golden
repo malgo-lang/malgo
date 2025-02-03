@@ -1,571 +1,262 @@
-Program
- { topVars = [], topFuns =
-  [
-   ( Meta
-    { meta = [] :-> AnyT, id = Id
-     { name = "False", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = External } }, [], [] :-> AnyT, Let
-    [ LocalDef
-     { _variable = Meta
-      { meta = SumT
-       [ Con
-        ( Data "test/testcases/malgo/NestedMatch.mlg.False" ) [], Con
-        ( Data "test/testcases/malgo/NestedMatch.mlg.True" ) [] ], id = Id
-       { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 30 } }, typ = SumT
-      [ Con
-       ( Data "test/testcases/malgo/NestedMatch.mlg.False" ) [], Con
-       ( Data "test/testcases/malgo/NestedMatch.mlg.True" ) [] ], _object = Pack
-      ( SumT
-       [ Con
-        ( Data "test/testcases/malgo/NestedMatch.mlg.False" ) [], Con
-        ( Data "test/testcases/malgo/NestedMatch.mlg.True" ) [] ] )
-      ( Con ( Data "test/testcases/malgo/NestedMatch.mlg.False" ) [] ) [] } ]
-    ( Cast AnyT
-     ( Var
-      ( Meta
-       { meta = SumT
-        [ Con
-         ( Data "test/testcases/malgo/NestedMatch.mlg.False" ) [], Con
-         ( Data "test/testcases/malgo/NestedMatch.mlg.True" ) [] ], id = Id
-        { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 30 } } ) ) ) ),
-   ( Meta
-    { meta = [] :-> AnyT, id = Id
-     { name = "True", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = External } }, [], [] :-> AnyT, Let
-    [ LocalDef
-     { _variable = Meta
-      { meta = SumT
-       [ Con
-        ( Data "test/testcases/malgo/NestedMatch.mlg.False" ) [], Con
-        ( Data "test/testcases/malgo/NestedMatch.mlg.True" ) [] ], id = Id
-       { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 31 } }, typ = SumT
-      [ Con
-       ( Data "test/testcases/malgo/NestedMatch.mlg.False" ) [], Con
-       ( Data "test/testcases/malgo/NestedMatch.mlg.True" ) [] ], _object = Pack
-      ( SumT
-       [ Con
-        ( Data "test/testcases/malgo/NestedMatch.mlg.False" ) [], Con
-        ( Data "test/testcases/malgo/NestedMatch.mlg.True" ) [] ] )
-      ( Con ( Data "test/testcases/malgo/NestedMatch.mlg.True" ) [] ) [] } ]
-    ( Cast AnyT
-     ( Var
-      ( Meta
-       { meta = SumT
-        [ Con
-         ( Data "test/testcases/malgo/NestedMatch.mlg.False" ) [], Con
-         ( Data "test/testcases/malgo/NestedMatch.mlg.True" ) [] ], id = Id
-        { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 31 } } ) ) ) ),
-   ( Meta
-    { meta = [] :-> AnyT, id = Id
-     { name = "False1", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = External } }, [], [] :-> AnyT, Let
-    [ LocalDef
-     { _variable = Meta
-      { meta = SumT
-       [ Con
-        ( Data "test/testcases/malgo/NestedMatch.mlg.False1" ) [], Con
-        ( Data "test/testcases/malgo/NestedMatch.mlg.True1" ) [] ], id = Id
-       { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 32 } }, typ = SumT
-      [ Con
-       ( Data "test/testcases/malgo/NestedMatch.mlg.False1" ) [], Con
-       ( Data "test/testcases/malgo/NestedMatch.mlg.True1" ) [] ], _object = Pack
-      ( SumT
-       [ Con
-        ( Data "test/testcases/malgo/NestedMatch.mlg.False1" ) [], Con
-        ( Data "test/testcases/malgo/NestedMatch.mlg.True1" ) [] ] )
-      ( Con ( Data "test/testcases/malgo/NestedMatch.mlg.False1" ) [] ) [] } ]
-    ( Cast AnyT
-     ( Var
-      ( Meta
-       { meta = SumT
-        [ Con
-         ( Data "test/testcases/malgo/NestedMatch.mlg.False1" ) [], Con
-         ( Data "test/testcases/malgo/NestedMatch.mlg.True1" ) [] ], id = Id
-        { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 32 } } ) ) ) ),
-   ( Meta
-    { meta = [] :-> AnyT, id = Id
-     { name = "True1", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = External } }, [], [] :-> AnyT, Let
-    [ LocalDef
-     { _variable = Meta
-      { meta = SumT
-       [ Con
-        ( Data "test/testcases/malgo/NestedMatch.mlg.False1" ) [], Con
-        ( Data "test/testcases/malgo/NestedMatch.mlg.True1" ) [] ], id = Id
-       { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 33 } }, typ = SumT
-      [ Con
-       ( Data "test/testcases/malgo/NestedMatch.mlg.False1" ) [], Con
-       ( Data "test/testcases/malgo/NestedMatch.mlg.True1" ) [] ], _object = Pack
-      ( SumT
-       [ Con
-        ( Data "test/testcases/malgo/NestedMatch.mlg.False1" ) [], Con
-        ( Data "test/testcases/malgo/NestedMatch.mlg.True1" ) [] ] )
-      ( Con ( Data "test/testcases/malgo/NestedMatch.mlg.True1" ) [] ) [] } ]
-    ( Cast AnyT
-     ( Var
-      ( Meta
-       { meta = SumT
-        [ Con
-         ( Data "test/testcases/malgo/NestedMatch.mlg.False1" ) [], Con
-         ( Data "test/testcases/malgo/NestedMatch.mlg.True1" ) [] ], id = Id
-        { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 33 } } ) ) ) ),
-   ( Meta
-    { meta = [] :-> AnyT, id = Id
-     { name = "False2", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = External } }, [], [] :-> AnyT, Let
-    [ LocalDef
-     { _variable = Meta
-      { meta = SumT
-       [ Con
-        ( Data "test/testcases/malgo/NestedMatch.mlg.False2" ) [], Con
-        ( Data "test/testcases/malgo/NestedMatch.mlg.True2" ) [] ], id = Id
-       { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 34 } }, typ = SumT
-      [ Con
-       ( Data "test/testcases/malgo/NestedMatch.mlg.False2" ) [], Con
-       ( Data "test/testcases/malgo/NestedMatch.mlg.True2" ) [] ], _object = Pack
-      ( SumT
-       [ Con
-        ( Data "test/testcases/malgo/NestedMatch.mlg.False2" ) [], Con
-        ( Data "test/testcases/malgo/NestedMatch.mlg.True2" ) [] ] )
-      ( Con ( Data "test/testcases/malgo/NestedMatch.mlg.False2" ) [] ) [] } ]
-    ( Cast AnyT
-     ( Var
-      ( Meta
-       { meta = SumT
-        [ Con
-         ( Data "test/testcases/malgo/NestedMatch.mlg.False2" ) [], Con
-         ( Data "test/testcases/malgo/NestedMatch.mlg.True2" ) [] ], id = Id
-        { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 34 } } ) ) ) ),
-   ( Meta
-    { meta = [] :-> AnyT, id = Id
-     { name = "True2", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = External } }, [], [] :-> AnyT, Let
-    [ LocalDef
-     { _variable = Meta
-      { meta = SumT
-       [ Con
-        ( Data "test/testcases/malgo/NestedMatch.mlg.False2" ) [], Con
-        ( Data "test/testcases/malgo/NestedMatch.mlg.True2" ) [] ], id = Id
-       { name = "let", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 35 } }, typ = SumT
-      [ Con
-       ( Data "test/testcases/malgo/NestedMatch.mlg.False2" ) [], Con
-       ( Data "test/testcases/malgo/NestedMatch.mlg.True2" ) [] ], _object = Pack
-      ( SumT
-       [ Con
-        ( Data "test/testcases/malgo/NestedMatch.mlg.False2" ) [], Con
-        ( Data "test/testcases/malgo/NestedMatch.mlg.True2" ) [] ] )
-      ( Con ( Data "test/testcases/malgo/NestedMatch.mlg.True2" ) [] ) [] } ]
-    ( Cast AnyT
-     ( Var
-      ( Meta
-       { meta = SumT
-        [ Con
-         ( Data "test/testcases/malgo/NestedMatch.mlg.False2" ) [], Con
-         ( Data "test/testcases/malgo/NestedMatch.mlg.True2" ) [] ], id = Id
-        { name = "let", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 35 } } ) ) ) ),
-   ( Meta
-    { meta = [ StringT ] :-> SumT
-     [ Con Tuple [] ], id = Id
-     { name = "malgo_print_string", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = External } },
-    [ Meta
-     { meta = StringT, id = Id
-      { name = "p", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 36 } } ], [ StringT ] :-> SumT
-    [ Con Tuple [] ], RawCall "malgo_print_string"
-    ( [ StringT ] :-> SumT [ Con Tuple [] ] )
-    [ Var
-     ( Meta
-      { meta = StringT, id = Id
-       { name = "p", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 36 } } ) ] ),
-   ( Meta
-    { meta =
-     [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
-     { name = "malgo_exit_failure", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = External } },
-    [ Meta
-     { meta = SumT
-      [ Con Tuple [] ], id = Id
-      { name = "p", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 37 } } ],
-    [ SumT [ Con Tuple [] ] ] :-> AnyT, RawCall "malgo_exit_failure"
-    ( [ SumT [ Con Tuple [] ] ] :-> AnyT )
-    [ Var
-     ( Meta
-      { meta = SumT
-       [ Con Tuple [] ], id = Id
-       { name = "p", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 37 } } ) ] ),
-   ( Meta
-    { meta =
-     [ SumT [ Con Tuple [] ] ] :-> SumT
-     [ Con Tuple [] ], id = Id
-     { name = "main", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = External } },
-    [ Meta
-     { meta = SumT
-      [ Con Tuple [] ], id = Id
-      { name = "$_", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 38 } } ],
-    [ SumT [ Con Tuple [] ] ] :-> SumT
-    [ Con Tuple [] ], Let
-    [ LocalDef
-     { _variable = Meta
-      { meta = [ AnyT ] :-> SumT
-       [ Con Tuple [] ], id = Id
-       { name = "fun", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 44 } }, typ = [ AnyT ] :-> SumT
-      [ Con Tuple [] ], _object = Fun
-      [ Meta
-       { meta = AnyT, id = Id
-        { name = "true", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 39 } } ]
-      ( Assign
-       ( Meta
-        { meta = SumT
-         [ Con
-          ( Data "test/testcases/malgo/NestedMatch.mlg.False" ) [], Con
-          ( Data "test/testcases/malgo/NestedMatch.mlg.True" ) [] ], id = Id
-         { name = "scrutinee", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 58 } } )
-       ( Cast
-        ( SumT
-         [ Con
-          ( Data "test/testcases/malgo/NestedMatch.mlg.False" ) [], Con
-          ( Data "test/testcases/malgo/NestedMatch.mlg.True" ) [] ] )
-        ( Var
-         ( Meta
-          { meta = AnyT, id = Id
-           { name = "true", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 39 } } ) ) )
-       ( Switch
-        ( Var
-         ( Meta
-          { meta = SumT
-           [ Con
-            ( Data "test/testcases/malgo/NestedMatch.mlg.False" ) [], Con
-            ( Data "test/testcases/malgo/NestedMatch.mlg.True" ) [] ], id = Id
-           { name = "scrutinee", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 58 } } ) )
-        [
-         ( Data "test/testcases/malgo/NestedMatch.mlg.False", Destruct
-          ( Var
-           ( Meta
-            { meta = SumT
-             [ Con
-              ( Data "test/testcases/malgo/NestedMatch.mlg.False" ) [], Con
-              ( Data "test/testcases/malgo/NestedMatch.mlg.True" ) [] ], id = Id
-             { name = "scrutinee", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 58 } } ) )
-          ( Con ( Data "test/testcases/malgo/NestedMatch.mlg.False" ) [] ) []
-          ( Let
-           [ LocalDef
-            { _variable = Meta
-             { meta = SumT
-              [ Con Tuple [] ], id = Id
-              { name = "let", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 40 } }, typ = SumT
-             [ Con Tuple [] ], _object = Pack
-             ( SumT [ Con Tuple [] ] )
-             ( Con Tuple [] ) [] } ]
-           ( Assign
-            ( Meta
-             { meta = AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 42 } } )
-            ( Call
-             ( Var
-              ( Meta
-               { meta =
-                [ SumT [ Con Tuple [] ] ] :-> AnyT, id = Id
-                { name = "malgo_exit_failure", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = External } } ) )
-             [ Var
-              ( Meta
-               { meta = SumT
-                [ Con Tuple [] ], id = Id
-                { name = "let", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 40 } } ) ] )
-            ( Cast
-             ( SumT [ Con Tuple [] ] )
-             ( Var
-              ( Meta
-               { meta = AnyT, id = Id
-                { name = "d", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 42 } } ) ) ) ) ) ),
-         ( Data "test/testcases/malgo/NestedMatch.mlg.True", Destruct
-          ( Var
-           ( Meta
-            { meta = SumT
-             [ Con
-              ( Data "test/testcases/malgo/NestedMatch.mlg.False" ) [], Con
-              ( Data "test/testcases/malgo/NestedMatch.mlg.True" ) [] ], id = Id
-             { name = "scrutinee", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 58 } } ) )
-          ( Con ( Data "test/testcases/malgo/NestedMatch.mlg.True" ) [] ) []
-          ( Assign
-           ( Meta
-            { meta = SumT
-             [ Con Tuple [] ], id = Id
-             { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 43 } } )
-           ( Call
-            ( Var
-             ( Meta
-              { meta = [ StringT ] :-> SumT
-               [ Con Tuple [] ], id = Id
-               { name = "malgo_print_string", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = External } } ) )
-            [ Unboxed ( String "OK" ) ] )
-           ( Cast
-            ( SumT [ Con Tuple [] ] )
-            ( Var
-             ( Meta
-              { meta = SumT
-               [ Con Tuple [] ], id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 43 } } ) ) ) ) ) ]
-        ( Error ( SumT [ Con Tuple [] ] ) ) ) ) } ]
-    ( Let
-     [ LocalDef
-      { _variable = Meta
-       { meta = [ AnyT ] :-> AnyT, id = Id
-        { name = "fun", moduleName = Artifact
-         ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 47 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
-       [ Meta
-        { meta = AnyT, id = Id
-         { name = "true1", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 46 } } ]
-       ( Assign
-        ( Meta
-         { meta = SumT
-          [ Con
-           ( Data "test/testcases/malgo/NestedMatch.mlg.False1" ) [], Con
-           ( Data "test/testcases/malgo/NestedMatch.mlg.True1" ) [] ], id = Id
-          { name = "scrutinee", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 59 } } )
-        ( Cast
-         ( SumT
-          [ Con
-           ( Data "test/testcases/malgo/NestedMatch.mlg.False1" ) [], Con
-           ( Data "test/testcases/malgo/NestedMatch.mlg.True1" ) [] ] )
-         ( Var
-          ( Meta
-           { meta = AnyT, id = Id
-            { name = "true1", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 46 } } ) ) )
-        ( Switch
-         ( Var
-          ( Meta
-           { meta = SumT
-            [ Con
-             ( Data "test/testcases/malgo/NestedMatch.mlg.False1" ) [], Con
-             ( Data "test/testcases/malgo/NestedMatch.mlg.True1" ) [] ], id = Id
-            { name = "scrutinee", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 59 } } ) )
-         [
-          ( Data "test/testcases/malgo/NestedMatch.mlg.False1", Destruct
-           ( Var
-            ( Meta
-             { meta = SumT
-              [ Con
-               ( Data "test/testcases/malgo/NestedMatch.mlg.False1" ) [], Con
-               ( Data "test/testcases/malgo/NestedMatch.mlg.True1" ) [] ], id = Id
-              { name = "scrutinee", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 59 } } ) )
-           ( Con ( Data "test/testcases/malgo/NestedMatch.mlg.False1" ) [] ) []
-           ( CallDirect
-            ( Meta
-             { meta = [] :-> AnyT, id = Id
-              { name = "True", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = External } } ) [] ) ),
-          ( Data "test/testcases/malgo/NestedMatch.mlg.True1", Destruct
-           ( Var
-            ( Meta
-             { meta = SumT
-              [ Con
-               ( Data "test/testcases/malgo/NestedMatch.mlg.False1" ) [], Con
-               ( Data "test/testcases/malgo/NestedMatch.mlg.True1" ) [] ], id = Id
-              { name = "scrutinee", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 59 } } ) )
-           ( Con ( Data "test/testcases/malgo/NestedMatch.mlg.True1" ) [] ) []
-           ( CallDirect
-            ( Meta
-             { meta = [] :-> AnyT, id = Id
-              { name = "False", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = External } } ) [] ) ) ] ( Error AnyT ) ) ) } ]
-     ( Let
-      [ LocalDef
-       { _variable = Meta
-        { meta = [ AnyT ] :-> AnyT, id = Id
-         { name = "fun", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 50 } }, typ = [ AnyT ] :-> AnyT, _object = Fun
-        [ Meta
-         { meta = AnyT, id = Id
-          { name = "true2", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 49 } } ]
-        ( Assign
-         ( Meta
-          { meta = SumT
-           [ Con
-            ( Data "test/testcases/malgo/NestedMatch.mlg.False2" ) [], Con
-            ( Data "test/testcases/malgo/NestedMatch.mlg.True2" ) [] ], id = Id
-           { name = "scrutinee", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 60 } } )
-         ( Cast
-          ( SumT
-           [ Con
-            ( Data "test/testcases/malgo/NestedMatch.mlg.False2" ) [], Con
-            ( Data "test/testcases/malgo/NestedMatch.mlg.True2" ) [] ] )
-          ( Var
-           ( Meta
-            { meta = AnyT, id = Id
-             { name = "true2", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 49 } } ) ) )
-         ( Switch
-          ( Var
-           ( Meta
-            { meta = SumT
-             [ Con
-              ( Data "test/testcases/malgo/NestedMatch.mlg.False2" ) [], Con
-              ( Data "test/testcases/malgo/NestedMatch.mlg.True2" ) [] ], id = Id
-             { name = "scrutinee", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 60 } } ) )
-          [
-           ( Data "test/testcases/malgo/NestedMatch.mlg.False2", Destruct
-            ( Var
-             ( Meta
-              { meta = SumT
-               [ Con
-                ( Data "test/testcases/malgo/NestedMatch.mlg.False2" ) [], Con
-                ( Data "test/testcases/malgo/NestedMatch.mlg.True2" ) [] ], id = Id
-               { name = "scrutinee", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 60 } } ) )
-            ( Con
-             ( Data "test/testcases/malgo/NestedMatch.mlg.False2" ) [] ) []
-            ( CallDirect
-             ( Meta
-              { meta = [] :-> AnyT, id = Id
-               { name = "True1", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = External } } ) [] ) ),
-           ( Data "test/testcases/malgo/NestedMatch.mlg.True2", Destruct
-            ( Var
-             ( Meta
-              { meta = SumT
-               [ Con
-                ( Data "test/testcases/malgo/NestedMatch.mlg.False2" ) [], Con
-                ( Data "test/testcases/malgo/NestedMatch.mlg.True2" ) [] ], id = Id
-               { name = "scrutinee", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 60 } } ) )
-            ( Con ( Data "test/testcases/malgo/NestedMatch.mlg.True2" ) [] ) []
-            ( CallDirect
-             ( Meta
-              { meta = [] :-> AnyT, id = Id
-               { name = "False1", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = External } } ) [] ) ) ] ( Error AnyT ) ) ) } ]
-      ( Assign
-       ( Meta
-        { meta = AnyT, id = Id
-         { name = "d", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 52 } } )
-       ( CallDirect
-        ( Meta
-         { meta = [] :-> AnyT, id = Id
-          { name = "True2", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = External } } ) [] )
-       ( Assign
-        ( Meta
-         { meta = AnyT, id = Id
-          { name = "d", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 53 } } )
-        ( Call
-         ( Var
-          ( Meta
-           { meta = [ AnyT ] :-> AnyT, id = Id
-            { name = "fun", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 50 } } ) )
-         [ Var
-          ( Meta
-           { meta = AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 52 } } ) ] )
-        ( Assign
-         ( Meta
-          { meta = AnyT, id = Id
-           { name = "d", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 54 } } )
-         ( Cast AnyT
-          ( Var
-           ( Meta
-            { meta = AnyT, id = Id
-             { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 53 } } ) ) )
-         ( Assign
-          ( Meta
-           { meta = AnyT, id = Id
-            { name = "d", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 55 } } )
-          ( Call
-           ( Var
-            ( Meta
-             { meta = [ AnyT ] :-> AnyT, id = Id
-              { name = "fun", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 47 } } ) )
-           [ Var
-            ( Meta
-             { meta = AnyT, id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 54 } } ) ] )
-          ( Assign
-           ( Meta
-            { meta = AnyT, id = Id
-             { name = "d", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 56 } } )
-           ( Cast AnyT
-            ( Var
-             ( Meta
-              { meta = AnyT, id = Id
-               { name = "d", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 55 } } ) ) )
-           ( Assign
-            ( Meta
-             { meta = SumT
-              [ Con Tuple [] ], id = Id
-              { name = "d", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 57 } } )
-            ( Call
-             ( Var
-              ( Meta
-               { meta = [ AnyT ] :-> SumT
-                [ Con Tuple [] ], id = Id
-                { name = "fun", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 44 } } ) )
-             [ Var
-              ( Meta
-               { meta = AnyT, id = Id
-                { name = "d", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 56 } } ) ] )
-            ( Cast
-             ( SumT [ Con Tuple [] ] )
-             ( Var
-              ( Meta
-               { meta = SumT
-                [ Con Tuple [] ], id = Id
-                { name = "d", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" ), sort = Temporal 57 } } ) ) ) ) ) ) ) ) ) ) ) ) ], extFuns =
-  [
-   ( "malgo_print_string", [ StringT ] :-> SumT [ Con Tuple [] ] ),
-   ( "malgo_exit_failure", [ SumT [ Con Tuple [] ] ] :-> AnyT ) ] }
+(()
+   ((define
+      (False)
+      (-> () Any#)
+      (let
+         (($NestedMatch.let_30
+            (sum
+               (con test/testcases/malgo/NestedMatch.mlg.False)
+               (con test/testcases/malgo/NestedMatch.mlg.True))
+            (pack
+               (sum
+                  (con test/testcases/malgo/NestedMatch.mlg.False)
+                  (con test/testcases/malgo/NestedMatch.mlg.True))
+               (con test/testcases/malgo/NestedMatch.mlg.False))))
+         (cast Any# $NestedMatch.let_30)))
+      (define
+         (True)
+         (-> () Any#)
+         (let
+            (($NestedMatch.let_31
+               (sum
+                  (con test/testcases/malgo/NestedMatch.mlg.False)
+                  (con test/testcases/malgo/NestedMatch.mlg.True))
+               (pack
+                  (sum
+                     (con test/testcases/malgo/NestedMatch.mlg.False)
+                     (con test/testcases/malgo/NestedMatch.mlg.True))
+                  (con test/testcases/malgo/NestedMatch.mlg.True))))
+            (cast Any# $NestedMatch.let_31)))
+      (define
+         (False1)
+         (-> () Any#)
+         (let
+            (($NestedMatch.let_32
+               (sum
+                  (con test/testcases/malgo/NestedMatch.mlg.False1)
+                  (con test/testcases/malgo/NestedMatch.mlg.True1))
+               (pack
+                  (sum
+                     (con test/testcases/malgo/NestedMatch.mlg.False1)
+                     (con test/testcases/malgo/NestedMatch.mlg.True1))
+                  (con test/testcases/malgo/NestedMatch.mlg.False1))))
+            (cast Any# $NestedMatch.let_32)))
+      (define
+         (True1)
+         (-> () Any#)
+         (let
+            (($NestedMatch.let_33
+               (sum
+                  (con test/testcases/malgo/NestedMatch.mlg.False1)
+                  (con test/testcases/malgo/NestedMatch.mlg.True1))
+               (pack
+                  (sum
+                     (con test/testcases/malgo/NestedMatch.mlg.False1)
+                     (con test/testcases/malgo/NestedMatch.mlg.True1))
+                  (con test/testcases/malgo/NestedMatch.mlg.True1))))
+            (cast Any# $NestedMatch.let_33)))
+      (define
+         (False2)
+         (-> () Any#)
+         (let
+            (($NestedMatch.let_34
+               (sum
+                  (con test/testcases/malgo/NestedMatch.mlg.False2)
+                  (con test/testcases/malgo/NestedMatch.mlg.True2))
+               (pack
+                  (sum
+                     (con test/testcases/malgo/NestedMatch.mlg.False2)
+                     (con test/testcases/malgo/NestedMatch.mlg.True2))
+                  (con test/testcases/malgo/NestedMatch.mlg.False2))))
+            (cast Any# $NestedMatch.let_34)))
+      (define
+         (True2)
+         (-> () Any#)
+         (let
+            (($NestedMatch.let_35
+               (sum
+                  (con test/testcases/malgo/NestedMatch.mlg.False2)
+                  (con test/testcases/malgo/NestedMatch.mlg.True2))
+               (pack
+                  (sum
+                     (con test/testcases/malgo/NestedMatch.mlg.False2)
+                     (con test/testcases/malgo/NestedMatch.mlg.True2))
+                  (con test/testcases/malgo/NestedMatch.mlg.True2))))
+            (cast Any# $NestedMatch.let_35)))
+      (define
+         (malgo_print_string $NestedMatch.p_36)
+         (->
+            (String#)
+            (sum
+               (con Tuple#)))
+         (raw
+            malgo_print_string
+            (->
+               (String#)
+               (sum
+                  (con Tuple#)))
+            $NestedMatch.p_36))
+      (define
+         (malgo_exit_failure $NestedMatch.p_37)
+         (->
+            ((sum
+               (con Tuple#)))
+            Any#)
+         (raw
+            malgo_exit_failure
+            (->
+               ((sum
+                  (con Tuple#)))
+               Any#)
+            $NestedMatch.p_37))
+      (define
+         (main $NestedMatch.$__38)
+         (->
+            ((sum
+               (con Tuple#)))
+            (sum
+               (con Tuple#)))
+         (let
+            (($NestedMatch.fun_44
+               (->
+                  (Any#)
+                  (sum
+                     (con Tuple#)))
+               (fun
+                  ($NestedMatch.true_39)
+                  (=
+                     $NestedMatch.scrutinee_58
+                     (cast
+                        (sum
+                           (con test/testcases/malgo/NestedMatch.mlg.False)
+                           (con test/testcases/malgo/NestedMatch.mlg.True))
+                        $NestedMatch.true_39)
+                     (switch
+                        $NestedMatch.scrutinee_58
+                        (test/testcases/malgo/NestedMatch.mlg.False
+                           (destruct
+                              $NestedMatch.scrutinee_58
+                              (con test/testcases/malgo/NestedMatch.mlg.False)
+                              ()
+                              (let
+                                 (($NestedMatch.let_40
+                                    (sum
+                                       (con Tuple#))
+                                    (pack
+                                       (sum
+                                          (con Tuple#))
+                                       (con Tuple#))))
+                                 (=
+                                    $NestedMatch.d_42
+                                    (call malgo_exit_failure $NestedMatch.let_40)
+                                    (cast
+                                       (sum
+                                          (con Tuple#))
+                                       $NestedMatch.d_42)))))
+                        (test/testcases/malgo/NestedMatch.mlg.True
+                           (destruct
+                              $NestedMatch.scrutinee_58
+                              (con test/testcases/malgo/NestedMatch.mlg.True)
+                              ()
+                              (=
+                                 $NestedMatch.d_43
+                                 (call malgo_print_string "OK")
+                                 (cast
+                                    (sum
+                                       (con Tuple#))
+                                    $NestedMatch.d_43))))
+                        (ERROR
+                           (sum
+                              (con Tuple#))))))))
+            (let
+               (($NestedMatch.fun_47
+                  (->
+                     (Any#)
+                     Any#)
+                  (fun
+                     ($NestedMatch.true1_46)
+                     (=
+                        $NestedMatch.scrutinee_59
+                        (cast
+                           (sum
+                              (con test/testcases/malgo/NestedMatch.mlg.False1)
+                              (con test/testcases/malgo/NestedMatch.mlg.True1))
+                           $NestedMatch.true1_46)
+                        (switch
+                           $NestedMatch.scrutinee_59
+                           (test/testcases/malgo/NestedMatch.mlg.False1
+                              (destruct
+                                 $NestedMatch.scrutinee_59
+                                 (con test/testcases/malgo/NestedMatch.mlg.False1)
+                                 ()
+                                 (direct True)))
+                           (test/testcases/malgo/NestedMatch.mlg.True1
+                              (destruct
+                                 $NestedMatch.scrutinee_59
+                                 (con test/testcases/malgo/NestedMatch.mlg.True1)
+                                 ()
+                                 (direct False)))
+                           (ERROR Any#))))))
+               (let
+                  (($NestedMatch.fun_50
+                     (->
+                        (Any#)
+                        Any#)
+                     (fun
+                        ($NestedMatch.true2_49)
+                        (=
+                           $NestedMatch.scrutinee_60
+                           (cast
+                              (sum
+                                 (con test/testcases/malgo/NestedMatch.mlg.False2)
+                                 (con test/testcases/malgo/NestedMatch.mlg.True2))
+                              $NestedMatch.true2_49)
+                           (switch
+                              $NestedMatch.scrutinee_60
+                              (test/testcases/malgo/NestedMatch.mlg.False2
+                                 (destruct
+                                    $NestedMatch.scrutinee_60
+                                    (con test/testcases/malgo/NestedMatch.mlg.False2)
+                                    ()
+                                    (direct True1)))
+                              (test/testcases/malgo/NestedMatch.mlg.True2
+                                 (destruct
+                                    $NestedMatch.scrutinee_60
+                                    (con test/testcases/malgo/NestedMatch.mlg.True2)
+                                    ()
+                                    (direct False1)))
+                              (ERROR Any#))))))
+                  (=
+                     $NestedMatch.d_52
+                     (direct True2)
+                     (=
+                        $NestedMatch.d_53
+                        (call $NestedMatch.fun_50 $NestedMatch.d_52)
+                        (=
+                           $NestedMatch.d_54
+                           (cast Any# $NestedMatch.d_53)
+                           (=
+                              $NestedMatch.d_55
+                              (call $NestedMatch.fun_47 $NestedMatch.d_54)
+                              (=
+                                 $NestedMatch.d_56
+                                 (cast Any# $NestedMatch.d_55)
+                                 (=
+                                    $NestedMatch.d_57
+                                    (call $NestedMatch.fun_44 $NestedMatch.d_56)
+                                    (cast
+                                       (sum
+                                          (con Tuple#))
+                                       $NestedMatch.d_57))))))))))))
+   ((extern
+      malgo_print_string
+      (->
+         (String#)
+         (sum
+            (con Tuple#))))
+      (extern
+         malgo_exit_failure
+         (->
+            ((sum
+               (con Tuple#)))
+            Any#))))

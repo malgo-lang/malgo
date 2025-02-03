@@ -7,7 +7,7 @@ import Effectful.Error.Static (runError)
 import Effectful.Reader.Static (runReader)
 import GHC.Exception (CallStack, prettyCallStack)
 import Malgo.Core.Eval
-import Malgo.Core.Flat qualified as Flag
+import Malgo.Core.Flat qualified as Flat
 import Malgo.Desugar.Pass (desugar)
 import Malgo.Infer.Pass (infer)
 import Malgo.Interface (buildInterface)
@@ -53,7 +53,7 @@ driveEval srcPath = capture do
     (typed, tcEnv) <- infer rnEnv renamed
     refined <- refine tcEnv typed
     (dsState, core) <- desugar tcEnv refined
-    core' <- runReader refined.moduleName $ Flag.normalize core
+    core' <- runReader refined.moduleName $ Flat.normalize core
     let inf = buildInterface refined.moduleName rnState tcEnv dsState
     core'' <- Link.link inf core'
     runError @EvalError $ runReader refined.moduleName $ eval core''

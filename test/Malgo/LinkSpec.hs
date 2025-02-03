@@ -14,6 +14,7 @@ import Malgo.Prelude
 import Malgo.Refine.Pass (refine)
 import Malgo.Rename.Pass (rename)
 import Malgo.Rename.RnEnv qualified as RnEnv
+import Malgo.SExpr (sShow)
 import Malgo.Syntax
 import Malgo.TestUtils
 import System.Directory
@@ -48,4 +49,4 @@ driveLink srcPath = do
     core' <- runReader refined.moduleName $ Flag.normalize core
     let inf = buildInterface refined.moduleName rnState tcEnv dsState
     core'' <- Link.link inf core'
-    pure $ pShowCompact core''
+    pure $ sShow core''
