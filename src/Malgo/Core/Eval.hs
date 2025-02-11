@@ -1,5 +1,3 @@
-{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
-
 module Malgo.Core.Eval (eval, EvalError) where
 
 import Data.Map qualified as Map
@@ -19,7 +17,14 @@ eval :: (IOE :> es, Error EvalError :> es, Reader ModuleName :> es, State Uniq :
 eval program = evalState @Env mempty do
   traverse_ evalTopFun program.topFuns
   traverse_ initTopVar program.topVars
-  traverse_ evalTopVar program.topVars -- TODO: eval main function.
+  traverse_ evalTopVar program.topVars
+  main <- findMain program.topFuns
+  void $ evalExpr (CallDirect main [])
+  where
+    findMain [] = throwError NoMain
+    findMain ((name, _, _, _) : rest)
+      | name.id.name == "main" = pure name
+      | otherwise = findMain rest
 
 evalTopFun :: (State Env :> es, IOE :> es) => (Name, [Name], c, Expr Name) -> Eff es ()
 evalTopFun (name, parameters, _, body) = do
@@ -170,17 +175,7 @@ evalObj _hint (Record fields) =
     writeRef ref value
     pure ref
 
-primitives :: (Error EvalError :> es) => Map Text ([Value] -> Eff es Value)
-primitives =
-  Map.fromList
-    [ ( "malgo_unsafe_cast",
-        \case
-          [value] -> pure value
-          values -> throwError $ InvalidArguments "malgo_unsafe_cast" values
-      )
-    ]
-
-evalPrimitive :: (Error EvalError :> es) => Text -> [Value] -> Eff es Value
+evalPrimitive :: (Error EvalError :> es, IOE :> es) => Text -> [Value] -> Eff es Value
 evalPrimitive name args = do
   case Map.lookup name primitives of
     Just prim -> prim args
@@ -235,6 +230,7 @@ data EvalError
   | NoMatch
   | UnexpectedError Type
   | InvalidArguments Text [Value]
+  | NoMain
   deriving stock (Show)
 
 -- | A reference to a mutable value.
@@ -263,3 +259,40 @@ data Value
   | VPack Tag [Ref]
   | VRecord (Map Text Ref)
   deriving stock (Show)
+
+primitives :: (Error EvalError :> es, IOE :> es) => Map Text ([Value] -> Eff es Value)
+primitives =
+  Map.fromList
+    [ ( "malgo_unsafe_cast",
+        \case
+          [value] -> pure value
+          values -> throwError $ InvalidArguments "malgo_unsafe_cast" values
+      ),
+      ( "malgo_add_int32_t",
+        \case
+          [VUnboxed (Int32 x), VUnboxed (Int32 y)] -> do
+            pure $ VUnboxed (Int32 (x + y))
+          values -> throwError $ InvalidArguments "malgo_add_int32_t" values
+      ),
+      ( "malgo_sub_int32_t",
+        \case
+          [VUnboxed (Int32 x), VUnboxed (Int32 y)] -> do
+            pure $ VUnboxed (Int32 (x - y))
+          values -> throwError $ InvalidArguments "malgo_sub_int32_t" values
+      ),
+      ( "malgo_int32_t_to_string",
+        \case
+          [VUnboxed (Int32 x)] -> pure $ VUnboxed $ String $ convertString $ show x
+          values -> throwError $ InvalidArguments "malgo_int32_t_to_string" values
+      ),
+      ( "malgo_print_string",
+        \case
+          [VUnboxed (String x)] -> putText x >> pure (VPack Tuple [])
+          values -> throwError $ InvalidArguments "malgo_print_string" values
+      ),
+      ( "malgo_newline",
+        \case
+          [VPack Tuple []] -> putText "\n" >> pure (VPack Tuple [])
+          values -> throwError $ InvalidArguments "malgo_newline" values
+      )
+    ]
