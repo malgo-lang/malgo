@@ -2,11 +2,10 @@
 
 module Malgo.Core.Eval (eval, EvalError) where
 
-import Control.Lens (view)
 import Data.Map qualified as Map
 import Data.Traversable (for)
 import Effectful
-import Effectful.Error.Static (Error, catchError, throwError)
+import Effectful.Error.Static (Error, throwError)
 import Effectful.Reader.Static (Reader)
 import Effectful.State.Static.Local
 import Malgo.Core.Syntax
@@ -36,13 +35,7 @@ initTopVar (name, _, _) = do
 
 evalTopVar :: (State Env :> es, Error EvalError :> es, IOE :> es, State Uniq :> es, Reader ModuleName :> es) => (Name, b, Expr Name) -> Eff es ()
 evalTopVar (name, _, expr) = do
-  -- TODO: Better error message.
-  -- If UnInitializedVariable is thrown, it means that some variables in expr is read before they are initialized.
-  -- Core doen't allow this, so we can assume that the error is caused by a bug in the compiler.
-  value <-
-    evalExpr expr `catchError` \_ -> \case
-      UnInitializedVariable _ -> throwError (InvalidTopVar name)
-      err -> throwError err
+  value <- evalExpr expr
   ref <- lookupRef name
   writeRef ref value
 
@@ -54,7 +47,8 @@ evalExpr (Call closure args) = do
   case closure' of
     VFun env parameters body ->
       local do
-        put $ fromMaybe mempty env
+        current <- get
+        put $ fromMaybe current env -- If the environment is not captured, use the current environment.
         assign' (zip parameters args')
         evalExpr body
     _ -> throwError (NotClosure closure')
@@ -208,14 +202,14 @@ type Name = Meta Type
 
 type Env = Map Name Ref
 
-lookupRef :: (Error EvalError :> es, State Env :> es) => Name -> Eff es Ref
+lookupRef :: (Error EvalError :> es, State Env :> es, HasCallStack) => Name -> Eff es Ref
 lookupRef name = do
   env <- get
   case Map.lookup name env of
     Just ref -> pure ref
     Nothing -> throwError (UnboundVariable name)
 
-lookup :: (Error EvalError :> es, State Env :> es, IOE :> es) => Name -> Eff es Value
+lookup :: (Error EvalError :> es, State Env :> es, IOE :> es, HasCallStack) => Name -> Eff es Value
 lookup name = do
   env <- get
   case Map.lookup name env of
