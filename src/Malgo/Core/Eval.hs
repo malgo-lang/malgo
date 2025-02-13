@@ -19,11 +19,15 @@ eval program = evalState @Env mempty do
   traverse_ initTopVar program.topVars
   traverse_ evalTopVar program.topVars
   main <- findMain program.topFuns
-  void $ evalExpr (CallDirect main [])
+  case main of
+    (VFun _ [parameter] body) -> do
+      assign' [(parameter, VPack Tuple [])]
+      void $ evalExpr body
+    _ -> throwError NoMain
   where
     findMain [] = throwError NoMain
     findMain ((name, _, _, _) : rest)
-      | name.id.name == "main" = pure name
+      | name.id.name == "main" = lookup name
       | otherwise = findMain rest
 
 evalTopFun :: (State Env :> es, IOE :> es) => (Name, [Name], c, Expr Name) -> Eff es ()
