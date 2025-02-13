@@ -1,7 +1,6 @@
 module Malgo.RenameSpec (spec) where
 
 import Data.ByteString qualified as BS
-import Error.Diagnose
 import Malgo.Monad (CompileMode (..), runMalgoM)
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
@@ -11,7 +10,6 @@ import Malgo.TestUtils
 import System.Directory
 import System.FilePath
 import Test.Hspec
-import Test.Hspec.Golden
 
 spec :: Spec
 spec = parallel do
@@ -19,10 +17,10 @@ spec = parallel do
     setupBuiltin
     setupPrelude
   testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
-  golden "rename Builtin" (driveRename builtinPath)
-  golden "rename Prelude" (driveRename preludePath)
+  golden "Builtin" (driveRename builtinPath)
+  golden "Prelude" (driveRename preludePath)
   for_ testcases \testcase -> do
-    golden ("rename " <> takeBaseName testcase) (driveRename (testcaseDir </> testcase))
+    golden (takeBaseName testcase) (driveRename (testcaseDir </> testcase))
 
 driveRename :: FilePath -> IO String
 driveRename srcPath = do

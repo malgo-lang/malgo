@@ -24,7 +24,6 @@ import System.Directory
 import System.FilePath
 import System.IO.Silently (capture)
 import Test.Hspec
-import Test.Hspec.Golden
 
 spec :: Spec
 spec = do
@@ -33,12 +32,12 @@ spec = do
     setupPrelude
   testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
   for_ testcases \testcase -> do
-    golden ("eval" <> takeBaseName testcase) do
+    golden (takeBaseName testcase) do
       (captured, result) <- driveEval (testcaseDir </> testcase)
       case result of
         Left (cs, err) ->
           error $ prettyCallStack cs <> "\n" <> show err
-        Right value -> pure $ captured <> "\n====\n" <> show value
+        Right _ -> pure captured
 
 driveEval :: FilePath -> IO (String, Either (CallStack, EvalError) ())
 driveEval srcPath = capture do

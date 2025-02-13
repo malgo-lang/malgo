@@ -2,7 +2,6 @@ module Malgo.LinkSpec (spec) where
 
 import Data.ByteString qualified as BS
 import Effectful.Reader.Static (runReader)
-import Error.Diagnose
 import Malgo.Core.Flat qualified as Flag
 import Malgo.Desugar.Pass (desugar)
 import Malgo.Infer.Pass (infer)
@@ -20,7 +19,6 @@ import Malgo.TestUtils
 import System.Directory
 import System.FilePath
 import Test.Hspec
-import Test.Hspec.Golden
 
 spec :: Spec
 spec = parallel do
@@ -28,10 +26,10 @@ spec = parallel do
     setupBuiltin
     setupPrelude
   testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
-  golden "link Builtin" (driveLink builtinPath)
-  golden "link Prelude" (driveLink preludePath)
+  golden "Builtin" (driveLink builtinPath)
+  golden "Prelude" (driveLink preludePath)
   for_ testcases \testcase -> do
-    golden ("link" <> takeBaseName testcase) (driveLink (testcaseDir </> testcase))
+    golden (takeBaseName testcase) (driveLink (testcaseDir </> testcase))
 
 driveLink :: FilePath -> IO String
 driveLink srcPath = do

@@ -14,15 +14,14 @@ import Prettyprinter.Render.Text qualified as PP
 import System.Directory (listDirectory)
 import System.FilePath (isExtensionOf, takeBaseName, (</>))
 import Test.Hspec
-import Test.Hspec.Golden
 
 spec :: Spec
 spec = parallel do
   testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
-  golden "parse Builtin" (driveParse builtinPath)
-  golden "parse Prelude" (driveParse preludePath)
+  golden "Builtin" (driveParse builtinPath)
+  golden "Prelude" (driveParse preludePath)
   for_ testcases \testcase -> do
-    golden ("parse " <> takeBaseName testcase) (driveParse (testcaseDir </> testcase))
+    golden (takeBaseName testcase) (driveParse (testcaseDir </> testcase))
 
 driveParse :: FilePath -> IO String
 driveParse srcPath = do

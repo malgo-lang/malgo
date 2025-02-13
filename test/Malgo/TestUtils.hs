@@ -1,10 +1,14 @@
 module Malgo.TestUtils where
 
-import Data.Text.Lazy as TL
+import Data.Text.Lazy as TL hiding (foldr1, words)
 import Malgo.Core.Optimize (OptimizeOption, defaultOptimizeOption)
 import Malgo.Driver qualified as Driver
 import Malgo.Monad
 import Malgo.Prelude
+import System.FilePath ((</>))
+import Test.Hspec (Spec, it)
+import Test.Hspec.Core.Spec (getSpecDescriptionPath)
+import Test.Hspec.Golden (defaultGolden)
 import Text.Pretty.Simple
 
 smallIndentNoColor :: OutputOptions
@@ -42,3 +46,15 @@ flag = Flag {noOptimize = False, lambdaLift = False, debugMode = False, testMode
 
 option :: OptimizeOption
 option = defaultOptimizeOption
+
+golden ::
+  -- | Test description
+  String ->
+  -- | Content (@return content@ for pure functions)
+  IO String ->
+  Spec
+golden description runAction = do
+  path <- (<> words description) <$> getSpecDescriptionPath
+  it description
+    $ defaultGolden (foldr1 (</>) path)
+    <$> runAction

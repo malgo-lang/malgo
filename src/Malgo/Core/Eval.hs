@@ -274,16 +274,73 @@ primitives =
             pure $ VUnboxed (Int32 (x + y))
           values -> throwError $ InvalidArguments "malgo_add_int32_t" values
       ),
+      ( "malgo_add_int64_t",
+        \case
+          [VUnboxed (Int64 x), VUnboxed (Int64 y)] -> do
+            pure $ VUnboxed (Int64 (x + y))
+          values -> throwError $ InvalidArguments "malgo_add_int64_t" values
+      ),
+      ( "malgo_add_double",
+        \case
+          [VUnboxed (Double x), VUnboxed (Double y)] -> do
+            pure $ VUnboxed (Double (x + y))
+          values -> throwError $ InvalidArguments "malgo_add_double" values
+      ),
       ( "malgo_sub_int32_t",
         \case
           [VUnboxed (Int32 x), VUnboxed (Int32 y)] -> do
             pure $ VUnboxed (Int32 (x - y))
           values -> throwError $ InvalidArguments "malgo_sub_int32_t" values
       ),
+      ( "malgo_sub_int64_t",
+        \case
+          [VUnboxed (Int64 x), VUnboxed (Int64 y)] -> do
+            pure $ VUnboxed (Int64 (x - y))
+          values -> throwError $ InvalidArguments "malgo_sub_int64_t" values
+      ),
+      ( "malgo_mul_int64_t",
+        \case
+          [VUnboxed (Int64 x), VUnboxed (Int64 y)] -> do
+            pure $ VUnboxed (Int64 (x * y))
+          values -> throwError $ InvalidArguments "malgo_mul_int64_t" values
+      ),
+      ( "malgo_mul_double",
+        \case
+          [VUnboxed (Double x), VUnboxed (Double y)] -> do
+            pure $ VUnboxed (Double (x * y))
+          values -> throwError $ InvalidArguments "malgo_mul_double" values
+      ),
+      ( "malgo_eq_int64_t",
+        \case
+          [VUnboxed (Int64 x), VUnboxed (Int64 y)] -> do
+            pure $ VUnboxed (Int32 $ if x == y then 1 else 0)
+          values -> throwError $ InvalidArguments "malgo_eq_int64_t" values
+      ),
+      ( "malgo_le_int32_t",
+        \case
+          [VUnboxed (Int32 x), VUnboxed (Int32 y)] -> do
+            pure $ VUnboxed (Int32 $ if x <= y then 1 else 0)
+          values -> throwError $ InvalidArguments "malgo_le_int32_t" values
+      ),
       ( "malgo_int32_t_to_string",
         \case
           [VUnboxed (Int32 x)] -> pure $ VUnboxed $ String $ convertString $ show x
           values -> throwError $ InvalidArguments "malgo_int32_t_to_string" values
+      ),
+      ( "malgo_int64_t_to_string",
+        \case
+          [VUnboxed (Int64 x)] -> pure $ VUnboxed $ String $ convertString $ show x
+          values -> throwError $ InvalidArguments "malgo_int64_t_to_string" values
+      ),
+      ( "malgo_double_to_string",
+        \case
+          [VUnboxed (Double x)] -> pure $ VUnboxed $ String $ convertString $ show x
+          values -> throwError $ InvalidArguments "malgo_double_to_string" values
+      ),
+      ( "malgo_string_append",
+        \case
+          [VUnboxed (String x), VUnboxed (String y)] -> pure $ VUnboxed $ String $ x <> y
+          values -> throwError $ InvalidArguments "malgo_string_append" values
       ),
       ( "malgo_print_string",
         \case

@@ -12,7 +12,6 @@ import Malgo.TestUtils
 import System.Directory
 import System.FilePath
 import Test.Hspec
-import Test.Hspec.Golden
 
 spec :: Spec
 spec = parallel do
@@ -20,10 +19,10 @@ spec = parallel do
     setupBuiltin
     setupPrelude
   testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
-  golden "infer Builtin" (driveInfer builtinPath)
-  golden "infer Prelude" (driveInfer preludePath)
+  golden "Builtin" (driveInfer builtinPath)
+  golden "Prelude" (driveInfer preludePath)
   for_ testcases \testcase -> do
-    golden ("infer " <> takeBaseName testcase) (driveInfer (testcaseDir </> testcase))
+    golden (takeBaseName testcase) (driveInfer (testcaseDir </> testcase))
 
 driveInfer :: FilePath -> IO String
 driveInfer srcPath = do

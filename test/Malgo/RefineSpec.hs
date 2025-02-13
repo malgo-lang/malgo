@@ -1,7 +1,6 @@
 module Malgo.RefineSpec (spec) where
 
 import Data.ByteString qualified as BS
-import Error.Diagnose
 import Malgo.Infer.Pass (infer)
 import Malgo.Monad (CompileMode (..), runMalgoM)
 import Malgo.Parser (parseMalgo)
@@ -13,7 +12,6 @@ import Malgo.TestUtils
 import System.Directory
 import System.FilePath
 import Test.Hspec
-import Test.Hspec.Golden
 
 spec :: Spec
 spec = parallel do
@@ -21,10 +19,10 @@ spec = parallel do
     setupBuiltin
     setupPrelude
   testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
-  golden "refine Builtin" (driveRefine builtinPath)
-  golden "refine Prelude" (driveRefine preludePath)
+  golden "Builtin" (driveRefine builtinPath)
+  golden "Prelude" (driveRefine preludePath)
   for_ testcases \testcase -> do
-    golden ("refine " <> takeBaseName testcase) (driveRefine (testcaseDir </> testcase))
+    golden (takeBaseName testcase) (driveRefine (testcaseDir </> testcase))
 
 driveRefine :: FilePath -> IO String
 driveRefine srcPath = do

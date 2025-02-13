@@ -1,7 +1,6 @@
 module Malgo.DesugarSpec (spec) where
 
 import Data.ByteString qualified as BS
-import Error.Diagnose
 import Malgo.Desugar.Pass (desugar)
 import Malgo.Infer.Pass (infer)
 import Malgo.Monad (CompileMode (..), runMalgoM)
@@ -15,7 +14,6 @@ import Malgo.TestUtils
 import System.Directory
 import System.FilePath
 import Test.Hspec
-import Test.Hspec.Golden
 
 spec :: Spec
 spec = parallel do
@@ -23,10 +21,10 @@ spec = parallel do
     setupBuiltin
     setupPrelude
   testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
-  golden "desugar Builtin" (driveDesugar builtinPath)
-  golden "desugar Prelude" (driveDesugar preludePath)
+  golden "Builtin" (driveDesugar builtinPath)
+  golden "Prelude" (driveDesugar preludePath)
   for_ testcases \testcase -> do
-    golden ("desugar " <> takeBaseName testcase) (driveDesugar (testcaseDir </> testcase))
+    golden (takeBaseName testcase) (driveDesugar (testcaseDir </> testcase))
 
 driveDesugar :: FilePath -> IO String
 driveDesugar srcPath = do

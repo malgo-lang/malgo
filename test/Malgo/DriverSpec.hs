@@ -31,7 +31,7 @@ import System.Process.Typed
   )
 import Test.Hspec (Spec, anyException, it, parallel, runIO, sequential, shouldBe, shouldThrow)
 import Test.Hspec.Core.Spec (getSpecDescriptionPath)
-import Test.Hspec.Golden (Golden (..), golden)
+import Test.Hspec.Golden (Golden (..))
 
 getWorkspaceDir :: (MonadIO m) => m FilePath
 getWorkspaceDir = liftIO do
@@ -193,7 +193,7 @@ test testcase _typ lambdaLift noOptimize option compileMode = retry 3 do
 goldenLLVM :: String -> IO BL.ByteString -> Spec
 goldenLLVM description runAction = do
   path <- (<> words description) <$> getSpecDescriptionPath
-  let name = intercalate "-" path
+  let name = foldr1 (</>) path
   it description do
     actualOutput <- runAction
     pure
