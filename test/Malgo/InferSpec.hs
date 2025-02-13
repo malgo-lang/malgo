@@ -1,7 +1,6 @@
 module Malgo.InferSpec (spec) where
 
 import Data.ByteString qualified as BS
-import Error.Diagnose
 import Malgo.Infer.Pass (infer)
 import Malgo.Monad (CompileMode (..), runMalgoM)
 import Malgo.Parser (parseMalgo)
