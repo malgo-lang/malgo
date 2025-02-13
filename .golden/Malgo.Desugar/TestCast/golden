@@ -58,66 +58,48 @@
       (define
          (main $TestCast.$__39)
          (->
-            ((sum
-               (con Tuple#)))
-            (sum
-               (con Tuple#)))
-         (=
-            $TestCast.d_53
-            (=
-               $TestCast.d_51
-               (=
-                  $TestCast.d_41
-                  (=
-                     $TestCast.d_40
+            ((sum (con Tuple#)))
+            (sum (con Tuple#)))
+         (= $TestCast.d_53
+            (= $TestCast.d_51
+               (= $TestCast.d_41
+                  (= $TestCast.d_40
                      (call malgo_read_vector 2_i64)
                      (cast
                         (->
                            (Any#)
                            Any#)
                         $TestCast.d_40))
-                  (=
-                     $TestCast.d_49
-                     (=
-                        $TestCast.d_43
-                        (=
-                           $TestCast.d_42
+                  (= $TestCast.d_49
+                     (= $TestCast.d_43
+                        (= $TestCast.d_42
                            (call malgo_new_vector 10_i64)
                            (cast
                               (->
                                  (Any#)
                                  Any#)
                               $TestCast.d_42))
-                        (=
-                           $TestCast.d_47
-                           (=
-                              $TestCast.d_45
-                              (=
-                                 $TestCast.d_44
+                        (= $TestCast.d_47
+                           (= $TestCast.d_45
+                              (= $TestCast.d_44
                                  (call Int32# 5_i32)
                                  (cast Any# $TestCast.d_44))
-                              (=
-                                 $TestCast.d_46
+                              (= $TestCast.d_46
                                  (call malgo_unsafe_cast $TestCast.d_45)
                                  (cast Any# $TestCast.d_46)))
-                           (=
-                              $TestCast.d_48
+                           (= $TestCast.d_48
                               (call $TestCast.d_43 $TestCast.d_47)
                               (cast Any# $TestCast.d_48))))
-                     (=
-                        $TestCast.d_50
+                     (= $TestCast.d_50
                         (call $TestCast.d_41 $TestCast.d_49)
                         (cast Any# $TestCast.d_50))))
-               (=
-                  $TestCast.d_52
+               (= $TestCast.d_52
                   (call malgo_unsafe_cast $TestCast.d_51)
                   (cast Any# $TestCast.d_52)))
-            (=
-               $TestCast.d_54
+            (= $TestCast.d_54
                (call printInt32 $TestCast.d_53)
                (cast
-                  (sum
-                     (con Tuple#))
+                  (sum (con Tuple#))
                   $TestCast.d_54)))))
    ((extern
       malgo_new_vector

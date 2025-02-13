@@ -4,24 +4,17 @@
       (x Any#)
       (y Any#)
       (z Any#))
-   (=
-      $FieldPrefix.d_54
-      (=
-         $FieldPrefix.d_48
-         (=
-            $FieldPrefix.d_47
+   (= $FieldPrefix.d_54
+      (= $FieldPrefix.d_48
+         (= $FieldPrefix.d_47
             (call Float# 0.0_f32)
             (cast Any# $FieldPrefix.d_47))
-         (=
-            $FieldPrefix.d_50
-            (=
-               $FieldPrefix.d_49
+         (= $FieldPrefix.d_50
+            (= $FieldPrefix.d_49
                (call Float# 0.0_f32)
                (cast Any# $FieldPrefix.d_49))
-            (=
-               $FieldPrefix.d_52
-               (=
-                  $FieldPrefix.d_51
+            (= $FieldPrefix.d_52
+               (= $FieldPrefix.d_51
                   (call Float# 0.0_f32)
                   (cast Any# $FieldPrefix.d_51))
                (let
@@ -41,18 +34,13 @@
       (Record#
          (x Any#)
          (y Any#))
-      (=
-         $FieldPrefix.d_60
-         (=
-            $FieldPrefix.d_56
-            (=
-               $FieldPrefix.d_55
+      (= $FieldPrefix.d_60
+         (= $FieldPrefix.d_56
+            (= $FieldPrefix.d_55
                (call Int32# 0_i32)
                (cast Any# $FieldPrefix.d_55))
-            (=
-               $FieldPrefix.d_58
-               (=
-                  $FieldPrefix.d_57
+            (= $FieldPrefix.d_58
+               (= $FieldPrefix.d_57
                   (call Int32# 0_i32)
                   (cast Any# $FieldPrefix.d_57))
                (let
@@ -97,68 +85,49 @@
             ((Record#
                (x Any#)
                (y Any#)))
-            (sum
-               (con Tuple#)))
+            (sum (con Tuple#)))
          (match
             $FieldPrefix.record_67
             (open
                ((x $FieldPrefix.p_68)
                   (y $FieldPrefix.p_69))
-               (=
-                  $FieldPrefix.d_73
-                  (=
-                     $FieldPrefix.d_71
-                     (=
-                        $FieldPrefix.d_70
+               (= $FieldPrefix.d_73
+                  (= $FieldPrefix.d_71
+                     (= $FieldPrefix.d_70
                         (call toStringInt32 $FieldPrefix.p_68)
                         (cast Any# $FieldPrefix.d_70))
-                     (=
-                        $FieldPrefix.d_72
+                     (= $FieldPrefix.d_72
                         (call printString $FieldPrefix.d_71)
                         (cast
-                           (sum
-                              (con Tuple#))
+                           (sum (con Tuple#))
                            $FieldPrefix.d_72)))
-                  (=
-                     $FieldPrefix.d_77
-                     (=
-                        $FieldPrefix.d_75
-                        (=
-                           $FieldPrefix.d_74
+                  (= $FieldPrefix.d_77
+                     (= $FieldPrefix.d_75
+                        (= $FieldPrefix.d_74
                            (call String# ", ")
                            (cast Any# $FieldPrefix.d_74))
-                        (=
-                           $FieldPrefix.d_76
+                        (= $FieldPrefix.d_76
                            (call printString $FieldPrefix.d_75)
                            (cast
-                              (sum
-                                 (con Tuple#))
+                              (sum (con Tuple#))
                               $FieldPrefix.d_76)))
-                     (=
-                        $FieldPrefix.d_79
-                        (=
-                           $FieldPrefix.d_78
+                     (= $FieldPrefix.d_79
+                        (= $FieldPrefix.d_78
                            (call toStringInt32 $FieldPrefix.p_69)
                            (cast Any# $FieldPrefix.d_78))
-                        (=
-                           $FieldPrefix.d_80
+                        (= $FieldPrefix.d_80
                            (call printString $FieldPrefix.d_79)
                            (cast
-                              (sum
-                                 (con Tuple#))
+                              (sum (con Tuple#))
                               $FieldPrefix.d_80))))))))
       (define
          (main $FieldPrefix.$__81)
          (->
-            ((sum
-               (con Tuple#)))
-            (sum
-               (con Tuple#)))
-         (=
-            $FieldPrefix.d_82
+            ((sum (con Tuple#)))
+            (sum (con Tuple#)))
+         (= $FieldPrefix.d_82
             (call print2D zero2D)
             (cast
-               (sum
-                  (con Tuple#))
+               (sum (con Tuple#))
                $FieldPrefix.d_82))))
    ())

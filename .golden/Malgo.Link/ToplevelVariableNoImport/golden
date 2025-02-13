@@ -1,8 +1,7 @@
 (((define
    one
    Any#
-   (=
-      $ToplevelVariableNoImport.d_198
+   (= $ToplevelVariableNoImport.d_198
       (call Int32# 1_i32)
       (cast Any# $ToplevelVariableNoImport.d_198)))
    (define
@@ -15,15 +14,12 @@
                Any#)
             (fun
                ($ToplevelVariableNoImport.nothing_212)
-               (=
-                  $ToplevelVariableNoImport.scrutinee_278
+               (= $ToplevelVariableNoImport.scrutinee_278
                   (cast
-                     (sum
-                        (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing)
+                     (sum (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing)
                         (con
                            test/testcases/malgo/ToplevelVariableNoImport.mlg.Just
-                           (sum
-                              (con Tuple#))))
+                           (sum (con Tuple#))))
                      $ToplevelVariableNoImport.nothing_212)
                   (switch
                      $ToplevelVariableNoImport.scrutinee_278
@@ -38,30 +34,23 @@
                            $ToplevelVariableNoImport.scrutinee_278
                            (con
                               test/testcases/malgo/ToplevelVariableNoImport.mlg.Just
-                              (sum
-                                 (con Tuple#)))
+                              (sum (con Tuple#)))
                            ($ToplevelVariableNoImport.p_213)
                            (direct Nothing)))
                      (ERROR Any#))))))
          (let
             (($ToplevelVariableNoImport.let_216
-               (sum
-                  (con Tuple#))
+               (sum (con Tuple#))
                (pack
-                  (sum
-                     (con Tuple#))
+                  (sum (con Tuple#))
                   (con Tuple#))))
-            (=
-               $ToplevelVariableNoImport.cast_218
+            (= $ToplevelVariableNoImport.cast_218
                (cast Any# $ToplevelVariableNoImport.let_216)
-               (=
-                  $ToplevelVariableNoImport.d_219
+               (= $ToplevelVariableNoImport.d_219
                   (call Just $ToplevelVariableNoImport.cast_218)
-                  (=
-                     $ToplevelVariableNoImport.d_220
+                  (= $ToplevelVariableNoImport.d_220
                      (cast Any# $ToplevelVariableNoImport.d_219)
-                     (=
-                        $ToplevelVariableNoImport.d_221
+                     (= $ToplevelVariableNoImport.d_221
                         (call $ToplevelVariableNoImport.fun_214 $ToplevelVariableNoImport.d_220)
                         (cast Any# $ToplevelVariableNoImport.d_221)))))))))
    ((define
@@ -69,11 +58,9 @@
       (->
          (Any# Any#)
          Any#)
-      (=
-         $ToplevelVariableNoImport.scrutinee_280
+      (= $ToplevelVariableNoImport.scrutinee_280
          (cast
-            (sum
-               (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32# Int32#))
+            (sum (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32# Int32#))
             $ToplevelVariableNoImport.int32#_245)
          (switch
             $ToplevelVariableNoImport.scrutinee_280
@@ -82,11 +69,9 @@
                   $ToplevelVariableNoImport.scrutinee_280
                   (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32# Int32#)
                   ($ToplevelVariableNoImport.p_247)
-                  (=
-                     $ToplevelVariableNoImport.scrutinee_279
+                  (= $ToplevelVariableNoImport.scrutinee_279
                      (cast
-                        (sum
-                           (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32# Int32#))
+                        (sum (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32# Int32#))
                         $ToplevelVariableNoImport.int32#_246)
                      (switch
                         $ToplevelVariableNoImport.scrutinee_279
@@ -95,24 +80,19 @@
                               $ToplevelVariableNoImport.scrutinee_279
                               (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32# Int32#)
                               ($ToplevelVariableNoImport.p_248)
-                              (=
-                                 $ToplevelVariableNoImport.d_249
+                              (= $ToplevelVariableNoImport.d_249
                                  (call addInt32# $ToplevelVariableNoImport.p_247)
-                                 (=
-                                    $ToplevelVariableNoImport.d_250
+                                 (= $ToplevelVariableNoImport.d_250
                                     (cast
                                        (->
                                           (Int32#)
                                           Int32#)
                                        $ToplevelVariableNoImport.d_249)
-                                    (=
-                                       $ToplevelVariableNoImport.d_251
+                                    (= $ToplevelVariableNoImport.d_251
                                        (call $ToplevelVariableNoImport.d_250 $ToplevelVariableNoImport.p_248)
-                                       (=
-                                          $ToplevelVariableNoImport.d_252
+                                       (= $ToplevelVariableNoImport.d_252
                                           (cast Int32# $ToplevelVariableNoImport.d_251)
-                                          (=
-                                             $ToplevelVariableNoImport.d_253
+                                          (= $ToplevelVariableNoImport.d_253
                                              (call Int32# $ToplevelVariableNoImport.d_252)
                                              (cast Any# $ToplevelVariableNoImport.d_253))))))))
                         (ERROR Any#)))))
@@ -122,18 +102,15 @@
          (->
             (Int32# Int32#)
             Int32#)
-         (=
-            $ToplevelVariableNoImport.d_231
+         (= $ToplevelVariableNoImport.d_231
             (call malgo_add_int32_t $ToplevelVariableNoImport.x_229)
-            (=
-               $ToplevelVariableNoImport.d_232
+            (= $ToplevelVariableNoImport.d_232
                (cast
                   (->
                      (Int32#)
                      Int32#)
                   $ToplevelVariableNoImport.d_231)
-               (=
-                  $ToplevelVariableNoImport.d_233
+               (= $ToplevelVariableNoImport.d_233
                   (call $ToplevelVariableNoImport.d_232 $ToplevelVariableNoImport.y_230)
                   (cast Int32# $ToplevelVariableNoImport.d_233)))))
       (define
@@ -161,11 +138,9 @@
             Any#)
          (let
             (($ToplevelVariableNoImport.let_168
-               (sum
-                  (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32# Int32#))
+               (sum (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32# Int32#))
                (pack
-                  (sum
-                     (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32# Int32#))
+                  (sum (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32# Int32#))
                   (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32# Int32#)
                   $ToplevelVariableNoImport.p_167)))
             (cast Any# $ToplevelVariableNoImport.let_168)))
@@ -176,11 +151,9 @@
             Any#)
          (let
             (($ToplevelVariableNoImport.let_170
-               (sum
-                  (con test/testcases/malgo/ToplevelVariableNoImport.mlg.String# String#))
+               (sum (con test/testcases/malgo/ToplevelVariableNoImport.mlg.String# String#))
                (pack
-                  (sum
-                     (con test/testcases/malgo/ToplevelVariableNoImport.mlg.String# String#))
+                  (sum (con test/testcases/malgo/ToplevelVariableNoImport.mlg.String# String#))
                   (con test/testcases/malgo/ToplevelVariableNoImport.mlg.String# String#)
                   $ToplevelVariableNoImport.p_169)))
             (cast Any# $ToplevelVariableNoImport.let_170)))
@@ -189,12 +162,10 @@
          (-> () Any#)
          (let
             (($ToplevelVariableNoImport.let_171
-               (sum
-                  (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing)
+               (sum (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing)
                   (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Just Any#))
                (pack
-                  (sum
-                     (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing)
+                  (sum (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing)
                      (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Just Any#))
                   (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing))))
             (cast Any# $ToplevelVariableNoImport.let_171)))
@@ -205,12 +176,10 @@
             Any#)
          (let
             (($ToplevelVariableNoImport.let_173
-               (sum
-                  (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing)
+               (sum (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing)
                   (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Just Any#))
                (pack
-                  (sum
-                     (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing)
+                  (sum (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing)
                      (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Just Any#))
                   (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Just Any#)
                   $ToplevelVariableNoImport.p_172)))
@@ -235,14 +204,12 @@
          (malgo_print_string $ToplevelVariableNoImport.p_180)
          (->
             (String#)
-            (sum
-               (con Tuple#)))
+            (sum (con Tuple#)))
          (raw
             malgo_print_string
             (->
                (String#)
-               (sum
-                  (con Tuple#)))
+               (sum (con Tuple#)))
             $ToplevelVariableNoImport.p_180))
       (define
          (malgo_int32_t_to_string $ToplevelVariableNoImport.p_181)
@@ -260,8 +227,7 @@
          (->
             (Int32#)
             String#)
-         (=
-            $ToplevelVariableNoImport.d_183
+         (= $ToplevelVariableNoImport.d_183
             (call malgo_int32_t_to_string $ToplevelVariableNoImport.x_182)
             (cast String# $ToplevelVariableNoImport.d_183)))
       (define
@@ -269,11 +235,9 @@
          (->
             (Any#)
             Any#)
-         (=
-            $ToplevelVariableNoImport.scrutinee_281
+         (= $ToplevelVariableNoImport.scrutinee_281
             (cast
-               (sum
-                  (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32# Int32#))
+               (sum (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32# Int32#))
                $ToplevelVariableNoImport.int32#_184)
             (switch
                $ToplevelVariableNoImport.scrutinee_281
@@ -282,14 +246,11 @@
                      $ToplevelVariableNoImport.scrutinee_281
                      (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32# Int32#)
                      ($ToplevelVariableNoImport.p_185)
-                     (=
-                        $ToplevelVariableNoImport.d_186
+                     (= $ToplevelVariableNoImport.d_186
                         (call toStringInt32# $ToplevelVariableNoImport.p_185)
-                        (=
-                           $ToplevelVariableNoImport.d_187
+                        (= $ToplevelVariableNoImport.d_187
                            (cast String# $ToplevelVariableNoImport.d_186)
-                           (=
-                              $ToplevelVariableNoImport.d_188
+                           (= $ToplevelVariableNoImport.d_188
                               (call String# $ToplevelVariableNoImport.d_187)
                               (cast Any# $ToplevelVariableNoImport.d_188))))))
                (ERROR Any#))))
@@ -297,26 +258,20 @@
          (printString# $ToplevelVariableNoImport.x_189)
          (->
             (String#)
-            (sum
-               (con Tuple#)))
-         (=
-            $ToplevelVariableNoImport.d_190
+            (sum (con Tuple#)))
+         (= $ToplevelVariableNoImport.d_190
             (call malgo_print_string $ToplevelVariableNoImport.x_189)
             (cast
-               (sum
-                  (con Tuple#))
+               (sum (con Tuple#))
                $ToplevelVariableNoImport.d_190)))
       (define
          (printString $ToplevelVariableNoImport.string#_191)
          (->
             (Any#)
-            (sum
-               (con Tuple#)))
-         (=
-            $ToplevelVariableNoImport.scrutinee_282
+            (sum (con Tuple#)))
+         (= $ToplevelVariableNoImport.scrutinee_282
             (cast
-               (sum
-                  (con test/testcases/malgo/ToplevelVariableNoImport.mlg.String# String#))
+               (sum (con test/testcases/malgo/ToplevelVariableNoImport.mlg.String# String#))
                $ToplevelVariableNoImport.string#_191)
             (switch
                $ToplevelVariableNoImport.scrutinee_282
@@ -325,34 +280,26 @@
                      $ToplevelVariableNoImport.scrutinee_282
                      (con test/testcases/malgo/ToplevelVariableNoImport.mlg.String# String#)
                      ($ToplevelVariableNoImport.p_192)
-                     (=
-                        $ToplevelVariableNoImport.d_193
+                     (= $ToplevelVariableNoImport.d_193
                         (call printString# $ToplevelVariableNoImport.p_192)
                         (cast
-                           (sum
-                              (con Tuple#))
+                           (sum (con Tuple#))
                            $ToplevelVariableNoImport.d_193))))
                (ERROR
-                  (sum
-                     (con Tuple#))))))
+                  (sum (con Tuple#))))))
       (define
          (printInt32 $ToplevelVariableNoImport.i_194)
          (->
             (Any#)
-            (sum
-               (con Tuple#)))
-         (=
-            $ToplevelVariableNoImport.d_195
+            (sum (con Tuple#)))
+         (= $ToplevelVariableNoImport.d_195
             (call toStringInt32 $ToplevelVariableNoImport.i_194)
-            (=
-               $ToplevelVariableNoImport.d_196
+            (= $ToplevelVariableNoImport.d_196
                (cast Any# $ToplevelVariableNoImport.d_195)
-               (=
-                  $ToplevelVariableNoImport.d_197
+               (= $ToplevelVariableNoImport.d_197
                   (call printString $ToplevelVariableNoImport.d_196)
                   (cast
-                     (sum
-                        (con Tuple#))
+                     (sum (con Tuple#))
                      $ToplevelVariableNoImport.d_197)))))
       (define
          (identity $ToplevelVariableNoImport.x_200)
@@ -383,14 +330,11 @@
             (->
                (Any#)
                Any#))
-         (=
-            $ToplevelVariableNoImport.cast_207
+         (= $ToplevelVariableNoImport.cast_207
             (cast Any# identity)
-            (=
-               $ToplevelVariableNoImport.d_208
+            (= $ToplevelVariableNoImport.d_208
                (call const $ToplevelVariableNoImport.cast_207)
-               (=
-                  $ToplevelVariableNoImport.d_209
+               (= $ToplevelVariableNoImport.d_209
                   (cast
                      (->
                         (Any#)
@@ -436,11 +380,9 @@
          (->
             (Any#)
             Any#)
-         (=
-            $ToplevelVariableNoImport.d_255
+         (= $ToplevelVariableNoImport.d_255
             (call addInt32 one)
-            (=
-               $ToplevelVariableNoImport.d_256
+            (= $ToplevelVariableNoImport.d_256
                (cast
                   (->
                      (Any#)
@@ -450,23 +392,18 @@
       (define
          (main $ToplevelVariableNoImport.$__259)
          (->
-            ((sum
-               (con Tuple#)))
-            (sum
-               (con Tuple#)))
+            ((sum (con Tuple#)))
+            (sum (con Tuple#)))
          (let
             (($ToplevelVariableNoImport.fun_266
                (->
                   (Any#)
-                  (sum
-                     (con Tuple#)))
+                  (sum (con Tuple#)))
                (fun
                   ($ToplevelVariableNoImport.nothing_260)
-                  (=
-                     $ToplevelVariableNoImport.scrutinee_283
+                  (= $ToplevelVariableNoImport.scrutinee_283
                      (cast
-                        (sum
-                           (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing)
+                        (sum (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing)
                            (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Just Any#))
                         $ToplevelVariableNoImport.nothing_260)
                      (switch
@@ -476,18 +413,14 @@
                               $ToplevelVariableNoImport.scrutinee_283
                               (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing)
                               ()
-                              (=
-                                 $ToplevelVariableNoImport.d_261
+                              (= $ToplevelVariableNoImport.d_261
                                  (call String# "OK")
-                                 (=
-                                    $ToplevelVariableNoImport.d_262
+                                 (= $ToplevelVariableNoImport.d_262
                                     (cast Any# $ToplevelVariableNoImport.d_261)
-                                    (=
-                                       $ToplevelVariableNoImport.d_263
+                                    (= $ToplevelVariableNoImport.d_263
                                        (call printString $ToplevelVariableNoImport.d_262)
                                        (cast
-                                          (sum
-                                             (con Tuple#))
+                                          (sum (con Tuple#))
                                           $ToplevelVariableNoImport.d_263))))))
                         (test/testcases/malgo/ToplevelVariableNoImport.mlg.Just
                            (destruct
@@ -496,56 +429,41 @@
                               ($ToplevelVariableNoImport.p_264)
                               (let
                                  (($ToplevelVariableNoImport.let_265
-                                    (sum
-                                       (con Tuple#))
+                                    (sum (con Tuple#))
                                     (pack
-                                       (sum
-                                          (con Tuple#))
+                                       (sum (con Tuple#))
                                        (con Tuple#))))
                                  $ToplevelVariableNoImport.let_265)))
                         (ERROR
-                           (sum
-                              (con Tuple#))))))))
-            (=
-               $ToplevelVariableNoImport.d_268
+                           (sum (con Tuple#))))))))
+            (= $ToplevelVariableNoImport.d_268
                (call $ToplevelVariableNoImport.fun_266 comp)
-               (=
-                  $ToplevelVariableNoImport.d_269
+               (= $ToplevelVariableNoImport.d_269
                   (cast
-                     (sum
-                        (con Tuple#))
+                     (sum (con Tuple#))
                      $ToplevelVariableNoImport.d_268)
-                  (=
-                     $ToplevelVariableNoImport.cast_270
+                  (= $ToplevelVariableNoImport.cast_270
                      (cast Any# const)
-                     (=
-                        $ToplevelVariableNoImport.d_271
+                     (= $ToplevelVariableNoImport.d_271
                         (call constId $ToplevelVariableNoImport.cast_270)
-                        (=
-                           $ToplevelVariableNoImport.d_272
+                        (= $ToplevelVariableNoImport.d_272
                            (cast
                               (->
                                  (Any#)
                                  Any#)
                               $ToplevelVariableNoImport.d_271)
-                           (=
-                              $ToplevelVariableNoImport.d_273
+                           (= $ToplevelVariableNoImport.d_273
                               (call addOne one)
-                              (=
-                                 $ToplevelVariableNoImport.d_274
+                              (= $ToplevelVariableNoImport.d_274
                                  (cast Any# $ToplevelVariableNoImport.d_273)
-                                 (=
-                                    $ToplevelVariableNoImport.d_275
+                                 (= $ToplevelVariableNoImport.d_275
                                     (call $ToplevelVariableNoImport.d_272 $ToplevelVariableNoImport.d_274)
-                                    (=
-                                       $ToplevelVariableNoImport.d_276
+                                    (= $ToplevelVariableNoImport.d_276
                                        (cast Any# $ToplevelVariableNoImport.d_275)
-                                       (=
-                                          $ToplevelVariableNoImport.d_277
+                                       (= $ToplevelVariableNoImport.d_277
                                           (call printInt32 $ToplevelVariableNoImport.d_276)
                                           (cast
-                                             (sum
-                                                (con Tuple#))
+                                             (sum (con Tuple#))
                                              $ToplevelVariableNoImport.d_277))))))))))))))
    ((extern
       malgo_add_int32_t
@@ -556,8 +474,7 @@
          malgo_print_string
          (->
             (String#)
-            (sum
-               (con Tuple#))))
+            (sum (con Tuple#))))
       (extern
          malgo_int32_t_to_string
          (->

@@ -6,47 +6,35 @@
          Any#)
       (match
          (cast
-            (sum
-               (con runtime/malgo/Builtin.mlg.Int64# Int64#))
+            (sum (con runtime/malgo/Builtin.mlg.Int64# Int64#))
             $TestDot.int64#_30)
          (unpack
             (con runtime/malgo/Builtin.mlg.Int64# Int64#)
             ($TestDot.p_31)
-            (=
-               $TestDot.d_35
-               (=
-                  $TestDot.d_33
-                  (=
-                     $TestDot.d_32
+            (= $TestDot.d_35
+               (= $TestDot.d_33
+                  (= $TestDot.d_32
                      (call addInt64# $TestDot.p_31)
                      (cast
                         (->
                            (Int64#)
                            Int64#)
                         $TestDot.d_32))
-                  (=
-                     $TestDot.d_34
+                  (= $TestDot.d_34
                      (call $TestDot.d_33 1_i64)
                      (cast Int64# $TestDot.d_34)))
-               (=
-                  $TestDot.d_36
+               (= $TestDot.d_36
                   (call Int64# $TestDot.d_35)
                   (cast Any# $TestDot.d_36))))))
       (define
          (main $TestDot.$__37)
          (->
-            ((sum
-               (con Tuple#)))
-            (sum
-               (con Tuple#)))
-         (=
-            $TestDot.d_45
-            (=
-               $TestDot.d_41
-               (=
-                  $TestDot.d_39
-                  (=
-                     $TestDot.d_38
+            ((sum (con Tuple#)))
+            (sum (con Tuple#)))
+         (= $TestDot.d_45
+            (= $TestDot.d_41
+               (= $TestDot.d_39
+                  (= $TestDot.d_38
                      (call . succ)
                      (cast
                         (->
@@ -57,29 +45,23 @@
                               (Any#)
                               Any#))
                         $TestDot.d_38))
-                  (=
-                     $TestDot.d_40
+                  (= $TestDot.d_40
                      (call $TestDot.d_39 succ)
                      (cast
                         (->
                            (Any#)
                            Any#)
                         $TestDot.d_40)))
-               (=
-                  $TestDot.d_43
-                  (=
-                     $TestDot.d_42
+               (= $TestDot.d_43
+                  (= $TestDot.d_42
                      (call Int64# 0_i64)
                      (cast Any# $TestDot.d_42))
-                  (=
-                     $TestDot.d_44
+                  (= $TestDot.d_44
                      (call $TestDot.d_41 $TestDot.d_43)
                      (cast Any# $TestDot.d_44))))
-            (=
-               $TestDot.d_46
+            (= $TestDot.d_46
                (call printInt64 $TestDot.d_45)
                (cast
-                  (sum
-                     (con Tuple#))
+                  (sum (con Tuple#))
                   $TestDot.d_46)))))
    ())

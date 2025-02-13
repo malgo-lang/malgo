@@ -6,12 +6,10 @@
          Any#)
       (let
          (($DataDef.let_27
-            (sum
-               (con test/testcases/malgo/DataDef.mlg.Nil)
+            (sum (con test/testcases/malgo/DataDef.mlg.Nil)
                (con test/testcases/malgo/DataDef.mlg.Cons Any# Any#))
             (pack
-               (sum
-                  (con test/testcases/malgo/DataDef.mlg.Nil)
+               (sum (con test/testcases/malgo/DataDef.mlg.Nil)
                   (con test/testcases/malgo/DataDef.mlg.Cons Any# Any#))
                (con test/testcases/malgo/DataDef.mlg.Cons Any# Any#)
                $DataDef.p_25
@@ -24,11 +22,9 @@
             Any#)
          (let
             (($DataDef.let_19
-               (sum
-                  (con test/testcases/malgo/DataDef.mlg.Int# Int64#))
+               (sum (con test/testcases/malgo/DataDef.mlg.Int# Int64#))
                (pack
-                  (sum
-                     (con test/testcases/malgo/DataDef.mlg.Int# Int64#))
+                  (sum (con test/testcases/malgo/DataDef.mlg.Int# Int64#))
                   (con test/testcases/malgo/DataDef.mlg.Int# Int64#)
                   $DataDef.p_18)))
             (cast Any# $DataDef.let_19)))
@@ -37,12 +33,10 @@
          (-> () Any#)
          (let
             (($DataDef.let_20
-               (sum
-                  (con test/testcases/malgo/DataDef.mlg.Nil)
+               (sum (con test/testcases/malgo/DataDef.mlg.Nil)
                   (con test/testcases/malgo/DataDef.mlg.Cons Any# Any#))
                (pack
-                  (sum
-                     (con test/testcases/malgo/DataDef.mlg.Nil)
+                  (sum (con test/testcases/malgo/DataDef.mlg.Nil)
                      (con test/testcases/malgo/DataDef.mlg.Cons Any# Any#))
                   (con test/testcases/malgo/DataDef.mlg.Nil))))
             (cast Any# $DataDef.let_20)))
@@ -77,66 +71,51 @@
          (malgo_print_string $DataDef.p_30)
          (->
             (String#)
-            (sum
-               (con Tuple#)))
+            (sum (con Tuple#)))
          (raw
             malgo_print_string
             (->
                (String#)
-               (sum
-                  (con Tuple#)))
+               (sum (con Tuple#)))
             $DataDef.p_30))
       (define
          (main $DataDef.$__31)
          (->
-            ((sum
-               (con Tuple#)))
-            (sum
-               (con Tuple#)))
-         (=
-            $DataDef.d_38
+            ((sum (con Tuple#)))
+            (sum (con Tuple#)))
+         (= $DataDef.d_38
             (let
                (($DataDef.fun_37
                   (->
                      (Any#)
-                     (sum
-                        (con Tuple#)))
+                     (sum (con Tuple#)))
                   (fun
                      ($DataDef.int#_32)
                      (match
                         (cast
-                           (sum
-                              (con test/testcases/malgo/DataDef.mlg.Int# Int64#))
+                           (sum (con test/testcases/malgo/DataDef.mlg.Int# Int64#))
                            $DataDef.int#_32)
                         (unpack
                            (con test/testcases/malgo/DataDef.mlg.Int# Int64#)
                            ($DataDef.p_33)
-                           (=
-                              $DataDef.d_35
-                              (=
-                                 $DataDef.d_34
+                           (= $DataDef.d_35
+                              (= $DataDef.d_34
                                  (call malgo_int64_t_to_string $DataDef.p_33)
                                  (cast String# $DataDef.d_34))
-                              (=
-                                 $DataDef.d_36
+                              (= $DataDef.d_36
                                  (call malgo_print_string $DataDef.d_35)
                                  (cast
-                                    (sum
-                                       (con Tuple#))
+                                    (sum (con Tuple#))
                                     $DataDef.d_36))))))))
                $DataDef.fun_37)
-            (=
-               $DataDef.d_40
-               (=
-                  $DataDef.d_39
+            (= $DataDef.d_40
+               (= $DataDef.d_39
                   (call Int# 1_i64)
                   (cast Any# $DataDef.d_39))
-               (=
-                  $DataDef.d_41
+               (= $DataDef.d_41
                   (call $DataDef.d_38 $DataDef.d_40)
                   (cast
-                     (sum
-                        (con Tuple#))
+                     (sum (con Tuple#))
                      $DataDef.d_41))))))
    ((extern
       malgo_int64_t_to_string
@@ -147,5 +126,4 @@
          malgo_print_string
          (->
             (String#)
-            (sum
-               (con Tuple#))))))
+            (sum (con Tuple#))))))

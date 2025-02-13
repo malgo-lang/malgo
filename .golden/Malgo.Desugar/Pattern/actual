@@ -2,22 +2,16 @@
    ((define
       (main $Pattern.$__16)
       (->
-         ((sum
-            (con Tuple#)))
-         (sum
-            (con Tuple#)))
-      (=
-         $Pattern.d_18
-         (=
-            $Pattern.d_17
+         ((sum (con Tuple#)))
+         (sum (con Tuple#)))
+      (= $Pattern.d_18
+         (= $Pattern.d_17
             (call String# "OK")
             (cast Any# $Pattern.d_17))
-         (=
-            $Pattern.d_19
+         (= $Pattern.d_19
             (call putStrLn $Pattern.d_18)
             (cast
-               (sum
-                  (con Tuple#))
+               (sum (con Tuple#))
                $Pattern.d_19))))
       (define
          (isNil $Pattern.nil_20)
@@ -26,8 +20,7 @@
             Any#)
          (match
             (cast
-               (sum
-                  (con runtime/malgo/Prelude.mlg.Nil)
+               (sum (con runtime/malgo/Prelude.mlg.Nil)
                   (con runtime/malgo/Prelude.mlg.Cons Any# Any#))
                $Pattern.nil_20)
             (unpack

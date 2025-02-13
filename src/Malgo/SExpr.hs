@@ -45,10 +45,12 @@ indentStrategy :: S.SExpr Atom -> S.Indent
 indentStrategy (S.A (Symbol "def")) = S.SwingAfter 4
 indentStrategy (S.A (Symbol "$")) = S.SwingAfter 2
 indentStrategy (S.A (Symbol ".")) = S.SwingAfter 2
+indentStrategy (S.A (Symbol "=")) = S.SwingAfter 2
 indentStrategy (S.A (Symbol "do")) = S.SwingAfter 2
 indentStrategy (S.A (Symbol "then")) = S.SwingAfter 2
 indentStrategy (S.A (Symbol "prim")) = S.SwingAfter 2
 indentStrategy (S.A (Symbol "invoke")) = S.SwingAfter 2
+indentStrategy (S.A (Symbol "sum")) = S.SwingAfter 2
 indentStrategy _ = S.Swing
 
 instance (ToSExpr a) => ToSExpr [a] where

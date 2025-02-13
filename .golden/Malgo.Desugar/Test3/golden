@@ -7,8 +7,7 @@
                (Any#)
                Any#))
          Any#)
-      (=
-         $Test3.d_84
+      (= $Test3.d_84
          (call $Test3.f_83 $Test3.x_82)
          (cast Any# $Test3.d_84)))
       (define
@@ -18,12 +17,10 @@
             Any#)
          (let
             (($Test3.let_75
-               (sum
-                  (con test/testcases/malgo/Test3.mlg.Nil)
+               (sum (con test/testcases/malgo/Test3.mlg.Nil)
                   (con test/testcases/malgo/Test3.mlg.Cons Any# Any#))
                (pack
-                  (sum
-                     (con test/testcases/malgo/Test3.mlg.Nil)
+                  (sum (con test/testcases/malgo/Test3.mlg.Nil)
                      (con test/testcases/malgo/Test3.mlg.Cons Any# Any#))
                   (con test/testcases/malgo/Test3.mlg.Cons Any# Any#)
                   $Test3.p_73
@@ -34,12 +31,10 @@
          (-> () Any#)
          (let
             (($Test3.let_66
-               (sum
-                  (con test/testcases/malgo/Test3.mlg.A)
+               (sum (con test/testcases/malgo/Test3.mlg.A)
                   (con test/testcases/malgo/Test3.mlg.B))
                (pack
-                  (sum
-                     (con test/testcases/malgo/Test3.mlg.A)
+                  (sum (con test/testcases/malgo/Test3.mlg.A)
                      (con test/testcases/malgo/Test3.mlg.B))
                   (con test/testcases/malgo/Test3.mlg.A))))
             (cast Any# $Test3.let_66)))
@@ -48,12 +43,10 @@
          (-> () Any#)
          (let
             (($Test3.let_67
-               (sum
-                  (con test/testcases/malgo/Test3.mlg.A)
+               (sum (con test/testcases/malgo/Test3.mlg.A)
                   (con test/testcases/malgo/Test3.mlg.B))
                (pack
-                  (sum
-                     (con test/testcases/malgo/Test3.mlg.A)
+                  (sum (con test/testcases/malgo/Test3.mlg.A)
                      (con test/testcases/malgo/Test3.mlg.B))
                   (con test/testcases/malgo/Test3.mlg.B))))
             (cast Any# $Test3.let_67)))
@@ -62,12 +55,10 @@
          (-> () Any#)
          (let
             (($Test3.let_68
-               (sum
-                  (con test/testcases/malgo/Test3.mlg.Nil)
+               (sum (con test/testcases/malgo/Test3.mlg.Nil)
                   (con test/testcases/malgo/Test3.mlg.Cons Any# Any#))
                (pack
-                  (sum
-                     (con test/testcases/malgo/Test3.mlg.Nil)
+                  (sum (con test/testcases/malgo/Test3.mlg.Nil)
                      (con test/testcases/malgo/Test3.mlg.Cons Any# Any#))
                   (con test/testcases/malgo/Test3.mlg.Nil))))
             (cast Any# $Test3.let_68)))
@@ -91,14 +82,12 @@
          (malgo_print_string $Test3.p_77)
          (->
             (String#)
-            (sum
-               (con Tuple#)))
+            (sum (con Tuple#)))
          (raw
             malgo_print_string
             (->
                (String#)
-               (sum
-                  (con Tuple#)))
+               (sum (con Tuple#)))
             $Test3.p_77))
       (define
          (|> $Test3.x_78)
@@ -123,98 +112,75 @@
       (define
          (main $Test3.$__86)
          (->
-            ((sum
-               (con Tuple#)))
-            (sum
-               (con Tuple#)))
-         (=
-            $Test3.d_99
-            (=
-               $Test3.d_97
-               (=
-                  $Test3.d_89
-                  (=
-                     $Test3.d_87
+            ((sum (con Tuple#)))
+            (sum (con Tuple#)))
+         (= $Test3.d_99
+            (= $Test3.d_97
+               (= $Test3.d_89
+                  (= $Test3.d_87
                      (direct A)
-                     (=
-                        $Test3.d_88
+                     (= $Test3.d_88
                         (call Cons $Test3.d_87)
                         (cast
                            (->
                               (Any#)
                               Any#)
                            $Test3.d_88)))
-                  (=
-                     $Test3.d_95
-                     (=
-                        $Test3.d_92
-                        (=
-                           $Test3.d_90
+                  (= $Test3.d_95
+                     (= $Test3.d_92
+                        (= $Test3.d_90
                            (direct B)
-                           (=
-                              $Test3.d_91
+                           (= $Test3.d_91
                               (call Cons $Test3.d_90)
                               (cast
                                  (->
                                     (Any#)
                                     Any#)
                                  $Test3.d_91)))
-                        (=
-                           $Test3.d_93
+                        (= $Test3.d_93
                            (direct Nil)
-                           (=
-                              $Test3.d_94
+                           (= $Test3.d_94
                               (call $Test3.d_92 $Test3.d_93)
                               (cast Any# $Test3.d_94))))
-                     (=
-                        $Test3.d_96
+                     (= $Test3.d_96
                         (call $Test3.d_89 $Test3.d_95)
                         (cast Any# $Test3.d_96))))
-               (=
-                  $Test3.d_98
+               (= $Test3.d_98
                   (call |> $Test3.d_97)
                   (cast
                      (->
                         ((->
                            (Any#)
-                           (sum
-                              (con Tuple#))))
-                        (sum
-                           (con Tuple#)))
+                           (sum (con Tuple#))))
+                        (sum (con Tuple#)))
                      $Test3.d_98)))
-            (=
-               $Test3.d_110
+            (= $Test3.d_110
                (let
                   (($Test3.fun_109
                      (->
                         (Any#)
-                        (sum
-                           (con Tuple#)))
+                        (sum (con Tuple#)))
                      (fun
                         ($Test3.cons_100)
                         (match
                            (cast
-                              (sum
-                                 (con test/testcases/malgo/Test3.mlg.Nil)
+                              (sum (con test/testcases/malgo/Test3.mlg.Nil)
                                  (con test/testcases/malgo/Test3.mlg.Cons Any# Any#))
                               $Test3.cons_100)
                            (unpack
                               (con test/testcases/malgo/Test3.mlg.Nil)
                               ()
-                              (=
-                                 $Test3.d_101
+                              (= $Test3.d_101
                                  (call malgo_print_string "WRONG")
                                  (cast
-                                    (sum
-                                       (con Tuple#))
+                                    (sum (con Tuple#))
                                     $Test3.d_101)))
                            (unpack
                               (con test/testcases/malgo/Test3.mlg.Cons Any# Any#)
                               ($Test3.p_102 $Test3.p_103)
                               (match
                                  (cast
-                                    (sum
-                                       (con test/testcases/malgo/Test3.mlg.A)
+                                    (sum (con test/testcases/malgo/Test3.mlg.A)
                                        (con test/testcases/malgo/Test3.mlg.B))
                                     $Test3.p_102)
                                  (unpack
@@ -222,89 +188,73 @@
                                     ()
                                     (match
                                        (cast
-                                          (sum
-                                             (con test/testcases/malgo/Test3.mlg.Nil)
+                                          (sum (con test/testcases/malgo/Test3.mlg.Nil)
                                              (con test/testcases/malgo/Test3.mlg.Cons Any# Any#))
                                           $Test3.p_103)
                                        (unpack
                                           (con test/testcases/malgo/Test3.mlg.Nil)
                                           ()
-                                          (=
-                                             $Test3.d_101
+                                          (= $Test3.d_101
                                              (call malgo_print_string "WRONG")
                                              (cast
-                                                (sum
-                                                   (con Tuple#))
+                                                (sum (con Tuple#))
                                                 $Test3.d_101)))
                                        (unpack
                                           (con test/testcases/malgo/Test3.mlg.Cons Any# Any#)
                                           ($Test3.p_104 $Test3.p_105)
                                           (match
                                              (cast
-                                                (sum
-                                                   (con test/testcases/malgo/Test3.mlg.A)
+                                                (sum (con test/testcases/malgo/Test3.mlg.A)
                                                    (con test/testcases/malgo/Test3.mlg.B))
                                                 $Test3.p_104)
                                              (unpack
                                                 (con test/testcases/malgo/Test3.mlg.A)
                                                 ()
-                                                (=
-                                                   $Test3.d_101
+                                                (= $Test3.d_101
                                                    (call malgo_print_string "WRONG")
                                                    (cast
-                                                      (sum
-                                                         (con Tuple#))
+                                                      (sum (con Tuple#))
                                                       $Test3.d_101)))
                                              (unpack
                                                 (con test/testcases/malgo/Test3.mlg.B)
                                                 ()
                                                 (match
                                                    (cast
-                                                      (sum
-                                                         (con test/testcases/malgo/Test3.mlg.Nil)
+                                                      (sum (con test/testcases/malgo/Test3.mlg.Nil)
                                                          (con test/testcases/malgo/Test3.mlg.Cons Any# Any#))
                                                       $Test3.p_105)
                                                    (unpack
                                                       (con test/testcases/malgo/Test3.mlg.Nil)
                                                       ()
-                                                      (=
-                                                         $Test3.d_106
+                                                      (= $Test3.d_106
                                                          (call malgo_print_string "OK")
                                                          (cast
-                                                            (sum
-                                                               (con Tuple#))
+                                                            (sum (con Tuple#))
                                                             $Test3.d_106)))
                                                    (unpack
                                                       (con test/testcases/malgo/Test3.mlg.Cons Any# Any#)
                                                       ($Test3.p_107 $Test3.p_108)
-                                                      (=
-                                                         $Test3.d_101
+                                                      (= $Test3.d_101
                                                          (call malgo_print_string "WRONG")
                                                          (cast
-                                                            (sum
-                                                               (con Tuple#))
+                                                            (sum (con Tuple#))
                                                             $Test3.d_101)))))))))
                                  (unpack
                                     (con test/testcases/malgo/Test3.mlg.B)
                                     ()
-                                    (=
-                                       $Test3.d_101
+                                    (= $Test3.d_101
                                        (call malgo_print_string "WRONG")
                                        (cast
-                                          (sum
-                                             (con Tuple#))
+                                          (sum (con Tuple#))
                                           $Test3.d_101)))))))))
                   $Test3.fun_109)
-               (=
-                  $Test3.d_111
+               (= $Test3.d_111
                   (call $Test3.d_99 $Test3.d_110)
                   (cast
-                     (sum
-                        (con Tuple#))
+                     (sum (con Tuple#))
                      $Test3.d_111))))))
    ((extern
       malgo_print_string
       (->
          (String#)
-         (sum
-            (con Tuple#))))))
+         (sum (con Tuple#))))))

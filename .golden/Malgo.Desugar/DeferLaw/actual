@@ -4,57 +4,43 @@
       (->
          (Any#)
          Any#)
-      (=
-         $DeferLaw.d_25
+      (= $DeferLaw.d_25
          (let
             (($DeferLaw.fun_24
                (->
-                  ((sum
-                     (con Tuple#)))
+                  ((sum (con Tuple#)))
                   Any#)
                (fun
                   ($DeferLaw.$__23)
                   $DeferLaw.x_22)))
             $DeferLaw.fun_24)
-         (=
-            $DeferLaw.d_27
+         (= $DeferLaw.d_27
             (let
                (($DeferLaw.let_26
-                  (sum
-                     (con Tuple#))
+                  (sum (con Tuple#))
                   (pack
-                     (sum
-                        (con Tuple#))
+                     (sum (con Tuple#))
                      (con Tuple#))))
                $DeferLaw.let_26)
-            (=
-               $DeferLaw.d_28
+            (= $DeferLaw.d_28
                (call $DeferLaw.d_25 $DeferLaw.d_27)
                (cast Any# $DeferLaw.d_28)))))
       (define
          (main $DeferLaw.$__29)
          (->
-            ((sum
-               (con Tuple#)))
-            (sum
-               (con Tuple#)))
-         (=
-            $DeferLaw.d_33
-            (=
-               $DeferLaw.d_31
-               (=
-                  $DeferLaw.d_30
+            ((sum (con Tuple#)))
+            (sum (con Tuple#)))
+         (= $DeferLaw.d_33
+            (= $DeferLaw.d_31
+               (= $DeferLaw.d_30
                   (call String# "Hello")
                   (cast Any# $DeferLaw.d_30))
-               (=
-                  $DeferLaw.d_32
+               (= $DeferLaw.d_32
                   (call f $DeferLaw.d_31)
                   (cast Any# $DeferLaw.d_32)))
-            (=
-               $DeferLaw.d_34
+            (= $DeferLaw.d_34
                (call putStrLn $DeferLaw.d_33)
                (cast
-                  (sum
-                     (con Tuple#))
+                  (sum (con Tuple#))
                   $DeferLaw.d_34)))))
    ())
