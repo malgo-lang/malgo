@@ -14,7 +14,7 @@ import Malgo.MonadUniq (Uniq)
 import Malgo.Prelude hiding (catchError, lookup, throwError)
 
 eval :: (IOE :> es, Error EvalError :> es, Reader ModuleName :> es, State Uniq :> es) => Program Name -> Eff es ()
-eval program = evalState @Env mempty do
+eval program = evalState Env {bindings = mempty} do
   traverse_ evalTopFun program.topFuns
   traverse_ initTopVar program.topVars
   traverse_ evalTopVar program.topVars
@@ -40,7 +40,7 @@ evalTopFun (name, parameters, _, body) = do
 initTopVar :: (State Env :> es, IOE :> es) => (Name, b, c) -> Eff es ()
 initTopVar (name, _, _) = do
   ref <- newRef name
-  modify (Map.insert name ref)
+  modify (\env -> env {bindings = Map.insert name ref env.bindings})
 
 evalTopVar :: (State Env :> es, Error EvalError :> es, IOE :> es, State Uniq :> es, Reader ModuleName :> es) => (Name, b, Expr Name) -> Eff es ()
 evalTopVar (name, _, expr) = do
@@ -199,24 +199,27 @@ evalAtom = \case
 
 type Name = Meta Type
 
-type Env = Map Name Ref
+newtype Env = Env {bindings :: Map Name Ref}
+
+instance Show Env where
+  show Env {bindings} = show $ Map.keys bindings
 
 lookupRef :: (Error EvalError :> es, State Env :> es, HasCallStack) => Name -> Eff es Ref
 lookupRef name = do
-  env <- get
-  case Map.lookup name env of
+  Env {bindings} <- get
+  case Map.lookup name bindings of
     Just ref -> pure ref
     Nothing -> throwError (UnboundVariable name)
 
 lookup :: (Error EvalError :> es, State Env :> es, IOE :> es, HasCallStack) => Name -> Eff es Value
 lookup name = do
-  env <- get
-  case Map.lookup name env of
+  Env {bindings} <- get
+  case Map.lookup name bindings of
     Just ref -> readRef ref
     Nothing -> throwError (UnboundVariable name)
 
 assign :: (State Env :> es) => [(Name, Ref)] -> Eff es ()
-assign xs = modify (Map.fromList xs <>)
+assign xs = modify (\env@Env {bindings} -> env {bindings = Map.fromList xs <> bindings})
 
 assign' :: (State Env :> es, IOE :> es) => [(Name, Value)] -> Eff es ()
 assign' xs = do
@@ -239,7 +242,7 @@ data EvalError
 
 -- | A reference to a mutable value.
 -- The name is uset for error messages. It describes the variable that the reference is bound to.
-data Ref = Ref {name :: Name, ref :: IORef (Maybe Value)}
+data Ref = Ref {name :: Name, _ref :: IORef (Maybe Value)}
 
 instance Show Ref where
   show (Ref name _) = show name
