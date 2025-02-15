@@ -31,7 +31,6 @@ import Data.Store
 import Effectful
 import Effectful.Dispatch.Static
 import Effectful.Error.Static (prettyCallStack)
-import Extra (dropEnd)
 import GHC.Records
 import GHC.Stack (callStack)
 import Malgo.Prelude
