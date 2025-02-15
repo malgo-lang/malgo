@@ -23,6 +23,8 @@ import Malgo.TestUtils
 import System.Directory
 import System.FilePath
 import System.IO.Silently (capture)
+import System.IO.Streams (InputStream)
+import System.IO.Streams qualified as Streams
 import Test.Hspec
 
 spec :: Spec
@@ -55,4 +57,7 @@ driveEval srcPath = capture do
     core' <- runReader refined.moduleName $ Flat.normalize core
     let inf = buildInterface refined.moduleName rnState tcEnv dsState
     core'' <- Link.link inf core'
-    runError @EvalError $ runReader refined.moduleName $ eval core''
+    runError @EvalError $ runReader refined.moduleName $ eval core'' testStdin defaultStdout defaultStderr
+
+testStdin :: IO (InputStream Char)
+testStdin = Streams.fromList "Hello\n"

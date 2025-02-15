@@ -101,6 +101,7 @@ library
     , filepath
     , generic-data
     , hashable
+    , io-streams
     , knob
     , lens
     , llvm-hs
@@ -167,6 +168,7 @@ executable malgo
     , filepath
     , generic-data
     , hashable
+    , io-streams
     , knob
     , lens
     , llvm-hs
@@ -247,6 +249,7 @@ test-suite malgo-test
     , hspec
     , hspec-core
     , hspec-golden >=0.2.2.0
+    , io-streams
     , knob
     , lens
     , llvm-hs

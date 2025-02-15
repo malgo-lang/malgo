@@ -1,6 +1,10 @@
-module Malgo.Core.Eval (eval, EvalError) where
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
+module Malgo.Core.Eval (eval, EvalError, defaultStdin, defaultStdout, defaultStderr) where
+
+import Control.Exception (throwIO, try)
 import Data.Map qualified as Map
+import Data.Text qualified as T
 import Data.Traversable (for)
 import Effectful
 import Effectful.Error.Static (Error, throwError)
@@ -12,18 +16,26 @@ import Malgo.Id
 import Malgo.Module
 import Malgo.MonadUniq (Uniq)
 import Malgo.Prelude hiding (catchError, lookup, throwError)
+import System.IO (hPutChar)
+import System.IO.Error (isEOFError)
+import System.IO.Streams (InputStream, OutputStream)
+import System.IO.Streams qualified as Streams
 
-eval :: (IOE :> es, Error EvalError :> es, Reader ModuleName :> es, State Uniq :> es) => Program Name -> Eff es ()
-eval program = evalState Env {bindings = mempty} do
-  traverse_ evalTopFun program.topFuns
-  traverse_ initTopVar program.topVars
-  traverse_ evalTopVar program.topVars
-  main <- findMain program.topFuns
-  case main of
-    (VFun _ [parameter] body) -> do
-      assign' [(parameter, VPack Tuple [])]
-      void $ evalExpr body
-    _ -> throwError NoMain
+eval :: (IOE :> es, Error EvalError :> es, Reader ModuleName :> es, State Uniq :> es) => Program Name -> IO (InputStream Char) -> IO (OutputStream Char) -> IO (OutputStream Char) -> Eff es ()
+eval program stdin stdout stderr = do
+  stdin <- liftIO stdin
+  stdout <- liftIO stdout
+  stderr <- liftIO stderr
+  evalState Env {bindings = mempty, stdin, stdout, stderr} do
+    traverse_ evalTopFun program.topFuns
+    traverse_ initTopVar program.topVars
+    traverse_ evalTopVar program.topVars
+    main <- findMain program.topFuns
+    case main of
+      (VFun _ [parameter] body) -> do
+        assign' [(parameter, VPack Tuple [])]
+        void $ evalExpr body
+      _ -> throwError NoMain
   where
     findMain [] = throwError NoMain
     findMain ((name, _, _, _) : rest)
@@ -179,7 +191,7 @@ evalObj _hint (Record fields) =
     writeRef ref value
     pure ref
 
-evalPrimitive :: (Error EvalError :> es, IOE :> es) => Text -> [Value] -> Eff es Value
+evalPrimitive :: (Error EvalError :> es, IOE :> es, State Env :> es) => Text -> [Value] -> Eff es Value
 evalPrimitive name args = do
   case Map.lookup name primitives of
     Just prim -> prim args
@@ -199,10 +211,28 @@ evalAtom = \case
 
 type Name = Meta Type
 
-newtype Env = Env {bindings :: Map Name Ref}
+data Env = Env {bindings :: Map Name Ref, stdin :: InputStream Char, stdout :: OutputStream Char, stderr :: OutputStream Char}
 
 instance Show Env where
   show Env {bindings} = show $ Map.keys bindings
+
+defaultStdin :: (MonadIO m) => m (InputStream Char)
+defaultStdin = liftIO do
+  Streams.makeInputStream $ do
+    result <- liftIO (try getChar)
+    case result of
+      Right char -> pure (Just char)
+      Left e -> if isEOFError e then pure Nothing else throwIO e
+
+defaultStdout :: (MonadIO m) => m (OutputStream Char)
+defaultStdout = liftIO do
+  Streams.makeOutputStream
+    $ traverse_ putChar
+
+defaultStderr :: (MonadIO m) => m (OutputStream Char)
+defaultStderr = liftIO do
+  Streams.makeOutputStream
+    $ traverse_ (hPutChar stderr)
 
 lookupRef :: (Error EvalError :> es, State Env :> es, HasCallStack) => Name -> Eff es Ref
 lookupRef name = do
@@ -267,7 +297,7 @@ data Value
   | VRecord (Map Text Ref)
   deriving stock (Show)
 
-primitives :: (Error EvalError :> es, IOE :> es) => Map Text ([Value] -> Eff es Value)
+primitives :: (Error EvalError :> es, IOE :> es, State Env :> es) => Map Text ([Value] -> Eff es Value)
 primitives =
   Map.fromList
     [ ( "malgo_unsafe_cast",
@@ -351,12 +381,37 @@ primitives =
       ),
       ( "malgo_print_string",
         \case
-          [VUnboxed (String x)] -> putText x >> pure (VPack Tuple [])
+          [VUnboxed (String x)] -> do
+            Env {stdout} <- get
+            putTextTo stdout x >> pure (VPack Tuple [])
           values -> throwError $ InvalidArguments "malgo_print_string" values
       ),
       ( "malgo_newline",
         \case
-          [VPack Tuple []] -> putText "\n" >> pure (VPack Tuple [])
+          [VPack Tuple []] -> do
+            Env {stdout} <- get
+            putTextTo stdout "\n" >> pure (VPack Tuple [])
           values -> throwError $ InvalidArguments "malgo_newline" values
+      ),
+      ( "malgo_get_contents",
+        \case
+          [VPack Tuple []] -> do
+            Env {stdin} <- get
+            VUnboxed . String <$> getContentsFrom stdin
+          values -> throwError $ InvalidArguments "malgo_get_contents" values
       )
     ]
+
+putTextTo :: (IOE :> es) => OutputStream Char -> Text -> Eff es ()
+putTextTo stream text = do
+  let string = convertString @_ @String text
+  liftIO $ traverse_ (\char -> Streams.write (Just char) stream) string
+
+getContentsFrom :: (IOE :> es) => InputStream Char -> Eff es Text
+getContentsFrom stream = do
+  char <- liftIO $ Streams.read stream
+  case char of
+    Just char -> do
+      rest <- getContentsFrom stream
+      pure $ T.cons char rest
+    Nothing -> pure ""
