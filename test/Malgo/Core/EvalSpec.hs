@@ -22,8 +22,7 @@ import Malgo.Syntax
 import Malgo.TestUtils
 import System.Directory
 import System.FilePath
-import System.IO.Silently (capture)
-import System.IO.Streams (InputStream)
+import System.IO.Streams (InputStream, OutputStream)
 import System.IO.Streams qualified as Streams
 import Test.Hspec
 
@@ -35,14 +34,14 @@ spec = do
   testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
   for_ testcases \testcase -> do
     golden (takeBaseName testcase) do
-      (captured, result) <- driveEval (testcaseDir </> testcase)
+      result <- driveEval (testcaseDir </> testcase)
       case result of
         Left (cs, err) ->
           error $ prettyCallStack cs <> "\n" <> show err
-        Right _ -> pure captured
+        Right captured -> pure captured
 
-driveEval :: FilePath -> IO (String, Either (CallStack, EvalError) ())
-driveEval srcPath = capture do
+driveEval :: FilePath -> IO (Either (CallStack, EvalError) String)
+driveEval srcPath = do
   src <- convertString <$> BS.readFile srcPath
   runMalgoM LLVM flag option do
     parsed <-
@@ -57,7 +56,20 @@ driveEval srcPath = capture do
     core' <- runReader refined.moduleName $ Flat.normalize core
     let inf = buildInterface refined.moduleName rnState tcEnv dsState
     core'' <- Link.link inf core'
-    runError @EvalError $ runReader refined.moduleName $ eval core'' testStdin defaultStdout defaultStderr
+    (testStdout, builder) <- setupTestStdout
+    runError @EvalError $ runReader refined.moduleName $ do
+      eval core'' testStdin testStdout defaultStderr
+      liftIO $ readIORef builder
 
 testStdin :: IO (InputStream Char)
 testStdin = Streams.fromList "Hello\n"
+
+setupTestStdout :: (MonadIO m) => m (IO (OutputStream Char), IORef String)
+setupTestStdout = do
+  builder <- newIORef ""
+  pure
+    ( Streams.makeOutputStream \case
+        Just c -> modifyIORef builder (<> [c])
+        Nothing -> pure (),
+      builder
+    )
