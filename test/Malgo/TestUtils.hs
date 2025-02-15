@@ -1,4 +1,16 @@
-module Malgo.TestUtils where
+module Malgo.TestUtils
+  ( smallIndentNoColor,
+    pShowCompact,
+    testcaseDir,
+    builtinPath,
+    setupBuiltin,
+    preludePath,
+    setupPrelude,
+    flag,
+    option,
+    golden,
+  )
+where
 
 import Data.Text.Lazy as TL hiding (foldr1, words)
 import Malgo.Core.Optimize (OptimizeOption, defaultOptimizeOption)
