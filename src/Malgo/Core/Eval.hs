@@ -191,7 +191,7 @@ evalObj _hint (Record fields) =
     writeRef ref value
     pure ref
 
-evalPrimitive :: (Error EvalError :> es, IOE :> es, State Env :> es) => Text -> [Value] -> Eff es Value
+evalPrimitive :: (Error EvalError :> es, IOE :> es, State Env :> es, State Uniq :> es, Reader ModuleName :> es) => Text -> [Value] -> Eff es Value
 evalPrimitive name args = do
   case Map.lookup name primitives of
     Just prim -> prim args
@@ -295,9 +295,10 @@ data Value
   | VFun (Maybe Env) [Name] (Expr Name)
   | VPack Tag [Ref]
   | VRecord (Map Text Ref)
+  | VVector [Ref]
   deriving stock (Show)
 
-primitives :: (Error EvalError :> es, IOE :> es, State Env :> es) => Map Text ([Value] -> Eff es Value)
+primitives :: (Error EvalError :> es, IOE :> es, State Env :> es, State Uniq :> es, Reader ModuleName :> es) => Map Text ([Value] -> Eff es Value)
 primitives =
   Map.fromList
     [ ( "malgo_unsafe_cast",
@@ -399,6 +400,21 @@ primitives =
             Env {stdin} <- get
             VUnboxed . String <$> getContentsFrom stdin
           values -> throwError $ InvalidArguments "malgo_get_contents" values
+      ),
+      ( "malgo_new_vector",
+        \case
+          [VUnboxed (Int64 n), initValue] -> do
+            refs <- replicateM (fromIntegral n) do
+              newRef . withMeta AnyT =<< newTemporalId "vector"
+            traverse_ (`writeRef` initValue) refs
+            pure $ VVector refs
+          values -> throwError $ InvalidArguments "malgo_new_vector" values
+      ),
+      ( "malgo_read_vector",
+        \case
+          [VUnboxed (Int64 i), VVector refs] -> do
+            readRef (refs !! fromIntegral i)
+          values -> throwError $ InvalidArguments "malgo_read_vector" values
       )
     ]
 
