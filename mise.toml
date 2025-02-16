@@ -14,7 +14,7 @@ run = "hpack && cabal build"
 description = "Run the tests"
 depends = ["build"]
 run = """
-    if [ -z '{{option(name="match")}}' ]; then
+    if [ 'false' = '{{option(name="match")}}' ]; then
         cabal test --test-show-details=direct
     else
         cabal test --test-show-details=direct --test-options=--match --test-options={{option(name="match")}}

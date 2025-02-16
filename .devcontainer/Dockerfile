@@ -2,10 +2,6 @@ FROM mcr.microsoft.com/devcontainers/base:debian
 
 RUN apt-get update && apt-get install -y build-essential curl libffi-dev libffi8ubuntu1 libgmp-dev libgmp10 libncurses-dev libncurses5 libtinfo5 libgc-dev lsb-release wget software-properties-common gnupg pkg-config && rm -rf /var/lib/apt/lists/*
 
-RUN wget https://apt.llvm.org/llvm.sh
-RUN chmod +x llvm.sh
-RUN ./llvm.sh 15 all
-RUN rm llvm.sh
 RUN rm -rf /var/lib/apt/lists/*
 
 USER vscode
@@ -14,7 +10,7 @@ USER vscode
 
 ENV BOOTSTRAP_HASKELL_NONINTERACTIVE=1
 
-ENV BOOTSTRAP_HASKELL_GHC_VERSION=9.6.4
+ENV BOOTSTRAP_HASKELL_GHC_VERSION=9.10.1
 ENV BOOTSTRAP_HASKELL_CABAL_VERSION=3.12.1.0
 # Disable HLS installation
 # ENV BOOTSTRAP_HASKELL_INSTALL_HLS=0

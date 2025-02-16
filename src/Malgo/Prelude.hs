@@ -52,7 +52,6 @@ module Malgo.Prelude
     identity,
     pass,
     foldMapM,
-    unzip,
     replaceOf,
     chomp,
     asumMap,
@@ -179,11 +178,6 @@ foldMapM f =
         pure $! mappend acc w
     )
     mempty
-
--- | Generalization of 'Data.List.unzip' :: [(a, b)] -> ([a], [b])
-unzip :: (Functor f) => f (a, b) -> (f a, f b)
-unzip xs = (fst <$> xs, snd <$> xs)
-{-# INLINE unzip #-}
 
 replaceOf :: (Eq b) => ASetter s t b b -> b -> b -> s -> t
 replaceOf l x x' = over l (\v -> if v == x then x' else v)
