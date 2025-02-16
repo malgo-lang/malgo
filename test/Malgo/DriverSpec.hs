@@ -7,7 +7,6 @@ module Malgo.DriverSpec (spec) where
 
 import Data.ByteString.Lazy qualified as BL
 import Data.List (intercalate)
-import Data.Text qualified as T
 import Extra (retry, timeout)
 import Malgo.Core.Optimize (OptimizeOption (..), defaultOptimizeOption)
 import Malgo.Driver qualified as Driver
@@ -177,13 +176,12 @@ test testcase _typ lambdaLift noOptimize option compileMode = retry 3 do
 
   (exitCode, result) <-
     timeoutWrapper "run"
-      $ second convertString
-      <$> readProcessStdout
+      $ readProcessStdout
         ( proc (workspaceDir </> takeBaseName testcase -<.> ".out") []
             & setStdin (byteStringInput "Hello")
         )
   ("out" :: String, exitCode) `shouldBe` ("out", ExitSuccess)
-  pure $ convertString $ T.stripEnd result
+  pure $ convertString result
   where
     timeoutWrapper phase m = do
       timeout (60 * 5) m >>= \case
