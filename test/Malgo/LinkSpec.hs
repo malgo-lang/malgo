@@ -7,7 +7,7 @@ import Malgo.Desugar.Pass (desugar)
 import Malgo.Infer.Pass (infer)
 import Malgo.Interface (buildInterface)
 import Malgo.Link qualified as Link
-import Malgo.Monad (CompileMode (..), runMalgoM)
+import Malgo.Monad (runMalgoM)
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
 import Malgo.Refine.Pass (refine)
@@ -34,7 +34,7 @@ spec = parallel do
 driveLink :: FilePath -> IO String
 driveLink srcPath = do
   src <- convertString <$> BS.readFile srcPath
-  runMalgoM LLVM flag option do
+  runMalgoM flag option do
     parsed <-
       parseMalgo srcPath src >>= \case
         Left err -> error $ show err

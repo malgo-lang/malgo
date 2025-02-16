@@ -42,7 +42,7 @@ builtinPath = "./runtime/malgo/Builtin.mlg"
 
 setupBuiltin :: IO ()
 setupBuiltin =
-  runMalgoM LLVM flag option do
+  runMalgoM flag option do
     Driver.compile builtinPath
 
 preludePath :: FilePath
@@ -50,7 +50,7 @@ preludePath = "./runtime/malgo/Prelude.mlg"
 
 setupPrelude :: IO ()
 setupPrelude =
-  runMalgoM LLVM flag option do
+  runMalgoM flag option do
     Driver.compile preludePath
 
 flag :: Flag

@@ -32,14 +32,14 @@ eval program stdin stdout stderr = do
     traverse_ evalTopVar program.topVars
     main <- findMain program.topFuns
     case main of
-      (VFun _ [parameter] body) -> do
+      Just (VFun _ [parameter] body) -> do
         assign' [(parameter, VPack Tuple [])]
         void $ evalExpr body
-      _ -> throwError NoMain
+      _ -> pure () -- No main function
   where
-    findMain [] = throwError NoMain
+    findMain [] = pure Nothing
     findMain ((name, _, _, _) : rest)
-      | name.id.name == "main" = lookup name
+      | name.id.name == "main" = Just <$> lookup name
       | otherwise = findMain rest
 
 evalTopFun :: (State Env :> es, IOE :> es) => (Name, [Name], c, Expr Name) -> Eff es ()
@@ -267,7 +267,6 @@ data EvalError
   | NoMatch
   | UnexpectedError Type
   | InvalidArguments Text [Value]
-  | NoMain
   deriving stock (Show)
 
 -- | A reference to a mutable value.

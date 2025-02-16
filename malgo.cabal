@@ -24,7 +24,6 @@ library
   exposed-modules:
       Malgo.Core.Alpha
       Malgo.Core.Annotate
-      Malgo.Core.CodeGen.LLVM
       Malgo.Core.Eval
       Malgo.Core.Flat
       Malgo.Core.LambdaLift
@@ -104,8 +103,6 @@ library
     , io-streams
     , knob
     , lens
-    , llvm-hs
-    , llvm-hs-pure
     , megaparsec
     , mtl
     , optparse-applicative
@@ -171,8 +168,6 @@ executable malgo
     , io-streams
     , knob
     , lens
-    , llvm-hs
-    , llvm-hs-pure
     , malgo
     , megaparsec
     , mtl
@@ -200,7 +195,6 @@ test-suite malgo-test
   other-modules:
       Malgo.Core.EvalSpec
       Malgo.DesugarSpec
-      Malgo.DriverSpec
       Malgo.InferSpec
       Malgo.LinkSpec
       Malgo.ParserSpec
@@ -252,8 +246,6 @@ test-suite malgo-test
     , io-streams
     , knob
     , lens
-    , llvm-hs
-    , llvm-hs-pure
     , malgo
     , megaparsec
     , mtl

@@ -4,16 +4,17 @@ module Malgo.Driver (compile, compileFromAST, withDump) where
 import Data.ByteString qualified as BS
 import Data.String.Conversions.Monomorphic (toString)
 import Effectful
+import Effectful.Error.Static (prettyCallStack, runError)
 import Effectful.Reader.Static
 import Effectful.State.Static.Local
 import Error.Diagnose (TabSize (..), WithUnicode (..), addFile, prettyDiagnostic)
 import Error.Diagnose.Compat.Megaparsec
-import Malgo.Core.CodeGen.LLVM qualified as LLVM
+import Malgo.Core.Eval (EvalError, defaultStderr, defaultStdin, defaultStdout, eval)
 import Malgo.Core.Flat qualified as Flat
 import Malgo.Core.LambdaLift (lambdalift)
 import Malgo.Core.Lint (lint)
 import Malgo.Core.Optimize (OptimizeOption, optimizeProgram)
-import Malgo.Core.Syntax (Program, searchMain)
+import Malgo.Core.Syntax (Program)
 import Malgo.Core.Type (Type)
 import Malgo.Desugar.Pass (desugar)
 import Malgo.Id (Meta (..))
@@ -30,7 +31,6 @@ import Malgo.Rename.Pass (rename)
 import Malgo.Rename.RnEnv qualified as RnEnv
 import Malgo.Syntax qualified as Syntax
 import Malgo.Syntax.Extension
-import Path (replaceExtension)
 import Prettyprinter qualified as PrettyPrinter
 import Prettyprinter.Render.Text qualified as PrettyPrinter
 import System.Exit (exitFailure)
@@ -128,20 +128,6 @@ compileToCore srcPath parsedAst = do
 
   pure coreLL
 
--- | Compile the Core representation to LLVM module.
-compileToLLVM ::
-  ( IOE :> es,
-    State Uniq :> es
-  ) =>
-  ArtifactPath ->
-  ModuleName ->
-  Program (Meta Type) ->
-  Eff es ()
-compileToLLVM srcPath moduleName coreLL = do
-  Uniq i <- get @Uniq
-  dstPath <- replaceExtension ".ll" srcPath.targetPath
-  LLVM.codeGen srcPath.relPath dstPath moduleName (searchMain coreLL) i coreLL
-
 -- | Compile the parsed AST.
 compileFromAST ::
   ( Reader OptimizeOption :> es,
@@ -157,7 +143,14 @@ compileFromAST ::
 compileFromAST srcPath parsedAst = do
   let moduleName = parsedAst.moduleName
   coreLL <- compileToCore srcPath parsedAst
-  compileToLLVM srcPath moduleName coreLL
+  result <- runError @EvalError $ runReader moduleName do
+    eval coreLL defaultStdin defaultStdout defaultStderr
+  case result of
+    Left (cs, err) -> do
+      let message = prettyCallStack cs <> "\n" <> show err
+      liftIO $ hPutStrLn stderr message
+      liftIO exitFailure
+    Right _ -> pure ()
 
 -- | Read the source file and parse it, then compile.
 compile ::

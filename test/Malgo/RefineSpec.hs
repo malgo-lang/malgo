@@ -2,7 +2,7 @@ module Malgo.RefineSpec (spec) where
 
 import Data.ByteString qualified as BS
 import Malgo.Infer.Pass (infer)
-import Malgo.Monad (CompileMode (..), runMalgoM)
+import Malgo.Monad (runMalgoM)
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
 import Malgo.Refine.Pass (refine)
@@ -27,7 +27,7 @@ spec = parallel do
 driveRefine :: FilePath -> IO String
 driveRefine srcPath = do
   src <- convertString <$> BS.readFile srcPath
-  runMalgoM LLVM flag option do
+  runMalgoM flag option do
     parsed <-
       parseMalgo srcPath src >>= \case
         Left err -> error $ show err
