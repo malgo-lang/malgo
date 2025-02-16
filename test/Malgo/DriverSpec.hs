@@ -202,8 +202,8 @@ goldenLLVM description runAction = do
           encodePretty = convertString,
           writeToFile = BL.writeFile,
           readFromFile = BL.readFile,
-          goldenFile = ".golden" </> "llvm" </> name </> "golden.ll",
-          actualFile = Just (".golden" </> "llvm" </> name </> "actual.ll"),
+          goldenFile = ".golden" </> name </> "golden.ll",
+          actualFile = Just (".golden" </> name </> "actual.ll"),
           failFirstTime = False
         }
 
