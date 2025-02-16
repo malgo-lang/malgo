@@ -39,6 +39,11 @@ spec = do
         Left (cs, err) ->
           error $ prettyCallStack cs <> "\n" <> show err
         Right captured -> pure captured
+  errorcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory (testcaseDir </> "error")
+  for_ errorcases \errorcase -> do
+    it ("error " <> takeBaseName errorcase)
+      $ driveEval (testcaseDir </> "error" </> errorcase)
+      `shouldThrow` anyException
 
 driveEval :: FilePath -> IO (Either (CallStack, EvalError) String)
 driveEval srcPath = do
