@@ -26,7 +26,8 @@ import Text.Pretty.Simple
 smallIndentNoColor :: OutputOptions
 smallIndentNoColor =
   defaultOutputOptionsNoColor
-    { outputOptionsIndentAmount = 1
+    { outputOptionsIndentAmount = 1,
+      outputOptionsStringStyle = Literal
     -- outputOptionsCompact is problematic: https://github.com/cdepillabout/pretty-simple/issues/84
     -- outputOptionsCompactParens = True,
     -- outputOptionsCompact = True
