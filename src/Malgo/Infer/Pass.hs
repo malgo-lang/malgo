@@ -368,40 +368,42 @@ tcClause (Clause pos pats e) = do
 
 tcPatterns :: (State Uniq :> es, Reader ModuleName :> es, State TcEnv :> es, State TypeMap :> es, IOE :> es, Writer [(Range, Constraint)] :> es, Reader Flag :> es) => [Pat (Malgo Rename)] -> Eff es [Pat (Malgo Infer)]
 tcPatterns [] = pure []
-tcPatterns (VarP x v : ps) = do
+tcPatterns (VarP x v : rest) = do
   ty <- TyMeta <$> freshVar Nothing
   modify (insertSignature v (Forall [] ty))
-  ps' <- tcPatterns ps
-  pure $ VarP (Typed ty x) v : ps'
-tcPatterns (ConP pos con pats : ps) = do
+  rest' <- tcPatterns rest
+  pure $ VarP (Typed ty x) v : rest'
+tcPatterns (ConP pos con pats : rest) = do
   conType <- instantiate pos =<< lookupVar pos con
   let (conParams, _) = splitTyArr conType
   -- コンストラクタの型に基づくASTの組み換え
   -- 足りない分を後続のパターン列から補充
-  let (morePats, restPs) = List.splitAt (length conParams - length pats) ps
+  let (morePats, actualRest) = List.splitAt (length conParams - length pats) rest
   -- 足りない分（morePats）を補充した残り（restPs）が空でなければ、
   -- 2引数以上の関数での文法エラー
-  when (not (null morePats) && not (null restPs))
+  when (not (null morePats) && not (null actualRest))
     $ errorOn pos "Invalid Pattern: You may need to put parentheses"
   pats' <- tcPatterns (pats <> morePats)
   ty <- TyMeta <$> freshVar Nothing
   let patTypes = map typeOf pats'
   tell [(pos, conType :~ buildTyArr patTypes ty)]
-  ps' <- tcPatterns restPs
-  pure (ConP (Typed ty pos) con pats' : ps')
-tcPatterns (TupleP pos pats : ps) = do
+  actualRest' <- tcPatterns actualRest
+  pure (ConP (Typed ty pos) con pats' : actualRest')
+tcPatterns (TupleP pos pats : rest) = do
   pats' <- tcPatterns pats
-  ps' <- tcPatterns ps
+  rest' <- tcPatterns rest
   let patTypes = map typeOf pats'
-  pure $ TupleP (Typed (TyConApp (TyTuple (length patTypes)) patTypes) pos) pats' : ps'
-tcPatterns (RecordP pos kps : ps) = do
-  kps' <- traverseOf (traversed . _2) (\x -> List.head <$> tcPatterns [x]) kps
+  pure $ TupleP (Typed (TyConApp (TyTuple (length patTypes)) patTypes) pos) pats' : rest'
+tcPatterns (RecordP pos kps : rest) = do
+  let ps = map snd kps
   ps' <- tcPatterns ps
+  let kps' = zip (map fst kps) ps'
+  rest' <- tcPatterns rest
   let patternType = TyRecord $ Map.fromList $ map (bimap identity typeOf) kps'
-  pure $ RecordP (Typed patternType pos) kps' : ps'
-tcPatterns (UnboxedP pos unboxed : ps) = do
-  ps' <- tcPatterns ps
-  pure $ UnboxedP (Typed (typeOf unboxed) pos) unboxed : ps'
+  pure $ RecordP (Typed patternType pos) kps' : rest'
+tcPatterns (UnboxedP pos unboxed : rest) = do
+  rest' <- tcPatterns rest
+  pure $ UnboxedP (Typed (typeOf unboxed) pos) unboxed : rest'
 
 tcStmts ::
   (Reader ModuleName :> es, State Uniq :> es, State TypeMap :> es, State TcEnv :> es, Writer [(Range, Constraint)] :> es, IOE :> es, Reader Flag :> es) =>
