@@ -1,1065 +1,3083 @@
 Module
  { moduleName = Artifact
-  ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), moduleDefinition = BindGroup
+  ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+ , moduleDefinition = BindGroup
   { _scDefs =
    [
     [
      ( Range
       { _start = SourcePos
-       { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 6, sourceColumn = Pos 1 }, _end = SourcePos
-       { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 8, sourceColumn = Pos 1 } }, Id
-      { name = "id", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External }, Fn
+       { sourceName = "./test/testcases/malgo/TestEither.mlg"
+       , sourceLine = Pos 6
+       , sourceColumn = Pos 1
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/TestEither.mlg"
+       , sourceLine = Pos 8
+       , sourceColumn = Pos 1
+       }
+      }
+     , Id
+      { name = "id"
+      , moduleName = Artifact
+       ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+      , sort = External
+      }
+     , Fn
       ( Range
        { _start = SourcePos
-        { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 6, sourceColumn = Pos 11 }, _end = SourcePos
-        { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 6, sourceColumn = Pos 17 } } )
+        { sourceName = "./test/testcases/malgo/TestEither.mlg"
+        , sourceLine = Pos 6
+        , sourceColumn = Pos 11
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestEither.mlg"
+        , sourceLine = Pos 6
+        , sourceColumn = Pos 17
+        }
+       }
+      )
       ( Clause
        ( Range
         { _start = SourcePos
-         { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 6, sourceColumn = Pos 11 }, _end = SourcePos
-         { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 6, sourceColumn = Pos 17 } } )
+         { sourceName = "./test/testcases/malgo/TestEither.mlg"
+         , sourceLine = Pos 6
+         , sourceColumn = Pos 11
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/TestEither.mlg"
+         , sourceLine = Pos 6
+         , sourceColumn = Pos 17
+         }
+        }
+       )
        [ VarP
         ( Range
          { _start = SourcePos
-          { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 6, sourceColumn = Pos 11 }, _end = SourcePos
-          { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 6, sourceColumn = Pos 13 } } )
+          { sourceName = "./test/testcases/malgo/TestEither.mlg"
+          , sourceLine = Pos 6
+          , sourceColumn = Pos 11
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/TestEither.mlg"
+          , sourceLine = Pos 6
+          , sourceColumn = Pos 13
+          }
+         }
+        )
         ( Id
-         { name = "x", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Internal 2 } ) ]
+         { name = "x"
+         , moduleName = Artifact
+          ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+         , sort = Internal 2
+         }
+        )
+       ]
        ( Seq
         ( Range
          { _start = SourcePos
-          { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 6, sourceColumn = Pos 16 }, _end = SourcePos
-          { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 6, sourceColumn = Pos 17 } } )
+          { sourceName = "./test/testcases/malgo/TestEither.mlg"
+          , sourceLine = Pos 6
+          , sourceColumn = Pos 16
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/TestEither.mlg"
+          , sourceLine = Pos 6
+          , sourceColumn = Pos 17
+          }
+         }
+        )
         ( NoBind
          ( Range
           { _start = SourcePos
-           { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 6, sourceColumn = Pos 16 }, _end = SourcePos
-           { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 6, sourceColumn = Pos 17 } } )
+           { sourceName = "./test/testcases/malgo/TestEither.mlg"
+           , sourceLine = Pos 6
+           , sourceColumn = Pos 16
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/TestEither.mlg"
+           , sourceLine = Pos 6
+           , sourceColumn = Pos 17
+           }
+          }
+         )
          ( Var
           ( Range
            { _start = SourcePos
-            { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 6, sourceColumn = Pos 16 }, _end = SourcePos
-            { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 6, sourceColumn = Pos 17 } } )
+            { sourceName = "./test/testcases/malgo/TestEither.mlg"
+            , sourceLine = Pos 6
+            , sourceColumn = Pos 16
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestEither.mlg"
+            , sourceLine = Pos 6
+            , sourceColumn = Pos 17
+            }
+           }
+          )
           ( Id
-           { name = "x", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Internal 2 } ) ) :| [] ) ) :| [] ) ) ],
+           { name = "x"
+           , moduleName = Artifact
+            ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+           , sort = Internal 2
+           }
+          )
+         ) :| []
+        )
+       ) :| []
+      )
+     )
+    ]
+   ,
     [
      ( Range
       { _start = SourcePos
-       { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 8, sourceColumn = Pos 1 }, _end = SourcePos
-       { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 12, sourceColumn = Pos 1 } }, Id
-      { name = "andThen", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External }, Fn
+       { sourceName = "./test/testcases/malgo/TestEither.mlg"
+       , sourceLine = Pos 8
+       , sourceColumn = Pos 1
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/TestEither.mlg"
+       , sourceLine = Pos 12
+       , sourceColumn = Pos 1
+       }
+      }
+     , Id
+      { name = "andThen"
+      , moduleName = Artifact
+       ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+      , sort = External
+      }
+     , Fn
       ( Range
        { _start = SourcePos
-        { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 9, sourceColumn = Pos 5 }, _end = SourcePos
-        { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 10, sourceColumn = Pos 24 } } )
+        { sourceName = "./test/testcases/malgo/TestEither.mlg"
+        , sourceLine = Pos 9
+        , sourceColumn = Pos 5
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestEither.mlg"
+        , sourceLine = Pos 10
+        , sourceColumn = Pos 24
+        }
+       }
+      )
       ( Clause
        ( Range
         { _start = SourcePos
-         { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 9, sourceColumn = Pos 5 }, _end = SourcePos
-         { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 9, sourceColumn = Pos 25 } } )
+         { sourceName = "./test/testcases/malgo/TestEither.mlg"
+         , sourceLine = Pos 9
+         , sourceColumn = Pos 5
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/TestEither.mlg"
+         , sourceLine = Pos 9
+         , sourceColumn = Pos 25
+         }
+        }
+       )
        [ VarP
         ( Range
          { _start = SourcePos
-          { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 9, sourceColumn = Pos 5 }, _end = SourcePos
-          { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 9, sourceColumn = Pos 7 } } )
+          { sourceName = "./test/testcases/malgo/TestEither.mlg"
+          , sourceLine = Pos 9
+          , sourceColumn = Pos 5
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/TestEither.mlg"
+          , sourceLine = Pos 9
+          , sourceColumn = Pos 7
+          }
+         }
+        )
         ( Id
-         { name = "_", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Internal 3 } ), ConP
+         { name = "_"
+         , moduleName = Artifact
+          ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+         , sort = Internal 3
+         }
+        )
+       , ConP
         ( Range
          { _start = SourcePos
-          { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 9, sourceColumn = Pos 8 }, _end = SourcePos
-          { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 9, sourceColumn = Pos 14 } } )
+          { sourceName = "./test/testcases/malgo/TestEither.mlg"
+          , sourceLine = Pos 9
+          , sourceColumn = Pos 8
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/TestEither.mlg"
+          , sourceLine = Pos 9
+          , sourceColumn = Pos 14
+          }
+         }
+        )
         ( Id
-         { name = "Left", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External } )
+         { name = "Left"
+         , moduleName = Artifact
+          ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+         , sort = External
+         }
+        )
         [ VarP
          ( Range
           { _start = SourcePos
-           { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 9, sourceColumn = Pos 13 }, _end = SourcePos
-           { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 9, sourceColumn = Pos 14 } } )
+           { sourceName = "./test/testcases/malgo/TestEither.mlg"
+           , sourceLine = Pos 9
+           , sourceColumn = Pos 13
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/TestEither.mlg"
+           , sourceLine = Pos 9
+           , sourceColumn = Pos 14
+           }
+          }
+         )
          ( Id
-          { name = "x", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Internal 4 } ) ] ]
+          { name = "x"
+          , moduleName = Artifact
+           ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+          , sort = Internal 4
+          }
+         )
+        ]
+       ]
        ( Seq
         ( Range
          { _start = SourcePos
-          { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 9, sourceColumn = Pos 19 }, _end = SourcePos
-          { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 9, sourceColumn = Pos 25 } } )
+          { sourceName = "./test/testcases/malgo/TestEither.mlg"
+          , sourceLine = Pos 9
+          , sourceColumn = Pos 19
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/TestEither.mlg"
+          , sourceLine = Pos 9
+          , sourceColumn = Pos 25
+          }
+         }
+        )
         ( NoBind
          ( Range
           { _start = SourcePos
-           { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 9, sourceColumn = Pos 19 }, _end = SourcePos
-           { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 9, sourceColumn = Pos 25 } } )
+           { sourceName = "./test/testcases/malgo/TestEither.mlg"
+           , sourceLine = Pos 9
+           , sourceColumn = Pos 19
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/TestEither.mlg"
+           , sourceLine = Pos 9
+           , sourceColumn = Pos 25
+           }
+          }
+         )
          ( Apply
           ( Range
            { _start = SourcePos
-            { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 9, sourceColumn = Pos 19 }, _end = SourcePos
-            { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 9, sourceColumn = Pos 25 } } )
+            { sourceName = "./test/testcases/malgo/TestEither.mlg"
+            , sourceLine = Pos 9
+            , sourceColumn = Pos 19
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestEither.mlg"
+            , sourceLine = Pos 9
+            , sourceColumn = Pos 25
+            }
+           }
+          )
           ( Var
            ( Range
             { _start = SourcePos
-             { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 9, sourceColumn = Pos 19 }, _end = SourcePos
-             { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 9, sourceColumn = Pos 24 } } )
+             { sourceName = "./test/testcases/malgo/TestEither.mlg"
+             , sourceLine = Pos 9
+             , sourceColumn = Pos 19
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TestEither.mlg"
+             , sourceLine = Pos 9
+             , sourceColumn = Pos 24
+             }
+            }
+           )
            ( Id
-            { name = "Left", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External } ) )
+            { name = "Left"
+            , moduleName = Artifact
+             ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+            , sort = External
+            }
+           )
+          )
           ( Var
            ( Range
             { _start = SourcePos
-             { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 9, sourceColumn = Pos 24 }, _end = SourcePos
-             { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 9, sourceColumn = Pos 25 } } )
+             { sourceName = "./test/testcases/malgo/TestEither.mlg"
+             , sourceLine = Pos 9
+             , sourceColumn = Pos 24
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TestEither.mlg"
+             , sourceLine = Pos 9
+             , sourceColumn = Pos 25
+             }
+            }
+           )
            ( Id
-            { name = "x", moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Internal 4 } ) ) ) :| [] ) ) :|
+            { name = "x"
+            , moduleName = Artifact
+             ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+            , sort = Internal 4
+            }
+           )
+          )
+         ) :| []
+        )
+       ) :|
        [ Clause
         ( Range
          { _start = SourcePos
-          { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 10, sourceColumn = Pos 5 }, _end = SourcePos
-          { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 10, sourceColumn = Pos 24 } } )
+          { sourceName = "./test/testcases/malgo/TestEither.mlg"
+          , sourceLine = Pos 10
+          , sourceColumn = Pos 5
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/TestEither.mlg"
+          , sourceLine = Pos 10
+          , sourceColumn = Pos 24
+          }
+         }
+        )
         [ VarP
          ( Range
           { _start = SourcePos
-           { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 10, sourceColumn = Pos 5 }, _end = SourcePos
-           { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 10, sourceColumn = Pos 7 } } )
+           { sourceName = "./test/testcases/malgo/TestEither.mlg"
+           , sourceLine = Pos 10
+           , sourceColumn = Pos 5
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/TestEither.mlg"
+           , sourceLine = Pos 10
+           , sourceColumn = Pos 7
+           }
+          }
+         )
          ( Id
-          { name = "f", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Internal 5 } ), ConP
+          { name = "f"
+          , moduleName = Artifact
+           ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+          , sort = Internal 5
+          }
+         )
+        , ConP
          ( Range
           { _start = SourcePos
-           { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 10, sourceColumn = Pos 8 }, _end = SourcePos
-           { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 10, sourceColumn = Pos 15 } } )
+           { sourceName = "./test/testcases/malgo/TestEither.mlg"
+           , sourceLine = Pos 10
+           , sourceColumn = Pos 8
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/TestEither.mlg"
+           , sourceLine = Pos 10
+           , sourceColumn = Pos 15
+           }
+          }
+         )
          ( Id
-          { name = "Right", moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External } )
+          { name = "Right"
+          , moduleName = Artifact
+           ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+          , sort = External
+          }
+         )
          [ VarP
           ( Range
            { _start = SourcePos
-            { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 10, sourceColumn = Pos 14 }, _end = SourcePos
-            { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 10, sourceColumn = Pos 15 } } )
+            { sourceName = "./test/testcases/malgo/TestEither.mlg"
+            , sourceLine = Pos 10
+            , sourceColumn = Pos 14
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestEither.mlg"
+            , sourceLine = Pos 10
+            , sourceColumn = Pos 15
+            }
+           }
+          )
           ( Id
-           { name = "x", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Internal 6 } ) ] ]
+           { name = "x"
+           , moduleName = Artifact
+            ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+           , sort = Internal 6
+           }
+          )
+         ]
+        ]
         ( Seq
          ( Range
           { _start = SourcePos
-           { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 10, sourceColumn = Pos 20 }, _end = SourcePos
-           { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 10, sourceColumn = Pos 24 } } )
+           { sourceName = "./test/testcases/malgo/TestEither.mlg"
+           , sourceLine = Pos 10
+           , sourceColumn = Pos 20
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/TestEither.mlg"
+           , sourceLine = Pos 10
+           , sourceColumn = Pos 24
+           }
+          }
+         )
          ( NoBind
           ( Range
            { _start = SourcePos
-            { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 10, sourceColumn = Pos 20 }, _end = SourcePos
-            { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 10, sourceColumn = Pos 24 } } )
+            { sourceName = "./test/testcases/malgo/TestEither.mlg"
+            , sourceLine = Pos 10
+            , sourceColumn = Pos 20
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestEither.mlg"
+            , sourceLine = Pos 10
+            , sourceColumn = Pos 24
+            }
+           }
+          )
           ( Apply
            ( Range
             { _start = SourcePos
-             { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 10, sourceColumn = Pos 20 }, _end = SourcePos
-             { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 10, sourceColumn = Pos 24 } } )
+             { sourceName = "./test/testcases/malgo/TestEither.mlg"
+             , sourceLine = Pos 10
+             , sourceColumn = Pos 20
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TestEither.mlg"
+             , sourceLine = Pos 10
+             , sourceColumn = Pos 24
+             }
+            }
+           )
            ( Var
             ( Range
              { _start = SourcePos
-              { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 10, sourceColumn = Pos 20 }, _end = SourcePos
-              { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 10, sourceColumn = Pos 22 } } )
+              { sourceName = "./test/testcases/malgo/TestEither.mlg"
+              , sourceLine = Pos 10
+              , sourceColumn = Pos 20
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/TestEither.mlg"
+              , sourceLine = Pos 10
+              , sourceColumn = Pos 22
+              }
+             }
+            )
             ( Id
-             { name = "f", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Internal 5 } ) )
+             { name = "f"
+             , moduleName = Artifact
+              ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+             , sort = Internal 5
+             }
+            )
+           )
            ( Var
             ( Range
              { _start = SourcePos
-              { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 10, sourceColumn = Pos 22 }, _end = SourcePos
-              { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 10, sourceColumn = Pos 24 } } )
+              { sourceName = "./test/testcases/malgo/TestEither.mlg"
+              , sourceLine = Pos 10
+              , sourceColumn = Pos 22
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/TestEither.mlg"
+              , sourceLine = Pos 10
+              , sourceColumn = Pos 24
+              }
+             }
+            )
             ( Id
-             { name = "x", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Internal 6 } ) ) ) :| [] ) ) ] ) ) ],
+             { name = "x"
+             , moduleName = Artifact
+              ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+             , sort = Internal 6
+             }
+            )
+           )
+          ) :| []
+         )
+        )
+       ]
+      )
+     )
+    ]
+   ,
     [
      ( Range
       { _start = SourcePos
-       { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 12, sourceColumn = Pos 1 }, _end = SourcePos
-       { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 24, sourceColumn = Pos 2 } }, Id
-      { name = "main", moduleName = Artifact
-       ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External }, Fn
+       { sourceName = "./test/testcases/malgo/TestEither.mlg"
+       , sourceLine = Pos 12
+       , sourceColumn = Pos 1
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/TestEither.mlg"
+       , sourceLine = Pos 24
+       , sourceColumn = Pos 2
+       }
+      }
+     , Id
+      { name = "main"
+      , moduleName = Artifact
+       ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+      , sort = External
+      }
+     , Fn
       ( Range
        { _start = SourcePos
-        { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 3 }, _end = SourcePos
-        { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 24, sourceColumn = Pos 1 } } )
+        { sourceName = "./test/testcases/malgo/TestEither.mlg"
+        , sourceLine = Pos 13
+        , sourceColumn = Pos 3
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestEither.mlg"
+        , sourceLine = Pos 24
+        , sourceColumn = Pos 1
+        }
+       }
+      )
       ( Clause
        ( Range
         { _start = SourcePos
-         { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 3 }, _end = SourcePos
-         { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 24, sourceColumn = Pos 1 } } ) []
+         { sourceName = "./test/testcases/malgo/TestEither.mlg"
+         , sourceLine = Pos 13
+         , sourceColumn = Pos 3
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/TestEither.mlg"
+         , sourceLine = Pos 24
+         , sourceColumn = Pos 1
+         }
+        }
+       ) []
        ( Seq
         ( Range
          { _start = SourcePos
-          { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 3 }, _end = SourcePos
-          { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 24, sourceColumn = Pos 1 } } )
+          { sourceName = "./test/testcases/malgo/TestEither.mlg"
+          , sourceLine = Pos 13
+          , sourceColumn = Pos 3
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/TestEither.mlg"
+          , sourceLine = Pos 24
+          , sourceColumn = Pos 1
+          }
+         }
+        )
         ( NoBind
          ( Range
           { _start = SourcePos
-           { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 3 }, _end = SourcePos
-           { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 82 } } )
+           { sourceName = "./test/testcases/malgo/TestEither.mlg"
+           , sourceLine = Pos 13
+           , sourceColumn = Pos 3
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/TestEither.mlg"
+           , sourceLine = Pos 13
+           , sourceColumn = Pos 82
+           }
+          }
+         )
          ( OpApp
           ( Range
            { _start = SourcePos
-            { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 11 }, _end = SourcePos
-            { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 14 } },
-           ( LeftA, 0 ) )
+            { sourceName = "./test/testcases/malgo/TestEither.mlg"
+            , sourceLine = Pos 13
+            , sourceColumn = Pos 11
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestEither.mlg"
+            , sourceLine = Pos 13
+            , sourceColumn = Pos 14
+            }
+           }
+          ,
+           ( LeftA
+           , 0
+           )
+          )
           ( Id
-           { name = "|>", moduleName = Artifact
-            ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } )
+           { name = "|>"
+           , moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+           , sort = External
+           }
+          )
           ( Apply
            ( Range
             { _start = SourcePos
-             { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 3 }, _end = SourcePos
-             { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 11 } } )
+             { sourceName = "./test/testcases/malgo/TestEither.mlg"
+             , sourceLine = Pos 13
+             , sourceColumn = Pos 3
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TestEither.mlg"
+             , sourceLine = Pos 13
+             , sourceColumn = Pos 11
+             }
+            }
+           )
            ( Var
             ( Range
              { _start = SourcePos
-              { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 3 }, _end = SourcePos
-              { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 9 } } )
+              { sourceName = "./test/testcases/malgo/TestEither.mlg"
+              , sourceLine = Pos 13
+              , sourceColumn = Pos 3
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/TestEither.mlg"
+              , sourceLine = Pos 13
+              , sourceColumn = Pos 9
+              }
+             }
+            )
             ( Id
-             { name = "Right", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External } ) )
+             { name = "Right"
+             , moduleName = Artifact
+              ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+             , sort = External
+             }
+            )
+           )
            ( Apply
             ( Range
              { _start = SourcePos
-              { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 9 }, _end = SourcePos
-              { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 11 } } )
+              { sourceName = "./test/testcases/malgo/TestEither.mlg"
+              , sourceLine = Pos 13
+              , sourceColumn = Pos 9
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/TestEither.mlg"
+              , sourceLine = Pos 13
+              , sourceColumn = Pos 11
+              }
+             }
+            )
             ( Var
              ( Range
               { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 9 }, _end = SourcePos
-               { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 11 } } )
+               { sourceName = "./test/testcases/malgo/TestEither.mlg"
+               , sourceLine = Pos 13
+               , sourceColumn = Pos 9
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TestEither.mlg"
+               , sourceLine = Pos 13
+               , sourceColumn = Pos 11
+               }
+              }
+             )
              ( Id
-              { name = "Int32#", moduleName = Artifact
-               ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
+              { name = "Int32#"
+              , moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+              , sort = External
+              }
+             )
+            )
             ( Unboxed
              ( Range
               { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 9 }, _end = SourcePos
-               { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 11 } } )
-             ( Int32 1 ) ) ) )
+               { sourceName = "./test/testcases/malgo/TestEither.mlg"
+               , sourceLine = Pos 13
+               , sourceColumn = Pos 9
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TestEither.mlg"
+               , sourceLine = Pos 13
+               , sourceColumn = Pos 11
+               }
+              }
+             )
+             ( Int32 1 )
+            )
+           )
+          )
           ( Fn
            ( Range
             { _start = SourcePos
-             { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 16 }, _end = SourcePos
-             { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 81 } } )
+             { sourceName = "./test/testcases/malgo/TestEither.mlg"
+             , sourceLine = Pos 13
+             , sourceColumn = Pos 16
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TestEither.mlg"
+             , sourceLine = Pos 13
+             , sourceColumn = Pos 81
+             }
+            }
+           )
            ( Clause
             ( Range
              { _start = SourcePos
-              { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 16 }, _end = SourcePos
-              { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 51 } } )
+              { sourceName = "./test/testcases/malgo/TestEither.mlg"
+              , sourceLine = Pos 13
+              , sourceColumn = Pos 16
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/TestEither.mlg"
+              , sourceLine = Pos 13
+              , sourceColumn = Pos 51
+              }
+             }
+            )
             [ ConP
              ( Range
               { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 16 }, _end = SourcePos
-               { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 22 } } )
+               { sourceName = "./test/testcases/malgo/TestEither.mlg"
+               , sourceLine = Pos 13
+               , sourceColumn = Pos 16
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TestEither.mlg"
+               , sourceLine = Pos 13
+               , sourceColumn = Pos 22
+               }
+              }
+             )
              ( Id
-              { name = "Right", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External } ) [], VarP
+              { name = "Right"
+              , moduleName = Artifact
+               ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+              , sort = External
+              }
+             ) []
+            , VarP
              ( Range
               { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 22 }, _end = SourcePos
-               { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 24 } } )
+               { sourceName = "./test/testcases/malgo/TestEither.mlg"
+               , sourceLine = Pos 13
+               , sourceColumn = Pos 22
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TestEither.mlg"
+               , sourceLine = Pos 13
+               , sourceColumn = Pos 24
+               }
+              }
+             )
              ( Id
-              { name = "x", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Internal 7 } ) ]
+              { name = "x"
+              , moduleName = Artifact
+               ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+              , sort = Internal 7
+              }
+             )
+            ]
             ( Seq
              ( Range
               { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 27 }, _end = SourcePos
-               { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 51 } } )
+               { sourceName = "./test/testcases/malgo/TestEither.mlg"
+               , sourceLine = Pos 13
+               , sourceColumn = Pos 27
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TestEither.mlg"
+               , sourceLine = Pos 13
+               , sourceColumn = Pos 51
+               }
+              }
+             )
              ( NoBind
               ( Range
                { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 27 }, _end = SourcePos
-                { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 51 } } )
+                { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                , sourceLine = Pos 13
+                , sourceColumn = Pos 27
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                , sourceLine = Pos 13
+                , sourceColumn = Pos 51
+                }
+               }
+              )
               ( Apply
                ( Range
                 { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 27 }, _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 51 } } )
+                 { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                 , sourceLine = Pos 13
+                 , sourceColumn = Pos 27
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                 , sourceLine = Pos 13
+                 , sourceColumn = Pos 51
+                 }
+                }
+               )
                ( Var
                 ( Range
                  { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 27 }, _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 34 } } )
+                  { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                  , sourceLine = Pos 13
+                  , sourceColumn = Pos 27
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                  , sourceLine = Pos 13
+                  , sourceColumn = Pos 34
+                  }
+                 }
+                )
                 ( Id
-                 { name = "putStr", moduleName = Artifact
-                  ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } ) )
+                 { name = "putStr"
+                 , moduleName = Artifact
+                  ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+                 , sort = External
+                 }
+                )
+               )
                ( Seq
                 ( Range
                  { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 34 }, _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 51 } } )
+                  { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                  , sourceLine = Pos 13
+                  , sourceColumn = Pos 34
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                  , sourceLine = Pos 13
+                  , sourceColumn = Pos 51
+                  }
+                 }
+                )
                 ( NoBind
                  ( Range
                   { _start = SourcePos
-                   { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 35 }, _end = SourcePos
-                   { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 50 } } )
+                   { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                   , sourceLine = Pos 13
+                   , sourceColumn = Pos 35
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                   , sourceLine = Pos 13
+                   , sourceColumn = Pos 50
+                   }
+                  }
+                 )
                  ( Apply
                   ( Range
                    { _start = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 35 }, _end = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 50 } } )
+                    { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                    , sourceLine = Pos 13
+                    , sourceColumn = Pos 35
+                    }
+                   , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                    , sourceLine = Pos 13
+                    , sourceColumn = Pos 50
+                    }
+                   }
+                  )
                   ( Var
                    ( Range
                     { _start = SourcePos
-                     { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 35 }, _end = SourcePos
-                     { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 49 } } )
+                     { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                     , sourceLine = Pos 13
+                     , sourceColumn = Pos 35
+                     }
+                    , _end = SourcePos
+                     { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                     , sourceLine = Pos 13
+                     , sourceColumn = Pos 49
+                     }
+                    }
+                   )
                    ( Id
-                    { name = "toStringInt32", moduleName = Artifact
-                     ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
+                    { name = "toStringInt32"
+                    , moduleName = Artifact
+                     ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+                    , sort = External
+                    }
+                   )
+                  )
                   ( Var
                    ( Range
                     { _start = SourcePos
-                     { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 49 }, _end = SourcePos
-                     { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 50 } } )
+                     { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                     , sourceLine = Pos 13
+                     , sourceColumn = Pos 49
+                     }
+                    , _end = SourcePos
+                     { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                     , sourceLine = Pos 13
+                     , sourceColumn = Pos 50
+                     }
+                    }
+                   )
                    ( Id
-                    { name = "x", moduleName = Artifact
-                     ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Internal 7 } ) ) ) :| [] ) ) ) :| [] ) ) :|
+                    { name = "x"
+                    , moduleName = Artifact
+                     ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+                    , sort = Internal 7
+                    }
+                   )
+                  )
+                 ) :| []
+                )
+               )
+              ) :| []
+             )
+            ) :|
             [ Clause
              ( Range
               { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 53 }, _end = SourcePos
-               { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 81 } } )
+               { sourceName = "./test/testcases/malgo/TestEither.mlg"
+               , sourceLine = Pos 13
+               , sourceColumn = Pos 53
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TestEither.mlg"
+               , sourceLine = Pos 13
+               , sourceColumn = Pos 81
+               }
+              }
+             )
              [ VarP
               ( Range
                { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 53 }, _end = SourcePos
-                { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 55 } } )
+                { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                , sourceLine = Pos 13
+                , sourceColumn = Pos 53
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                , sourceLine = Pos 13
+                , sourceColumn = Pos 55
+                }
+               }
+              )
               ( Id
-               { name = "_", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Internal 8 } ) ]
+               { name = "_"
+               , moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+               , sort = Internal 8
+               }
+              )
+             ]
              ( Seq
               ( Range
                { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 58 }, _end = SourcePos
-                { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 81 } } )
+                { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                , sourceLine = Pos 13
+                , sourceColumn = Pos 58
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                , sourceLine = Pos 13
+                , sourceColumn = Pos 81
+                }
+               }
+              )
               ( NoBind
                ( Range
                 { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 58 }, _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 81 } } )
+                 { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                 , sourceLine = Pos 13
+                 , sourceColumn = Pos 58
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                 , sourceLine = Pos 13
+                 , sourceColumn = Pos 81
+                 }
+                }
+               )
                ( Apply
                 ( Range
                  { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 58 }, _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 81 } } )
+                  { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                  , sourceLine = Pos 13
+                  , sourceColumn = Pos 58
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                  , sourceLine = Pos 13
+                  , sourceColumn = Pos 81
+                  }
+                 }
+                )
                 ( Var
                  ( Range
                   { _start = SourcePos
-                   { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 58 }, _end = SourcePos
-                   { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 67 } } )
+                   { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                   , sourceLine = Pos 13
+                   , sourceColumn = Pos 58
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                   , sourceLine = Pos 13
+                   , sourceColumn = Pos 67
+                   }
+                  }
+                 )
                  ( Id
-                  { name = "putStrLn", moduleName = Artifact
-                   ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } ) )
+                  { name = "putStrLn"
+                  , moduleName = Artifact
+                   ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+                  , sort = External
+                  }
+                 )
+                )
                 ( Apply
                  ( Range
                   { _start = SourcePos
-                   { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 67 }, _end = SourcePos
-                   { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 81 } } )
+                   { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                   , sourceLine = Pos 13
+                   , sourceColumn = Pos 67
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                   , sourceLine = Pos 13
+                   , sourceColumn = Pos 81
+                   }
+                  }
+                 )
                  ( Var
                   ( Range
                    { _start = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 67 }, _end = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 81 } } )
+                    { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                    , sourceLine = Pos 13
+                    , sourceColumn = Pos 67
+                    }
+                   , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                    , sourceLine = Pos 13
+                    , sourceColumn = Pos 81
+                    }
+                   }
+                  )
                   ( Id
-                   { name = "String#", moduleName = Artifact
-                    ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
+                   { name = "String#"
+                   , moduleName = Artifact
+                    ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+                   , sort = External
+                   }
+                  )
+                 )
                  ( Unboxed
                   ( Range
                    { _start = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 67 }, _end = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 13, sourceColumn = Pos 81 } } )
-                  ( String "unreachable" ) ) ) ) :| [] ) ) ] ) ) ) :|
+                    { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                    , sourceLine = Pos 13
+                    , sourceColumn = Pos 67
+                    }
+                   , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                    , sourceLine = Pos 13
+                    , sourceColumn = Pos 81
+                    }
+                   }
+                  )
+                  ( String "unreachable" )
+                 )
+                )
+               ) :| []
+              )
+             )
+            ]
+           )
+          )
+         ) :|
          [ Let
           ( Range
            { _start = SourcePos
-            { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 15, sourceColumn = Pos 3 }, _end = SourcePos
-            { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 15, sourceColumn = Pos 18 } } )
+            { sourceName = "./test/testcases/malgo/TestEither.mlg"
+            , sourceLine = Pos 15
+            , sourceColumn = Pos 3
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestEither.mlg"
+            , sourceLine = Pos 15
+            , sourceColumn = Pos 18
+            }
+           }
+          )
           ( Id
-           { name = "x", moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Internal 9 } )
+           { name = "x"
+           , moduleName = Artifact
+            ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+           , sort = Internal 9
+           }
+          )
           ( Apply
            ( Range
             { _start = SourcePos
-             { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 15, sourceColumn = Pos 11 }, _end = SourcePos
-             { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 15, sourceColumn = Pos 18 } } )
+             { sourceName = "./test/testcases/malgo/TestEither.mlg"
+             , sourceLine = Pos 15
+             , sourceColumn = Pos 11
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TestEither.mlg"
+             , sourceLine = Pos 15
+             , sourceColumn = Pos 18
+             }
+            }
+           )
            ( Var
             ( Range
              { _start = SourcePos
-              { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 15, sourceColumn = Pos 11 }, _end = SourcePos
-              { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 15, sourceColumn = Pos 17 } } )
+              { sourceName = "./test/testcases/malgo/TestEither.mlg"
+              , sourceLine = Pos 15
+              , sourceColumn = Pos 11
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/TestEither.mlg"
+              , sourceLine = Pos 15
+              , sourceColumn = Pos 17
+              }
+             }
+            )
             ( Id
-             { name = "Right", moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External } ) )
+             { name = "Right"
+             , moduleName = Artifact
+              ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+             , sort = External
+             }
+            )
+           )
            ( Apply
             ( Range
              { _start = SourcePos
-              { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 15, sourceColumn = Pos 17 }, _end = SourcePos
-              { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 15, sourceColumn = Pos 18 } } )
+              { sourceName = "./test/testcases/malgo/TestEither.mlg"
+              , sourceLine = Pos 15
+              , sourceColumn = Pos 17
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/TestEither.mlg"
+              , sourceLine = Pos 15
+              , sourceColumn = Pos 18
+              }
+             }
+            )
             ( Var
              ( Range
               { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 15, sourceColumn = Pos 17 }, _end = SourcePos
-               { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 15, sourceColumn = Pos 18 } } )
+               { sourceName = "./test/testcases/malgo/TestEither.mlg"
+               , sourceLine = Pos 15
+               , sourceColumn = Pos 17
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TestEither.mlg"
+               , sourceLine = Pos 15
+               , sourceColumn = Pos 18
+               }
+              }
+             )
              ( Id
-              { name = "Int32#", moduleName = Artifact
-               ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
+              { name = "Int32#"
+              , moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+              , sort = External
+              }
+             )
+            )
             ( Unboxed
              ( Range
               { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 15, sourceColumn = Pos 17 }, _end = SourcePos
-               { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 15, sourceColumn = Pos 18 } } )
-             ( Int32 1 ) ) ) ), NoBind
+               { sourceName = "./test/testcases/malgo/TestEither.mlg"
+               , sourceLine = Pos 15
+               , sourceColumn = Pos 17
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TestEither.mlg"
+               , sourceLine = Pos 15
+               , sourceColumn = Pos 18
+               }
+              }
+             )
+             ( Int32 1 )
+            )
+           )
+          )
+         , NoBind
           ( Range
            { _start = SourcePos
-            { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 3 }, _end = SourcePos
-            { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 18, sourceColumn = Pos 62 } } )
+            { sourceName = "./test/testcases/malgo/TestEither.mlg"
+            , sourceLine = Pos 17
+            , sourceColumn = Pos 3
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestEither.mlg"
+            , sourceLine = Pos 18
+            , sourceColumn = Pos 62
+            }
+           }
+          )
           ( OpApp
            ( Range
             { _start = SourcePos
-             { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 18, sourceColumn = Pos 5 }, _end = SourcePos
-             { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 18, sourceColumn = Pos 8 } },
-            ( LeftA, 0 ) )
+             { sourceName = "./test/testcases/malgo/TestEither.mlg"
+             , sourceLine = Pos 18
+             , sourceColumn = Pos 5
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TestEither.mlg"
+             , sourceLine = Pos 18
+             , sourceColumn = Pos 8
+             }
+            }
+           ,
+            ( LeftA
+            , 0
+            )
+           )
            ( Id
-            { name = "|>", moduleName = Artifact
-             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } )
+            { name = "|>"
+            , moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+            , sort = External
+            }
+           )
            ( OpApp
             ( Range
              { _start = SourcePos
-              { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 5 }, _end = SourcePos
-              { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 8 } },
-             ( LeftA, 0 ) )
+              { sourceName = "./test/testcases/malgo/TestEither.mlg"
+              , sourceLine = Pos 17
+              , sourceColumn = Pos 5
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/TestEither.mlg"
+              , sourceLine = Pos 17
+              , sourceColumn = Pos 8
+              }
+             }
+            ,
+             ( LeftA
+             , 0
+             )
+            )
             ( Id
-             { name = "|>", moduleName = Artifact
-              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } )
+             { name = "|>"
+             , moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+             , sort = External
+             }
+            )
             ( Var
              ( Range
               { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 3 }, _end = SourcePos
-               { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 5 } } )
+               { sourceName = "./test/testcases/malgo/TestEither.mlg"
+               , sourceLine = Pos 17
+               , sourceColumn = Pos 3
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TestEither.mlg"
+               , sourceLine = Pos 17
+               , sourceColumn = Pos 5
+               }
+              }
+             )
              ( Id
-              { name = "x", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Internal 9 } ) )
+              { name = "x"
+              , moduleName = Artifact
+               ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+              , sort = Internal 9
+              }
+             )
+            )
             ( Apply
              ( Range
               { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 8 }, _end = SourcePos
-               { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 18, sourceColumn = Pos 5 } } )
+               { sourceName = "./test/testcases/malgo/TestEither.mlg"
+               , sourceLine = Pos 17
+               , sourceColumn = Pos 8
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TestEither.mlg"
+               , sourceLine = Pos 18
+               , sourceColumn = Pos 5
+               }
+              }
+             )
              ( Var
               ( Range
                { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 8 }, _end = SourcePos
-                { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 16 } } )
+                { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                , sourceLine = Pos 17
+                , sourceColumn = Pos 8
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                , sourceLine = Pos 17
+                , sourceColumn = Pos 16
+                }
+               }
+              )
               ( Id
-               { name = "andThen", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External } ) )
+               { name = "andThen"
+               , moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+               , sort = External
+               }
+              )
+             )
              ( Fn
               ( Range
                { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 18 }, _end = SourcePos
-                { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 44 } } )
+                { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                , sourceLine = Pos 17
+                , sourceColumn = Pos 18
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                , sourceLine = Pos 17
+                , sourceColumn = Pos 44
+                }
+               }
+              )
               ( Clause
                ( Range
                 { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 18 }, _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 44 } } )
+                 { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                 , sourceLine = Pos 17
+                 , sourceColumn = Pos 18
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                 , sourceLine = Pos 17
+                 , sourceColumn = Pos 44
+                 }
+                }
+               )
                [ VarP
                 ( Range
                  { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 18 }, _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 20 } } )
+                  { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                  , sourceLine = Pos 17
+                  , sourceColumn = Pos 18
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                  , sourceLine = Pos 17
+                  , sourceColumn = Pos 20
+                  }
+                 }
+                )
                 ( Id
-                 { name = "x", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Internal 10 } ) ]
+                 { name = "x"
+                 , moduleName = Artifact
+                  ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+                 , sort = Internal 10
+                 }
+                )
+               ]
                ( Seq
                 ( Range
                  { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 23 }, _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 44 } } )
+                  { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                  , sourceLine = Pos 17
+                  , sourceColumn = Pos 23
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                  , sourceLine = Pos 17
+                  , sourceColumn = Pos 44
+                  }
+                 }
+                )
                 ( NoBind
                  ( Range
                   { _start = SourcePos
-                   { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 23 }, _end = SourcePos
-                   { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 44 } } )
+                   { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                   , sourceLine = Pos 17
+                   , sourceColumn = Pos 23
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                   , sourceLine = Pos 17
+                   , sourceColumn = Pos 44
+                   }
+                  }
+                 )
                  ( Apply
                   ( Range
                    { _start = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 23 }, _end = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 44 } } )
+                    { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                    , sourceLine = Pos 17
+                    , sourceColumn = Pos 23
+                    }
+                   , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                    , sourceLine = Pos 17
+                    , sourceColumn = Pos 44
+                    }
+                   }
+                  )
                   ( Var
                    ( Range
                     { _start = SourcePos
-                     { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 23 }, _end = SourcePos
-                     { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 29 } } )
+                     { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                     , sourceLine = Pos 17
+                     , sourceColumn = Pos 23
+                     }
+                    , _end = SourcePos
+                     { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                     , sourceLine = Pos 17
+                     , sourceColumn = Pos 29
+                     }
+                    }
+                   )
                    ( Id
-                    { name = "Right", moduleName = Artifact
-                     ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External } ) )
+                    { name = "Right"
+                    , moduleName = Artifact
+                     ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+                    , sort = External
+                    }
+                   )
+                  )
                   ( Seq
                    ( Range
                     { _start = SourcePos
-                     { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 29 }, _end = SourcePos
-                     { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 44 } } )
+                     { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                     , sourceLine = Pos 17
+                     , sourceColumn = Pos 29
+                     }
+                    , _end = SourcePos
+                     { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                     , sourceLine = Pos 17
+                     , sourceColumn = Pos 44
+                     }
+                    }
+                   )
                    ( NoBind
                     ( Range
                      { _start = SourcePos
-                      { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 30 }, _end = SourcePos
-                      { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 42 } } )
+                      { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                      , sourceLine = Pos 17
+                      , sourceColumn = Pos 30
+                      }
+                     , _end = SourcePos
+                      { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                      , sourceLine = Pos 17
+                      , sourceColumn = Pos 42
+                      }
+                     }
+                    )
                     ( Apply
                      ( Range
                       { _start = SourcePos
-                       { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 30 }, _end = SourcePos
-                       { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 42 } } )
+                       { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                       , sourceLine = Pos 17
+                       , sourceColumn = Pos 30
+                       }
+                      , _end = SourcePos
+                       { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                       , sourceLine = Pos 17
+                       , sourceColumn = Pos 42
+                       }
+                      }
+                     )
                      ( Apply
                       ( Range
                        { _start = SourcePos
-                        { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 30 }, _end = SourcePos
-                        { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 42 } } )
+                        { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                        , sourceLine = Pos 17
+                        , sourceColumn = Pos 30
+                        }
+                       , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                        , sourceLine = Pos 17
+                        , sourceColumn = Pos 42
+                        }
+                       }
+                      )
                       ( Var
                        ( Range
                         { _start = SourcePos
-                         { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 30 }, _end = SourcePos
-                         { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 39 } } )
+                         { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                         , sourceLine = Pos 17
+                         , sourceColumn = Pos 30
+                         }
+                        , _end = SourcePos
+                         { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                         , sourceLine = Pos 17
+                         , sourceColumn = Pos 39
+                         }
+                        }
+                       )
                        ( Id
-                        { name = "addInt32", moduleName = Artifact
-                         ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
+                        { name = "addInt32"
+                        , moduleName = Artifact
+                         ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+                        , sort = External
+                        }
+                       )
+                      )
                       ( Var
                        ( Range
                         { _start = SourcePos
-                         { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 39 }, _end = SourcePos
-                         { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 41 } } )
+                         { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                         , sourceLine = Pos 17
+                         , sourceColumn = Pos 39
+                         }
+                        , _end = SourcePos
+                         { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                         , sourceLine = Pos 17
+                         , sourceColumn = Pos 41
+                         }
+                        }
+                       )
                        ( Id
-                        { name = "x", moduleName = Artifact
-                         ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Internal 10 } ) ) )
+                        { name = "x"
+                        , moduleName = Artifact
+                         ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+                        , sort = Internal 10
+                        }
+                       )
+                      )
+                     )
                      ( Apply
                       ( Range
                        { _start = SourcePos
-                        { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 41 }, _end = SourcePos
-                        { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 42 } } )
+                        { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                        , sourceLine = Pos 17
+                        , sourceColumn = Pos 41
+                        }
+                       , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                        , sourceLine = Pos 17
+                        , sourceColumn = Pos 42
+                        }
+                       }
+                      )
                       ( Var
                        ( Range
                         { _start = SourcePos
-                         { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 41 }, _end = SourcePos
-                         { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 42 } } )
+                         { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                         , sourceLine = Pos 17
+                         , sourceColumn = Pos 41
+                         }
+                        , _end = SourcePos
+                         { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                         , sourceLine = Pos 17
+                         , sourceColumn = Pos 42
+                         }
+                        }
+                       )
                        ( Id
-                        { name = "Int32#", moduleName = Artifact
-                         ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
+                        { name = "Int32#"
+                        , moduleName = Artifact
+                         ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+                        , sort = External
+                        }
+                       )
+                      )
                       ( Unboxed
                        ( Range
                         { _start = SourcePos
-                         { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 41 }, _end = SourcePos
-                         { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 17, sourceColumn = Pos 42 } } )
-                       ( Int32 1 ) ) ) ) :| [] ) ) ) :| [] ) ) :| [] ) ) ) )
+                         { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                         , sourceLine = Pos 17
+                         , sourceColumn = Pos 41
+                         }
+                        , _end = SourcePos
+                         { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                         , sourceLine = Pos 17
+                         , sourceColumn = Pos 42
+                         }
+                        }
+                       )
+                       ( Int32 1 )
+                      )
+                     )
+                    ) :| []
+                   )
+                  )
+                 ) :| []
+                )
+               ) :| []
+              )
+             )
+            )
+           )
            ( Apply
             ( Range
              { _start = SourcePos
-              { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 18, sourceColumn = Pos 8 }, _end = SourcePos
-              { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 18, sourceColumn = Pos 62 } } )
+              { sourceName = "./test/testcases/malgo/TestEither.mlg"
+              , sourceLine = Pos 18
+              , sourceColumn = Pos 8
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/TestEither.mlg"
+              , sourceLine = Pos 18
+              , sourceColumn = Pos 62
+              }
+             }
+            )
             ( Var
              ( Range
               { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 18, sourceColumn = Pos 8 }, _end = SourcePos
-               { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 18, sourceColumn = Pos 16 } } )
+               { sourceName = "./test/testcases/malgo/TestEither.mlg"
+               , sourceLine = Pos 18
+               , sourceColumn = Pos 8
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TestEither.mlg"
+               , sourceLine = Pos 18
+               , sourceColumn = Pos 16
+               }
+              }
+             )
              ( Id
-              { name = "andThen", moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External } ) )
+              { name = "andThen"
+              , moduleName = Artifact
+               ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+              , sort = External
+              }
+             )
+            )
             ( Fn
              ( Range
               { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 18, sourceColumn = Pos 18 }, _end = SourcePos
-               { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 18, sourceColumn = Pos 61 } } )
+               { sourceName = "./test/testcases/malgo/TestEither.mlg"
+               , sourceLine = Pos 18
+               , sourceColumn = Pos 18
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TestEither.mlg"
+               , sourceLine = Pos 18
+               , sourceColumn = Pos 61
+               }
+              }
+             )
              ( Clause
               ( Range
                { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 18, sourceColumn = Pos 18 }, _end = SourcePos
-                { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 18, sourceColumn = Pos 61 } } )
+                { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                , sourceLine = Pos 18
+                , sourceColumn = Pos 18
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                , sourceLine = Pos 18
+                , sourceColumn = Pos 61
+                }
+               }
+              )
               [ VarP
                ( Range
                 { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 18, sourceColumn = Pos 18 }, _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 18, sourceColumn = Pos 20 } } )
+                 { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                 , sourceLine = Pos 18
+                 , sourceColumn = Pos 18
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                 , sourceLine = Pos 18
+                 , sourceColumn = Pos 20
+                 }
+                }
+               )
                ( Id
-                { name = "y", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Internal 11 } ) ]
+                { name = "y"
+                , moduleName = Artifact
+                 ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+                , sort = Internal 11
+                }
+               )
+              ]
               ( Seq
                ( Range
                 { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 18, sourceColumn = Pos 23 }, _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 18, sourceColumn = Pos 61 } } )
+                 { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                 , sourceLine = Pos 18
+                 , sourceColumn = Pos 23
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                 , sourceLine = Pos 18
+                 , sourceColumn = Pos 61
+                 }
+                }
+               )
                ( NoBind
                 ( Range
                  { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 18, sourceColumn = Pos 23 }, _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 18, sourceColumn = Pos 61 } } )
+                  { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                  , sourceLine = Pos 18
+                  , sourceColumn = Pos 23
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                  , sourceLine = Pos 18
+                  , sourceColumn = Pos 61
+                  }
+                 }
+                )
                 ( OpApp
                  ( Range
                   { _start = SourcePos
-                   { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 18, sourceColumn = Pos 52 }, _end = SourcePos
-                   { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 18, sourceColumn = Pos 55 } },
-                  ( LeftA, 0 ) )
+                   { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                   , sourceLine = Pos 18
+                   , sourceColumn = Pos 52
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                   , sourceLine = Pos 18
+                   , sourceColumn = Pos 55
+                   }
+                  }
+                 ,
+                  ( LeftA
+                  , 0
+                  )
+                 )
                  ( Id
-                  { name = "|>", moduleName = Artifact
-                   ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } )
+                  { name = "|>"
+                  , moduleName = Artifact
+                   ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+                  , sort = External
+                  }
+                 )
                  ( OpApp
                   ( Range
                    { _start = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 18, sourceColumn = Pos 42 }, _end = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 18, sourceColumn = Pos 45 } },
-                   ( LeftA, 0 ) )
+                    { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                    , sourceLine = Pos 18
+                    , sourceColumn = Pos 42
+                    }
+                   , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                    , sourceLine = Pos 18
+                    , sourceColumn = Pos 45
+                    }
+                   }
+                  ,
+                   ( LeftA
+                   , 0
+                   )
+                  )
                   ( Id
-                   { name = "|>", moduleName = Artifact
-                    ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } )
+                   { name = "|>"
+                   , moduleName = Artifact
+                    ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+                   , sort = External
+                   }
+                  )
                   ( OpApp
                    ( Range
                     { _start = SourcePos
-                     { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 18, sourceColumn = Pos 25 }, _end = SourcePos
-                     { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 18, sourceColumn = Pos 28 } },
-                    ( LeftA, 0 ) )
+                     { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                     , sourceLine = Pos 18
+                     , sourceColumn = Pos 25
+                     }
+                    , _end = SourcePos
+                     { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                     , sourceLine = Pos 18
+                     , sourceColumn = Pos 28
+                     }
+                    }
+                   ,
+                    ( LeftA
+                    , 0
+                    )
+                   )
                    ( Id
-                    { name = "|>", moduleName = Artifact
-                     ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } )
+                    { name = "|>"
+                    , moduleName = Artifact
+                     ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+                    , sort = External
+                    }
+                   )
                    ( Var
                     ( Range
                      { _start = SourcePos
-                      { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 18, sourceColumn = Pos 23 }, _end = SourcePos
-                      { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 18, sourceColumn = Pos 25 } } )
+                      { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                      , sourceLine = Pos 18
+                      , sourceColumn = Pos 23
+                      }
+                     , _end = SourcePos
+                      { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                      , sourceLine = Pos 18
+                      , sourceColumn = Pos 25
+                      }
+                     }
+                    )
                     ( Id
-                     { name = "y", moduleName = Artifact
-                      ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Internal 11 } ) )
+                     { name = "y"
+                     , moduleName = Artifact
+                      ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+                     , sort = Internal 11
+                     }
+                    )
+                   )
                    ( Var
                     ( Range
                      { _start = SourcePos
-                      { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 18, sourceColumn = Pos 28 }, _end = SourcePos
-                      { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 18, sourceColumn = Pos 42 } } )
+                      { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                      , sourceLine = Pos 18
+                      , sourceColumn = Pos 28
+                      }
+                     , _end = SourcePos
+                      { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                      , sourceLine = Pos 18
+                      , sourceColumn = Pos 42
+                      }
+                     }
+                    )
                     ( Id
-                     { name = "toStringInt32", moduleName = Artifact
-                      ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) )
+                     { name = "toStringInt32"
+                     , moduleName = Artifact
+                      ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+                     , sort = External
+                     }
+                    )
+                   )
+                  )
                   ( Var
                    ( Range
                     { _start = SourcePos
-                     { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 18, sourceColumn = Pos 45 }, _end = SourcePos
-                     { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 18, sourceColumn = Pos 52 } } )
+                     { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                     , sourceLine = Pos 18
+                     , sourceColumn = Pos 45
+                     }
+                    , _end = SourcePos
+                     { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                     , sourceLine = Pos 18
+                     , sourceColumn = Pos 52
+                     }
+                    }
+                   )
                    ( Id
-                    { name = "putStr", moduleName = Artifact
-                     ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } ) ) )
+                    { name = "putStr"
+                    , moduleName = Artifact
+                     ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+                    , sort = External
+                    }
+                   )
+                  )
+                 )
                  ( Var
                   ( Range
                    { _start = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 18, sourceColumn = Pos 55 }, _end = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 18, sourceColumn = Pos 61 } } )
+                    { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                    , sourceLine = Pos 18
+                    , sourceColumn = Pos 55
+                    }
+                   , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                    , sourceLine = Pos 18
+                    , sourceColumn = Pos 61
+                    }
+                   }
+                  )
                   ( Id
-                   { name = "Right", moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External } ) ) ) :| [] ) ) :| [] ) ) ) ), NoBind
+                   { name = "Right"
+                   , moduleName = Artifact
+                    ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+                   , sort = External
+                   }
+                  )
+                 )
+                ) :| []
+               )
+              ) :| []
+             )
+            )
+           )
+          )
+         , NoBind
           ( Range
            { _start = SourcePos
-            { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 20, sourceColumn = Pos 3 }, _end = SourcePos
-            { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 24, sourceColumn = Pos 1 } } )
+            { sourceName = "./test/testcases/malgo/TestEither.mlg"
+            , sourceLine = Pos 20
+            , sourceColumn = Pos 3
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestEither.mlg"
+            , sourceLine = Pos 24
+            , sourceColumn = Pos 1
+            }
+           }
+          )
           ( OpApp
            ( Range
             { _start = SourcePos
-             { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 22, sourceColumn = Pos 5 }, _end = SourcePos
-             { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 22, sourceColumn = Pos 8 } },
-            ( LeftA, 0 ) )
+             { sourceName = "./test/testcases/malgo/TestEither.mlg"
+             , sourceLine = Pos 22
+             , sourceColumn = Pos 5
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TestEither.mlg"
+             , sourceLine = Pos 22
+             , sourceColumn = Pos 8
+             }
+            }
+           ,
+            ( LeftA
+            , 0
+            )
+           )
            ( Id
-            { name = "|>", moduleName = Artifact
-             ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } )
+            { name = "|>"
+            , moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+            , sort = External
+            }
+           )
            ( OpApp
             ( Range
              { _start = SourcePos
-              { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 5 }, _end = SourcePos
-              { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 8 } },
-             ( LeftA, 0 ) )
+              { sourceName = "./test/testcases/malgo/TestEither.mlg"
+              , sourceLine = Pos 21
+              , sourceColumn = Pos 5
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/TestEither.mlg"
+              , sourceLine = Pos 21
+              , sourceColumn = Pos 8
+              }
+             }
+            ,
+             ( LeftA
+             , 0
+             )
+            )
             ( Id
-             { name = "|>", moduleName = Artifact
-              ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } )
+             { name = "|>"
+             , moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+             , sort = External
+             }
+            )
             ( OpApp
              ( Range
               { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 20, sourceColumn = Pos 5 }, _end = SourcePos
-               { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 20, sourceColumn = Pos 8 } },
-              ( LeftA, 0 ) )
+               { sourceName = "./test/testcases/malgo/TestEither.mlg"
+               , sourceLine = Pos 20
+               , sourceColumn = Pos 5
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TestEither.mlg"
+               , sourceLine = Pos 20
+               , sourceColumn = Pos 8
+               }
+              }
+             ,
+              ( LeftA
+              , 0
+              )
+             )
              ( Id
-              { name = "|>", moduleName = Artifact
-               ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } )
+              { name = "|>"
+              , moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+              , sort = External
+              }
+             )
              ( Var
               ( Range
                { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 20, sourceColumn = Pos 3 }, _end = SourcePos
-                { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 20, sourceColumn = Pos 5 } } )
+                { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                , sourceLine = Pos 20
+                , sourceColumn = Pos 3
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                , sourceLine = Pos 20
+                , sourceColumn = Pos 5
+                }
+               }
+              )
               ( Id
-               { name = "x", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Internal 9 } ) )
+               { name = "x"
+               , moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+               , sort = Internal 9
+               }
+              )
+             )
              ( Apply
               ( Range
                { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 20, sourceColumn = Pos 8 }, _end = SourcePos
-                { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 5 } } )
+                { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                , sourceLine = Pos 20
+                , sourceColumn = Pos 8
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                , sourceLine = Pos 21
+                , sourceColumn = Pos 5
+                }
+               }
+              )
               ( Var
                ( Range
                 { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 20, sourceColumn = Pos 8 }, _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 20, sourceColumn = Pos 16 } } )
+                 { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                 , sourceLine = Pos 20
+                 , sourceColumn = Pos 8
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                 , sourceLine = Pos 20
+                 , sourceColumn = Pos 16
+                 }
+                }
+               )
                ( Id
-                { name = "andThen", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External } ) )
+                { name = "andThen"
+                , moduleName = Artifact
+                 ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+                , sort = External
+                }
+               )
+              )
               ( Fn
                ( Range
                 { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 20, sourceColumn = Pos 18 }, _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 20, sourceColumn = Pos 36 } } )
+                 { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                 , sourceLine = Pos 20
+                 , sourceColumn = Pos 18
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                 , sourceLine = Pos 20
+                 , sourceColumn = Pos 36
+                 }
+                }
+               )
                ( Clause
                 ( Range
                  { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 20, sourceColumn = Pos 18 }, _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 20, sourceColumn = Pos 36 } } )
+                  { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                  , sourceLine = Pos 20
+                  , sourceColumn = Pos 18
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                  , sourceLine = Pos 20
+                  , sourceColumn = Pos 36
+                  }
+                 }
+                )
                 [ VarP
                  ( Range
                   { _start = SourcePos
-                   { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 20, sourceColumn = Pos 18 }, _end = SourcePos
-                   { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 20, sourceColumn = Pos 20 } } )
+                   { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                   , sourceLine = Pos 20
+                   , sourceColumn = Pos 18
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                   , sourceLine = Pos 20
+                   , sourceColumn = Pos 20
+                   }
+                  }
+                 )
                  ( Id
-                  { name = "_", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Internal 12 } ) ]
+                  { name = "_"
+                  , moduleName = Artifact
+                   ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+                  , sort = Internal 12
+                  }
+                 )
+                ]
                 ( Seq
                  ( Range
                   { _start = SourcePos
-                   { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 20, sourceColumn = Pos 23 }, _end = SourcePos
-                   { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 20, sourceColumn = Pos 36 } } )
+                   { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                   , sourceLine = Pos 20
+                   , sourceColumn = Pos 23
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                   , sourceLine = Pos 20
+                   , sourceColumn = Pos 36
+                   }
+                  }
+                 )
                  ( NoBind
                   ( Range
                    { _start = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 20, sourceColumn = Pos 23 }, _end = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 20, sourceColumn = Pos 36 } } )
+                    { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                    , sourceLine = Pos 20
+                    , sourceColumn = Pos 23
+                    }
+                   , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                    , sourceLine = Pos 20
+                    , sourceColumn = Pos 36
+                    }
+                   }
+                  )
                   ( Apply
                    ( Range
                     { _start = SourcePos
-                     { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 20, sourceColumn = Pos 23 }, _end = SourcePos
-                     { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 20, sourceColumn = Pos 36 } } )
+                     { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                     , sourceLine = Pos 20
+                     , sourceColumn = Pos 23
+                     }
+                    , _end = SourcePos
+                     { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                     , sourceLine = Pos 20
+                     , sourceColumn = Pos 36
+                     }
+                    }
+                   )
                    ( Var
                     ( Range
                      { _start = SourcePos
-                      { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 20, sourceColumn = Pos 23 }, _end = SourcePos
-                      { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 20, sourceColumn = Pos 28 } } )
+                      { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                      , sourceLine = Pos 20
+                      , sourceColumn = Pos 23
+                      }
+                     , _end = SourcePos
+                      { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                      , sourceLine = Pos 20
+                      , sourceColumn = Pos 28
+                      }
+                     }
+                    )
                     ( Id
-                     { name = "Left", moduleName = Artifact
-                      ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External } ) )
+                     { name = "Left"
+                     , moduleName = Artifact
+                      ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+                     , sort = External
+                     }
+                    )
+                   )
                    ( Apply
                     ( Range
                      { _start = SourcePos
-                      { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 20, sourceColumn = Pos 28 }, _end = SourcePos
-                      { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 20, sourceColumn = Pos 36 } } )
+                      { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                      , sourceLine = Pos 20
+                      , sourceColumn = Pos 28
+                      }
+                     , _end = SourcePos
+                      { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                      , sourceLine = Pos 20
+                      , sourceColumn = Pos 36
+                      }
+                     }
+                    )
                     ( Var
                      ( Range
                       { _start = SourcePos
-                       { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 20, sourceColumn = Pos 28 }, _end = SourcePos
-                       { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 20, sourceColumn = Pos 36 } } )
+                       { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                       , sourceLine = Pos 20
+                       , sourceColumn = Pos 28
+                       }
+                      , _end = SourcePos
+                       { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                       , sourceLine = Pos 20
+                       , sourceColumn = Pos 36
+                       }
+                      }
+                     )
                      ( Id
-                      { name = "String#", moduleName = Artifact
-                       ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
+                      { name = "String#"
+                      , moduleName = Artifact
+                       ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+                      , sort = External
+                      }
+                     )
+                    )
                     ( Unboxed
                      ( Range
                       { _start = SourcePos
-                       { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 20, sourceColumn = Pos 28 }, _end = SourcePos
-                       { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 20, sourceColumn = Pos 36 } } )
-                     ( String "error" ) ) ) ) :| [] ) ) :| [] ) ) ) )
+                       { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                       , sourceLine = Pos 20
+                       , sourceColumn = Pos 28
+                       }
+                      , _end = SourcePos
+                       { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                       , sourceLine = Pos 20
+                       , sourceColumn = Pos 36
+                       }
+                      }
+                     )
+                     ( String "error" )
+                    )
+                   )
+                  ) :| []
+                 )
+                ) :| []
+               )
+              )
+             )
+            )
             ( Apply
              ( Range
               { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 8 }, _end = SourcePos
-               { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 22, sourceColumn = Pos 5 } } )
+               { sourceName = "./test/testcases/malgo/TestEither.mlg"
+               , sourceLine = Pos 21
+               , sourceColumn = Pos 8
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TestEither.mlg"
+               , sourceLine = Pos 22
+               , sourceColumn = Pos 5
+               }
+              }
+             )
              ( Var
               ( Range
                { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 8 }, _end = SourcePos
-                { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 16 } } )
+                { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                , sourceLine = Pos 21
+                , sourceColumn = Pos 8
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                , sourceLine = Pos 21
+                , sourceColumn = Pos 16
+                }
+               }
+              )
               ( Id
-               { name = "andThen", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External } ) )
+               { name = "andThen"
+               , moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+               , sort = External
+               }
+              )
+             )
              ( Fn
               ( Range
                { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 18 }, _end = SourcePos
-                { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 44 } } )
+                { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                , sourceLine = Pos 21
+                , sourceColumn = Pos 18
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                , sourceLine = Pos 21
+                , sourceColumn = Pos 44
+                }
+               }
+              )
               ( Clause
                ( Range
                 { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 18 }, _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 44 } } )
+                 { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                 , sourceLine = Pos 21
+                 , sourceColumn = Pos 18
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                 , sourceLine = Pos 21
+                 , sourceColumn = Pos 44
+                 }
+                }
+               )
                [ VarP
                 ( Range
                  { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 18 }, _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 20 } } )
+                  { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                  , sourceLine = Pos 21
+                  , sourceColumn = Pos 18
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                  , sourceLine = Pos 21
+                  , sourceColumn = Pos 20
+                  }
+                 }
+                )
                 ( Id
-                 { name = "x", moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Internal 13 } ) ]
+                 { name = "x"
+                 , moduleName = Artifact
+                  ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+                 , sort = Internal 13
+                 }
+                )
+               ]
                ( Seq
                 ( Range
                  { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 23 }, _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 44 } } )
+                  { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                  , sourceLine = Pos 21
+                  , sourceColumn = Pos 23
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                  , sourceLine = Pos 21
+                  , sourceColumn = Pos 44
+                  }
+                 }
+                )
                 ( NoBind
                  ( Range
                   { _start = SourcePos
-                   { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 23 }, _end = SourcePos
-                   { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 44 } } )
+                   { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                   , sourceLine = Pos 21
+                   , sourceColumn = Pos 23
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                   , sourceLine = Pos 21
+                   , sourceColumn = Pos 44
+                   }
+                  }
+                 )
                  ( Apply
                   ( Range
                    { _start = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 23 }, _end = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 44 } } )
+                    { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                    , sourceLine = Pos 21
+                    , sourceColumn = Pos 23
+                    }
+                   , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                    , sourceLine = Pos 21
+                    , sourceColumn = Pos 44
+                    }
+                   }
+                  )
                   ( Var
                    ( Range
                     { _start = SourcePos
-                     { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 23 }, _end = SourcePos
-                     { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 29 } } )
+                     { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                     , sourceLine = Pos 21
+                     , sourceColumn = Pos 23
+                     }
+                    , _end = SourcePos
+                     { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                     , sourceLine = Pos 21
+                     , sourceColumn = Pos 29
+                     }
+                    }
+                   )
                    ( Id
-                    { name = "Right", moduleName = Artifact
-                     ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External } ) )
+                    { name = "Right"
+                    , moduleName = Artifact
+                     ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+                    , sort = External
+                    }
+                   )
+                  )
                   ( Seq
                    ( Range
                     { _start = SourcePos
-                     { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 29 }, _end = SourcePos
-                     { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 44 } } )
+                     { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                     , sourceLine = Pos 21
+                     , sourceColumn = Pos 29
+                     }
+                    , _end = SourcePos
+                     { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                     , sourceLine = Pos 21
+                     , sourceColumn = Pos 44
+                     }
+                    }
+                   )
                    ( NoBind
                     ( Range
                      { _start = SourcePos
-                      { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 30 }, _end = SourcePos
-                      { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 42 } } )
+                      { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                      , sourceLine = Pos 21
+                      , sourceColumn = Pos 30
+                      }
+                     , _end = SourcePos
+                      { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                      , sourceLine = Pos 21
+                      , sourceColumn = Pos 42
+                      }
+                     }
+                    )
                     ( Apply
                      ( Range
                       { _start = SourcePos
-                       { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 30 }, _end = SourcePos
-                       { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 42 } } )
+                       { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                       , sourceLine = Pos 21
+                       , sourceColumn = Pos 30
+                       }
+                      , _end = SourcePos
+                       { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                       , sourceLine = Pos 21
+                       , sourceColumn = Pos 42
+                       }
+                      }
+                     )
                      ( Apply
                       ( Range
                        { _start = SourcePos
-                        { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 30 }, _end = SourcePos
-                        { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 42 } } )
+                        { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                        , sourceLine = Pos 21
+                        , sourceColumn = Pos 30
+                        }
+                       , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                        , sourceLine = Pos 21
+                        , sourceColumn = Pos 42
+                        }
+                       }
+                      )
                       ( Var
                        ( Range
                         { _start = SourcePos
-                         { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 30 }, _end = SourcePos
-                         { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 39 } } )
+                         { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                         , sourceLine = Pos 21
+                         , sourceColumn = Pos 30
+                         }
+                        , _end = SourcePos
+                         { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                         , sourceLine = Pos 21
+                         , sourceColumn = Pos 39
+                         }
+                        }
+                       )
                        ( Id
-                        { name = "addInt32", moduleName = Artifact
-                         ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
+                        { name = "addInt32"
+                        , moduleName = Artifact
+                         ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+                        , sort = External
+                        }
+                       )
+                      )
                       ( Var
                        ( Range
                         { _start = SourcePos
-                         { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 39 }, _end = SourcePos
-                         { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 41 } } )
+                         { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                         , sourceLine = Pos 21
+                         , sourceColumn = Pos 39
+                         }
+                        , _end = SourcePos
+                         { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                         , sourceLine = Pos 21
+                         , sourceColumn = Pos 41
+                         }
+                        }
+                       )
                        ( Id
-                        { name = "x", moduleName = Artifact
-                         ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Internal 13 } ) ) )
+                        { name = "x"
+                        , moduleName = Artifact
+                         ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+                        , sort = Internal 13
+                        }
+                       )
+                      )
+                     )
                      ( Apply
                       ( Range
                        { _start = SourcePos
-                        { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 41 }, _end = SourcePos
-                        { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 42 } } )
+                        { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                        , sourceLine = Pos 21
+                        , sourceColumn = Pos 41
+                        }
+                       , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                        , sourceLine = Pos 21
+                        , sourceColumn = Pos 42
+                        }
+                       }
+                      )
                       ( Var
                        ( Range
                         { _start = SourcePos
-                         { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 41 }, _end = SourcePos
-                         { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 42 } } )
+                         { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                         , sourceLine = Pos 21
+                         , sourceColumn = Pos 41
+                         }
+                        , _end = SourcePos
+                         { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                         , sourceLine = Pos 21
+                         , sourceColumn = Pos 42
+                         }
+                        }
+                       )
                        ( Id
-                        { name = "Int32#", moduleName = Artifact
-                         ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) )
+                        { name = "Int32#"
+                        , moduleName = Artifact
+                         ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+                        , sort = External
+                        }
+                       )
+                      )
                       ( Unboxed
                        ( Range
                         { _start = SourcePos
-                         { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 41 }, _end = SourcePos
-                         { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 21, sourceColumn = Pos 42 } } )
-                       ( Int32 1 ) ) ) ) :| [] ) ) ) :| [] ) ) :| [] ) ) ) )
+                         { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                         , sourceLine = Pos 21
+                         , sourceColumn = Pos 41
+                         }
+                        , _end = SourcePos
+                         { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                         , sourceLine = Pos 21
+                         , sourceColumn = Pos 42
+                         }
+                        }
+                       )
+                       ( Int32 1 )
+                      )
+                     )
+                    ) :| []
+                   )
+                  )
+                 ) :| []
+                )
+               ) :| []
+              )
+             )
+            )
+           )
            ( Fn
             ( Range
              { _start = SourcePos
-              { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 22, sourceColumn = Pos 10 }, _end = SourcePos
-              { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 23, sourceColumn = Pos 52 } } )
+              { sourceName = "./test/testcases/malgo/TestEither.mlg"
+              , sourceLine = Pos 22
+              , sourceColumn = Pos 10
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/TestEither.mlg"
+              , sourceLine = Pos 23
+              , sourceColumn = Pos 52
+              }
+             }
+            )
             ( Clause
              ( Range
               { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 22, sourceColumn = Pos 10 }, _end = SourcePos
-               { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 22, sourceColumn = Pos 34 } } )
+               { sourceName = "./test/testcases/malgo/TestEither.mlg"
+               , sourceLine = Pos 22
+               , sourceColumn = Pos 10
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TestEither.mlg"
+               , sourceLine = Pos 22
+               , sourceColumn = Pos 34
+               }
+              }
+             )
              [ ConP
               ( Range
                { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 22, sourceColumn = Pos 10 }, _end = SourcePos
-                { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 22, sourceColumn = Pos 15 } } )
+                { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                , sourceLine = Pos 22
+                , sourceColumn = Pos 10
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                , sourceLine = Pos 22
+                , sourceColumn = Pos 15
+                }
+               }
+              )
               ( Id
-               { name = "Left", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External } ) [], VarP
+               { name = "Left"
+               , moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+               , sort = External
+               }
+              ) []
+             , VarP
               ( Range
                { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 22, sourceColumn = Pos 15 }, _end = SourcePos
-                { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 22, sourceColumn = Pos 19 } } )
+                { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                , sourceLine = Pos 22
+                , sourceColumn = Pos 15
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                , sourceLine = Pos 22
+                , sourceColumn = Pos 19
+                }
+               }
+              )
               ( Id
-               { name = "err", moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Internal 14 } ) ]
+               { name = "err"
+               , moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+               , sort = Internal 14
+               }
+              )
+             ]
              ( Seq
               ( Range
                { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 22, sourceColumn = Pos 22 }, _end = SourcePos
-                { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 22, sourceColumn = Pos 34 } } )
+                { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                , sourceLine = Pos 22
+                , sourceColumn = Pos 22
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                , sourceLine = Pos 22
+                , sourceColumn = Pos 34
+                }
+               }
+              )
               ( NoBind
                ( Range
                 { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 22, sourceColumn = Pos 22 }, _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 22, sourceColumn = Pos 34 } } )
+                 { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                 , sourceLine = Pos 22
+                 , sourceColumn = Pos 22
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                 , sourceLine = Pos 22
+                 , sourceColumn = Pos 34
+                 }
+                }
+               )
                ( Apply
                 ( Range
                  { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 22, sourceColumn = Pos 22 }, _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 22, sourceColumn = Pos 34 } } )
+                  { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                  , sourceLine = Pos 22
+                  , sourceColumn = Pos 22
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                  , sourceLine = Pos 22
+                  , sourceColumn = Pos 34
+                  }
+                 }
+                )
                 ( Var
                  ( Range
                   { _start = SourcePos
-                   { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 22, sourceColumn = Pos 22 }, _end = SourcePos
-                   { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 22, sourceColumn = Pos 31 } } )
+                   { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                   , sourceLine = Pos 22
+                   , sourceColumn = Pos 22
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                   , sourceLine = Pos 22
+                   , sourceColumn = Pos 31
+                   }
+                  }
+                 )
                  ( Id
-                  { name = "putStrLn", moduleName = Artifact
-                   ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } ) )
+                  { name = "putStrLn"
+                  , moduleName = Artifact
+                   ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+                  , sort = External
+                  }
+                 )
+                )
                 ( Var
                  ( Range
                   { _start = SourcePos
-                   { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 22, sourceColumn = Pos 31 }, _end = SourcePos
-                   { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 22, sourceColumn = Pos 34 } } )
+                   { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                   , sourceLine = Pos 22
+                   , sourceColumn = Pos 31
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                   , sourceLine = Pos 22
+                   , sourceColumn = Pos 34
+                   }
+                  }
+                 )
                  ( Id
-                  { name = "err", moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Internal 14 } ) ) ) :| [] ) ) :|
+                  { name = "err"
+                  , moduleName = Artifact
+                   ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+                  , sort = Internal 14
+                  }
+                 )
+                )
+               ) :| []
+              )
+             ) :|
              [ Clause
               ( Range
                { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 23, sourceColumn = Pos 10 }, _end = SourcePos
-                { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 23, sourceColumn = Pos 52 } } )
+                { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                , sourceLine = Pos 23
+                , sourceColumn = Pos 10
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                , sourceLine = Pos 23
+                , sourceColumn = Pos 52
+                }
+               }
+              )
               [ ConP
                ( Range
                 { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 23, sourceColumn = Pos 10 }, _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 23, sourceColumn = Pos 16 } } )
+                 { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                 , sourceLine = Pos 23
+                 , sourceColumn = Pos 10
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                 , sourceLine = Pos 23
+                 , sourceColumn = Pos 16
+                 }
+                }
+               )
                ( Id
-                { name = "Right", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External } ) [], VarP
+                { name = "Right"
+                , moduleName = Artifact
+                 ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+                , sort = External
+                }
+               ) []
+              , VarP
                ( Range
                 { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 23, sourceColumn = Pos 16 }, _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 23, sourceColumn = Pos 18 } } )
+                 { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                 , sourceLine = Pos 23
+                 , sourceColumn = Pos 16
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                 , sourceLine = Pos 23
+                 , sourceColumn = Pos 18
+                 }
+                }
+               )
                ( Id
-                { name = "x", moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Internal 15 } ) ]
+                { name = "x"
+                , moduleName = Artifact
+                 ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+                , sort = Internal 15
+                }
+               )
+              ]
               ( Seq
                ( Range
                 { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 23, sourceColumn = Pos 21 }, _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 23, sourceColumn = Pos 52 } } )
+                 { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                 , sourceLine = Pos 23
+                 , sourceColumn = Pos 21
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                 , sourceLine = Pos 23
+                 , sourceColumn = Pos 52
+                 }
+                }
+               )
                ( NoBind
                 ( Range
                  { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 23, sourceColumn = Pos 21 }, _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 23, sourceColumn = Pos 52 } } )
+                  { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                  , sourceLine = Pos 23
+                  , sourceColumn = Pos 21
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                  , sourceLine = Pos 23
+                  , sourceColumn = Pos 52
+                  }
+                 }
+                )
                 ( OpApp
                  ( Range
                   { _start = SourcePos
-                   { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 23, sourceColumn = Pos 40 }, _end = SourcePos
-                   { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 23, sourceColumn = Pos 43 } },
-                  ( LeftA, 0 ) )
+                   { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                   , sourceLine = Pos 23
+                   , sourceColumn = Pos 40
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                   , sourceLine = Pos 23
+                   , sourceColumn = Pos 43
+                   }
+                  }
+                 ,
+                  ( LeftA
+                  , 0
+                  )
+                 )
                  ( Id
-                  { name = "|>", moduleName = Artifact
-                   ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } )
+                  { name = "|>"
+                  , moduleName = Artifact
+                   ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+                  , sort = External
+                  }
+                 )
                  ( OpApp
                   ( Range
                    { _start = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 23, sourceColumn = Pos 23 }, _end = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 23, sourceColumn = Pos 26 } },
-                   ( LeftA, 0 ) )
+                    { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                    , sourceLine = Pos 23
+                    , sourceColumn = Pos 23
+                    }
+                   , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                    , sourceLine = Pos 23
+                    , sourceColumn = Pos 26
+                    }
+                   }
+                  ,
+                   ( LeftA
+                   , 0
+                   )
+                  )
                   ( Id
-                   { name = "|>", moduleName = Artifact
-                    ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } )
+                   { name = "|>"
+                   , moduleName = Artifact
+                    ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+                   , sort = External
+                   }
+                  )
                   ( Var
                    ( Range
                     { _start = SourcePos
-                     { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 23, sourceColumn = Pos 21 }, _end = SourcePos
-                     { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 23, sourceColumn = Pos 23 } } )
+                     { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                     , sourceLine = Pos 23
+                     , sourceColumn = Pos 21
+                     }
+                    , _end = SourcePos
+                     { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                     , sourceLine = Pos 23
+                     , sourceColumn = Pos 23
+                     }
+                    }
+                   )
                    ( Id
-                    { name = "x", moduleName = Artifact
-                     ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Internal 15 } ) )
+                    { name = "x"
+                    , moduleName = Artifact
+                     ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+                    , sort = Internal 15
+                    }
+                   )
+                  )
                   ( Var
                    ( Range
                     { _start = SourcePos
-                     { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 23, sourceColumn = Pos 26 }, _end = SourcePos
-                     { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 23, sourceColumn = Pos 40 } } )
+                     { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                     , sourceLine = Pos 23
+                     , sourceColumn = Pos 26
+                     }
+                    , _end = SourcePos
+                     { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                     , sourceLine = Pos 23
+                     , sourceColumn = Pos 40
+                     }
+                    }
+                   )
                    ( Id
-                    { name = "toStringInt32", moduleName = Artifact
-                     ( ArtifactPath "runtime/malgo/Builtin.mlg" ), sort = External } ) ) )
+                    { name = "toStringInt32"
+                    , moduleName = Artifact
+                     ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+                    , sort = External
+                    }
+                   )
+                  )
+                 )
                  ( Var
                   ( Range
                    { _start = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 23, sourceColumn = Pos 43 }, _end = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 23, sourceColumn = Pos 52 } } )
+                    { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                    , sourceLine = Pos 23
+                    , sourceColumn = Pos 43
+                    }
+                   , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/TestEither.mlg"
+                    , sourceLine = Pos 23
+                    , sourceColumn = Pos 52
+                    }
+                   }
+                  )
                   ( Id
-                   { name = "putStrLn", moduleName = Artifact
-                    ( ArtifactPath "runtime/malgo/Prelude.mlg" ), sort = External } ) ) ) :| [] ) ) ] ) ) ) ] ) ) :| [] ) ) ] ], _scSigs = [], _dataDefs =
+                   { name = "putStrLn"
+                   , moduleName = Artifact
+                    ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+                   , sort = External
+                   }
+                  )
+                 )
+                ) :| []
+               )
+              )
+             ]
+            )
+           )
+          )
+         ]
+        )
+       ) :| []
+      )
+     )
+    ]
+   ]
+  , _scSigs = []
+  , _dataDefs =
    [
     ( Range
      { _start = SourcePos
-      { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 4, sourceColumn = Pos 6 }, _end = SourcePos
-      { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 6, sourceColumn = Pos 1 } }, Id
-     { name = "Either", moduleName = Artifact
-      ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External },
+      { sourceName = "./test/testcases/malgo/TestEither.mlg"
+      , sourceLine = Pos 4
+      , sourceColumn = Pos 6
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/TestEither.mlg"
+      , sourceLine = Pos 6
+      , sourceColumn = Pos 1
+      }
+     }
+    , Id
+     { name = "Either"
+     , moduleName = Artifact
+      ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+     , sort = External
+     }
+    ,
      [
       ( Range
        { _start = SourcePos
-        { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 4, sourceColumn = Pos 13 }, _end = SourcePos
-        { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 4, sourceColumn = Pos 15 } }, Id
-       { name = "a", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Internal 0 } ),
+        { sourceName = "./test/testcases/malgo/TestEither.mlg"
+        , sourceLine = Pos 4
+        , sourceColumn = Pos 13
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestEither.mlg"
+        , sourceLine = Pos 4
+        , sourceColumn = Pos 15
+        }
+       }
+      , Id
+       { name = "a"
+       , moduleName = Artifact
+        ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+       , sort = Internal 0
+       }
+      )
+     ,
       ( Range
        { _start = SourcePos
-        { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 4, sourceColumn = Pos 15 }, _end = SourcePos
-        { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 4, sourceColumn = Pos 17 } }, Id
-       { name = "b", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Internal 1 } ) ],
+        { sourceName = "./test/testcases/malgo/TestEither.mlg"
+        , sourceLine = Pos 4
+        , sourceColumn = Pos 15
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestEither.mlg"
+        , sourceLine = Pos 4
+        , sourceColumn = Pos 17
+        }
+       }
+      , Id
+       { name = "b"
+       , moduleName = Artifact
+        ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+       , sort = Internal 1
+       }
+      )
+     ]
+    ,
      [
       ( Range
        { _start = SourcePos
-        { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 4, sourceColumn = Pos 19 }, _end = SourcePos
-        { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 4, sourceColumn = Pos 26 } }, Id
-       { name = "Left", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External },
+        { sourceName = "./test/testcases/malgo/TestEither.mlg"
+        , sourceLine = Pos 4
+        , sourceColumn = Pos 19
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestEither.mlg"
+        , sourceLine = Pos 4
+        , sourceColumn = Pos 26
+        }
+       }
+      , Id
+       { name = "Left"
+       , moduleName = Artifact
+        ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+       , sort = External
+       }
+      ,
        [ TyVar
         ( Range
          { _start = SourcePos
-          { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 4, sourceColumn = Pos 24 }, _end = SourcePos
-          { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 4, sourceColumn = Pos 26 } } )
+          { sourceName = "./test/testcases/malgo/TestEither.mlg"
+          , sourceLine = Pos 4
+          , sourceColumn = Pos 24
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/TestEither.mlg"
+          , sourceLine = Pos 4
+          , sourceColumn = Pos 26
+          }
+         }
+        )
         ( Id
-         { name = "a", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Internal 0 } ) ] ),
+         { name = "a"
+         , moduleName = Artifact
+          ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+         , sort = Internal 0
+         }
+        )
+       ]
+      )
+     ,
       ( Range
        { _start = SourcePos
-        { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 4, sourceColumn = Pos 28 }, _end = SourcePos
-        { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 6, sourceColumn = Pos 1 } }, Id
-       { name = "Right", moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = External },
+        { sourceName = "./test/testcases/malgo/TestEither.mlg"
+        , sourceLine = Pos 4
+        , sourceColumn = Pos 28
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestEither.mlg"
+        , sourceLine = Pos 6
+        , sourceColumn = Pos 1
+        }
+       }
+      , Id
+       { name = "Right"
+       , moduleName = Artifact
+        ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+       , sort = External
+       }
+      ,
        [ TyVar
         ( Range
          { _start = SourcePos
-          { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 4, sourceColumn = Pos 34 }, _end = SourcePos
-          { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 6, sourceColumn = Pos 1 } } )
+          { sourceName = "./test/testcases/malgo/TestEither.mlg"
+          , sourceLine = Pos 4
+          , sourceColumn = Pos 34
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/TestEither.mlg"
+          , sourceLine = Pos 6
+          , sourceColumn = Pos 1
+          }
+         }
+        )
         ( Id
-         { name = "b", moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/TestEither.mlg" ), sort = Internal 1 } ) ] ) ] ) ], _typeSynonyms = [], _foreigns = [], _imports =
+         { name = "b"
+         , moduleName = Artifact
+          ( ArtifactPath "test/testcases/malgo/TestEither.mlg" )
+         , sort = Internal 1
+         }
+        )
+       ]
+      )
+     ]
+    )
+   ]
+  , _typeSynonyms = []
+  , _foreigns = []
+  , _imports =
    [
     ( Range
      { _start = SourcePos
-      { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 1, sourceColumn = Pos 1 }, _end = SourcePos
-      { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 2, sourceColumn = Pos 1 } }, Artifact
-     ( ArtifactPath "runtime/malgo/Builtin.mlg" ), All ),
+      { sourceName = "./test/testcases/malgo/TestEither.mlg"
+      , sourceLine = Pos 1
+      , sourceColumn = Pos 1
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/TestEither.mlg"
+      , sourceLine = Pos 2
+      , sourceColumn = Pos 1
+      }
+     }
+    , Artifact
+     ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+    , All
+    )
+   ,
     ( Range
      { _start = SourcePos
-      { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 2, sourceColumn = Pos 1 }, _end = SourcePos
-      { sourceName = "./test/testcases/malgo/TestEither.mlg", sourceLine = Pos 4, sourceColumn = Pos 1 } }, Artifact
-     ( ArtifactPath "runtime/malgo/Prelude.mlg" ), All ) ] } }
+      { sourceName = "./test/testcases/malgo/TestEither.mlg"
+      , sourceLine = Pos 2
+      , sourceColumn = Pos 1
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/TestEither.mlg"
+      , sourceLine = Pos 4
+      , sourceColumn = Pos 1
+      }
+     }
+    , Artifact
+     ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+    , All
+    )
+   ]
+  }
+ }

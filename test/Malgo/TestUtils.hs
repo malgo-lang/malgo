@@ -26,9 +26,10 @@ import Text.Pretty.Simple
 smallIndentNoColor :: OutputOptions
 smallIndentNoColor =
   defaultOutputOptionsNoColor
-    { outputOptionsIndentAmount = 1,
-      outputOptionsCompactParens = True,
-      outputOptionsCompact = True
+    { outputOptionsIndentAmount = 1
+    -- outputOptionsCompact is problematic: https://github.com/cdepillabout/pretty-simple/issues/84
+    -- outputOptionsCompactParens = True,
+    -- outputOptionsCompact = True
     }
 
 pShowCompact :: (ConvertibleStrings TL.Text b, Show a) => a -> b
