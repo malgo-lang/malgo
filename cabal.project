@@ -2,7 +2,9 @@ packages: *.cabal
 
 jobs: $ncpus
 
-optimization: 2
+optimization: 0
+
+semaphore: true
 
 package *
   ghc-options:
