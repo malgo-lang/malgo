@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.37.0.
+-- This file has been generated from package.yaml by hpack version 0.38.0.
 --
 -- see: https://github.com/sol/hpack
 
@@ -101,7 +101,6 @@ library
     , generic-data
     , hashable
     , io-streams
-    , knob
     , lens
     , megaparsec
     , mtl
@@ -110,12 +109,9 @@ library
     , path
     , pretty-simple
     , prettyprinter
-    , raw-strings-qq
-    , regex-tdfa
     , s-cargot
     , store
     , string-conversions
-    , syb
     , text
     , transformers
     , unliftio
@@ -166,7 +162,6 @@ executable malgo
     , generic-data
     , hashable
     , io-streams
-    , knob
     , lens
     , malgo
     , megaparsec
@@ -176,12 +171,9 @@ executable malgo
     , path
     , pretty-simple
     , prettyprinter
-    , raw-strings-qq
-    , regex-tdfa
     , s-cargot
     , store
     , string-conversions
-    , syb
     , text
     , transformers
     , unliftio
@@ -244,7 +236,6 @@ test-suite malgo-test
     , hspec-core
     , hspec-golden >=0.2.2.0
     , io-streams
-    , knob
     , lens
     , malgo
     , megaparsec
@@ -254,13 +245,10 @@ test-suite malgo-test
     , path
     , pretty-simple
     , prettyprinter
-    , raw-strings-qq
-    , regex-tdfa
     , s-cargot
     , silently
     , store
     , string-conversions
-    , syb
     , text
     , time
     , transformers
