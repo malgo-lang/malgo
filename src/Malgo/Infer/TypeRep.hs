@@ -15,9 +15,6 @@ module Malgo.Infer.TypeRep
     HasKind (..),
     Scheme (..),
     TypeDef (..),
-    typeConstructor,
-    typeParameters,
-    valueConstructors,
     TypeMap,
     runTypeUnify,
     pattern TyConApp,
@@ -31,7 +28,7 @@ module Malgo.Infer.TypeRep
   )
 where
 
-import Control.Lens (At (at), Traversal', makeLenses, mapped, (?~), (^.), _1, _2)
+import Control.Lens (At (at), Traversal', mapped, (?~), (^.), _1, _2)
 import Data.Data (Data)
 import Data.Map.Strict qualified as Map (fromList, toList)
 import Data.Set qualified as Set (singleton)
@@ -226,9 +223,9 @@ instance (Pretty ty) => Pretty (Scheme ty) where
 -- | Definition of Type constructor
 -- valueConstructorsのSchemeは、typeParametersで全称化されている
 data TypeDef ty = TypeDef
-  { _typeConstructor :: ty,
-    _typeParameters :: [TypeVar],
-    _valueConstructors :: [(Id, Scheme ty)]
+  { typeConstructor :: ty,
+    typeParameters :: [TypeVar],
+    valueConstructors :: [(Id, Scheme ty)]
   }
   deriving stock (Show, Generic, Functor, Foldable, Traversable)
   deriving anyclass (Store)
@@ -237,9 +234,7 @@ instance (Pretty ty) => Pretty (TypeDef ty) where
   pretty (TypeDef c q u) = pretty (c, q, u)
 
 instance (HasKind ty) => HasKind (TypeDef ty) where
-  kindOf ctx TypeDef {_typeConstructor} = kindOf ctx _typeConstructor
-
-makeLenses ''TypeDef
+  kindOf ctx TypeDef {typeConstructor} = kindOf ctx typeConstructor
 
 -----------------------
 -- Unification monad --

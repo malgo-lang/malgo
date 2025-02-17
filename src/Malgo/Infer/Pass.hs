@@ -43,7 +43,7 @@ lookupType :: (State TcEnv :> es, IOE :> es, Reader Flag :> es) => Range -> Id -
 lookupType pos name =
   gets @TcEnv (view typeDefMap >>> Map.lookup name) >>= \case
     Nothing -> errorOn pos $ "Not in scope:" <+> squotes (pretty name)
-    Just TypeDef {..} -> pure _typeConstructor
+    Just TypeDef {..} -> pure typeConstructor
 
 infer :: (State (Map ModuleName Interface) :> es, State Uniq :> es, IOE :> es, Reader Flag :> es, Workspace :> es) => RnEnv -> Module (Malgo Rename) -> Eff es (Module (Malgo Infer), TcEnv)
 infer rnEnv (Module name bg) = runReader rnEnv $ runReader name $ do
@@ -144,7 +144,7 @@ tcDataDefs ds = do
     let valueCons' = zip valueConsNames $ map (Forall params') valueConsTypes
     traverse_ (\(consName, consType) -> modify $ insertSignature consName consType) valueCons'
     -- 2. 環境に登録する
-    modify $ updateTypeDef name \t -> t {_typeParameters = params', _valueConstructors = valueCons'}
+    modify $ updateTypeDef name \t -> t {typeParameters = params', valueConstructors = valueCons'}
     pure (pos, name, params, map (second (map tcType)) valueCons)
 
 tcForeigns ::
