@@ -30,17 +30,16 @@ eval program stdin stdout stderr = do
     traverse_ evalTopFun program.topFuns
     traverse_ initTopVar program.topVars
     traverse_ evalTopVar program.topVars
-    main <- findMain program.topFuns
-    case main of
-      Just (VFun _ [parameter] body) -> do
-        assign' [(parameter, VPack Tuple [])]
-        void $ evalExpr body
-      _ -> pure () -- No main function
-  where
-    findMain [] = pure Nothing
-    findMain ((name, _, _, _) : rest)
-      | name.id.name == "main" = Just <$> lookup name
-      | otherwise = findMain rest
+    let mainName = searchMain program
+    case mainName of
+      Nothing -> pure ()
+      Just mainName -> do
+        main <- lookup mainName
+        case main of
+          VFun _ [parameter] body -> do
+            assign' [(parameter, VPack Tuple [])]
+            void $ evalExpr body
+          _ -> pure () -- No main function
 
 evalTopFun :: (State Env :> es, IOE :> es) => (Name, [Name], c, Expr Name) -> Eff es ()
 evalTopFun (name, parameters, _, body) = do
