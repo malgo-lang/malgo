@@ -58,45 +58,46 @@ tag = IDENT;
 
 ```
 "cut" producer consumer -> [producer] [consumer] Cut
-(S, E, Cut : C) -> (S, E, C)
+(S, E, Cut : C, D) -> (S, E, C, D)
 
 variable in producer -> Fetch(variable)
-(S, E, Fetch(variable) : C) -> (E[variable] : S, E, C)
+(S, E, Fetch(variable) : C, D) -> (E[variable] : S, E, C, D)
 
 constant -> Push(constant)
-(S, E, Push(constant) : C) -> (constant : S, E, C)
+(S, E, Push(constant) : C, D) -> (constant : S, E, C, D)
 
 "lambda" variable statement -> Lambda(variable, [statement])
-(S, E, Lambda(variable, body) : C) -> (Lambda(E, variable, body) : S, E, C)
+(S, E, Lambda(variable, body) : C, D) -> (Lambda(E, variable, body) : S, E, C, D)
 
 "{" key ":" statement "}" -> Object(key, [statement])
-(S, E, Object(key, body) : C) -> (Object(E, key, body) : S, E, C)
+(S, E, Object(key, body) : C, D) -> (Object(E, key, body) : S, E, C, D)
 
 "struct" tag producer -> [producer] Struct(tag)
-(value : S, E, Struct(tag) : C) -> (Struct(tag, value) : S, E, C)
+(value : S, E, Struct(tag) : C, D) -> (Struct(tag, value) : S, E, C, D)
 
 "do" variable statement -> Do(variable, [statement])
-(S, E, Do(variable, body) : code <> Cut : C) -> (S, (variable, code) : E, body)
+(S, E, Do(variable, body) : C, D) -> (Do(E, variable, body) : S, E, C, D)
+(Do(E, variable, body) : S, E, code <> Cut : C, D) -> (S, (variable, code) : E, body, C, D)
 
 variable in consumer -> Resume(variable)
-(S, E, Resume(variable) : C) -> (S, E, E[variable] : C)
+(S, E, Resume(variable) : C, D) -> (S, E, E[variable] : C, D)
 
 "(" producer ")" -> [producer] Apply
-(value : Lambda(capture, variable, body) : S, E, Apply : C) 
--> (S, (variable, value) : capture, body)
+(value : Lambda(capture, variable, body) : S, E, Apply : C, D) 
+-> (S, (variable, value) : capture, body, D)
 
 "." key -> Proj(key)
-(Object(capture, key, body) : S, E, Proj(key) : C) -> (S, capture, body)
+(Object(capture, key, body) : S, E, Proj(key) : C, D) -> (S, capture, body, D)
 
 "match" "{" pattern "->" statement "}" -> Match(pattern, [statement])
-(value : S, E, Match(pattern, body) : C) -> (S, (pattern, value) : E, body)
+(value : S, E, Match(pattern, body) : C, D) -> (S, (pattern, value) : E, body, D)
 
 "then" variable statement -> Then(variable, [statement])
-(value : S, E, Then(variable, body) : C)
--> (S, (variable, value) : E, body)
+(value : S, E, Then(variable, body) : C, D)
+-> (S, (variable, value) : E, body, D)
 
 "finish" -> Finish
-(value : S, E, Finish : C) -> exit with value
+(value : S, E, Finish : C, D) -> exit with value
 ```
 
 ```
@@ -148,4 +149,21 @@ do a (do b (mul 2 4 b) | then x (add x 5 a)) | finish
         Cut)
     Finish
     Cut
+-> Do(a, Do(b, [mul 2 4 b]); Then(x, [add x 5 a]); Cut); Finish; Cut
 ```
+
+
+```
+    ([], {}, Do(a, Do(b, [mul 2 4 b]); Then(x, [add x 5 a]); Cut); Finish; Cut, [])
+->  ([Do({}, a, Do(b, [mul 2 4 b]); Then(x, [add x 5 a]); Cut)], {}, Finish; Cut, [])
+->  ([], {a = Finish}, Do(b, [mul 2 4 b]); Then(x, [add x 5 a]); Cut, [])
+->  ([Do({a = Finish}, b, [mul 2 4 b])], {}, Then(x, [add x 5 a]); Cut, [])
+->  ([], {b = Then(x, [add x 5 a]), a = Finish}, [mul 2 4 b], [])
+->  ([8], {b = Then(x, [add x 5 a]), a = Finish}, Then(x, [add x 5 a]), [])
+->  ([], {x = 8, b = Then(x, [add x 5 a]), a = Finish}, [add x 5 a], [])
+->  ([13], {x = 8, b = Then(x, [add x 5 a]), a = Finish}, Finish, [])
+->  exit with 13
+```
+
+- Q: Is it necessary to have `Cut` instruction?
+- Q: Is it necessary to have `D` dump stack?
