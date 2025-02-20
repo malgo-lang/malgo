@@ -1,8 +1,8 @@
-module Malgo.Machine.Value (Value (..), Env (..)) where
+module Malgo.Sequent.Value (Value (..), Env (..)) where
 
-import Malgo.Machine.Command (Name, Tag)
-import Malgo.Machine.Command qualified as C
 import Malgo.Prelude
+import Malgo.Sequent.Command (Name, Tag)
+import Malgo.Sequent.Command qualified as C
 
 data Value where
   Literal :: C.Literal -> Value

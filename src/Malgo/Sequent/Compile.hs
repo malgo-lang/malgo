@@ -1,10 +1,10 @@
--- | Compile Malgo AST to Malgo Machine Code.
-module Malgo.Machine.Compile (compile) where
+-- | Compile Malgo AST to Malgo Sequent Code.
+module Malgo.Sequent.Compile (compile) where
 
 import Effectful
 import Malgo.Infer.TcEnv (TcEnv)
-import Malgo.Machine.Command
 import Malgo.Prelude
+import Malgo.Sequent.Command
 import Malgo.Syntax as S
 import Malgo.Syntax.Extension as S
 

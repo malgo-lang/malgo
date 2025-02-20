@@ -1,4 +1,4 @@
-module Malgo.Machine.Command
+module Malgo.Sequent.Command
   ( Program (..),
     Branch (..),
     Tag (..),
