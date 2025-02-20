@@ -45,7 +45,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: golden
-          path: .golden/
+          path: .golden/**
       - name: Error handling
         if: ${{ steps.run-tests.outcome == 'failure' }}
         run: exit 1
