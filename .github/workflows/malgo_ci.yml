@@ -11,21 +11,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        ghc: ["9.6.4"]
+        ghc: ["9.10.1"]
         os: [ubuntu-latest]
 
     steps:
-      - name: add llvm repo
-        uses: myci-actions/add-deb-repo@11
-        with:
-          repo: deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-15 main
-          repo-name: llvm
-          keys-asc: https://apt.llvm.org/llvm-snapshot.gpg.key
-      - name: Install packages
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libgc-dev
-          sudo apt-get install -y llvm-15-dev clang-15
       - uses: actions/checkout@v4
       - name: Cache .cabal
         uses: actions/cache@v4
