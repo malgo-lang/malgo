@@ -7,7 +7,7 @@ import Malgo.Sequent.Command qualified as C
 data Value where
   Literal :: C.Literal -> Value
   Struct :: Tag -> [Value] -> Value
-  Function :: Env -> Name -> C.Command -> Value
+  Function :: Env -> [Name] -> C.Command -> Value
   Object :: Env -> Map Text C.Command -> Value
 
 data Env = Env
