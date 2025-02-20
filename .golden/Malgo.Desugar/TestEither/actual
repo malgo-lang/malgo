@@ -1,0 +1,448 @@
+(()
+   ((define
+      ($TestEither.andThen_curry_260 $TestEither.__261 $TestEither.left_262)
+      (->
+         ((->
+            (Any#)
+            Any#)
+            Any#)
+         Any#)
+      (match
+         (cast
+            (sum (con test/testcases/malgo/TestEither.mlg.Left Any#)
+               (con test/testcases/malgo/TestEither.mlg.Right Any#))
+            $TestEither.left_262)
+         (unpack
+            (con test/testcases/malgo/TestEither.mlg.Left Any#)
+            ($TestEither.p_263)
+            (= $TestEither.d_264
+               (call Left $TestEither.p_263)
+               (cast Any# $TestEither.d_264)))
+         (unpack
+            (con test/testcases/malgo/TestEither.mlg.Right Any#)
+            ($TestEither.p_265)
+            (= $TestEither.d_266
+               (call $TestEither.__261 $TestEither.p_265)
+               (cast Any# $TestEither.d_266)))))
+      (define
+         (Left $TestEither.p_249)
+         (->
+            (Any#)
+            Any#)
+         (let
+            (($TestEither.let_250
+               (sum (con test/testcases/malgo/TestEither.mlg.Left Any#)
+                  (con test/testcases/malgo/TestEither.mlg.Right Any#))
+               (pack
+                  (sum (con test/testcases/malgo/TestEither.mlg.Left Any#)
+                     (con test/testcases/malgo/TestEither.mlg.Right Any#))
+                  (con test/testcases/malgo/TestEither.mlg.Left Any#)
+                  $TestEither.p_249)))
+            (cast Any# $TestEither.let_250)))
+      (define
+         (Right $TestEither.p_251)
+         (->
+            (Any#)
+            Any#)
+         (let
+            (($TestEither.let_252
+               (sum (con test/testcases/malgo/TestEither.mlg.Left Any#)
+                  (con test/testcases/malgo/TestEither.mlg.Right Any#))
+               (pack
+                  (sum (con test/testcases/malgo/TestEither.mlg.Left Any#)
+                     (con test/testcases/malgo/TestEither.mlg.Right Any#))
+                  (con test/testcases/malgo/TestEither.mlg.Right Any#)
+                  $TestEither.p_251)))
+            (cast Any# $TestEither.let_252)))
+      (define
+         (id $TestEither.x_253)
+         (->
+            (Any#)
+            Any#)
+         $TestEither.x_253)
+      (define
+         (andThen $TestEither.__254)
+         (->
+            ((->
+               (Any#)
+               Any#))
+            (->
+               (Any#)
+               Any#))
+         (let
+            (($TestEither.let_267
+               (->
+                  (Any#)
+                  Any#)
+               (fun
+                  ($TestEither.left_255)
+                  (direct $TestEither.andThen_curry_260 $TestEither.__254 $TestEither.left_255))))
+            $TestEither.let_267))
+      (define
+         (main $TestEither.$__268)
+         (->
+            ((sum (con Tuple#)))
+            (sum (con Tuple#)))
+         (= $TestEither.d_287
+            (= $TestEither.d_274
+               (= $TestEither.d_272
+                  (= $TestEither.d_270
+                     (= $TestEither.d_269
+                        (call Int32# 1_i32)
+                        (cast Any# $TestEither.d_269))
+                     (= $TestEither.d_271
+                        (call Right $TestEither.d_270)
+                        (cast Any# $TestEither.d_271)))
+                  (= $TestEither.d_273
+                     (call |> $TestEither.d_272)
+                     (cast
+                        (->
+                           ((->
+                              (Any#)
+                              (sum (con Tuple#))))
+                           (sum (con Tuple#)))
+                        $TestEither.d_273)))
+               (= $TestEither.d_285
+                  (let
+                     (($TestEither.fun_284
+                        (->
+                           (Any#)
+                           (sum (con Tuple#)))
+                        (fun
+                           ($TestEither.right_275)
+                           (match
+                              (cast
+                                 (sum (con test/testcases/malgo/TestEither.mlg.Left Any#)
+                                    (con test/testcases/malgo/TestEither.mlg.Right Any#))
+                                 $TestEither.right_275)
+                              (unpack
+                                 (con test/testcases/malgo/TestEither.mlg.Left Any#)
+                                 ($TestEither.p_279)
+                                 (= $TestEither.d_277
+                                    (= $TestEither.d_276
+                                       (call String# "unreachable")
+                                       (cast Any# $TestEither.d_276))
+                                    (= $TestEither.d_278
+                                       (call putStrLn $TestEither.d_277)
+                                       (cast
+                                          (sum (con Tuple#))
+                                          $TestEither.d_278))))
+                              (unpack
+                                 (con test/testcases/malgo/TestEither.mlg.Right Any#)
+                                 ($TestEither.p_280)
+                                 (= $TestEither.d_282
+                                    (= $TestEither.d_281
+                                       (call toStringInt32 $TestEither.p_280)
+                                       (cast Any# $TestEither.d_281))
+                                    (= $TestEither.d_283
+                                       (call putStr $TestEither.d_282)
+                                       (cast
+                                          (sum (con Tuple#))
+                                          $TestEither.d_283))))))))
+                     $TestEither.fun_284)
+                  (= $TestEither.d_286
+                     (call $TestEither.d_274 $TestEither.d_285)
+                     (cast
+                        (sum (con Tuple#))
+                        $TestEither.d_286))))
+            (match
+               (= $TestEither.d_289
+                  (= $TestEither.d_288
+                     (call Int32# 1_i32)
+                     (cast Any# $TestEither.d_288))
+                  (= $TestEither.d_290
+                     (call Right $TestEither.d_289)
+                     (cast Any# $TestEither.d_290)))
+               (bind
+                  $TestEither.let_test/testcases/malgo/TestEither.mlg.#x_9_291
+                  Any#
+                  (= $TestEither.d_329
+                     (= $TestEither.d_309
+                        (= $TestEither.d_307
+                           (= $TestEither.d_293
+                              (= $TestEither.d_292
+                                 (call |> $TestEither.let_test/testcases/malgo/TestEither.mlg.#x_9_291)
+                                 (cast
+                                    (->
+                                       ((->
+                                          (Any#)
+                                          Any#))
+                                       Any#)
+                                    $TestEither.d_292))
+                              (= $TestEither.d_305
+                                 (= $TestEither.d_303
+                                    (let
+                                       (($TestEither.fun_302
+                                          (->
+                                             (Any#)
+                                             Any#)
+                                          (fun
+                                             ($TestEither.x_294)
+                                             (= $TestEither.d_300
+                                                (= $TestEither.d_296
+                                                   (= $TestEither.d_295
+                                                      (call addInt32 $TestEither.x_294)
+                                                      (cast
+                                                         (->
+                                                            (Any#)
+                                                            Any#)
+                                                         $TestEither.d_295))
+                                                   (= $TestEither.d_298
+                                                      (= $TestEither.d_297
+                                                         (call Int32# 1_i32)
+                                                         (cast Any# $TestEither.d_297))
+                                                      (= $TestEither.d_299
+                                                         (call $TestEither.d_296 $TestEither.d_298)
+                                                         (cast Any# $TestEither.d_299))))
+                                                (= $TestEither.d_301
+                                                   (call Right $TestEither.d_300)
+                                                   (cast Any# $TestEither.d_301))))))
+                                       $TestEither.fun_302)
+                                    (= $TestEither.d_304
+                                       (call andThen $TestEither.d_303)
+                                       (cast
+                                          (->
+                                             (Any#)
+                                             Any#)
+                                          $TestEither.d_304)))
+                                 (= $TestEither.d_306
+                                    (call $TestEither.d_293 $TestEither.d_305)
+                                    (cast Any# $TestEither.d_306))))
+                           (= $TestEither.d_308
+                              (call |> $TestEither.d_307)
+                              (cast
+                                 (->
+                                    ((->
+                                       (Any#)
+                                       Any#))
+                                    Any#)
+                                 $TestEither.d_308)))
+                        (= $TestEither.d_327
+                           (= $TestEither.d_325
+                              (let
+                                 (($TestEither.fun_324
+                                    (->
+                                       (Any#)
+                                       Any#)
+                                    (fun
+                                       ($TestEither.y_310)
+                                       (= $TestEither.d_321
+                                          (= $TestEither.d_318
+                                             (= $TestEither.d_316
+                                                (= $TestEither.d_314
+                                                   (= $TestEither.d_312
+                                                      (= $TestEither.d_311
+                                                         (call |> $TestEither.y_310)
+                                                         (cast
+                                                            (->
+                                                               ((->
+                                                                  (Any#)
+                                                                  Any#))
+                                                               Any#)
+                                                            $TestEither.d_311))
+                                                      (= $TestEither.d_313
+                                                         (call $TestEither.d_312 toStringInt32)
+                                                         (cast Any# $TestEither.d_313)))
+                                                   (= $TestEither.d_315
+                                                      (call |> $TestEither.d_314)
+                                                      (cast
+                                                         (->
+                                                            ((->
+                                                               (Any#)
+                                                               (sum (con Tuple#))))
+                                                            (sum (con Tuple#)))
+                                                         $TestEither.d_315)))
+                                                (= $TestEither.d_317
+                                                   (call $TestEither.d_316 putStr)
+                                                   (cast
+                                                      (sum (con Tuple#))
+                                                      $TestEither.d_317)))
+                                             (= $TestEither.cast_319
+                                                (cast Any# $TestEither.d_318)
+                                                (= $TestEither.d_320
+                                                   (call |> $TestEither.cast_319)
+                                                   (cast
+                                                      (->
+                                                         ((->
+                                                            ((sum (con Tuple#)))
+                                                            Any#))
+                                                         Any#)
+                                                      $TestEither.d_320))))
+                                          (= $TestEither.cast_322
+                                             (cast
+                                                (->
+                                                   ((sum (con Tuple#)))
+                                                   Any#)
+                                                Right)
+                                             (= $TestEither.d_323
+                                                (call $TestEither.d_321 $TestEither.cast_322)
+                                                (cast Any# $TestEither.d_323)))))))
+                                 $TestEither.fun_324)
+                              (= $TestEither.d_326
+                                 (call andThen $TestEither.d_325)
+                                 (cast
+                                    (->
+                                       (Any#)
+                                       Any#)
+                                    $TestEither.d_326)))
+                           (= $TestEither.d_328
+                              (call $TestEither.d_309 $TestEither.d_327)
+                              (cast Any# $TestEither.d_328))))
+                     (= $TestEither.d_359
+                        (= $TestEither.d_357
+                           (= $TestEither.d_343
+                              (= $TestEither.d_341
+                                 (= $TestEither.d_331
+                                    (= $TestEither.d_330
+                                       (call |> $TestEither.let_test/testcases/malgo/TestEither.mlg.#x_9_291)
+                                       (cast
+                                          (->
+                                             ((->
+                                                (Any#)
+                                                Any#))
+                                             Any#)
+                                          $TestEither.d_330))
+                                    (= $TestEither.d_339
+                                       (= $TestEither.d_337
+                                          (let
+                                             (($TestEither.fun_336
+                                                (->
+                                                   (Any#)
+                                                   Any#)
+                                                (fun
+                                                   ($TestEither.__332)
+                                                   (= $TestEither.d_334
+                                                      (= $TestEither.d_333
+                                                         (call String# "error")
+                                                         (cast Any# $TestEither.d_333))
+                                                      (= $TestEither.d_335
+                                                         (call Left $TestEither.d_334)
+                                                         (cast Any# $TestEither.d_335))))))
+                                             $TestEither.fun_336)
+                                          (= $TestEither.d_338
+                                             (call andThen $TestEither.d_337)
+                                             (cast
+                                                (->
+                                                   (Any#)
+                                                   Any#)
+                                                $TestEither.d_338)))
+                                       (= $TestEither.d_340
+                                          (call $TestEither.d_331 $TestEither.d_339)
+                                          (cast Any# $TestEither.d_340))))
+                                 (= $TestEither.d_342
+                                    (call |> $TestEither.d_341)
+                                    (cast
+                                       (->
+                                          ((->
+                                             (Any#)
+                                             Any#))
+                                          Any#)
+                                       $TestEither.d_342)))
+                              (= $TestEither.d_355
+                                 (= $TestEither.d_353
+                                    (let
+                                       (($TestEither.fun_352
+                                          (->
+                                             (Any#)
+                                             Any#)
+                                          (fun
+                                             ($TestEither.x_344)
+                                             (= $TestEither.d_350
+                                                (= $TestEither.d_346
+                                                   (= $TestEither.d_345
+                                                      (call addInt32 $TestEither.x_344)
+                                                      (cast
+                                                         (->
+                                                            (Any#)
+                                                            Any#)
+                                                         $TestEither.d_345))
+                                                   (= $TestEither.d_348
+                                                      (= $TestEither.d_347
+                                                         (call Int32# 1_i32)
+                                                         (cast Any# $TestEither.d_347))
+                                                      (= $TestEither.d_349
+                                                         (call $TestEither.d_346 $TestEither.d_348)
+                                                         (cast Any# $TestEither.d_349))))
+                                                (= $TestEither.d_351
+                                                   (call Right $TestEither.d_350)
+                                                   (cast Any# $TestEither.d_351))))))
+                                       $TestEither.fun_352)
+                                    (= $TestEither.d_354
+                                       (call andThen $TestEither.d_353)
+                                       (cast
+                                          (->
+                                             (Any#)
+                                             Any#)
+                                          $TestEither.d_354)))
+                                 (= $TestEither.d_356
+                                    (call $TestEither.d_343 $TestEither.d_355)
+                                    (cast Any# $TestEither.d_356))))
+                           (= $TestEither.d_358
+                              (call |> $TestEither.d_357)
+                              (cast
+                                 (->
+                                    ((->
+                                       (Any#)
+                                       (sum (con Tuple#))))
+                                    (sum (con Tuple#)))
+                                 $TestEither.d_358)))
+                        (= $TestEither.d_372
+                           (let
+                              (($TestEither.fun_371
+                                 (->
+                                    (Any#)
+                                    (sum (con Tuple#)))
+                                 (fun
+                                    ($TestEither.left_360)
+                                    (match
+                                       (cast
+                                          (sum (con test/testcases/malgo/TestEither.mlg.Left Any#)
+                                             (con test/testcases/malgo/TestEither.mlg.Right Any#))
+                                          $TestEither.left_360)
+                                       (unpack
+                                          (con test/testcases/malgo/TestEither.mlg.Left Any#)
+                                          ($TestEither.p_361)
+                                          (= $TestEither.d_362
+                                             (call putStrLn $TestEither.p_361)
+                                             (cast
+                                                (sum (con Tuple#))
+                                                $TestEither.d_362)))
+                                       (unpack
+                                          (con test/testcases/malgo/TestEither.mlg.Right Any#)
+                                          ($TestEither.p_363)
+                                          (= $TestEither.d_369
+                                             (= $TestEither.d_367
+                                                (= $TestEither.d_365
+                                                   (= $TestEither.d_364
+                                                      (call |> $TestEither.p_363)
+                                                      (cast
+                                                         (->
+                                                            ((->
+                                                               (Any#)
+                                                               Any#))
+                                                            Any#)
+                                                         $TestEither.d_364))
+                                                   (= $TestEither.d_366
+                                                      (call $TestEither.d_365 toStringInt32)
+                                                      (cast Any# $TestEither.d_366)))
+                                                (= $TestEither.d_368
+                                                   (call |> $TestEither.d_367)
+                                                   (cast
+                                                      (->
+                                                         ((->
+                                                            (Any#)
+                                                            (sum (con Tuple#))))
+                                                         (sum (con Tuple#)))
+                                                      $TestEither.d_368)))
+                                             (= $TestEither.d_370
+                                                (call $TestEither.d_369 putStrLn)
+                                                (cast
+                                                   (sum (con Tuple#))
+                                                   $TestEither.d_370))))))))
+                              $TestEither.fun_371)
+                           (= $TestEither.d_373
+                              (call $TestEither.d_359 $TestEither.d_372)
+                              (cast
+                                 (sum (con Tuple#))
+                                 $TestEither.d_373))))))))))
+   ())

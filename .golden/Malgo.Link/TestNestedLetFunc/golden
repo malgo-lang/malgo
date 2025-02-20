@@ -1,0 +1,59 @@
+(()
+   ((define
+      (malgo_print_string $TestNestedLetFunc.p_13)
+      (->
+         (String#)
+         (sum (con Tuple#)))
+      (raw
+         malgo_print_string
+         (->
+            (String#)
+            (sum (con Tuple#)))
+         $TestNestedLetFunc.p_13))
+      (define
+         (main $TestNestedLetFunc.$__14)
+         (->
+            ((sum (con Tuple#)))
+            (sum (con Tuple#)))
+         (let
+            (($TestNestedLetFunc.fun_23
+               (->
+                  ((sum (con Tuple#)))
+                  (sum (con Tuple#)))
+               (fun
+                  ($TestNestedLetFunc.$__15)
+                  (let
+                     (($TestNestedLetFunc.fun_18
+                        (->
+                           ((sum (con Tuple#)))
+                           (sum (con Tuple#)))
+                        (fun
+                           ($TestNestedLetFunc.a_16)
+                           (let
+                              (($TestNestedLetFunc.let_17
+                                 (sum (con Tuple#))
+                                 (pack
+                                    (sum (con Tuple#))
+                                    (con Tuple#))))
+                              $TestNestedLetFunc.let_17))))
+                     (let
+                        (($TestNestedLetFunc.let_20
+                           (sum (con Tuple#))
+                           (pack
+                              (sum (con Tuple#))
+                              (con Tuple#))))
+                        (= $TestNestedLetFunc.d_22
+                           (call $TestNestedLetFunc.fun_18 $TestNestedLetFunc.let_20)
+                           (cast
+                              (sum (con Tuple#))
+                              $TestNestedLetFunc.d_22)))))))
+            (= $TestNestedLetFunc.d_25
+               (call malgo_print_string "PASS")
+               (cast
+                  (sum (con Tuple#))
+                  $TestNestedLetFunc.d_25)))))
+   ((extern
+      malgo_print_string
+      (->
+         (String#)
+         (sum (con Tuple#))))))

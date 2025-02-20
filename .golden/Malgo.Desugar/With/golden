@@ -1,0 +1,230 @@
+(()
+   ((define
+      ($With.finally_curry_106 $With.finalizer_107 $With.k_108)
+      (->
+         ((->
+            (Any#)
+            Any#)
+            (->
+               ((sum (con Tuple#)))
+               Any#))
+         Any#)
+      (match
+         (= $With.d_110
+            (let
+               (($With.let_109
+                  (sum (con Tuple#))
+                  (pack
+                     (sum (con Tuple#))
+                     (con Tuple#))))
+               $With.let_109)
+            (= $With.d_111
+               (call $With.k_108 $With.d_110)
+               (cast Any# $With.d_111)))
+         (bind
+            $With.let_test/testcases/malgo/With.mlg.#x_4_112
+            Any#
+            (= $With.d_113
+               (call $With.finalizer_107 $With.let_test/testcases/malgo/With.mlg.#x_4_112)
+               (cast Any# $With.d_113)))))
+      (define
+         ($With.printAndReturn_curry_92 $With.str_93 $With.k_94)
+         (->
+            (Any#
+               (->
+                  (Any#)
+                  Any#))
+            Any#)
+         (= $With.d_96
+            (= $With.d_95
+               (call printString $With.str_93)
+               (cast
+                  (sum (con Tuple#))
+                  $With.d_95))
+            (= $With.d_97
+               (call $With.k_94 $With.str_93)
+               (cast Any# $With.d_97))))
+      (define
+         (twice $With.k_79)
+         (->
+            ((->
+               ((sum (con Tuple#)))
+               Any#))
+            Any#)
+         (= $With.d_83
+            (= $With.d_81
+               (let
+                  (($With.let_80
+                     (sum (con Tuple#))
+                     (pack
+                        (sum (con Tuple#))
+                        (con Tuple#))))
+                  $With.let_80)
+               (= $With.d_82
+                  (call $With.k_79 $With.d_81)
+                  (cast Any# $With.d_82)))
+            (= $With.d_85
+               (let
+                  (($With.let_84
+                     (sum (con Tuple#))
+                     (pack
+                        (sum (con Tuple#))
+                        (con Tuple#))))
+                  $With.let_84)
+               (= $With.d_86
+                  (call $With.k_79 $With.d_85)
+                  (cast Any# $With.d_86)))))
+      (define
+         (printAndReturn $With.str_87)
+         (->
+            (Any#)
+            (->
+               ((->
+                  (Any#)
+                  Any#))
+               Any#))
+         (let
+            (($With.let_98
+               (->
+                  ((->
+                     (Any#)
+                     Any#))
+                  Any#)
+               (fun
+                  ($With.k_88)
+                  (direct $With.printAndReturn_curry_92 $With.str_87 $With.k_88))))
+            $With.let_98))
+      (define
+         (finally $With.finalizer_99)
+         (->
+            ((->
+               (Any#)
+               Any#))
+            (->
+               ((->
+                  ((sum (con Tuple#)))
+                  Any#))
+               Any#))
+         (let
+            (($With.let_114
+               (->
+                  ((->
+                     ((sum (con Tuple#)))
+                     Any#))
+                  Any#)
+               (fun
+                  ($With.k_100)
+                  (direct $With.finally_curry_106 $With.finalizer_99 $With.k_100))))
+            $With.let_114))
+      (define
+         (main $With.$__115)
+         (->
+            ((sum (con Tuple#)))
+            (sum (con Tuple#)))
+         (= $With.d_124
+            (= $With.d_121
+               (let
+                  (($With.fun_120
+                     (->
+                        ((sum (con Tuple#)))
+                        (sum (con Tuple#)))
+                     (fun
+                        ($With.tuple_116)
+                        (match
+                           $With.tuple_116
+                           (unpack
+                              (con Tuple#)
+                              ()
+                              (= $With.d_118
+                                 (= $With.d_117
+                                    (call String# "end")
+                                    (cast Any# $With.d_117))
+                                 (= $With.d_119
+                                    (call printString $With.d_118)
+                                    (cast
+                                       (sum (con Tuple#))
+                                       $With.d_119))))))))
+                  $With.fun_120)
+               (= $With.cast_122
+                  (cast
+                     (->
+                        (Any#)
+                        Any#)
+                     $With.d_121)
+                  (= $With.d_123
+                     (call finally $With.cast_122)
+                     (cast
+                        (->
+                           ((->
+                              ((sum (con Tuple#)))
+                              (sum (con Tuple#))))
+                           (sum (con Tuple#)))
+                        $With.d_123))))
+            (= $With.d_141
+               (let
+                  (($With.fun_140
+                     (->
+                        ((sum (con Tuple#)))
+                        (sum (con Tuple#)))
+                     (fun
+                        ($With.$__125)
+                        (= $With.d_137
+                           (let
+                              (($With.fun_136
+                                 (->
+                                    ((sum (con Tuple#)))
+                                    (sum (con Tuple#)))
+                                 (fun
+                                    ($With.$__126)
+                                    (= $With.d_130
+                                       (= $With.d_128
+                                          (= $With.d_127
+                                             (call String# "foo")
+                                             (cast Any# $With.d_127))
+                                          (= $With.d_129
+                                             (call printAndReturn $With.d_128)
+                                             (cast
+                                                (->
+                                                   ((->
+                                                      (Any#)
+                                                      (sum (con Tuple#))))
+                                                   (sum (con Tuple#)))
+                                                $With.d_129)))
+                                       (= $With.d_134
+                                          (let
+                                             (($With.fun_133
+                                                (->
+                                                   (Any#)
+                                                   (sum (con Tuple#)))
+                                                (fun
+                                                   ($With.x_131)
+                                                   (= $With.d_132
+                                                      (call printString $With.x_131)
+                                                      (cast
+                                                         (sum (con Tuple#))
+                                                         $With.d_132)))))
+                                             $With.fun_133)
+                                          (= $With.d_135
+                                             (call $With.d_130 $With.d_134)
+                                             (cast
+                                                (sum (con Tuple#))
+                                                $With.d_135)))))))
+                              $With.fun_136)
+                           (= $With.cast_138
+                              (cast
+                                 (->
+                                    ((sum (con Tuple#)))
+                                    Any#)
+                                 $With.d_137)
+                              (= $With.d_139
+                                 (call twice $With.cast_138)
+                                 (cast
+                                    (sum (con Tuple#))
+                                    $With.d_139)))))))
+                  $With.fun_140)
+               (= $With.d_142
+                  (call $With.d_124 $With.d_141)
+                  (cast
+                     (sum (con Tuple#))
+                     $With.d_142))))))
+   ())

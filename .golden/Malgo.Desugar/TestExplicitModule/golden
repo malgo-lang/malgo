@@ -1,0 +1,16 @@
+(()
+   ((define
+      (main $TestExplicitModule.$__7)
+      (->
+         ((sum (con Tuple#)))
+         (sum (con Tuple#)))
+      (= $TestExplicitModule.d_9
+         (= $TestExplicitModule.d_8
+            (call String# "Hello, world")
+            (cast Any# $TestExplicitModule.d_8))
+         (= $TestExplicitModule.d_10
+            (call putStrLn $TestExplicitModule.d_9)
+            (cast
+               (sum (con Tuple#))
+               $TestExplicitModule.d_10)))))
+   ())

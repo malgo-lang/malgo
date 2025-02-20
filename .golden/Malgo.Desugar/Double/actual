@@ -1,0 +1,20 @@
+(()
+   ((define
+      (main $Double.$__9)
+      (->
+         ((sum (con Tuple#)))
+         (sum (con Tuple#)))
+      (= $Double.d_13
+         (= $Double.d_11
+            (= $Double.d_10
+               (call Double# 3.14_f64)
+               (cast Any# $Double.d_10))
+            (= $Double.d_12
+               (call toStringDouble $Double.d_11)
+               (cast Any# $Double.d_12)))
+         (= $Double.d_14
+            (call putStr $Double.d_13)
+            (cast
+               (sum (con Tuple#))
+               $Double.d_14)))))
+   ())

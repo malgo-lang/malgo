@@ -2,24 +2,23 @@ module Malgo.LinkSpec (spec) where
 
 import Data.ByteString qualified as BS
 import Effectful.Reader.Static (runReader)
-import Error.Diagnose
 import Malgo.Core.Flat qualified as Flag
 import Malgo.Desugar.Pass (desugar)
 import Malgo.Infer.Pass (infer)
 import Malgo.Interface (buildInterface)
 import Malgo.Link qualified as Link
-import Malgo.Monad (CompileMode (..), runMalgoM)
+import Malgo.Monad (runMalgoM)
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
 import Malgo.Refine.Pass (refine)
 import Malgo.Rename.Pass (rename)
 import Malgo.Rename.RnEnv qualified as RnEnv
+import Malgo.SExpr (sShow)
 import Malgo.Syntax
 import Malgo.TestUtils
 import System.Directory
 import System.FilePath
 import Test.Hspec
-import Test.Hspec.Golden
 
 spec :: Spec
 spec = parallel do
@@ -27,13 +26,15 @@ spec = parallel do
     setupBuiltin
     setupPrelude
   testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
+  golden "Builtin" (driveLink builtinPath)
+  golden "Prelude" (driveLink preludePath)
   for_ testcases \testcase -> do
-    golden ("link" <> takeBaseName testcase) (driveLink (testcaseDir </> testcase))
+    golden (takeBaseName testcase) (driveLink (testcaseDir </> testcase))
 
 driveLink :: FilePath -> IO String
 driveLink srcPath = do
   src <- convertString <$> BS.readFile srcPath
-  runMalgoM LLVM flag option do
+  runMalgoM flag option do
     parsed <-
       parseMalgo srcPath src >>= \case
         Left err -> error $ show err
@@ -46,4 +47,4 @@ driveLink srcPath = do
     core' <- runReader refined.moduleName $ Flag.normalize core
     let inf = buildInterface refined.moduleName rnState tcEnv dsState
     core'' <- Link.link inf core'
-    pure $ pShowCompact core''
+    pure $ sShow core''

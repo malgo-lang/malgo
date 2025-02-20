@@ -1,0 +1,114 @@
+(()
+   ((define
+      ($Test0.+#_curry_76 $Test0.x_77 $Test0.y_78)
+      (->
+         (Int64# Int64#)
+         Int64#)
+      (= $Test0.d_80
+         (= $Test0.d_79
+            (call addInt64# $Test0.x_77)
+            (cast
+               (->
+                  (Int64#)
+                  Int64#)
+               $Test0.d_79))
+         (= $Test0.d_81
+            (call $Test0.d_80 $Test0.y_78)
+            (cast Int64# $Test0.d_81))))
+      (define
+         ($Test0.|>_curry_53 $Test0.x_54 $Test0.f_55)
+         (->
+            (Any#
+               (->
+                  (Any#)
+                  Any#))
+            Any#)
+         (= $Test0.d_56
+            (call $Test0.f_55 $Test0.x_54)
+            (cast Any# $Test0.d_56)))
+      (define
+         (|> $Test0.x_50)
+         (->
+            (Any#)
+            (->
+               ((->
+                  (Any#)
+                  Any#))
+               Any#))
+         (let
+            (($Test0.let_57
+               (->
+                  ((->
+                     (Any#)
+                     Any#))
+                  Any#)
+               (fun
+                  ($Test0.f_51)
+                  (direct $Test0.|>_curry_53 $Test0.x_50 $Test0.f_51))))
+            $Test0.let_57))
+      (define
+         (main $Test0.$__58)
+         (->
+            ((sum (con Tuple#)))
+            (sum (con Tuple#)))
+         (= $Test0.d_62
+            (= $Test0.d_60
+               (= $Test0.d_59
+                  (call Int64# 1_i64)
+                  (cast Any# $Test0.d_59))
+               (= $Test0.d_61
+                  (call |> $Test0.d_60)
+                  (cast
+                     (->
+                        ((->
+                           (Any#)
+                           (sum (con Tuple#))))
+                        (sum (con Tuple#)))
+                     $Test0.d_61)))
+            (= $Test0.d_69
+               (let
+                  (($Test0.fun_68
+                     (->
+                        (Any#)
+                        (sum (con Tuple#)))
+                     (fun
+                        ($Test0.int64#_63)
+                        (match
+                           (cast
+                              (sum (con runtime/malgo/Builtin.mlg.Int64# Int64#))
+                              $Test0.int64#_63)
+                           (unpack
+                              (con runtime/malgo/Builtin.mlg.Int64# Int64#)
+                              ($Test0.p_64)
+                              (= $Test0.d_66
+                                 (= $Test0.d_65
+                                    (call toStringInt64# $Test0.p_64)
+                                    (cast String# $Test0.d_65))
+                                 (= $Test0.d_67
+                                    (call printString# $Test0.d_66)
+                                    (cast
+                                       (sum (con Tuple#))
+                                       $Test0.d_67))))))))
+                  $Test0.fun_68)
+               (= $Test0.d_70
+                  (call $Test0.d_62 $Test0.d_69)
+                  (cast
+                     (sum (con Tuple#))
+                     $Test0.d_70)))))
+      (define
+         (+# $Test0.x_71)
+         (->
+            (Int64#)
+            (->
+               (Int64#)
+               Int64#))
+         (let
+            (($Test0.let_82
+               (->
+                  (Int64#)
+                  Int64#)
+               (fun
+                  ($Test0.y_72)
+                  (direct $Test0.+#_curry_76 $Test0.x_71 $Test0.y_72))))
+            $Test0.let_82)))
+   ())

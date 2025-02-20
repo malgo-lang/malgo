@@ -21,5 +21,5 @@ buildRefineEnv tcEnv =
     }
   where
     f :: TypeDef Type -> Maybe (TypeVar, TypeDef Type)
-    f t@TypeDef {_typeConstructor = TyCon con} = Just (con, t)
+    f t@TypeDef {typeConstructor = TyCon con} = Just (con, t)
     f _ = Nothing

@@ -1,0 +1,534 @@
+(((define
+   eventually
+   (Record#
+      (bind
+         (->
+            (Any#)
+            (->
+               ((->
+                  (Any#)
+                  Any#))
+               Any#)))
+      (return
+         (->
+            (Any#)
+            Any#)))
+   (= $Eventually.d_307
+      (let
+         (($Eventually.record_306
+            (Record#
+               (bind
+                  (->
+                     (Any#)
+                     (->
+                        ((->
+                           (Any#)
+                           Any#))
+                        Any#)))
+               (return
+                  (->
+                     (Any#)
+                     Any#)))
+            (record
+               (bind eventuallyBind)
+               (return Done))))
+         $Eventually.record_306)
+      $Eventually.d_307))
+   (define
+      comp
+      Any#
+      (= $Eventually.d_354
+         (= $Eventually.d_325
+            (= $Eventually.d_312
+               (= $Eventually.d_311
+                  (call bind eventually)
+                  (cast
+                     (->
+                        (Any#)
+                        (->
+                           ((->
+                              ((sum (con Tuple#)))
+                              Any#))
+                           Any#))
+                     $Eventually.d_311))
+               (= $Eventually.d_323
+                  (= $Eventually.d_321
+                     (let
+                        (($Eventually.fun_320
+                           (->
+                              ((sum (con Tuple#)))
+                              Any#)
+                           (fun
+                              ($Eventually.$__313)
+                              (= $Eventually.d_317
+                                 (= $Eventually.d_315
+                                    (= $Eventually.d_314
+                                       (call String# "1")
+                                       (cast Any# $Eventually.d_314))
+                                    (= $Eventually.d_316
+                                       (call printString $Eventually.d_315)
+                                       (cast
+                                          (sum (con Tuple#))
+                                          $Eventually.d_316)))
+                                 (= $Eventually.cast_318
+                                    (cast Any# $Eventually.d_317)
+                                    (= $Eventually.d_319
+                                       (call Done $Eventually.cast_318)
+                                       (cast Any# $Eventually.d_319)))))))
+                        $Eventually.fun_320)
+                     (= $Eventually.d_322
+                        (call NotYetDone $Eventually.d_321)
+                        (cast Any# $Eventually.d_322)))
+                  (= $Eventually.d_324
+                     (call $Eventually.d_312 $Eventually.d_323)
+                     (cast
+                        (->
+                           ((->
+                              ((sum (con Tuple#)))
+                              Any#))
+                           Any#)
+                        $Eventually.d_324))))
+            (= $Eventually.d_352
+               (let
+                  (($Eventually.fun_351
+                     (->
+                        ((sum (con Tuple#)))
+                        Any#)
+                     (fun
+                        ($Eventually.__326)
+                        (= $Eventually.d_341
+                           (= $Eventually.d_328
+                              (= $Eventually.d_327
+                                 (call bind eventually)
+                                 (cast
+                                    (->
+                                       (Any#)
+                                       (->
+                                          ((->
+                                             ((sum (con Tuple#)))
+                                             Any#))
+                                          Any#))
+                                    $Eventually.d_327))
+                              (= $Eventually.d_339
+                                 (= $Eventually.d_337
+                                    (let
+                                       (($Eventually.fun_336
+                                          (->
+                                             ((sum (con Tuple#)))
+                                             Any#)
+                                          (fun
+                                             ($Eventually.$__329)
+                                             (= $Eventually.d_333
+                                                (= $Eventually.d_331
+                                                   (= $Eventually.d_330
+                                                      (call String# "2")
+                                                      (cast Any# $Eventually.d_330))
+                                                   (= $Eventually.d_332
+                                                      (call printString $Eventually.d_331)
+                                                      (cast
+                                                         (sum (con Tuple#))
+                                                         $Eventually.d_332)))
+                                                (= $Eventually.cast_334
+                                                   (cast Any# $Eventually.d_333)
+                                                   (= $Eventually.d_335
+                                                      (call Done $Eventually.cast_334)
+                                                      (cast Any# $Eventually.d_335)))))))
+                                       $Eventually.fun_336)
+                                    (= $Eventually.d_338
+                                       (call NotYetDone $Eventually.d_337)
+                                       (cast Any# $Eventually.d_338)))
+                                 (= $Eventually.d_340
+                                    (call $Eventually.d_328 $Eventually.d_339)
+                                    (cast
+                                       (->
+                                          ((->
+                                             ((sum (con Tuple#)))
+                                             Any#))
+                                          Any#)
+                                       $Eventually.d_340))))
+                           (= $Eventually.d_349
+                              (let
+                                 (($Eventually.fun_348
+                                    (->
+                                       ((sum (con Tuple#)))
+                                       Any#)
+                                    (fun
+                                       ($Eventually.__342)
+                                       (= $Eventually.d_344
+                                          (= $Eventually.d_343
+                                             (call return eventually)
+                                             (cast
+                                                (->
+                                                   (Any#)
+                                                   Any#)
+                                                $Eventually.d_343))
+                                          (= $Eventually.d_346
+                                             (= $Eventually.d_345
+                                                (call Int32# 3_i32)
+                                                (cast Any# $Eventually.d_345))
+                                             (= $Eventually.d_347
+                                                (call $Eventually.d_344 $Eventually.d_346)
+                                                (cast Any# $Eventually.d_347)))))))
+                                 $Eventually.fun_348)
+                              (= $Eventually.d_350
+                                 (call $Eventually.d_341 $Eventually.d_349)
+                                 (cast Any# $Eventually.d_350)))))))
+                  $Eventually.fun_351)
+               (= $Eventually.d_353
+                  (call $Eventually.d_325 $Eventually.d_352)
+                  (cast Any# $Eventually.d_353))))
+         $Eventually.d_354)))
+   ((define
+      ($Eventually.eventuallyBind_curry_288 $Eventually.done_289 $Eventually.k_290)
+      (->
+         (Any#
+            (->
+               (Any#)
+               Any#))
+         Any#)
+      (match
+         (cast
+            (sum (con test/testcases/malgo/Eventually.mlg.Done Any#)
+               (con
+                  test/testcases/malgo/Eventually.mlg.NotYetDone
+                  (->
+                     ((sum (con Tuple#)))
+                     Any#)))
+            $Eventually.done_289)
+         (unpack
+            (con test/testcases/malgo/Eventually.mlg.Done Any#)
+            ($Eventually.p_291)
+            (= $Eventually.d_292
+               (call $Eventually.k_290 $Eventually.p_291)
+               (cast Any# $Eventually.d_292)))
+         (unpack
+            (con
+               test/testcases/malgo/Eventually.mlg.NotYetDone
+               (->
+                  ((sum (con Tuple#)))
+                  Any#))
+            ($Eventually.p_293)
+            (= $Eventually.d_303
+               (let
+                  (($Eventually.fun_294
+                     (->
+                        ((sum (con Tuple#)))
+                        Any#)
+                     (fun
+                        ($Eventually.$__295)
+                        (= $Eventually.d_301
+                           (= $Eventually.d_299
+                              (= $Eventually.d_297
+                                 (let
+                                    (($Eventually.let_296
+                                       (sum (con Tuple#))
+                                       (pack
+                                          (sum (con Tuple#))
+                                          (con Tuple#))))
+                                    $Eventually.let_296)
+                                 (= $Eventually.d_298
+                                    (call $Eventually.p_293 $Eventually.d_297)
+                                    (cast Any# $Eventually.d_298)))
+                              (= $Eventually.d_300
+                                 (call eventuallyBind $Eventually.d_299)
+                                 (cast
+                                    (->
+                                       ((->
+                                          (Any#)
+                                          Any#))
+                                       Any#)
+                                    $Eventually.d_300)))
+                           (= $Eventually.d_302
+                              (call $Eventually.d_301 $Eventually.k_290)
+                              (cast Any# $Eventually.d_302))))))
+                  $Eventually.fun_294)
+               (= $Eventually.d_304
+                  (call NotYetDone $Eventually.d_303)
+                  (cast Any# $Eventually.d_304))))))
+      (define
+         (Done $Eventually.p_258)
+         (->
+            (Any#)
+            Any#)
+         (let
+            (($Eventually.let_259
+               (sum (con test/testcases/malgo/Eventually.mlg.Done Any#)
+                  (con
+                     test/testcases/malgo/Eventually.mlg.NotYetDone
+                     (->
+                        ((sum (con Tuple#)))
+                        Any#)))
+               (pack
+                  (sum (con test/testcases/malgo/Eventually.mlg.Done Any#)
+                     (con
+                        test/testcases/malgo/Eventually.mlg.NotYetDone
+                        (->
+                           ((sum (con Tuple#)))
+                           Any#)))
+                  (con test/testcases/malgo/Eventually.mlg.Done Any#)
+                  $Eventually.p_258)))
+            (cast Any# $Eventually.let_259)))
+      (define
+         (NotYetDone $Eventually.p_260)
+         (->
+            ((->
+               ((sum (con Tuple#)))
+               Any#))
+            Any#)
+         (let
+            (($Eventually.let_261
+               (sum (con test/testcases/malgo/Eventually.mlg.Done Any#)
+                  (con
+                     test/testcases/malgo/Eventually.mlg.NotYetDone
+                     (->
+                        ((sum (con Tuple#)))
+                        Any#)))
+               (pack
+                  (sum (con test/testcases/malgo/Eventually.mlg.Done Any#)
+                     (con
+                        test/testcases/malgo/Eventually.mlg.NotYetDone
+                        (->
+                           ((sum (con Tuple#)))
+                           Any#)))
+                  (con
+                     test/testcases/malgo/Eventually.mlg.NotYetDone
+                     (->
+                        ((sum (con Tuple#)))
+                        Any#))
+                  $Eventually.p_260)))
+            (cast Any# $Eventually.let_261)))
+      (define
+         (step $Eventually.done_262)
+         (->
+            (Any#)
+            Any#)
+         (match
+            (cast
+               (sum (con test/testcases/malgo/Eventually.mlg.Done Any#)
+                  (con
+                     test/testcases/malgo/Eventually.mlg.NotYetDone
+                     (->
+                        ((sum (con Tuple#)))
+                        Any#)))
+               $Eventually.done_262)
+            (unpack
+               (con test/testcases/malgo/Eventually.mlg.Done Any#)
+               ($Eventually.p_263)
+               (= $Eventually.d_264
+                  (call Done $Eventually.p_263)
+                  (cast Any# $Eventually.d_264)))
+            (unpack
+               (con
+                  test/testcases/malgo/Eventually.mlg.NotYetDone
+                  (->
+                     ((sum (con Tuple#)))
+                     Any#))
+               ($Eventually.p_265)
+               (= $Eventually.d_267
+                  (let
+                     (($Eventually.let_266
+                        (sum (con Tuple#))
+                        (pack
+                           (sum (con Tuple#))
+                           (con Tuple#))))
+                     $Eventually.let_266)
+                  (= $Eventually.d_268
+                     (call $Eventually.p_265 $Eventually.d_267)
+                     (cast Any# $Eventually.d_268))))))
+      (define
+         (return $Eventually.record_269)
+         (->
+            ((Record#
+               (bind
+                  (->
+                     (Any#)
+                     (->
+                        ((->
+                           (Any#)
+                           Any#))
+                        Any#)))
+               (return
+                  (->
+                     (Any#)
+                     Any#))))
+            (->
+               (Any#)
+               Any#))
+         (match
+            $Eventually.record_269
+            (open
+               ((bind $Eventually.p_270)
+                  (return $Eventually.p_271))
+               $Eventually.p_271)))
+      (define
+         (eventuallyBind $Eventually.done_272)
+         (->
+            (Any#)
+            (->
+               ((->
+                  (Any#)
+                  Any#))
+               Any#))
+         (let
+            (($Eventually.let_305
+               (->
+                  ((->
+                     (Any#)
+                     Any#))
+                  Any#)
+               (fun
+                  ($Eventually.k_273)
+                  (direct $Eventually.eventuallyBind_curry_288 $Eventually.done_272 $Eventually.k_273))))
+            $Eventually.let_305))
+      (define
+         (bind $Eventually.record_308)
+         (->
+            ((Record#
+               (bind
+                  (->
+                     (Any#)
+                     (->
+                        ((->
+                           (Any#)
+                           Any#))
+                        Any#)))
+               (return
+                  (->
+                     (Any#)
+                     Any#))))
+            (->
+               (Any#)
+               (->
+                  ((->
+                     (Any#)
+                     Any#))
+                  Any#)))
+         (match
+            $Eventually.record_308
+            (open
+               ((bind $Eventually.p_309)
+                  (return $Eventually.p_310))
+               $Eventually.p_309)))
+      (define
+         (main $Eventually.$__355)
+         (->
+            ((sum (con Tuple#)))
+            (sum (con Tuple#)))
+         (= $Eventually.d_359
+            (= $Eventually.d_357
+               (= $Eventually.d_356
+                  (call |> comp)
+                  (cast
+                     (->
+                        ((->
+                           (Any#)
+                           Any#))
+                        Any#)
+                     $Eventually.d_356))
+               (= $Eventually.d_358
+                  (call $Eventually.d_357 step)
+                  (cast Any# $Eventually.d_358)))
+            (= $Eventually.d_373
+               (= $Eventually.d_371
+                  (= $Eventually.d_369
+                     (= $Eventually.d_367
+                        (= $Eventually.d_365
+                           (= $Eventually.d_363
+                              (= $Eventually.d_361
+                                 (= $Eventually.d_360
+                                    (call |> comp)
+                                    (cast
+                                       (->
+                                          ((->
+                                             (Any#)
+                                             Any#))
+                                          Any#)
+                                       $Eventually.d_360))
+                                 (= $Eventually.d_362
+                                    (call $Eventually.d_361 step)
+                                    (cast Any# $Eventually.d_362)))
+                              (= $Eventually.d_364
+                                 (call |> $Eventually.d_363)
+                                 (cast
+                                    (->
+                                       ((->
+                                          (Any#)
+                                          Any#))
+                                       Any#)
+                                    $Eventually.d_364)))
+                           (= $Eventually.d_366
+                              (call $Eventually.d_365 step)
+                              (cast Any# $Eventually.d_366)))
+                        (= $Eventually.d_368
+                           (call |> $Eventually.d_367)
+                           (cast
+                              (->
+                                 ((->
+                                    (Any#)
+                                    Any#))
+                                 Any#)
+                              $Eventually.d_368)))
+                     (= $Eventually.d_370
+                        (call $Eventually.d_369 step)
+                        (cast Any# $Eventually.d_370)))
+                  (= $Eventually.d_372
+                     (call |> $Eventually.d_371)
+                     (cast
+                        (->
+                           ((->
+                              (Any#)
+                              (sum (con Tuple#))))
+                           (sum (con Tuple#)))
+                        $Eventually.d_372)))
+               (= $Eventually.d_384
+                  (let
+                     (($Eventually.fun_383
+                        (->
+                           (Any#)
+                           (sum (con Tuple#)))
+                        (fun
+                           ($Eventually.done_374)
+                           (match
+                              (cast
+                                 (sum (con test/testcases/malgo/Eventually.mlg.Done Any#)
+                                    (con
+                                       test/testcases/malgo/Eventually.mlg.NotYetDone
+                                       (->
+                                          ((sum (con Tuple#)))
+                                          Any#)))
+                                 $Eventually.done_374)
+                              (unpack
+                                 (con test/testcases/malgo/Eventually.mlg.Done Any#)
+                                 ($Eventually.p_375)
+                                 (= $Eventually.d_377
+                                    (= $Eventually.d_376
+                                       (call toStringInt32 $Eventually.p_375)
+                                       (cast Any# $Eventually.d_376))
+                                    (= $Eventually.d_378
+                                       (call printString $Eventually.d_377)
+                                       (cast
+                                          (sum (con Tuple#))
+                                          $Eventually.d_378))))
+                              (unpack
+                                 (con
+                                    test/testcases/malgo/Eventually.mlg.NotYetDone
+                                    (->
+                                       ((sum (con Tuple#)))
+                                       Any#))
+                                 ($Eventually.p_379)
+                                 (= $Eventually.d_381
+                                    (= $Eventually.d_380
+                                       (call String# "not yet")
+                                       (cast Any# $Eventually.d_380))
+                                    (= $Eventually.d_382
+                                       (call printString $Eventually.d_381)
+                                       (cast
+                                          (sum (con Tuple#))
+                                          $Eventually.d_382))))))))
+                     $Eventually.fun_383)
+                  (= $Eventually.d_385
+                     (call $Eventually.d_373 $Eventually.d_384)
+                     (cast
+                        (sum (con Tuple#))
+                        $Eventually.d_385)))))))
+   ())

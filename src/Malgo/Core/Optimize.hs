@@ -73,20 +73,20 @@ optimizeProgram ::
 optimizeProgram Program {..} = do
   state <-
     {-# SCC "buildState" #-}
-      execState mempty do
-        {-# SCC "checkInlinable_topFuns" #-} for_ topFuns $ \(name, ps, t, e) -> checkInlinable $ LocalDef name t (Fun ps e)
-        {-# SCC "checkInlinable_topVars" #-}
-          for_ topVars $ \case
-            (name, t, Let [LocalDef f _ (Fun ps e)] (Atom (Var v))) | f == v -> checkInlinable $ LocalDef name t (Fun ps e)
-            _ -> pass
+    execState mempty do
+      {-# SCC "checkInlinable_topFuns" #-} for_ topFuns $ \(name, ps, t, e) -> checkInlinable $ LocalDef name t (Fun ps e)
+      {-# SCC "checkInlinable_topVars" #-}
+        for_ topVars $ \case
+          (name, t, Let [LocalDef f _ (Fun ps e)] (Atom (Var v))) | f == v -> checkInlinable $ LocalDef name t (Fun ps e)
+          _ -> pass
   topVars <- {-# SCC "optimizeExpr_topVars" #-} traverse (\(n, t, e) -> (n,t,) <$> optimizeExpr state e) topVars
   topFuns <- {-# SCC "optimizeExpr_topFuns" #-} traverse (\(n, ps, t, e) -> (n,ps,t,) <$> optimizeExpr state e) topFuns
 
   -- Remove all unused toplevel functions and variables.
-  -- If a global definition is (external or native) and defined in the current module, it cannot be removed.
+  -- If a global definition is external and defined in the current module, it cannot be removed.
   -- Otherwise, delete it if it is not reachable from above definitions.
   moduleName <- ask @ModuleName
-  let roots = {-# SCC "roots" #-} filter (\x -> x.id.sort `elem` [External, Native] && x.id.moduleName == moduleName) $ map (view _1) topFuns <> map (view _1) topVars
+  let roots = {-# SCC "roots" #-} filter (\x -> idIsExternal x.id && x.id.moduleName == moduleName) $ map (view _1) topFuns <> map (view _1) topVars
   let (graph, _, toVertex) = {-# SCC "callGraph" #-} callGraph Program {..}
   let reachableFromMain = {-# SCC "reachable" #-} ordNub $ concatMap (toVertex >>> Maybe.fromJust >>> Graph.reachable graph) roots
 

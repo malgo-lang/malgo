@@ -11,32 +11,30 @@ import Error.Diagnose.Compat.Megaparsec (errorDiagnosticFromBundle)
 import Malgo.Core.Optimize (OptimizeOption (..))
 import Malgo.Core.Parser qualified as Core
 import Malgo.Driver qualified as Driver
-import Malgo.Monad (CompileMode (..), runMalgoM)
+import Malgo.Monad (runMalgoM)
 import Malgo.Monad qualified as Flag
 import Malgo.Prelude
 import Options.Applicative
 import System.Directory (makeAbsolute)
 import System.Exit (exitFailure)
 
-data ToLLOpt = ToLLOpt
+data EvalOpt = ToLLOpt
   { srcPath :: FilePath,
-    compileMode :: CompileMode,
     noOptimize :: Bool,
     lambdaLift :: Bool,
     optimizeOption :: OptimizeOption,
     debugMode :: Bool
   }
 
-makeFieldsNoPrefix ''ToLLOpt
+makeFieldsNoPrefix ''EvalOpt
 
 main :: IO ()
 main = do
   command <- parseCommand
   case command of
-    ToLL opt ->
+    Eval opt ->
       Driver.compile opt.srcPath
         & runMalgoM
-          opt.compileMode
           Flag
             { Flag.noOptimize = opt.noOptimize,
               Flag.lambdaLift = opt.lambdaLift,
@@ -54,14 +52,10 @@ main = do
         Right prog -> do
           putText $ render $ pretty prog
 
-toLLOpt :: Parser ToLLOpt
+toLLOpt :: Parser EvalOpt
 toLLOpt =
   ( ToLLOpt
       <$> strArgument (metavar "SOURCE" <> help "Source file (relative path)" <> action "file")
-      <*> ( strOption (long "compile-mode" <> short 'c' <> metavar "COMPILE_MODE" <> value "llvm") <&> \case
-              ("llvm" :: String) -> LLVM
-              _ -> error "Invalid compile mode"
-          )
       <*> switch (long "no-opt")
       <*> switch (long "lambdalift")
       <*> ( OptimizeOption
@@ -83,7 +77,7 @@ newtype CoreOpt = CoreOpt FilePath
   deriving stock (Eq, Show)
 
 data Command
-  = ToLL ToLLOpt
+  = Eval EvalOpt
   | Core CoreOpt
 
 parseCommand :: IO Command
@@ -95,14 +89,14 @@ parseCommand = do
           <> header "malgo programming language"
       )
   case command of
-    ToLL opt -> do
+    Eval opt -> do
       srcPath <- makeAbsolute opt.srcPath
-      pure $ ToLL opt {srcPath = srcPath}
+      pure $ Eval opt {srcPath = srcPath}
     Core opt -> pure $ Core opt
   where
     toLL =
-      command "to-ll"
-        $ info (ToLL <$> toLLOpt)
+      command "eval"
+        $ info (Eval <$> toLLOpt)
         $ fullDesc
         <> progDesc "Compile Malgo file (.mlg) to LLVM Textual IR (.ll)"
         <> header "malgo to LLVM Textual IR Compiler"

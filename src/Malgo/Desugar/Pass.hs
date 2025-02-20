@@ -169,7 +169,7 @@ dsDataDef :: (State DsState :> es, Reader ModuleName :> es, State Uniq :> es) =>
 dsDataDef (_, name, _, cons) =
   for cons $ \(_, conName, _) -> do
     -- lookup constructor infomations
-    vcs <- ((._valueConstructors) . fromJust) . Map.lookup name <$> gets @DsState (._typeDefMap)
+    vcs <- ((.valueConstructors) . fromJust) . Map.lookup name <$> gets @DsState (._typeDefMap)
     let Forall _ conType = fromJust $ List.lookup conName vcs
 
     -- desugar conType

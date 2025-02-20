@@ -1,0 +1,460 @@
+(((define
+   one
+   Any#
+   (= $ToplevelVariableNoImport.d_199
+      (= $ToplevelVariableNoImport.d_198
+         (call Int32# 1_i32)
+         (cast Any# $ToplevelVariableNoImport.d_198))
+      $ToplevelVariableNoImport.d_199))
+   (define
+      comp
+      Any#
+      (= $ToplevelVariableNoImport.d_222
+         (= $ToplevelVariableNoImport.d_215
+            (let
+               (($ToplevelVariableNoImport.fun_214
+                  (->
+                     (Any#)
+                     Any#)
+                  (fun
+                     ($ToplevelVariableNoImport.nothing_212)
+                     (match
+                        (cast
+                           (sum (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing)
+                              (con
+                                 test/testcases/malgo/ToplevelVariableNoImport.mlg.Just
+                                 (sum (con Tuple#))))
+                           $ToplevelVariableNoImport.nothing_212)
+                        (unpack
+                           (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing)
+                           ()
+                           (direct Nothing))
+                        (unpack
+                           (con
+                              test/testcases/malgo/ToplevelVariableNoImport.mlg.Just
+                              (sum (con Tuple#)))
+                           ($ToplevelVariableNoImport.p_213)
+                           (direct Nothing))))))
+               $ToplevelVariableNoImport.fun_214)
+            (= $ToplevelVariableNoImport.d_220
+               (= $ToplevelVariableNoImport.d_217
+                  (let
+                     (($ToplevelVariableNoImport.let_216
+                        (sum (con Tuple#))
+                        (pack
+                           (sum (con Tuple#))
+                           (con Tuple#))))
+                     $ToplevelVariableNoImport.let_216)
+                  (= $ToplevelVariableNoImport.cast_218
+                     (cast Any# $ToplevelVariableNoImport.d_217)
+                     (= $ToplevelVariableNoImport.d_219
+                        (call Just $ToplevelVariableNoImport.cast_218)
+                        (cast Any# $ToplevelVariableNoImport.d_219))))
+               (= $ToplevelVariableNoImport.d_221
+                  (call $ToplevelVariableNoImport.d_215 $ToplevelVariableNoImport.d_220)
+                  (cast Any# $ToplevelVariableNoImport.d_221))))
+         $ToplevelVariableNoImport.d_222)))
+   ((define
+      ($ToplevelVariableNoImport.addInt32_curry_244 $ToplevelVariableNoImport.int32#_245 $ToplevelVariableNoImport.int32#_246)
+      (->
+         (Any# Any#)
+         Any#)
+      (match
+         (cast
+            (sum (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32# Int32#))
+            $ToplevelVariableNoImport.int32#_245)
+         (unpack
+            (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32# Int32#)
+            ($ToplevelVariableNoImport.p_247)
+            (match
+               (cast
+                  (sum (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32# Int32#))
+                  $ToplevelVariableNoImport.int32#_246)
+               (unpack
+                  (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32# Int32#)
+                  ($ToplevelVariableNoImport.p_248)
+                  (= $ToplevelVariableNoImport.d_252
+                     (= $ToplevelVariableNoImport.d_250
+                        (= $ToplevelVariableNoImport.d_249
+                           (call addInt32# $ToplevelVariableNoImport.p_247)
+                           (cast
+                              (->
+                                 (Int32#)
+                                 Int32#)
+                              $ToplevelVariableNoImport.d_249))
+                        (= $ToplevelVariableNoImport.d_251
+                           (call $ToplevelVariableNoImport.d_250 $ToplevelVariableNoImport.p_248)
+                           (cast Int32# $ToplevelVariableNoImport.d_251)))
+                     (= $ToplevelVariableNoImport.d_253
+                        (call Int32# $ToplevelVariableNoImport.d_252)
+                        (cast Any# $ToplevelVariableNoImport.d_253))))))))
+      (define
+         ($ToplevelVariableNoImport.addInt32#_curry_228 $ToplevelVariableNoImport.x_229 $ToplevelVariableNoImport.y_230)
+         (->
+            (Int32# Int32#)
+            Int32#)
+         (= $ToplevelVariableNoImport.d_232
+            (= $ToplevelVariableNoImport.d_231
+               (call malgo_add_int32_t $ToplevelVariableNoImport.x_229)
+               (cast
+                  (->
+                     (Int32#)
+                     Int32#)
+                  $ToplevelVariableNoImport.d_231))
+            (= $ToplevelVariableNoImport.d_233
+               (call $ToplevelVariableNoImport.d_232 $ToplevelVariableNoImport.y_230)
+               (cast Int32# $ToplevelVariableNoImport.d_233))))
+      (define
+         ($ToplevelVariableNoImport.const_curry_203 $ToplevelVariableNoImport.a_204 $ToplevelVariableNoImport.__205)
+         (->
+            (Any# Any#)
+            Any#)
+         $ToplevelVariableNoImport.a_204)
+      (define
+         ($ToplevelVariableNoImport.malgo_add_int32_t_curry_176 $ToplevelVariableNoImport.p_177 $ToplevelVariableNoImport.p_178)
+         (->
+            (Int32# Int32#)
+            Int32#)
+         (raw
+            malgo_add_int32_t
+            (->
+               (Int32# Int32#)
+               Int32#)
+            $ToplevelVariableNoImport.p_177
+            $ToplevelVariableNoImport.p_178))
+      (define
+         (Int32# $ToplevelVariableNoImport.p_167)
+         (->
+            (Int32#)
+            Any#)
+         (let
+            (($ToplevelVariableNoImport.let_168
+               (sum (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32# Int32#))
+               (pack
+                  (sum (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32# Int32#))
+                  (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32# Int32#)
+                  $ToplevelVariableNoImport.p_167)))
+            (cast Any# $ToplevelVariableNoImport.let_168)))
+      (define
+         (String# $ToplevelVariableNoImport.p_169)
+         (->
+            (String#)
+            Any#)
+         (let
+            (($ToplevelVariableNoImport.let_170
+               (sum (con test/testcases/malgo/ToplevelVariableNoImport.mlg.String# String#))
+               (pack
+                  (sum (con test/testcases/malgo/ToplevelVariableNoImport.mlg.String# String#))
+                  (con test/testcases/malgo/ToplevelVariableNoImport.mlg.String# String#)
+                  $ToplevelVariableNoImport.p_169)))
+            (cast Any# $ToplevelVariableNoImport.let_170)))
+      (define
+         (Nothing)
+         (-> () Any#)
+         (let
+            (($ToplevelVariableNoImport.let_171
+               (sum (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing)
+                  (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Just Any#))
+               (pack
+                  (sum (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing)
+                     (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Just Any#))
+                  (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing))))
+            (cast Any# $ToplevelVariableNoImport.let_171)))
+      (define
+         (Just $ToplevelVariableNoImport.p_172)
+         (->
+            (Any#)
+            Any#)
+         (let
+            (($ToplevelVariableNoImport.let_173
+               (sum (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing)
+                  (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Just Any#))
+               (pack
+                  (sum (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing)
+                     (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Just Any#))
+                  (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Just Any#)
+                  $ToplevelVariableNoImport.p_172)))
+            (cast Any# $ToplevelVariableNoImport.let_173)))
+      (define
+         (malgo_add_int32_t $ToplevelVariableNoImport.p_174)
+         (->
+            (Int32#)
+            (->
+               (Int32#)
+               Int32#))
+         (let
+            (($ToplevelVariableNoImport.let_179
+               (->
+                  (Int32#)
+                  Int32#)
+               (fun
+                  ($ToplevelVariableNoImport.p_175)
+                  (direct $ToplevelVariableNoImport.malgo_add_int32_t_curry_176 $ToplevelVariableNoImport.p_174 $ToplevelVariableNoImport.p_175))))
+            $ToplevelVariableNoImport.let_179))
+      (define
+         (malgo_print_string $ToplevelVariableNoImport.p_180)
+         (->
+            (String#)
+            (sum (con Tuple#)))
+         (raw
+            malgo_print_string
+            (->
+               (String#)
+               (sum (con Tuple#)))
+            $ToplevelVariableNoImport.p_180))
+      (define
+         (malgo_int32_t_to_string $ToplevelVariableNoImport.p_181)
+         (->
+            (Int32#)
+            String#)
+         (raw
+            malgo_int32_t_to_string
+            (->
+               (Int32#)
+               String#)
+            $ToplevelVariableNoImport.p_181))
+      (define
+         (toStringInt32# $ToplevelVariableNoImport.x_182)
+         (->
+            (Int32#)
+            String#)
+         (= $ToplevelVariableNoImport.d_183
+            (call malgo_int32_t_to_string $ToplevelVariableNoImport.x_182)
+            (cast String# $ToplevelVariableNoImport.d_183)))
+      (define
+         (toStringInt32 $ToplevelVariableNoImport.int32#_184)
+         (->
+            (Any#)
+            Any#)
+         (match
+            (cast
+               (sum (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32# Int32#))
+               $ToplevelVariableNoImport.int32#_184)
+            (unpack
+               (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Int32# Int32#)
+               ($ToplevelVariableNoImport.p_185)
+               (= $ToplevelVariableNoImport.d_187
+                  (= $ToplevelVariableNoImport.d_186
+                     (call toStringInt32# $ToplevelVariableNoImport.p_185)
+                     (cast String# $ToplevelVariableNoImport.d_186))
+                  (= $ToplevelVariableNoImport.d_188
+                     (call String# $ToplevelVariableNoImport.d_187)
+                     (cast Any# $ToplevelVariableNoImport.d_188))))))
+      (define
+         (printString# $ToplevelVariableNoImport.x_189)
+         (->
+            (String#)
+            (sum (con Tuple#)))
+         (= $ToplevelVariableNoImport.d_190
+            (call malgo_print_string $ToplevelVariableNoImport.x_189)
+            (cast
+               (sum (con Tuple#))
+               $ToplevelVariableNoImport.d_190)))
+      (define
+         (printString $ToplevelVariableNoImport.string#_191)
+         (->
+            (Any#)
+            (sum (con Tuple#)))
+         (match
+            (cast
+               (sum (con test/testcases/malgo/ToplevelVariableNoImport.mlg.String# String#))
+               $ToplevelVariableNoImport.string#_191)
+            (unpack
+               (con test/testcases/malgo/ToplevelVariableNoImport.mlg.String# String#)
+               ($ToplevelVariableNoImport.p_192)
+               (= $ToplevelVariableNoImport.d_193
+                  (call printString# $ToplevelVariableNoImport.p_192)
+                  (cast
+                     (sum (con Tuple#))
+                     $ToplevelVariableNoImport.d_193)))))
+      (define
+         (printInt32 $ToplevelVariableNoImport.i_194)
+         (->
+            (Any#)
+            (sum (con Tuple#)))
+         (= $ToplevelVariableNoImport.d_196
+            (= $ToplevelVariableNoImport.d_195
+               (call toStringInt32 $ToplevelVariableNoImport.i_194)
+               (cast Any# $ToplevelVariableNoImport.d_195))
+            (= $ToplevelVariableNoImport.d_197
+               (call printString $ToplevelVariableNoImport.d_196)
+               (cast
+                  (sum (con Tuple#))
+                  $ToplevelVariableNoImport.d_197))))
+      (define
+         (identity $ToplevelVariableNoImport.x_200)
+         (->
+            (Any#)
+            Any#)
+         $ToplevelVariableNoImport.x_200)
+      (define
+         (const $ToplevelVariableNoImport.a_201)
+         (->
+            (Any#)
+            (->
+               (Any#)
+               Any#))
+         (let
+            (($ToplevelVariableNoImport.let_206
+               (->
+                  (Any#)
+                  Any#)
+               (fun
+                  ($ToplevelVariableNoImport.__202)
+                  (direct $ToplevelVariableNoImport.const_curry_203 $ToplevelVariableNoImport.a_201 $ToplevelVariableNoImport.__202))))
+            $ToplevelVariableNoImport.let_206))
+      (define
+         (constId $ToplevelVariableNoImport.eta_210)
+         (->
+            (Any#)
+            (->
+               (Any#)
+               Any#))
+         (= $ToplevelVariableNoImport.d_211
+            (= $ToplevelVariableNoImport.d_209
+               (= $ToplevelVariableNoImport.cast_207
+                  (cast Any# identity)
+                  (= $ToplevelVariableNoImport.d_208
+                     (call const $ToplevelVariableNoImport.cast_207)
+                     (cast
+                        (->
+                           (Any#)
+                           (->
+                              (Any#)
+                              Any#))
+                        $ToplevelVariableNoImport.d_208)))
+               $ToplevelVariableNoImport.d_209)
+            (call $ToplevelVariableNoImport.d_211 $ToplevelVariableNoImport.eta_210)))
+      (define
+         (addInt32# $ToplevelVariableNoImport.x_223)
+         (->
+            (Int32#)
+            (->
+               (Int32#)
+               Int32#))
+         (let
+            (($ToplevelVariableNoImport.let_234
+               (->
+                  (Int32#)
+                  Int32#)
+               (fun
+                  ($ToplevelVariableNoImport.y_224)
+                  (direct $ToplevelVariableNoImport.addInt32#_curry_228 $ToplevelVariableNoImport.x_223 $ToplevelVariableNoImport.y_224))))
+            $ToplevelVariableNoImport.let_234))
+      (define
+         (addInt32 $ToplevelVariableNoImport.int32#_235)
+         (->
+            (Any#)
+            (->
+               (Any#)
+               Any#))
+         (let
+            (($ToplevelVariableNoImport.let_254
+               (->
+                  (Any#)
+                  Any#)
+               (fun
+                  ($ToplevelVariableNoImport.int32#_236)
+                  (direct $ToplevelVariableNoImport.addInt32_curry_244 $ToplevelVariableNoImport.int32#_235 $ToplevelVariableNoImport.int32#_236))))
+            $ToplevelVariableNoImport.let_254))
+      (define
+         (addOne $ToplevelVariableNoImport.eta_257)
+         (->
+            (Any#)
+            Any#)
+         (= $ToplevelVariableNoImport.d_258
+            (= $ToplevelVariableNoImport.d_256
+               (= $ToplevelVariableNoImport.d_255
+                  (call addInt32 one)
+                  (cast
+                     (->
+                        (Any#)
+                        Any#)
+                     $ToplevelVariableNoImport.d_255))
+               $ToplevelVariableNoImport.d_256)
+            (call $ToplevelVariableNoImport.d_258 $ToplevelVariableNoImport.eta_257)))
+      (define
+         (main $ToplevelVariableNoImport.$__259)
+         (->
+            ((sum (con Tuple#)))
+            (sum (con Tuple#)))
+         (= $ToplevelVariableNoImport.d_269
+            (= $ToplevelVariableNoImport.d_267
+               (let
+                  (($ToplevelVariableNoImport.fun_266
+                     (->
+                        (Any#)
+                        (sum (con Tuple#)))
+                     (fun
+                        ($ToplevelVariableNoImport.nothing_260)
+                        (match
+                           (cast
+                              (sum (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing)
+                                 (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Just Any#))
+                              $ToplevelVariableNoImport.nothing_260)
+                           (unpack
+                              (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Nothing)
+                              ()
+                              (= $ToplevelVariableNoImport.d_262
+                                 (= $ToplevelVariableNoImport.d_261
+                                    (call String# "OK")
+                                    (cast Any# $ToplevelVariableNoImport.d_261))
+                                 (= $ToplevelVariableNoImport.d_263
+                                    (call printString $ToplevelVariableNoImport.d_262)
+                                    (cast
+                                       (sum (con Tuple#))
+                                       $ToplevelVariableNoImport.d_263))))
+                           (unpack
+                              (con test/testcases/malgo/ToplevelVariableNoImport.mlg.Just Any#)
+                              ($ToplevelVariableNoImport.p_264)
+                              (let
+                                 (($ToplevelVariableNoImport.let_265
+                                    (sum (con Tuple#))
+                                    (pack
+                                       (sum (con Tuple#))
+                                       (con Tuple#))))
+                                 $ToplevelVariableNoImport.let_265))))))
+                  $ToplevelVariableNoImport.fun_266)
+               (= $ToplevelVariableNoImport.d_268
+                  (call $ToplevelVariableNoImport.d_267 comp)
+                  (cast
+                     (sum (con Tuple#))
+                     $ToplevelVariableNoImport.d_268)))
+            (= $ToplevelVariableNoImport.d_276
+               (= $ToplevelVariableNoImport.d_272
+                  (= $ToplevelVariableNoImport.cast_270
+                     (cast Any# const)
+                     (= $ToplevelVariableNoImport.d_271
+                        (call constId $ToplevelVariableNoImport.cast_270)
+                        (cast
+                           (->
+                              (Any#)
+                              Any#)
+                           $ToplevelVariableNoImport.d_271)))
+                  (= $ToplevelVariableNoImport.d_274
+                     (= $ToplevelVariableNoImport.d_273
+                        (call addOne one)
+                        (cast Any# $ToplevelVariableNoImport.d_273))
+                     (= $ToplevelVariableNoImport.d_275
+                        (call $ToplevelVariableNoImport.d_272 $ToplevelVariableNoImport.d_274)
+                        (cast Any# $ToplevelVariableNoImport.d_275))))
+               (= $ToplevelVariableNoImport.d_277
+                  (call printInt32 $ToplevelVariableNoImport.d_276)
+                  (cast
+                     (sum (con Tuple#))
+                     $ToplevelVariableNoImport.d_277))))))
+   ((extern
+      malgo_add_int32_t
+      (->
+         (Int32# Int32#)
+         Int32#))
+      (extern
+         malgo_print_string
+         (->
+            (String#)
+            (sum (con Tuple#))))
+      (extern
+         malgo_int32_t_to_string
+         (->
+            (Int32#)
+            String#))))

@@ -1,0 +1,132 @@
+(()
+   ((define
+      (A)
+      (-> () Any#)
+      (let
+         (($TuplePattern.let_26
+            (sum (con test/testcases/malgo/TuplePattern.mlg.A)
+               (con test/testcases/malgo/TuplePattern.mlg.B)
+               (con test/testcases/malgo/TuplePattern.mlg.C))
+            (pack
+               (sum (con test/testcases/malgo/TuplePattern.mlg.A)
+                  (con test/testcases/malgo/TuplePattern.mlg.B)
+                  (con test/testcases/malgo/TuplePattern.mlg.C))
+               (con test/testcases/malgo/TuplePattern.mlg.A))))
+         (cast Any# $TuplePattern.let_26)))
+      (define
+         (B)
+         (-> () Any#)
+         (let
+            (($TuplePattern.let_27
+               (sum (con test/testcases/malgo/TuplePattern.mlg.A)
+                  (con test/testcases/malgo/TuplePattern.mlg.B)
+                  (con test/testcases/malgo/TuplePattern.mlg.C))
+               (pack
+                  (sum (con test/testcases/malgo/TuplePattern.mlg.A)
+                     (con test/testcases/malgo/TuplePattern.mlg.B)
+                     (con test/testcases/malgo/TuplePattern.mlg.C))
+                  (con test/testcases/malgo/TuplePattern.mlg.B))))
+            (cast Any# $TuplePattern.let_27)))
+      (define
+         (C)
+         (-> () Any#)
+         (let
+            (($TuplePattern.let_28
+               (sum (con test/testcases/malgo/TuplePattern.mlg.A)
+                  (con test/testcases/malgo/TuplePattern.mlg.B)
+                  (con test/testcases/malgo/TuplePattern.mlg.C))
+               (pack
+                  (sum (con test/testcases/malgo/TuplePattern.mlg.A)
+                     (con test/testcases/malgo/TuplePattern.mlg.B)
+                     (con test/testcases/malgo/TuplePattern.mlg.C))
+                  (con test/testcases/malgo/TuplePattern.mlg.C))))
+            (cast Any# $TuplePattern.let_28)))
+      (define
+         (main $TuplePattern.$__29)
+         (->
+            ((sum (con Tuple#)))
+            (sum (con Tuple#)))
+         (= $TuplePattern.d_36
+            (= $TuplePattern.d_33
+               (= $TuplePattern.d_30
+                  (direct A)
+                  (= $TuplePattern.d_31
+                     (direct B)
+                     (let
+                        (($TuplePattern.let_32
+                           (sum (con Tuple# Any# Any#))
+                           (pack
+                              (sum (con Tuple# Any# Any#))
+                              (con Tuple# Any# Any#)
+                              $TuplePattern.d_30
+                              $TuplePattern.d_31)))
+                        $TuplePattern.let_32)))
+               (= $TuplePattern.cast_34
+                  (cast Any# $TuplePattern.d_33)
+                  (= $TuplePattern.d_35
+                     (call |> $TuplePattern.cast_34)
+                     (cast
+                        (->
+                           ((->
+                              ((sum (con Tuple# Any# Any#)))
+                              (sum (con Tuple#))))
+                           (sum (con Tuple#)))
+                        $TuplePattern.d_35))))
+            (= $TuplePattern.d_46
+               (let
+                  (($TuplePattern.fun_45
+                     (->
+                        ((sum (con Tuple# Any# Any#)))
+                        (sum (con Tuple#)))
+                     (fun
+                        ($TuplePattern.tuple_37)
+                        (match
+                           $TuplePattern.tuple_37
+                           (unpack
+                              (con Tuple# Any# Any#)
+                              ($TuplePattern.p_38 $TuplePattern.p_39)
+                              (match
+                                 (cast
+                                    (sum (con test/testcases/malgo/TuplePattern.mlg.A)
+                                       (con test/testcases/malgo/TuplePattern.mlg.B)
+                                       (con test/testcases/malgo/TuplePattern.mlg.C))
+                                    $TuplePattern.p_38)
+                                 (unpack
+                                    (con test/testcases/malgo/TuplePattern.mlg.A)
+                                    ()
+                                    (= $TuplePattern.d_41
+                                       (= $TuplePattern.d_40
+                                          (call String# "A")
+                                          (cast Any# $TuplePattern.d_40))
+                                       (= $TuplePattern.d_42
+                                          (call printString $TuplePattern.d_41)
+                                          (cast
+                                             (sum (con Tuple#))
+                                             $TuplePattern.d_42))))
+                                 (unpack
+                                    (con test/testcases/malgo/TuplePattern.mlg.B)
+                                    ()
+                                    (let
+                                       (($TuplePattern.let_43
+                                          (sum (con Tuple#))
+                                          (pack
+                                             (sum (con Tuple#))
+                                             (con Tuple#))))
+                                       $TuplePattern.let_43))
+                                 (unpack
+                                    (con test/testcases/malgo/TuplePattern.mlg.C)
+                                    ()
+                                    (let
+                                       (($TuplePattern.let_44
+                                          (sum (con Tuple#))
+                                          (pack
+                                             (sum (con Tuple#))
+                                             (con Tuple#))))
+                                       $TuplePattern.let_44))))))))
+                  $TuplePattern.fun_45)
+               (= $TuplePattern.d_47
+                  (call $TuplePattern.d_36 $TuplePattern.d_46)
+                  (cast
+                     (sum (con Tuple#))
+                     $TuplePattern.d_47))))))
+   ())

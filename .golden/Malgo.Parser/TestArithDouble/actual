@@ -1,0 +1,1935 @@
+Module
+ { moduleName = Artifact
+  ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" )
+ , moduleDefinition = ParsedDefinitions
+  [ Import
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+     , sourceLine = Pos 1
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+     , sourceLine = Pos 2
+     , sourceColumn = Pos 1
+     }
+    }
+   )
+   ( Artifact
+    ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+   ) All
+  , Import
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+     , sourceLine = Pos 2
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+     , sourceLine = Pos 5
+     , sourceColumn = Pos 1
+     }
+    }
+   )
+   ( Artifact
+    ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+   ) All
+  , ScDef
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+     , sourceLine = Pos 5
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+     , sourceLine = Pos 7
+     , sourceColumn = Pos 1
+     }
+    }
+   ) "neg"
+   ( Fn
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+      , sourceLine = Pos 5
+      , sourceColumn = Pos 13
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+      , sourceLine = Pos 5
+      , sourceColumn = Pos 36
+      }
+     }
+    )
+    ( Clause
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+       , sourceLine = Pos 5
+       , sourceColumn = Pos 13
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+       , sourceLine = Pos 5
+       , sourceColumn = Pos 36
+       }
+      }
+     )
+     [ VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 5
+        , sourceColumn = Pos 13
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 5
+        , sourceColumn = Pos 15
+        }
+       }
+      ) "x"
+     ]
+     ( Seq
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 5
+        , sourceColumn = Pos 18
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 5
+        , sourceColumn = Pos 36
+        }
+       }
+      )
+      ( NoBind
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+         , sourceLine = Pos 5
+         , sourceColumn = Pos 18
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+         , sourceLine = Pos 5
+         , sourceColumn = Pos 36
+         }
+        }
+       )
+       ( Apply
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+          , sourceLine = Pos 5
+          , sourceColumn = Pos 18
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+          , sourceLine = Pos 5
+          , sourceColumn = Pos 36
+          }
+         }
+        )
+        ( Apply
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+           , sourceLine = Pos 5
+           , sourceColumn = Pos 18
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+           , sourceLine = Pos 5
+           , sourceColumn = Pos 36
+           }
+          }
+         )
+         ( Var
+          ( Qualified
+           { visibility = Implicit
+           , value = Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+             , sourceLine = Pos 5
+             , sourceColumn = Pos 18
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+             , sourceLine = Pos 5
+             , sourceColumn = Pos 29
+             }
+            }
+           }
+          ) "subDouble#"
+         )
+         ( Unboxed
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+            , sourceLine = Pos 5
+            , sourceColumn = Pos 29
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+            , sourceLine = Pos 5
+            , sourceColumn = Pos 34
+            }
+           }
+          )
+          ( Double 0.0 )
+         )
+        )
+        ( Var
+         ( Qualified
+          { visibility = Implicit
+          , value = Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+            , sourceLine = Pos 5
+            , sourceColumn = Pos 34
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+            , sourceLine = Pos 5
+            , sourceColumn = Pos 36
+            }
+           }
+          }
+         ) "x"
+        )
+       ) :| []
+      )
+     ) :| []
+    )
+   )
+  , Infix
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+     , sourceLine = Pos 7
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+     , sourceLine = Pos 8
+     , sourceColumn = Pos 1
+     }
+    }
+   ) LeftA 7 "*"
+  , ScDef
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+     , sourceLine = Pos 8
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+     , sourceLine = Pos 10
+     , sourceColumn = Pos 1
+     }
+    }
+   ) "*"
+   ( Fn
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+      , sourceLine = Pos 8
+      , sourceColumn = Pos 12
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+      , sourceLine = Pos 8
+      , sourceColumn = Pos 33
+      }
+     }
+    )
+    ( Clause
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+       , sourceLine = Pos 8
+       , sourceColumn = Pos 12
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+       , sourceLine = Pos 8
+       , sourceColumn = Pos 33
+       }
+      }
+     )
+     [ VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 8
+        , sourceColumn = Pos 12
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 8
+        , sourceColumn = Pos 14
+        }
+       }
+      ) "x"
+     , VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 8
+        , sourceColumn = Pos 14
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 8
+        , sourceColumn = Pos 16
+        }
+       }
+      ) "y"
+     ]
+     ( Seq
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 8
+        , sourceColumn = Pos 19
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 8
+        , sourceColumn = Pos 33
+        }
+       }
+      )
+      ( NoBind
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+         , sourceLine = Pos 8
+         , sourceColumn = Pos 19
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+         , sourceLine = Pos 8
+         , sourceColumn = Pos 33
+         }
+        }
+       )
+       ( Apply
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+          , sourceLine = Pos 8
+          , sourceColumn = Pos 19
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+          , sourceLine = Pos 8
+          , sourceColumn = Pos 33
+          }
+         }
+        )
+        ( Apply
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+           , sourceLine = Pos 8
+           , sourceColumn = Pos 19
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+           , sourceLine = Pos 8
+           , sourceColumn = Pos 33
+           }
+          }
+         )
+         ( Var
+          ( Qualified
+           { visibility = Implicit
+           , value = Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+             , sourceLine = Pos 8
+             , sourceColumn = Pos 19
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+             , sourceLine = Pos 8
+             , sourceColumn = Pos 30
+             }
+            }
+           }
+          ) "mulDouble#"
+         )
+         ( Var
+          ( Qualified
+           { visibility = Implicit
+           , value = Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+             , sourceLine = Pos 8
+             , sourceColumn = Pos 30
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+             , sourceLine = Pos 8
+             , sourceColumn = Pos 32
+             }
+            }
+           }
+          ) "x"
+         )
+        )
+        ( Var
+         ( Qualified
+          { visibility = Implicit
+          , value = Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+            , sourceLine = Pos 8
+            , sourceColumn = Pos 32
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+            , sourceLine = Pos 8
+            , sourceColumn = Pos 33
+            }
+           }
+          }
+         ) "y"
+        )
+       ) :| []
+      )
+     ) :| []
+    )
+   )
+  , ScDef
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+     , sourceLine = Pos 10
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+     , sourceLine = Pos 12
+     , sourceColumn = Pos 1
+     }
+    }
+   ) "mul"
+   ( Fn
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+      , sourceLine = Pos 10
+      , sourceColumn = Pos 12
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+      , sourceLine = Pos 10
+      , sourceColumn = Pos 33
+      }
+     }
+    )
+    ( Clause
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+       , sourceLine = Pos 10
+       , sourceColumn = Pos 12
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+       , sourceLine = Pos 10
+       , sourceColumn = Pos 33
+       }
+      }
+     )
+     [ VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 10
+        , sourceColumn = Pos 12
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 10
+        , sourceColumn = Pos 14
+        }
+       }
+      ) "x"
+     , VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 10
+        , sourceColumn = Pos 14
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 10
+        , sourceColumn = Pos 16
+        }
+       }
+      ) "y"
+     ]
+     ( Seq
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 10
+        , sourceColumn = Pos 19
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 10
+        , sourceColumn = Pos 33
+        }
+       }
+      )
+      ( NoBind
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+         , sourceLine = Pos 10
+         , sourceColumn = Pos 19
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+         , sourceLine = Pos 10
+         , sourceColumn = Pos 33
+         }
+        }
+       )
+       ( Apply
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+          , sourceLine = Pos 10
+          , sourceColumn = Pos 19
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+          , sourceLine = Pos 10
+          , sourceColumn = Pos 33
+          }
+         }
+        )
+        ( Apply
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+           , sourceLine = Pos 10
+           , sourceColumn = Pos 19
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+           , sourceLine = Pos 10
+           , sourceColumn = Pos 33
+           }
+          }
+         )
+         ( Var
+          ( Qualified
+           { visibility = Implicit
+           , value = Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+             , sourceLine = Pos 10
+             , sourceColumn = Pos 19
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+             , sourceLine = Pos 10
+             , sourceColumn = Pos 30
+             }
+            }
+           }
+          ) "mulDouble#"
+         )
+         ( Var
+          ( Qualified
+           { visibility = Implicit
+           , value = Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+             , sourceLine = Pos 10
+             , sourceColumn = Pos 30
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+             , sourceLine = Pos 10
+             , sourceColumn = Pos 32
+             }
+            }
+           }
+          ) "x"
+         )
+        )
+        ( Var
+         ( Qualified
+          { visibility = Implicit
+          , value = Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+            , sourceLine = Pos 10
+            , sourceColumn = Pos 32
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+            , sourceLine = Pos 10
+            , sourceColumn = Pos 33
+            }
+           }
+          }
+         ) "y"
+        )
+       ) :| []
+      )
+     ) :| []
+    )
+   )
+  , Infix
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+     , sourceLine = Pos 12
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+     , sourceLine = Pos 13
+     , sourceColumn = Pos 1
+     }
+    }
+   ) LeftA 6 "+"
+  , ScDef
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+     , sourceLine = Pos 13
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+     , sourceLine = Pos 15
+     , sourceColumn = Pos 1
+     }
+    }
+   ) "+"
+   ( Fn
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+      , sourceLine = Pos 13
+      , sourceColumn = Pos 12
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+      , sourceLine = Pos 13
+      , sourceColumn = Pos 33
+      }
+     }
+    )
+    ( Clause
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+       , sourceLine = Pos 13
+       , sourceColumn = Pos 12
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+       , sourceLine = Pos 13
+       , sourceColumn = Pos 33
+       }
+      }
+     )
+     [ VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 13
+        , sourceColumn = Pos 12
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 13
+        , sourceColumn = Pos 14
+        }
+       }
+      ) "x"
+     , VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 13
+        , sourceColumn = Pos 14
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 13
+        , sourceColumn = Pos 16
+        }
+       }
+      ) "y"
+     ]
+     ( Seq
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 13
+        , sourceColumn = Pos 19
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 13
+        , sourceColumn = Pos 33
+        }
+       }
+      )
+      ( NoBind
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+         , sourceLine = Pos 13
+         , sourceColumn = Pos 19
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+         , sourceLine = Pos 13
+         , sourceColumn = Pos 33
+         }
+        }
+       )
+       ( Apply
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+          , sourceLine = Pos 13
+          , sourceColumn = Pos 19
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+          , sourceLine = Pos 13
+          , sourceColumn = Pos 33
+          }
+         }
+        )
+        ( Apply
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+           , sourceLine = Pos 13
+           , sourceColumn = Pos 19
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+           , sourceLine = Pos 13
+           , sourceColumn = Pos 33
+           }
+          }
+         )
+         ( Var
+          ( Qualified
+           { visibility = Implicit
+           , value = Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+             , sourceLine = Pos 13
+             , sourceColumn = Pos 19
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+             , sourceLine = Pos 13
+             , sourceColumn = Pos 30
+             }
+            }
+           }
+          ) "addDouble#"
+         )
+         ( Var
+          ( Qualified
+           { visibility = Implicit
+           , value = Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+             , sourceLine = Pos 13
+             , sourceColumn = Pos 30
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+             , sourceLine = Pos 13
+             , sourceColumn = Pos 32
+             }
+            }
+           }
+          ) "x"
+         )
+        )
+        ( Var
+         ( Qualified
+          { visibility = Implicit
+          , value = Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+            , sourceLine = Pos 13
+            , sourceColumn = Pos 32
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+            , sourceLine = Pos 13
+            , sourceColumn = Pos 33
+            }
+           }
+          }
+         ) "y"
+        )
+       ) :| []
+      )
+     ) :| []
+    )
+   )
+  , ScDef
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+     , sourceLine = Pos 15
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+     , sourceLine = Pos 17
+     , sourceColumn = Pos 1
+     }
+    }
+   ) "add"
+   ( Fn
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+      , sourceLine = Pos 15
+      , sourceColumn = Pos 12
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+      , sourceLine = Pos 15
+      , sourceColumn = Pos 33
+      }
+     }
+    )
+    ( Clause
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+       , sourceLine = Pos 15
+       , sourceColumn = Pos 12
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+       , sourceLine = Pos 15
+       , sourceColumn = Pos 33
+       }
+      }
+     )
+     [ VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 15
+        , sourceColumn = Pos 12
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 15
+        , sourceColumn = Pos 14
+        }
+       }
+      ) "x"
+     , VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 15
+        , sourceColumn = Pos 14
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 15
+        , sourceColumn = Pos 16
+        }
+       }
+      ) "y"
+     ]
+     ( Seq
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 15
+        , sourceColumn = Pos 19
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 15
+        , sourceColumn = Pos 33
+        }
+       }
+      )
+      ( NoBind
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+         , sourceLine = Pos 15
+         , sourceColumn = Pos 19
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+         , sourceLine = Pos 15
+         , sourceColumn = Pos 33
+         }
+        }
+       )
+       ( Apply
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+          , sourceLine = Pos 15
+          , sourceColumn = Pos 19
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+          , sourceLine = Pos 15
+          , sourceColumn = Pos 33
+          }
+         }
+        )
+        ( Apply
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+           , sourceLine = Pos 15
+           , sourceColumn = Pos 19
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+           , sourceLine = Pos 15
+           , sourceColumn = Pos 33
+           }
+          }
+         )
+         ( Var
+          ( Qualified
+           { visibility = Implicit
+           , value = Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+             , sourceLine = Pos 15
+             , sourceColumn = Pos 19
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+             , sourceLine = Pos 15
+             , sourceColumn = Pos 30
+             }
+            }
+           }
+          ) "addDouble#"
+         )
+         ( Var
+          ( Qualified
+           { visibility = Implicit
+           , value = Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+             , sourceLine = Pos 15
+             , sourceColumn = Pos 30
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+             , sourceLine = Pos 15
+             , sourceColumn = Pos 32
+             }
+            }
+           }
+          ) "x"
+         )
+        )
+        ( Var
+         ( Qualified
+          { visibility = Implicit
+          , value = Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+            , sourceLine = Pos 15
+            , sourceColumn = Pos 32
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+            , sourceLine = Pos 15
+            , sourceColumn = Pos 33
+            }
+           }
+          }
+         ) "y"
+        )
+       ) :| []
+      )
+     ) :| []
+    )
+   )
+  , ScDef
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+     , sourceLine = Pos 17
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+     , sourceLine = Pos 19
+     , sourceColumn = Pos 1
+     }
+    }
+   ) "show"
+   ( Fn
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+      , sourceLine = Pos 17
+      , sourceColumn = Pos 13
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+      , sourceLine = Pos 17
+      , sourceColumn = Pos 45
+      }
+     }
+    )
+    ( Clause
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+       , sourceLine = Pos 17
+       , sourceColumn = Pos 13
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+       , sourceLine = Pos 17
+       , sourceColumn = Pos 45
+       }
+      }
+     )
+     [ VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 17
+        , sourceColumn = Pos 13
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 17
+        , sourceColumn = Pos 15
+        }
+       }
+      ) "x"
+     ]
+     ( Seq
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 17
+        , sourceColumn = Pos 18
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 17
+        , sourceColumn = Pos 45
+        }
+       }
+      )
+      ( NoBind
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+         , sourceLine = Pos 17
+         , sourceColumn = Pos 18
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+         , sourceLine = Pos 17
+         , sourceColumn = Pos 45
+         }
+        }
+       )
+       ( Apply
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+          , sourceLine = Pos 17
+          , sourceColumn = Pos 18
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+          , sourceLine = Pos 17
+          , sourceColumn = Pos 45
+          }
+         }
+        )
+        ( Var
+         ( Qualified
+          { visibility = Implicit
+          , value = Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+            , sourceLine = Pos 17
+            , sourceColumn = Pos 18
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+            , sourceLine = Pos 17
+            , sourceColumn = Pos 26
+            }
+           }
+          }
+         ) "String#"
+        )
+        ( Seq
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+           , sourceLine = Pos 17
+           , sourceColumn = Pos 26
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+           , sourceLine = Pos 17
+           , sourceColumn = Pos 45
+           }
+          }
+         )
+         ( NoBind
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+            , sourceLine = Pos 17
+            , sourceColumn = Pos 27
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+            , sourceLine = Pos 17
+            , sourceColumn = Pos 44
+            }
+           }
+          )
+          ( Apply
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+             , sourceLine = Pos 17
+             , sourceColumn = Pos 27
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+             , sourceLine = Pos 17
+             , sourceColumn = Pos 44
+             }
+            }
+           )
+           ( Var
+            ( Qualified
+             { visibility = Implicit
+             , value = Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+               , sourceLine = Pos 17
+               , sourceColumn = Pos 27
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+               , sourceLine = Pos 17
+               , sourceColumn = Pos 43
+               }
+              }
+             }
+            ) "toStringDouble#"
+           )
+           ( Var
+            ( Qualified
+             { visibility = Implicit
+             , value = Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+               , sourceLine = Pos 17
+               , sourceColumn = Pos 43
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+               , sourceLine = Pos 17
+               , sourceColumn = Pos 44
+               }
+              }
+             }
+            ) "x"
+           )
+          ) :| []
+         )
+        )
+       ) :| []
+      )
+     ) :| []
+    )
+   )
+  , ScDef
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+     , sourceLine = Pos 19
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+     , sourceLine = Pos 21
+     , sourceColumn = Pos 1
+     }
+    }
+   ) "traceShowId"
+   ( Fn
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+      , sourceLine = Pos 19
+      , sourceColumn = Pos 21
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+      , sourceLine = Pos 19
+      , sourceColumn = Pos 47
+      }
+     }
+    )
+    ( Clause
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+       , sourceLine = Pos 19
+       , sourceColumn = Pos 21
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+       , sourceLine = Pos 19
+       , sourceColumn = Pos 47
+       }
+      }
+     )
+     [ VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 19
+        , sourceColumn = Pos 21
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 19
+        , sourceColumn = Pos 23
+        }
+       }
+      ) "x"
+     ]
+     ( Seq
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 19
+        , sourceColumn = Pos 26
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 19
+        , sourceColumn = Pos 47
+        }
+       }
+      )
+      ( NoBind
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+         , sourceLine = Pos 19
+         , sourceColumn = Pos 26
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+         , sourceLine = Pos 19
+         , sourceColumn = Pos 43
+         }
+        }
+       )
+       ( Apply
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+          , sourceLine = Pos 19
+          , sourceColumn = Pos 26
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+          , sourceLine = Pos 19
+          , sourceColumn = Pos 43
+          }
+         }
+        )
+        ( Var
+         ( Qualified
+          { visibility = Implicit
+          , value = Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+            , sourceLine = Pos 19
+            , sourceColumn = Pos 26
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+            , sourceLine = Pos 19
+            , sourceColumn = Pos 35
+            }
+           }
+          }
+         ) "putStrLn"
+        )
+        ( Seq
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+           , sourceLine = Pos 19
+           , sourceColumn = Pos 35
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+           , sourceLine = Pos 19
+           , sourceColumn = Pos 43
+           }
+          }
+         )
+         ( NoBind
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+            , sourceLine = Pos 19
+            , sourceColumn = Pos 36
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+            , sourceLine = Pos 19
+            , sourceColumn = Pos 42
+            }
+           }
+          )
+          ( Apply
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+             , sourceLine = Pos 19
+             , sourceColumn = Pos 36
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+             , sourceLine = Pos 19
+             , sourceColumn = Pos 42
+             }
+            }
+           )
+           ( Var
+            ( Qualified
+             { visibility = Implicit
+             , value = Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+               , sourceLine = Pos 19
+               , sourceColumn = Pos 36
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+               , sourceLine = Pos 19
+               , sourceColumn = Pos 41
+               }
+              }
+             }
+            ) "show"
+           )
+           ( Var
+            ( Qualified
+             { visibility = Implicit
+             , value = Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+               , sourceLine = Pos 19
+               , sourceColumn = Pos 41
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+               , sourceLine = Pos 19
+               , sourceColumn = Pos 42
+               }
+              }
+             }
+            ) "x"
+           )
+          ) :| []
+         )
+        )
+       ) :|
+       [ NoBind
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+          , sourceLine = Pos 19
+          , sourceColumn = Pos 45
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+          , sourceLine = Pos 19
+          , sourceColumn = Pos 47
+          }
+         }
+        )
+        ( Var
+         ( Qualified
+          { visibility = Implicit
+          , value = Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+            , sourceLine = Pos 19
+            , sourceColumn = Pos 45
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+            , sourceLine = Pos 19
+            , sourceColumn = Pos 47
+            }
+           }
+          }
+         ) "x"
+        )
+       ]
+      )
+     ) :| []
+    )
+   )
+  , ScSig
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+     , sourceLine = Pos 21
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+     , sourceLine = Pos 22
+     , sourceColumn = Pos 1
+     }
+    }
+   ) "f"
+   ( TyArr
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+      , sourceLine = Pos 21
+      , sourceColumn = Pos 17
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+      , sourceLine = Pos 21
+      , sourceColumn = Pos 20
+      }
+     }
+    )
+    ( TyCon
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+       , sourceLine = Pos 21
+       , sourceColumn = Pos 9
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+       , sourceLine = Pos 21
+       , sourceColumn = Pos 17
+       }
+      }
+     ) "Double#"
+    )
+    ( TyCon
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+       , sourceLine = Pos 21
+       , sourceColumn = Pos 20
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+       , sourceLine = Pos 22
+       , sourceColumn = Pos 1
+       }
+      }
+     ) "Double#"
+    )
+   )
+  , ScDef
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+     , sourceLine = Pos 22
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+     , sourceLine = Pos 24
+     , sourceColumn = Pos 1
+     }
+    }
+   ) "f"
+   ( Fn
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+      , sourceLine = Pos 22
+      , sourceColumn = Pos 10
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+      , sourceLine = Pos 22
+      , sourceColumn = Pos 29
+      }
+     }
+    )
+    ( Clause
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+       , sourceLine = Pos 22
+       , sourceColumn = Pos 10
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+       , sourceLine = Pos 22
+       , sourceColumn = Pos 29
+       }
+      }
+     )
+     [ VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 22
+        , sourceColumn = Pos 10
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 22
+        , sourceColumn = Pos 12
+        }
+       }
+      ) "x"
+     ]
+     ( Seq
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 22
+        , sourceColumn = Pos 15
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 22
+        , sourceColumn = Pos 29
+        }
+       }
+      )
+      ( NoBind
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+         , sourceLine = Pos 22
+         , sourceColumn = Pos 15
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+         , sourceLine = Pos 22
+         , sourceColumn = Pos 29
+         }
+        }
+       )
+       ( OpApp
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+          , sourceLine = Pos 22
+          , sourceColumn = Pos 26
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+          , sourceLine = Pos 22
+          , sourceColumn = Pos 28
+          }
+         }
+        ) "*"
+        ( Seq
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+           , sourceLine = Pos 22
+           , sourceColumn = Pos 15
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+           , sourceLine = Pos 22
+           , sourceColumn = Pos 26
+           }
+          }
+         )
+         ( NoBind
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+            , sourceLine = Pos 22
+            , sourceColumn = Pos 16
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+            , sourceLine = Pos 22
+            , sourceColumn = Pos 24
+            }
+           }
+          )
+          ( OpApp
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+             , sourceLine = Pos 22
+             , sourceColumn = Pos 18
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+             , sourceLine = Pos 22
+             , sourceColumn = Pos 20
+             }
+            }
+           ) "+"
+           ( Var
+            ( Qualified
+             { visibility = Implicit
+             , value = Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+               , sourceLine = Pos 22
+               , sourceColumn = Pos 16
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+               , sourceLine = Pos 22
+               , sourceColumn = Pos 18
+               }
+              }
+             }
+            ) "x"
+           )
+           ( Unboxed
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+              , sourceLine = Pos 22
+              , sourceColumn = Pos 20
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+              , sourceLine = Pos 22
+              , sourceColumn = Pos 24
+              }
+             }
+            )
+            ( Double 0.0 )
+           )
+          ) :| []
+         )
+        )
+        ( Var
+         ( Qualified
+          { visibility = Implicit
+          , value = Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+            , sourceLine = Pos 22
+            , sourceColumn = Pos 28
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+            , sourceLine = Pos 22
+            , sourceColumn = Pos 29
+            }
+           }
+          }
+         ) "x"
+        )
+       ) :| []
+      )
+     ) :| []
+    )
+   )
+  , ScDef
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+     , sourceLine = Pos 24
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+     , sourceLine = Pos 26
+     , sourceColumn = Pos 2
+     }
+    }
+   ) "main"
+   ( Fn
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+      , sourceLine = Pos 25
+      , sourceColumn = Pos 3
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+      , sourceLine = Pos 26
+      , sourceColumn = Pos 1
+      }
+     }
+    )
+    ( Clause
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+       , sourceLine = Pos 25
+       , sourceColumn = Pos 3
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+       , sourceLine = Pos 26
+       , sourceColumn = Pos 1
+       }
+      }
+     ) []
+     ( Seq
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 25
+        , sourceColumn = Pos 3
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 26
+        , sourceColumn = Pos 1
+        }
+       }
+      )
+      ( NoBind
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+         , sourceLine = Pos 25
+         , sourceColumn = Pos 3
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+         , sourceLine = Pos 26
+         , sourceColumn = Pos 1
+         }
+        }
+       )
+       ( Apply
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+          , sourceLine = Pos 25
+          , sourceColumn = Pos 3
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+          , sourceLine = Pos 26
+          , sourceColumn = Pos 1
+          }
+         }
+        )
+        ( Var
+         ( Qualified
+          { visibility = Implicit
+          , value = Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+            , sourceLine = Pos 25
+            , sourceColumn = Pos 3
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+            , sourceLine = Pos 25
+            , sourceColumn = Pos 12
+            }
+           }
+          }
+         ) "putStrLn"
+        )
+        ( Seq
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+           , sourceLine = Pos 25
+           , sourceColumn = Pos 12
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+           , sourceLine = Pos 26
+           , sourceColumn = Pos 1
+           }
+          }
+         )
+         ( NoBind
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+            , sourceLine = Pos 25
+            , sourceColumn = Pos 13
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+            , sourceLine = Pos 25
+            , sourceColumn = Pos 26
+            }
+           }
+          )
+          ( Apply
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+             , sourceLine = Pos 25
+             , sourceColumn = Pos 13
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+             , sourceLine = Pos 25
+             , sourceColumn = Pos 26
+             }
+            }
+           )
+           ( Var
+            ( Qualified
+             { visibility = Implicit
+             , value = Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+               , sourceLine = Pos 25
+               , sourceColumn = Pos 13
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+               , sourceLine = Pos 25
+               , sourceColumn = Pos 18
+               }
+              }
+             }
+            ) "show"
+           )
+           ( Seq
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+              , sourceLine = Pos 25
+              , sourceColumn = Pos 18
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+              , sourceLine = Pos 25
+              , sourceColumn = Pos 26
+              }
+             }
+            )
+            ( NoBind
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+               , sourceLine = Pos 25
+               , sourceColumn = Pos 19
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+               , sourceLine = Pos 25
+               , sourceColumn = Pos 25
+               }
+              }
+             )
+             ( Apply
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+                , sourceLine = Pos 25
+                , sourceColumn = Pos 19
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+                , sourceLine = Pos 25
+                , sourceColumn = Pos 25
+                }
+               }
+              )
+              ( Var
+               ( Qualified
+                { visibility = Implicit
+                , value = Range
+                 { _start = SourcePos
+                  { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+                  , sourceLine = Pos 25
+                  , sourceColumn = Pos 19
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+                  , sourceLine = Pos 25
+                  , sourceColumn = Pos 21
+                  }
+                 }
+                }
+               ) "f"
+              )
+              ( Unboxed
+               ( Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+                 , sourceLine = Pos 25
+                 , sourceColumn = Pos 21
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+                 , sourceLine = Pos 25
+                 , sourceColumn = Pos 25
+                 }
+                }
+               )
+               ( Double 0.5 )
+              )
+             ) :| []
+            )
+           )
+          ) :| []
+         )
+        )
+       ) :| []
+      )
+     ) :| []
+    )
+   )
+  ]
+ }

@@ -1,0 +1,1650 @@
+Module
+ { moduleName = Artifact
+  ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+ , moduleDefinition = BindGroup
+  { _scDefs =
+   [
+    [
+     ( Typed
+      { annotated = TyArr
+       ( TyTuple 0 )
+       ( TyTuple 0 )
+      , value = Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+        , sourceLine = Pos 14
+        , sourceColumn = Pos 1
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+        , sourceLine = Pos 21
+        , sourceColumn = Pos 2
+        }
+       }
+      }
+     , Id
+      { name = "main"
+      , moduleName = Artifact
+       ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+      , sort = External
+      }
+     , Fn
+      ( Typed
+       { annotated = TyArr
+        ( TyTuple 0 )
+        ( TyTuple 0 )
+       , value = Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+         , sourceLine = Pos 15
+         , sourceColumn = Pos 3
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+         , sourceLine = Pos 21
+         , sourceColumn = Pos 1
+         }
+        }
+       }
+      )
+      ( Clause
+       ( Typed
+        { annotated = TyArr
+         ( TyTuple 0 )
+         ( TyTuple 0 )
+        , value = Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+          , sourceLine = Pos 15
+          , sourceColumn = Pos 3
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+          , sourceLine = Pos 21
+          , sourceColumn = Pos 1
+          }
+         }
+        }
+       )
+       [ VarP
+        ( Typed
+         { annotated = TyTuple 0
+         , value = Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+           , sourceLine = Pos 15
+           , sourceColumn = Pos 3
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+           , sourceLine = Pos 21
+           , sourceColumn = Pos 1
+           }
+          }
+         }
+        )
+        ( Id
+         { name = "$_"
+         , moduleName = Artifact
+          ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+         , sort = Internal 29
+         }
+        )
+       ]
+       ( Seq
+        ( Typed
+         { annotated = TyTuple 0
+         , value = Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+           , sourceLine = Pos 15
+           , sourceColumn = Pos 3
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+           , sourceLine = Pos 21
+           , sourceColumn = Pos 1
+           }
+          }
+         }
+        )
+        ( NoBind
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+           , sourceLine = Pos 15
+           , sourceColumn = Pos 3
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+           , sourceLine = Pos 21
+           , sourceColumn = Pos 1
+           }
+          }
+         )
+         ( Apply
+          ( Typed
+           { annotated = TyTuple 0
+           , value = Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+             , sourceLine = Pos 15
+             , sourceColumn = Pos 3
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+             , sourceLine = Pos 21
+             , sourceColumn = Pos 1
+             }
+            }
+           }
+          )
+          ( Fn
+           ( Typed
+            { annotated = TyArr
+             ( TyCon
+              ( Id
+               { name = "Bool"
+               , moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+               , sort = External
+               }
+              )
+             )
+             ( TyTuple 0 )
+            , value = Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+              , sourceLine = Pos 15
+              , sourceColumn = Pos 5
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+              , sourceLine = Pos 16
+              , sourceColumn = Pos 36
+              }
+             }
+            }
+           )
+           ( Clause
+            ( Typed
+             { annotated = TyArr
+              ( TyCon
+               ( Id
+                { name = "Bool"
+                , moduleName = Artifact
+                 ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                , sort = External
+                }
+               )
+              )
+              ( TyTuple 0 )
+             , value = Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+               , sourceLine = Pos 15
+               , sourceColumn = Pos 5
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+               , sourceLine = Pos 15
+               , sourceColumn = Pos 37
+               }
+              }
+             }
+            )
+            [ ConP
+             ( Typed
+              { annotated = TyCon
+               ( Id
+                { name = "Bool"
+                , moduleName = Artifact
+                 ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                , sort = External
+                }
+               )
+              , value = Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                , sourceLine = Pos 15
+                , sourceColumn = Pos 5
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                , sourceLine = Pos 15
+                , sourceColumn = Pos 10
+                }
+               }
+              }
+             )
+             ( Id
+              { name = "True"
+              , moduleName = Artifact
+               ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+              , sort = External
+              }
+             ) []
+            ]
+            ( Seq
+             ( Typed
+              { annotated = TyTuple 0
+              , value = Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                , sourceLine = Pos 15
+                , sourceColumn = Pos 13
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                , sourceLine = Pos 15
+                , sourceColumn = Pos 37
+                }
+               }
+              }
+             )
+             ( NoBind
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                , sourceLine = Pos 15
+                , sourceColumn = Pos 13
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                , sourceLine = Pos 15
+                , sourceColumn = Pos 37
+                }
+               }
+              )
+              ( Apply
+               ( Typed
+                { annotated = TyTuple 0
+                , value = Range
+                 { _start = SourcePos
+                  { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                  , sourceLine = Pos 15
+                  , sourceColumn = Pos 13
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                  , sourceLine = Pos 15
+                  , sourceColumn = Pos 37
+                  }
+                 }
+                }
+               )
+               ( Var
+                ( Typed
+                 { annotated = TyArr ( TyPrim StringT )
+                  ( TyTuple 0 )
+                 , value = Range
+                  { _start = SourcePos
+                   { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                   , sourceLine = Pos 15
+                   , sourceColumn = Pos 13
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                   , sourceLine = Pos 15
+                   , sourceColumn = Pos 32
+                   }
+                  }
+                 }
+                )
+                ( Id
+                 { name = "malgo_print_string"
+                 , moduleName = Artifact
+                  ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                 , sort = External
+                 }
+                )
+               )
+               ( Unboxed
+                ( Typed
+                 { annotated = TyPrim StringT
+                 , value = Range
+                  { _start = SourcePos
+                   { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                   , sourceLine = Pos 15
+                   , sourceColumn = Pos 32
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                   , sourceLine = Pos 15
+                   , sourceColumn = Pos 37
+                   }
+                  }
+                 }
+                )
+                ( String "OK" )
+               )
+              ) :| []
+             )
+            ) :|
+            [ Clause
+             ( Typed
+              { annotated = TyArr
+               ( TyCon
+                ( Id
+                 { name = "Bool"
+                 , moduleName = Artifact
+                  ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                 , sort = External
+                 }
+                )
+               )
+               ( TyTuple 0 )
+              , value = Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                , sourceLine = Pos 16
+                , sourceColumn = Pos 5
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                , sourceLine = Pos 16
+                , sourceColumn = Pos 36
+                }
+               }
+              }
+             )
+             [ ConP
+              ( Typed
+               { annotated = TyCon
+                ( Id
+                 { name = "Bool"
+                 , moduleName = Artifact
+                  ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                 , sort = External
+                 }
+                )
+               , value = Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                 , sourceLine = Pos 16
+                 , sourceColumn = Pos 5
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                 , sourceLine = Pos 16
+                 , sourceColumn = Pos 11
+                 }
+                }
+               }
+              )
+              ( Id
+               { name = "False"
+               , moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+               , sort = External
+               }
+              ) []
+             ]
+             ( Seq
+              ( Typed
+               { annotated = TyTuple 0
+               , value = Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                 , sourceLine = Pos 16
+                 , sourceColumn = Pos 14
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                 , sourceLine = Pos 16
+                 , sourceColumn = Pos 36
+                 }
+                }
+               }
+              )
+              ( NoBind
+               ( Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                 , sourceLine = Pos 16
+                 , sourceColumn = Pos 14
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                 , sourceLine = Pos 16
+                 , sourceColumn = Pos 36
+                 }
+                }
+               )
+               ( Apply
+                ( Typed
+                 { annotated = TyTuple 0
+                 , value = Range
+                  { _start = SourcePos
+                   { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                   , sourceLine = Pos 16
+                   , sourceColumn = Pos 14
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                   , sourceLine = Pos 16
+                   , sourceColumn = Pos 36
+                   }
+                  }
+                 }
+                )
+                ( Var
+                 ( Typed
+                  { annotated = TyArr
+                   ( TyTuple 0 )
+                   ( TyTuple 0 )
+                  , value = Range
+                   { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                    , sourceLine = Pos 16
+                    , sourceColumn = Pos 14
+                    }
+                   , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                    , sourceLine = Pos 16
+                    , sourceColumn = Pos 33
+                    }
+                   }
+                  }
+                 )
+                 ( Id
+                  { name = "malgo_exit_failure"
+                  , moduleName = Artifact
+                   ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                  , sort = External
+                  }
+                 )
+                )
+                ( Tuple
+                 ( Typed
+                  { annotated = TyTuple 0
+                  , value = Range
+                   { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                    , sourceLine = Pos 16
+                    , sourceColumn = Pos 33
+                    }
+                   , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                    , sourceLine = Pos 16
+                    , sourceColumn = Pos 36
+                    }
+                   }
+                  }
+                 ) []
+                )
+               ) :| []
+              )
+             )
+            ]
+           )
+          )
+          ( Seq
+           ( Typed
+            { annotated = TyCon
+             ( Id
+              { name = "Bool"
+              , moduleName = Artifact
+               ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+              , sort = External
+              }
+             )
+            , value = Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+              , sourceLine = Pos 17
+              , sourceColumn = Pos 5
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+              , sourceLine = Pos 21
+              , sourceColumn = Pos 1
+              }
+             }
+            }
+           )
+           ( NoBind
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+              , sourceLine = Pos 17
+              , sourceColumn = Pos 6
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+              , sourceLine = Pos 20
+              , sourceColumn = Pos 32
+              }
+             }
+            )
+            ( Apply
+             ( Typed
+              { annotated = TyCon
+               ( Id
+                { name = "Bool"
+                , moduleName = Artifact
+                 ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                , sort = External
+                }
+               )
+              , value = Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                , sourceLine = Pos 17
+                , sourceColumn = Pos 6
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                , sourceLine = Pos 20
+                , sourceColumn = Pos 32
+                }
+               }
+              }
+             )
+             ( Fn
+              ( Typed
+               { annotated = TyArr
+                ( TyCon
+                 ( Id
+                  { name = "Bool1"
+                  , moduleName = Artifact
+                   ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                  , sort = External
+                  }
+                 )
+                )
+                ( TyCon
+                 ( Id
+                  { name = "Bool"
+                  , moduleName = Artifact
+                   ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                  , sort = External
+                  }
+                 )
+                )
+               , value = Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                 , sourceLine = Pos 17
+                 , sourceColumn = Pos 8
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                 , sourceLine = Pos 18
+                 , sourceColumn = Pos 22
+                 }
+                }
+               }
+              )
+              ( Clause
+               ( Typed
+                { annotated = TyArr
+                 ( TyCon
+                  ( Id
+                   { name = "Bool1"
+                   , moduleName = Artifact
+                    ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                   , sort = External
+                   }
+                  )
+                 )
+                 ( TyCon
+                  ( Id
+                   { name = "Bool"
+                   , moduleName = Artifact
+                    ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                   , sort = External
+                   }
+                  )
+                 )
+                , value = Range
+                 { _start = SourcePos
+                  { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                  , sourceLine = Pos 17
+                  , sourceColumn = Pos 8
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                  , sourceLine = Pos 17
+                  , sourceColumn = Pos 22
+                  }
+                 }
+                }
+               )
+               [ ConP
+                ( Typed
+                 { annotated = TyCon
+                  ( Id
+                   { name = "Bool1"
+                   , moduleName = Artifact
+                    ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                   , sort = External
+                   }
+                  )
+                 , value = Range
+                  { _start = SourcePos
+                   { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                   , sourceLine = Pos 17
+                   , sourceColumn = Pos 8
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                   , sourceLine = Pos 17
+                   , sourceColumn = Pos 14
+                   }
+                  }
+                 }
+                )
+                ( Id
+                 { name = "True1"
+                 , moduleName = Artifact
+                  ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                 , sort = External
+                 }
+                ) []
+               ]
+               ( Seq
+                ( Typed
+                 { annotated = TyCon
+                  ( Id
+                   { name = "Bool"
+                   , moduleName = Artifact
+                    ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                   , sort = External
+                   }
+                  )
+                 , value = Range
+                  { _start = SourcePos
+                   { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                   , sourceLine = Pos 17
+                   , sourceColumn = Pos 17
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                   , sourceLine = Pos 17
+                   , sourceColumn = Pos 22
+                   }
+                  }
+                 }
+                )
+                ( NoBind
+                 ( Range
+                  { _start = SourcePos
+                   { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                   , sourceLine = Pos 17
+                   , sourceColumn = Pos 17
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                   , sourceLine = Pos 17
+                   , sourceColumn = Pos 22
+                   }
+                  }
+                 )
+                 ( Var
+                  ( Typed
+                   { annotated = TyCon
+                    ( Id
+                     { name = "Bool"
+                     , moduleName = Artifact
+                      ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                     , sort = External
+                     }
+                    )
+                   , value = Range
+                    { _start = SourcePos
+                     { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                     , sourceLine = Pos 17
+                     , sourceColumn = Pos 17
+                     }
+                    , _end = SourcePos
+                     { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                     , sourceLine = Pos 17
+                     , sourceColumn = Pos 22
+                     }
+                    }
+                   }
+                  )
+                  ( Id
+                   { name = "False"
+                   , moduleName = Artifact
+                    ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                   , sort = External
+                   }
+                  )
+                 ) :| []
+                )
+               ) :|
+               [ Clause
+                ( Typed
+                 { annotated = TyArr
+                  ( TyCon
+                   ( Id
+                    { name = "Bool1"
+                    , moduleName = Artifact
+                     ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                    , sort = External
+                    }
+                   )
+                  )
+                  ( TyCon
+                   ( Id
+                    { name = "Bool"
+                    , moduleName = Artifact
+                     ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                    , sort = External
+                    }
+                   )
+                  )
+                 , value = Range
+                  { _start = SourcePos
+                   { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                   , sourceLine = Pos 18
+                   , sourceColumn = Pos 8
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                   , sourceLine = Pos 18
+                   , sourceColumn = Pos 22
+                   }
+                  }
+                 }
+                )
+                [ ConP
+                 ( Typed
+                  { annotated = TyCon
+                   ( Id
+                    { name = "Bool1"
+                    , moduleName = Artifact
+                     ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                    , sort = External
+                    }
+                   )
+                  , value = Range
+                   { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                    , sourceLine = Pos 18
+                    , sourceColumn = Pos 8
+                    }
+                   , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                    , sourceLine = Pos 18
+                    , sourceColumn = Pos 15
+                    }
+                   }
+                  }
+                 )
+                 ( Id
+                  { name = "False1"
+                  , moduleName = Artifact
+                   ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                  , sort = External
+                  }
+                 ) []
+                ]
+                ( Seq
+                 ( Typed
+                  { annotated = TyCon
+                   ( Id
+                    { name = "Bool"
+                    , moduleName = Artifact
+                     ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                    , sort = External
+                    }
+                   )
+                  , value = Range
+                   { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                    , sourceLine = Pos 18
+                    , sourceColumn = Pos 18
+                    }
+                   , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                    , sourceLine = Pos 18
+                    , sourceColumn = Pos 22
+                    }
+                   }
+                  }
+                 )
+                 ( NoBind
+                  ( Range
+                   { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                    , sourceLine = Pos 18
+                    , sourceColumn = Pos 18
+                    }
+                   , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                    , sourceLine = Pos 18
+                    , sourceColumn = Pos 22
+                    }
+                   }
+                  )
+                  ( Var
+                   ( Typed
+                    { annotated = TyCon
+                     ( Id
+                      { name = "Bool"
+                      , moduleName = Artifact
+                       ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                      , sort = External
+                      }
+                     )
+                    , value = Range
+                     { _start = SourcePos
+                      { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                      , sourceLine = Pos 18
+                      , sourceColumn = Pos 18
+                      }
+                     , _end = SourcePos
+                      { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                      , sourceLine = Pos 18
+                      , sourceColumn = Pos 22
+                      }
+                     }
+                    }
+                   )
+                   ( Id
+                    { name = "True"
+                    , moduleName = Artifact
+                     ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                    , sort = External
+                    }
+                   )
+                  ) :| []
+                 )
+                )
+               ]
+              )
+             )
+             ( Seq
+              ( Typed
+               { annotated = TyCon
+                ( Id
+                 { name = "Bool1"
+                 , moduleName = Artifact
+                  ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                 , sort = External
+                 }
+                )
+               , value = Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                 , sourceLine = Pos 19
+                 , sourceColumn = Pos 5
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                 , sourceLine = Pos 20
+                 , sourceColumn = Pos 32
+                 }
+                }
+               }
+              )
+              ( NoBind
+               ( Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                 , sourceLine = Pos 19
+                 , sourceColumn = Pos 6
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                 , sourceLine = Pos 20
+                 , sourceColumn = Pos 31
+                 }
+                }
+               )
+               ( Apply
+                ( Typed
+                 { annotated = TyCon
+                  ( Id
+                   { name = "Bool1"
+                   , moduleName = Artifact
+                    ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                   , sort = External
+                   }
+                  )
+                 , value = Range
+                  { _start = SourcePos
+                   { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                   , sourceLine = Pos 19
+                   , sourceColumn = Pos 6
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                   , sourceLine = Pos 20
+                   , sourceColumn = Pos 31
+                   }
+                  }
+                 }
+                )
+                ( Fn
+                 ( Typed
+                  { annotated = TyArr
+                   ( TyCon
+                    ( Id
+                     { name = "Bool2"
+                     , moduleName = Artifact
+                      ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                     , sort = External
+                     }
+                    )
+                   )
+                   ( TyCon
+                    ( Id
+                     { name = "Bool1"
+                     , moduleName = Artifact
+                      ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                     , sort = External
+                     }
+                    )
+                   )
+                  , value = Range
+                   { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                    , sourceLine = Pos 19
+                    , sourceColumn = Pos 8
+                    }
+                   , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                    , sourceLine = Pos 20
+                    , sourceColumn = Pos 24
+                    }
+                   }
+                  }
+                 )
+                 ( Clause
+                  ( Typed
+                   { annotated = TyArr
+                    ( TyCon
+                     ( Id
+                      { name = "Bool2"
+                      , moduleName = Artifact
+                       ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                      , sort = External
+                      }
+                     )
+                    )
+                    ( TyCon
+                     ( Id
+                      { name = "Bool1"
+                      , moduleName = Artifact
+                       ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                      , sort = External
+                      }
+                     )
+                    )
+                   , value = Range
+                    { _start = SourcePos
+                     { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                     , sourceLine = Pos 19
+                     , sourceColumn = Pos 8
+                     }
+                    , _end = SourcePos
+                     { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                     , sourceLine = Pos 19
+                     , sourceColumn = Pos 23
+                     }
+                    }
+                   }
+                  )
+                  [ ConP
+                   ( Typed
+                    { annotated = TyCon
+                     ( Id
+                      { name = "Bool2"
+                      , moduleName = Artifact
+                       ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                      , sort = External
+                      }
+                     )
+                    , value = Range
+                     { _start = SourcePos
+                      { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                      , sourceLine = Pos 19
+                      , sourceColumn = Pos 8
+                      }
+                     , _end = SourcePos
+                      { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                      , sourceLine = Pos 19
+                      , sourceColumn = Pos 14
+                      }
+                     }
+                    }
+                   )
+                   ( Id
+                    { name = "True2"
+                    , moduleName = Artifact
+                     ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                    , sort = External
+                    }
+                   ) []
+                  ]
+                  ( Seq
+                   ( Typed
+                    { annotated = TyCon
+                     ( Id
+                      { name = "Bool1"
+                      , moduleName = Artifact
+                       ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                      , sort = External
+                      }
+                     )
+                    , value = Range
+                     { _start = SourcePos
+                      { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                      , sourceLine = Pos 19
+                      , sourceColumn = Pos 17
+                      }
+                     , _end = SourcePos
+                      { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                      , sourceLine = Pos 19
+                      , sourceColumn = Pos 23
+                      }
+                     }
+                    }
+                   )
+                   ( NoBind
+                    ( Range
+                     { _start = SourcePos
+                      { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                      , sourceLine = Pos 19
+                      , sourceColumn = Pos 17
+                      }
+                     , _end = SourcePos
+                      { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                      , sourceLine = Pos 19
+                      , sourceColumn = Pos 23
+                      }
+                     }
+                    )
+                    ( Var
+                     ( Typed
+                      { annotated = TyCon
+                       ( Id
+                        { name = "Bool1"
+                        , moduleName = Artifact
+                         ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                        , sort = External
+                        }
+                       )
+                      , value = Range
+                       { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                        , sourceLine = Pos 19
+                        , sourceColumn = Pos 17
+                        }
+                       , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                        , sourceLine = Pos 19
+                        , sourceColumn = Pos 23
+                        }
+                       }
+                      }
+                     )
+                     ( Id
+                      { name = "False1"
+                      , moduleName = Artifact
+                       ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                      , sort = External
+                      }
+                     )
+                    ) :| []
+                   )
+                  ) :|
+                  [ Clause
+                   ( Typed
+                    { annotated = TyArr
+                     ( TyCon
+                      ( Id
+                       { name = "Bool2"
+                       , moduleName = Artifact
+                        ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                       , sort = External
+                       }
+                      )
+                     )
+                     ( TyCon
+                      ( Id
+                       { name = "Bool1"
+                       , moduleName = Artifact
+                        ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                       , sort = External
+                       }
+                      )
+                     )
+                    , value = Range
+                     { _start = SourcePos
+                      { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                      , sourceLine = Pos 20
+                      , sourceColumn = Pos 8
+                      }
+                     , _end = SourcePos
+                      { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                      , sourceLine = Pos 20
+                      , sourceColumn = Pos 24
+                      }
+                     }
+                    }
+                   )
+                   [ ConP
+                    ( Typed
+                     { annotated = TyCon
+                      ( Id
+                       { name = "Bool2"
+                       , moduleName = Artifact
+                        ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                       , sort = External
+                       }
+                      )
+                     , value = Range
+                      { _start = SourcePos
+                       { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                       , sourceLine = Pos 20
+                       , sourceColumn = Pos 8
+                       }
+                      , _end = SourcePos
+                       { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                       , sourceLine = Pos 20
+                       , sourceColumn = Pos 15
+                       }
+                      }
+                     }
+                    )
+                    ( Id
+                     { name = "False2"
+                     , moduleName = Artifact
+                      ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                     , sort = External
+                     }
+                    ) []
+                   ]
+                   ( Seq
+                    ( Typed
+                     { annotated = TyCon
+                      ( Id
+                       { name = "Bool1"
+                       , moduleName = Artifact
+                        ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                       , sort = External
+                       }
+                      )
+                     , value = Range
+                      { _start = SourcePos
+                       { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                       , sourceLine = Pos 20
+                       , sourceColumn = Pos 18
+                       }
+                      , _end = SourcePos
+                       { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                       , sourceLine = Pos 20
+                       , sourceColumn = Pos 24
+                       }
+                      }
+                     }
+                    )
+                    ( NoBind
+                     ( Range
+                      { _start = SourcePos
+                       { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                       , sourceLine = Pos 20
+                       , sourceColumn = Pos 18
+                       }
+                      , _end = SourcePos
+                       { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                       , sourceLine = Pos 20
+                       , sourceColumn = Pos 24
+                       }
+                      }
+                     )
+                     ( Var
+                      ( Typed
+                       { annotated = TyCon
+                        ( Id
+                         { name = "Bool1"
+                         , moduleName = Artifact
+                          ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                         , sort = External
+                         }
+                        )
+                       , value = Range
+                        { _start = SourcePos
+                         { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                         , sourceLine = Pos 20
+                         , sourceColumn = Pos 18
+                         }
+                        , _end = SourcePos
+                         { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                         , sourceLine = Pos 20
+                         , sourceColumn = Pos 24
+                         }
+                        }
+                       }
+                      )
+                      ( Id
+                       { name = "True1"
+                       , moduleName = Artifact
+                        ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                       , sort = External
+                       }
+                      )
+                     ) :| []
+                    )
+                   )
+                  ]
+                 )
+                )
+                ( Var
+                 ( Typed
+                  { annotated = TyCon
+                   ( Id
+                    { name = "Bool2"
+                    , moduleName = Artifact
+                     ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                    , sort = External
+                    }
+                   )
+                  , value = Range
+                   { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                    , sourceLine = Pos 20
+                    , sourceColumn = Pos 26
+                    }
+                   , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+                    , sourceLine = Pos 20
+                    , sourceColumn = Pos 31
+                    }
+                   }
+                  }
+                 )
+                 ( Id
+                  { name = "True2"
+                  , moduleName = Artifact
+                   ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+                  , sort = External
+                  }
+                 )
+                )
+               ) :| []
+              )
+             )
+            ) :| []
+           )
+          )
+         ) :| []
+        )
+       ) :| []
+      )
+     )
+    ]
+   ]
+  , _scSigs = []
+  , _dataDefs =
+   [
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+      , sourceLine = Pos 5
+      , sourceColumn = Pos 6
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+      , sourceLine = Pos 6
+      , sourceColumn = Pos 1
+      }
+     }
+    , Id
+     { name = "Bool"
+     , moduleName = Artifact
+      ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+     , sort = External
+     }
+    , []
+    ,
+     [
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+        , sourceLine = Pos 5
+        , sourceColumn = Pos 13
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+        , sourceLine = Pos 5
+        , sourceColumn = Pos 19
+        }
+       }
+      , Id
+       { name = "False"
+       , moduleName = Artifact
+        ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+       , sort = External
+       }
+      , []
+      )
+     ,
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+        , sourceLine = Pos 5
+        , sourceColumn = Pos 21
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+        , sourceLine = Pos 6
+        , sourceColumn = Pos 1
+        }
+       }
+      , Id
+       { name = "True"
+       , moduleName = Artifact
+        ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+       , sort = External
+       }
+      , []
+      )
+     ]
+    )
+   ,
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+      , sourceLine = Pos 6
+      , sourceColumn = Pos 6
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+      , sourceLine = Pos 7
+      , sourceColumn = Pos 1
+      }
+     }
+    , Id
+     { name = "Bool1"
+     , moduleName = Artifact
+      ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+     , sort = External
+     }
+    , []
+    ,
+     [
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+        , sourceLine = Pos 6
+        , sourceColumn = Pos 14
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+        , sourceLine = Pos 6
+        , sourceColumn = Pos 21
+        }
+       }
+      , Id
+       { name = "False1"
+       , moduleName = Artifact
+        ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+       , sort = External
+       }
+      , []
+      )
+     ,
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+        , sourceLine = Pos 6
+        , sourceColumn = Pos 23
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+        , sourceLine = Pos 7
+        , sourceColumn = Pos 1
+        }
+       }
+      , Id
+       { name = "True1"
+       , moduleName = Artifact
+        ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+       , sort = External
+       }
+      , []
+      )
+     ]
+    )
+   ,
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+      , sourceLine = Pos 7
+      , sourceColumn = Pos 6
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+      , sourceLine = Pos 10
+      , sourceColumn = Pos 1
+      }
+     }
+    , Id
+     { name = "Bool2"
+     , moduleName = Artifact
+      ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+     , sort = External
+     }
+    , []
+    ,
+     [
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+        , sourceLine = Pos 7
+        , sourceColumn = Pos 14
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+        , sourceLine = Pos 7
+        , sourceColumn = Pos 21
+        }
+       }
+      , Id
+       { name = "False2"
+       , moduleName = Artifact
+        ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+       , sort = External
+       }
+      , []
+      )
+     ,
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+        , sourceLine = Pos 7
+        , sourceColumn = Pos 23
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+        , sourceLine = Pos 10
+        , sourceColumn = Pos 1
+        }
+       }
+      , Id
+       { name = "True2"
+       , moduleName = Artifact
+        ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+       , sort = External
+       }
+      , []
+      )
+     ]
+    )
+   ]
+  , _typeSynonyms = []
+  , _foreigns =
+   [
+    ( Typed
+     { annotated = TyArr ( TyPrim StringT )
+      ( TyTuple 0 )
+     , value =
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+        , sourceLine = Pos 10
+        , sourceColumn = Pos 1
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+        , sourceLine = Pos 12
+        , sourceColumn = Pos 1
+        }
+       }
+      , "malgo_print_string"
+      )
+     }
+    , Id
+     { name = "malgo_print_string"
+     , moduleName = Artifact
+      ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+     , sort = External
+     }
+    , TyArr
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+       , sourceLine = Pos 10
+       , sourceColumn = Pos 45
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+       , sourceLine = Pos 10
+       , sourceColumn = Pos 48
+       }
+      }
+     )
+     ( TyCon
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+        , sourceLine = Pos 10
+        , sourceColumn = Pos 37
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+        , sourceLine = Pos 10
+        , sourceColumn = Pos 45
+        }
+       }
+      )
+      ( Id
+       { name = "String#"
+       , moduleName = ModuleName "Builtin"
+       , sort = External
+       }
+      )
+     )
+     ( TyTuple
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+        , sourceLine = Pos 10
+        , sourceColumn = Pos 48
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+        , sourceLine = Pos 12
+        , sourceColumn = Pos 1
+        }
+       }
+      ) []
+     )
+    )
+   ,
+    ( Typed
+     { annotated = TyArr
+      ( TyTuple 0 )
+      ( TyVar
+       ( Id
+        { name = "a"
+        , moduleName = Artifact
+         ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+        , sort = Internal 2
+        }
+       )
+      )
+     , value =
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+        , sourceLine = Pos 12
+        , sourceColumn = Pos 1
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+        , sourceLine = Pos 14
+        , sourceColumn = Pos 1
+        }
+       }
+      , "malgo_exit_failure"
+      )
+     }
+    , Id
+     { name = "malgo_exit_failure"
+     , moduleName = Artifact
+      ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+     , sort = External
+     }
+    , TyArr
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+       , sourceLine = Pos 12
+       , sourceColumn = Pos 40
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+       , sourceLine = Pos 12
+       , sourceColumn = Pos 43
+       }
+      }
+     )
+     ( TyTuple
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+        , sourceLine = Pos 12
+        , sourceColumn = Pos 37
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+        , sourceLine = Pos 12
+        , sourceColumn = Pos 40
+        }
+       }
+      ) []
+     )
+     ( TyVar
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+        , sourceLine = Pos 12
+        , sourceColumn = Pos 43
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
+        , sourceLine = Pos 14
+        , sourceColumn = Pos 1
+        }
+       }
+      )
+      ( Id
+       { name = "a"
+       , moduleName = Artifact
+        ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
+       , sort = Internal 0
+       }
+      )
+     )
+    )
+   ]
+  , _imports = []
+  }
+ }

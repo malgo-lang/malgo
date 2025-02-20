@@ -1,0 +1,111 @@
+(((define
+   one
+   Any#
+   (= $ZeroArgs.d_35
+      (= $ZeroArgs.d_31
+         (let
+            (($ZeroArgs.fun_30
+               (->
+                  ((sum (con Tuple#)))
+                  Any#)
+               (fun
+                  ($ZeroArgs.$__28)
+                  (= $ZeroArgs.d_29
+                     (call Int32# 1_i32)
+                     (cast Any# $ZeroArgs.d_29)))))
+            $ZeroArgs.fun_30)
+         (= $ZeroArgs.d_33
+            (let
+               (($ZeroArgs.let_32
+                  (sum (con Tuple#))
+                  (pack
+                     (sum (con Tuple#))
+                     (con Tuple#))))
+               $ZeroArgs.let_32)
+            (= $ZeroArgs.d_34
+               (call $ZeroArgs.d_31 $ZeroArgs.d_33)
+               (cast Any# $ZeroArgs.d_34))))
+      $ZeroArgs.d_35)))
+   ((define
+      (id $ZeroArgs.x_36)
+      (->
+         (Any#)
+         Any#)
+      (= $ZeroArgs.d_39
+         (let
+            (($ZeroArgs.fun_38
+               (->
+                  ((sum (con Tuple#)))
+                  Any#)
+               (fun
+                  ($ZeroArgs.$__37)
+                  $ZeroArgs.x_36)))
+            $ZeroArgs.fun_38)
+         (= $ZeroArgs.d_41
+            (let
+               (($ZeroArgs.let_40
+                  (sum (con Tuple#))
+                  (pack
+                     (sum (con Tuple#))
+                     (con Tuple#))))
+               $ZeroArgs.let_40)
+            (= $ZeroArgs.d_42
+               (call $ZeroArgs.d_39 $ZeroArgs.d_41)
+               (cast Any# $ZeroArgs.d_42)))))
+      (define
+         (main $ZeroArgs.eta_57)
+         (->
+            ((sum (con Tuple#)))
+            (sum (con Tuple#)))
+         (= $ZeroArgs.d_58
+            (= $ZeroArgs.d_56
+               (= $ZeroArgs.d_52
+                  (let
+                     (($ZeroArgs.fun_51
+                        (->
+                           ((sum (con Tuple#)))
+                           (->
+                              ((sum (con Tuple#)))
+                              (sum (con Tuple#))))
+                        (fun
+                           ($ZeroArgs.$__43)
+                           (let
+                              (($ZeroArgs.fun_50
+                                 (->
+                                    ((sum (con Tuple#)))
+                                    (sum (con Tuple#)))
+                                 (fun
+                                    ($ZeroArgs.$__44)
+                                    (= $ZeroArgs.d_48
+                                       (= $ZeroArgs.d_46
+                                          (= $ZeroArgs.d_45
+                                             (call id one)
+                                             (cast Any# $ZeroArgs.d_45))
+                                          (= $ZeroArgs.d_47
+                                             (call toStringInt32 $ZeroArgs.d_46)
+                                             (cast Any# $ZeroArgs.d_47)))
+                                       (= $ZeroArgs.d_49
+                                          (call printString $ZeroArgs.d_48)
+                                          (cast
+                                             (sum (con Tuple#))
+                                             $ZeroArgs.d_49))))))
+                              $ZeroArgs.fun_50))))
+                     $ZeroArgs.fun_51)
+                  (= $ZeroArgs.d_54
+                     (let
+                        (($ZeroArgs.let_53
+                           (sum (con Tuple#))
+                           (pack
+                              (sum (con Tuple#))
+                              (con Tuple#))))
+                        $ZeroArgs.let_53)
+                     (= $ZeroArgs.d_55
+                        (call $ZeroArgs.d_52 $ZeroArgs.d_54)
+                        (cast
+                           (->
+                              ((sum (con Tuple#)))
+                              (sum (con Tuple#)))
+                           $ZeroArgs.d_55))))
+               $ZeroArgs.d_56)
+            (call $ZeroArgs.d_58 $ZeroArgs.eta_57))))
+   ())

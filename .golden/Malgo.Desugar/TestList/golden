@@ -1,0 +1,78 @@
+(()
+   ((define
+      (main $TestList.$__41)
+      (->
+         ((sum (con Tuple#)))
+         (sum (con Tuple#)))
+      (match
+         (= $TestList.d_45
+            (= $TestList.d_43
+               (= $TestList.d_42
+                  (call Int32# 1_i32)
+                  (cast Any# $TestList.d_42))
+               (= $TestList.d_44
+                  (call Cons $TestList.d_43)
+                  (cast
+                     (->
+                        (Any#)
+                        Any#)
+                     $TestList.d_44)))
+            (= $TestList.d_58
+               (= $TestList.d_49
+                  (= $TestList.d_47
+                     (= $TestList.d_46
+                        (call Int32# 2_i32)
+                        (cast Any# $TestList.d_46))
+                     (= $TestList.d_48
+                        (call Cons $TestList.d_47)
+                        (cast
+                           (->
+                              (Any#)
+                              Any#)
+                           $TestList.d_48)))
+                  (= $TestList.d_56
+                     (= $TestList.d_53
+                        (= $TestList.d_51
+                           (= $TestList.d_50
+                              (call Int32# 3_i32)
+                              (cast Any# $TestList.d_50))
+                           (= $TestList.d_52
+                              (call Cons $TestList.d_51)
+                              (cast
+                                 (->
+                                    (Any#)
+                                    Any#)
+                                 $TestList.d_52)))
+                        (= $TestList.d_54
+                           (direct Nil)
+                           (= $TestList.d_55
+                              (call $TestList.d_53 $TestList.d_54)
+                              (cast Any# $TestList.d_55))))
+                     (= $TestList.d_57
+                        (call $TestList.d_49 $TestList.d_56)
+                        (cast Any# $TestList.d_57))))
+               (= $TestList.d_59
+                  (call $TestList.d_45 $TestList.d_58)
+                  (cast Any# $TestList.d_59))))
+         (bind
+            $TestList.let_test/testcases/malgo/TestList.mlg.#xs_0_60
+            Any#
+            (match
+               (direct Nil)
+               (bind
+                  $TestList.let_test/testcases/malgo/TestList.mlg.#nil_1_61
+                  Any#
+                  (= $TestList.d_65
+                     (= $TestList.d_63
+                        (= $TestList.d_62
+                           (call head $TestList.let_test/testcases/malgo/TestList.mlg.#xs_0_60)
+                           (cast Any# $TestList.d_62))
+                        (= $TestList.d_64
+                           (call toStringInt32 $TestList.d_63)
+                           (cast Any# $TestList.d_64)))
+                     (= $TestList.d_66
+                        (call putStrLn $TestList.d_65)
+                        (cast
+                           (sum (con Tuple#))
+                           $TestList.d_66)))))))))
+   ())

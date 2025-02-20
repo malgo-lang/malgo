@@ -2,4 +2,4 @@
 
 cabal update && cabal install hpack
 
-ghcup compile hls --git-ref master --ghc 9.6.4 -j 4
+ghcup compile hls --git-ref master --ghc 9.10.1 -j 4

@@ -1,0 +1,96 @@
+(((define
+   hello
+   (sum (con Tuple# Any# Any#))
+   (= $TypeSynonym.d_37
+      (= $TypeSynonym.d_33
+         (= $TypeSynonym.d_32
+            (call String# "hello")
+            (cast Any# $TypeSynonym.d_32))
+         (= $TypeSynonym.d_35
+            (= $TypeSynonym.d_34
+               (call String# "world")
+               (cast Any# $TypeSynonym.d_34))
+            (let
+               (($TypeSynonym.let_36
+                  (sum (con Tuple# Any# Any#))
+                  (pack
+                     (sum (con Tuple# Any# Any#))
+                     (con Tuple# Any# Any#)
+                     $TypeSynonym.d_33
+                     $TypeSynonym.d_35)))
+               $TypeSynonym.let_36)))
+      $TypeSynonym.d_37)))
+   ((define
+      (TCon)
+      (-> () Any#)
+      (let
+         (($TypeSynonym.let_30
+            (sum (con test/testcases/malgo/TypeSynonym.mlg.TCon))
+            (pack
+               (sum (con test/testcases/malgo/TypeSynonym.mlg.TCon))
+               (con test/testcases/malgo/TypeSynonym.mlg.TCon))))
+         (cast Any# $TypeSynonym.let_30)))
+      (define
+         (idOverS $TypeSynonym.x_31)
+         (->
+            (Any#)
+            Any#)
+         $TypeSynonym.x_31)
+      (define
+         (main $TypeSynonym.$__38)
+         (->
+            ((sum (con Tuple#)))
+            (sum (con Tuple#)))
+         (= $TypeSynonym.d_41
+            (= $TypeSynonym.cast_39
+               (cast Any# hello)
+               (= $TypeSynonym.d_40
+                  (call |> $TypeSynonym.cast_39)
+                  (cast
+                     (->
+                        ((->
+                           ((sum (con Tuple# Any# Any#)))
+                           (sum (con Tuple#))))
+                        (sum (con Tuple#)))
+                     $TypeSynonym.d_40)))
+            (= $TypeSynonym.d_53
+               (let
+                  (($TypeSynonym.fun_52
+                     (->
+                        ((sum (con Tuple# Any# Any#)))
+                        (sum (con Tuple#)))
+                     (fun
+                        ($TypeSynonym.tuple_42)
+                        (match
+                           $TypeSynonym.tuple_42
+                           (unpack
+                              (con Tuple# Any# Any#)
+                              ($TypeSynonym.p_43 $TypeSynonym.p_44)
+                              (= $TypeSynonym.d_46
+                                 (= $TypeSynonym.d_45
+                                    (call putStr $TypeSynonym.p_43)
+                                    (cast
+                                       (sum (con Tuple#))
+                                       $TypeSynonym.d_45))
+                                 (= $TypeSynonym.d_50
+                                    (= $TypeSynonym.d_48
+                                       (= $TypeSynonym.d_47
+                                          (call String# " ")
+                                          (cast Any# $TypeSynonym.d_47))
+                                       (= $TypeSynonym.d_49
+                                          (call putStr $TypeSynonym.d_48)
+                                          (cast
+                                             (sum (con Tuple#))
+                                             $TypeSynonym.d_49)))
+                                    (= $TypeSynonym.d_51
+                                       (call putStrLn $TypeSynonym.p_44)
+                                       (cast
+                                          (sum (con Tuple#))
+                                          $TypeSynonym.d_51)))))))))
+                  $TypeSynonym.fun_52)
+               (= $TypeSynonym.d_54
+                  (call $TypeSynonym.d_41 $TypeSynonym.d_53)
+                  (cast
+                     (sum (con Tuple#))
+                     $TypeSynonym.d_54))))))
+   ())

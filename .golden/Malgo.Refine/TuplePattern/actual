@@ -1,0 +1,1305 @@
+Module
+ { moduleName = Artifact
+  ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+ , moduleDefinition = BindGroup
+  { _scDefs =
+   [
+    [
+     ( Typed
+      { annotated = TyArr
+       ( TyTuple 0 )
+       ( TyTuple 0 )
+      , value = Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+        , sourceLine = Pos 7
+        , sourceColumn = Pos 1
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+        , sourceLine = Pos 13
+        , sourceColumn = Pos 2
+        }
+       }
+      }
+     , Id
+      { name = "main"
+      , moduleName = Artifact
+       ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+      , sort = External
+      }
+     , Fn
+      ( Typed
+       { annotated = TyArr
+        ( TyTuple 0 )
+        ( TyTuple 0 )
+       , value = Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+         , sourceLine = Pos 8
+         , sourceColumn = Pos 3
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+         , sourceLine = Pos 13
+         , sourceColumn = Pos 1
+         }
+        }
+       }
+      )
+      ( Clause
+       ( Typed
+        { annotated = TyArr
+         ( TyTuple 0 )
+         ( TyTuple 0 )
+        , value = Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+          , sourceLine = Pos 8
+          , sourceColumn = Pos 3
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+          , sourceLine = Pos 13
+          , sourceColumn = Pos 1
+          }
+         }
+        }
+       )
+       [ VarP
+        ( Typed
+         { annotated = TyTuple 0
+         , value = Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+           , sourceLine = Pos 8
+           , sourceColumn = Pos 3
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+           , sourceLine = Pos 13
+           , sourceColumn = Pos 1
+           }
+          }
+         }
+        )
+        ( Id
+         { name = "$_"
+         , moduleName = Artifact
+          ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+         , sort = Internal 25
+         }
+        )
+       ]
+       ( Seq
+        ( Typed
+         { annotated = TyTuple 0
+         , value = Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+           , sourceLine = Pos 8
+           , sourceColumn = Pos 3
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+           , sourceLine = Pos 13
+           , sourceColumn = Pos 1
+           }
+          }
+         }
+        )
+        ( NoBind
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+           , sourceLine = Pos 8
+           , sourceColumn = Pos 3
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+           , sourceLine = Pos 13
+           , sourceColumn = Pos 1
+           }
+          }
+         )
+         ( Apply
+          ( Typed
+           { annotated = TyTuple 0
+           , value = Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+             , sourceLine = Pos 9
+             , sourceColumn = Pos 5
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+             , sourceLine = Pos 9
+             , sourceColumn = Pos 8
+             }
+            }
+           }
+          )
+          ( Apply
+           ( Typed
+            { annotated = TyArr
+             ( TyArr
+              ( TyApp
+               ( TyApp
+                ( TyTuple 2 )
+                ( TyCon
+                 ( Id
+                  { name = "T"
+                  , moduleName = Artifact
+                   ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+                  , sort = External
+                  }
+                 )
+                )
+               )
+               ( TyCon
+                ( Id
+                 { name = "T"
+                 , moduleName = Artifact
+                  ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+                 , sort = External
+                 }
+                )
+               )
+              )
+              ( TyTuple 0 )
+             )
+             ( TyTuple 0 )
+            , value = Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+              , sourceLine = Pos 9
+              , sourceColumn = Pos 5
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+              , sourceLine = Pos 9
+              , sourceColumn = Pos 8
+              }
+             }
+            }
+           )
+           ( Var
+            ( Typed
+             { annotated = TyArr
+              ( TyApp
+               ( TyApp
+                ( TyTuple 2 )
+                ( TyCon
+                 ( Id
+                  { name = "T"
+                  , moduleName = Artifact
+                   ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+                  , sort = External
+                  }
+                 )
+                )
+               )
+               ( TyCon
+                ( Id
+                 { name = "T"
+                 , moduleName = Artifact
+                  ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+                 , sort = External
+                 }
+                )
+               )
+              )
+              ( TyArr
+               ( TyArr
+                ( TyApp
+                 ( TyApp
+                  ( TyTuple 2 )
+                  ( TyCon
+                   ( Id
+                    { name = "T"
+                    , moduleName = Artifact
+                     ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+                    , sort = External
+                    }
+                   )
+                  )
+                 )
+                 ( TyCon
+                  ( Id
+                   { name = "T"
+                   , moduleName = Artifact
+                    ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+                   , sort = External
+                   }
+                  )
+                 )
+                )
+                ( TyTuple 0 )
+               )
+               ( TyTuple 0 )
+              )
+             , value = Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+               , sourceLine = Pos 9
+               , sourceColumn = Pos 5
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+               , sourceLine = Pos 9
+               , sourceColumn = Pos 8
+               }
+              }
+             }
+            )
+            ( Id
+             { name = "|>"
+             , moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+             , sort = External
+             }
+            )
+           )
+           ( Tuple
+            ( Typed
+             { annotated = TyApp
+              ( TyApp
+               ( TyTuple 2 )
+               ( TyCon
+                ( Id
+                 { name = "T"
+                 , moduleName = Artifact
+                  ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+                 , sort = External
+                 }
+                )
+               )
+              )
+              ( TyCon
+               ( Id
+                { name = "T"
+                , moduleName = Artifact
+                 ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+                , sort = External
+                }
+               )
+              )
+             , value = Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+               , sourceLine = Pos 8
+               , sourceColumn = Pos 3
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+               , sourceLine = Pos 9
+               , sourceColumn = Pos 5
+               }
+              }
+             }
+            )
+            [ Var
+             ( Typed
+              { annotated = TyCon
+               ( Id
+                { name = "T"
+                , moduleName = Artifact
+                 ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+                , sort = External
+                }
+               )
+              , value = Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                , sourceLine = Pos 8
+                , sourceColumn = Pos 4
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                , sourceLine = Pos 8
+                , sourceColumn = Pos 5
+                }
+               }
+              }
+             )
+             ( Id
+              { name = "A"
+              , moduleName = Artifact
+               ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+              , sort = External
+              }
+             )
+            , Var
+             ( Typed
+              { annotated = TyCon
+               ( Id
+                { name = "T"
+                , moduleName = Artifact
+                 ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+                , sort = External
+                }
+               )
+              , value = Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                , sourceLine = Pos 8
+                , sourceColumn = Pos 7
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                , sourceLine = Pos 8
+                , sourceColumn = Pos 8
+                }
+               }
+              }
+             )
+             ( Id
+              { name = "B"
+              , moduleName = Artifact
+               ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+              , sort = External
+              }
+             )
+            ]
+           )
+          )
+          ( Fn
+           ( Typed
+            { annotated = TyArr
+             ( TyApp
+              ( TyApp
+               ( TyTuple 2 )
+               ( TyCon
+                ( Id
+                 { name = "T"
+                 , moduleName = Artifact
+                  ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+                 , sort = External
+                 }
+                )
+               )
+              )
+              ( TyCon
+               ( Id
+                { name = "T"
+                , moduleName = Artifact
+                 ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+                , sort = External
+                }
+               )
+              )
+             )
+             ( TyTuple 0 )
+            , value = Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+              , sourceLine = Pos 9
+              , sourceColumn = Pos 10
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+              , sourceLine = Pos 12
+              , sourceColumn = Pos 8
+              }
+             }
+            }
+           )
+           ( Clause
+            ( Typed
+             { annotated = TyArr
+              ( TyApp
+               ( TyApp
+                ( TyTuple 2 )
+                ( TyCon
+                 ( Id
+                  { name = "T"
+                  , moduleName = Artifact
+                   ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+                  , sort = External
+                  }
+                 )
+                )
+               )
+               ( TyCon
+                ( Id
+                 { name = "T"
+                 , moduleName = Artifact
+                  ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+                 , sort = External
+                 }
+                )
+               )
+              )
+              ( TyTuple 0 )
+             , value = Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+               , sourceLine = Pos 9
+               , sourceColumn = Pos 10
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+               , sourceLine = Pos 9
+               , sourceColumn = Pos 38
+               }
+              }
+             }
+            )
+            [ TupleP
+             ( Typed
+              { annotated = TyApp
+               ( TyApp
+                ( TyTuple 2 )
+                ( TyCon
+                 ( Id
+                  { name = "T"
+                  , moduleName = Artifact
+                   ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+                  , sort = External
+                  }
+                 )
+                )
+               )
+               ( TyCon
+                ( Id
+                 { name = "T"
+                 , moduleName = Artifact
+                  ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+                 , sort = External
+                 }
+                )
+               )
+              , value = Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                , sourceLine = Pos 9
+                , sourceColumn = Pos 10
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                , sourceLine = Pos 9
+                , sourceColumn = Pos 20
+                }
+               }
+              }
+             )
+             [ ConP
+              ( Typed
+               { annotated = TyCon
+                ( Id
+                 { name = "T"
+                 , moduleName = Artifact
+                  ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+                 , sort = External
+                 }
+                )
+               , value = Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                 , sourceLine = Pos 9
+                 , sourceColumn = Pos 11
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                 , sourceLine = Pos 9
+                 , sourceColumn = Pos 12
+                 }
+                }
+               }
+              )
+              ( Id
+               { name = "A"
+               , moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+               , sort = External
+               }
+              ) []
+             , VarP
+              ( Typed
+               { annotated = TyCon
+                ( Id
+                 { name = "T"
+                 , moduleName = Artifact
+                  ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+                 , sort = External
+                 }
+                )
+               , value = Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                 , sourceLine = Pos 9
+                 , sourceColumn = Pos 14
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                 , sourceLine = Pos 9
+                 , sourceColumn = Pos 18
+                 }
+                }
+               }
+              )
+              ( Id
+               { name = "rest"
+               , moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+               , sort = Internal 0
+               }
+              )
+             ]
+            ]
+            ( Seq
+             ( Typed
+              { annotated = TyTuple 0
+              , value = Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                , sourceLine = Pos 9
+                , sourceColumn = Pos 23
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                , sourceLine = Pos 9
+                , sourceColumn = Pos 38
+                }
+               }
+              }
+             )
+             ( NoBind
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                , sourceLine = Pos 9
+                , sourceColumn = Pos 23
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                , sourceLine = Pos 9
+                , sourceColumn = Pos 38
+                }
+               }
+              )
+              ( Apply
+               ( Typed
+                { annotated = TyTuple 0
+                , value = Range
+                 { _start = SourcePos
+                  { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                  , sourceLine = Pos 9
+                  , sourceColumn = Pos 23
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                  , sourceLine = Pos 9
+                  , sourceColumn = Pos 38
+                  }
+                 }
+                }
+               )
+               ( Var
+                ( Typed
+                 { annotated = TyArr
+                  ( TyCon
+                   ( Id
+                    { name = "String"
+                    , moduleName = Artifact
+                     ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+                    , sort = External
+                    }
+                   )
+                  )
+                  ( TyTuple 0 )
+                 , value = Range
+                  { _start = SourcePos
+                   { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                   , sourceLine = Pos 9
+                   , sourceColumn = Pos 23
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                   , sourceLine = Pos 9
+                   , sourceColumn = Pos 35
+                   }
+                  }
+                 }
+                )
+                ( Id
+                 { name = "printString"
+                 , moduleName = Artifact
+                  ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+                 , sort = External
+                 }
+                )
+               )
+               ( Apply
+                ( Typed
+                 { annotated = TyCon
+                  ( Id
+                   { name = "String"
+                   , moduleName = Artifact
+                    ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+                   , sort = External
+                   }
+                  )
+                 , value = Range
+                  { _start = SourcePos
+                   { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                   , sourceLine = Pos 9
+                   , sourceColumn = Pos 35
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                   , sourceLine = Pos 9
+                   , sourceColumn = Pos 38
+                   }
+                  }
+                 }
+                )
+                ( Var
+                 ( Typed
+                  { annotated = TyArr ( TyPrim StringT )
+                   ( TyCon
+                    ( Id
+                     { name = "String"
+                     , moduleName = Artifact
+                      ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+                     , sort = External
+                     }
+                    )
+                   )
+                  , value = Range
+                   { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                    , sourceLine = Pos 9
+                    , sourceColumn = Pos 35
+                    }
+                   , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                    , sourceLine = Pos 9
+                    , sourceColumn = Pos 38
+                    }
+                   }
+                  }
+                 )
+                 ( Id
+                  { name = "String#"
+                  , moduleName = Artifact
+                   ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+                  , sort = External
+                  }
+                 )
+                )
+                ( Unboxed
+                 ( Typed
+                  { annotated = TyPrim StringT
+                  , value = Range
+                   { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                    , sourceLine = Pos 9
+                    , sourceColumn = Pos 35
+                    }
+                   , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                    , sourceLine = Pos 9
+                    , sourceColumn = Pos 38
+                    }
+                   }
+                  }
+                 )
+                 ( String "A" )
+                )
+               )
+              ) :| []
+             )
+            ) :|
+            [ Clause
+             ( Typed
+              { annotated = TyArr
+               ( TyApp
+                ( TyApp
+                 ( TyTuple 2 )
+                 ( TyCon
+                  ( Id
+                   { name = "T"
+                   , moduleName = Artifact
+                    ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+                   , sort = External
+                   }
+                  )
+                 )
+                )
+                ( TyCon
+                 ( Id
+                  { name = "T"
+                  , moduleName = Artifact
+                   ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+                  , sort = External
+                  }
+                 )
+                )
+               )
+               ( TyTuple 0 )
+              , value = Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                , sourceLine = Pos 10
+                , sourceColumn = Pos 10
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                , sourceLine = Pos 10
+                , sourceColumn = Pos 25
+                }
+               }
+              }
+             )
+             [ TupleP
+              ( Typed
+               { annotated = TyApp
+                ( TyApp
+                 ( TyTuple 2 )
+                 ( TyCon
+                  ( Id
+                   { name = "T"
+                   , moduleName = Artifact
+                    ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+                   , sort = External
+                   }
+                  )
+                 )
+                )
+                ( TyCon
+                 ( Id
+                  { name = "T"
+                  , moduleName = Artifact
+                   ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+                  , sort = External
+                  }
+                 )
+                )
+               , value = Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                 , sourceLine = Pos 10
+                 , sourceColumn = Pos 10
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                 , sourceLine = Pos 10
+                 , sourceColumn = Pos 20
+                 }
+                }
+               }
+              )
+              [ ConP
+               ( Typed
+                { annotated = TyCon
+                 ( Id
+                  { name = "T"
+                  , moduleName = Artifact
+                   ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+                  , sort = External
+                  }
+                 )
+                , value = Range
+                 { _start = SourcePos
+                  { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                  , sourceLine = Pos 10
+                  , sourceColumn = Pos 11
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                  , sourceLine = Pos 10
+                  , sourceColumn = Pos 12
+                  }
+                 }
+                }
+               )
+               ( Id
+                { name = "B"
+                , moduleName = Artifact
+                 ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+                , sort = External
+                }
+               ) []
+              , VarP
+               ( Typed
+                { annotated = TyCon
+                 ( Id
+                  { name = "T"
+                  , moduleName = Artifact
+                   ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+                  , sort = External
+                  }
+                 )
+                , value = Range
+                 { _start = SourcePos
+                  { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                  , sourceLine = Pos 10
+                  , sourceColumn = Pos 14
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                  , sourceLine = Pos 10
+                  , sourceColumn = Pos 18
+                  }
+                 }
+                }
+               )
+               ( Id
+                { name = "rest"
+                , moduleName = Artifact
+                 ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+                , sort = Internal 1
+                }
+               )
+              ]
+             ]
+             ( Seq
+              ( Typed
+               { annotated = TyTuple 0
+               , value = Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                 , sourceLine = Pos 10
+                 , sourceColumn = Pos 23
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                 , sourceLine = Pos 10
+                 , sourceColumn = Pos 25
+                 }
+                }
+               }
+              )
+              ( NoBind
+               ( Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                 , sourceLine = Pos 10
+                 , sourceColumn = Pos 23
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                 , sourceLine = Pos 10
+                 , sourceColumn = Pos 25
+                 }
+                }
+               )
+               ( Tuple
+                ( Typed
+                 { annotated = TyTuple 0
+                 , value = Range
+                  { _start = SourcePos
+                   { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                   , sourceLine = Pos 10
+                   , sourceColumn = Pos 23
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                   , sourceLine = Pos 10
+                   , sourceColumn = Pos 25
+                   }
+                  }
+                 }
+                ) []
+               ) :| []
+              )
+             )
+            , Clause
+             ( Typed
+              { annotated = TyArr
+               ( TyApp
+                ( TyApp
+                 ( TyTuple 2 )
+                 ( TyCon
+                  ( Id
+                   { name = "T"
+                   , moduleName = Artifact
+                    ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+                   , sort = External
+                   }
+                  )
+                 )
+                )
+                ( TyCon
+                 ( Id
+                  { name = "T"
+                  , moduleName = Artifact
+                   ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+                  , sort = External
+                  }
+                 )
+                )
+               )
+               ( TyTuple 0 )
+              , value = Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                , sourceLine = Pos 11
+                , sourceColumn = Pos 10
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                , sourceLine = Pos 12
+                , sourceColumn = Pos 8
+                }
+               }
+              }
+             )
+             [ TupleP
+              ( Typed
+               { annotated = TyApp
+                ( TyApp
+                 ( TyTuple 2 )
+                 ( TyCon
+                  ( Id
+                   { name = "T"
+                   , moduleName = Artifact
+                    ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+                   , sort = External
+                   }
+                  )
+                 )
+                )
+                ( TyCon
+                 ( Id
+                  { name = "T"
+                  , moduleName = Artifact
+                   ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+                  , sort = External
+                  }
+                 )
+                )
+               , value = Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                 , sourceLine = Pos 11
+                 , sourceColumn = Pos 10
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                 , sourceLine = Pos 11
+                 , sourceColumn = Pos 20
+                 }
+                }
+               }
+              )
+              [ ConP
+               ( Typed
+                { annotated = TyCon
+                 ( Id
+                  { name = "T"
+                  , moduleName = Artifact
+                   ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+                  , sort = External
+                  }
+                 )
+                , value = Range
+                 { _start = SourcePos
+                  { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                  , sourceLine = Pos 11
+                  , sourceColumn = Pos 11
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                  , sourceLine = Pos 11
+                  , sourceColumn = Pos 12
+                  }
+                 }
+                }
+               )
+               ( Id
+                { name = "C"
+                , moduleName = Artifact
+                 ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+                , sort = External
+                }
+               ) []
+              , VarP
+               ( Typed
+                { annotated = TyCon
+                 ( Id
+                  { name = "T"
+                  , moduleName = Artifact
+                   ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+                  , sort = External
+                  }
+                 )
+                , value = Range
+                 { _start = SourcePos
+                  { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                  , sourceLine = Pos 11
+                  , sourceColumn = Pos 14
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                  , sourceLine = Pos 11
+                  , sourceColumn = Pos 18
+                  }
+                 }
+                }
+               )
+               ( Id
+                { name = "rest"
+                , moduleName = Artifact
+                 ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+                , sort = Internal 2
+                }
+               )
+              ]
+             ]
+             ( Seq
+              ( Typed
+               { annotated = TyTuple 0
+               , value = Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                 , sourceLine = Pos 11
+                 , sourceColumn = Pos 23
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                 , sourceLine = Pos 12
+                 , sourceColumn = Pos 8
+                 }
+                }
+               }
+              )
+              ( NoBind
+               ( Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                 , sourceLine = Pos 11
+                 , sourceColumn = Pos 23
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                 , sourceLine = Pos 12
+                 , sourceColumn = Pos 8
+                 }
+                }
+               )
+               ( Tuple
+                ( Typed
+                 { annotated = TyTuple 0
+                 , value = Range
+                  { _start = SourcePos
+                   { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                   , sourceLine = Pos 11
+                   , sourceColumn = Pos 23
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                   , sourceLine = Pos 12
+                   , sourceColumn = Pos 8
+                   }
+                  }
+                 }
+                ) []
+               ) :| []
+              )
+             )
+            ]
+           )
+          )
+         ) :| []
+        )
+       ) :| []
+      )
+     )
+    ]
+   ]
+  , _scSigs =
+   [
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+      , sourceLine = Pos 6
+      , sourceColumn = Pos 1
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+      , sourceLine = Pos 7
+      , sourceColumn = Pos 1
+      }
+     }
+    , Id
+     { name = "main"
+     , moduleName = Artifact
+      ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+     , sort = External
+     }
+    , TyArr
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+       , sourceLine = Pos 6
+       , sourceColumn = Pos 12
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+       , sourceLine = Pos 7
+       , sourceColumn = Pos 1
+       }
+      }
+     )
+     ( TyTuple
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+        , sourceLine = Pos 6
+        , sourceColumn = Pos 12
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+        , sourceLine = Pos 7
+        , sourceColumn = Pos 1
+        }
+       }
+      ) []
+     )
+     ( TyTuple
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+        , sourceLine = Pos 6
+        , sourceColumn = Pos 14
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+        , sourceLine = Pos 6
+        , sourceColumn = Pos 17
+        }
+       }
+      ) []
+     )
+    )
+   ]
+  , _dataDefs =
+   [
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+      , sourceLine = Pos 4
+      , sourceColumn = Pos 6
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+      , sourceLine = Pos 6
+      , sourceColumn = Pos 1
+      }
+     }
+    , Id
+     { name = "T"
+     , moduleName = Artifact
+      ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+     , sort = External
+     }
+    , []
+    ,
+     [
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+        , sourceLine = Pos 4
+        , sourceColumn = Pos 10
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+        , sourceLine = Pos 4
+        , sourceColumn = Pos 12
+        }
+       }
+      , Id
+       { name = "A"
+       , moduleName = Artifact
+        ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+       , sort = External
+       }
+      , []
+      )
+     ,
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+        , sourceLine = Pos 4
+        , sourceColumn = Pos 14
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+        , sourceLine = Pos 4
+        , sourceColumn = Pos 16
+        }
+       }
+      , Id
+       { name = "B"
+       , moduleName = Artifact
+        ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+       , sort = External
+       }
+      , []
+      )
+     ,
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+        , sourceLine = Pos 4
+        , sourceColumn = Pos 18
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+        , sourceLine = Pos 6
+        , sourceColumn = Pos 1
+        }
+       }
+      , Id
+       { name = "C"
+       , moduleName = Artifact
+        ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
+       , sort = External
+       }
+      , []
+      )
+     ]
+    )
+   ]
+  , _typeSynonyms = []
+  , _foreigns = []
+  , _imports =
+   [
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+      , sourceLine = Pos 1
+      , sourceColumn = Pos 1
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+      , sourceLine = Pos 2
+      , sourceColumn = Pos 1
+      }
+     }
+    , Artifact
+     ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+    , All
+    )
+   ,
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+      , sourceLine = Pos 2
+      , sourceColumn = Pos 1
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+      , sourceLine = Pos 4
+      , sourceColumn = Pos 1
+      }
+     }
+    , Artifact
+     ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+    , All
+    )
+   ]
+  }
+ }

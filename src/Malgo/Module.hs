@@ -15,7 +15,9 @@ module Malgo.Module
     pwdPath,
     parseArtifactPath,
     ViaStore (..),
+    ViaShow (..),
     moduleNameToString,
+    moduleNameDigest,
   )
 where
 
@@ -37,6 +39,7 @@ import System.Directory (canonicalizePath, createDirectoryIfMissing, doesFileExi
 import System.Directory.Extra (listDirectories)
 import System.FilePath (makeRelative)
 import System.FilePath qualified as F
+import Text.Pretty.Simple (pShowNoColor)
 
 data ModuleName
   = ModuleName Text
@@ -51,6 +54,14 @@ instance Pretty ModuleName where
 moduleNameToString :: (ConvertibleStrings FilePath b, ConvertibleStrings Text b) => ModuleName -> b
 moduleNameToString (ModuleName raw) = convertString raw
 moduleNameToString (Artifact path) = convertString $ toFilePath path.relPath
+
+-- | Convert ModuleName to a digest string.
+-- This is used for debugging.
+moduleNameDigest :: (ConvertibleStrings Text b, ConvertibleStrings FilePath b) => ModuleName -> b
+moduleNameDigest (ModuleName raw) = convertString raw
+moduleNameDigest (Artifact path) = convertString $ toFilePath $ case splitExtension $ filename path.relPath of
+  Just (name, _) -> name
+  Nothing -> filename path.relPath
 
 type HasModuleName r = HasField "moduleName" r ModuleName
 
@@ -214,3 +225,10 @@ instance (Store a) => Resource (ViaStore a) where
 instance Resource ByteString where
   toByteString = identity
   fromByteString = identity
+
+newtype ViaShow a = ViaShow a
+  deriving newtype (Pretty)
+
+instance (Show a) => Resource (ViaShow a) where
+  toByteString (ViaShow a) = convertString $ pShowNoColor a
+  fromByteString = error "fromByteString: ViaShow cannot be deserialized"

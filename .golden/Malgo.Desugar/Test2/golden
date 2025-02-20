@@ -1,0 +1,137 @@
+(()
+   ((define
+      (R)
+      (-> () Any#)
+      (let
+         (($Test2.let_23
+            (sum (con test/testcases/malgo/Test2.mlg.R)
+               (con test/testcases/malgo/Test2.mlg.G)
+               (con test/testcases/malgo/Test2.mlg.B))
+            (pack
+               (sum (con test/testcases/malgo/Test2.mlg.R)
+                  (con test/testcases/malgo/Test2.mlg.G)
+                  (con test/testcases/malgo/Test2.mlg.B))
+               (con test/testcases/malgo/Test2.mlg.R))))
+         (cast Any# $Test2.let_23)))
+      (define
+         (G)
+         (-> () Any#)
+         (let
+            (($Test2.let_24
+               (sum (con test/testcases/malgo/Test2.mlg.R)
+                  (con test/testcases/malgo/Test2.mlg.G)
+                  (con test/testcases/malgo/Test2.mlg.B))
+               (pack
+                  (sum (con test/testcases/malgo/Test2.mlg.R)
+                     (con test/testcases/malgo/Test2.mlg.G)
+                     (con test/testcases/malgo/Test2.mlg.B))
+                  (con test/testcases/malgo/Test2.mlg.G))))
+            (cast Any# $Test2.let_24)))
+      (define
+         (B)
+         (-> () Any#)
+         (let
+            (($Test2.let_25
+               (sum (con test/testcases/malgo/Test2.mlg.R)
+                  (con test/testcases/malgo/Test2.mlg.G)
+                  (con test/testcases/malgo/Test2.mlg.B))
+               (pack
+                  (sum (con test/testcases/malgo/Test2.mlg.R)
+                     (con test/testcases/malgo/Test2.mlg.G)
+                     (con test/testcases/malgo/Test2.mlg.B))
+                  (con test/testcases/malgo/Test2.mlg.B))))
+            (cast Any# $Test2.let_25)))
+      (define
+         (malgo_print_string $Test2.p_26)
+         (->
+            (String#)
+            (sum (con Tuple#)))
+         (raw
+            malgo_print_string
+            (->
+               (String#)
+               (sum (con Tuple#)))
+            $Test2.p_26))
+      (define
+         (rtob $Test2.r_27)
+         (->
+            (Any#)
+            Any#)
+         (match
+            (cast
+               (sum (con test/testcases/malgo/Test2.mlg.R)
+                  (con test/testcases/malgo/Test2.mlg.G)
+                  (con test/testcases/malgo/Test2.mlg.B))
+               $Test2.r_27)
+            (unpack
+               (con test/testcases/malgo/Test2.mlg.R)
+               ()
+               (direct B))
+            (unpack
+               (con test/testcases/malgo/Test2.mlg.G)
+               ()
+               $Test2.r_27)
+            (unpack
+               (con test/testcases/malgo/Test2.mlg.B)
+               ()
+               $Test2.r_27)))
+      (define
+         (main $Test2.$__28)
+         (->
+            ((sum (con Tuple#)))
+            (sum (con Tuple#)))
+         (= $Test2.d_33
+            (let
+               (($Test2.fun_32
+                  (->
+                     (Any#)
+                     (sum (con Tuple#)))
+                  (fun
+                     ($Test2.b_29)
+                     (match
+                        (cast
+                           (sum (con test/testcases/malgo/Test2.mlg.R)
+                              (con test/testcases/malgo/Test2.mlg.G)
+                              (con test/testcases/malgo/Test2.mlg.B))
+                           $Test2.b_29)
+                        (unpack
+                           (con test/testcases/malgo/Test2.mlg.R)
+                           ()
+                           (= $Test2.d_30
+                              (call malgo_print_string "WRONG")
+                              (cast
+                                 (sum (con Tuple#))
+                                 $Test2.d_30)))
+                        (unpack
+                           (con test/testcases/malgo/Test2.mlg.G)
+                           ()
+                           (= $Test2.d_30
+                              (call malgo_print_string "WRONG")
+                              (cast
+                                 (sum (con Tuple#))
+                                 $Test2.d_30)))
+                        (unpack
+                           (con test/testcases/malgo/Test2.mlg.B)
+                           ()
+                           (= $Test2.d_31
+                              (call malgo_print_string "OK")
+                              (cast
+                                 (sum (con Tuple#))
+                                 $Test2.d_31)))))))
+               $Test2.fun_32)
+            (= $Test2.d_36
+               (= $Test2.d_34
+                  (direct R)
+                  (= $Test2.d_35
+                     (call rtob $Test2.d_34)
+                     (cast Any# $Test2.d_35)))
+               (= $Test2.d_37
+                  (call $Test2.d_33 $Test2.d_36)
+                  (cast
+                     (sum (con Tuple#))
+                     $Test2.d_37))))))
+   ((extern
+      malgo_print_string
+      (->
+         (String#)
+         (sum (con Tuple#))))))

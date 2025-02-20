@@ -68,7 +68,7 @@ match ::
   -- | fail
   Core.Expr (Meta Core.Type) ->
   Eff es (Core.Expr (Meta Core.Type))
-match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
+match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads@(head : _), tails)) es err
   -- Variable Rule
   -- パターンの先頭がすべて変数のとき
   | all (has _VarP) heads = do
@@ -88,7 +88,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
   -- Constructor Rule
   -- パターンの先頭がすべて値コンストラクタのとき
   | all (has _ConP) heads = do
-      let patType = Malgo.typeOf $ List.head heads
+      let patType = Malgo.typeOf head
       -- unless (Malgo._TyApp `has` patType || Malgo._TyCon `has` patType) $
       --  errorDoc $ "Not valid type:" <+> pretty patType
       -- 型からコンストラクタの集合を求める
@@ -107,7 +107,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
       pure $ Match (Cast unfoldedType $ Core.Var scrutinee) cases
   -- パターンの先頭がすべてレコードのとき
   | all (has _RecordP) heads = do
-      let patType = Malgo.typeOf $ List.head heads
+      let patType = Malgo.typeOf head
       dsType patType >>= \case
         RecordT kts -> do
           params <- traverse (\t -> withMeta t <$> newTemporalId "p") kts
@@ -118,7 +118,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads, tails)) es err
         _ -> error "patType must be RecordT"
   -- パターンの先頭がすべてタプルのとき
   | all (has _TupleP) heads = do
-      let patType = Malgo.typeOf $ List.head heads
+      let patType = Malgo.typeOf head
       dsType patType >>= \case
         SumT [con@(Core.Con Core.Tuple ts)] -> do
           params <- traverse (\t -> withMeta t <$> newTemporalId "p") ts

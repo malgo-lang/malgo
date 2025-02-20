@@ -1,0 +1,62 @@
+(()
+   ((define
+      (first $TestPolySynonym.record_40)
+      (->
+         ((Record#
+            (fst Any#)
+            (snd Any#)))
+         Any#)
+      (match
+         $TestPolySynonym.record_40
+         (open
+            ((fst $TestPolySynonym.p_41)
+               (snd $TestPolySynonym.p_42))
+            $TestPolySynonym.p_41)))
+      (define
+         (main $TestPolySynonym.$__43)
+         (->
+            ((sum (con Tuple#)))
+            (sum (con Tuple#)))
+         (match
+            (= $TestPolySynonym.d_45
+               (= $TestPolySynonym.d_44
+                  (call Int32# 1_i32)
+                  (cast Any# $TestPolySynonym.d_44))
+               (= $TestPolySynonym.d_47
+                  (= $TestPolySynonym.d_46
+                     (call String# "hoge")
+                     (cast Any# $TestPolySynonym.d_46))
+                  (let
+                     (($TestPolySynonym.record_48
+                        (Record#
+                           (fst Any#)
+                           (snd Any#))
+                        (record
+                           (fst $TestPolySynonym.d_45)
+                           (snd $TestPolySynonym.d_47))))
+                     $TestPolySynonym.record_48)))
+            (bind
+               $TestPolySynonym.let_test/testcases/malgo/TestPolySynonym.mlg.#x_7_49
+               (Record#
+                  (fst Any#)
+                  (snd Any#))
+               (= $TestPolySynonym.d_53
+                  (= $TestPolySynonym.d_51
+                     (= $TestPolySynonym.d_50
+                        (call first $TestPolySynonym.let_test/testcases/malgo/TestPolySynonym.mlg.#x_7_49)
+                        (cast Any# $TestPolySynonym.d_50))
+                     (= $TestPolySynonym.d_52
+                        (call |> $TestPolySynonym.d_51)
+                        (cast
+                           (->
+                              ((->
+                                 (Any#)
+                                 (sum (con Tuple#))))
+                              (sum (con Tuple#)))
+                           $TestPolySynonym.d_52)))
+                  (= $TestPolySynonym.d_54
+                     (call $TestPolySynonym.d_53 printInt32)
+                     (cast
+                        (sum (con Tuple#))
+                        $TestPolySynonym.d_54)))))))
+   ())

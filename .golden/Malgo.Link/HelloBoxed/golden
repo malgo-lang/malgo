@@ -1,0 +1,103 @@
+(()
+   ((define
+      (String# $HelloBoxed.p_21)
+      (->
+         (String#)
+         Any#)
+      (let
+         (($HelloBoxed.let_22
+            (sum (con test/testcases/malgo/HelloBoxed.mlg.String# String#))
+            (pack
+               (sum (con test/testcases/malgo/HelloBoxed.mlg.String# String#))
+               (con test/testcases/malgo/HelloBoxed.mlg.String# String#)
+               $HelloBoxed.p_21)))
+         (cast Any# $HelloBoxed.let_22)))
+      (define
+         (malgo_print_string $HelloBoxed.p_23)
+         (->
+            (String#)
+            (sum (con Tuple#)))
+         (raw
+            malgo_print_string
+            (->
+               (String#)
+               (sum (con Tuple#)))
+            $HelloBoxed.p_23))
+      (define
+         (malgo_newline $HelloBoxed.p_24)
+         (->
+            ((sum (con Tuple#)))
+            (sum (con Tuple#)))
+         (raw
+            malgo_newline
+            (->
+               ((sum (con Tuple#)))
+               (sum (con Tuple#)))
+            $HelloBoxed.p_24))
+      (define
+         (string# $HelloBoxed.x_25)
+         (->
+            (String#)
+            Any#)
+         (= $HelloBoxed.d_26
+            (call String# $HelloBoxed.x_25)
+            (cast Any# $HelloBoxed.d_26)))
+      (define
+         (putStrLn $HelloBoxed.string#_27)
+         (->
+            (Any#)
+            (sum (con Tuple#)))
+         (= $HelloBoxed.scrutinee_38
+            (cast
+               (sum (con test/testcases/malgo/HelloBoxed.mlg.String# String#))
+               $HelloBoxed.string#_27)
+            (switch
+               $HelloBoxed.scrutinee_38
+               (test/testcases/malgo/HelloBoxed.mlg.String#
+                  (destruct
+                     $HelloBoxed.scrutinee_38
+                     (con test/testcases/malgo/HelloBoxed.mlg.String# String#)
+                     ($HelloBoxed.p_28)
+                     (= $HelloBoxed.d_29
+                        (call malgo_print_string $HelloBoxed.p_28)
+                        (= $HelloBoxed.d_30
+                           (cast
+                              (sum (con Tuple#))
+                              $HelloBoxed.d_29)
+                           (let
+                              (($HelloBoxed.let_31
+                                 (sum (con Tuple#))
+                                 (pack
+                                    (sum (con Tuple#))
+                                    (con Tuple#))))
+                              (= $HelloBoxed.d_33
+                                 (call malgo_newline $HelloBoxed.let_31)
+                                 (cast
+                                    (sum (con Tuple#))
+                                    $HelloBoxed.d_33)))))))
+               (ERROR
+                  (sum (con Tuple#))))))
+      (define
+         (main $HelloBoxed.$__34)
+         (->
+            ((sum (con Tuple#)))
+            (sum (con Tuple#)))
+         (= $HelloBoxed.d_35
+            (call String# "Hello, world")
+            (= $HelloBoxed.d_36
+               (cast Any# $HelloBoxed.d_35)
+               (= $HelloBoxed.d_37
+                  (call putStrLn $HelloBoxed.d_36)
+                  (cast
+                     (sum (con Tuple#))
+                     $HelloBoxed.d_37))))))
+   ((extern
+      malgo_print_string
+      (->
+         (String#)
+         (sum (con Tuple#))))
+      (extern
+         malgo_newline
+         (->
+            ((sum (con Tuple#)))
+            (sum (con Tuple#))))))
