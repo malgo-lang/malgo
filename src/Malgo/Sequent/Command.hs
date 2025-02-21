@@ -1,22 +1,17 @@
 module Malgo.Sequent.Command
   ( Program (..),
     Branch (..),
-    Tag (..),
-    Literal (..),
     Command (..),
     Pattern (..),
-    Name,
   )
 where
 
-import Malgo.Id
 import Malgo.Prelude
+import Malgo.Sequent.Core (Literal, Name, Tag)
 
 data Program = Program
   {definitions :: [(Name, Code)]}
   deriving stock (Show)
-
-type Name = Id
 
 type Code = [Command]
 
@@ -84,19 +79,6 @@ data Command
     --
     -- @(value* <> S, E, Select(range, branch*)) -> (S, E, selected branch)@
     Select Range [Branch]
-  deriving stock (Show)
-
-data Literal
-  = Int32 Int32
-  | Int64 Int64
-  | Float Float
-  | Double Double
-  | Char Char
-  | String Text
-  deriving stock (Show)
-
--- | Tag is used to distinguish different structures.
-data Tag = Tuple | Tag Text
   deriving stock (Show)
 
 data Branch = Branch

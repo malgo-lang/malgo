@@ -1,14 +1,14 @@
 module Malgo.Sequent.Value (Value (..), Env (..)) where
 
 import Malgo.Prelude
-import Malgo.Sequent.Command (Name, Tag)
-import Malgo.Sequent.Command qualified as C
+import Malgo.Sequent.Command (Command)
+import Malgo.Sequent.Core (Literal, Name, Tag)
 
 data Value where
-  Literal :: C.Literal -> Value
+  Literal :: Literal -> Value
   Struct :: Tag -> [Value] -> Value
-  Function :: Env -> [Name] -> C.Command -> Value
-  Object :: Env -> Map Text C.Command -> Value
+  Function :: Env -> [Name] -> Command -> Value
+  Object :: Env -> Map Text Command -> Value
 
 data Env = Env
   { parent :: Maybe Env,

@@ -20,6 +20,13 @@ instance ToSExpr Text where
 instance (ToSExpr a, ToSExpr b) => ToSExpr (a, b) where
   toSExpr (a, b) = S.L [toSExpr a, toSExpr b]
 
+instance (ToSExpr a, ToSExpr b, ToSExpr c) => ToSExpr (a, b, c) where
+  toSExpr (a, b, c) = S.L [toSExpr a, toSExpr b, toSExpr c]
+
+instance (ToSExpr a) => ToSExpr [a] where
+  toSExpr = S.L . map toSExpr
+  sShow = convertString . S.encode (S.unconstrainedPrint atomToText & S.setIndentStrategy indentStrategy) . map toSExpr
+
 data Atom
   = Symbol Text
   | Int Integer (Maybe Text)
@@ -52,7 +59,3 @@ indentStrategy (S.A (Symbol "prim")) = S.SwingAfter 2
 indentStrategy (S.A (Symbol "invoke")) = S.SwingAfter 2
 indentStrategy (S.A (Symbol "sum")) = S.SwingAfter 2
 indentStrategy _ = S.Swing
-
-instance (ToSExpr a) => ToSExpr [a] where
-  toSExpr = S.L . map toSExpr
-  sShow = convertString . S.encode (S.unconstrainedPrint atomToText & S.setIndentStrategy indentStrategy) . map toSExpr
