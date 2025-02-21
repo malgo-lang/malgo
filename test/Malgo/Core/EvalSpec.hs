@@ -25,7 +25,7 @@ import System.IO.Streams qualified as Streams
 import Test.Hspec
 
 spec :: Spec
-spec = do
+spec = parallel do
   runIO do
     setupBuiltin
     setupPrelude
