@@ -2,7 +2,7 @@ module Malgo.Sequent.Value (Value (..), Env (..)) where
 
 import Malgo.Prelude
 import Malgo.Sequent.Command (Command)
-import Malgo.Sequent.Core (Literal, Name, Tag)
+import Malgo.Sequent.Fun (Literal, Name, Tag)
 
 data Value where
   Literal :: Literal -> Value

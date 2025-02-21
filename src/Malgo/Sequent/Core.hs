@@ -1,12 +1,9 @@
 {-# LANGUAGE UndecidableInstances #-}
 
 module Malgo.Sequent.Core
-  ( Name,
-    Program (..),
+  ( Program (..),
     Producer (..),
     Consumer (..),
-    Tag (..),
-    Literal (..),
     convertToZero,
   )
 where
@@ -21,9 +18,7 @@ import Malgo.Module (ModuleName)
 import Malgo.MonadUniq
 import Malgo.Prelude
 import Malgo.SExpr hiding (Char, Double, Float, String)
-import Malgo.SExpr qualified as S
-
-type Name = Id
+import Malgo.Sequent.Fun (Literal, Name, Tag)
 
 data Program x = Program
   {definitions :: [(Name, [Name], Statement x)]}
@@ -89,14 +84,14 @@ instance ToSExpr (Statement x) where
 
 data Branch x = Branch
   { range :: Range,
-    patterns :: [Pattern],
+    pattern :: Pattern,
     statement :: Statement x
   }
 
 deriving stock instance Show (Branch x)
 
 instance ToSExpr (Branch x) where
-  toSExpr (Branch _ patterns statement) = S.L [S.L $ map toSExpr patterns, toSExpr statement]
+  toSExpr (Branch _ pattern statement) = S.L [toSExpr pattern, toSExpr statement]
 
 data Pattern where
   PVar :: Range -> Name -> Pattern
@@ -111,31 +106,6 @@ instance ToSExpr Pattern where
   toSExpr (PLiteral _ literal) = toSExpr literal
   toSExpr (Destruct _ tag patterns) = S.L [S.A "destruct", toSExpr tag, S.L $ map toSExpr patterns]
   toSExpr (Expand _ kvs) = S.L $ map (\(k, v) -> S.L [toSExpr k, toSExpr v]) $ Map.toList kvs
-
--- | Tag is used to distinguish different structures.
-data Tag = Tuple | Tag Text
-  deriving stock (Show)
-
-instance ToSExpr Tag where
-  toSExpr Tuple = S.A "tuple"
-  toSExpr (Tag t) = toSExpr t
-
-data Literal
-  = Int32 Int32
-  | Int64 Int64
-  | Float Float
-  | Double Double
-  | Char Char
-  | String Text
-  deriving stock (Show)
-
-instance ToSExpr Literal where
-  toSExpr (Int32 n) = S.A $ S.Int (fromIntegral n) (Just "i32")
-  toSExpr (Int64 n) = S.A $ S.Int (fromIntegral n) (Just "i64")
-  toSExpr (Float n) = S.A $ S.Float n
-  toSExpr (Double n) = S.A $ S.Double n
-  toSExpr (Char c) = S.A $ S.Char c
-  toSExpr (String t) = S.A $ S.String t
 
 convertToZero :: (State Uniq :> es, Reader ModuleName :> es) => Statement One -> Eff es (Statement Zero)
 convertToZero x = castToZero <$> flat x
@@ -155,12 +125,12 @@ instance (State Uniq :> es, Reader ModuleName :> es) => Flat es Producer where
         var <- newTemporalId "var"
         producer' <- flat producer
         constructor <- flat (Construct range tag (flatProducers <> [Var range var] <> rest) consumers)
-        pure $
-          Do range label $
-            Cut producer' $
-              Then range var $
-                Cut constructor $
-                  Label range label
+        pure
+          $ Do range label
+          $ Cut producer'
+          $ Then range var
+          $ Cut constructor
+          $ Label range label
       Nothing -> do
         producers' <- traverse flat flatProducers
         consumers' <- traverse flat consumers
@@ -195,11 +165,11 @@ instance (State Uniq :> es, Reader ModuleName :> es) => Flat es Consumer where
         inner <- newTemporalId "inner"
         producer' <- flat producer
         apply <- flat (Apply range (flatProducers <> [Var range inner] <> rest) consumers)
-        pure $
-          Then range outer $
-            Cut producer' $
-              Then range inner $
-                Cut (Var range outer) apply
+        pure
+          $ Then range outer
+          $ Cut producer'
+          $ Then range inner
+          $ Cut (Var range outer) apply
       Nothing -> do
         producers' <- traverse flat flatProducers
         consumers' <- traverse flat consumers

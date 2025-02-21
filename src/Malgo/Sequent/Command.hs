@@ -7,7 +7,7 @@ module Malgo.Sequent.Command
 where
 
 import Malgo.Prelude
-import Malgo.Sequent.Core (Literal, Name, Tag)
+import Malgo.Sequent.Fun (Literal, Name, Tag)
 
 data Program = Program
   {definitions :: [(Name, Code)]}
@@ -77,13 +77,13 @@ data Command
     Primitive Range Text
   | -- | Select selects a branch based on the values on the stack.
     --
-    -- @(value* <> S, E, Select(range, branch*)) -> (S, E, selected branch)@
+    -- @(value : S, E, Select(range, branch*)) -> (S, E, selected branch)@
     Select Range [Branch]
   deriving stock (Show)
 
 data Branch = Branch
   { range :: Range,
-    patterns :: [Pattern],
+    pattern :: Pattern,
     code :: Code
   }
   deriving stock (Show)
