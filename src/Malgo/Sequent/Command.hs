@@ -2,15 +2,14 @@ module Malgo.Sequent.Command
   ( Program (..),
     Branch (..),
     Command (..),
-    Pattern (..),
   )
 where
 
 import Malgo.Prelude
-import Malgo.Sequent.Fun (Literal, Name, Tag)
+import Malgo.Sequent.Fun (Literal, Name, Pattern, Tag)
 
 data Program = Program
-  {definitions :: [(Name, Code)]}
+  {definitions :: [(Range, Name, Code)]}
   deriving stock (Show)
 
 type Code = [Command]
@@ -86,13 +85,4 @@ data Branch = Branch
     pattern :: Pattern,
     code :: Code
   }
-  deriving stock (Show)
-
-data Pattern
-  = Var Name
-  | Literal Literal
-  | -- | Destruct a structure.
-    Destruct Tag [Pattern]
-  | -- | Expand an object.
-    Expand (Map Text Pattern)
   deriving stock (Show)

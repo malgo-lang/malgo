@@ -9,6 +9,7 @@ module Malgo.Sequent.Fun
     Expr (..),
     Branch (..),
     Pattern (..),
+    HasRange (..),
   )
 where
 
@@ -46,50 +47,72 @@ instance ToSExpr Literal where
   toSExpr (Char c) = S.A $ S.Char c
   toSExpr (String t) = S.A $ S.String t
 
-data Program = Program
-  {definitions :: [(Name, [Name], Expr)]}
+data Program = Program [(Range, Name, [Name], Expr)]
 
 instance ToSExpr Program where
-  toSExpr Program {definitions} = S.L $ map toSExpr definitions
+  toSExpr (Program definitions) = S.L $ map (\(_, name, parameters, body) -> toSExpr (name, parameters, body)) definitions
 
 data Expr
-  = Var {range :: Range, name :: Name}
-  | Literal {range :: Range, literal :: Literal}
-  | Construct {range :: Range, tag :: Tag, arguments :: [Expr]}
-  | Lambda {range :: Range, parameters :: [Name], body :: Expr}
-  | Object {range :: Range, fields :: Map Text Expr}
-  | Apply {range :: Range, callee :: Expr, arguments :: [Expr]}
-  | Project {range :: Range, callee :: Expr, field :: Text}
-  | Primitive {range :: Range, operator :: Text, arguments :: [Expr]}
-  | Select {range :: Range, scrutinees :: Expr, branches :: [Branch]}
+  = Var Range Name
+  | Literal Range Literal
+  | Construct Range Tag [Expr]
+  | Lambda Range [Name] Expr
+  | Object Range (Map Text Expr)
+  | Apply Range Expr [Expr]
+  | Project Range Expr Text
+  | Primitive Range Text [Expr]
+  | Select Range Expr [Branch]
   deriving stock (Show)
+
+class HasRange a where
+  range :: a -> Range
+
+instance HasRange Expr where
+  range (Var r _) = r
+  range (Literal r _) = r
+  range (Construct r _ _) = r
+  range (Lambda r _ _) = r
+  range (Object r _) = r
+  range (Apply r _ _) = r
+  range (Project r _ _) = r
+  range (Primitive r _ _) = r
+  range (Select r _ _) = r
 
 instance ToSExpr Expr where
-  toSExpr Var {name} = toSExpr name
-  toSExpr Literal {literal} = toSExpr literal
-  toSExpr Construct {tag, arguments} = S.L [toSExpr tag, S.L $ map toSExpr arguments]
-  toSExpr Lambda {parameters, body} = S.L [S.A "lambda", S.L $ map toSExpr parameters, toSExpr body]
-  toSExpr Object {fields} = S.L [S.A "object", S.L $ map toSExpr $ Map.toList fields]
-  toSExpr Apply {callee, arguments} = S.L [S.A "apply", toSExpr callee, S.L $ map toSExpr arguments]
-  toSExpr Project {callee, field} = S.L [S.A "project", toSExpr callee, toSExpr field]
-  toSExpr Primitive {operator, arguments} = S.L [S.A "primitive", toSExpr operator, S.L $ map toSExpr arguments]
-  toSExpr Select {scrutinees, branches} = S.L [S.A "select", toSExpr scrutinees, S.L $ map toSExpr branches]
+  toSExpr (Var _ name) = toSExpr name
+  toSExpr (Literal _ literal) = toSExpr literal
+  toSExpr (Construct _ tag arguments) = S.L [toSExpr tag, S.L $ map toSExpr arguments]
+  toSExpr (Lambda _ parameters body) = S.L [S.A "lambda", S.L $ map toSExpr parameters, toSExpr body]
+  toSExpr (Object _ fields) = S.L [S.A "object", S.L $ map toSExpr $ Map.toList fields]
+  toSExpr (Apply _ callee arguments) = S.L [S.A "apply", toSExpr callee, S.L $ map toSExpr arguments]
+  toSExpr (Project _ callee field) = S.L [S.A "project", toSExpr callee, toSExpr field]
+  toSExpr (Primitive _ operator arguments) = S.L [S.A "primitive", toSExpr operator, S.L $ map toSExpr arguments]
+  toSExpr (Select _ scrutinees branches) = S.L [S.A "select", toSExpr scrutinees, S.L $ map toSExpr branches]
 
-data Branch = Branch {range :: Range, pattern :: Pattern, body :: Expr}
+data Branch = Branch Range Pattern Expr
   deriving stock (Show)
+
+instance HasRange Branch where
+  range (Branch r _ _) = r
 
 instance ToSExpr Branch where
-  toSExpr Branch {pattern, body} = S.L [toSExpr pattern, toSExpr body]
+  toSExpr (Branch _ pattern body) = S.L [toSExpr pattern, toSExpr body]
 
 data Pattern
-  = PVar {range :: Range, name :: Name}
-  | PLiteral {range :: Range, literal :: Literal}
-  | Destruct {range :: Range, tag :: Tag, patterns :: [Pattern]}
-  | Expand {range :: Range, fields :: Map Text Pattern}
+  = PVar Range Name
+  | PLiteral Range Literal
+  | Destruct Range Tag [Pattern]
+  | Expand Range (Map Text Pattern)
   deriving stock (Show)
 
+instance HasRange Pattern where
+  range (PVar r _) = r
+  range (PLiteral r _) = r
+  range (Destruct r _ _) = r
+  range (Expand r _) = r
+
 instance ToSExpr Pattern where
-  toSExpr PVar {name} = toSExpr name
-  toSExpr PLiteral {literal} = toSExpr literal
-  toSExpr Destruct {tag, patterns} = S.L [toSExpr tag, S.L $ map toSExpr patterns]
-  toSExpr Expand {fields} = S.L [S.A "expand", S.L $ map toSExpr $ Map.toList fields]
+  toSExpr (PVar _ name) = toSExpr name
+  toSExpr (PLiteral _ literal) = toSExpr literal
+  toSExpr (Destruct _ tag patterns) = S.L [toSExpr tag, S.L $ map toSExpr patterns]
+  toSExpr (Expand _ fields) = S.L [S.A "expand", S.L $ map toSExpr $ Map.toList fields]

@@ -4,6 +4,9 @@ module Malgo.Sequent.Core
   ( Program (..),
     Producer (..),
     Consumer (..),
+    Rank (..),
+    Statement (..),
+    Branch (..),
     convertToZero,
   )
 where
@@ -18,14 +21,14 @@ import Malgo.Module (ModuleName)
 import Malgo.MonadUniq
 import Malgo.Prelude
 import Malgo.SExpr hiding (Char, Double, Float, String)
-import Malgo.Sequent.Fun (Literal, Name, Tag)
+import Malgo.Sequent.Fun (Literal, Name, Pattern, Tag)
 
 data Program x = Program
-  {definitions :: [(Name, [Name], Statement x)]}
+  {definitions :: [(Range, Name, [Name], Statement x)]}
   deriving stock (Show)
 
 instance ToSExpr (Program x) where
-  toSExpr (Program defs) = S.L $ map toSExpr defs
+  toSExpr (Program defs) = S.L $ map (\(_, name, parameters, body) -> toSExpr (name, parameters, body)) defs
 
 type data Rank = Zero | One
 
@@ -51,25 +54,26 @@ instance ToSExpr (Producer x) where
 data Consumer x where
   Label :: Range -> Name -> Consumer x
   Apply :: Range -> [Producer x] -> [Consumer x] -> Consumer x
-  Project :: Range -> Text -> Consumer x
+  Project :: Range -> Text -> Consumer x -> Consumer x
   Then :: Range -> Name -> Statement x -> Consumer x
   Finish :: Range -> Consumer x
+  Select :: Range -> [Branch x] -> Consumer x
 
 deriving stock instance Show (Consumer x)
 
 instance ToSExpr (Consumer x) where
   toSExpr (Label _ name) = toSExpr name
   toSExpr (Apply _ producers consumers) = S.L [S.A "apply", S.L $ map toSExpr producers, S.L $ map toSExpr consumers]
-  toSExpr (Project _ field) = S.L [S.A "project", toSExpr field]
+  toSExpr (Project _ field return) = S.L [S.A "project", toSExpr field, toSExpr return]
   toSExpr (Then _ name statement) = S.L [S.A "then", toSExpr name, toSExpr statement]
   toSExpr (Finish _) = S.A "finish"
+  toSExpr (Select _ branches) = S.L $ S.A "select" : map toSExpr branches
 
 data Statement x where
   Cut :: Producer x -> Consumer x -> Statement x
   CutDo :: Range -> Name -> Statement Zero -> Consumer Zero -> Statement Zero
   Primitive :: Range -> Text -> [Producer x] -> [Consumer x] -> Statement x
   Invoke :: Range -> Name -> [Producer x] -> [Consumer x] -> Statement x
-  Select :: Range -> [Branch x] -> Statement x
 
 deriving stock instance Show (Statement x)
 
@@ -80,7 +84,6 @@ instance ToSExpr (Statement x) where
     S.L [S.A "prim", toSExpr name, S.L $ map toSExpr producers, S.L $ map toSExpr consumers]
   toSExpr (Invoke _ name producers consumers) =
     S.L [S.A "invoke", toSExpr name, S.L $ map toSExpr producers, S.L $ map toSExpr consumers]
-  toSExpr (Select _ branches) = S.L $ S.A "select" : map toSExpr branches
 
 data Branch x = Branch
   { range :: Range,
@@ -92,20 +95,6 @@ deriving stock instance Show (Branch x)
 
 instance ToSExpr (Branch x) where
   toSExpr (Branch _ pattern statement) = S.L [toSExpr pattern, toSExpr statement]
-
-data Pattern where
-  PVar :: Range -> Name -> Pattern
-  PLiteral :: Range -> Literal -> Pattern
-  Destruct :: Range -> Tag -> [Pattern] -> Pattern
-  Expand :: Range -> (Map Text Pattern) -> Pattern
-
-deriving stock instance Show (Pattern)
-
-instance ToSExpr Pattern where
-  toSExpr (PVar _ name) = toSExpr name
-  toSExpr (PLiteral _ literal) = toSExpr literal
-  toSExpr (Destruct _ tag patterns) = S.L [S.A "destruct", toSExpr tag, S.L $ map toSExpr patterns]
-  toSExpr (Expand _ kvs) = S.L $ map (\(k, v) -> S.L [toSExpr k, toSExpr v]) $ Map.toList kvs
 
 convertToZero :: (State Uniq :> es, Reader ModuleName :> es) => Statement One -> Eff es (Statement Zero)
 convertToZero x = castToZero <$> flat x
@@ -174,11 +163,16 @@ instance (State Uniq :> es, Reader ModuleName :> es) => Flat es Consumer where
         producers' <- traverse flat flatProducers
         consumers' <- traverse flat consumers
         pure (Apply range producers' consumers')
-  flat (Project range field) = pure (Project range field)
+  flat (Project range field return) = do
+    return' <- flat return
+    pure (Project range field return')
   flat (Then range name statement) = do
     statement' <- flat statement
     pure (Then range name statement')
   flat (Finish range) = pure (Finish range)
+  flat (Select range branches) = do
+    branches' <- traverse flat branches
+    pure (Select range branches')
 
 instance (State Uniq :> es, Reader ModuleName :> es) => Flat es Statement where
   flat :: Statement One -> Eff es (Statement One)
@@ -210,9 +204,6 @@ instance (State Uniq :> es, Reader ModuleName :> es) => Flat es Statement where
         producers' <- traverse flat flatProducers
         consumers' <- traverse flat consumers
         pure (Invoke range name producers' consumers')
-  flat (Select range branches) = do
-    branches' <- traverse flat branches
-    pure (Select range branches')
 
 instance (State Uniq :> es, Reader ModuleName :> es) => Flat es Branch where
   flat :: Branch One -> Eff es (Branch One)
@@ -238,9 +229,10 @@ instance CastToZero Consumer where
   castToZero (Label range name) = Label range name
   castToZero (Apply range producers consumers) =
     Apply range (fmap castToZero producers) (fmap castToZero consumers)
-  castToZero (Project range field) = Project range field
+  castToZero (Project range field return) = Project range field $ castToZero return
   castToZero (Then range name statement) = Then range name (castToZero statement)
   castToZero (Finish range) = Finish range
+  castToZero (Select range branches) = Select range (fmap castToZero branches)
 
 instance CastToZero Statement where
   castToZero :: Statement One -> Statement Zero
@@ -250,7 +242,6 @@ instance CastToZero Statement where
     Primitive range name (fmap castToZero producers) (fmap castToZero consumers)
   castToZero (Invoke range name producers consumers) =
     Invoke range name (fmap castToZero producers) (fmap castToZero consumers)
-  castToZero (Select range branches) = Select range (fmap castToZero branches)
 
 instance CastToZero Branch where
   castToZero :: Branch One -> Branch Zero

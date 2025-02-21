@@ -8,4 +8,5 @@ import Malgo.Syntax as S
 import Malgo.Syntax.Extension as S
 
 compile :: () => TcEnv -> Module (Malgo 'Refine) -> Eff es ()
-compile = undefined
+compile = do
+  undefined
