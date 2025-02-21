@@ -35,7 +35,7 @@ import GHC.Records
 import GHC.Stack (callStack)
 import Malgo.Prelude
 import Path
-import System.Directory (canonicalizePath, createDirectoryIfMissing, doesFileExist, findFile, getCurrentDirectory, makeAbsolute, withCurrentDirectory)
+import System.Directory (canonicalizePath, createDirectoryIfMissing, doesFileExist, findFile, getCurrentDirectory, makeAbsolute)
 import System.Directory.Extra (listDirectories)
 import System.FilePath (makeRelative)
 import System.FilePath qualified as F
@@ -181,8 +181,8 @@ pwdPath = do
 
 parseArtifactPath :: (IOE :> es, Workspace :> es) => ArtifactPath -> FilePath -> Eff es ArtifactPath
 parseArtifactPath from path = do
-  let basePath = toFilePath $ parent from.originPath
-  rawPath <- liftIO $ withCurrentDirectory basePath $ canonicalizePath path
+  basePath <- liftIO $ makeAbsolute $ toFilePath $ parent from.originPath
+  rawPath <- liftIO $ canonicalizePath (basePath F.</> path)
   originPath <- parseAbsFile rawPath
 
   workspace <- getWorkspaceAbs
