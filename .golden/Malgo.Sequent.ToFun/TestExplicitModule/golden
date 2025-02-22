@@ -6,7 +6,7 @@
             ($TestExplicitModule.param_7))
          ((#TestExplicitModule.$__6
             (apply
-               putStrLn
+               (invoke putStrLn)
                ((apply
-                  String#
+                  (invoke String#)
                   ("Hello, world"))))))))))

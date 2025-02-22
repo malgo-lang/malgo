@@ -20,9 +20,9 @@
             ((#Test0.$__41
                (apply
                   (apply
-                     |>
+                     (invoke |>)
                      ((apply
-                        Int64#
+                        (invoke Int64#)
                         (1_i64))))
                   ((lambda
                      ($Test0.param_53)
@@ -32,9 +32,9 @@
                         (((Int64#
                            (#Test0.i_6))
                            (apply
-                              printString#
+                              (invoke printString#)
                               ((apply
-                                 toStringInt64#
+                                 (invoke toStringInt64#)
                                  (#Test0.i_6)))))))))))))))
    (+#
       (lambda
@@ -48,6 +48,6 @@
                   (#Test0.x_4 #Test0.y_5))
                   (apply
                      (apply
-                        addInt64#
+                        (invoke addInt64#)
                         (#Test0.x_4))
                      (#Test0.y_5)))))))))

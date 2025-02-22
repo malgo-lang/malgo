@@ -6,7 +6,7 @@
             ($TypeAnnotation.param_12))
          ((#TypeAnnotation.$__11
             (apply
-               printString
+               (invoke printString)
                ((apply
                   (lambda
                      ($TypeAnnotation.param_13)
@@ -15,5 +15,5 @@
                            ($TypeAnnotation.param_13))
                         ((#TypeAnnotation.x_0 #TypeAnnotation.x_0))))
                   ((apply
-                     String#
+                     (invoke String#)
                      ("hoge"))))))))))))

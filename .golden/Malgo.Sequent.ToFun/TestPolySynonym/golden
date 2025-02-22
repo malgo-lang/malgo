@@ -20,16 +20,16 @@
                   (object
                      ((fst
                         (apply
-                           Int32#
+                           (invoke Int32#)
                            (1_i32)))
                         (snd
                            (apply
-                              String#
+                              (invoke String#)
                               ("hoge")))))
                   (apply
                      (apply
-                        |>
+                        (invoke |>)
                         ((apply
-                           first
+                           (invoke first)
                            (#TestPolySynonym.x_7))))
-                     (printInt32)))))))))
+                     ((invoke printInt32))))))))))

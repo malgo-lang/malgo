@@ -32,8 +32,8 @@
                (apply
                   (apply
                      (apply
-                        if
-                        (True))
+                        (invoke if)
+                        ((invoke True)))
                      ((lambda
                         ($Test1.param_43)
                         (select
@@ -41,7 +41,7 @@
                               ($Test1.param_43))
                            ((#Test1.$__30
                               (apply
-                                 malgo_print_string
+                                 (invoke malgo_print_string)
                                  ("True"))))))))
                   ((lambda
                      ($Test1.param_44)
@@ -50,5 +50,5 @@
                            ($Test1.param_44))
                         ((#Test1.$__35
                            (apply
-                              malgo_print_string
+                              (invoke malgo_print_string)
                               ("False"))))))))))))))

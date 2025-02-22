@@ -13,11 +13,11 @@
                         ($NestedMatch.param_31))
                      (((True ())
                         (apply
-                           malgo_print_string
+                           (invoke malgo_print_string)
                            ("OK")))
                         ((False ())
                            (apply
-                              malgo_exit_failure
+                              (invoke malgo_exit_failure)
                               ((tuple ())))))))
                ((apply
                   (lambda
@@ -26,9 +26,9 @@
                         (tuple
                            ($NestedMatch.param_32))
                         (((True1 ())
-                           False)
+                           (invoke False))
                            ((False1 ())
-                              True))))
+                              (invoke True)))))
                   ((apply
                      (lambda
                         ($NestedMatch.param_33)
@@ -36,7 +36,7 @@
                            (tuple
                               ($NestedMatch.param_33))
                            (((True2 ())
-                              False1)
+                              (invoke False1))
                               ((False2 ())
-                                 True1))))
-                     (True2))))))))))))
+                                 (invoke True1)))))
+                     ((invoke True2)))))))))))))

@@ -6,7 +6,7 @@
             ($Echo.param_9))
          ((#Echo.$__8
             (apply
-               putStr
+               (invoke putStr)
                ((apply
-                  getContents
+                  (invoke getContents)
                   ((tuple ())))))))))))

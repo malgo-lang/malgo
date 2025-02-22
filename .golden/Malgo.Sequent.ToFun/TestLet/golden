@@ -22,7 +22,7 @@
                   #TestLet.x_4
                   (apply
                      (apply
-                        addInt32#
+                        (invoke addInt32#)
                         (1_i32))
                      (2_i32))
                   (apply
@@ -31,10 +31,10 @@
                         (let
                            #TestLet.x_5
                            (apply
-                              Int32#
+                              (invoke Int32#)
                               ((apply
                                  (apply
-                                    addInt32#
+                                    (invoke addInt32#)
                                     (1_i32))
                                  (2_i32))))
                            (let
@@ -47,15 +47,15 @@
                                     (((Int32#
                                        (#TestLet.x_6))
                                        (apply
-                                          printString#
+                                          (invoke printString#)
                                           ((apply
-                                             toStringInt32#
+                                             (invoke toStringInt32#)
                                              (#TestLet.x_6))))))))
                               (apply
                                  #TestLet.printInt32_7
                                  (#TestLet.x_5)))))
                      ((apply
-                        printString#
+                        (invoke printString#)
                         ((apply
-                           toStringInt32#
+                           (invoke toStringInt32#)
                            (#TestLet.x_4)))))))))))))

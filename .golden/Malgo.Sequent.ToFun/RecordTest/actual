@@ -31,21 +31,21 @@
                   (object
                      ((a
                         (apply
-                           Int32#
+                           (invoke Int32#)
                            (32_i32)))
                         (b
                            (apply
-                              Int32#
+                              (invoke Int32#)
                               (10_i32)))))
                   (apply
-                     printString
+                     (invoke printString)
                      ((apply
-                        toStringInt32
+                        (invoke toStringInt32)
                         ((apply
                            (apply
-                              addInt32
+                              (invoke addInt32)
                               ((apply
-                                 f
+                                 (invoke f)
                                  (#RecordTest.x_5))))
                            ((apply
                               (lambda

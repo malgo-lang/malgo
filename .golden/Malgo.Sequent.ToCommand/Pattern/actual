@@ -1,39 +1,55 @@
 ((main
+   $Pattern.return_18
    ((lambda
-      ($Pattern.param_16 $Pattern.return_18)
-      ((do $Pattern.return_19
+      ($Pattern.param_16 $Pattern.return_19)
+      ((do $Pattern.return_20
          ((fetch $Pattern.param_16)
             (construct tuple 1)
             (select
                (#Pattern.$__9
-                  ((do $Pattern.return_21
-                     ((fetch putStrLn)
-                        (then $Pattern.outer_24
-                           ((do $Pattern.return_20
-                              ((fetch String#)
+                  ((do $Pattern.return_24
+                     ((do $Pattern.return_21
+                        ((suspend
+                           ((resume $Pattern.return_21)))
+                           (invoke putStrLn)))
+                        (then $Pattern.outer_30
+                           ((do $Pattern.return_23
+                              ((do $Pattern.return_22
+                                 ((suspend
+                                    ((resume $Pattern.return_22)))
+                                    (invoke String#)))
                                  (push "OK")
                                  (suspend
-                                    ((resume $Pattern.return_20)))
+                                    ((resume $Pattern.return_23)))
                                  (apply 2)))
-                              (then $Pattern.inner_25
-                                 ((fetch $Pattern.outer_24)
-                                    (fetch $Pattern.inner_25)
+                              (then $Pattern.inner_31
+                                 ((fetch $Pattern.outer_30)
+                                    (fetch $Pattern.inner_31)
                                     (suspend
-                                       ((resume $Pattern.return_21)))
+                                       ((resume $Pattern.return_24)))
                                     (apply 2)))))))
-                     (resume $Pattern.return_19))))))
-         (resume $Pattern.return_18)))))
+                     (resume $Pattern.return_20))))))
+         (resume $Pattern.return_19)))
+      (resume $Pattern.return_18)))
    (isNil
+      $Pattern.return_25
       ((lambda
-         ($Pattern.param_17 $Pattern.return_22)
-         ((do $Pattern.return_23
+         ($Pattern.param_17 $Pattern.return_26)
+         ((do $Pattern.return_27
             ((fetch $Pattern.param_17)
                (construct tuple 1)
                (select
                   ((Nil ())
-                     ((fetch True)
-                        (resume $Pattern.return_23)))
+                     ((do $Pattern.return_28
+                        ((suspend
+                           ((resume $Pattern.return_28)))
+                           (invoke True)))
+                        (resume $Pattern.return_27)))
                   (#Pattern.__0
-                     ((fetch False)
-                        (resume $Pattern.return_23))))))
-            (resume $Pattern.return_22))))))
+                     ((do $Pattern.return_29
+                        ((suspend
+                           ((resume $Pattern.return_29)))
+                           (invoke False)))
+                        (resume $Pattern.return_27))))))
+            (resume $Pattern.return_26)))
+         (resume $Pattern.return_25))))

@@ -7,7 +7,7 @@
                ($ZeroArgs.param_28))
             ((#ZeroArgs.$__6
                (apply
-                  Int32#
+                  (invoke Int32#)
                   (1_i32))))))
       ((tuple ()))))
    (id
@@ -40,10 +40,10 @@
                            ($ZeroArgs.param_32))
                         ((#ZeroArgs.$__24
                            (apply
-                              printString
+                              (invoke printString)
                               ((apply
-                                 toStringInt32
+                                 (invoke toStringInt32)
                                  ((apply
-                                    id
-                                    (one))))))))))))))
+                                    (invoke id)
+                                    ((invoke one)))))))))))))))
          ((tuple ())))))

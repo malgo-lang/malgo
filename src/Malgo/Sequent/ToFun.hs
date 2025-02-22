@@ -26,6 +26,7 @@ instance (State Uniq :> es, Reader ModuleName :> es) => Convert (Typed Range, Id
     pure (range, name, expr)
 
 instance (State Uniq :> es, Reader ModuleName :> es) => Convert (S.Expr (Malgo 'Refine)) (Eff es F.Expr) where
+  convert (S.Var Typed {value = range} name) | idIsExternal name = pure $ F.Invoke range name
   convert (S.Var Typed {value = range} name) = pure $ F.Var range name
   convert (S.Unboxed Typed {value = range} literal) = pure $ F.Literal range $ convert literal
   convert (S.Apply Typed {value = range} f x) = do

@@ -1,4 +1,5 @@
-((<> appendString)
+((<>
+   (invoke appendString))
    (show
       (lambda
          ($Punctuate.param_113)
@@ -9,48 +10,48 @@
                (#Punctuate.str_0))
                (apply
                   (apply
-                     <>
+                     (invoke <>)
                      ((apply
-                        String#
+                        (invoke String#)
                         ("Symbol "))))
                   (#Punctuate.str_0)))
                ((SInt
                   (#Punctuate.int_1))
                   (apply
                      (apply
-                        <>
+                        (invoke <>)
                         ((apply
-                           String#
+                           (invoke String#)
                            ("SInt "))))
                      ((apply
-                        toStringInt32
+                        (invoke toStringInt32)
                         (#Punctuate.int_1)))))
                ((SList
                   (#Punctuate.ss_2))
                   (apply
                      (apply
-                        <>
+                        (invoke <>)
                         ((apply
-                           String#
+                           (invoke String#)
                            ("SList ["))))
                      ((apply
                         (apply
-                           <>
+                           (invoke <>)
                            ((apply
-                              concatString
+                              (invoke concatString)
                               ((apply
                                  (apply
-                                    punctuate
+                                    (invoke punctuate)
                                     ((apply
-                                       String#
+                                       (invoke String#)
                                        (", "))))
                                  ((apply
                                     (apply
-                                       mapList
-                                       (show))
+                                       (invoke mapList)
+                                       ((invoke show)))
                                     (#Punctuate.ss_2))))))))
                         ((apply
-                           String#
+                           (invoke String#)
                            ("]")))))))))))
    (main
       (lambda
@@ -62,46 +63,46 @@
                (let
                   #Punctuate.x_3
                   (apply
-                     SList
+                     (invoke SList)
                      ((apply
                         (apply
-                           Cons
+                           (invoke Cons)
                            ((apply
-                              Symbol
+                              (invoke Symbol)
                               ((apply
-                                 String#
+                                 (invoke String#)
                                  ("x"))))))
                         ((apply
                            (apply
-                              Cons
+                              (invoke Cons)
                               ((apply
-                                 SList
+                                 (invoke SList)
                                  ((apply
                                     (apply
-                                       Cons
+                                       (invoke Cons)
                                        ((apply
-                                          Symbol
+                                          (invoke Symbol)
                                           ((apply
-                                             String#
+                                             (invoke String#)
                                              ("y"))))))
                                     ((apply
                                        (apply
-                                          Cons
+                                          (invoke Cons)
                                           ((apply
-                                             SList
+                                             (invoke SList)
                                              ((apply
                                                 (apply
-                                                   Cons
+                                                   (invoke Cons)
                                                    ((apply
-                                                      Symbol
+                                                      (invoke Symbol)
                                                       ((apply
-                                                         String#
+                                                         (invoke String#)
                                                          ("z"))))))
-                                                (Nil))))))
-                                       (Nil))))))))
-                           (Nil))))))
+                                                ((invoke Nil)))))))
+                                       ((invoke Nil)))))))))
+                           ((invoke Nil)))))))
                   (apply
-                     putStrLn
+                     (invoke putStrLn)
                      ((apply
-                        show
+                        (invoke show)
                         (#Punctuate.x_3)))))))))))

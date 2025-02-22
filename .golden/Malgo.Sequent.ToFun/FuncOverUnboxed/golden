@@ -6,21 +6,21 @@
             ($FuncOverUnboxed.param_22))
          ((0_i64
             (apply
-               printString#
+               (invoke printString#)
                ((apply
-                  toStringInt64#
+                  (invoke toStringInt64#)
                   (1_i64)))))
             (1_i64
                (apply
-                  printString#
+                  (invoke printString#)
                   ((apply
-                     toStringInt64#
+                     (invoke toStringInt64#)
                      (1_i64)))))
             (#FuncOverUnboxed.__0
                (apply
-                  printString#
+                  (invoke printString#)
                   ((apply
-                     toStringInt64#
+                     (invoke toStringInt64#)
                      (0_i64)))))))))
    (main
       (lambda
@@ -30,5 +30,5 @@
                ($FuncOverUnboxed.param_23))
             ((#FuncOverUnboxed.$__21
                (apply
-                  f
+                  (invoke f)
                   (0_i64))))))))

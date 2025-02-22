@@ -1,11 +1,11 @@
 ((one
    (apply
-      Int32#
+      (invoke Int32#)
       (1_i32)))
    (constId
       (apply
-         const
-         (identity)))
+         (invoke const)
+         ((invoke identity))))
    (comp
       (apply
          (lambda
@@ -14,17 +14,17 @@
                (tuple
                   ($ToplevelVariable.param_82))
                (((Nothing ())
-                  Nothing)
+                  (invoke Nothing))
                   ((Just
                      (#ToplevelVariable.x_1))
-                     Nothing))))
+                     (invoke Nothing)))))
          ((apply
-            Just
+            (invoke Just)
             ((tuple ()))))))
    (addOne
       (apply
-         addInt32
-         (one)))
+         (invoke addInt32)
+         ((invoke one))))
    (main
       (lambda
          ($ToplevelVariable.param_83)
@@ -36,14 +36,14 @@
                   (lambda
                      ($ToplevelVariable.tmp_84)
                      (apply
-                        printInt32
+                        (invoke printInt32)
                         ((apply
                            (apply
-                              constId
-                              (const))
+                              (invoke constId)
+                              ((invoke const)))
                            ((apply
-                              addOne
-                              (one)))))))
+                              (invoke addOne)
+                              ((invoke one))))))))
                   ((apply
                      (lambda
                         ($ToplevelVariable.param_85)
@@ -52,11 +52,11 @@
                               ($ToplevelVariable.param_85))
                            (((Nothing ())
                               (apply
-                                 printString
+                                 (invoke printString)
                                  ((apply
-                                    String#
+                                    (invoke String#)
                                     ("OK")))))
                               ((Just
                                  (#ToplevelVariable.__2))
                                  (tuple ())))))
-                     (comp))))))))))
+                     ((invoke comp)))))))))))

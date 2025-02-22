@@ -8,7 +8,7 @@
                   ($Show.param_113))
                ((#Show.x_3
                   (apply
-                     toStringInt32
+                     (invoke toStringInt32)
                      (#Show.x_3))))))))))
    (show
       (lambda
@@ -30,10 +30,10 @@
                (((tuple
                   (#Show.showDict_13 #Show.x_14))
                   (apply
-                     printString
+                     (invoke printString)
                      ((apply
                         (apply
-                           show
+                           (invoke show)
                            (#Show.showDict_13))
                         (#Show.x_14))))))))))
    (<>
@@ -48,7 +48,7 @@
                   (#Show.x_0 #Show.y_1))
                   (apply
                      (apply
-                        appendString
+                        (invoke appendString)
                         (#Show.x_0))
                      (#Show.y_1))))))))
    (showTuple2
@@ -72,34 +72,34 @@
                                  (#Show.a_10 #Show.b_11))
                                  (apply
                                     (apply
-                                       <>
+                                       (invoke <>)
                                        ((apply
-                                          String#
+                                          (invoke String#)
                                           ("("))))
                                     ((apply
                                        (apply
-                                          <>
+                                          (invoke <>)
                                           ((apply
                                              (apply
-                                                show
+                                                (invoke show)
                                                 (#Show.showDictA_8))
                                              (#Show.a_10))))
                                        ((apply
                                           (apply
-                                             <>
+                                             (invoke <>)
                                              ((apply
-                                                String#
+                                                (invoke String#)
                                                 (", "))))
                                           ((apply
                                              (apply
-                                                <>
+                                                (invoke <>)
                                                 ((apply
                                                    (apply
-                                                      show
+                                                      (invoke show)
                                                       (#Show.showDictB_9))
                                                    (#Show.b_11))))
                                              ((apply
-                                                String#
+                                                (invoke String#)
                                                 (")")))))))))))))))))))))))
    (main
       (lambda
@@ -110,16 +110,16 @@
             ((#Show.$__112
                (apply
                   (apply
-                     print
+                     (invoke print)
                      ((apply
                         (apply
-                           showTuple2
-                           (showInt32))
-                        (showInt32))))
+                           (invoke showTuple2)
+                           ((invoke showInt32)))
+                        ((invoke showInt32)))))
                   ((tuple
                      ((apply
-                        Int32#
+                        (invoke Int32#)
                         (1_i32))
                         (apply
-                           Int32#
+                           (invoke Int32#)
                            (2_i32))))))))))))

@@ -1,6 +1,6 @@
 ((undefined
    (apply
-      malgo_unsafe_cast
+      (invoke malgo_unsafe_cast)
       ((tuple ()))))
    (toStringInt64#
       (lambda
@@ -10,7 +10,7 @@
                ($Builtin.param_1792))
             ((#Builtin.x_257
                (apply
-                  malgo_int64_t_to_string
+                  (invoke malgo_int64_t_to_string)
                   (#Builtin.x_257)))))))
    (toStringInt64
       (lambda
@@ -21,9 +21,9 @@
             (((Int64#
                (#Builtin.x_258))
                (apply
-                  String#
+                  (invoke String#)
                   ((apply
-                     toStringInt64#
+                     (invoke toStringInt64#)
                      (#Builtin.x_258)))))))))
    (toStringInt32#
       (lambda
@@ -33,7 +33,7 @@
                ($Builtin.param_1794))
             ((#Builtin.x_255
                (apply
-                  malgo_int32_t_to_string
+                  (invoke malgo_int32_t_to_string)
                   (#Builtin.x_255)))))))
    (toStringInt32
       (lambda
@@ -44,9 +44,9 @@
             (((Int32#
                (#Builtin.x_256))
                (apply
-                  String#
+                  (invoke String#)
                   ((apply
-                     toStringInt32#
+                     (invoke toStringInt32#)
                      (#Builtin.x_256)))))))))
    (toStringFloat#
       (lambda
@@ -56,7 +56,7 @@
                ($Builtin.param_1796))
             ((#Builtin.x_259
                (apply
-                  malgo_float_to_string
+                  (invoke malgo_float_to_string)
                   (#Builtin.x_259)))))))
    (toStringFloat
       (lambda
@@ -67,9 +67,9 @@
             (((Float#
                (#Builtin.x_260))
                (apply
-                  String#
+                  (invoke String#)
                   ((apply
-                     toStringFloat#
+                     (invoke toStringFloat#)
                      (#Builtin.x_260)))))))))
    (toStringDouble#
       (lambda
@@ -79,7 +79,7 @@
                ($Builtin.param_1798))
             ((#Builtin.x_261
                (apply
-                  malgo_double_to_string
+                  (invoke malgo_double_to_string)
                   (#Builtin.x_261)))))))
    (toStringDouble
       (lambda
@@ -90,9 +90,9 @@
             (((Double#
                (#Builtin.x_262))
                (apply
-                  String#
+                  (invoke String#)
                   ((apply
-                     toStringDouble#
+                     (invoke toStringDouble#)
                      (#Builtin.x_262)))))))))
    (toStringChar#
       (lambda
@@ -102,7 +102,7 @@
                ($Builtin.param_1800))
             ((#Builtin.x_263
                (apply
-                  malgo_char_to_string
+                  (invoke malgo_char_to_string)
                   (#Builtin.x_263)))))))
    (toStringChar
       (lambda
@@ -113,9 +113,9 @@
             (((Char#
                (#Builtin.x_264))
                (apply
-                  String#
+                  (invoke String#)
                   ((apply
-                     toStringChar#
+                     (invoke toStringChar#)
                      (#Builtin.x_264)))))))))
    (substring#
       (lambda
@@ -132,7 +132,7 @@
                      (apply
                         (apply
                            (apply
-                              malgo_substring
+                              (invoke malgo_substring)
                               (#Builtin.str_249))
                            (#Builtin.start_250))
                         (#Builtin.end_251)))))))))
@@ -154,11 +154,11 @@
                         (Int64#
                            (#Builtin.end_254))))
                      (apply
-                        String#
+                        (invoke String#)
                         ((apply
                            (apply
                               (apply
-                                 substring#
+                                 (invoke substring#)
                                  (#Builtin.str_252))
                               (#Builtin.start_253))
                            (#Builtin.end_254)))))))))))
@@ -174,7 +174,7 @@
                   (#Builtin.x_32 #Builtin.y_33))
                   (apply
                      (apply
-                        malgo_sub_int64_t
+                        (invoke malgo_sub_int64_t)
                         (#Builtin.x_32))
                      (#Builtin.y_33))))))))
    (subInt64
@@ -191,10 +191,10 @@
                      (Int64#
                         (#Builtin.y_35))))
                   (apply
-                     Int64#
+                     (invoke Int64#)
                      ((apply
                         (apply
-                           subInt64#
+                           (invoke subInt64#)
                            (#Builtin.x_34))
                         (#Builtin.y_35))))))))))
    (subInt32#
@@ -209,7 +209,7 @@
                   (#Builtin.x_16 #Builtin.y_17))
                   (apply
                      (apply
-                        malgo_sub_int32_t
+                        (invoke malgo_sub_int32_t)
                         (#Builtin.x_16))
                      (#Builtin.y_17))))))))
    (subInt32
@@ -226,10 +226,10 @@
                      (Int32#
                         (#Builtin.y_19))))
                   (apply
-                     Int32#
+                     (invoke Int32#)
                      ((apply
                         (apply
-                           subInt32#
+                           (invoke subInt32#)
                            (#Builtin.x_18))
                         (#Builtin.y_19))))))))))
    (subFloat#
@@ -244,7 +244,7 @@
                   (#Builtin.x_48 #Builtin.y_49))
                   (apply
                      (apply
-                        malgo_sub_float
+                        (invoke malgo_sub_float)
                         (#Builtin.x_48))
                      (#Builtin.y_49))))))))
    (subFloat
@@ -261,10 +261,10 @@
                      (Float#
                         (#Builtin.y_51))))
                   (apply
-                     Float#
+                     (invoke Float#)
                      ((apply
                         (apply
-                           subFloat#
+                           (invoke subFloat#)
                            (#Builtin.x_50))
                         (#Builtin.y_51))))))))))
    (subDouble#
@@ -279,7 +279,7 @@
                   (#Builtin.x_64 #Builtin.y_65))
                   (apply
                      (apply
-                        malgo_sub_double
+                        (invoke malgo_sub_double)
                         (#Builtin.x_64))
                      (#Builtin.y_65))))))))
    (subDouble
@@ -296,10 +296,10 @@
                      (Double#
                         (#Builtin.y_67))))
                   (apply
-                     Double#
+                     (invoke Double#)
                      ((apply
                         (apply
-                           subDouble#
+                           (invoke subDouble#)
                            (#Builtin.x_66))
                         (#Builtin.y_67))))))))))
    (string#
@@ -310,7 +310,7 @@
                ($Builtin.param_1824))
             ((#Builtin.x_5
                (apply
-                  String#
+                  (invoke String#)
                   (#Builtin.x_5)))))))
    (sqrtFloat#
       (lambda
@@ -320,7 +320,7 @@
                ($Builtin.param_1825))
             ((#Builtin.x_76
                (apply
-                  sqrtf
+                  (invoke sqrtf)
                   (#Builtin.x_76)))))))
    (sqrtFloat
       (lambda
@@ -331,9 +331,9 @@
             (((Float#
                (#Builtin.x_77))
                (apply
-                  Float#
+                  (invoke Float#)
                   ((apply
-                     sqrtFloat#
+                     (invoke sqrtFloat#)
                      (#Builtin.x_77)))))))))
    (sqrtDouble#
       (lambda
@@ -343,7 +343,7 @@
                ($Builtin.param_1827))
             ((#Builtin.x_78
                (apply
-                  sqrt
+                  (invoke sqrt)
                   (#Builtin.x_78)))))))
    (sqrtDouble
       (lambda
@@ -354,9 +354,9 @@
             (((Double#
                (#Builtin.x_79))
                (apply
-                  Double#
+                  (invoke Double#)
                   ((apply
-                     sqrtDouble#
+                     (invoke sqrtDouble#)
                      (#Builtin.x_79)))))))))
    (printString#
       (lambda
@@ -366,7 +366,7 @@
                ($Builtin.param_1829))
             ((#Builtin.x_271
                (apply
-                  malgo_print_string
+                  (invoke malgo_print_string)
                   (#Builtin.x_271)))))))
    (printString
       (lambda
@@ -377,7 +377,7 @@
             (((String#
                (#Builtin.x_272))
                (apply
-                  printString#
+                  (invoke printString#)
                   (#Builtin.x_272)))))))
    (printChar#
       (lambda
@@ -387,7 +387,7 @@
                ($Builtin.param_1831))
             ((#Builtin.x_269
                (apply
-                  malgo_print_char
+                  (invoke malgo_print_char)
                   (#Builtin.x_269)))))))
    (printChar
       (lambda
@@ -398,7 +398,7 @@
             (((Char#
                (#Builtin.x_270))
                (apply
-                  printChar#
+                  (invoke printChar#)
                   (#Builtin.x_270)))))))
    (panic
       (lambda
@@ -409,7 +409,7 @@
             (((String#
                (#Builtin.message_8))
                (apply
-                  malgo_panic
+                  (invoke malgo_panic)
                   (#Builtin.message_8)))))))
    (ordChar#
       (lambda
@@ -419,7 +419,7 @@
                ($Builtin.param_1834))
             ((#Builtin.x_225
                (apply
-                  malgo_char_ord
+                  (invoke malgo_char_ord)
                   (#Builtin.x_225)))))))
    (ordChar
       (lambda
@@ -430,9 +430,9 @@
             (((Char#
                (#Builtin.chr_226))
                (apply
-                  Int32#
+                  (invoke Int32#)
                   ((apply
-                     ordChar#
+                     (invoke ordChar#)
                      (#Builtin.chr_226)))))))))
    (not
       (lambda
@@ -441,9 +441,9 @@
             (tuple
                ($Builtin.param_1836))
             (((True ())
-               False)
+               (invoke False))
                ((False ())
-                  True)))))
+                  (invoke True))))))
    (newline
       (lambda
          ($Builtin.param_1837)
@@ -452,7 +452,7 @@
                ($Builtin.param_1837))
             ((#Builtin.__268
                (apply
-                  malgo_newline
+                  (invoke malgo_newline)
                   ((tuple ()))))))))
    (neString#
       (lambda
@@ -466,7 +466,7 @@
                   (#Builtin.x_205 #Builtin.y_206))
                   (apply
                      (apply
-                        malgo_ne_string
+                        (invoke malgo_ne_string)
                         (#Builtin.x_205))
                      (#Builtin.y_206))))))))
    (neInt64#
@@ -481,7 +481,7 @@
                   (#Builtin.x_109 #Builtin.y_110))
                   (apply
                      (apply
-                        malgo_ne_int64_t
+                        (invoke malgo_ne_int64_t)
                         (#Builtin.x_109))
                      (#Builtin.y_110))))))))
    (neInt32#
@@ -496,7 +496,7 @@
                   (#Builtin.x_85 #Builtin.y_86))
                   (apply
                      (apply
-                        malgo_ne_int32_t
+                        (invoke malgo_ne_int32_t)
                         (#Builtin.x_85))
                      (#Builtin.y_86))))))))
    (neFloat#
@@ -511,7 +511,7 @@
                   (#Builtin.x_133 #Builtin.y_134))
                   (apply
                      (apply
-                        malgo_ne_float
+                        (invoke malgo_ne_float)
                         (#Builtin.x_133))
                      (#Builtin.y_134))))))))
    (neDouble#
@@ -526,7 +526,7 @@
                   (#Builtin.x_157 #Builtin.y_158))
                   (apply
                      (apply
-                        malgo_ne_double
+                        (invoke malgo_ne_double)
                         (#Builtin.x_157))
                      (#Builtin.y_158))))))))
    (neChar#
@@ -541,7 +541,7 @@
                   (#Builtin.x_181 #Builtin.y_182))
                   (apply
                      (apply
-                        malgo_ne_char
+                        (invoke malgo_ne_char)
                         (#Builtin.x_181))
                      (#Builtin.y_182))))))))
    (mulInt64#
@@ -556,7 +556,7 @@
                   (#Builtin.x_36 #Builtin.y_37))
                   (apply
                      (apply
-                        malgo_mul_int64_t
+                        (invoke malgo_mul_int64_t)
                         (#Builtin.x_36))
                      (#Builtin.y_37))))))))
    (mulInt64
@@ -573,10 +573,10 @@
                      (Int64#
                         (#Builtin.y_39))))
                   (apply
-                     Int64#
+                     (invoke Int64#)
                      ((apply
                         (apply
-                           mulInt64#
+                           (invoke mulInt64#)
                            (#Builtin.x_38))
                         (#Builtin.y_39))))))))))
    (mulInt32#
@@ -591,7 +591,7 @@
                   (#Builtin.x_20 #Builtin.y_21))
                   (apply
                      (apply
-                        malgo_mul_int32_t
+                        (invoke malgo_mul_int32_t)
                         (#Builtin.x_20))
                      (#Builtin.y_21))))))))
    (mulInt32
@@ -608,10 +608,10 @@
                      (Int32#
                         (#Builtin.y_23))))
                   (apply
-                     Int32#
+                     (invoke Int32#)
                      ((apply
                         (apply
-                           mulInt32#
+                           (invoke mulInt32#)
                            (#Builtin.x_22))
                         (#Builtin.y_23))))))))))
    (mulFloat#
@@ -626,7 +626,7 @@
                   (#Builtin.x_52 #Builtin.y_53))
                   (apply
                      (apply
-                        malgo_mul_float
+                        (invoke malgo_mul_float)
                         (#Builtin.x_52))
                      (#Builtin.y_53))))))))
    (mulFloat
@@ -643,10 +643,10 @@
                      (Float#
                         (#Builtin.y_55))))
                   (apply
-                     Float#
+                     (invoke Float#)
                      ((apply
                         (apply
-                           mulFloat#
+                           (invoke mulFloat#)
                            (#Builtin.x_54))
                         (#Builtin.y_55))))))))))
    (mulDouble#
@@ -661,7 +661,7 @@
                   (#Builtin.x_68 #Builtin.y_69))
                   (apply
                      (apply
-                        malgo_mul_double
+                        (invoke malgo_mul_double)
                         (#Builtin.x_68))
                      (#Builtin.y_69))))))))
    (mulDouble
@@ -678,10 +678,10 @@
                      (Double#
                         (#Builtin.y_71))))
                   (apply
-                     Double#
+                     (invoke Double#)
                      ((apply
                         (apply
-                           mulDouble#
+                           (invoke mulDouble#)
                            (#Builtin.x_70))
                         (#Builtin.y_71))))))))))
    (ltString#
@@ -696,7 +696,7 @@
                   (#Builtin.x_209 #Builtin.y_210))
                   (apply
                      (apply
-                        malgo_lt_string
+                        (invoke malgo_lt_string)
                         (#Builtin.x_209))
                      (#Builtin.y_210))))))))
    (ltInt64#
@@ -711,7 +711,7 @@
                   (#Builtin.x_113 #Builtin.y_114))
                   (apply
                      (apply
-                        malgo_lt_int64_t
+                        (invoke malgo_lt_int64_t)
                         (#Builtin.x_113))
                      (#Builtin.y_114))))))))
    (ltInt32#
@@ -726,7 +726,7 @@
                   (#Builtin.x_89 #Builtin.y_90))
                   (apply
                      (apply
-                        malgo_lt_int32_t
+                        (invoke malgo_lt_int32_t)
                         (#Builtin.x_89))
                      (#Builtin.y_90))))))))
    (ltFloat#
@@ -741,7 +741,7 @@
                   (#Builtin.x_137 #Builtin.y_138))
                   (apply
                      (apply
-                        malgo_lt_float
+                        (invoke malgo_lt_float)
                         (#Builtin.x_137))
                      (#Builtin.y_138))))))))
    (ltDouble#
@@ -756,7 +756,7 @@
                   (#Builtin.x_161 #Builtin.y_162))
                   (apply
                      (apply
-                        malgo_lt_double
+                        (invoke malgo_lt_double)
                         (#Builtin.x_161))
                      (#Builtin.y_162))))))))
    (ltChar#
@@ -771,7 +771,7 @@
                   (#Builtin.x_185 #Builtin.y_186))
                   (apply
                      (apply
-                        malgo_lt_char
+                        (invoke malgo_lt_char)
                         (#Builtin.x_185))
                      (#Builtin.y_186))))))))
    (lengthString#
@@ -782,7 +782,7 @@
                ($Builtin.param_1878))
             ((#Builtin.x_235
                (apply
-                  malgo_string_length
+                  (invoke malgo_string_length)
                   (#Builtin.x_235)))))))
    (lengthString
       (lambda
@@ -793,9 +793,9 @@
             (((String#
                (#Builtin.str_236))
                (apply
-                  Int64#
+                  (invoke Int64#)
                   ((apply
-                     lengthString#
+                     (invoke lengthString#)
                      (#Builtin.str_236)))))))))
    (leString#
       (lambda
@@ -809,7 +809,7 @@
                   (#Builtin.x_217 #Builtin.y_218))
                   (apply
                      (apply
-                        malgo_le_string
+                        (invoke malgo_le_string)
                         (#Builtin.x_217))
                      (#Builtin.y_218))))))))
    (leInt64#
@@ -824,7 +824,7 @@
                   (#Builtin.x_121 #Builtin.y_122))
                   (apply
                      (apply
-                        malgo_le_int64_t
+                        (invoke malgo_le_int64_t)
                         (#Builtin.x_121))
                      (#Builtin.y_122))))))))
    (leInt32#
@@ -839,7 +839,7 @@
                   (#Builtin.x_97 #Builtin.y_98))
                   (apply
                      (apply
-                        malgo_le_int32_t
+                        (invoke malgo_le_int32_t)
                         (#Builtin.x_97))
                      (#Builtin.y_98))))))))
    (leFloat#
@@ -854,7 +854,7 @@
                   (#Builtin.x_145 #Builtin.y_146))
                   (apply
                      (apply
-                        malgo_le_float
+                        (invoke malgo_le_float)
                         (#Builtin.x_145))
                      (#Builtin.y_146))))))))
    (leDouble#
@@ -869,7 +869,7 @@
                   (#Builtin.x_169 #Builtin.y_170))
                   (apply
                      (apply
-                        malgo_le_double
+                        (invoke malgo_le_double)
                         (#Builtin.x_169))
                      (#Builtin.y_170))))))))
    (leChar#
@@ -884,7 +884,7 @@
                   (#Builtin.x_193 #Builtin.y_194))
                   (apply
                      (apply
-                        malgo_le_char
+                        (invoke malgo_le_char)
                         (#Builtin.x_193))
                      (#Builtin.y_194))))))))
    (isUpper#
@@ -895,7 +895,7 @@
                ($Builtin.param_1892))
             ((#Builtin.x_231
                (apply
-                  malgo_is_upper
+                  (invoke malgo_is_upper)
                   (#Builtin.x_231)))))))
    (isTrue#
       (lambda
@@ -903,8 +903,10 @@
          (select
             (tuple
                ($Builtin.param_1893))
-            ((1_i32 True)
-               (#Builtin.__80 False)))))
+            ((1_i32
+               (invoke True))
+               (#Builtin.__80
+                  (invoke False))))))
    (isUpper
       (lambda
          ($Builtin.param_1894)
@@ -914,9 +916,9 @@
             (((Char#
                (#Builtin.x_232))
                (apply
-                  isTrue#
+                  (invoke isTrue#)
                   ((apply
-                     isUpper#
+                     (invoke isUpper#)
                      (#Builtin.x_232)))))))))
    (leChar
       (lambda
@@ -932,10 +934,10 @@
                      (Char#
                         (#Builtin.y_196))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           leChar#
+                           (invoke leChar#)
                            (#Builtin.x_195))
                         (#Builtin.y_196))))))))))
    (leDouble
@@ -952,10 +954,10 @@
                      (Double#
                         (#Builtin.y_172))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           leDouble#
+                           (invoke leDouble#)
                            (#Builtin.x_171))
                         (#Builtin.y_172))))))))))
    (leFloat
@@ -972,10 +974,10 @@
                      (Float#
                         (#Builtin.y_148))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           leFloat#
+                           (invoke leFloat#)
                            (#Builtin.x_147))
                         (#Builtin.y_148))))))))))
    (leInt32
@@ -992,10 +994,10 @@
                      (Int32#
                         (#Builtin.y_100))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           leInt32#
+                           (invoke leInt32#)
                            (#Builtin.x_99))
                         (#Builtin.y_100))))))))))
    (leInt64
@@ -1012,10 +1014,10 @@
                      (Int64#
                         (#Builtin.y_124))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           leInt64#
+                           (invoke leInt64#)
                            (#Builtin.x_123))
                         (#Builtin.y_124))))))))))
    (leString
@@ -1032,10 +1034,10 @@
                      (String#
                         (#Builtin.y_220))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           leString#
+                           (invoke leString#)
                            (#Builtin.x_219))
                         (#Builtin.y_220))))))))))
    (ltChar
@@ -1052,10 +1054,10 @@
                      (Char#
                         (#Builtin.y_188))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           ltChar#
+                           (invoke ltChar#)
                            (#Builtin.x_187))
                         (#Builtin.y_188))))))))))
    (ltDouble
@@ -1072,10 +1074,10 @@
                      (Double#
                         (#Builtin.y_164))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           ltDouble#
+                           (invoke ltDouble#)
                            (#Builtin.x_163))
                         (#Builtin.y_164))))))))))
    (ltFloat
@@ -1092,10 +1094,10 @@
                      (Float#
                         (#Builtin.y_140))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           ltFloat#
+                           (invoke ltFloat#)
                            (#Builtin.x_139))
                         (#Builtin.y_140))))))))))
    (ltInt32
@@ -1112,10 +1114,10 @@
                      (Int32#
                         (#Builtin.y_92))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           ltInt32#
+                           (invoke ltInt32#)
                            (#Builtin.x_91))
                         (#Builtin.y_92))))))))))
    (ltInt64
@@ -1132,10 +1134,10 @@
                      (Int64#
                         (#Builtin.y_116))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           ltInt64#
+                           (invoke ltInt64#)
                            (#Builtin.x_115))
                         (#Builtin.y_116))))))))))
    (ltString
@@ -1152,10 +1154,10 @@
                      (String#
                         (#Builtin.y_212))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           ltString#
+                           (invoke ltString#)
                            (#Builtin.x_211))
                         (#Builtin.y_212))))))))))
    (neChar
@@ -1172,10 +1174,10 @@
                      (Char#
                         (#Builtin.y_184))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           neChar#
+                           (invoke neChar#)
                            (#Builtin.x_183))
                         (#Builtin.y_184))))))))))
    (neDouble
@@ -1192,10 +1194,10 @@
                      (Double#
                         (#Builtin.y_160))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           neDouble#
+                           (invoke neDouble#)
                            (#Builtin.x_159))
                         (#Builtin.y_160))))))))))
    (neFloat
@@ -1212,10 +1214,10 @@
                      (Float#
                         (#Builtin.y_136))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           neFloat#
+                           (invoke neFloat#)
                            (#Builtin.x_135))
                         (#Builtin.y_136))))))))))
    (neInt32
@@ -1232,10 +1234,10 @@
                      (Int32#
                         (#Builtin.y_88))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           neInt32#
+                           (invoke neInt32#)
                            (#Builtin.x_87))
                         (#Builtin.y_88))))))))))
    (neInt64
@@ -1252,10 +1254,10 @@
                      (Int64#
                         (#Builtin.y_112))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           neInt64#
+                           (invoke neInt64#)
                            (#Builtin.x_111))
                         (#Builtin.y_112))))))))))
    (neString
@@ -1272,10 +1274,10 @@
                      (String#
                         (#Builtin.y_208))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           neString#
+                           (invoke neString#)
                            (#Builtin.x_207))
                         (#Builtin.y_208))))))))))
    (isLower#
@@ -1286,7 +1288,7 @@
                ($Builtin.param_1931))
             ((#Builtin.x_229
                (apply
-                  malgo_is_lower
+                  (invoke malgo_is_lower)
                   (#Builtin.x_229)))))))
    (isLower
       (lambda
@@ -1297,9 +1299,9 @@
             (((Char#
                (#Builtin.x_230))
                (apply
-                  isTrue#
+                  (invoke isTrue#)
                   ((apply
-                     isLower#
+                     (invoke isLower#)
                      (#Builtin.x_230)))))))))
    (isDigit#
       (lambda
@@ -1309,7 +1311,7 @@
                ($Builtin.param_1933))
             ((#Builtin.x_227
                (apply
-                  malgo_is_digit
+                  (invoke malgo_is_digit)
                   (#Builtin.x_227)))))))
    (isDigit
       (lambda
@@ -1320,9 +1322,9 @@
             (((Char#
                (#Builtin.x_228))
                (apply
-                  isTrue#
+                  (invoke isTrue#)
                   ((apply
-                     isDigit#
+                     (invoke isDigit#)
                      (#Builtin.x_228)))))))))
    (isAlphanum#
       (lambda
@@ -1332,7 +1334,7 @@
                ($Builtin.param_1935))
             ((#Builtin.x_233
                (apply
-                  malgo_is_alphanum
+                  (invoke malgo_is_alphanum)
                   (#Builtin.x_233)))))))
    (isAlphanum
       (lambda
@@ -1343,9 +1345,9 @@
             (((Char#
                (#Builtin.x_234))
                (apply
-                  isTrue#
+                  (invoke isTrue#)
                   ((apply
-                     isAlphanum#
+                     (invoke isAlphanum#)
                      (#Builtin.x_234)))))))))
    (int64#
       (lambda
@@ -1355,7 +1357,7 @@
                ($Builtin.param_1937))
             ((#Builtin.x_1
                (apply
-                  Int64#
+                  (invoke Int64#)
                   (#Builtin.x_1)))))))
    (int32#
       (lambda
@@ -1365,7 +1367,7 @@
                ($Builtin.param_1938))
             ((#Builtin.x_0
                (apply
-                  Int32#
+                  (invoke Int32#)
                   (#Builtin.x_0)))))))
    (gtString#
       (lambda
@@ -1379,7 +1381,7 @@
                   (#Builtin.x_213 #Builtin.y_214))
                   (apply
                      (apply
-                        malgo_gt_string
+                        (invoke malgo_gt_string)
                         (#Builtin.x_213))
                      (#Builtin.y_214))))))))
    (gtString
@@ -1396,10 +1398,10 @@
                      (String#
                         (#Builtin.y_216))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           gtString#
+                           (invoke gtString#)
                            (#Builtin.x_215))
                         (#Builtin.y_216))))))))))
    (gtInt64#
@@ -1414,7 +1416,7 @@
                   (#Builtin.x_117 #Builtin.y_118))
                   (apply
                      (apply
-                        malgo_gt_int64_t
+                        (invoke malgo_gt_int64_t)
                         (#Builtin.x_117))
                      (#Builtin.y_118))))))))
    (gtInt64
@@ -1431,10 +1433,10 @@
                      (Int64#
                         (#Builtin.y_120))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           gtInt64#
+                           (invoke gtInt64#)
                            (#Builtin.x_119))
                         (#Builtin.y_120))))))))))
    (gtInt32#
@@ -1449,7 +1451,7 @@
                   (#Builtin.x_93 #Builtin.y_94))
                   (apply
                      (apply
-                        malgo_gt_int32_t
+                        (invoke malgo_gt_int32_t)
                         (#Builtin.x_93))
                      (#Builtin.y_94))))))))
    (gtInt32
@@ -1466,10 +1468,10 @@
                      (Int32#
                         (#Builtin.y_96))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           gtInt32#
+                           (invoke gtInt32#)
                            (#Builtin.x_95))
                         (#Builtin.y_96))))))))))
    (gtFloat#
@@ -1484,7 +1486,7 @@
                   (#Builtin.x_141 #Builtin.y_142))
                   (apply
                      (apply
-                        malgo_gt_float
+                        (invoke malgo_gt_float)
                         (#Builtin.x_141))
                      (#Builtin.y_142))))))))
    (gtFloat
@@ -1501,10 +1503,10 @@
                      (Float#
                         (#Builtin.y_144))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           gtFloat#
+                           (invoke gtFloat#)
                            (#Builtin.x_143))
                         (#Builtin.y_144))))))))))
    (gtDouble#
@@ -1519,7 +1521,7 @@
                   (#Builtin.x_165 #Builtin.y_166))
                   (apply
                      (apply
-                        malgo_gt_double
+                        (invoke malgo_gt_double)
                         (#Builtin.x_165))
                      (#Builtin.y_166))))))))
    (gtDouble
@@ -1536,10 +1538,10 @@
                      (Double#
                         (#Builtin.y_168))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           gtDouble#
+                           (invoke gtDouble#)
                            (#Builtin.x_167))
                         (#Builtin.y_168))))))))))
    (gtChar#
@@ -1554,7 +1556,7 @@
                   (#Builtin.x_189 #Builtin.y_190))
                   (apply
                      (apply
-                        malgo_gt_char
+                        (invoke malgo_gt_char)
                         (#Builtin.x_189))
                      (#Builtin.y_190))))))))
    (gtChar
@@ -1571,10 +1573,10 @@
                      (Char#
                         (#Builtin.y_192))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           gtChar#
+                           (invoke gtChar#)
                            (#Builtin.x_191))
                         (#Builtin.y_192))))))))))
    (getContents
@@ -1585,9 +1587,9 @@
                ($Builtin.param_1963))
             ((#Builtin.__275
                (apply
-                  String#
+                  (invoke String#)
                   ((apply
-                     malgo_get_contents
+                     (invoke malgo_get_contents)
                      ((tuple ()))))))))))
    (getChar
       (lambda
@@ -1597,9 +1599,9 @@
                ($Builtin.param_1964))
             ((#Builtin.__274
                (apply
-                  Char#
+                  (invoke Char#)
                   ((apply
-                     malgo_get_char
+                     (invoke malgo_get_char)
                      ((tuple ()))))))))))
    (geString#
       (lambda
@@ -1613,7 +1615,7 @@
                   (#Builtin.x_221 #Builtin.y_222))
                   (apply
                      (apply
-                        malgo_ge_string
+                        (invoke malgo_ge_string)
                         (#Builtin.x_221))
                      (#Builtin.y_222))))))))
    (geString
@@ -1630,10 +1632,10 @@
                      (String#
                         (#Builtin.y_224))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           geString#
+                           (invoke geString#)
                            (#Builtin.x_223))
                         (#Builtin.y_224))))))))))
    (geInt64#
@@ -1648,7 +1650,7 @@
                   (#Builtin.x_125 #Builtin.y_126))
                   (apply
                      (apply
-                        malgo_ge_int64_t
+                        (invoke malgo_ge_int64_t)
                         (#Builtin.x_125))
                      (#Builtin.y_126))))))))
    (geInt64
@@ -1665,10 +1667,10 @@
                      (Int64#
                         (#Builtin.y_128))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           geInt64#
+                           (invoke geInt64#)
                            (#Builtin.x_127))
                         (#Builtin.y_128))))))))))
    (geInt32#
@@ -1683,7 +1685,7 @@
                   (#Builtin.x_101 #Builtin.y_102))
                   (apply
                      (apply
-                        malgo_ge_int32_t
+                        (invoke malgo_ge_int32_t)
                         (#Builtin.x_101))
                      (#Builtin.y_102))))))))
    (geInt32
@@ -1700,10 +1702,10 @@
                      (Int32#
                         (#Builtin.y_104))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           geInt32#
+                           (invoke geInt32#)
                            (#Builtin.x_103))
                         (#Builtin.y_104))))))))))
    (geFloat#
@@ -1718,7 +1720,7 @@
                   (#Builtin.x_149 #Builtin.y_150))
                   (apply
                      (apply
-                        malgo_ge_float
+                        (invoke malgo_ge_float)
                         (#Builtin.x_149))
                      (#Builtin.y_150))))))))
    (geFloat
@@ -1735,10 +1737,10 @@
                      (Float#
                         (#Builtin.y_152))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           geFloat#
+                           (invoke geFloat#)
                            (#Builtin.x_151))
                         (#Builtin.y_152))))))))))
    (geDouble#
@@ -1753,7 +1755,7 @@
                   (#Builtin.x_173 #Builtin.y_174))
                   (apply
                      (apply
-                        malgo_ge_double
+                        (invoke malgo_ge_double)
                         (#Builtin.x_173))
                      (#Builtin.y_174))))))))
    (geDouble
@@ -1770,10 +1772,10 @@
                      (Double#
                         (#Builtin.y_176))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           geDouble#
+                           (invoke geDouble#)
                            (#Builtin.x_175))
                         (#Builtin.y_176))))))))))
    (geChar#
@@ -1788,7 +1790,7 @@
                   (#Builtin.x_197 #Builtin.y_198))
                   (apply
                      (apply
-                        malgo_ge_char
+                        (invoke malgo_ge_char)
                         (#Builtin.x_197))
                      (#Builtin.y_198))))))))
    (geChar
@@ -1805,10 +1807,10 @@
                      (Char#
                         (#Builtin.y_200))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           geChar#
+                           (invoke geChar#)
                            (#Builtin.x_199))
                         (#Builtin.y_200))))))))))
    (flush
@@ -1819,7 +1821,7 @@
                ($Builtin.param_1989))
             ((#Builtin.__273
                (apply
-                  malgo_flush
+                  (invoke malgo_flush)
                   ((tuple ()))))))))
    (float#
       (lambda
@@ -1829,7 +1831,7 @@
                ($Builtin.param_1990))
             ((#Builtin.x_2
                (apply
-                  Float#
+                  (invoke Float#)
                   (#Builtin.x_2)))))))
    (exitFailure
       (lambda
@@ -1839,7 +1841,7 @@
                ($Builtin.param_1991))
             ((#Builtin.__267
                (apply
-                  malgo_exit_failure
+                  (invoke malgo_exit_failure)
                   ((tuple ()))))))))
    (eqString#
       (lambda
@@ -1853,7 +1855,7 @@
                   (#Builtin.x_201 #Builtin.y_202))
                   (apply
                      (apply
-                        malgo_eq_string
+                        (invoke malgo_eq_string)
                         (#Builtin.x_201))
                      (#Builtin.y_202))))))))
    (eqString
@@ -1870,10 +1872,10 @@
                      (String#
                         (#Builtin.y_204))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           eqString#
+                           (invoke eqString#)
                            (#Builtin.x_203))
                         (#Builtin.y_204))))))))))
    (eqInt64#
@@ -1888,7 +1890,7 @@
                   (#Builtin.x_105 #Builtin.y_106))
                   (apply
                      (apply
-                        malgo_eq_int64_t
+                        (invoke malgo_eq_int64_t)
                         (#Builtin.x_105))
                      (#Builtin.y_106))))))))
    (eqInt64
@@ -1905,10 +1907,10 @@
                      (Int64#
                         (#Builtin.y_108))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           eqInt64#
+                           (invoke eqInt64#)
                            (#Builtin.x_107))
                         (#Builtin.y_108))))))))))
    (eqInt32#
@@ -1923,7 +1925,7 @@
                   (#Builtin.x_81 #Builtin.y_82))
                   (apply
                      (apply
-                        malgo_eq_int32_t
+                        (invoke malgo_eq_int32_t)
                         (#Builtin.x_81))
                      (#Builtin.y_82))))))))
    (eqInt32
@@ -1940,10 +1942,10 @@
                      (Int32#
                         (#Builtin.y_84))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           eqInt32#
+                           (invoke eqInt32#)
                            (#Builtin.x_83))
                         (#Builtin.y_84))))))))))
    (eqFloat#
@@ -1958,7 +1960,7 @@
                   (#Builtin.x_129 #Builtin.y_130))
                   (apply
                      (apply
-                        malgo_eq_float
+                        (invoke malgo_eq_float)
                         (#Builtin.x_129))
                      (#Builtin.y_130))))))))
    (eqFloat
@@ -1975,10 +1977,10 @@
                      (Float#
                         (#Builtin.y_132))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           eqFloat#
+                           (invoke eqFloat#)
                            (#Builtin.x_131))
                         (#Builtin.y_132))))))))))
    (eqDouble#
@@ -1993,7 +1995,7 @@
                   (#Builtin.x_153 #Builtin.y_154))
                   (apply
                      (apply
-                        malgo_eq_double
+                        (invoke malgo_eq_double)
                         (#Builtin.x_153))
                      (#Builtin.y_154))))))))
    (eqDouble
@@ -2010,10 +2012,10 @@
                      (Double#
                         (#Builtin.y_156))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           eqDouble#
+                           (invoke eqDouble#)
                            (#Builtin.x_155))
                         (#Builtin.y_156))))))))))
    (eqChar#
@@ -2028,7 +2030,7 @@
                   (#Builtin.x_177 #Builtin.y_178))
                   (apply
                      (apply
-                        malgo_eq_char
+                        (invoke malgo_eq_char)
                         (#Builtin.x_177))
                      (#Builtin.y_178))))))))
    (eqChar
@@ -2045,10 +2047,10 @@
                      (Char#
                         (#Builtin.y_180))))
                   (apply
-                     isTrue#
+                     (invoke isTrue#)
                      ((apply
                         (apply
-                           eqChar#
+                           (invoke eqChar#)
                            (#Builtin.x_179))
                         (#Builtin.y_180))))))))))
    (double#
@@ -2059,7 +2061,7 @@
                ($Builtin.param_2016))
             ((#Builtin.x_3
                (apply
-                  Double#
+                  (invoke Double#)
                   (#Builtin.x_3)))))))
    (divInt64#
       (lambda
@@ -2073,7 +2075,7 @@
                   (#Builtin.x_40 #Builtin.y_41))
                   (apply
                      (apply
-                        malgo_div_int64_t
+                        (invoke malgo_div_int64_t)
                         (#Builtin.x_40))
                      (#Builtin.y_41))))))))
    (divInt64
@@ -2090,10 +2092,10 @@
                      (Int64#
                         (#Builtin.y_43))))
                   (apply
-                     Int64#
+                     (invoke Int64#)
                      ((apply
                         (apply
-                           divInt64#
+                           (invoke divInt64#)
                            (#Builtin.x_42))
                         (#Builtin.y_43))))))))))
    (divInt32#
@@ -2108,7 +2110,7 @@
                   (#Builtin.x_24 #Builtin.y_25))
                   (apply
                      (apply
-                        malgo_div_int32_t
+                        (invoke malgo_div_int32_t)
                         (#Builtin.x_24))
                      (#Builtin.y_25))))))))
    (divInt32
@@ -2125,10 +2127,10 @@
                      (Int32#
                         (#Builtin.y_27))))
                   (apply
-                     Int32#
+                     (invoke Int32#)
                      ((apply
                         (apply
-                           divInt32#
+                           (invoke divInt32#)
                            (#Builtin.x_26))
                         (#Builtin.y_27))))))))))
    (divFloat#
@@ -2143,7 +2145,7 @@
                   (#Builtin.x_56 #Builtin.y_57))
                   (apply
                      (apply
-                        malgo_div_float
+                        (invoke malgo_div_float)
                         (#Builtin.x_56))
                      (#Builtin.y_57))))))))
    (divFloat
@@ -2160,10 +2162,10 @@
                      (Float#
                         (#Builtin.y_59))))
                   (apply
-                     Float#
+                     (invoke Float#)
                      ((apply
                         (apply
-                           divFloat#
+                           (invoke divFloat#)
                            (#Builtin.x_58))
                         (#Builtin.y_59))))))))))
    (divDouble#
@@ -2178,7 +2180,7 @@
                   (#Builtin.x_72 #Builtin.y_73))
                   (apply
                      (apply
-                        malgo_div_double
+                        (invoke malgo_div_double)
                         (#Builtin.x_72))
                      (#Builtin.y_73))))))))
    (divDouble
@@ -2195,10 +2197,10 @@
                      (Double#
                         (#Builtin.y_75))))
                   (apply
-                     Double#
+                     (invoke Double#)
                      ((apply
                         (apply
-                           divDouble#
+                           (invoke divDouble#)
                            (#Builtin.x_74))
                         (#Builtin.y_75))))))))))
    (consString#
@@ -2213,7 +2215,7 @@
                   (#Builtin.c_241 #Builtin.cs_242))
                   (apply
                      (apply
-                        malgo_string_cons
+                        (invoke malgo_string_cons)
                         (#Builtin.c_241))
                      (#Builtin.cs_242))))))))
    (consString
@@ -2230,10 +2232,10 @@
                      (String#
                         (#Builtin.cs_244))))
                   (apply
-                     String#
+                     (invoke String#)
                      ((apply
                         (apply
-                           consString#
+                           (invoke consString#)
                            (#Builtin.c_243))
                         (#Builtin.cs_244))))))))))
    (char#
@@ -2244,7 +2246,7 @@
                ($Builtin.param_2037))
             ((#Builtin.x_4
                (apply
-                  Char#
+                  (invoke Char#)
                   (#Builtin.x_4)))))))
    (atString#
       (lambda
@@ -2258,7 +2260,7 @@
                   (#Builtin.i_237 #Builtin.x_238))
                   (apply
                      (apply
-                        malgo_string_at
+                        (invoke malgo_string_at)
                         (#Builtin.i_237))
                      (#Builtin.x_238))))))))
    (atString
@@ -2275,10 +2277,10 @@
                      (String#
                         (#Builtin.x_240))))
                   (apply
-                     Char#
+                     (invoke Char#)
                      ((apply
                         (apply
-                           atString#
+                           (invoke atString#)
                            (#Builtin.i_239))
                         (#Builtin.x_240))))))))))
    (appendString#
@@ -2293,7 +2295,7 @@
                   (#Builtin.x_245 #Builtin.y_246))
                   (apply
                      (apply
-                        malgo_string_append
+                        (invoke malgo_string_append)
                         (#Builtin.x_245))
                      (#Builtin.y_246))))))))
    (appendString
@@ -2310,10 +2312,10 @@
                      (String#
                         (#Builtin.y_248))))
                   (apply
-                     String#
+                     (invoke String#)
                      ((apply
                         (apply
-                           appendString#
+                           (invoke appendString#)
                            (#Builtin.x_247))
                         (#Builtin.y_248))))))))))
    (addInt64#
@@ -2328,7 +2330,7 @@
                   (#Builtin.x_28 #Builtin.y_29))
                   (apply
                      (apply
-                        malgo_add_int64_t
+                        (invoke malgo_add_int64_t)
                         (#Builtin.x_28))
                      (#Builtin.y_29))))))))
    (addInt64
@@ -2345,10 +2347,10 @@
                      (Int64#
                         (#Builtin.y_31))))
                   (apply
-                     Int64#
+                     (invoke Int64#)
                      ((apply
                         (apply
-                           addInt64#
+                           (invoke addInt64#)
                            (#Builtin.x_30))
                         (#Builtin.y_31))))))))))
    (addInt32#
@@ -2363,7 +2365,7 @@
                   (#Builtin.x_12 #Builtin.y_13))
                   (apply
                      (apply
-                        malgo_add_int32_t
+                        (invoke malgo_add_int32_t)
                         (#Builtin.x_12))
                      (#Builtin.y_13))))))))
    (addInt32
@@ -2380,10 +2382,10 @@
                      (Int32#
                         (#Builtin.y_15))))
                   (apply
-                     Int32#
+                     (invoke Int32#)
                      ((apply
                         (apply
-                           addInt32#
+                           (invoke addInt32#)
                            (#Builtin.x_14))
                         (#Builtin.y_15))))))))))
    (addFloat#
@@ -2398,7 +2400,7 @@
                   (#Builtin.x_44 #Builtin.y_45))
                   (apply
                      (apply
-                        malgo_add_float
+                        (invoke malgo_add_float)
                         (#Builtin.x_44))
                      (#Builtin.y_45))))))))
    (addFloat
@@ -2415,10 +2417,10 @@
                      (Float#
                         (#Builtin.y_47))))
                   (apply
-                     Float#
+                     (invoke Float#)
                      ((apply
                         (apply
-                           addFloat#
+                           (invoke addFloat#)
                            (#Builtin.x_46))
                         (#Builtin.y_47))))))))))
    (addDouble#
@@ -2433,7 +2435,7 @@
                   (#Builtin.x_60 #Builtin.y_61))
                   (apply
                      (apply
-                        malgo_add_double
+                        (invoke malgo_add_double)
                         (#Builtin.x_60))
                      (#Builtin.y_61))))))))
    (addDouble
@@ -2450,9 +2452,9 @@
                      (Double#
                         (#Builtin.y_63))))
                   (apply
-                     Double#
+                     (invoke Double#)
                      ((apply
                         (apply
-                           addDouble#
+                           (invoke addDouble#)
                            (#Builtin.x_62))
                         (#Builtin.y_63)))))))))))

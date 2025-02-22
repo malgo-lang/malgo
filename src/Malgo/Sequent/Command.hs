@@ -14,11 +14,11 @@ import Malgo.SExpr qualified as S
 import Malgo.Sequent.Fun (Literal, Name, Pattern, Tag)
 
 data Program = Program
-  {definitions :: [(Range, Name, Code)]}
+  {definitions :: [(Range, Name, Name, Code)]}
   deriving stock (Show)
 
 instance ToSExpr Program where
-  toSExpr (Program defs) = S.L $ map (\(_, name, body) -> toSExpr (name, body)) defs
+  toSExpr (Program defs) = S.L $ map (\(_, name, return, body) -> toSExpr (name, return, body)) defs
 
 type Code = [Command]
 
@@ -86,6 +86,10 @@ data Command
     --
     -- @(value : S, E, Select(range, branch*)) -> (S, E, selected branch)@
     Select Range [Branch]
+  | -- | Invoke invokes a toplevel definition.
+    --
+    -- @(cont : S, E {name = μ return code}, Invoke(name)) -> (S, E {return = cont}, code)@
+    Invoke Range Name
   deriving stock (Show)
 
 instance ToSExpr Command where
@@ -103,6 +107,7 @@ instance ToSExpr Command where
   toSExpr (Finish _) = S.A "finish"
   toSExpr (Primitive _ name) = S.L [S.A "primitive", toSExpr name]
   toSExpr (Select _ branches) = S.L $ S.A "select" : map toSExpr branches
+  toSExpr (Invoke _ name) = S.L [S.A "invoke", toSExpr name]
 
 data Branch = Branch
   { range :: Range,

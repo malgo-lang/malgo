@@ -1,70 +1,91 @@
 ((main
+   $HelloImport.return_21
    ((lambda
-      ($HelloImport.param_18 $HelloImport.return_21)
-      ((do $HelloImport.return_22
+      ($HelloImport.param_18 $HelloImport.return_22)
+      ((do $HelloImport.return_23
          ((fetch $HelloImport.param_18)
             (construct tuple 1)
             (select
                (#HelloImport.$__17
-                  ((do $HelloImport.return_32
+                  ((do $HelloImport.return_38
                      ((lambda
-                        ($HelloImport.tmp_19 $HelloImport.return_23)
-                        ((do $HelloImport.return_29
-                           ((do $HelloImport.return_24
-                              ((fetch |>)
-                                 (fetch putStrLn)
-                                 (suspend
-                                    ((resume $HelloImport.return_24)))
-                                 (apply 2)))
+                        ($HelloImport.tmp_19 $HelloImport.return_24)
+                        ((do $HelloImport.return_33
+                           ((do $HelloImport.return_27
+                              ((do $HelloImport.return_25
+                                 ((suspend
+                                    ((resume $HelloImport.return_25)))
+                                    (invoke |>)))
+                                 (then $HelloImport.outer_39
+                                    ((do $HelloImport.return_26
+                                       ((suspend
+                                          ((resume $HelloImport.return_26)))
+                                          (invoke putStrLn)))
+                                       (then $HelloImport.inner_40
+                                          ((fetch $HelloImport.outer_39)
+                                             (fetch $HelloImport.inner_40)
+                                             (suspend
+                                                ((resume $HelloImport.return_27)))
+                                             (apply 2)))))))
                               (lambda
-                                 ($HelloImport.param_20 $HelloImport.return_25)
-                                 ((do $HelloImport.return_26
+                                 ($HelloImport.param_20 $HelloImport.return_28)
+                                 ((do $HelloImport.return_29
                                     ((fetch $HelloImport.param_20)
                                        (construct tuple 1)
                                        (select
                                           (#HelloImport.f_0
-                                             ((do $HelloImport.return_28
+                                             ((do $HelloImport.return_32
                                                 ((fetch #HelloImport.f_0)
-                                                   (then $HelloImport.outer_33
-                                                      ((do $HelloImport.return_27
-                                                         ((fetch String#)
+                                                   (then $HelloImport.outer_41
+                                                      ((do $HelloImport.return_31
+                                                         ((do $HelloImport.return_30
+                                                            ((suspend
+                                                               ((resume $HelloImport.return_30)))
+                                                               (invoke String#)))
                                                             (push " world")
                                                             (suspend
-                                                               ((resume $HelloImport.return_27)))
+                                                               ((resume $HelloImport.return_31)))
                                                             (apply 2)))
-                                                         (then $HelloImport.inner_34
-                                                            ((fetch $HelloImport.outer_33)
-                                                               (fetch $HelloImport.inner_34)
+                                                         (then $HelloImport.inner_42
+                                                            ((fetch $HelloImport.outer_41)
+                                                               (fetch $HelloImport.inner_42)
                                                                (suspend
-                                                                  ((resume $HelloImport.return_28)))
+                                                                  ((resume $HelloImport.return_32)))
                                                                (apply 2)))))))
-                                                (resume $HelloImport.return_26))))))
-                                    (resume $HelloImport.return_25)))
+                                                (resume $HelloImport.return_29))))))
+                                    (resume $HelloImport.return_28)))
                               (suspend
-                                 ((resume $HelloImport.return_29)))
+                                 ((resume $HelloImport.return_33)))
                               (apply 2)))
-                           (resume $HelloImport.return_23)))
-                        (then $HelloImport.outer_35
-                           ((do $HelloImport.return_31
-                              ((fetch putStr)
-                                 (then $HelloImport.outer_37
-                                    ((do $HelloImport.return_30
-                                       ((fetch String#)
+                           (resume $HelloImport.return_24)))
+                        (then $HelloImport.outer_43
+                           ((do $HelloImport.return_37
+                              ((do $HelloImport.return_34
+                                 ((suspend
+                                    ((resume $HelloImport.return_34)))
+                                    (invoke putStr)))
+                                 (then $HelloImport.outer_45
+                                    ((do $HelloImport.return_36
+                                       ((do $HelloImport.return_35
+                                          ((suspend
+                                             ((resume $HelloImport.return_35)))
+                                             (invoke String#)))
                                           (push "hello")
                                           (suspend
-                                             ((resume $HelloImport.return_30)))
+                                             ((resume $HelloImport.return_36)))
                                           (apply 2)))
-                                       (then $HelloImport.inner_38
-                                          ((fetch $HelloImport.outer_37)
-                                             (fetch $HelloImport.inner_38)
+                                       (then $HelloImport.inner_46
+                                          ((fetch $HelloImport.outer_45)
+                                             (fetch $HelloImport.inner_46)
                                              (suspend
-                                                ((resume $HelloImport.return_31)))
+                                                ((resume $HelloImport.return_37)))
                                              (apply 2)))))))
-                              (then $HelloImport.inner_36
-                                 ((fetch $HelloImport.outer_35)
-                                    (fetch $HelloImport.inner_36)
+                              (then $HelloImport.inner_44
+                                 ((fetch $HelloImport.outer_43)
+                                    (fetch $HelloImport.inner_44)
                                     (suspend
-                                       ((resume $HelloImport.return_32)))
+                                       ((resume $HelloImport.return_38)))
                                     (apply 2)))))))
-                     (resume $HelloImport.return_22))))))
-         (resume $HelloImport.return_21))))))
+                     (resume $HelloImport.return_23))))))
+         (resume $HelloImport.return_22)))
+      (resume $HelloImport.return_21))))

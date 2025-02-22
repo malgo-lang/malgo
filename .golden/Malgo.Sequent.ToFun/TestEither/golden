@@ -18,7 +18,7 @@
                      (Left
                         (#TestEither.x_4))))
                   (apply
-                     Left
+                     (invoke Left)
                      (#TestEither.x_4)))
                   ((tuple
                      (#TestEither.f_5
@@ -40,25 +40,25 @@
                      (let
                         #TestEither.x_9
                         (apply
-                           Right
+                           (invoke Right)
                            ((apply
-                              Int32#
+                              (invoke Int32#)
                               (1_i32))))
                         (apply
                            (lambda
                               ($TestEither.tmp_255)
                               (apply
                                  (apply
-                                    |>
+                                    (invoke |>)
                                     ((apply
                                        (apply
-                                          |>
+                                          (invoke |>)
                                           ((apply
                                              (apply
-                                                |>
+                                                (invoke |>)
                                                 (#TestEither.x_9))
                                              ((apply
-                                                andThen
+                                                (invoke andThen)
                                                 ((lambda
                                                    ($TestEither.param_258)
                                                    (select
@@ -66,12 +66,12 @@
                                                          ($TestEither.param_258))
                                                       ((#TestEither.__12
                                                          (apply
-                                                            Left
+                                                            (invoke Left)
                                                             ((apply
-                                                               String#
+                                                               (invoke String#)
                                                                ("error"))))))))))))))
                                        ((apply
-                                          andThen
+                                          (invoke andThen)
                                           ((lambda
                                              ($TestEither.param_259)
                                              (select
@@ -79,13 +79,13 @@
                                                    ($TestEither.param_259))
                                                 ((#TestEither.x_13
                                                    (apply
-                                                      Right
+                                                      (invoke Right)
                                                       ((apply
                                                          (apply
-                                                            addInt32
+                                                            (invoke addInt32)
                                                             (#TestEither.x_13))
                                                          ((apply
-                                                            Int32#
+                                                            (invoke Int32#)
                                                             (1_i32))))))))))))))))
                                  ((lambda
                                     ($TestEither.param_260)
@@ -95,28 +95,28 @@
                                        (((Left
                                           (#TestEither.err_14))
                                           (apply
-                                             putStrLn
+                                             (invoke putStrLn)
                                              (#TestEither.err_14)))
                                           ((Right
                                              (#TestEither.x_15))
                                              (apply
                                                 (apply
-                                                   |>
+                                                   (invoke |>)
                                                    ((apply
                                                       (apply
-                                                         |>
+                                                         (invoke |>)
                                                          (#TestEither.x_15))
-                                                      (toStringInt32))))
-                                                (putStrLn)))))))))
+                                                      ((invoke toStringInt32)))))
+                                                ((invoke putStrLn))))))))))
                            ((apply
                               (apply
-                                 |>
+                                 (invoke |>)
                                  ((apply
                                     (apply
-                                       |>
+                                       (invoke |>)
                                        (#TestEither.x_9))
                                     ((apply
-                                       andThen
+                                       (invoke andThen)
                                        ((lambda
                                           ($TestEither.param_256)
                                           (select
@@ -124,16 +124,16 @@
                                                 ($TestEither.param_256))
                                              ((#TestEither.x_10
                                                 (apply
-                                                   Right
+                                                   (invoke Right)
                                                    ((apply
                                                       (apply
-                                                         addInt32
+                                                         (invoke addInt32)
                                                          (#TestEither.x_10))
                                                       ((apply
-                                                         Int32#
+                                                         (invoke Int32#)
                                                          (1_i32))))))))))))))))
                               ((apply
-                                 andThen
+                                 (invoke andThen)
                                  ((lambda
                                     ($TestEither.param_257)
                                     (select
@@ -142,24 +142,24 @@
                                        ((#TestEither.y_11
                                           (apply
                                              (apply
-                                                |>
+                                                (invoke |>)
                                                 ((apply
                                                    (apply
-                                                      |>
+                                                      (invoke |>)
                                                       ((apply
                                                          (apply
-                                                            |>
+                                                            (invoke |>)
                                                             (#TestEither.y_11))
-                                                         (toStringInt32))))
-                                                   (putStr))))
-                                             (Right))))))))))))))
+                                                         ((invoke toStringInt32)))))
+                                                   ((invoke putStr)))))
+                                             ((invoke Right)))))))))))))))
                   ((apply
                      (apply
-                        |>
+                        (invoke |>)
                         ((apply
-                           Right
+                           (invoke Right)
                            ((apply
-                              Int32#
+                              (invoke Int32#)
                               (1_i32))))))
                      ((lambda
                         ($TestEither.param_254)
@@ -169,13 +169,13 @@
                            (((Right
                               (#TestEither.x_7))
                               (apply
-                                 putStr
+                                 (invoke putStr)
                                  ((apply
-                                    toStringInt32
+                                    (invoke toStringInt32)
                                     (#TestEither.x_7)))))
                               (#TestEither.__8
                                  (apply
-                                    putStrLn
+                                    (invoke putStrLn)
                                     ((apply
-                                       String#
+                                       (invoke String#)
                                        ("unreachable"))))))))))))))))))

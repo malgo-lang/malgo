@@ -1,201 +1,233 @@
 ((twice
+   $With.return_91
    ((lambda
-      ($With.param_79 $With.return_91)
-      ((do $With.return_92
+      ($With.param_79 $With.return_92)
+      ((do $With.return_93
          ((fetch $With.param_79)
             (construct tuple 1)
             (select
                (#With.k_6
-                  ((do $With.return_96
+                  ((do $With.return_97
                      ((lambda
-                        ($With.tmp_80 $With.return_93)
-                        ((do $With.return_94
+                        ($With.tmp_80 $With.return_94)
+                        ((do $With.return_95
                            ((fetch #With.k_6)
                               (construct tuple 0)
                               (suspend
-                                 ((resume $With.return_94)))
+                                 ((resume $With.return_95)))
                               (apply 2)))
-                           (resume $With.return_93)))
-                        (then $With.outer_129
-                           ((do $With.return_95
+                           (resume $With.return_94)))
+                        (then $With.outer_141
+                           ((do $With.return_96
                               ((fetch #With.k_6)
                                  (construct tuple 0)
                                  (suspend
-                                    ((resume $With.return_95)))
+                                    ((resume $With.return_96)))
                                  (apply 2)))
-                              (then $With.inner_130
-                                 ((fetch $With.outer_129)
-                                    (fetch $With.inner_130)
+                              (then $With.inner_142
+                                 ((fetch $With.outer_141)
+                                    (fetch $With.inner_142)
                                     (suspend
-                                       ((resume $With.return_96)))
+                                       ((resume $With.return_97)))
                                     (apply 2)))))))
-                     (resume $With.return_92))))))
-         (resume $With.return_91)))))
+                     (resume $With.return_93))))))
+         (resume $With.return_92)))
+      (resume $With.return_91)))
    (printAndReturn
+      $With.return_98
       ((lambda
-         ($With.param_81 $With.return_97)
+         ($With.param_81 $With.return_99)
          ((lambda
-            ($With.param_82 $With.return_98)
-            ((do $With.return_99
+            ($With.param_82 $With.return_100)
+            ((do $With.return_101
                ((fetch $With.param_81)
                   (fetch $With.param_82)
                   (construct tuple 2)
                   (select
                      ((tuple
                         (#With.str_7 #With.k_8))
-                        ((do $With.return_103
+                        ((do $With.return_106
                            ((lambda
-                              ($With.tmp_83 $With.return_100)
-                              ((do $With.return_101
+                              ($With.tmp_83 $With.return_102)
+                              ((do $With.return_103
                                  ((fetch #With.k_8)
                                     (fetch #With.str_7)
                                     (suspend
-                                       ((resume $With.return_101)))
+                                       ((resume $With.return_103)))
                                     (apply 2)))
-                                 (resume $With.return_100)))
-                              (then $With.outer_131
-                                 ((do $With.return_102
-                                    ((fetch printString)
+                                 (resume $With.return_102)))
+                              (then $With.outer_143
+                                 ((do $With.return_105
+                                    ((do $With.return_104
+                                       ((suspend
+                                          ((resume $With.return_104)))
+                                          (invoke printString)))
                                        (fetch #With.str_7)
                                        (suspend
-                                          ((resume $With.return_102)))
+                                          ((resume $With.return_105)))
                                        (apply 2)))
-                                    (then $With.inner_132
-                                       ((fetch $With.outer_131)
-                                          (fetch $With.inner_132)
+                                    (then $With.inner_144
+                                       ((fetch $With.outer_143)
+                                          (fetch $With.inner_144)
                                           (suspend
-                                             ((resume $With.return_103)))
+                                             ((resume $With.return_106)))
                                           (apply 2)))))))
-                           (resume $With.return_99))))))
-               (resume $With.return_98)))
-            (resume $With.return_97)))))
+                           (resume $With.return_101))))))
+               (resume $With.return_100)))
+            (resume $With.return_99)))
+         (resume $With.return_98)))
    (finally
+      $With.return_107
       ((lambda
-         ($With.param_84 $With.return_104)
+         ($With.param_84 $With.return_108)
          ((lambda
-            ($With.param_85 $With.return_105)
-            ((do $With.return_106
+            ($With.param_85 $With.return_109)
+            ((do $With.return_110
                ((fetch $With.param_84)
                   (fetch $With.param_85)
                   (construct tuple 2)
                   (select
                      ((tuple
                         (#With.finalizer_2 #With.k_3))
-                        ((do $With.return_109
-                           ((do $With.return_107
+                        ((do $With.return_113
+                           ((do $With.return_111
                               ((fetch #With.k_3)
                                  (construct tuple 0)
                                  (suspend
-                                    ((resume $With.return_107)))
+                                    ((resume $With.return_111)))
                                  (apply 2)))
                               (then #With.x_4
-                                 ((do $With.return_108
+                                 ((do $With.return_112
                                     ((fetch #With.finalizer_2)
                                        (fetch #With.x_4)
                                        (suspend
-                                          ((resume $With.return_108)))
+                                          ((resume $With.return_112)))
                                        (apply 2)))
-                                    (resume $With.return_109)))))
-                           (resume $With.return_106))))))
-               (resume $With.return_105)))
-            (resume $With.return_104)))))
+                                    (resume $With.return_113)))))
+                           (resume $With.return_110))))))
+               (resume $With.return_109)))
+            (resume $With.return_108)))
+         (resume $With.return_107)))
    (main
+      $With.return_114
       ((lambda
-         ($With.param_86 $With.return_110)
-         ((do $With.return_111
+         ($With.param_86 $With.return_115)
+         ((do $With.return_116
             ((fetch $With.param_86)
                (construct tuple 1)
                (select
                   (#With.$__78
-                     ((do $With.return_128
-                        ((do $With.return_116
-                           ((fetch finally)
+                     ((do $With.return_140
+                        ((do $With.return_124
+                           ((do $With.return_117
+                              ((suspend
+                                 ((resume $With.return_117)))
+                                 (invoke finally)))
                               (lambda
-                                 ($With.param_87 $With.return_112)
-                                 ((do $With.return_113
+                                 ($With.param_87 $With.return_118)
+                                 ((do $With.return_119
                                     ((fetch $With.param_87)
                                        (construct tuple 1)
                                        (select
                                           ((tuple ())
-                                             ((do $With.return_115
-                                                ((fetch printString)
-                                                   (then $With.outer_133
-                                                      ((do $With.return_114
-                                                         ((fetch String#)
+                                             ((do $With.return_123
+                                                ((do $With.return_120
+                                                   ((suspend
+                                                      ((resume $With.return_120)))
+                                                      (invoke printString)))
+                                                   (then $With.outer_145
+                                                      ((do $With.return_122
+                                                         ((do $With.return_121
+                                                            ((suspend
+                                                               ((resume $With.return_121)))
+                                                               (invoke String#)))
                                                             (push "end")
                                                             (suspend
-                                                               ((resume $With.return_114)))
+                                                               ((resume $With.return_122)))
                                                             (apply 2)))
-                                                         (then $With.inner_134
-                                                            ((fetch $With.outer_133)
-                                                               (fetch $With.inner_134)
+                                                         (then $With.inner_146
+                                                            ((fetch $With.outer_145)
+                                                               (fetch $With.inner_146)
                                                                (suspend
-                                                                  ((resume $With.return_115)))
+                                                                  ((resume $With.return_123)))
                                                                (apply 2)))))))
-                                                (resume $With.return_113))))))
-                                    (resume $With.return_112)))
+                                                (resume $With.return_119))))))
+                                    (resume $With.return_118)))
                               (suspend
-                                 ((resume $With.return_116)))
+                                 ((resume $With.return_124)))
                               (apply 2)))
                            (lambda
-                              ($With.param_88 $With.return_117)
-                              ((do $With.return_118
+                              ($With.param_88 $With.return_125)
+                              ((do $With.return_126
                                  ((fetch $With.param_88)
                                     (construct tuple 1)
                                     (select
                                        (#With.$__75
-                                          ((do $With.return_127
-                                             ((fetch twice)
+                                          ((do $With.return_139
+                                             ((do $With.return_127
+                                                ((suspend
+                                                   ((resume $With.return_127)))
+                                                   (invoke twice)))
                                                 (lambda
-                                                   ($With.param_89 $With.return_119)
-                                                   ((do $With.return_120
+                                                   ($With.param_89 $With.return_128)
+                                                   ((do $With.return_129
                                                       ((fetch $With.param_89)
                                                          (construct tuple 1)
                                                          (select
                                                             (#With.$__72
-                                                               ((do $With.return_126
-                                                                  ((do $With.return_122
-                                                                     ((fetch printAndReturn)
-                                                                        (then $With.outer_135
-                                                                           ((do $With.return_121
-                                                                              ((fetch String#)
+                                                               ((do $With.return_138
+                                                                  ((do $With.return_133
+                                                                     ((do $With.return_130
+                                                                        ((suspend
+                                                                           ((resume $With.return_130)))
+                                                                           (invoke printAndReturn)))
+                                                                        (then $With.outer_147
+                                                                           ((do $With.return_132
+                                                                              ((do $With.return_131
+                                                                                 ((suspend
+                                                                                    ((resume $With.return_131)))
+                                                                                    (invoke String#)))
                                                                                  (push "foo")
                                                                                  (suspend
-                                                                                    ((resume $With.return_121)))
+                                                                                    ((resume $With.return_132)))
                                                                                  (apply 2)))
-                                                                              (then $With.inner_136
-                                                                                 ((fetch $With.outer_135)
-                                                                                    (fetch $With.inner_136)
+                                                                              (then $With.inner_148
+                                                                                 ((fetch $With.outer_147)
+                                                                                    (fetch $With.inner_148)
                                                                                     (suspend
-                                                                                       ((resume $With.return_122)))
+                                                                                       ((resume $With.return_133)))
                                                                                     (apply 2)))))))
                                                                      (lambda
-                                                                        ($With.param_90 $With.return_123)
-                                                                        ((do $With.return_124
+                                                                        ($With.param_90 $With.return_134)
+                                                                        ((do $With.return_135
                                                                            ((fetch $With.param_90)
                                                                               (construct tuple 1)
                                                                               (select
                                                                                  (#With.x_9
-                                                                                    ((do $With.return_125
-                                                                                       ((fetch printString)
+                                                                                    ((do $With.return_137
+                                                                                       ((do $With.return_136
+                                                                                          ((suspend
+                                                                                             ((resume $With.return_136)))
+                                                                                             (invoke printString)))
                                                                                           (fetch #With.x_9)
                                                                                           (suspend
-                                                                                             ((resume $With.return_125)))
+                                                                                             ((resume $With.return_137)))
                                                                                           (apply 2)))
-                                                                                       (resume $With.return_124))))))
-                                                                           (resume $With.return_123)))
+                                                                                       (resume $With.return_135))))))
+                                                                           (resume $With.return_134)))
                                                                      (suspend
-                                                                        ((resume $With.return_126)))
+                                                                        ((resume $With.return_138)))
                                                                      (apply 2)))
-                                                                  (resume $With.return_120))))))
-                                                      (resume $With.return_119)))
+                                                                  (resume $With.return_129))))))
+                                                      (resume $With.return_128)))
                                                 (suspend
-                                                   ((resume $With.return_127)))
+                                                   ((resume $With.return_139)))
                                                 (apply 2)))
-                                             (resume $With.return_118))))))
-                                 (resume $With.return_117)))
+                                             (resume $With.return_126))))))
+                                 (resume $With.return_125)))
                            (suspend
-                              ((resume $With.return_128)))
+                              ((resume $With.return_140)))
                            (apply 2)))
-                        (resume $With.return_111))))))
-            (resume $With.return_110))))))
+                        (resume $With.return_116))))))
+            (resume $With.return_115)))
+         (resume $With.return_114))))

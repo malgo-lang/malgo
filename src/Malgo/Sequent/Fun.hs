@@ -47,7 +47,7 @@ instance ToSExpr Literal where
   toSExpr (Char c) = S.A $ S.Char c
   toSExpr (String t) = S.A $ S.String t
 
-data Program = Program [(Range, Name,  Expr)]
+data Program = Program [(Range, Name, Expr)]
 
 instance ToSExpr Program where
   toSExpr (Program definitions) = S.L $ map (\(_, name, body) -> toSExpr (name, body)) definitions
@@ -63,6 +63,7 @@ data Expr
   | Project Range Expr Text
   | Primitive Range Text [Expr]
   | Select Range Expr [Branch]
+  | Invoke Range Name
   deriving stock (Show)
 
 class HasRange a where
@@ -79,6 +80,7 @@ instance HasRange Expr where
   range (Project r _ _) = r
   range (Primitive r _ _) = r
   range (Select r _ _) = r
+  range (Invoke r _) = r
 
 instance ToSExpr Expr where
   toSExpr (Var _ name) = toSExpr name
@@ -91,6 +93,7 @@ instance ToSExpr Expr where
   toSExpr (Project _ callee field) = S.L [S.A "project", toSExpr callee, toSExpr field]
   toSExpr (Primitive _ operator arguments) = S.L [S.A "primitive", toSExpr operator, S.L $ map toSExpr arguments]
   toSExpr (Select _ scrutinees branches) = S.L [S.A "select", toSExpr scrutinees, S.L $ map toSExpr branches]
+  toSExpr (Invoke _ name) = S.L [S.A "invoke", toSExpr name]
 
 data Branch = Branch Range Pattern Expr
   deriving stock (Show)

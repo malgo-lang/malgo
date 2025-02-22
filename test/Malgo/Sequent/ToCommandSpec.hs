@@ -21,7 +21,7 @@ import System.FilePath
 import Test.Hspec
 
 spec :: Spec
-spec = parallel $ xdescribe "disable" do
+spec = parallel do
   runIO do
     setupBuiltin
     setupPrelude

@@ -6,9 +6,9 @@
             ($Double.param_9))
          ((#Double.$__8
             (apply
-               putStr
+               (invoke putStr)
                ((apply
-                  toStringDouble
+                  (invoke toStringDouble)
                   ((apply
-                     Double#
+                     (invoke Double#)
                      (3.14_f64))))))))))))

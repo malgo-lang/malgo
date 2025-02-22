@@ -10,7 +10,7 @@
                (#Factorial.x_0 #Factorial.y_1))
                (apply
                   (apply
-                     eqInt64
+                     (invoke eqInt64)
                      (#Factorial.x_0))
                   (#Factorial.y_1))))))))
    (-
@@ -25,7 +25,7 @@
                   (#Factorial.x_2 #Factorial.y_3))
                   (apply
                      (apply
-                        subInt64
+                        (invoke subInt64)
                         (#Factorial.x_2))
                      (#Factorial.y_3))))))))
    (*
@@ -40,7 +40,7 @@
                   (#Factorial.x_4 #Factorial.y_5))
                   (apply
                      (apply
-                        mulInt64
+                        (invoke mulInt64)
                         (#Factorial.x_4))
                      (#Factorial.y_5))))))))
    (factAcc
@@ -56,13 +56,13 @@
                   (apply
                      (apply
                         (apply
-                           if
+                           (invoke if)
                            ((apply
                               (apply
-                                 ==
+                                 (invoke ==)
                                  (#Factorial.n_7))
                               ((apply
-                                 Int64#
+                                 (invoke Int64#)
                                  (0_i64))))))
                         ((lambda
                            ($Factorial.param_106)
@@ -78,17 +78,17 @@
                            ((#Factorial.$__70
                               (apply
                                  (apply
-                                    factAcc
+                                    (invoke factAcc)
                                     ((apply
                                        (apply
-                                          -
+                                          (invoke -)
                                           (#Factorial.n_7))
                                        ((apply
-                                          Int64#
+                                          (invoke Int64#)
                                           (1_i64))))))
                                  ((apply
                                     (apply
-                                       *
+                                       (invoke *)
                                        (#Factorial.n_7))
                                     (#Factorial.acc_8))))))))))))))))
    (fact
@@ -100,10 +100,10 @@
             ((#Factorial.n_6
                (apply
                   (apply
-                     factAcc
+                     (invoke factAcc)
                      (#Factorial.n_6))
                   ((apply
-                     Int64#
+                     (invoke Int64#)
                      (1_i64)))))))))
    (main
       (lambda
@@ -114,14 +114,14 @@
             ((#Factorial.$__97
                (apply
                   (apply
-                     |>
+                     (invoke |>)
                      ((apply
                         (apply
-                           |>
+                           (invoke |>)
                            ((apply
-                              fact
+                              (invoke fact)
                               ((apply
-                                 Int64#
+                                 (invoke Int64#)
                                  (5_i64))))))
-                        (toStringInt64))))
-                  (putStrLn))))))))
+                        ((invoke toStringInt64)))))
+                  ((invoke putStrLn)))))))))

@@ -8,10 +8,10 @@
    (hello
       (tuple
          ((apply
-            String#
+            (invoke String#)
             ("hello"))
             (apply
-               String#
+               (invoke String#)
                ("world")))))
    (main
       (lambda
@@ -22,8 +22,8 @@
             ((#TypeSynonym.$__29
                (apply
                   (apply
-                     |>
-                     (hello))
+                     (invoke |>)
+                     ((invoke hello)))
                   ((lambda
                      ($TypeSynonym.param_32)
                      (select
@@ -38,13 +38,13 @@
                                     (lambda
                                        ($TypeSynonym.tmp_34)
                                        (apply
-                                          putStrLn
+                                          (invoke putStrLn)
                                           (#TypeSynonym.w_3)))
                                     ((apply
-                                       putStr
+                                       (invoke putStr)
                                        ((apply
-                                          String#
+                                          (invoke String#)
                                           (" ")))))))
                               ((apply
-                                 putStr
+                                 (invoke putStr)
                                  (#TypeSynonym.h_2))))))))))))))))

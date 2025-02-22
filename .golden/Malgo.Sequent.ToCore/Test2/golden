@@ -1,70 +1,83 @@
 ((rtob
-   (lambda
-      ($Test2.param_23 $Test2.return_26)
-      (cut
-         (do $Test2.return_27
-            (cut
-               (construct
-                  tuple
-                  ($Test2.param_23)
-                  ())
-               (select
-                  ((R ())
-                     (cut B $Test2.return_27))
-                  (#Test2.a_0
-                     (cut #Test2.a_0 $Test2.return_27)))))
-         $Test2.return_26)))
-   (main
+   $Test2.return_26
+   (cut
       (lambda
-         ($Test2.param_24 $Test2.return_28)
+         ($Test2.param_23 $Test2.return_27)
          (cut
-            (do $Test2.return_29
+            (do $Test2.return_28
                (cut
                   (construct
                      tuple
-                     ($Test2.param_24)
+                     ($Test2.param_23)
                      ())
                   (select
-                     (#Test2.$__22
+                     ((R ())
                         (cut
-                           (do $Test2.return_35
-                              (cut
-                                 (lambda
-                                    ($Test2.param_25 $Test2.return_30)
-                                    (cut
-                                       (do $Test2.return_31
-                                          (cut
-                                             (construct
-                                                tuple
-                                                ($Test2.param_25)
-                                                ())
-                                             (select
-                                                ((B ())
-                                                   (cut
-                                                      (do $Test2.return_32
-                                                         (cut
-                                                            malgo_print_string
-                                                            (apply
-                                                               ("OK")
-                                                               ($Test2.return_32))))
-                                                      $Test2.return_31))
-                                                (#Test2.__1
-                                                   (cut
-                                                      (do $Test2.return_33
-                                                         (cut
-                                                            malgo_print_string
-                                                            (apply
-                                                               ("WRONG")
-                                                               ($Test2.return_33))))
-                                                      $Test2.return_31)))))
-                                       $Test2.return_30))
-                                 (apply
-                                    ((do $Test2.return_34
+                           (do $Test2.return_29
+                              (invoke B $Test2.return_29))
+                           $Test2.return_28))
+                     (#Test2.a_0
+                        (cut #Test2.a_0 $Test2.return_28)))))
+            $Test2.return_27))
+      $Test2.return_26))
+   (main
+      $Test2.return_30
+      (cut
+         (lambda
+            ($Test2.param_24 $Test2.return_31)
+            (cut
+               (do $Test2.return_32
+                  (cut
+                     (construct
+                        tuple
+                        ($Test2.param_24)
+                        ())
+                     (select
+                        (#Test2.$__22
+                           (cut
+                              (do $Test2.return_42
+                                 (cut
+                                    (lambda
+                                       ($Test2.param_25 $Test2.return_33)
                                        (cut
-                                          rtob
-                                          (apply
-                                             (R)
-                                             ($Test2.return_34)))))
-                                    ($Test2.return_35))))
-                           $Test2.return_29)))))
-            $Test2.return_28))))
+                                          (do $Test2.return_34
+                                             (cut
+                                                (construct
+                                                   tuple
+                                                   ($Test2.param_25)
+                                                   ())
+                                                (select
+                                                   ((B ())
+                                                      (cut
+                                                         (do $Test2.return_36
+                                                            (cut
+                                                               (do $Test2.return_35
+                                                                  (invoke malgo_print_string $Test2.return_35))
+                                                               (apply
+                                                                  ("OK")
+                                                                  ($Test2.return_36))))
+                                                         $Test2.return_34))
+                                                   (#Test2.__1
+                                                      (cut
+                                                         (do $Test2.return_38
+                                                            (cut
+                                                               (do $Test2.return_37
+                                                                  (invoke malgo_print_string $Test2.return_37))
+                                                               (apply
+                                                                  ("WRONG")
+                                                                  ($Test2.return_38))))
+                                                         $Test2.return_34)))))
+                                          $Test2.return_33))
+                                    (apply
+                                       ((do $Test2.return_41
+                                          (cut
+                                             (do $Test2.return_39
+                                                (invoke rtob $Test2.return_39))
+                                             (apply
+                                                ((do $Test2.return_40
+                                                   (invoke R $Test2.return_40)))
+                                                ($Test2.return_41)))))
+                                       ($Test2.return_42))))
+                              $Test2.return_32)))))
+               $Test2.return_31))
+         $Test2.return_30)))

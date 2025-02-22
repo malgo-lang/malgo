@@ -1,20 +1,23 @@
 ((id
+   $TestEither.return_261
    ((lambda
-      ($TestEither.param_249 $TestEither.return_261)
-      ((do $TestEither.return_262
+      ($TestEither.param_249 $TestEither.return_262)
+      ((do $TestEither.return_263
          ((fetch $TestEither.param_249)
             (construct tuple 1)
             (select
                (#TestEither.x_2
                   ((fetch #TestEither.x_2)
-                     (resume $TestEither.return_262))))))
-         (resume $TestEither.return_261)))))
+                     (resume $TestEither.return_263))))))
+         (resume $TestEither.return_262)))
+      (resume $TestEither.return_261)))
    (andThen
+      $TestEither.return_264
       ((lambda
-         ($TestEither.param_250 $TestEither.return_263)
+         ($TestEither.param_250 $TestEither.return_265)
          ((lambda
-            ($TestEither.param_251 $TestEither.return_264)
-            ((do $TestEither.return_265
+            ($TestEither.param_251 $TestEither.return_266)
+            ((do $TestEither.return_267
                ((fetch $TestEither.param_250)
                   (fetch $TestEither.param_251)
                   (construct tuple 2)
@@ -23,430 +26,567 @@
                         (#TestEither.__3
                            (Left
                               (#TestEither.x_4))))
-                        ((do $TestEither.return_266
-                           ((fetch Left)
+                        ((do $TestEither.return_269
+                           ((do $TestEither.return_268
+                              ((suspend
+                                 ((resume $TestEither.return_268)))
+                                 (invoke Left)))
                               (fetch #TestEither.x_4)
                               (suspend
-                                 ((resume $TestEither.return_266)))
+                                 ((resume $TestEither.return_269)))
                               (apply 2)))
-                           (resume $TestEither.return_265)))
+                           (resume $TestEither.return_267)))
                      ((tuple
                         (#TestEither.f_5
                            (Right
                               (#TestEither.x_6))))
-                        ((do $TestEither.return_267
+                        ((do $TestEither.return_270
                            ((fetch #TestEither.f_5)
                               (fetch #TestEither.x_6)
                               (suspend
-                                 ((resume $TestEither.return_267)))
+                                 ((resume $TestEither.return_270)))
                               (apply 2)))
-                           (resume $TestEither.return_265))))))
-               (resume $TestEither.return_264)))
-            (resume $TestEither.return_263)))))
+                           (resume $TestEither.return_267))))))
+               (resume $TestEither.return_266)))
+            (resume $TestEither.return_265)))
+         (resume $TestEither.return_264)))
    (main
+      $TestEither.return_271
       ((lambda
-         ($TestEither.param_252 $TestEither.return_268)
-         ((do $TestEither.return_269
+         ($TestEither.param_252 $TestEither.return_272)
+         ((do $TestEither.return_273
             ((fetch $TestEither.param_252)
                (construct tuple 1)
                (select
                   (#TestEither.$__248
-                     ((do $TestEither.return_331
+                     ((do $TestEither.return_372
                         ((lambda
-                           ($TestEither.tmp_253 $TestEither.return_270)
-                           ((do $TestEither.return_320
-                              ((do $TestEither.return_272
-                                 ((fetch Right)
-                                    (then $TestEither.outer_332
-                                       ((do $TestEither.return_271
-                                          ((fetch Int32#)
+                           ($TestEither.tmp_253 $TestEither.return_274)
+                           ((do $TestEither.return_354
+                              ((do $TestEither.return_278
+                                 ((do $TestEither.return_275
+                                    ((suspend
+                                       ((resume $TestEither.return_275)))
+                                       (invoke Right)))
+                                    (then $TestEither.outer_373
+                                       ((do $TestEither.return_277
+                                          ((do $TestEither.return_276
+                                             ((suspend
+                                                ((resume $TestEither.return_276)))
+                                                (invoke Int32#)))
                                              (push 1_i32)
                                              (suspend
-                                                ((resume $TestEither.return_271)))
+                                                ((resume $TestEither.return_277)))
                                              (apply 2)))
-                                          (then $TestEither.inner_333
-                                             ((fetch $TestEither.outer_332)
-                                                (fetch $TestEither.inner_333)
+                                          (then $TestEither.inner_374
+                                             ((fetch $TestEither.outer_373)
+                                                (fetch $TestEither.inner_374)
                                                 (suspend
-                                                   ((resume $TestEither.return_272)))
+                                                   ((resume $TestEither.return_278)))
                                                 (apply 2)))))))
                                  (then #TestEither.x_9
-                                    ((do $TestEither.return_319
+                                    ((do $TestEither.return_353
                                        ((lambda
-                                          ($TestEither.tmp_255 $TestEither.return_273)
-                                          ((do $TestEither.return_298
-                                             ((do $TestEither.return_290
-                                                ((fetch |>)
-                                                   (then $TestEither.outer_334
-                                                      ((do $TestEither.return_289
-                                                         ((do $TestEither.return_281
-                                                            ((fetch |>)
-                                                               (then $TestEither.outer_336
-                                                                  ((do $TestEither.return_280
-                                                                     ((do $TestEither.return_274
-                                                                        ((fetch |>)
+                                          ($TestEither.tmp_255 $TestEither.return_279)
+                                          ((do $TestEither.return_319
+                                             ((do $TestEither.return_306
+                                                ((do $TestEither.return_280
+                                                   ((suspend
+                                                      ((resume $TestEither.return_280)))
+                                                      (invoke |>)))
+                                                   (then $TestEither.outer_375
+                                                      ((do $TestEither.return_305
+                                                         ((do $TestEither.return_293
+                                                            ((do $TestEither.return_281
+                                                               ((suspend
+                                                                  ((resume $TestEither.return_281)))
+                                                                  (invoke |>)))
+                                                               (then $TestEither.outer_377
+                                                                  ((do $TestEither.return_292
+                                                                     ((do $TestEither.return_283
+                                                                        ((do $TestEither.return_282
+                                                                           ((suspend
+                                                                              ((resume $TestEither.return_282)))
+                                                                              (invoke |>)))
                                                                            (fetch #TestEither.x_9)
                                                                            (suspend
-                                                                              ((resume $TestEither.return_274)))
+                                                                              ((resume $TestEither.return_283)))
                                                                            (apply 2)))
-                                                                        (then $TestEither.outer_338
-                                                                           ((do $TestEither.return_279
-                                                                              ((fetch andThen)
+                                                                        (then $TestEither.outer_379
+                                                                           ((do $TestEither.return_291
+                                                                              ((do $TestEither.return_284
+                                                                                 ((suspend
+                                                                                    ((resume $TestEither.return_284)))
+                                                                                    (invoke andThen)))
                                                                                  (lambda
-                                                                                    ($TestEither.param_258 $TestEither.return_275)
-                                                                                    ((do $TestEither.return_276
+                                                                                    ($TestEither.param_258 $TestEither.return_285)
+                                                                                    ((do $TestEither.return_286
                                                                                        ((fetch $TestEither.param_258)
                                                                                           (construct tuple 1)
                                                                                           (select
                                                                                              (#TestEither.__12
-                                                                                                ((do $TestEither.return_278
-                                                                                                   ((fetch Left)
-                                                                                                      (then $TestEither.outer_340
-                                                                                                         ((do $TestEither.return_277
-                                                                                                            ((fetch String#)
+                                                                                                ((do $TestEither.return_290
+                                                                                                   ((do $TestEither.return_287
+                                                                                                      ((suspend
+                                                                                                         ((resume $TestEither.return_287)))
+                                                                                                         (invoke Left)))
+                                                                                                      (then $TestEither.outer_381
+                                                                                                         ((do $TestEither.return_289
+                                                                                                            ((do $TestEither.return_288
+                                                                                                               ((suspend
+                                                                                                                  ((resume $TestEither.return_288)))
+                                                                                                                  (invoke String#)))
                                                                                                                (push "error")
                                                                                                                (suspend
-                                                                                                                  ((resume $TestEither.return_277)))
+                                                                                                                  ((resume $TestEither.return_289)))
                                                                                                                (apply 2)))
-                                                                                                            (then $TestEither.inner_341
-                                                                                                               ((fetch $TestEither.outer_340)
-                                                                                                                  (fetch $TestEither.inner_341)
+                                                                                                            (then $TestEither.inner_382
+                                                                                                               ((fetch $TestEither.outer_381)
+                                                                                                                  (fetch $TestEither.inner_382)
                                                                                                                   (suspend
-                                                                                                                     ((resume $TestEither.return_278)))
+                                                                                                                     ((resume $TestEither.return_290)))
                                                                                                                   (apply 2)))))))
-                                                                                                   (resume $TestEither.return_276))))))
-                                                                                       (resume $TestEither.return_275)))
+                                                                                                   (resume $TestEither.return_286))))))
+                                                                                       (resume $TestEither.return_285)))
                                                                                  (suspend
-                                                                                    ((resume $TestEither.return_279)))
+                                                                                    ((resume $TestEither.return_291)))
                                                                                  (apply 2)))
-                                                                              (then $TestEither.inner_339
-                                                                                 ((fetch $TestEither.outer_338)
-                                                                                    (fetch $TestEither.inner_339)
+                                                                              (then $TestEither.inner_380
+                                                                                 ((fetch $TestEither.outer_379)
+                                                                                    (fetch $TestEither.inner_380)
                                                                                     (suspend
-                                                                                       ((resume $TestEither.return_280)))
+                                                                                       ((resume $TestEither.return_292)))
                                                                                     (apply 2)))))))
-                                                                     (then $TestEither.inner_337
-                                                                        ((fetch $TestEither.outer_336)
-                                                                           (fetch $TestEither.inner_337)
+                                                                     (then $TestEither.inner_378
+                                                                        ((fetch $TestEither.outer_377)
+                                                                           (fetch $TestEither.inner_378)
                                                                            (suspend
-                                                                              ((resume $TestEither.return_281)))
+                                                                              ((resume $TestEither.return_293)))
                                                                            (apply 2)))))))
-                                                            (then $TestEither.outer_342
-                                                               ((do $TestEither.return_288
-                                                                  ((fetch andThen)
+                                                            (then $TestEither.outer_383
+                                                               ((do $TestEither.return_304
+                                                                  ((do $TestEither.return_294
+                                                                     ((suspend
+                                                                        ((resume $TestEither.return_294)))
+                                                                        (invoke andThen)))
                                                                      (lambda
-                                                                        ($TestEither.param_259 $TestEither.return_282)
-                                                                        ((do $TestEither.return_283
+                                                                        ($TestEither.param_259 $TestEither.return_295)
+                                                                        ((do $TestEither.return_296
                                                                            ((fetch $TestEither.param_259)
                                                                               (construct tuple 1)
                                                                               (select
                                                                                  (#TestEither.x_13
-                                                                                    ((do $TestEither.return_287
-                                                                                       ((fetch Right)
-                                                                                          (then $TestEither.outer_344
-                                                                                             ((do $TestEither.return_286
-                                                                                                ((do $TestEither.return_284
-                                                                                                   ((fetch addInt32)
+                                                                                    ((do $TestEither.return_303
+                                                                                       ((do $TestEither.return_297
+                                                                                          ((suspend
+                                                                                             ((resume $TestEither.return_297)))
+                                                                                             (invoke Right)))
+                                                                                          (then $TestEither.outer_385
+                                                                                             ((do $TestEither.return_302
+                                                                                                ((do $TestEither.return_299
+                                                                                                   ((do $TestEither.return_298
+                                                                                                      ((suspend
+                                                                                                         ((resume $TestEither.return_298)))
+                                                                                                         (invoke addInt32)))
                                                                                                       (fetch #TestEither.x_13)
                                                                                                       (suspend
-                                                                                                         ((resume $TestEither.return_284)))
+                                                                                                         ((resume $TestEither.return_299)))
                                                                                                       (apply 2)))
-                                                                                                   (then $TestEither.outer_346
-                                                                                                      ((do $TestEither.return_285
-                                                                                                         ((fetch Int32#)
+                                                                                                   (then $TestEither.outer_387
+                                                                                                      ((do $TestEither.return_301
+                                                                                                         ((do $TestEither.return_300
+                                                                                                            ((suspend
+                                                                                                               ((resume $TestEither.return_300)))
+                                                                                                               (invoke Int32#)))
                                                                                                             (push 1_i32)
                                                                                                             (suspend
-                                                                                                               ((resume $TestEither.return_285)))
+                                                                                                               ((resume $TestEither.return_301)))
                                                                                                             (apply 2)))
-                                                                                                         (then $TestEither.inner_347
-                                                                                                            ((fetch $TestEither.outer_346)
-                                                                                                               (fetch $TestEither.inner_347)
+                                                                                                         (then $TestEither.inner_388
+                                                                                                            ((fetch $TestEither.outer_387)
+                                                                                                               (fetch $TestEither.inner_388)
                                                                                                                (suspend
-                                                                                                                  ((resume $TestEither.return_286)))
+                                                                                                                  ((resume $TestEither.return_302)))
                                                                                                                (apply 2)))))))
-                                                                                                (then $TestEither.inner_345
-                                                                                                   ((fetch $TestEither.outer_344)
-                                                                                                      (fetch $TestEither.inner_345)
+                                                                                                (then $TestEither.inner_386
+                                                                                                   ((fetch $TestEither.outer_385)
+                                                                                                      (fetch $TestEither.inner_386)
                                                                                                       (suspend
-                                                                                                         ((resume $TestEither.return_287)))
+                                                                                                         ((resume $TestEither.return_303)))
                                                                                                       (apply 2)))))))
-                                                                                       (resume $TestEither.return_283))))))
-                                                                           (resume $TestEither.return_282)))
+                                                                                       (resume $TestEither.return_296))))))
+                                                                           (resume $TestEither.return_295)))
                                                                      (suspend
-                                                                        ((resume $TestEither.return_288)))
+                                                                        ((resume $TestEither.return_304)))
                                                                      (apply 2)))
-                                                                  (then $TestEither.inner_343
-                                                                     ((fetch $TestEither.outer_342)
-                                                                        (fetch $TestEither.inner_343)
+                                                                  (then $TestEither.inner_384
+                                                                     ((fetch $TestEither.outer_383)
+                                                                        (fetch $TestEither.inner_384)
                                                                         (suspend
-                                                                           ((resume $TestEither.return_289)))
+                                                                           ((resume $TestEither.return_305)))
                                                                         (apply 2)))))))
-                                                         (then $TestEither.inner_335
-                                                            ((fetch $TestEither.outer_334)
-                                                               (fetch $TestEither.inner_335)
+                                                         (then $TestEither.inner_376
+                                                            ((fetch $TestEither.outer_375)
+                                                               (fetch $TestEither.inner_376)
                                                                (suspend
-                                                                  ((resume $TestEither.return_290)))
+                                                                  ((resume $TestEither.return_306)))
                                                                (apply 2)))))))
                                                 (lambda
-                                                   ($TestEither.param_260 $TestEither.return_291)
-                                                   ((do $TestEither.return_292
+                                                   ($TestEither.param_260 $TestEither.return_307)
+                                                   ((do $TestEither.return_308
                                                       ((fetch $TestEither.param_260)
                                                          (construct tuple 1)
                                                          (select
                                                             ((Left
                                                                (#TestEither.err_14))
-                                                               ((do $TestEither.return_293
-                                                                  ((fetch putStrLn)
+                                                               ((do $TestEither.return_310
+                                                                  ((do $TestEither.return_309
+                                                                     ((suspend
+                                                                        ((resume $TestEither.return_309)))
+                                                                        (invoke putStrLn)))
                                                                      (fetch #TestEither.err_14)
                                                                      (suspend
-                                                                        ((resume $TestEither.return_293)))
+                                                                        ((resume $TestEither.return_310)))
                                                                      (apply 2)))
-                                                                  (resume $TestEither.return_292)))
+                                                                  (resume $TestEither.return_308)))
                                                             ((Right
                                                                (#TestEither.x_15))
-                                                               ((do $TestEither.return_297
-                                                                  ((do $TestEither.return_296
-                                                                     ((fetch |>)
-                                                                        (then $TestEither.outer_348
-                                                                           ((do $TestEither.return_295
-                                                                              ((do $TestEither.return_294
-                                                                                 ((fetch |>)
+                                                               ((do $TestEither.return_318
+                                                                  ((do $TestEither.return_316
+                                                                     ((do $TestEither.return_311
+                                                                        ((suspend
+                                                                           ((resume $TestEither.return_311)))
+                                                                           (invoke |>)))
+                                                                        (then $TestEither.outer_389
+                                                                           ((do $TestEither.return_315
+                                                                              ((do $TestEither.return_313
+                                                                                 ((do $TestEither.return_312
+                                                                                    ((suspend
+                                                                                       ((resume $TestEither.return_312)))
+                                                                                       (invoke |>)))
                                                                                     (fetch #TestEither.x_15)
                                                                                     (suspend
-                                                                                       ((resume $TestEither.return_294)))
+                                                                                       ((resume $TestEither.return_313)))
                                                                                     (apply 2)))
-                                                                                 (fetch toStringInt32)
-                                                                                 (suspend
-                                                                                    ((resume $TestEither.return_295)))
-                                                                                 (apply 2)))
-                                                                              (then $TestEither.inner_349
-                                                                                 ((fetch $TestEither.outer_348)
-                                                                                    (fetch $TestEither.inner_349)
+                                                                                 (then $TestEither.outer_391
+                                                                                    ((do $TestEither.return_314
+                                                                                       ((suspend
+                                                                                          ((resume $TestEither.return_314)))
+                                                                                          (invoke toStringInt32)))
+                                                                                       (then $TestEither.inner_392
+                                                                                          ((fetch $TestEither.outer_391)
+                                                                                             (fetch $TestEither.inner_392)
+                                                                                             (suspend
+                                                                                                ((resume $TestEither.return_315)))
+                                                                                             (apply 2)))))))
+                                                                              (then $TestEither.inner_390
+                                                                                 ((fetch $TestEither.outer_389)
+                                                                                    (fetch $TestEither.inner_390)
                                                                                     (suspend
-                                                                                       ((resume $TestEither.return_296)))
+                                                                                       ((resume $TestEither.return_316)))
                                                                                     (apply 2)))))))
-                                                                     (fetch putStrLn)
-                                                                     (suspend
-                                                                        ((resume $TestEither.return_297)))
-                                                                     (apply 2)))
-                                                                  (resume $TestEither.return_292))))))
-                                                      (resume $TestEither.return_291)))
+                                                                     (then $TestEither.outer_393
+                                                                        ((do $TestEither.return_317
+                                                                           ((suspend
+                                                                              ((resume $TestEither.return_317)))
+                                                                              (invoke putStrLn)))
+                                                                           (then $TestEither.inner_394
+                                                                              ((fetch $TestEither.outer_393)
+                                                                                 (fetch $TestEither.inner_394)
+                                                                                 (suspend
+                                                                                    ((resume $TestEither.return_318)))
+                                                                                 (apply 2)))))))
+                                                                  (resume $TestEither.return_308))))))
+                                                      (resume $TestEither.return_307)))
                                                 (suspend
-                                                   ((resume $TestEither.return_298)))
+                                                   ((resume $TestEither.return_319)))
                                                 (apply 2)))
-                                             (resume $TestEither.return_273)))
-                                          (then $TestEither.outer_350
-                                             ((do $TestEither.return_318
-                                                ((do $TestEither.return_308
-                                                   ((fetch |>)
-                                                      (then $TestEither.outer_352
-                                                         ((do $TestEither.return_307
-                                                            ((do $TestEither.return_299
-                                                               ((fetch |>)
+                                             (resume $TestEither.return_279)))
+                                          (then $TestEither.outer_395
+                                             ((do $TestEither.return_352
+                                                ((do $TestEither.return_335
+                                                   ((do $TestEither.return_320
+                                                      ((suspend
+                                                         ((resume $TestEither.return_320)))
+                                                         (invoke |>)))
+                                                      (then $TestEither.outer_397
+                                                         ((do $TestEither.return_334
+                                                            ((do $TestEither.return_322
+                                                               ((do $TestEither.return_321
+                                                                  ((suspend
+                                                                     ((resume $TestEither.return_321)))
+                                                                     (invoke |>)))
                                                                   (fetch #TestEither.x_9)
                                                                   (suspend
-                                                                     ((resume $TestEither.return_299)))
+                                                                     ((resume $TestEither.return_322)))
                                                                   (apply 2)))
-                                                               (then $TestEither.outer_354
-                                                                  ((do $TestEither.return_306
-                                                                     ((fetch andThen)
+                                                               (then $TestEither.outer_399
+                                                                  ((do $TestEither.return_333
+                                                                     ((do $TestEither.return_323
+                                                                        ((suspend
+                                                                           ((resume $TestEither.return_323)))
+                                                                           (invoke andThen)))
                                                                         (lambda
-                                                                           ($TestEither.param_256 $TestEither.return_300)
-                                                                           ((do $TestEither.return_301
+                                                                           ($TestEither.param_256 $TestEither.return_324)
+                                                                           ((do $TestEither.return_325
                                                                               ((fetch $TestEither.param_256)
                                                                                  (construct tuple 1)
                                                                                  (select
                                                                                     (#TestEither.x_10
-                                                                                       ((do $TestEither.return_305
-                                                                                          ((fetch Right)
-                                                                                             (then $TestEither.outer_356
-                                                                                                ((do $TestEither.return_304
-                                                                                                   ((do $TestEither.return_302
-                                                                                                      ((fetch addInt32)
+                                                                                       ((do $TestEither.return_332
+                                                                                          ((do $TestEither.return_326
+                                                                                             ((suspend
+                                                                                                ((resume $TestEither.return_326)))
+                                                                                                (invoke Right)))
+                                                                                             (then $TestEither.outer_401
+                                                                                                ((do $TestEither.return_331
+                                                                                                   ((do $TestEither.return_328
+                                                                                                      ((do $TestEither.return_327
+                                                                                                         ((suspend
+                                                                                                            ((resume $TestEither.return_327)))
+                                                                                                            (invoke addInt32)))
                                                                                                          (fetch #TestEither.x_10)
                                                                                                          (suspend
-                                                                                                            ((resume $TestEither.return_302)))
+                                                                                                            ((resume $TestEither.return_328)))
                                                                                                          (apply 2)))
-                                                                                                      (then $TestEither.outer_358
-                                                                                                         ((do $TestEither.return_303
-                                                                                                            ((fetch Int32#)
+                                                                                                      (then $TestEither.outer_403
+                                                                                                         ((do $TestEither.return_330
+                                                                                                            ((do $TestEither.return_329
+                                                                                                               ((suspend
+                                                                                                                  ((resume $TestEither.return_329)))
+                                                                                                                  (invoke Int32#)))
                                                                                                                (push 1_i32)
                                                                                                                (suspend
-                                                                                                                  ((resume $TestEither.return_303)))
+                                                                                                                  ((resume $TestEither.return_330)))
                                                                                                                (apply 2)))
-                                                                                                            (then $TestEither.inner_359
-                                                                                                               ((fetch $TestEither.outer_358)
-                                                                                                                  (fetch $TestEither.inner_359)
+                                                                                                            (then $TestEither.inner_404
+                                                                                                               ((fetch $TestEither.outer_403)
+                                                                                                                  (fetch $TestEither.inner_404)
                                                                                                                   (suspend
-                                                                                                                     ((resume $TestEither.return_304)))
+                                                                                                                     ((resume $TestEither.return_331)))
                                                                                                                   (apply 2)))))))
-                                                                                                   (then $TestEither.inner_357
-                                                                                                      ((fetch $TestEither.outer_356)
-                                                                                                         (fetch $TestEither.inner_357)
+                                                                                                   (then $TestEither.inner_402
+                                                                                                      ((fetch $TestEither.outer_401)
+                                                                                                         (fetch $TestEither.inner_402)
                                                                                                          (suspend
-                                                                                                            ((resume $TestEither.return_305)))
+                                                                                                            ((resume $TestEither.return_332)))
                                                                                                          (apply 2)))))))
-                                                                                          (resume $TestEither.return_301))))))
-                                                                              (resume $TestEither.return_300)))
+                                                                                          (resume $TestEither.return_325))))))
+                                                                              (resume $TestEither.return_324)))
                                                                         (suspend
-                                                                           ((resume $TestEither.return_306)))
+                                                                           ((resume $TestEither.return_333)))
                                                                         (apply 2)))
-                                                                     (then $TestEither.inner_355
-                                                                        ((fetch $TestEither.outer_354)
-                                                                           (fetch $TestEither.inner_355)
+                                                                     (then $TestEither.inner_400
+                                                                        ((fetch $TestEither.outer_399)
+                                                                           (fetch $TestEither.inner_400)
                                                                            (suspend
-                                                                              ((resume $TestEither.return_307)))
+                                                                              ((resume $TestEither.return_334)))
                                                                            (apply 2)))))))
-                                                            (then $TestEither.inner_353
-                                                               ((fetch $TestEither.outer_352)
-                                                                  (fetch $TestEither.inner_353)
+                                                            (then $TestEither.inner_398
+                                                               ((fetch $TestEither.outer_397)
+                                                                  (fetch $TestEither.inner_398)
                                                                   (suspend
-                                                                     ((resume $TestEither.return_308)))
+                                                                     ((resume $TestEither.return_335)))
                                                                   (apply 2)))))))
-                                                   (then $TestEither.outer_360
-                                                      ((do $TestEither.return_317
-                                                         ((fetch andThen)
+                                                   (then $TestEither.outer_405
+                                                      ((do $TestEither.return_351
+                                                         ((do $TestEither.return_336
+                                                            ((suspend
+                                                               ((resume $TestEither.return_336)))
+                                                               (invoke andThen)))
                                                             (lambda
-                                                               ($TestEither.param_257 $TestEither.return_309)
-                                                               ((do $TestEither.return_310
+                                                               ($TestEither.param_257 $TestEither.return_337)
+                                                               ((do $TestEither.return_338
                                                                   ((fetch $TestEither.param_257)
                                                                      (construct tuple 1)
                                                                      (select
                                                                         (#TestEither.y_11
-                                                                           ((do $TestEither.return_316
-                                                                              ((do $TestEither.return_315
-                                                                                 ((fetch |>)
-                                                                                    (then $TestEither.outer_362
-                                                                                       ((do $TestEither.return_314
-                                                                                          ((do $TestEither.return_313
-                                                                                             ((fetch |>)
-                                                                                                (then $TestEither.outer_364
-                                                                                                   ((do $TestEither.return_312
-                                                                                                      ((do $TestEither.return_311
-                                                                                                         ((fetch |>)
+                                                                           ((do $TestEither.return_350
+                                                                              ((do $TestEither.return_348
+                                                                                 ((do $TestEither.return_339
+                                                                                    ((suspend
+                                                                                       ((resume $TestEither.return_339)))
+                                                                                       (invoke |>)))
+                                                                                    (then $TestEither.outer_407
+                                                                                       ((do $TestEither.return_347
+                                                                                          ((do $TestEither.return_345
+                                                                                             ((do $TestEither.return_340
+                                                                                                ((suspend
+                                                                                                   ((resume $TestEither.return_340)))
+                                                                                                   (invoke |>)))
+                                                                                                (then $TestEither.outer_409
+                                                                                                   ((do $TestEither.return_344
+                                                                                                      ((do $TestEither.return_342
+                                                                                                         ((do $TestEither.return_341
+                                                                                                            ((suspend
+                                                                                                               ((resume $TestEither.return_341)))
+                                                                                                               (invoke |>)))
                                                                                                             (fetch #TestEither.y_11)
                                                                                                             (suspend
-                                                                                                               ((resume $TestEither.return_311)))
+                                                                                                               ((resume $TestEither.return_342)))
                                                                                                             (apply 2)))
-                                                                                                         (fetch toStringInt32)
-                                                                                                         (suspend
-                                                                                                            ((resume $TestEither.return_312)))
-                                                                                                         (apply 2)))
-                                                                                                      (then $TestEither.inner_365
-                                                                                                         ((fetch $TestEither.outer_364)
-                                                                                                            (fetch $TestEither.inner_365)
+                                                                                                         (then $TestEither.outer_411
+                                                                                                            ((do $TestEither.return_343
+                                                                                                               ((suspend
+                                                                                                                  ((resume $TestEither.return_343)))
+                                                                                                                  (invoke toStringInt32)))
+                                                                                                               (then $TestEither.inner_412
+                                                                                                                  ((fetch $TestEither.outer_411)
+                                                                                                                     (fetch $TestEither.inner_412)
+                                                                                                                     (suspend
+                                                                                                                        ((resume $TestEither.return_344)))
+                                                                                                                     (apply 2)))))))
+                                                                                                      (then $TestEither.inner_410
+                                                                                                         ((fetch $TestEither.outer_409)
+                                                                                                            (fetch $TestEither.inner_410)
                                                                                                             (suspend
-                                                                                                               ((resume $TestEither.return_313)))
+                                                                                                               ((resume $TestEither.return_345)))
                                                                                                             (apply 2)))))))
-                                                                                             (fetch putStr)
-                                                                                             (suspend
-                                                                                                ((resume $TestEither.return_314)))
-                                                                                             (apply 2)))
-                                                                                          (then $TestEither.inner_363
-                                                                                             ((fetch $TestEither.outer_362)
-                                                                                                (fetch $TestEither.inner_363)
+                                                                                             (then $TestEither.outer_413
+                                                                                                ((do $TestEither.return_346
+                                                                                                   ((suspend
+                                                                                                      ((resume $TestEither.return_346)))
+                                                                                                      (invoke putStr)))
+                                                                                                   (then $TestEither.inner_414
+                                                                                                      ((fetch $TestEither.outer_413)
+                                                                                                         (fetch $TestEither.inner_414)
+                                                                                                         (suspend
+                                                                                                            ((resume $TestEither.return_347)))
+                                                                                                         (apply 2)))))))
+                                                                                          (then $TestEither.inner_408
+                                                                                             ((fetch $TestEither.outer_407)
+                                                                                                (fetch $TestEither.inner_408)
                                                                                                 (suspend
-                                                                                                   ((resume $TestEither.return_315)))
+                                                                                                   ((resume $TestEither.return_348)))
                                                                                                 (apply 2)))))))
-                                                                                 (fetch Right)
-                                                                                 (suspend
-                                                                                    ((resume $TestEither.return_316)))
-                                                                                 (apply 2)))
-                                                                              (resume $TestEither.return_310))))))
-                                                                  (resume $TestEither.return_309)))
+                                                                                 (then $TestEither.outer_415
+                                                                                    ((do $TestEither.return_349
+                                                                                       ((suspend
+                                                                                          ((resume $TestEither.return_349)))
+                                                                                          (invoke Right)))
+                                                                                       (then $TestEither.inner_416
+                                                                                          ((fetch $TestEither.outer_415)
+                                                                                             (fetch $TestEither.inner_416)
+                                                                                             (suspend
+                                                                                                ((resume $TestEither.return_350)))
+                                                                                             (apply 2)))))))
+                                                                              (resume $TestEither.return_338))))))
+                                                                  (resume $TestEither.return_337)))
                                                             (suspend
-                                                               ((resume $TestEither.return_317)))
+                                                               ((resume $TestEither.return_351)))
                                                             (apply 2)))
-                                                         (then $TestEither.inner_361
-                                                            ((fetch $TestEither.outer_360)
-                                                               (fetch $TestEither.inner_361)
+                                                         (then $TestEither.inner_406
+                                                            ((fetch $TestEither.outer_405)
+                                                               (fetch $TestEither.inner_406)
                                                                (suspend
-                                                                  ((resume $TestEither.return_318)))
+                                                                  ((resume $TestEither.return_352)))
                                                                (apply 2)))))))
-                                                (then $TestEither.inner_351
-                                                   ((fetch $TestEither.outer_350)
-                                                      (fetch $TestEither.inner_351)
+                                                (then $TestEither.inner_396
+                                                   ((fetch $TestEither.outer_395)
+                                                      (fetch $TestEither.inner_396)
                                                       (suspend
-                                                         ((resume $TestEither.return_319)))
+                                                         ((resume $TestEither.return_353)))
                                                       (apply 2)))))))
-                                       (resume $TestEither.return_320)))))
-                              (resume $TestEither.return_270)))
-                           (then $TestEither.outer_366
-                              ((do $TestEither.return_330
-                                 ((do $TestEither.return_323
-                                    ((fetch |>)
-                                       (then $TestEither.outer_368
-                                          ((do $TestEither.return_322
-                                             ((fetch Right)
-                                                (then $TestEither.outer_370
-                                                   ((do $TestEither.return_321
-                                                      ((fetch Int32#)
+                                       (resume $TestEither.return_354)))))
+                              (resume $TestEither.return_274)))
+                           (then $TestEither.outer_417
+                              ((do $TestEither.return_371
+                                 ((do $TestEither.return_360
+                                    ((do $TestEither.return_355
+                                       ((suspend
+                                          ((resume $TestEither.return_355)))
+                                          (invoke |>)))
+                                       (then $TestEither.outer_419
+                                          ((do $TestEither.return_359
+                                             ((do $TestEither.return_356
+                                                ((suspend
+                                                   ((resume $TestEither.return_356)))
+                                                   (invoke Right)))
+                                                (then $TestEither.outer_421
+                                                   ((do $TestEither.return_358
+                                                      ((do $TestEither.return_357
+                                                         ((suspend
+                                                            ((resume $TestEither.return_357)))
+                                                            (invoke Int32#)))
                                                          (push 1_i32)
                                                          (suspend
-                                                            ((resume $TestEither.return_321)))
+                                                            ((resume $TestEither.return_358)))
                                                          (apply 2)))
-                                                      (then $TestEither.inner_371
-                                                         ((fetch $TestEither.outer_370)
-                                                            (fetch $TestEither.inner_371)
+                                                      (then $TestEither.inner_422
+                                                         ((fetch $TestEither.outer_421)
+                                                            (fetch $TestEither.inner_422)
                                                             (suspend
-                                                               ((resume $TestEither.return_322)))
+                                                               ((resume $TestEither.return_359)))
                                                             (apply 2)))))))
-                                             (then $TestEither.inner_369
-                                                ((fetch $TestEither.outer_368)
-                                                   (fetch $TestEither.inner_369)
+                                             (then $TestEither.inner_420
+                                                ((fetch $TestEither.outer_419)
+                                                   (fetch $TestEither.inner_420)
                                                    (suspend
-                                                      ((resume $TestEither.return_323)))
+                                                      ((resume $TestEither.return_360)))
                                                    (apply 2)))))))
                                     (lambda
-                                       ($TestEither.param_254 $TestEither.return_324)
-                                       ((do $TestEither.return_325
+                                       ($TestEither.param_254 $TestEither.return_361)
+                                       ((do $TestEither.return_362
                                           ((fetch $TestEither.param_254)
                                              (construct tuple 1)
                                              (select
                                                 ((Right
                                                    (#TestEither.x_7))
-                                                   ((do $TestEither.return_327
-                                                      ((fetch putStr)
-                                                         (then $TestEither.outer_372
-                                                            ((do $TestEither.return_326
-                                                               ((fetch toStringInt32)
+                                                   ((do $TestEither.return_366
+                                                      ((do $TestEither.return_363
+                                                         ((suspend
+                                                            ((resume $TestEither.return_363)))
+                                                            (invoke putStr)))
+                                                         (then $TestEither.outer_423
+                                                            ((do $TestEither.return_365
+                                                               ((do $TestEither.return_364
+                                                                  ((suspend
+                                                                     ((resume $TestEither.return_364)))
+                                                                     (invoke toStringInt32)))
                                                                   (fetch #TestEither.x_7)
                                                                   (suspend
-                                                                     ((resume $TestEither.return_326)))
+                                                                     ((resume $TestEither.return_365)))
                                                                   (apply 2)))
-                                                               (then $TestEither.inner_373
-                                                                  ((fetch $TestEither.outer_372)
-                                                                     (fetch $TestEither.inner_373)
+                                                               (then $TestEither.inner_424
+                                                                  ((fetch $TestEither.outer_423)
+                                                                     (fetch $TestEither.inner_424)
                                                                      (suspend
-                                                                        ((resume $TestEither.return_327)))
+                                                                        ((resume $TestEither.return_366)))
                                                                      (apply 2)))))))
-                                                      (resume $TestEither.return_325)))
+                                                      (resume $TestEither.return_362)))
                                                 (#TestEither.__8
-                                                   ((do $TestEither.return_329
-                                                      ((fetch putStrLn)
-                                                         (then $TestEither.outer_374
-                                                            ((do $TestEither.return_328
-                                                               ((fetch String#)
+                                                   ((do $TestEither.return_370
+                                                      ((do $TestEither.return_367
+                                                         ((suspend
+                                                            ((resume $TestEither.return_367)))
+                                                            (invoke putStrLn)))
+                                                         (then $TestEither.outer_425
+                                                            ((do $TestEither.return_369
+                                                               ((do $TestEither.return_368
+                                                                  ((suspend
+                                                                     ((resume $TestEither.return_368)))
+                                                                     (invoke String#)))
                                                                   (push "unreachable")
                                                                   (suspend
-                                                                     ((resume $TestEither.return_328)))
+                                                                     ((resume $TestEither.return_369)))
                                                                   (apply 2)))
-                                                               (then $TestEither.inner_375
-                                                                  ((fetch $TestEither.outer_374)
-                                                                     (fetch $TestEither.inner_375)
+                                                               (then $TestEither.inner_426
+                                                                  ((fetch $TestEither.outer_425)
+                                                                     (fetch $TestEither.inner_426)
                                                                      (suspend
-                                                                        ((resume $TestEither.return_329)))
+                                                                        ((resume $TestEither.return_370)))
                                                                      (apply 2)))))))
-                                                      (resume $TestEither.return_325))))))
-                                          (resume $TestEither.return_324)))
+                                                      (resume $TestEither.return_362))))))
+                                          (resume $TestEither.return_361)))
                                     (suspend
-                                       ((resume $TestEither.return_330)))
+                                       ((resume $TestEither.return_371)))
                                     (apply 2)))
-                                 (then $TestEither.inner_367
-                                    ((fetch $TestEither.outer_366)
-                                       (fetch $TestEither.inner_367)
+                                 (then $TestEither.inner_418
+                                    ((fetch $TestEither.outer_417)
+                                       (fetch $TestEither.inner_418)
                                        (suspend
-                                          ((resume $TestEither.return_331)))
+                                          ((resume $TestEither.return_372)))
                                        (apply 2)))))))
-                        (resume $TestEither.return_269))))))
-            (resume $TestEither.return_268))))))
+                        (resume $TestEither.return_273))))))
+            (resume $TestEither.return_272)))
+         (resume $TestEither.return_271))))

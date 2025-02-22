@@ -1,128 +1,153 @@
 ((|>
+   $TestLet.return_54
    ((lambda
-      ($TestLet.param_49 $TestLet.return_54)
+      ($TestLet.param_49 $TestLet.return_55)
       ((lambda
-         ($TestLet.param_50 $TestLet.return_55)
-         ((do $TestLet.return_56
+         ($TestLet.param_50 $TestLet.return_56)
+         ((do $TestLet.return_57
             ((fetch $TestLet.param_49)
                (fetch $TestLet.param_50)
                (construct tuple 2)
                (select
                   ((tuple
                      (#TestLet.x_2 #TestLet.f_3))
-                     ((do $TestLet.return_57
+                     ((do $TestLet.return_58
                         ((fetch #TestLet.f_3)
                            (fetch #TestLet.x_2)
                            (suspend
-                              ((resume $TestLet.return_57)))
+                              ((resume $TestLet.return_58)))
                            (apply 2)))
-                        (resume $TestLet.return_56))))))
-            (resume $TestLet.return_55)))
-         (resume $TestLet.return_54)))))
+                        (resume $TestLet.return_57))))))
+            (resume $TestLet.return_56)))
+         (resume $TestLet.return_55)))
+      (resume $TestLet.return_54)))
    (main
+      $TestLet.return_59
       ((lambda
-         ($TestLet.param_51 $TestLet.return_58)
-         ((do $TestLet.return_59
+         ($TestLet.param_51 $TestLet.return_60)
+         ((do $TestLet.return_61
             ((fetch $TestLet.param_51)
                (construct tuple 1)
                (select
                   (#TestLet.$__48
-                     ((do $TestLet.return_76
-                        ((do $TestLet.return_61
-                           ((do $TestLet.return_60
-                              ((fetch addInt32#)
+                     ((do $TestLet.return_85
+                        ((do $TestLet.return_64
+                           ((do $TestLet.return_63
+                              ((do $TestLet.return_62
+                                 ((suspend
+                                    ((resume $TestLet.return_62)))
+                                    (invoke addInt32#)))
                                  (push 1_i32)
                                  (suspend
-                                    ((resume $TestLet.return_60)))
+                                    ((resume $TestLet.return_63)))
                                  (apply 2)))
                               (push 2_i32)
                               (suspend
-                                 ((resume $TestLet.return_61)))
+                                 ((resume $TestLet.return_64)))
                               (apply 2)))
                            (then #TestLet.x_4
-                              ((do $TestLet.return_75
+                              ((do $TestLet.return_84
                                  ((lambda
-                                    ($TestLet.tmp_52 $TestLet.return_62)
-                                    ((do $TestLet.return_72
-                                       ((do $TestLet.return_65
-                                          ((fetch Int32#)
-                                             (then $TestLet.outer_77
-                                                ((do $TestLet.return_64
-                                                   ((do $TestLet.return_63
-                                                      ((fetch addInt32#)
+                                    ($TestLet.tmp_52 $TestLet.return_65)
+                                    ((do $TestLet.return_79
+                                       ((do $TestLet.return_70
+                                          ((do $TestLet.return_66
+                                             ((suspend
+                                                ((resume $TestLet.return_66)))
+                                                (invoke Int32#)))
+                                             (then $TestLet.outer_86
+                                                ((do $TestLet.return_69
+                                                   ((do $TestLet.return_68
+                                                      ((do $TestLet.return_67
+                                                         ((suspend
+                                                            ((resume $TestLet.return_67)))
+                                                            (invoke addInt32#)))
                                                          (push 1_i32)
                                                          (suspend
-                                                            ((resume $TestLet.return_63)))
+                                                            ((resume $TestLet.return_68)))
                                                          (apply 2)))
                                                       (push 2_i32)
                                                       (suspend
-                                                         ((resume $TestLet.return_64)))
+                                                         ((resume $TestLet.return_69)))
                                                       (apply 2)))
-                                                   (then $TestLet.inner_78
-                                                      ((fetch $TestLet.outer_77)
-                                                         (fetch $TestLet.inner_78)
+                                                   (then $TestLet.inner_87
+                                                      ((fetch $TestLet.outer_86)
+                                                         (fetch $TestLet.inner_87)
                                                          (suspend
-                                                            ((resume $TestLet.return_65)))
+                                                            ((resume $TestLet.return_70)))
                                                          (apply 2)))))))
                                           (then #TestLet.x_5
-                                             ((do $TestLet.return_71
+                                             ((do $TestLet.return_78
                                                 ((lambda
-                                                   ($TestLet.param_53 $TestLet.return_66)
-                                                   ((do $TestLet.return_67
+                                                   ($TestLet.param_53 $TestLet.return_71)
+                                                   ((do $TestLet.return_72
                                                       ((fetch $TestLet.param_53)
                                                          (construct tuple 1)
                                                          (select
                                                             ((Int32#
                                                                (#TestLet.x_6))
-                                                               ((do $TestLet.return_69
-                                                                  ((fetch printString#)
-                                                                     (then $TestLet.outer_79
-                                                                        ((do $TestLet.return_68
-                                                                           ((fetch toStringInt32#)
+                                                               ((do $TestLet.return_76
+                                                                  ((do $TestLet.return_73
+                                                                     ((suspend
+                                                                        ((resume $TestLet.return_73)))
+                                                                        (invoke printString#)))
+                                                                     (then $TestLet.outer_88
+                                                                        ((do $TestLet.return_75
+                                                                           ((do $TestLet.return_74
+                                                                              ((suspend
+                                                                                 ((resume $TestLet.return_74)))
+                                                                                 (invoke toStringInt32#)))
                                                                               (fetch #TestLet.x_6)
                                                                               (suspend
-                                                                                 ((resume $TestLet.return_68)))
+                                                                                 ((resume $TestLet.return_75)))
                                                                               (apply 2)))
-                                                                           (then $TestLet.inner_80
-                                                                              ((fetch $TestLet.outer_79)
-                                                                                 (fetch $TestLet.inner_80)
+                                                                           (then $TestLet.inner_89
+                                                                              ((fetch $TestLet.outer_88)
+                                                                                 (fetch $TestLet.inner_89)
                                                                                  (suspend
-                                                                                    ((resume $TestLet.return_69)))
+                                                                                    ((resume $TestLet.return_76)))
                                                                                  (apply 2)))))))
-                                                                  (resume $TestLet.return_67))))))
-                                                      (resume $TestLet.return_66)))
+                                                                  (resume $TestLet.return_72))))))
+                                                      (resume $TestLet.return_71)))
                                                    (then #TestLet.printInt32_7
-                                                      ((do $TestLet.return_70
+                                                      ((do $TestLet.return_77
                                                          ((fetch #TestLet.printInt32_7)
                                                             (fetch #TestLet.x_5)
                                                             (suspend
-                                                               ((resume $TestLet.return_70)))
+                                                               ((resume $TestLet.return_77)))
                                                             (apply 2)))
-                                                         (resume $TestLet.return_71)))))
-                                                (resume $TestLet.return_72)))))
-                                       (resume $TestLet.return_62)))
-                                    (then $TestLet.outer_81
-                                       ((do $TestLet.return_74
-                                          ((fetch printString#)
-                                             (then $TestLet.outer_83
-                                                ((do $TestLet.return_73
-                                                   ((fetch toStringInt32#)
+                                                         (resume $TestLet.return_78)))))
+                                                (resume $TestLet.return_79)))))
+                                       (resume $TestLet.return_65)))
+                                    (then $TestLet.outer_90
+                                       ((do $TestLet.return_83
+                                          ((do $TestLet.return_80
+                                             ((suspend
+                                                ((resume $TestLet.return_80)))
+                                                (invoke printString#)))
+                                             (then $TestLet.outer_92
+                                                ((do $TestLet.return_82
+                                                   ((do $TestLet.return_81
+                                                      ((suspend
+                                                         ((resume $TestLet.return_81)))
+                                                         (invoke toStringInt32#)))
                                                       (fetch #TestLet.x_4)
                                                       (suspend
-                                                         ((resume $TestLet.return_73)))
+                                                         ((resume $TestLet.return_82)))
                                                       (apply 2)))
-                                                   (then $TestLet.inner_84
-                                                      ((fetch $TestLet.outer_83)
-                                                         (fetch $TestLet.inner_84)
+                                                   (then $TestLet.inner_93
+                                                      ((fetch $TestLet.outer_92)
+                                                         (fetch $TestLet.inner_93)
                                                          (suspend
-                                                            ((resume $TestLet.return_74)))
+                                                            ((resume $TestLet.return_83)))
                                                          (apply 2)))))))
-                                          (then $TestLet.inner_82
-                                             ((fetch $TestLet.outer_81)
-                                                (fetch $TestLet.inner_82)
+                                          (then $TestLet.inner_91
+                                             ((fetch $TestLet.outer_90)
+                                                (fetch $TestLet.inner_91)
                                                 (suspend
-                                                   ((resume $TestLet.return_75)))
+                                                   ((resume $TestLet.return_84)))
                                                 (apply 2)))))))
-                                 (resume $TestLet.return_76)))))
-                        (resume $TestLet.return_59))))))
-            (resume $TestLet.return_58))))))
+                                 (resume $TestLet.return_85)))))
+                        (resume $TestLet.return_61))))))
+            (resume $TestLet.return_60)))
+         (resume $TestLet.return_59))))

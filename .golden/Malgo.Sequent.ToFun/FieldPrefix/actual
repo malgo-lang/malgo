@@ -2,25 +2,25 @@
    (object
       ((x
          (apply
-            Float#
+            (invoke Float#)
             (0.0_f32)))
          (y
             (apply
-               Float#
+               (invoke Float#)
                (0.0_f32)))
          (z
             (apply
-               Float#
+               (invoke Float#)
                (0.0_f32))))))
    (zero2D
       (object
          ((x
             (apply
-               Int32#
+               (invoke Int32#)
                (0_i32)))
             (y
                (apply
-                  Int32#
+                  (invoke Int32#)
                   (0_i32))))))
    (y2D
       (lambda
@@ -58,19 +58,19 @@
                         (lambda
                            ($FieldPrefix.tmp_51)
                            (apply
-                              printString
+                              (invoke printString)
                               ((apply
-                                 toStringInt32
+                                 (invoke toStringInt32)
                                  (#FieldPrefix.y_1)))))
                         ((apply
-                           printString
+                           (invoke printString)
                            ((apply
-                              String#
+                              (invoke String#)
                               (", ")))))))
                   ((apply
-                     printString
+                     (invoke printString)
                      ((apply
-                        toStringInt32
+                        (invoke toStringInt32)
                         (#FieldPrefix.x_0)))))))))))
    (main
       (lambda
@@ -80,5 +80,5 @@
                ($FieldPrefix.param_52))
             ((#FieldPrefix.$__46
                (apply
-                  print2D
-                  (zero2D))))))))
+                  (invoke print2D)
+                  ((invoke zero2D)))))))))

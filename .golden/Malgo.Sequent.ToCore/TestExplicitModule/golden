@@ -1,26 +1,31 @@
 ((main
-   (lambda
-      ($TestExplicitModule.param_7 $TestExplicitModule.return_8)
-      (cut
-         (do $TestExplicitModule.return_9
-            (cut
-               (construct
-                  tuple
-                  ($TestExplicitModule.param_7)
-                  ())
-               (select
-                  (#TestExplicitModule.$__6
-                     (cut
-                        (do $TestExplicitModule.return_11
-                           (cut
-                              putStrLn
-                              (apply
-                                 ((do $TestExplicitModule.return_10
-                                    (cut
-                                       String#
-                                       (apply
-                                          ("Hello, world")
-                                          ($TestExplicitModule.return_10)))))
-                                 ($TestExplicitModule.return_11))))
-                        $TestExplicitModule.return_9)))))
-         $TestExplicitModule.return_8))))
+   $TestExplicitModule.return_8
+   (cut
+      (lambda
+         ($TestExplicitModule.param_7 $TestExplicitModule.return_9)
+         (cut
+            (do $TestExplicitModule.return_10
+               (cut
+                  (construct
+                     tuple
+                     ($TestExplicitModule.param_7)
+                     ())
+                  (select
+                     (#TestExplicitModule.$__6
+                        (cut
+                           (do $TestExplicitModule.return_14
+                              (cut
+                                 (do $TestExplicitModule.return_11
+                                    (invoke putStrLn $TestExplicitModule.return_11))
+                                 (apply
+                                    ((do $TestExplicitModule.return_13
+                                       (cut
+                                          (do $TestExplicitModule.return_12
+                                             (invoke String# $TestExplicitModule.return_12))
+                                          (apply
+                                             ("Hello, world")
+                                             ($TestExplicitModule.return_13)))))
+                                    ($TestExplicitModule.return_14))))
+                           $TestExplicitModule.return_10)))))
+            $TestExplicitModule.return_9))
+      $TestExplicitModule.return_8)))

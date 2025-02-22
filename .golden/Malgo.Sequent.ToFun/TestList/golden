@@ -9,30 +9,30 @@
                #TestList.xs_0
                (apply
                   (apply
-                     Cons
+                     (invoke Cons)
                      ((apply
-                        Int32#
+                        (invoke Int32#)
                         (1_i32))))
                   ((apply
                      (apply
-                        Cons
+                        (invoke Cons)
                         ((apply
-                           Int32#
+                           (invoke Int32#)
                            (2_i32))))
                      ((apply
                         (apply
-                           Cons
+                           (invoke Cons)
                            ((apply
-                              Int32#
+                              (invoke Int32#)
                               (3_i32))))
-                        (Nil))))))
+                        ((invoke Nil)))))))
                (let
                   #TestList.nil_1
-                  Nil
+                  (invoke Nil)
                   (apply
-                     putStrLn
+                     (invoke putStrLn)
                      ((apply
-                        toStringInt32
+                        (invoke toStringInt32)
                         ((apply
-                           head
+                           (invoke head)
                            (#TestList.xs_0))))))))))))))

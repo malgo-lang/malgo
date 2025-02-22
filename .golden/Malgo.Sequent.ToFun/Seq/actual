@@ -2,28 +2,28 @@
    (let
       #Seq.x_0
       (apply
-         Int32#
+         (invoke Int32#)
          (1_i32))
       (let
          #Seq.y_1
          (apply
-            Int32#
+            (invoke Int32#)
             (2_i32))
          (apply
             (lambda
                ($Seq.tmp_27)
                (apply
                   (apply
-                     addInt32
+                     (invoke addInt32)
                      (#Seq.x_0))
                   (#Seq.y_1)))
             ((apply
-               printString
+               (invoke printString)
                ((apply
-                  toStringInt32
+                  (invoke toStringInt32)
                   ((apply
                      (apply
-                        addInt32
+                        (invoke addInt32)
                         (#Seq.x_0))
                      (#Seq.y_1)))))))))))
    (main
@@ -34,7 +34,7 @@
                ($Seq.param_28))
             ((#Seq.$__26
                (apply
-                  printString
+                  (invoke printString)
                   ((apply
-                     toStringInt32
-                     (executeWhenLoaded))))))))))
+                     (invoke toStringInt32)
+                     ((invoke executeWhenLoaded)))))))))))

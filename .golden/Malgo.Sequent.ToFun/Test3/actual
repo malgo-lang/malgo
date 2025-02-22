@@ -20,16 +20,16 @@
             ((#Test3.$__65
                (apply
                   (apply
-                     |>
+                     (invoke |>)
                      ((apply
                         (apply
-                           Cons
-                           (A))
+                           (invoke Cons)
+                           ((invoke A)))
                         ((apply
                            (apply
-                              Cons
-                              (B))
-                           (Nil))))))
+                              (invoke Cons)
+                              ((invoke B)))
+                           ((invoke Nil)))))))
                   ((lambda
                      ($Test3.param_69)
                      (select
@@ -41,9 +41,9 @@
                                  ((B ())
                                     (Nil ())))))
                            (apply
-                              malgo_print_string
+                              (invoke malgo_print_string)
                               ("OK")))
                            (#Test3.__5
                               (apply
-                                 malgo_print_string
+                                 (invoke malgo_print_string)
                                  ("WRONG"))))))))))))))

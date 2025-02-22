@@ -6,9 +6,9 @@
             ($TestArithDouble.param_91))
          ((#TestArithDouble.x_9
             (apply
-               String#
+               (invoke String#)
                ((apply
-                  toStringDouble#
+                  (invoke toStringDouble#)
                   (#TestArithDouble.x_9)))))))))
    (traceShowId
       (lambda
@@ -22,9 +22,9 @@
                      ($TestArithDouble.tmp_93)
                      #TestArithDouble.x_10)
                   ((apply
-                     putStrLn
+                     (invoke putStrLn)
                      ((apply
-                        show
+                        (invoke show)
                         (#TestArithDouble.x_10)))))))))))
    (neg
       (lambda
@@ -35,7 +35,7 @@
             ((#TestArithDouble.x_0
                (apply
                   (apply
-                     subDouble#
+                     (invoke subDouble#)
                      (0.0_f64))
                   (#TestArithDouble.x_0)))))))
    (mul
@@ -50,7 +50,7 @@
                   (#TestArithDouble.x_3 #TestArithDouble.y_4))
                   (apply
                      (apply
-                        mulDouble#
+                        (invoke mulDouble#)
                         (#TestArithDouble.x_3))
                      (#TestArithDouble.y_4))))))))
    (add
@@ -65,7 +65,7 @@
                   (#TestArithDouble.x_7 #TestArithDouble.y_8))
                   (apply
                      (apply
-                        addDouble#
+                        (invoke addDouble#)
                         (#TestArithDouble.x_7))
                      (#TestArithDouble.y_8))))))))
    (+
@@ -80,7 +80,7 @@
                   (#TestArithDouble.x_5 #TestArithDouble.y_6))
                   (apply
                      (apply
-                        addDouble#
+                        (invoke addDouble#)
                         (#TestArithDouble.x_5))
                      (#TestArithDouble.y_6))))))))
    (*
@@ -95,7 +95,7 @@
                   (#TestArithDouble.x_1 #TestArithDouble.y_2))
                   (apply
                      (apply
-                        mulDouble#
+                        (invoke mulDouble#)
                         (#TestArithDouble.x_1))
                      (#TestArithDouble.y_2))))))))
    (f
@@ -107,10 +107,10 @@
             ((#TestArithDouble.x_11
                (apply
                   (apply
-                     *
+                     (invoke *)
                      ((apply
                         (apply
-                           +
+                           (invoke +)
                            (#TestArithDouble.x_11))
                         (0.0_f64))))
                   (#TestArithDouble.x_11)))))))
@@ -122,9 +122,9 @@
                ($TestArithDouble.param_104))
             ((#TestArithDouble.$__90
                (apply
-                  putStrLn
+                  (invoke putStrLn)
                   ((apply
-                     show
+                     (invoke show)
                      ((apply
-                        f
+                        (invoke f)
                         (0.5_f64))))))))))))

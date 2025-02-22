@@ -7,9 +7,10 @@
          ((#TuplePattern.$__25
             (apply
                (apply
-                  |>
+                  (invoke |>)
                   ((tuple
-                     (A B))))
+                     ((invoke A)
+                        (invoke B)))))
                ((lambda
                   ($TuplePattern.param_27)
                   (select
@@ -19,9 +20,9 @@
                         ((A ())
                            #TuplePattern.rest_0))
                         (apply
-                           printString
+                           (invoke printString)
                            ((apply
-                              String#
+                              (invoke String#)
                               ("A")))))
                         ((tuple
                            ((B ())

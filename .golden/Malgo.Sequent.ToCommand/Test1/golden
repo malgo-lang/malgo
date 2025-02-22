@@ -1,11 +1,12 @@
 ((if
+   $Test1.return_45
    ((lambda
-      ($Test1.param_39 $Test1.return_45)
+      ($Test1.param_39 $Test1.return_46)
       ((lambda
-         ($Test1.param_40 $Test1.return_46)
+         ($Test1.param_40 $Test1.return_47)
          ((lambda
-            ($Test1.param_41 $Test1.return_47)
-            ((do $Test1.return_48
+            ($Test1.param_41 $Test1.return_48)
+            ((do $Test1.return_49
                ((fetch $Test1.param_39)
                   (fetch $Test1.param_40)
                   (fetch $Test1.param_41)
@@ -15,78 +16,97 @@
                         ((True ())
                            #Test1.t_0
                            #Test1.__1))
-                        ((do $Test1.return_49
-                           ((fetch #Test1.t_0)
-                              (construct tuple 0)
-                              (suspend
-                                 ((resume $Test1.return_49)))
-                              (apply 2)))
-                           (resume $Test1.return_48)))
-                     ((tuple
-                        ((False ())
-                           #Test1.__2
-                           #Test1.f_3))
                         ((do $Test1.return_50
-                           ((fetch #Test1.f_3)
+                           ((fetch #Test1.t_0)
                               (construct tuple 0)
                               (suspend
                                  ((resume $Test1.return_50)))
                               (apply 2)))
-                           (resume $Test1.return_48))))))
-               (resume $Test1.return_47)))
-            (resume $Test1.return_46)))
-         (resume $Test1.return_45)))))
+                           (resume $Test1.return_49)))
+                     ((tuple
+                        ((False ())
+                           #Test1.__2
+                           #Test1.f_3))
+                        ((do $Test1.return_51
+                           ((fetch #Test1.f_3)
+                              (construct tuple 0)
+                              (suspend
+                                 ((resume $Test1.return_51)))
+                              (apply 2)))
+                           (resume $Test1.return_49))))))
+               (resume $Test1.return_48)))
+            (resume $Test1.return_47)))
+         (resume $Test1.return_46)))
+      (resume $Test1.return_45)))
    (main
+      $Test1.return_52
       ((lambda
-         ($Test1.param_42 $Test1.return_51)
-         ((do $Test1.return_52
+         ($Test1.param_42 $Test1.return_53)
+         ((do $Test1.return_54
             ((fetch $Test1.param_42)
                (construct tuple 1)
                (select
                   (#Test1.$__38
-                     ((do $Test1.return_61
-                        ((do $Test1.return_57
-                           ((do $Test1.return_53
-                              ((fetch if)
-                                 (fetch True)
-                                 (suspend
-                                    ((resume $Test1.return_53)))
-                                 (apply 2)))
+                     ((do $Test1.return_67
+                        ((do $Test1.return_62
+                           ((do $Test1.return_57
+                              ((do $Test1.return_55
+                                 ((suspend
+                                    ((resume $Test1.return_55)))
+                                    (invoke if)))
+                                 (then $Test1.outer_68
+                                    ((do $Test1.return_56
+                                       ((suspend
+                                          ((resume $Test1.return_56)))
+                                          (invoke True)))
+                                       (then $Test1.inner_69
+                                          ((fetch $Test1.outer_68)
+                                             (fetch $Test1.inner_69)
+                                             (suspend
+                                                ((resume $Test1.return_57)))
+                                             (apply 2)))))))
                               (lambda
-                                 ($Test1.param_43 $Test1.return_54)
-                                 ((do $Test1.return_55
+                                 ($Test1.param_43 $Test1.return_58)
+                                 ((do $Test1.return_59
                                     ((fetch $Test1.param_43)
                                        (construct tuple 1)
                                        (select
                                           (#Test1.$__30
-                                             ((do $Test1.return_56
-                                                ((fetch malgo_print_string)
+                                             ((do $Test1.return_61
+                                                ((do $Test1.return_60
+                                                   ((suspend
+                                                      ((resume $Test1.return_60)))
+                                                      (invoke malgo_print_string)))
                                                    (push "True")
                                                    (suspend
-                                                      ((resume $Test1.return_56)))
+                                                      ((resume $Test1.return_61)))
                                                    (apply 2)))
-                                                (resume $Test1.return_55))))))
-                                    (resume $Test1.return_54)))
+                                                (resume $Test1.return_59))))))
+                                    (resume $Test1.return_58)))
                               (suspend
-                                 ((resume $Test1.return_57)))
+                                 ((resume $Test1.return_62)))
                               (apply 2)))
                            (lambda
-                              ($Test1.param_44 $Test1.return_58)
-                              ((do $Test1.return_59
+                              ($Test1.param_44 $Test1.return_63)
+                              ((do $Test1.return_64
                                  ((fetch $Test1.param_44)
                                     (construct tuple 1)
                                     (select
                                        (#Test1.$__35
-                                          ((do $Test1.return_60
-                                             ((fetch malgo_print_string)
+                                          ((do $Test1.return_66
+                                             ((do $Test1.return_65
+                                                ((suspend
+                                                   ((resume $Test1.return_65)))
+                                                   (invoke malgo_print_string)))
                                                 (push "False")
                                                 (suspend
-                                                   ((resume $Test1.return_60)))
+                                                   ((resume $Test1.return_66)))
                                                 (apply 2)))
-                                             (resume $Test1.return_59))))))
-                                 (resume $Test1.return_58)))
+                                             (resume $Test1.return_64))))))
+                                 (resume $Test1.return_63)))
                            (suspend
-                              ((resume $Test1.return_61)))
+                              ((resume $Test1.return_67)))
                            (apply 2)))
-                        (resume $Test1.return_52))))))
-            (resume $Test1.return_51))))))
+                        (resume $Test1.return_54))))))
+            (resume $Test1.return_53)))
+         (resume $Test1.return_52))))

@@ -6,19 +6,19 @@
             ($TestCast.param_27))
          ((#TestCast.$__26
             (apply
-               printInt32
+               (invoke printInt32)
                ((apply
-                  malgo_unsafe_cast
+                  (invoke malgo_unsafe_cast)
                   ((apply
                      (apply
-                        malgo_read_vector
+                        (invoke malgo_read_vector)
                         (2_i64))
                      ((apply
                         (apply
-                           malgo_new_vector
+                           (invoke malgo_new_vector)
                            (10_i64))
                         ((apply
-                           malgo_unsafe_cast
+                           (invoke malgo_unsafe_cast)
                            ((apply
-                              Int32#
+                              (invoke Int32#)
                               (5_i32))))))))))))))))))

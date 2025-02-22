@@ -7,10 +7,10 @@
          (((Int64#
             (#TestDot.x_0))
             (apply
-               Int64#
+               (invoke Int64#)
                ((apply
                   (apply
-                     addInt64#
+                     (invoke addInt64#)
                      (#TestDot.x_0))
                   (1_i64)))))))))
    (main
@@ -21,13 +21,13 @@
                ($TestDot.param_31))
             ((#TestDot.$__29
                (apply
-                  printInt64
+                  (invoke printInt64)
                   ((apply
                      (apply
                         (apply
-                           .
-                           (succ))
-                        (succ))
+                           (invoke .)
+                           ((invoke succ)))
+                        ((invoke succ)))
                      ((apply
-                        Int64#
+                        (invoke Int64#)
                         (0_i64))))))))))))

@@ -1,64 +1,73 @@
 ((f
-   (lambda
-      ($DeferLaw.param_22 $DeferLaw.return_25)
-      (cut
-         (do $DeferLaw.return_26
-            (cut
-               (construct
-                  tuple
-                  ($DeferLaw.param_22)
-                  ())
-               (select
-                  (#DeferLaw.x_1
-                     (cut
-                        (do $DeferLaw.return_29
-                           (cut
-                              (lambda
-                                 ($DeferLaw.param_23 $DeferLaw.return_27)
-                                 (cut
-                                    (do $DeferLaw.return_28
-                                       (cut
-                                          (construct
-                                             tuple
-                                             ($DeferLaw.param_23)
-                                             ())
-                                          (select
-                                             (#DeferLaw.$__8
-                                                (cut #DeferLaw.x_1 $DeferLaw.return_28)))))
-                                    $DeferLaw.return_27))
-                              (apply
-                                 ((construct tuple () ()))
-                                 ($DeferLaw.return_29))))
-                        $DeferLaw.return_26)))))
-         $DeferLaw.return_25)))
-   (main
+   $DeferLaw.return_25
+   (cut
       (lambda
-         ($DeferLaw.param_24 $DeferLaw.return_30)
+         ($DeferLaw.param_22 $DeferLaw.return_26)
          (cut
-            (do $DeferLaw.return_31
+            (do $DeferLaw.return_27
                (cut
                   (construct
                      tuple
-                     ($DeferLaw.param_24)
+                     ($DeferLaw.param_22)
                      ())
                   (select
-                     (#DeferLaw.$__21
+                     (#DeferLaw.x_1
                         (cut
-                           (do $DeferLaw.return_34
+                           (do $DeferLaw.return_30
                               (cut
-                                 putStrLn
+                                 (lambda
+                                    ($DeferLaw.param_23 $DeferLaw.return_28)
+                                    (cut
+                                       (do $DeferLaw.return_29
+                                          (cut
+                                             (construct
+                                                tuple
+                                                ($DeferLaw.param_23)
+                                                ())
+                                             (select
+                                                (#DeferLaw.$__8
+                                                   (cut #DeferLaw.x_1 $DeferLaw.return_29)))))
+                                       $DeferLaw.return_28))
                                  (apply
-                                    ((do $DeferLaw.return_33
-                                       (cut
-                                          f
-                                          (apply
-                                             ((do $DeferLaw.return_32
-                                                (cut
-                                                   String#
-                                                   (apply
-                                                      ("Hello")
-                                                      ($DeferLaw.return_32)))))
-                                             ($DeferLaw.return_33)))))
-                                    ($DeferLaw.return_34))))
-                           $DeferLaw.return_31)))))
-            $DeferLaw.return_30))))
+                                    ((construct tuple () ()))
+                                    ($DeferLaw.return_30))))
+                           $DeferLaw.return_27)))))
+            $DeferLaw.return_26))
+      $DeferLaw.return_25))
+   (main
+      $DeferLaw.return_31
+      (cut
+         (lambda
+            ($DeferLaw.param_24 $DeferLaw.return_32)
+            (cut
+               (do $DeferLaw.return_33
+                  (cut
+                     (construct
+                        tuple
+                        ($DeferLaw.param_24)
+                        ())
+                     (select
+                        (#DeferLaw.$__21
+                           (cut
+                              (do $DeferLaw.return_39
+                                 (cut
+                                    (do $DeferLaw.return_34
+                                       (invoke putStrLn $DeferLaw.return_34))
+                                    (apply
+                                       ((do $DeferLaw.return_38
+                                          (cut
+                                             (do $DeferLaw.return_35
+                                                (invoke f $DeferLaw.return_35))
+                                             (apply
+                                                ((do $DeferLaw.return_37
+                                                   (cut
+                                                      (do $DeferLaw.return_36
+                                                         (invoke String# $DeferLaw.return_36))
+                                                      (apply
+                                                         ("Hello")
+                                                         ($DeferLaw.return_37)))))
+                                                ($DeferLaw.return_38)))))
+                                       ($DeferLaw.return_39))))
+                              $DeferLaw.return_33)))))
+               $DeferLaw.return_32))
+         $DeferLaw.return_31)))

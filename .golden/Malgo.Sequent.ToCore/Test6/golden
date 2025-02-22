@@ -1,77 +1,91 @@
 ((rtob
-   (lambda
-      ($Test6.param_30 $Test6.return_33)
-      (cut
-         (do $Test6.return_34
-            (cut
-               (construct
-                  tuple
-                  ($Test6.param_30)
-                  ())
-               (select
-                  ((R ())
-                     (cut B $Test6.return_34))
-                  (#Test6.__1
-                     (cut
-                        (do $Test6.return_35
-                           (cut
-                              malgo_exit_failure
-                              (apply
-                                 ((construct tuple () ()))
-                                 ($Test6.return_35))))
-                        $Test6.return_34)))))
-         $Test6.return_33)))
-   (main
+   $Test6.return_33
+   (cut
       (lambda
-         ($Test6.param_31 $Test6.return_36)
+         ($Test6.param_30 $Test6.return_34)
          (cut
-            (do $Test6.return_37
+            (do $Test6.return_35
                (cut
                   (construct
                      tuple
-                     ($Test6.param_31)
+                     ($Test6.param_30)
                      ())
                   (select
-                     (#Test6.$__29
+                     ((R ())
                         (cut
-                           (do $Test6.return_43
+                           (do $Test6.return_36
+                              (invoke B $Test6.return_36))
+                           $Test6.return_35))
+                     (#Test6.__1
+                        (cut
+                           (do $Test6.return_38
                               (cut
-                                 (lambda
-                                    ($Test6.param_32 $Test6.return_38)
-                                    (cut
-                                       (do $Test6.return_39
-                                          (cut
-                                             (construct
-                                                tuple
-                                                ($Test6.param_32)
-                                                ())
-                                             (select
-                                                ((B ())
-                                                   (cut
-                                                      (do $Test6.return_40
-                                                         (cut
-                                                            malgo_print_string
-                                                            (apply
-                                                               ("OK")
-                                                               ($Test6.return_40))))
-                                                      $Test6.return_39))
-                                                (#Test6.__2
-                                                   (cut
-                                                      (do $Test6.return_41
-                                                         (cut
-                                                            malgo_print_string
-                                                            (apply
-                                                               ("WRONG")
-                                                               ($Test6.return_41))))
-                                                      $Test6.return_39)))))
-                                       $Test6.return_38))
+                                 (do $Test6.return_37
+                                    (invoke malgo_exit_failure $Test6.return_37))
                                  (apply
-                                    ((do $Test6.return_42
+                                    ((construct tuple () ()))
+                                    ($Test6.return_38))))
+                           $Test6.return_35)))))
+            $Test6.return_34))
+      $Test6.return_33))
+   (main
+      $Test6.return_39
+      (cut
+         (lambda
+            ($Test6.param_31 $Test6.return_40)
+            (cut
+               (do $Test6.return_41
+                  (cut
+                     (construct
+                        tuple
+                        ($Test6.param_31)
+                        ())
+                     (select
+                        (#Test6.$__29
+                           (cut
+                              (do $Test6.return_51
+                                 (cut
+                                    (lambda
+                                       ($Test6.param_32 $Test6.return_42)
                                        (cut
-                                          rtob
-                                          (apply
-                                             (R)
-                                             ($Test6.return_42)))))
-                                    ($Test6.return_43))))
-                           $Test6.return_37)))))
-            $Test6.return_36))))
+                                          (do $Test6.return_43
+                                             (cut
+                                                (construct
+                                                   tuple
+                                                   ($Test6.param_32)
+                                                   ())
+                                                (select
+                                                   ((B ())
+                                                      (cut
+                                                         (do $Test6.return_45
+                                                            (cut
+                                                               (do $Test6.return_44
+                                                                  (invoke malgo_print_string $Test6.return_44))
+                                                               (apply
+                                                                  ("OK")
+                                                                  ($Test6.return_45))))
+                                                         $Test6.return_43))
+                                                   (#Test6.__2
+                                                      (cut
+                                                         (do $Test6.return_47
+                                                            (cut
+                                                               (do $Test6.return_46
+                                                                  (invoke malgo_print_string $Test6.return_46))
+                                                               (apply
+                                                                  ("WRONG")
+                                                                  ($Test6.return_47))))
+                                                         $Test6.return_43)))))
+                                          $Test6.return_42))
+                                    (apply
+                                       ((do $Test6.return_50
+                                          (cut
+                                             (do $Test6.return_48
+                                                (invoke rtob $Test6.return_48))
+                                             (apply
+                                                ((do $Test6.return_49
+                                                   (invoke R $Test6.return_49)))
+                                                ($Test6.return_50)))))
+                                       ($Test6.return_51))))
+                              $Test6.return_41)))))
+               $Test6.return_40))
+         $Test6.return_39)))

@@ -6,7 +6,7 @@
             ($ToplevelVariableNoImport.param_167))
          ((#ToplevelVariableNoImport.x_14
             (apply
-               malgo_int32_t_to_string
+               (invoke malgo_int32_t_to_string)
                (#ToplevelVariableNoImport.x_14)))))))
    (toStringInt32
       (lambda
@@ -17,9 +17,9 @@
             (((Int32#
                (#ToplevelVariableNoImport.x_15))
                (apply
-                  String#
+                  (invoke String#)
                   ((apply
-                     toStringInt32#
+                     (invoke toStringInt32#)
                      (#ToplevelVariableNoImport.x_15)))))))))
    (printString#
       (lambda
@@ -29,7 +29,7 @@
                ($ToplevelVariableNoImport.param_169))
             ((#ToplevelVariableNoImport.x_4
                (apply
-                  malgo_print_string
+                  (invoke malgo_print_string)
                   (#ToplevelVariableNoImport.x_4)))))))
    (printString
       (lambda
@@ -40,7 +40,7 @@
             (((String#
                (#ToplevelVariableNoImport.x_5))
                (apply
-                  printString#
+                  (invoke printString#)
                   (#ToplevelVariableNoImport.x_5)))))))
    (printInt32
       (lambda
@@ -50,13 +50,13 @@
                ($ToplevelVariableNoImport.param_171))
             ((#ToplevelVariableNoImport.i_13
                (apply
-                  printString
+                  (invoke printString)
                   ((apply
-                     toStringInt32
+                     (invoke toStringInt32)
                      (#ToplevelVariableNoImport.i_13)))))))))
    (one
       (apply
-         Int32#
+         (invoke Int32#)
          (1_i32)))
    (identity
       (lambda
@@ -78,8 +78,8 @@
                   #ToplevelVariableNoImport.a_10))))))
    (constId
       (apply
-         const
-         (identity)))
+         (invoke const)
+         ((invoke identity))))
    (comp
       (apply
          (lambda
@@ -88,12 +88,12 @@
                (tuple
                   ($ToplevelVariableNoImport.param_175))
                (((Nothing ())
-                  Nothing)
+                  (invoke Nothing))
                   ((Just
                      (#ToplevelVariableNoImport.x_17))
-                     Nothing))))
+                     (invoke Nothing)))))
          ((apply
-            Just
+            (invoke Just)
             ((tuple ()))))))
    (addInt32#
       (lambda
@@ -107,7 +107,7 @@
                   (#ToplevelVariableNoImport.x_0 #ToplevelVariableNoImport.y_1))
                   (apply
                      (apply
-                        malgo_add_int32_t
+                        (invoke malgo_add_int32_t)
                         (#ToplevelVariableNoImport.x_0))
                      (#ToplevelVariableNoImport.y_1))))))))
    (addInt32
@@ -124,16 +124,16 @@
                      (Int32#
                         (#ToplevelVariableNoImport.y_3))))
                   (apply
-                     Int32#
+                     (invoke Int32#)
                      ((apply
                         (apply
-                           addInt32#
+                           (invoke addInt32#)
                            (#ToplevelVariableNoImport.x_2))
                         (#ToplevelVariableNoImport.y_3))))))))))
    (addOne
       (apply
-         addInt32
-         (one)))
+         (invoke addInt32)
+         ((invoke one))))
    (main
       (lambda
          ($ToplevelVariableNoImport.param_180)
@@ -145,14 +145,14 @@
                   (lambda
                      ($ToplevelVariableNoImport.tmp_181)
                      (apply
-                        printInt32
+                        (invoke printInt32)
                         ((apply
                            (apply
-                              constId
-                              (const))
+                              (invoke constId)
+                              ((invoke const)))
                            ((apply
-                              addOne
-                              (one)))))))
+                              (invoke addOne)
+                              ((invoke one))))))))
                   ((apply
                      (lambda
                         ($ToplevelVariableNoImport.param_182)
@@ -161,11 +161,11 @@
                               ($ToplevelVariableNoImport.param_182))
                            (((Nothing ())
                               (apply
-                                 printString
+                                 (invoke printString)
                                  ((apply
-                                    String#
+                                    (invoke String#)
                                     ("OK")))))
                               ((Just
                                  (#ToplevelVariableNoImport.__18))
                                  (tuple ())))))
-                     (comp))))))))))
+                     ((invoke comp)))))))))))

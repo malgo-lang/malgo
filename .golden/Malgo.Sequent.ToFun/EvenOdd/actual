@@ -6,16 +6,16 @@
             ($EvenOdd.param_51))
          (((Int32#
             (0_i32))
-            True)
+            (invoke True))
             (#EvenOdd.n_0
                (apply
-                  odd
+                  (invoke odd)
                   ((apply
                      (apply
-                        subInt32
+                        (invoke subInt32)
                         (#EvenOdd.n_0))
                      ((apply
-                        Int32#
+                        (invoke Int32#)
                         (1_i32)))))))))))
    (odd
       (lambda
@@ -25,16 +25,16 @@
                ($EvenOdd.param_52))
             (((Int32#
                (0_i32))
-               False)
+               (invoke False))
                (#EvenOdd.n_1
                   (apply
-                     even
+                     (invoke even)
                      ((apply
                         (apply
-                           subInt32
+                           (invoke subInt32)
                            (#EvenOdd.n_1))
                         ((apply
-                           Int32#
+                           (invoke Int32#)
                            (1_i32)))))))))))
    (main
       (lambda
@@ -51,18 +51,18 @@
                            ($EvenOdd.param_54))
                         (((False ())
                            (apply
-                              putStrLn
+                              (invoke putStrLn)
                               ((apply
-                                 String#
+                                 (invoke String#)
                                  ("False")))))
                            ((True ())
                               (apply
-                                 putStrLn
+                                 (invoke putStrLn)
                                  ((apply
-                                    String#
+                                    (invoke String#)
                                     ("True"))))))))
                   ((apply
-                     even
+                     (invoke even)
                      ((apply
-                        Int32#
+                        (invoke Int32#)
                         (10_i32))))))))))))

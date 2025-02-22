@@ -12,7 +12,7 @@
                   (apply
                      #InlineFunction.f_6
                      ((apply
-                        fix
+                        (invoke fix)
                         (#InlineFunction.f_6))))
                   (#InlineFunction.x_7))))))))
    (<=
@@ -27,7 +27,7 @@
                   (#InlineFunction.x_0 #InlineFunction.y_1))
                   (apply
                      (apply
-                        leInt32
+                        (invoke leInt32)
                         (#InlineFunction.x_0))
                      (#InlineFunction.y_1))))))))
    (-
@@ -42,7 +42,7 @@
                   (#InlineFunction.x_4 #InlineFunction.y_5))
                   (apply
                      (apply
-                        subInt32
+                        (invoke subInt32)
                         (#InlineFunction.x_4))
                      (#InlineFunction.y_5))))))))
    (+
@@ -57,7 +57,7 @@
                   (#InlineFunction.x_2 #InlineFunction.y_3))
                   (apply
                      (apply
-                        addInt32
+                        (invoke addInt32)
                         (#InlineFunction.x_2))
                      (#InlineFunction.y_3))))))))
    (main
@@ -70,7 +70,7 @@
                (let
                   #InlineFunction.fib_10
                   (apply
-                     fix
+                     (invoke fix)
                      ((lambda
                         ($InlineFunction.param_121)
                         (lambda
@@ -83,13 +83,13 @@
                                  (apply
                                     (apply
                                        (apply
-                                          if
+                                          (invoke if)
                                           ((apply
                                              (apply
-                                                <=
+                                                (invoke <=)
                                                 (#InlineFunction.n_9))
                                              ((apply
-                                                Int32#
+                                                (invoke Int32#)
                                                 (1_i32))))))
                                        ((lambda
                                           ($InlineFunction.param_123)
@@ -98,7 +98,7 @@
                                                 ($InlineFunction.param_123))
                                              ((#InlineFunction.$__73
                                                 (apply
-                                                   Int32#
+                                                   (invoke Int32#)
                                                    (1_i32))))))))
                                     ((lambda
                                        ($InlineFunction.param_124)
@@ -108,35 +108,35 @@
                                           ((#InlineFunction.$__90
                                              (apply
                                                 (apply
-                                                   +
+                                                   (invoke +)
                                                    ((apply
                                                       #InlineFunction.f_8
                                                       ((apply
                                                          (apply
-                                                            -
+                                                            (invoke -)
                                                             (#InlineFunction.n_9))
                                                          ((apply
-                                                            Int32#
+                                                            (invoke Int32#)
                                                             (1_i32))))))))
                                                 ((apply
                                                    #InlineFunction.f_8
                                                    ((apply
                                                       (apply
-                                                         -
+                                                         (invoke -)
                                                          (#InlineFunction.n_9))
                                                       ((apply
-                                                         Int32#
+                                                         (invoke Int32#)
                                                          (2_i32)))))))))))))))))))))
                   (apply
                      (apply
-                        |>
+                        (invoke |>)
                         ((apply
                            (apply
-                              |>
+                              (invoke |>)
                               ((apply
                                  #InlineFunction.fib_10
                                  ((apply
-                                    Int32#
+                                    (invoke Int32#)
                                     (5_i32))))))
-                           (toStringInt32))))
-                     (putStrLn)))))))))
+                           ((invoke toStringInt32)))))
+                     ((invoke putStrLn))))))))))

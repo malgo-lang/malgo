@@ -7,10 +7,10 @@
          ((#UseModule.x_0
             (apply
                (apply
-                  addInt32
+                  (invoke addInt32)
                   (#UseModule.x_0))
                ((apply
-                  Int32#
+                  (invoke Int32#)
                   (1_i32)))))))))
    (main
       (lambda
@@ -24,19 +24,19 @@
                      ($UseModule.tmp_38)
                      (apply
                         (apply
-                           <|
-                           (printInt32))
+                           (invoke <|)
+                           ((invoke printInt32)))
                         ((apply
                            (apply
                               (apply
-                                 .
-                                 (succ))
-                              (succ))
+                                 (invoke .)
+                                 ((invoke succ)))
+                              ((invoke succ)))
                            ((apply
-                              Int32#
+                              (invoke Int32#)
                               (1_i32)))))))
                   ((apply
-                     putStrLn
+                     (invoke putStrLn)
                      ((apply
-                        String#
+                        (invoke String#)
                         ("Hello, world!"))))))))))))

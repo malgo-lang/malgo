@@ -14,10 +14,10 @@
                      (((Int#
                         (#DataDef.x_1))
                         (apply
-                           malgo_print_string
+                           (invoke malgo_print_string)
                            ((apply
-                              malgo_int64_t_to_string
+                              (invoke malgo_int64_t_to_string)
                               (#DataDef.x_1))))))))
                ((apply
-                  Int#
+                  (invoke Int#)
                   (1_i64))))))))))

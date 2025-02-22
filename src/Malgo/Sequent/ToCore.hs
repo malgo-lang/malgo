@@ -17,13 +17,15 @@ toCore (Program definitions) = C.Program <$> traverse convert definitions
 class Convert a b where
   convert :: a -> b
 
-instance (State Uniq :> es, Reader ModuleName :> es) => Convert (Range, Name, Expr) (Eff es (Range, Name, C.Producer One)) where
+instance (State Uniq :> es, Reader ModuleName :> es) => Convert (Range, Name, Expr) (Eff es (Range, Name, Name, C.Statement One)) where
   convert (range, name, body) = do
+    return <- newTemporalId "return"
     body' <- convert body
     pure
       ( range,
         name,
-        body'
+        return,
+        C.Cut body' (C.Label range return)
       )
 
 instance (State Uniq :> es, Reader ModuleName :> es) => Convert Expr (Eff es (C.Producer One)) where
@@ -62,6 +64,9 @@ instance (State Uniq :> es, Reader ModuleName :> es) => Convert Expr (Eff es (C.
     return <- newTemporalId "return"
     branches' <- traverse (convert return) branches
     pure $ Do range return $ Cut scrutinee' $ C.Select range branches'
+  convert (Invoke range name) = do
+    return <- newTemporalId "return"
+    pure $ Do range return $ C.Invoke range name (C.Label range return)
 
 instance (State Uniq :> es, Reader ModuleName :> es) => Convert Name (Branch -> Eff es (C.Branch One)) where
   convert return (Branch range pattern body) = do

@@ -18,11 +18,11 @@
             (tuple
                ($Null.param_121))
             (((Nil ())
-               Nothing)
+               (invoke Nothing))
                ((Cons
                   (#Null.p_5 #Null.__6))
                   (apply
-                     Just
+                     (invoke Just)
                      (#Null.p_5)))))))
    (isNothing
       (lambda
@@ -31,10 +31,10 @@
             (tuple
                ($Null.param_122))
             (((Nothing ())
-               True)
+               (invoke True))
                ((Just
                   (#Null.__3))
-                  False)))))
+                  (invoke False))))))
    (null
       (lambda
          ($Null.param_123)
@@ -43,9 +43,9 @@
                ($Null.param_123))
             ((#Null.as_8
                (apply
-                  isNothing
+                  (invoke isNothing)
                   ((apply
-                     mHead
+                     (invoke mHead)
                      (#Null.as_8)))))))))
    (main
       (lambda
@@ -56,18 +56,18 @@
             ((#Null.$__118
                (apply
                   (apply
-                     |>
+                     (invoke |>)
                      ((apply
-                        null
+                        (invoke null)
                         ((apply
                            (apply
-                              Cons
-                              (True))
+                              (invoke Cons)
+                              ((invoke True)))
                            ((apply
                               (apply
-                                 Cons
-                                 (True))
-                              (Nil))))))))
+                                 (invoke Cons)
+                                 ((invoke True)))
+                              ((invoke Nil)))))))))
                   ((lambda
                      ($Null.param_125)
                      (select
@@ -75,9 +75,9 @@
                            ($Null.param_125))
                         (((False ())
                            (apply
-                              malgo_print_string
+                              (invoke malgo_print_string)
                               ("OK")))
                            ((True ())
                               (apply
-                                 malgo_exit_failure
+                                 (invoke malgo_exit_failure)
                                  ((tuple ())))))))))))))))

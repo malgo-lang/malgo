@@ -1,134 +1,147 @@
 ((|>
-   (lambda
-      ($TestLet.param_49 $TestLet.return_54)
+   $TestLet.return_54
+   (cut
+      (lambda
+         ($TestLet.param_49 $TestLet.return_55)
+         (cut
+            (lambda
+               ($TestLet.param_50 $TestLet.return_56)
+               (cut
+                  (do $TestLet.return_57
+                     (cut
+                        (construct
+                           tuple
+                           ($TestLet.param_49 $TestLet.param_50)
+                           ())
+                        (select
+                           ((tuple
+                              (#TestLet.x_2 #TestLet.f_3))
+                              (cut
+                                 (do $TestLet.return_58
+                                    (cut
+                                       #TestLet.f_3
+                                       (apply
+                                          (#TestLet.x_2)
+                                          ($TestLet.return_58))))
+                                 $TestLet.return_57)))))
+                  $TestLet.return_56))
+            $TestLet.return_55))
+      $TestLet.return_54))
+   (main
+      $TestLet.return_59
       (cut
          (lambda
-            ($TestLet.param_50 $TestLet.return_55)
+            ($TestLet.param_51 $TestLet.return_60)
             (cut
-               (do $TestLet.return_56
+               (do $TestLet.return_61
                   (cut
                      (construct
                         tuple
-                        ($TestLet.param_49 $TestLet.param_50)
+                        ($TestLet.param_51)
                         ())
                      (select
-                        ((tuple
-                           (#TestLet.x_2 #TestLet.f_3))
+                        (#TestLet.$__48
                            (cut
-                              (do $TestLet.return_57
+                              (do $TestLet.return_85
                                  (cut
-                                    #TestLet.f_3
-                                    (apply
-                                       (#TestLet.x_2)
-                                       ($TestLet.return_57))))
-                              $TestLet.return_56)))))
-               $TestLet.return_55))
-         $TestLet.return_54)))
-   (main
-      (lambda
-         ($TestLet.param_51 $TestLet.return_58)
-         (cut
-            (do $TestLet.return_59
-               (cut
-                  (construct
-                     tuple
-                     ($TestLet.param_51)
-                     ())
-                  (select
-                     (#TestLet.$__48
-                        (cut
-                           (do $TestLet.return_76
-                              (cut
-                                 (do $TestLet.return_61
-                                    (cut
-                                       (do $TestLet.return_60
-                                          (cut
-                                             addInt32#
-                                             (apply
-                                                (1_i32)
-                                                ($TestLet.return_60))))
-                                       (apply
-                                          (2_i32)
-                                          ($TestLet.return_61))))
-                                 (then #TestLet.x_4
-                                    (cut
-                                       (do $TestLet.return_75
-                                          (cut
-                                             (lambda
-                                                ($TestLet.tmp_52 $TestLet.return_62)
-                                                (cut
-                                                   (do $TestLet.return_72
-                                                      (cut
-                                                         (do $TestLet.return_65
-                                                            (cut
-                                                               Int32#
-                                                               (apply
-                                                                  ((do $TestLet.return_64
-                                                                     (cut
-                                                                        (do $TestLet.return_63
-                                                                           (cut
-                                                                              addInt32#
-                                                                              (apply
-                                                                                 (1_i32)
-                                                                                 ($TestLet.return_63))))
-                                                                        (apply
-                                                                           (2_i32)
-                                                                           ($TestLet.return_64)))))
-                                                                  ($TestLet.return_65))))
-                                                         (then #TestLet.x_5
-                                                            (cut
-                                                               (do $TestLet.return_71
-                                                                  (cut
-                                                                     (lambda
-                                                                        ($TestLet.param_53 $TestLet.return_66)
-                                                                        (cut
-                                                                           (do $TestLet.return_67
-                                                                              (cut
-                                                                                 (construct
-                                                                                    tuple
-                                                                                    ($TestLet.param_53)
-                                                                                    ())
-                                                                                 (select
-                                                                                    ((Int32#
-                                                                                       (#TestLet.x_6))
-                                                                                       (cut
-                                                                                          (do $TestLet.return_69
-                                                                                             (cut
-                                                                                                printString#
-                                                                                                (apply
-                                                                                                   ((do $TestLet.return_68
-                                                                                                      (cut
-                                                                                                         toStringInt32#
-                                                                                                         (apply
-                                                                                                            (#TestLet.x_6)
-                                                                                                            ($TestLet.return_68)))))
-                                                                                                   ($TestLet.return_69))))
-                                                                                          $TestLet.return_67)))))
-                                                                           $TestLet.return_66))
-                                                                     (then #TestLet.printInt32_7
-                                                                        (cut
-                                                                           (do $TestLet.return_70
-                                                                              (cut
-                                                                                 #TestLet.printInt32_7
-                                                                                 (apply
-                                                                                    (#TestLet.x_5)
-                                                                                    ($TestLet.return_70))))
-                                                                           $TestLet.return_71))))
-                                                               $TestLet.return_72))))
-                                                   $TestLet.return_62))
-                                             (apply
-                                                ((do $TestLet.return_74
+                                    (do $TestLet.return_64
+                                       (cut
+                                          (do $TestLet.return_63
+                                             (cut
+                                                (do $TestLet.return_62
+                                                   (invoke addInt32# $TestLet.return_62))
+                                                (apply
+                                                   (1_i32)
+                                                   ($TestLet.return_63))))
+                                          (apply
+                                             (2_i32)
+                                             ($TestLet.return_64))))
+                                    (then #TestLet.x_4
+                                       (cut
+                                          (do $TestLet.return_84
+                                             (cut
+                                                (lambda
+                                                   ($TestLet.tmp_52 $TestLet.return_65)
                                                    (cut
-                                                      printString#
-                                                      (apply
-                                                         ((do $TestLet.return_73
-                                                            (cut
-                                                               toStringInt32#
-                                                               (apply
-                                                                  (#TestLet.x_4)
-                                                                  ($TestLet.return_73)))))
-                                                         ($TestLet.return_74)))))
-                                                ($TestLet.return_75))))
-                                       $TestLet.return_76))))
-                           $TestLet.return_59)))))
-            $TestLet.return_58))))
+                                                      (do $TestLet.return_79
+                                                         (cut
+                                                            (do $TestLet.return_70
+                                                               (cut
+                                                                  (do $TestLet.return_66
+                                                                     (invoke Int32# $TestLet.return_66))
+                                                                  (apply
+                                                                     ((do $TestLet.return_69
+                                                                        (cut
+                                                                           (do $TestLet.return_68
+                                                                              (cut
+                                                                                 (do $TestLet.return_67
+                                                                                    (invoke addInt32# $TestLet.return_67))
+                                                                                 (apply
+                                                                                    (1_i32)
+                                                                                    ($TestLet.return_68))))
+                                                                           (apply
+                                                                              (2_i32)
+                                                                              ($TestLet.return_69)))))
+                                                                     ($TestLet.return_70))))
+                                                            (then #TestLet.x_5
+                                                               (cut
+                                                                  (do $TestLet.return_78
+                                                                     (cut
+                                                                        (lambda
+                                                                           ($TestLet.param_53 $TestLet.return_71)
+                                                                           (cut
+                                                                              (do $TestLet.return_72
+                                                                                 (cut
+                                                                                    (construct
+                                                                                       tuple
+                                                                                       ($TestLet.param_53)
+                                                                                       ())
+                                                                                    (select
+                                                                                       ((Int32#
+                                                                                          (#TestLet.x_6))
+                                                                                          (cut
+                                                                                             (do $TestLet.return_76
+                                                                                                (cut
+                                                                                                   (do $TestLet.return_73
+                                                                                                      (invoke printString# $TestLet.return_73))
+                                                                                                   (apply
+                                                                                                      ((do $TestLet.return_75
+                                                                                                         (cut
+                                                                                                            (do $TestLet.return_74
+                                                                                                               (invoke toStringInt32# $TestLet.return_74))
+                                                                                                            (apply
+                                                                                                               (#TestLet.x_6)
+                                                                                                               ($TestLet.return_75)))))
+                                                                                                      ($TestLet.return_76))))
+                                                                                             $TestLet.return_72)))))
+                                                                              $TestLet.return_71))
+                                                                        (then #TestLet.printInt32_7
+                                                                           (cut
+                                                                              (do $TestLet.return_77
+                                                                                 (cut
+                                                                                    #TestLet.printInt32_7
+                                                                                    (apply
+                                                                                       (#TestLet.x_5)
+                                                                                       ($TestLet.return_77))))
+                                                                              $TestLet.return_78))))
+                                                                  $TestLet.return_79))))
+                                                      $TestLet.return_65))
+                                                (apply
+                                                   ((do $TestLet.return_83
+                                                      (cut
+                                                         (do $TestLet.return_80
+                                                            (invoke printString# $TestLet.return_80))
+                                                         (apply
+                                                            ((do $TestLet.return_82
+                                                               (cut
+                                                                  (do $TestLet.return_81
+                                                                     (invoke toStringInt32# $TestLet.return_81))
+                                                                  (apply
+                                                                     (#TestLet.x_4)
+                                                                     ($TestLet.return_82)))))
+                                                            ($TestLet.return_83)))))
+                                                   ($TestLet.return_84))))
+                                          $TestLet.return_85))))
+                              $TestLet.return_61)))))
+               $TestLet.return_60))
+         $TestLet.return_59)))

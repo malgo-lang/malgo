@@ -1,25 +1,33 @@
 ((main
+   $TestExplicitModule.return_8
    ((lambda
-      ($TestExplicitModule.param_7 $TestExplicitModule.return_8)
-      ((do $TestExplicitModule.return_9
+      ($TestExplicitModule.param_7 $TestExplicitModule.return_9)
+      ((do $TestExplicitModule.return_10
          ((fetch $TestExplicitModule.param_7)
             (construct tuple 1)
             (select
                (#TestExplicitModule.$__6
-                  ((do $TestExplicitModule.return_11
-                     ((fetch putStrLn)
-                        (then $TestExplicitModule.outer_12
-                           ((do $TestExplicitModule.return_10
-                              ((fetch String#)
+                  ((do $TestExplicitModule.return_14
+                     ((do $TestExplicitModule.return_11
+                        ((suspend
+                           ((resume $TestExplicitModule.return_11)))
+                           (invoke putStrLn)))
+                        (then $TestExplicitModule.outer_15
+                           ((do $TestExplicitModule.return_13
+                              ((do $TestExplicitModule.return_12
+                                 ((suspend
+                                    ((resume $TestExplicitModule.return_12)))
+                                    (invoke String#)))
                                  (push "Hello, world")
                                  (suspend
-                                    ((resume $TestExplicitModule.return_10)))
+                                    ((resume $TestExplicitModule.return_13)))
                                  (apply 2)))
-                              (then $TestExplicitModule.inner_13
-                                 ((fetch $TestExplicitModule.outer_12)
-                                    (fetch $TestExplicitModule.inner_13)
+                              (then $TestExplicitModule.inner_16
+                                 ((fetch $TestExplicitModule.outer_15)
+                                    (fetch $TestExplicitModule.inner_16)
                                     (suspend
-                                       ((resume $TestExplicitModule.return_11)))
+                                       ((resume $TestExplicitModule.return_14)))
                                     (apply 2)))))))
-                     (resume $TestExplicitModule.return_9))))))
-         (resume $TestExplicitModule.return_8))))))
+                     (resume $TestExplicitModule.return_10))))))
+         (resume $TestExplicitModule.return_9)))
+      (resume $TestExplicitModule.return_8))))

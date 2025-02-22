@@ -22,7 +22,7 @@
                #Prelude.xs_26)
                (#Prelude.__27
                   (apply
-                     exitFailure
+                     (invoke exitFailure)
                      ((tuple ()))))))))
    (snd
       (lambda
@@ -44,10 +44,10 @@
                   (lambda
                      ($Prelude.tmp_692)
                      (apply
-                        newline
+                        (invoke newline)
                         ((tuple ()))))
                   ((apply
-                     printString
+                     (invoke printString)
                      (#Prelude.str_91)))))))))
    (putStr
       (lambda
@@ -57,7 +57,7 @@
                ($Prelude.param_693))
             ((#Prelude.str_90
                (apply
-                  printString
+                  (invoke printString)
                   (#Prelude.str_90)))))))
    (punctuate
       (lambda
@@ -70,7 +70,7 @@
                (((tuple
                   (#Prelude.__55
                      (Nil ())))
-                  Nil)
+                  (invoke Nil))
                   ((tuple
                      (#Prelude.__56
                         (Cons
@@ -78,24 +78,24 @@
                               (Nil ())))))
                      (apply
                         (apply
-                           Cons
+                           (invoke Cons)
                            (#Prelude.x_57))
-                        (Nil)))
+                        ((invoke Nil))))
                   ((tuple
                      (#Prelude.sep_58
                         (Cons
                            (#Prelude.x_59 #Prelude.xs_60))))
                      (apply
                         (apply
-                           Cons
+                           (invoke Cons)
                            (#Prelude.x_59))
                         ((apply
                            (apply
-                              Cons
+                              (invoke Cons)
                               (#Prelude.sep_58))
                            ((apply
                               (apply
-                                 punctuate
+                                 (invoke punctuate)
                                  (#Prelude.sep_58))
                               (#Prelude.xs_60))))))))))))
    (printInt64
@@ -106,9 +106,9 @@
                ($Prelude.param_696))
             ((#Prelude.i_93
                (apply
-                  printString
+                  (invoke printString)
                   ((apply
-                     toStringInt64
+                     (invoke toStringInt64)
                      (#Prelude.i_93)))))))))
    (printInt32
       (lambda
@@ -118,9 +118,9 @@
                ($Prelude.param_697))
             ((#Prelude.i_92
                (apply
-                  printString
+                  (invoke printString)
                   ((apply
-                     toStringInt32
+                     (invoke toStringInt32)
                      (#Prelude.i_92)))))))))
    (mapList
       (lambda
@@ -133,20 +133,20 @@
                (((tuple
                   (#Prelude.__38
                      (Nil ())))
-                  Nil)
+                  (invoke Nil))
                   ((tuple
                      (#Prelude.f_39
                         (Cons
                            (#Prelude.x_40 #Prelude.xs_41))))
                      (apply
                         (apply
-                           Cons
+                           (invoke Cons)
                            ((apply
                               #Prelude.f_39
                               (#Prelude.x_40))))
                         ((apply
                            (apply
-                              mapList
+                              (invoke mapList)
                               (#Prelude.f_39))
                            (#Prelude.xs_41))))))))))
    (listToString
@@ -157,16 +157,16 @@
                ($Prelude.param_700))
             (((Nil ())
                (apply
-                  String#
+                  (invoke String#)
                   ("")))
                ((Cons
                   (#Prelude.c_42 #Prelude.cs_43))
                   (apply
                      (apply
-                        consString
+                        (invoke consString)
                         (#Prelude.c_42))
                      ((apply
-                        listToString
+                        (invoke listToString)
                         (#Prelude.cs_43)))))))))
    (isWhiteSpace
       (lambda
@@ -176,17 +176,18 @@
                ($Prelude.param_701))
             (((Char#
                (' '))
-               True)
+               (invoke True))
                ((Char#
                   ('\n'))
-                  True)
+                  (invoke True))
                ((Char#
                   ('\r'))
-                  True)
+                  (invoke True))
                ((Char#
                   ('\t'))
-                  True)
-               (#Prelude.__61 False)))))
+                  (invoke True))
+               (#Prelude.__61
+                  (invoke False))))))
    (if
       (lambda
          ($Prelude.param_702)
@@ -221,13 +222,13 @@
                (apply
                   (apply
                      (apply
-                        if
+                        (invoke if)
                         ((apply
                            (apply
-                              eqString
+                              (invoke eqString)
                               (#Prelude.str_45))
                            ((apply
-                              String#
+                              (invoke String#)
                               (""))))))
                      ((lambda
                         ($Prelude.param_706)
@@ -244,13 +245,13 @@
                            (apply
                               (apply
                                  (apply
-                                    substring
+                                    (invoke substring)
                                     (#Prelude.str_45))
                                  ((apply
-                                    Int64#
+                                    (invoke Int64#)
                                     (1_i64))))
                               ((apply
-                                 lengthString
+                                 (invoke lengthString)
                                  (#Prelude.str_45)))))))))))))))
    (unless
       (lambda
@@ -267,7 +268,7 @@
                      (apply
                         (apply
                            (apply
-                              if
+                              (invoke if)
                               (#Prelude.c_82))
                            ((lambda
                               ($Prelude.param_711)
@@ -293,20 +294,21 @@
                (apply
                   (apply
                      (apply
-                        if
+                        (invoke if)
                         ((apply
                            (apply
-                              eqString
+                              (invoke eqString)
                               (#Prelude.str_44))
                            ((apply
-                              String#
+                              (invoke String#)
                               (""))))))
                      ((lambda
                         ($Prelude.param_714)
                         (select
                            (tuple
                               ($Prelude.param_714))
-                           ((#Prelude.$__417 Nothing))))))
+                           ((#Prelude.$__417
+                              (invoke Nothing)))))))
                   ((lambda
                      ($Prelude.param_715)
                      (select
@@ -314,12 +316,12 @@
                            ($Prelude.param_715))
                         ((#Prelude.$__430
                            (apply
-                              Just
+                              (invoke Just)
                               ((apply
                                  (apply
-                                    atString
+                                    (invoke atString)
                                     ((apply
-                                       Int64#
+                                       (invoke Int64#)
                                        (0_i64))))
                                  (#Prelude.str_44)))))))))))))))
    (head
@@ -333,7 +335,7 @@
                #Prelude.x_21)
                (#Prelude.__23
                   (apply
-                     exitFailure
+                     (invoke exitFailure)
                      ((tuple ()))))))))
    (fst
       (lambda
@@ -367,7 +369,7 @@
                         (apply
                            (apply
                               (apply
-                                 foldl
+                                 (invoke foldl)
                                  (#Prelude.f_32))
                               ((apply
                                  (apply
@@ -394,9 +396,9 @@
                ($Prelude.param_723))
             (((Nil ())
                (apply
-                  panic
+                  (invoke panic)
                   ((apply
-                     String#
+                     (invoke String#)
                      ("no branch")))))
                ((Cons
                   ((tuple
@@ -412,7 +414,7 @@
                         #Prelude.__88))
                      #Prelude.xs_89))
                   (apply
-                     cond
+                     (invoke cond)
                      (#Prelude.xs_89)))))))
    (concatString
       (lambda
@@ -422,16 +424,16 @@
                ($Prelude.param_724))
             (((Nil ())
                (apply
-                  String#
+                  (invoke String#)
                   ("")))
                ((Cons
                   (#Prelude.x_52 #Prelude.xs_53))
                   (apply
                      (apply
-                        appendString
+                        (invoke appendString)
                         (#Prelude.x_52))
                      ((apply
-                        concatString
+                        (invoke concatString)
                         (#Prelude.xs_53)))))))))
    (case
       (lambda
@@ -458,9 +460,9 @@
                   (#Prelude.pred_49 #Prelude.str_50))
                   (apply
                      (apply
-                        case
+                        (invoke case)
                         ((apply
-                           headString
+                           (invoke headString)
                            (#Prelude.str_50))))
                      ((lambda
                         ($Prelude.param_729)
@@ -474,7 +476,7 @@
                                  (apply
                                     (apply
                                        (apply
-                                          if
+                                          (invoke if)
                                           ((apply
                                              #Prelude.pred_49
                                              (#Prelude.c_51))))
@@ -486,10 +488,10 @@
                                              ((#Prelude.$__605
                                                 (apply
                                                    (apply
-                                                      dropWhileString
+                                                      (invoke dropWhileString)
                                                       (#Prelude.pred_49))
                                                    ((apply
-                                                      tailString
+                                                      (invoke tailString)
                                                       (#Prelude.str_50))))))))))
                                     ((lambda
                                        ($Prelude.param_731)
@@ -509,9 +511,9 @@
                   (#Prelude.pred_46 #Prelude.str_47))
                   (apply
                      (apply
-                        case
+                        (invoke case)
                         ((apply
-                           headString
+                           (invoke headString)
                            (#Prelude.str_47))))
                      ((lambda
                         ($Prelude.param_734)
@@ -525,7 +527,7 @@
                                  (apply
                                     (apply
                                        (apply
-                                          if
+                                          (invoke if)
                                           ((apply
                                              #Prelude.pred_46
                                              (#Prelude.c_48))))
@@ -537,14 +539,14 @@
                                              ((#Prelude.$__651
                                                 (apply
                                                    (apply
-                                                      consString
+                                                      (invoke consString)
                                                       (#Prelude.c_48))
                                                    ((apply
                                                       (apply
-                                                         takeWhileString
+                                                         (invoke takeWhileString)
                                                          (#Prelude.pred_46))
                                                       ((apply
-                                                         tailString
+                                                         (invoke tailString)
                                                          (#Prelude.str_47))))))))))))
                                     ((lambda
                                        ($Prelude.param_736)
@@ -553,7 +555,7 @@
                                              ($Prelude.param_736))
                                           ((#Prelude.$__656
                                              (apply
-                                                String#
+                                                (invoke String#)
                                                 (""))))))))))))))))))))
    (<|
       (lambda

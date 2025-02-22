@@ -24,11 +24,11 @@ import Malgo.SExpr hiding (Char, Double, Float, String)
 import Malgo.Sequent.Fun (Literal, Name, Pattern, Tag)
 
 data Program x = Program
-  {definitions :: [(Range, Name, Producer x)]}
+  {definitions :: [(Range, Name, Name, Statement x)]}
   deriving stock (Show)
 
 instance ToSExpr (Program x) where
-  toSExpr (Program defs) = S.L $ map (\(_, name, body) -> toSExpr (name, body)) defs
+  toSExpr (Program defs) = S.L $ map (\(_, name, return, body) -> toSExpr (name, return, body)) defs
 
 type data Rank = Zero | One
 
@@ -73,6 +73,7 @@ data Statement x where
   Cut :: Producer x -> Consumer x -> Statement x
   CutDo :: Range -> Name -> Statement Zero -> Consumer Zero -> Statement Zero
   Primitive :: Range -> Text -> [Producer x] -> [Consumer x] -> Statement x
+  Invoke :: Range -> Name -> Consumer x -> Statement x
 
 deriving stock instance Show (Statement x)
 
@@ -81,6 +82,7 @@ instance ToSExpr (Statement x) where
   toSExpr (CutDo _ name statement consumer) = S.L ["cut-do", toSExpr name, toSExpr statement, toSExpr consumer]
   toSExpr (Primitive _ name producers consumers) =
     S.L [S.A "prim", toSExpr name, S.L $ map toSExpr producers, S.L $ map toSExpr consumers]
+  toSExpr (Invoke _ name consumer) = S.L ["invoke", toSExpr name, toSExpr consumer]
 
 data Branch x = Branch
   { range :: Range,
@@ -95,7 +97,7 @@ instance ToSExpr (Branch x) where
 
 convertToZero :: (State Uniq :> es, Reader ModuleName :> es) => Program One -> Eff es (Program Zero)
 convertToZero Program {..} = do
-  definitions' <- traverse (\(range, name, producer) -> (range,name,) . castToZero <$> flat producer) definitions
+  definitions' <- traverse (\(range, name, return, producer) -> (range,name,return,) . castToZero <$> flat producer) definitions
   pure (Program definitions')
 
 class Flat es f where
@@ -191,6 +193,9 @@ instance (State Uniq :> es, Reader ModuleName :> es) => Flat es Statement where
         producers' <- traverse flat flatProducers
         consumers' <- traverse flat consumers
         pure (Primitive range name producers' consumers')
+  flat (Invoke range name consumer) = do
+    consumer' <- flat consumer
+    pure (Invoke range name consumer')
 
 instance (State Uniq :> es, Reader ModuleName :> es) => Flat es Branch where
   flat :: Branch One -> Eff es (Branch One)
@@ -209,7 +214,7 @@ instance CastToZero Producer where
     Construct range tag (fmap castToZero producers) (fmap castToZero consumers)
   castToZero (Lambda range names statement) = Lambda range names (castToZero statement)
   castToZero (Object range kvs) = Object range (fmap castToZero kvs)
-  castToZero Do {} = error "castToZero: Do"
+  castToZero (Do range _ _) = error $ convertString (render $ pretty range) <> ": Do should be removed"
 
 instance CastToZero Consumer where
   castToZero :: Consumer One -> Consumer Zero
@@ -227,6 +232,7 @@ instance CastToZero Statement where
   castToZero (Cut producer consumer) = Cut (castToZero producer) (castToZero consumer)
   castToZero (Primitive range name producers consumers) =
     Primitive range name (fmap castToZero producers) (fmap castToZero consumers)
+  castToZero (Invoke range name consumer) = Invoke range name (castToZero consumer)
 
 instance CastToZero Branch where
   castToZero :: Branch One -> Branch Zero

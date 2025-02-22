@@ -10,8 +10,8 @@
                   ($HelloImport.tmp_19)
                   (apply
                      (apply
-                        |>
-                        (putStrLn))
+                        (invoke |>)
+                        ((invoke putStrLn)))
                      ((lambda
                         ($HelloImport.param_20)
                         (select
@@ -21,10 +21,10 @@
                               (apply
                                  #HelloImport.f_0
                                  ((apply
-                                    String#
+                                    (invoke String#)
                                     (" world")))))))))))
                ((apply
-                  putStr
+                  (invoke putStr)
                   ((apply
-                     String#
+                     (invoke String#)
                      ("hello"))))))))))))

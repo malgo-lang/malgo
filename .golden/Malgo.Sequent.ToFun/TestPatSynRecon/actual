@@ -10,10 +10,10 @@
                (#TestPatSynRecon.x_0 #TestPatSynRecon.y_1))
                (apply
                   (apply
-                     addInt64#
+                     (invoke addInt64#)
                      (#TestPatSynRecon.x_0))
                   (#TestPatSynRecon.y_1))))))))
-   (sum (lambda    ($TestPatSynRecon.param_85)    (select       (tuple          ($TestPatSynRecon.param_85))       (((Cons          ((Int64#             (#TestPatSynRecon.x_2))             #TestPatSynRecon.xs_3))          (apply             (apply                |>                ((apply                   sum                   (#TestPatSynRecon.xs_3))))             ((lambda                ($TestPatSynRecon.param_86)                (select                   (tuple                      ($TestPatSynRecon.param_86))                   (((Int64#                      (#TestPatSynRecon.s_4))                      (apply                         Int64#                         ((apply                            (apply                               +#                               (#TestPatSynRecon.x_2))                            (#TestPatSynRecon.s_4)))))))))))          ((Nil ())             (apply                Int64#                (0_i64)))))))
+   (sum (lambda    ($TestPatSynRecon.param_85)    (select       (tuple          ($TestPatSynRecon.param_85))       (((Cons          ((Int64#             (#TestPatSynRecon.x_2))             #TestPatSynRecon.xs_3))          (apply             (apply                (invoke |>)                ((apply                   (invoke sum)                   (#TestPatSynRecon.xs_3))))             ((lambda                ($TestPatSynRecon.param_86)                (select                   (tuple                      ($TestPatSynRecon.param_86))                   (((Int64#                      (#TestPatSynRecon.s_4))                      (apply                         (invoke Int64#)                         ((apply                            (apply                               (invoke +#)                               (#TestPatSynRecon.x_2))                            (#TestPatSynRecon.s_4)))))))))))          ((Nil ())             (apply                (invoke Int64#)                (0_i64)))))))
    (main
       (lambda
          ($TestPatSynRecon.param_87)
@@ -23,22 +23,22 @@
             ((#TestPatSynRecon.$__82
                (apply
                   (apply
-                     |>
+                     (invoke |>)
                      ((apply
-                        sum
+                        (invoke sum)
                         ((apply
                            (apply
-                              Cons
+                              (invoke Cons)
                               ((apply
-                                 Int64#
+                                 (invoke Int64#)
                                  (1_i64))))
                            ((apply
                               (apply
-                                 Cons
+                                 (invoke Cons)
                                  ((apply
-                                    Int64#
+                                    (invoke Int64#)
                                     (2_i64))))
-                              (Nil))))))))
+                              ((invoke Nil)))))))))
                   ((lambda
                      ($TestPatSynRecon.param_88)
                      (select
@@ -46,5 +46,5 @@
                            ($TestPatSynRecon.param_88))
                         ((#TestPatSynRecon.i_5
                            (apply
-                              printInt64
+                              (invoke printInt64)
                               (#TestPatSynRecon.i_5))))))))))))))

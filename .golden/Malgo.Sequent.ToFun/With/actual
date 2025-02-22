@@ -31,7 +31,7 @@
                            #With.k_8
                            (#With.str_7)))
                      ((apply
-                        printString
+                        (invoke printString)
                         (#With.str_7))))))))))
    (finally
       (lambda
@@ -60,7 +60,7 @@
             ((#With.$__78
                (apply
                   (apply
-                     finally
+                     (invoke finally)
                      ((lambda
                         ($With.param_87)
                         (select
@@ -68,9 +68,9 @@
                               ($With.param_87))
                            (((tuple ())
                               (apply
-                                 printString
+                                 (invoke printString)
                                  ((apply
-                                    String#
+                                    (invoke String#)
                                     ("end"))))))))))
                   ((lambda
                      ($With.param_88)
@@ -79,7 +79,7 @@
                            ($With.param_88))
                         ((#With.$__75
                            (apply
-                              twice
+                              (invoke twice)
                               ((lambda
                                  ($With.param_89)
                                  (select
@@ -88,9 +88,9 @@
                                     ((#With.$__72
                                        (apply
                                           (apply
-                                             printAndReturn
+                                             (invoke printAndReturn)
                                              ((apply
-                                                String#
+                                                (invoke String#)
                                                 ("foo"))))
                                           ((lambda
                                              ($With.param_90)
@@ -99,5 +99,5 @@
                                                    ($With.param_90))
                                                 ((#With.x_9
                                                    (apply
-                                                      printString
+                                                      (invoke printString)
                                                       (#With.x_9))))))))))))))))))))))))))

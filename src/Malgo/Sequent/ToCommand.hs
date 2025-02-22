@@ -15,10 +15,10 @@ toCommand (Program definitions) = C.Program <$> traverse convert definitions
 class Convert a b where
   convert :: a -> b
 
-instance (State Uniq :> es) => Convert (Range, Name, Producer Zero) (Eff es (Range, Name, Code)) where
-  convert (range, name, body) = do
+instance (State Uniq :> es) => Convert (Range, Name, Name, Statement Zero) (Eff es (Range, Name, Name, Code)) where
+  convert (range, name, return, body) = do
     body <- convert body
-    pure (range, name, body)
+    pure (range, name, return, body)
 
 instance (State Uniq :> es) => Convert (Statement Zero) (Eff es Code) where
   convert (Cut producer consumer) = do
@@ -34,6 +34,9 @@ instance (State Uniq :> es) => Convert (Statement Zero) (Eff es Code) where
     producers <- foldMap convert producers
     consumers <- map C.Suspend <$> traverse convert consumers
     pure $ producers <> consumers <> [C.Primitive range operator]
+  convert (Invoke range name consumer) = do
+    consumer <- C.Suspend <$> convert consumer
+    pure $ consumer : [C.Invoke range name]
 
 instance (State Uniq :> es) => Convert (Producer Zero) (Eff es Code) where
   convert (Var range name) = pure [C.Fetch range name]

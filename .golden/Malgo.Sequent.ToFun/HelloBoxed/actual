@@ -6,7 +6,7 @@
             ($HelloBoxed.param_21))
          ((#HelloBoxed.x_1
             (apply
-               String#
+               (invoke String#)
                (#HelloBoxed.x_1)))))))
    (putStrLn
       (lambda
@@ -20,10 +20,10 @@
                   (lambda
                      ($HelloBoxed.tmp_23)
                      (apply
-                        malgo_newline
+                        (invoke malgo_newline)
                         ((tuple ()))))
                   ((apply
-                     malgo_print_string
+                     (invoke malgo_print_string)
                      (#HelloBoxed.str_0)))))))))
    (main
       (lambda
@@ -33,7 +33,7 @@
                ($HelloBoxed.param_24))
             ((#HelloBoxed.$__20
                (apply
-                  putStrLn
+                  (invoke putStrLn)
                   ((apply
-                     String#
+                     (invoke String#)
                      ("Hello, world"))))))))))

@@ -6,11 +6,11 @@
             ($Primitive.param_11))
          ((#Primitive.$__10
             (apply
-               printString#
+               (invoke printString#)
                ((apply
-                  toStringInt64#
+                  (invoke toStringInt64#)
                   ((apply
                      (apply
-                        addInt64#
+                        (invoke addInt64#)
                         (40_i64))
                      (2_i64))))))))))))
