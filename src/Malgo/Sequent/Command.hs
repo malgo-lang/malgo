@@ -2,6 +2,7 @@ module Malgo.Sequent.Command
   ( Program (..),
     Branch (..),
     Command (..),
+    Code
   )
 where
 
@@ -44,13 +45,13 @@ data Command
   | -- | Suspend creates a scoped label.
     -- In other words, it turns a consumer into a producer.
     --
-    -- @(S, E, Suspend(command) : C) -> ([E, command] : S, E, C)@
-    Suspend Range Command
+    -- @(S, E, Suspend(code) : C) -> ([E, code] : S, E, C)@
+    Suspend [Command]
   | -- Consumer
 
     -- | Resume jumps to a scoped label created by Suspend.
     --
-    -- @(S, E { name = [E', command] }, Resume(name))) -> (S, E', command)@
+    -- @(S, E { name = [E', code] }, Resume(name))) -> (S, E', code)@
     Resume Range Name
   | -- | Apply applies a function to the top of the stack.
     --
@@ -58,7 +59,7 @@ data Command
     Apply Range Int
   | -- | Proj projects a field from the top of the stack.
     --
-    -- @({E field: code, ...} : S, _, Proj(field)) -> (S, E, code)@
+    -- @({E field: code, ...} : S, _, Proj(field, return)) -> (S, E, code : return)@
     Proj Range Text
   | -- | Then assigns a value to a variable.
     --
