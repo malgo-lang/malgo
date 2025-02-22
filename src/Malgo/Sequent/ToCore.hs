@@ -17,21 +17,24 @@ toCore (Program definitions) = C.Program <$> traverse convert definitions
 class Convert a b where
   convert :: a -> b
 
-instance (State Uniq :> es, Reader ModuleName :> es) => Convert (Range, Name, [Name], Expr) (Eff es (Range, Name, [Name], C.Statement One)) where
-  convert (range, name, params, body) = do
-    return <- newTemporalId "return"
+instance (State Uniq :> es, Reader ModuleName :> es) => Convert (Range, Name, Expr) (Eff es (Range, Name, C.Producer One)) where
+  convert (range, name, body) = do
     body' <- convert body
     pure
       ( range,
         name,
-        params <> [return],
-        Cut body' (C.Label range return)
+        body'
       )
 
 instance (State Uniq :> es, Reader ModuleName :> es) => Convert Expr (Eff es (C.Producer One)) where
   convert (Var range name) = pure $ C.Var range name
   convert (Literal range literal) = pure $ C.Literal range literal
   convert (Construct range tag arguments) = C.Construct range tag <$> traverse convert arguments <*> pure []
+  convert (Let range name value body) = do
+    value <- convert value
+    body <- convert body
+    ret <- newTemporalId "return"
+    pure $ C.Do range ret $ C.Cut value (C.Then range name (C.Cut body (C.Label range ret)))
   convert (Lambda range params body) = do
     return <- newTemporalId "return"
     body' <- convert body

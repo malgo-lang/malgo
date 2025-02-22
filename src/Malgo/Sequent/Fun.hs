@@ -47,15 +47,16 @@ instance ToSExpr Literal where
   toSExpr (Char c) = S.A $ S.Char c
   toSExpr (String t) = S.A $ S.String t
 
-data Program = Program [(Range, Name, [Name], Expr)]
+data Program = Program [(Range, Name,  Expr)]
 
 instance ToSExpr Program where
-  toSExpr (Program definitions) = S.L $ map (\(_, name, parameters, body) -> toSExpr (name, parameters, body)) definitions
+  toSExpr (Program definitions) = S.L $ map (\(_, name, body) -> toSExpr (name, body)) definitions
 
 data Expr
   = Var Range Name
   | Literal Range Literal
   | Construct Range Tag [Expr]
+  | Let Range Name Expr Expr
   | Lambda Range [Name] Expr
   | Object Range (Map Text Expr)
   | Apply Range Expr [Expr]
@@ -71,6 +72,7 @@ instance HasRange Expr where
   range (Var r _) = r
   range (Literal r _) = r
   range (Construct r _ _) = r
+  range (Let r _ _ _) = r
   range (Lambda r _ _) = r
   range (Object r _) = r
   range (Apply r _ _) = r
@@ -82,6 +84,7 @@ instance ToSExpr Expr where
   toSExpr (Var _ name) = toSExpr name
   toSExpr (Literal _ literal) = toSExpr literal
   toSExpr (Construct _ tag arguments) = S.L [toSExpr tag, S.L $ map toSExpr arguments]
+  toSExpr (Let _ name value body) = S.L [S.A "let", toSExpr name, toSExpr value, toSExpr body]
   toSExpr (Lambda _ parameters body) = S.L [S.A "lambda", S.L $ map toSExpr parameters, toSExpr body]
   toSExpr (Object _ fields) = S.L [S.A "object", S.L $ map toSExpr $ Map.toList fields]
   toSExpr (Apply _ callee arguments) = S.L [S.A "apply", toSExpr callee, S.L $ map toSExpr arguments]
