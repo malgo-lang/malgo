@@ -1,0 +1,39 @@
+((main
+   ((lambda
+      ($Primitive.param_11 $Primitive.return_12)
+      ((do $Primitive.return_13
+         ((fetch $Primitive.param_11)
+            (construct tuple 1)
+            (select
+               (#Primitive.$__10
+                  ((do $Primitive.return_17
+                     ((fetch printString#)
+                        (then $Primitive.outer_18
+                           ((do $Primitive.return_16
+                              ((fetch toStringInt64#)
+                                 (then $Primitive.outer_20
+                                    ((do $Primitive.return_15
+                                       ((do $Primitive.return_14
+                                          ((fetch addInt64#)
+                                             (push 40_i64)
+                                             (suspend
+                                                ((resume $Primitive.return_14)))
+                                             (apply 2)))
+                                          (push 2_i64)
+                                          (suspend
+                                             ((resume $Primitive.return_15)))
+                                          (apply 2)))
+                                       (then $Primitive.inner_21
+                                          ((fetch $Primitive.outer_20)
+                                             (fetch $Primitive.inner_21)
+                                             (suspend
+                                                ((resume $Primitive.return_16)))
+                                             (apply 2)))))))
+                              (then $Primitive.inner_19
+                                 ((fetch $Primitive.outer_18)
+                                    (fetch $Primitive.inner_19)
+                                    (suspend
+                                       ((resume $Primitive.return_17)))
+                                    (apply 2)))))))
+                     (resume $Primitive.return_13))))))
+         (resume $Primitive.return_12))))))

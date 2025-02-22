@@ -1,0 +1,107 @@
+((main
+   ((lambda
+      ($TestList.param_41 $TestList.return_42)
+      ((do $TestList.return_43
+         ((fetch $TestList.param_41)
+            (construct tuple 1)
+            (select
+               (#TestList.$__40
+                  ((do $TestList.return_57
+                     ((do $TestList.return_52
+                        ((do $TestList.return_45
+                           ((fetch Cons)
+                              (then $TestList.outer_58
+                                 ((do $TestList.return_44
+                                    ((fetch Int32#)
+                                       (push 1_i32)
+                                       (suspend
+                                          ((resume $TestList.return_44)))
+                                       (apply 2)))
+                                    (then $TestList.inner_59
+                                       ((fetch $TestList.outer_58)
+                                          (fetch $TestList.inner_59)
+                                          (suspend
+                                             ((resume $TestList.return_45)))
+                                          (apply 2)))))))
+                           (then $TestList.outer_60
+                              ((do $TestList.return_51
+                                 ((do $TestList.return_47
+                                    ((fetch Cons)
+                                       (then $TestList.outer_62
+                                          ((do $TestList.return_46
+                                             ((fetch Int32#)
+                                                (push 2_i32)
+                                                (suspend
+                                                   ((resume $TestList.return_46)))
+                                                (apply 2)))
+                                             (then $TestList.inner_63
+                                                ((fetch $TestList.outer_62)
+                                                   (fetch $TestList.inner_63)
+                                                   (suspend
+                                                      ((resume $TestList.return_47)))
+                                                   (apply 2)))))))
+                                    (then $TestList.outer_64
+                                       ((do $TestList.return_50
+                                          ((do $TestList.return_49
+                                             ((fetch Cons)
+                                                (then $TestList.outer_66
+                                                   ((do $TestList.return_48
+                                                      ((fetch Int32#)
+                                                         (push 3_i32)
+                                                         (suspend
+                                                            ((resume $TestList.return_48)))
+                                                         (apply 2)))
+                                                      (then $TestList.inner_67
+                                                         ((fetch $TestList.outer_66)
+                                                            (fetch $TestList.inner_67)
+                                                            (suspend
+                                                               ((resume $TestList.return_49)))
+                                                            (apply 2)))))))
+                                             (fetch Nil)
+                                             (suspend
+                                                ((resume $TestList.return_50)))
+                                             (apply 2)))
+                                          (then $TestList.inner_65
+                                             ((fetch $TestList.outer_64)
+                                                (fetch $TestList.inner_65)
+                                                (suspend
+                                                   ((resume $TestList.return_51)))
+                                                (apply 2)))))))
+                                 (then $TestList.inner_61
+                                    ((fetch $TestList.outer_60)
+                                       (fetch $TestList.inner_61)
+                                       (suspend
+                                          ((resume $TestList.return_52)))
+                                       (apply 2)))))))
+                        (then #TestList.xs_0
+                           ((do $TestList.return_56
+                              ((fetch Nil)
+                                 (then #TestList.nil_1
+                                    ((do $TestList.return_55
+                                       ((fetch putStrLn)
+                                          (then $TestList.outer_68
+                                             ((do $TestList.return_54
+                                                ((fetch toStringInt32)
+                                                   (then $TestList.outer_70
+                                                      ((do $TestList.return_53
+                                                         ((fetch head)
+                                                            (fetch #TestList.xs_0)
+                                                            (suspend
+                                                               ((resume $TestList.return_53)))
+                                                            (apply 2)))
+                                                         (then $TestList.inner_71
+                                                            ((fetch $TestList.outer_70)
+                                                               (fetch $TestList.inner_71)
+                                                               (suspend
+                                                                  ((resume $TestList.return_54)))
+                                                               (apply 2)))))))
+                                                (then $TestList.inner_69
+                                                   ((fetch $TestList.outer_68)
+                                                      (fetch $TestList.inner_69)
+                                                      (suspend
+                                                         ((resume $TestList.return_55)))
+                                                      (apply 2)))))))
+                                       (resume $TestList.return_56)))))
+                              (resume $TestList.return_57)))))
+                     (resume $TestList.return_43))))))
+         (resume $TestList.return_42))))))

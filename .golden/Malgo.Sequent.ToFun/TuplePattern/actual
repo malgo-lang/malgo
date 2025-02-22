@@ -1,0 +1,33 @@
+((main
+   (lambda
+      ($TuplePattern.param_26)
+      (select
+         (tuple
+            ($TuplePattern.param_26))
+         ((#TuplePattern.$__25
+            (apply
+               (apply
+                  |>
+                  ((tuple
+                     (A B))))
+               ((lambda
+                  ($TuplePattern.param_27)
+                  (select
+                     (tuple
+                        ($TuplePattern.param_27))
+                     (((tuple
+                        ((A ())
+                           #TuplePattern.rest_0))
+                        (apply
+                           printString
+                           ((apply
+                              String#
+                              ("A")))))
+                        ((tuple
+                           ((B ())
+                              #TuplePattern.rest_1))
+                           (tuple ()))
+                        ((tuple
+                           ((C ())
+                              #TuplePattern.rest_2))
+                           (tuple ())))))))))))))

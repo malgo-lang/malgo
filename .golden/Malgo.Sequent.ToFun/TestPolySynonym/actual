@@ -1,0 +1,35 @@
+((first
+   (lambda
+      ($TestPolySynonym.param_40)
+      (select
+         (tuple
+            ($TestPolySynonym.param_40))
+         (((expand
+            ((fst #TestPolySynonym.x_5)
+               (snd #TestPolySynonym.__6)))
+            #TestPolySynonym.x_5)))))
+   (main
+      (lambda
+         ($TestPolySynonym.param_41)
+         (select
+            (tuple
+               ($TestPolySynonym.param_41))
+            ((#TestPolySynonym.$__39
+               (let
+                  #TestPolySynonym.x_7
+                  (object
+                     ((fst
+                        (apply
+                           Int32#
+                           (1_i32)))
+                        (snd
+                           (apply
+                              String#
+                              ("hoge")))))
+                  (apply
+                     (apply
+                        |>
+                        ((apply
+                           first
+                           (#TestPolySynonym.x_7))))
+                     (printInt32)))))))))

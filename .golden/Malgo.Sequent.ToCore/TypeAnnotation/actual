@@ -1,0 +1,43 @@
+((main
+   (lambda
+      ($TypeAnnotation.param_12 $TypeAnnotation.return_14)
+      (cut
+         (do $TypeAnnotation.return_15
+            (cut
+               (construct
+                  tuple
+                  ($TypeAnnotation.param_12)
+                  ())
+               (select
+                  (#TypeAnnotation.$__11
+                     (cut
+                        (do $TypeAnnotation.return_20
+                           (cut
+                              printString
+                              (apply
+                                 ((do $TypeAnnotation.return_19
+                                    (cut
+                                       (lambda
+                                          ($TypeAnnotation.param_13 $TypeAnnotation.return_16)
+                                          (cut
+                                             (do $TypeAnnotation.return_17
+                                                (cut
+                                                   (construct
+                                                      tuple
+                                                      ($TypeAnnotation.param_13)
+                                                      ())
+                                                   (select
+                                                      (#TypeAnnotation.x_0
+                                                         (cut #TypeAnnotation.x_0 $TypeAnnotation.return_17)))))
+                                             $TypeAnnotation.return_16))
+                                       (apply
+                                          ((do $TypeAnnotation.return_18
+                                             (cut
+                                                String#
+                                                (apply
+                                                   ("hoge")
+                                                   ($TypeAnnotation.return_18)))))
+                                          ($TypeAnnotation.return_19)))))
+                                 ($TypeAnnotation.return_20))))
+                        $TypeAnnotation.return_15)))))
+         $TypeAnnotation.return_14))))

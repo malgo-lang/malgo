@@ -1,0 +1,115 @@
+((g
+   ((lambda
+      ($RecordTest.param_50 $RecordTest.return_54)
+      ((do $RecordTest.return_55
+         ((fetch $RecordTest.param_50)
+            (construct tuple 1)
+            (select
+               ((B
+                  ((expand
+                     ((a #RecordTest.a_3)
+                        (b #RecordTest.__4)))))
+                  ((fetch #RecordTest.a_3)
+                     (resume $RecordTest.return_55))))))
+         (resume $RecordTest.return_54)))))
+   (f
+      ((lambda
+         ($RecordTest.param_51 $RecordTest.return_56)
+         ((do $RecordTest.return_57
+            ((fetch $RecordTest.param_51)
+               (construct tuple 1)
+               (select
+                  ((expand
+                     ((a #RecordTest.a_1)
+                        (b #RecordTest.__2)))
+                     ((fetch #RecordTest.a_1)
+                        (resume $RecordTest.return_57))))))
+            (resume $RecordTest.return_56)))))
+   (main
+      ((lambda
+         ($RecordTest.param_52 $RecordTest.return_58)
+         ((do $RecordTest.return_59
+            ((fetch $RecordTest.param_52)
+               (construct tuple 1)
+               (select
+                  (#RecordTest.$__49
+                     ((do $RecordTest.return_71
+                        ((object
+                           ((a
+                              ((do $RecordTest.return_61
+                                 ((fetch Int32#)
+                                    (push 32_i32)
+                                    (suspend
+                                       ((resume $RecordTest.return_61)))
+                                    (apply 2)))
+                                 (resume $RecordTest.return_60)))
+                              (b
+                                 ((do $RecordTest.return_62
+                                    ((fetch Int32#)
+                                       (push 10_i32)
+                                       (suspend
+                                          ((resume $RecordTest.return_62)))
+                                       (apply 2)))
+                                    (resume $RecordTest.return_60)))))
+                           (then #RecordTest.x_5
+                              ((do $RecordTest.return_70
+                                 ((fetch printString)
+                                    (then $RecordTest.outer_72
+                                       ((do $RecordTest.return_69
+                                          ((fetch toStringInt32)
+                                             (then $RecordTest.outer_74
+                                                ((do $RecordTest.return_68
+                                                   ((do $RecordTest.return_64
+                                                      ((fetch addInt32)
+                                                         (then $RecordTest.outer_76
+                                                            ((do $RecordTest.return_63
+                                                               ((fetch f)
+                                                                  (fetch #RecordTest.x_5)
+                                                                  (suspend
+                                                                     ((resume $RecordTest.return_63)))
+                                                                  (apply 2)))
+                                                               (then $RecordTest.inner_77
+                                                                  ((fetch $RecordTest.outer_76)
+                                                                     (fetch $RecordTest.inner_77)
+                                                                     (suspend
+                                                                        ((resume $RecordTest.return_64)))
+                                                                     (apply 2)))))))
+                                                      (then $RecordTest.outer_78
+                                                         ((do $RecordTest.return_67
+                                                            ((lambda
+                                                               ($RecordTest.param_53 $RecordTest.return_65)
+                                                               ((do $RecordTest.return_66
+                                                                  ((fetch $RecordTest.param_53)
+                                                                     (construct tuple 1)
+                                                                     (select
+                                                                        ((expand
+                                                                           ((a #RecordTest.__6)
+                                                                              (b #RecordTest.b_7)))
+                                                                           ((fetch #RecordTest.b_7)
+                                                                              (resume $RecordTest.return_66))))))
+                                                                  (resume $RecordTest.return_65)))
+                                                               (fetch #RecordTest.x_5)
+                                                               (suspend
+                                                                  ((resume $RecordTest.return_67)))
+                                                               (apply 2)))
+                                                            (then $RecordTest.inner_79
+                                                               ((fetch $RecordTest.outer_78)
+                                                                  (fetch $RecordTest.inner_79)
+                                                                  (suspend
+                                                                     ((resume $RecordTest.return_68)))
+                                                                  (apply 2)))))))
+                                                   (then $RecordTest.inner_75
+                                                      ((fetch $RecordTest.outer_74)
+                                                         (fetch $RecordTest.inner_75)
+                                                         (suspend
+                                                            ((resume $RecordTest.return_69)))
+                                                         (apply 2)))))))
+                                          (then $RecordTest.inner_73
+                                             ((fetch $RecordTest.outer_72)
+                                                (fetch $RecordTest.inner_73)
+                                                (suspend
+                                                   ((resume $RecordTest.return_70)))
+                                                (apply 2)))))))
+                                 (resume $RecordTest.return_71)))))
+                        (resume $RecordTest.return_59))))))
+            (resume $RecordTest.return_58))))))

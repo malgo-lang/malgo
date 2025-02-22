@@ -1,0 +1,80 @@
+((main
+   ((lambda
+      ($NestedMatch.param_30 $NestedMatch.return_34)
+      ((do $NestedMatch.return_35
+         ((fetch $NestedMatch.param_30)
+            (construct tuple 1)
+            (select
+               (#NestedMatch.$__29
+                  ((do $NestedMatch.return_46
+                     ((lambda
+                        ($NestedMatch.param_31 $NestedMatch.return_36)
+                        ((do $NestedMatch.return_37
+                           ((fetch $NestedMatch.param_31)
+                              (construct tuple 1)
+                              (select
+                                 ((True ())
+                                    ((do $NestedMatch.return_38
+                                       ((fetch malgo_print_string)
+                                          (push "OK")
+                                          (suspend
+                                             ((resume $NestedMatch.return_38)))
+                                          (apply 2)))
+                                       (resume $NestedMatch.return_37)))
+                                 ((False ())
+                                    ((do $NestedMatch.return_39
+                                       ((fetch malgo_exit_failure)
+                                          (construct tuple 0)
+                                          (suspend
+                                             ((resume $NestedMatch.return_39)))
+                                          (apply 2)))
+                                       (resume $NestedMatch.return_37))))))
+                           (resume $NestedMatch.return_36)))
+                        (then $NestedMatch.outer_47
+                           ((do $NestedMatch.return_45
+                              ((lambda
+                                 ($NestedMatch.param_32 $NestedMatch.return_40)
+                                 ((do $NestedMatch.return_41
+                                    ((fetch $NestedMatch.param_32)
+                                       (construct tuple 1)
+                                       (select
+                                          ((True1 ())
+                                             ((fetch False)
+                                                (resume $NestedMatch.return_41)))
+                                          ((False1 ())
+                                             ((fetch True)
+                                                (resume $NestedMatch.return_41))))))
+                                    (resume $NestedMatch.return_40)))
+                                 (then $NestedMatch.outer_49
+                                    ((do $NestedMatch.return_44
+                                       ((lambda
+                                          ($NestedMatch.param_33 $NestedMatch.return_42)
+                                          ((do $NestedMatch.return_43
+                                             ((fetch $NestedMatch.param_33)
+                                                (construct tuple 1)
+                                                (select
+                                                   ((True2 ())
+                                                      ((fetch False1)
+                                                         (resume $NestedMatch.return_43)))
+                                                   ((False2 ())
+                                                      ((fetch True1)
+                                                         (resume $NestedMatch.return_43))))))
+                                             (resume $NestedMatch.return_42)))
+                                          (fetch True2)
+                                          (suspend
+                                             ((resume $NestedMatch.return_44)))
+                                          (apply 2)))
+                                       (then $NestedMatch.inner_50
+                                          ((fetch $NestedMatch.outer_49)
+                                             (fetch $NestedMatch.inner_50)
+                                             (suspend
+                                                ((resume $NestedMatch.return_45)))
+                                             (apply 2)))))))
+                              (then $NestedMatch.inner_48
+                                 ((fetch $NestedMatch.outer_47)
+                                    (fetch $NestedMatch.inner_48)
+                                    (suspend
+                                       ((resume $NestedMatch.return_46)))
+                                    (apply 2)))))))
+                     (resume $NestedMatch.return_35))))))
+         (resume $NestedMatch.return_34))))))

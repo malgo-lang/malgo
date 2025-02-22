@@ -1,0 +1,31 @@
+((main
+   (lambda
+      ($Double.param_9 $Double.return_10)
+      (cut
+         (do $Double.return_11
+            (cut
+               (construct
+                  tuple
+                  ($Double.param_9)
+                  ())
+               (select
+                  (#Double.$__8
+                     (cut
+                        (do $Double.return_14
+                           (cut
+                              putStr
+                              (apply
+                                 ((do $Double.return_13
+                                    (cut
+                                       toStringDouble
+                                       (apply
+                                          ((do $Double.return_12
+                                             (cut
+                                                Double#
+                                                (apply
+                                                   (3.14_f64)
+                                                   ($Double.return_12)))))
+                                          ($Double.return_13)))))
+                                 ($Double.return_14))))
+                        $Double.return_11)))))
+         $Double.return_10))))

@@ -1,0 +1,43 @@
+((main
+   ((lambda
+      ($TestNestedLetFunc.param_13 $TestNestedLetFunc.return_16)
+      ((do $TestNestedLetFunc.return_17
+         ((fetch $TestNestedLetFunc.param_13)
+            (construct tuple 1)
+            (select
+               (#TestNestedLetFunc.$__12
+                  ((do $TestNestedLetFunc.return_24
+                     ((lambda
+                        ($TestNestedLetFunc.param_14 $TestNestedLetFunc.return_18)
+                        ((do $TestNestedLetFunc.return_19
+                           ((fetch $TestNestedLetFunc.param_14)
+                              (construct tuple 1)
+                              (select
+                                 (#TestNestedLetFunc.$__9
+                                    ((do $TestNestedLetFunc.return_22
+                                       ((lambda
+                                          ($TestNestedLetFunc.param_15 $TestNestedLetFunc.return_20)
+                                          ((do $TestNestedLetFunc.return_21
+                                             ((fetch $TestNestedLetFunc.param_15)
+                                                (construct tuple 1)
+                                                (select
+                                                   (#TestNestedLetFunc.a_0
+                                                      ((construct tuple 0)
+                                                         (resume $TestNestedLetFunc.return_21))))))
+                                             (resume $TestNestedLetFunc.return_20)))
+                                          (construct tuple 0)
+                                          (suspend
+                                             ((resume $TestNestedLetFunc.return_22)))
+                                          (apply 2)))
+                                       (resume $TestNestedLetFunc.return_19))))))
+                           (resume $TestNestedLetFunc.return_18)))
+                        (then #TestNestedLetFunc.f_2
+                           ((do $TestNestedLetFunc.return_23
+                              ((fetch malgo_print_string)
+                                 (push "PASS")
+                                 (suspend
+                                    ((resume $TestNestedLetFunc.return_23)))
+                                 (apply 2)))
+                              (resume $TestNestedLetFunc.return_24)))))
+                     (resume $TestNestedLetFunc.return_17))))))
+         (resume $TestNestedLetFunc.return_16))))))

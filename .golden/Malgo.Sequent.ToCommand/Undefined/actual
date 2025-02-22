@@ -1,0 +1,51 @@
+((g
+   ((lambda
+      ($Undefined.param_20 $Undefined.return_22)
+      ((do $Undefined.return_23
+         ((fetch $Undefined.param_20)
+            (construct tuple 1)
+            (select
+               (#Undefined.x_0
+                  ((fetch undefined)
+                     (resume $Undefined.return_23))))))
+         (resume $Undefined.return_22)))))
+   (main
+      ((lambda
+         ($Undefined.param_21 $Undefined.return_24)
+         ((do $Undefined.return_25
+            ((fetch $Undefined.param_21)
+               (construct tuple 1)
+               (select
+                  (#Undefined.$__17
+                     ((do $Undefined.return_30
+                        ((fetch undefined)
+                           (then #Undefined.x_1
+                              ((do $Undefined.return_29
+                                 ((do $Undefined.return_26
+                                    ((fetch g)
+                                       (fetch #Undefined.x_1)
+                                       (suspend
+                                          ((resume $Undefined.return_26)))
+                                       (apply 2)))
+                                    (then #Undefined.y_2
+                                       ((do $Undefined.return_28
+                                          ((fetch printString)
+                                             (then $Undefined.outer_31
+                                                ((do $Undefined.return_27
+                                                   ((fetch String#)
+                                                      (push "OK")
+                                                      (suspend
+                                                         ((resume $Undefined.return_27)))
+                                                      (apply 2)))
+                                                   (then $Undefined.inner_32
+                                                      ((fetch $Undefined.outer_31)
+                                                         (fetch $Undefined.inner_32)
+                                                         (suspend
+                                                            ((resume $Undefined.return_28)))
+                                                         (apply 2)))))))
+                                          (resume $Undefined.return_29)))))
+                                 (resume $Undefined.return_30)))))
+                        (resume $Undefined.return_25))))))
+            (resume $Undefined.return_24)))))
+   (f
+      ((fetch undefined))))

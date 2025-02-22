@@ -1,0 +1,83 @@
+((string#
+   (lambda
+      ($HelloBoxed.param_21 $HelloBoxed.return_25)
+      (cut
+         (do $HelloBoxed.return_26
+            (cut
+               (construct
+                  tuple
+                  ($HelloBoxed.param_21)
+                  ())
+               (select
+                  (#HelloBoxed.x_1
+                     (cut
+                        (do $HelloBoxed.return_27
+                           (cut
+                              String#
+                              (apply
+                                 (#HelloBoxed.x_1)
+                                 ($HelloBoxed.return_27))))
+                        $HelloBoxed.return_26)))))
+         $HelloBoxed.return_25)))
+   (putStrLn
+      (lambda
+         ($HelloBoxed.param_22 $HelloBoxed.return_28)
+         (cut
+            (do $HelloBoxed.return_29
+               (cut
+                  (construct
+                     tuple
+                     ($HelloBoxed.param_22)
+                     ())
+                  (select
+                     ((String#
+                        (#HelloBoxed.str_0))
+                        (cut
+                           (do $HelloBoxed.return_33
+                              (cut
+                                 (lambda
+                                    ($HelloBoxed.tmp_23 $HelloBoxed.return_30)
+                                    (cut
+                                       (do $HelloBoxed.return_31
+                                          (cut
+                                             malgo_newline
+                                             (apply
+                                                ((construct tuple () ()))
+                                                ($HelloBoxed.return_31))))
+                                       $HelloBoxed.return_30))
+                                 (apply
+                                    ((do $HelloBoxed.return_32
+                                       (cut
+                                          malgo_print_string
+                                          (apply
+                                             (#HelloBoxed.str_0)
+                                             ($HelloBoxed.return_32)))))
+                                    ($HelloBoxed.return_33))))
+                           $HelloBoxed.return_29)))))
+            $HelloBoxed.return_28)))
+   (main
+      (lambda
+         ($HelloBoxed.param_24 $HelloBoxed.return_34)
+         (cut
+            (do $HelloBoxed.return_35
+               (cut
+                  (construct
+                     tuple
+                     ($HelloBoxed.param_24)
+                     ())
+                  (select
+                     (#HelloBoxed.$__20
+                        (cut
+                           (do $HelloBoxed.return_37
+                              (cut
+                                 putStrLn
+                                 (apply
+                                    ((do $HelloBoxed.return_36
+                                       (cut
+                                          String#
+                                          (apply
+                                             ("Hello, world")
+                                             ($HelloBoxed.return_36)))))
+                                    ($HelloBoxed.return_37))))
+                           $HelloBoxed.return_35)))))
+            $HelloBoxed.return_34))))

@@ -1,0 +1,23 @@
+((main
+   (lambda
+      ($DataDef.param_18)
+      (select
+         (tuple
+            ($DataDef.param_18))
+         ((#DataDef.$__17
+            (apply
+               (lambda
+                  ($DataDef.param_19)
+                  (select
+                     (tuple
+                        ($DataDef.param_19))
+                     (((Int#
+                        (#DataDef.x_1))
+                        (apply
+                           malgo_print_string
+                           ((apply
+                              malgo_int64_t_to_string
+                              (#DataDef.x_1))))))))
+               ((apply
+                  Int#
+                  (1_i64))))))))))

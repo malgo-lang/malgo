@@ -2,16 +2,23 @@ module Malgo.Sequent.Command
   ( Program (..),
     Branch (..),
     Command (..),
-    Code
+    Code,
   )
 where
 
+import Data.Map qualified as Map
+import Data.SCargot.Repr.Basic qualified as S
 import Malgo.Prelude
+import Malgo.SExpr (ToSExpr (toSExpr))
+import Malgo.SExpr qualified as S
 import Malgo.Sequent.Fun (Literal, Name, Pattern, Tag)
 
 data Program = Program
   {definitions :: [(Range, Name, Code)]}
   deriving stock (Show)
+
+instance ToSExpr Program where
+  toSExpr (Program defs) = S.L $ map (\(_, name, body) -> toSExpr (name, body)) defs
 
 type Code = [Command]
 
@@ -81,9 +88,28 @@ data Command
     Select Range [Branch]
   deriving stock (Show)
 
+instance ToSExpr Command where
+  toSExpr (Fetch _ name) = S.L [S.A "fetch", toSExpr name]
+  toSExpr (Push _ lit) = S.L [S.A "push", toSExpr lit]
+  toSExpr (Construct _ tag n) = S.L [S.A "construct", toSExpr tag, S.A $ S.Int (fromIntegral n) Nothing]
+  toSExpr (Lambda _ names code) = S.L [S.A "lambda", S.L $ map toSExpr names, toSExpr code]
+  toSExpr (Object _ fields) = S.L [S.A "object", S.L $ map (\(k, v) -> S.L [toSExpr k, toSExpr v]) $ Map.toList fields]
+  toSExpr (Do _ name code) = S.L [S.A "do", toSExpr name, toSExpr code]
+  toSExpr (Suspend code) = S.L [S.A "suspend", S.L $ map toSExpr code]
+  toSExpr (Resume _ name) = S.L [S.A "resume", toSExpr name]
+  toSExpr (Apply _ n) = S.L [S.A "apply", S.A $ S.Int (fromIntegral n) Nothing]
+  toSExpr (Proj _ field) = S.L [S.A "proj", toSExpr field]
+  toSExpr (Then _ name code) = S.L [S.A "then", toSExpr name, toSExpr code]
+  toSExpr (Finish _) = S.A "finish"
+  toSExpr (Primitive _ name) = S.L [S.A "primitive", toSExpr name]
+  toSExpr (Select _ branches) = S.L $ S.A "select" : map toSExpr branches
+
 data Branch = Branch
   { range :: Range,
     pattern :: Pattern,
     code :: Code
   }
   deriving stock (Show)
+
+instance ToSExpr Branch where
+  toSExpr (Branch _ pattern code) = S.L [toSExpr pattern, toSExpr code]

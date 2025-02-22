@@ -1,0 +1,33 @@
+((rtob
+   (lambda
+      ($Test2.param_23)
+      (select
+         (tuple
+            ($Test2.param_23))
+         (((R ())
+            B)
+            (#Test2.a_0 #Test2.a_0)))))
+   (main
+      (lambda
+         ($Test2.param_24)
+         (select
+            (tuple
+               ($Test2.param_24))
+            ((#Test2.$__22
+               (apply
+                  (lambda
+                     ($Test2.param_25)
+                     (select
+                        (tuple
+                           ($Test2.param_25))
+                        (((B ())
+                           (apply
+                              malgo_print_string
+                              ("OK")))
+                           (#Test2.__1
+                              (apply
+                                 malgo_print_string
+                                 ("WRONG"))))))
+                  ((apply
+                     rtob
+                     (R))))))))))

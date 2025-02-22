@@ -1,0 +1,147 @@
+((even
+   (lambda
+      ($EvenOdd.param_51 $EvenOdd.return_55)
+      (cut
+         (do $EvenOdd.return_56
+            (cut
+               (construct
+                  tuple
+                  ($EvenOdd.param_51)
+                  ())
+               (select
+                  ((Int32#
+                     (0_i32))
+                     (cut True $EvenOdd.return_56))
+                  (#EvenOdd.n_0
+                     (cut
+                        (do $EvenOdd.return_60
+                           (cut
+                              odd
+                              (apply
+                                 ((do $EvenOdd.return_59
+                                    (cut
+                                       (do $EvenOdd.return_57
+                                          (cut
+                                             subInt32
+                                             (apply
+                                                (#EvenOdd.n_0)
+                                                ($EvenOdd.return_57))))
+                                       (apply
+                                          ((do $EvenOdd.return_58
+                                             (cut
+                                                Int32#
+                                                (apply
+                                                   (1_i32)
+                                                   ($EvenOdd.return_58)))))
+                                          ($EvenOdd.return_59)))))
+                                 ($EvenOdd.return_60))))
+                        $EvenOdd.return_56)))))
+         $EvenOdd.return_55)))
+   (odd
+      (lambda
+         ($EvenOdd.param_52 $EvenOdd.return_61)
+         (cut
+            (do $EvenOdd.return_62
+               (cut
+                  (construct
+                     tuple
+                     ($EvenOdd.param_52)
+                     ())
+                  (select
+                     ((Int32#
+                        (0_i32))
+                        (cut False $EvenOdd.return_62))
+                     (#EvenOdd.n_1
+                        (cut
+                           (do $EvenOdd.return_66
+                              (cut
+                                 even
+                                 (apply
+                                    ((do $EvenOdd.return_65
+                                       (cut
+                                          (do $EvenOdd.return_63
+                                             (cut
+                                                subInt32
+                                                (apply
+                                                   (#EvenOdd.n_1)
+                                                   ($EvenOdd.return_63))))
+                                          (apply
+                                             ((do $EvenOdd.return_64
+                                                (cut
+                                                   Int32#
+                                                   (apply
+                                                      (1_i32)
+                                                      ($EvenOdd.return_64)))))
+                                             ($EvenOdd.return_65)))))
+                                    ($EvenOdd.return_66))))
+                           $EvenOdd.return_62)))))
+            $EvenOdd.return_61)))
+   (main
+      (lambda
+         ($EvenOdd.param_53 $EvenOdd.return_67)
+         (cut
+            (do $EvenOdd.return_68
+               (cut
+                  (construct
+                     tuple
+                     ($EvenOdd.param_53)
+                     ())
+                  (select
+                     (#EvenOdd.$__50
+                        (cut
+                           (do $EvenOdd.return_77
+                              (cut
+                                 (lambda
+                                    ($EvenOdd.param_54 $EvenOdd.return_69)
+                                    (cut
+                                       (do $EvenOdd.return_70
+                                          (cut
+                                             (construct
+                                                tuple
+                                                ($EvenOdd.param_54)
+                                                ())
+                                             (select
+                                                ((False ())
+                                                   (cut
+                                                      (do $EvenOdd.return_72
+                                                         (cut
+                                                            putStrLn
+                                                            (apply
+                                                               ((do $EvenOdd.return_71
+                                                                  (cut
+                                                                     String#
+                                                                     (apply
+                                                                        ("False")
+                                                                        ($EvenOdd.return_71)))))
+                                                               ($EvenOdd.return_72))))
+                                                      $EvenOdd.return_70))
+                                                ((True ())
+                                                   (cut
+                                                      (do $EvenOdd.return_74
+                                                         (cut
+                                                            putStrLn
+                                                            (apply
+                                                               ((do $EvenOdd.return_73
+                                                                  (cut
+                                                                     String#
+                                                                     (apply
+                                                                        ("True")
+                                                                        ($EvenOdd.return_73)))))
+                                                               ($EvenOdd.return_74))))
+                                                      $EvenOdd.return_70)))))
+                                       $EvenOdd.return_69))
+                                 (apply
+                                    ((do $EvenOdd.return_76
+                                       (cut
+                                          even
+                                          (apply
+                                             ((do $EvenOdd.return_75
+                                                (cut
+                                                   Int32#
+                                                   (apply
+                                                      (10_i32)
+                                                      ($EvenOdd.return_75)))))
+                                             ($EvenOdd.return_76)))))
+                                    ($EvenOdd.return_77))))
+                           $EvenOdd.return_68)))))
+            $EvenOdd.return_67))))

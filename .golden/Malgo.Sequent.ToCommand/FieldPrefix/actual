@@ -1,0 +1,165 @@
+((zero3D
+   ((object
+      ((x
+         ((do $FieldPrefix.return_54
+            ((fetch Float#)
+               (push 0.0_f32)
+               (suspend
+                  ((resume $FieldPrefix.return_54)))
+               (apply 2)))
+            (resume $FieldPrefix.return_53)))
+         (y
+            ((do $FieldPrefix.return_55
+               ((fetch Float#)
+                  (push 0.0_f32)
+                  (suspend
+                     ((resume $FieldPrefix.return_55)))
+                  (apply 2)))
+               (resume $FieldPrefix.return_53)))
+         (z
+            ((do $FieldPrefix.return_56
+               ((fetch Float#)
+                  (push 0.0_f32)
+                  (suspend
+                     ((resume $FieldPrefix.return_56)))
+                  (apply 2)))
+               (resume $FieldPrefix.return_53)))))))
+   (zero2D
+      ((object
+         ((x
+            ((do $FieldPrefix.return_58
+               ((fetch Int32#)
+                  (push 0_i32)
+                  (suspend
+                     ((resume $FieldPrefix.return_58)))
+                  (apply 2)))
+               (resume $FieldPrefix.return_57)))
+            (y
+               ((do $FieldPrefix.return_59
+                  ((fetch Int32#)
+                     (push 0_i32)
+                     (suspend
+                        ((resume $FieldPrefix.return_59)))
+                     (apply 2)))
+                  (resume $FieldPrefix.return_57)))))))
+   (y2D
+      ((lambda
+         ($FieldPrefix.param_47 $FieldPrefix.return_60)
+         ((do $FieldPrefix.return_61
+            ((fetch $FieldPrefix.param_47)
+               (construct tuple 1)
+               (select
+                  ((expand
+                     ((x #FieldPrefix.__4)
+                        (y #FieldPrefix.y_5)))
+                     ((fetch #FieldPrefix.y_5)
+                        (resume $FieldPrefix.return_61))))))
+            (resume $FieldPrefix.return_60)))))
+   (x2D
+      ((lambda
+         ($FieldPrefix.param_48 $FieldPrefix.return_62)
+         ((do $FieldPrefix.return_63
+            ((fetch $FieldPrefix.param_48)
+               (construct tuple 1)
+               (select
+                  ((expand
+                     ((x #FieldPrefix.x_2)
+                        (y #FieldPrefix.__3)))
+                     ((fetch #FieldPrefix.x_2)
+                        (resume $FieldPrefix.return_63))))))
+            (resume $FieldPrefix.return_62)))))
+   (print2D
+      ((lambda
+         ($FieldPrefix.param_49 $FieldPrefix.return_64)
+         ((do $FieldPrefix.return_65
+            ((fetch $FieldPrefix.param_49)
+               (construct tuple 1)
+               (select
+                  ((expand
+                     ((x #FieldPrefix.x_0)
+                        (y #FieldPrefix.y_1)))
+                     ((do $FieldPrefix.return_75
+                        ((lambda
+                           ($FieldPrefix.tmp_50 $FieldPrefix.return_66)
+                           ((do $FieldPrefix.return_72
+                              ((lambda
+                                 ($FieldPrefix.tmp_51 $FieldPrefix.return_67)
+                                 ((do $FieldPrefix.return_69
+                                    ((fetch printString)
+                                       (then $FieldPrefix.outer_79
+                                          ((do $FieldPrefix.return_68
+                                             ((fetch toStringInt32)
+                                                (fetch #FieldPrefix.y_1)
+                                                (suspend
+                                                   ((resume $FieldPrefix.return_68)))
+                                                (apply 2)))
+                                             (then $FieldPrefix.inner_80
+                                                ((fetch $FieldPrefix.outer_79)
+                                                   (fetch $FieldPrefix.inner_80)
+                                                   (suspend
+                                                      ((resume $FieldPrefix.return_69)))
+                                                   (apply 2)))))))
+                                    (resume $FieldPrefix.return_67)))
+                                 (then $FieldPrefix.outer_81
+                                    ((do $FieldPrefix.return_71
+                                       ((fetch printString)
+                                          (then $FieldPrefix.outer_83
+                                             ((do $FieldPrefix.return_70
+                                                ((fetch String#)
+                                                   (push ", ")
+                                                   (suspend
+                                                      ((resume $FieldPrefix.return_70)))
+                                                   (apply 2)))
+                                                (then $FieldPrefix.inner_84
+                                                   ((fetch $FieldPrefix.outer_83)
+                                                      (fetch $FieldPrefix.inner_84)
+                                                      (suspend
+                                                         ((resume $FieldPrefix.return_71)))
+                                                      (apply 2)))))))
+                                       (then $FieldPrefix.inner_82
+                                          ((fetch $FieldPrefix.outer_81)
+                                             (fetch $FieldPrefix.inner_82)
+                                             (suspend
+                                                ((resume $FieldPrefix.return_72)))
+                                             (apply 2)))))))
+                              (resume $FieldPrefix.return_66)))
+                           (then $FieldPrefix.outer_85
+                              ((do $FieldPrefix.return_74
+                                 ((fetch printString)
+                                    (then $FieldPrefix.outer_87
+                                       ((do $FieldPrefix.return_73
+                                          ((fetch toStringInt32)
+                                             (fetch #FieldPrefix.x_0)
+                                             (suspend
+                                                ((resume $FieldPrefix.return_73)))
+                                             (apply 2)))
+                                          (then $FieldPrefix.inner_88
+                                             ((fetch $FieldPrefix.outer_87)
+                                                (fetch $FieldPrefix.inner_88)
+                                                (suspend
+                                                   ((resume $FieldPrefix.return_74)))
+                                                (apply 2)))))))
+                                 (then $FieldPrefix.inner_86
+                                    ((fetch $FieldPrefix.outer_85)
+                                       (fetch $FieldPrefix.inner_86)
+                                       (suspend
+                                          ((resume $FieldPrefix.return_75)))
+                                       (apply 2)))))))
+                        (resume $FieldPrefix.return_65))))))
+            (resume $FieldPrefix.return_64)))))
+   (main
+      ((lambda
+         ($FieldPrefix.param_52 $FieldPrefix.return_76)
+         ((do $FieldPrefix.return_77
+            ((fetch $FieldPrefix.param_52)
+               (construct tuple 1)
+               (select
+                  (#FieldPrefix.$__46
+                     ((do $FieldPrefix.return_78
+                        ((fetch print2D)
+                           (fetch zero2D)
+                           (suspend
+                              ((resume $FieldPrefix.return_78)))
+                           (apply 2)))
+                        (resume $FieldPrefix.return_77))))))
+            (resume $FieldPrefix.return_76))))))

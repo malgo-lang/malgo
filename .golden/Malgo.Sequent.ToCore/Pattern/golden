@@ -1,0 +1,42 @@
+((main
+   (lambda
+      ($Pattern.param_16 $Pattern.return_18)
+      (cut
+         (do $Pattern.return_19
+            (cut
+               (construct
+                  tuple
+                  ($Pattern.param_16)
+                  ())
+               (select
+                  (#Pattern.$__9
+                     (cut
+                        (do $Pattern.return_21
+                           (cut
+                              putStrLn
+                              (apply
+                                 ((do $Pattern.return_20
+                                    (cut
+                                       String#
+                                       (apply
+                                          ("OK")
+                                          ($Pattern.return_20)))))
+                                 ($Pattern.return_21))))
+                        $Pattern.return_19)))))
+         $Pattern.return_18)))
+   (isNil
+      (lambda
+         ($Pattern.param_17 $Pattern.return_22)
+         (cut
+            (do $Pattern.return_23
+               (cut
+                  (construct
+                     tuple
+                     ($Pattern.param_17)
+                     ())
+                  (select
+                     ((Nil ())
+                        (cut True $Pattern.return_23))
+                     (#Pattern.__0
+                        (cut False $Pattern.return_23)))))
+            $Pattern.return_22))))

@@ -77,8 +77,8 @@ data Statement x where
 deriving stock instance Show (Statement x)
 
 instance ToSExpr (Statement x) where
-  toSExpr (Cut producer consumer) = S.L [toSExpr producer, S.A "|", toSExpr consumer]
-  toSExpr (CutDo _ name statement consumer) = S.L [S.A "do", toSExpr name, toSExpr statement, S.A "|", toSExpr consumer]
+  toSExpr (Cut producer consumer) = S.L ["cut", toSExpr producer, toSExpr consumer]
+  toSExpr (CutDo _ name statement consumer) = S.L ["cut-do", toSExpr name, toSExpr statement, toSExpr consumer]
   toSExpr (Primitive _ name producers consumers) =
     S.L [S.A "prim", toSExpr name, S.L $ map toSExpr producers, S.L $ map toSExpr consumers]
 
@@ -93,8 +93,10 @@ deriving stock instance Show (Branch x)
 instance ToSExpr (Branch x) where
   toSExpr (Branch _ pattern statement) = S.L [toSExpr pattern, toSExpr statement]
 
-convertToZero :: (State Uniq :> es, Reader ModuleName :> es) => Statement One -> Eff es (Statement Zero)
-convertToZero x = castToZero <$> flat x
+convertToZero :: (State Uniq :> es, Reader ModuleName :> es) => Program One -> Eff es (Program Zero)
+convertToZero Program {..} = do
+  definitions' <- traverse (\(range, name, producer) -> (range,name,) . castToZero <$> flat producer) definitions
+  pure (Program definitions')
 
 class Flat es f where
   flat :: f One -> Eff es (f One)

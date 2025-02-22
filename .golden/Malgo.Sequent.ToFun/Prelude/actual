@@ -1,0 +1,571 @@
+((|>
+   (lambda
+      ($Prelude.param_687)
+      (lambda
+         ($Prelude.param_688)
+         (select
+            (tuple
+               ($Prelude.param_687 $Prelude.param_688))
+            (((tuple
+               (#Prelude.x_70 #Prelude.f_71))
+               (apply
+                  #Prelude.f_71
+                  (#Prelude.x_70))))))))
+   (tail
+      (lambda
+         ($Prelude.param_689)
+         (select
+            (tuple
+               ($Prelude.param_689))
+            (((Cons
+               (#Prelude.__25 #Prelude.xs_26))
+               #Prelude.xs_26)
+               (#Prelude.__27
+                  (apply
+                     exitFailure
+                     ((tuple ()))))))))
+   (snd
+      (lambda
+         ($Prelude.param_690)
+         (select
+            (tuple
+               ($Prelude.param_690))
+            (((tuple
+               (#Prelude.a_16 #Prelude.b_17))
+               #Prelude.b_17)))))
+   (putStrLn
+      (lambda
+         ($Prelude.param_691)
+         (select
+            (tuple
+               ($Prelude.param_691))
+            ((#Prelude.str_91
+               (apply
+                  (lambda
+                     ($Prelude.tmp_692)
+                     (apply
+                        newline
+                        ((tuple ()))))
+                  ((apply
+                     printString
+                     (#Prelude.str_91)))))))))
+   (putStr
+      (lambda
+         ($Prelude.param_693)
+         (select
+            (tuple
+               ($Prelude.param_693))
+            ((#Prelude.str_90
+               (apply
+                  printString
+                  (#Prelude.str_90)))))))
+   (punctuate
+      (lambda
+         ($Prelude.param_694)
+         (lambda
+            ($Prelude.param_695)
+            (select
+               (tuple
+                  ($Prelude.param_694 $Prelude.param_695))
+               (((tuple
+                  (#Prelude.__55
+                     (Nil ())))
+                  Nil)
+                  ((tuple
+                     (#Prelude.__56
+                        (Cons
+                           (#Prelude.x_57
+                              (Nil ())))))
+                     (apply
+                        (apply
+                           Cons
+                           (#Prelude.x_57))
+                        (Nil)))
+                  ((tuple
+                     (#Prelude.sep_58
+                        (Cons
+                           (#Prelude.x_59 #Prelude.xs_60))))
+                     (apply
+                        (apply
+                           Cons
+                           (#Prelude.x_59))
+                        ((apply
+                           (apply
+                              Cons
+                              (#Prelude.sep_58))
+                           ((apply
+                              (apply
+                                 punctuate
+                                 (#Prelude.sep_58))
+                              (#Prelude.xs_60))))))))))))
+   (printInt64
+      (lambda
+         ($Prelude.param_696)
+         (select
+            (tuple
+               ($Prelude.param_696))
+            ((#Prelude.i_93
+               (apply
+                  printString
+                  ((apply
+                     toStringInt64
+                     (#Prelude.i_93)))))))))
+   (printInt32
+      (lambda
+         ($Prelude.param_697)
+         (select
+            (tuple
+               ($Prelude.param_697))
+            ((#Prelude.i_92
+               (apply
+                  printString
+                  ((apply
+                     toStringInt32
+                     (#Prelude.i_92)))))))))
+   (mapList
+      (lambda
+         ($Prelude.param_698)
+         (lambda
+            ($Prelude.param_699)
+            (select
+               (tuple
+                  ($Prelude.param_698 $Prelude.param_699))
+               (((tuple
+                  (#Prelude.__38
+                     (Nil ())))
+                  Nil)
+                  ((tuple
+                     (#Prelude.f_39
+                        (Cons
+                           (#Prelude.x_40 #Prelude.xs_41))))
+                     (apply
+                        (apply
+                           Cons
+                           ((apply
+                              #Prelude.f_39
+                              (#Prelude.x_40))))
+                        ((apply
+                           (apply
+                              mapList
+                              (#Prelude.f_39))
+                           (#Prelude.xs_41))))))))))
+   (listToString
+      (lambda
+         ($Prelude.param_700)
+         (select
+            (tuple
+               ($Prelude.param_700))
+            (((Nil ())
+               (apply
+                  String#
+                  ("")))
+               ((Cons
+                  (#Prelude.c_42 #Prelude.cs_43))
+                  (apply
+                     (apply
+                        consString
+                        (#Prelude.c_42))
+                     ((apply
+                        listToString
+                        (#Prelude.cs_43)))))))))
+   (isWhiteSpace
+      (lambda
+         ($Prelude.param_701)
+         (select
+            (tuple
+               ($Prelude.param_701))
+            (((Char#
+               (' '))
+               True)
+               ((Char#
+                  ('\n'))
+                  True)
+               ((Char#
+                  ('\r'))
+                  True)
+               ((Char#
+                  ('\t'))
+                  True)
+               (#Prelude.__61 False)))))
+   (if
+      (lambda
+         ($Prelude.param_702)
+         (lambda
+            ($Prelude.param_703)
+            (lambda
+               ($Prelude.param_704)
+               (select
+                  (tuple
+                     ($Prelude.param_702 $Prelude.param_703 $Prelude.param_704))
+                  (((tuple
+                     ((True ())
+                        #Prelude.t_77
+                        #Prelude.__78))
+                     (apply
+                        #Prelude.t_77
+                        ((tuple ()))))
+                     ((tuple
+                        ((False ())
+                           #Prelude.__79
+                           #Prelude.f_80))
+                        (apply
+                           #Prelude.f_80
+                           ((tuple ()))))))))))
+   (tailString
+      (lambda
+         ($Prelude.param_705)
+         (select
+            (tuple
+               ($Prelude.param_705))
+            ((#Prelude.str_45
+               (apply
+                  (apply
+                     (apply
+                        if
+                        ((apply
+                           (apply
+                              eqString
+                              (#Prelude.str_45))
+                           ((apply
+                              String#
+                              (""))))))
+                     ((lambda
+                        ($Prelude.param_706)
+                        (select
+                           (tuple
+                              ($Prelude.param_706))
+                           ((#Prelude.$__366 #Prelude.str_45))))))
+                  ((lambda
+                     ($Prelude.param_707)
+                     (select
+                        (tuple
+                           ($Prelude.param_707))
+                        ((#Prelude.$__379
+                           (apply
+                              (apply
+                                 (apply
+                                    substring
+                                    (#Prelude.str_45))
+                                 ((apply
+                                    Int64#
+                                    (1_i64))))
+                              ((apply
+                                 lengthString
+                                 (#Prelude.str_45)))))))))))))))
+   (unless
+      (lambda
+         ($Prelude.param_708)
+         (lambda
+            ($Prelude.param_709)
+            (lambda
+               ($Prelude.param_710)
+               (select
+                  (tuple
+                     ($Prelude.param_708 $Prelude.param_709 $Prelude.param_710))
+                  (((tuple
+                     (#Prelude.c_82 #Prelude.tValue_83 #Prelude.f_84))
+                     (apply
+                        (apply
+                           (apply
+                              if
+                              (#Prelude.c_82))
+                           ((lambda
+                              ($Prelude.param_711)
+                              (select
+                                 (tuple
+                                    ($Prelude.param_711))
+                                 ((#Prelude.$__392 #Prelude.tValue_83))))))
+                        (#Prelude.f_84)))))))))
+   (identity
+      (lambda
+         ($Prelude.param_712)
+         (select
+            (tuple
+               ($Prelude.param_712))
+            ((#Prelude.x_1 #Prelude.x_1)))))
+   (headString
+      (lambda
+         ($Prelude.param_713)
+         (select
+            (tuple
+               ($Prelude.param_713))
+            ((#Prelude.str_44
+               (apply
+                  (apply
+                     (apply
+                        if
+                        ((apply
+                           (apply
+                              eqString
+                              (#Prelude.str_44))
+                           ((apply
+                              String#
+                              (""))))))
+                     ((lambda
+                        ($Prelude.param_714)
+                        (select
+                           (tuple
+                              ($Prelude.param_714))
+                           ((#Prelude.$__417 Nothing))))))
+                  ((lambda
+                     ($Prelude.param_715)
+                     (select
+                        (tuple
+                           ($Prelude.param_715))
+                        ((#Prelude.$__430
+                           (apply
+                              Just
+                              ((apply
+                                 (apply
+                                    atString
+                                    ((apply
+                                       Int64#
+                                       (0_i64))))
+                                 (#Prelude.str_44)))))))))))))))
+   (head
+      (lambda
+         ($Prelude.param_716)
+         (select
+            (tuple
+               ($Prelude.param_716))
+            (((Cons
+               (#Prelude.x_21 #Prelude.__22))
+               #Prelude.x_21)
+               (#Prelude.__23
+                  (apply
+                     exitFailure
+                     ((tuple ()))))))))
+   (fst
+      (lambda
+         ($Prelude.param_717)
+         (select
+            (tuple
+               ($Prelude.param_717))
+            (((tuple
+               (#Prelude.a_12 #Prelude.b_13))
+               #Prelude.a_12)))))
+   (foldl
+      (lambda
+         ($Prelude.param_718)
+         (lambda
+            ($Prelude.param_719)
+            (lambda
+               ($Prelude.param_720)
+               (select
+                  (tuple
+                     ($Prelude.param_718 $Prelude.param_719 $Prelude.param_720))
+                  (((tuple
+                     (#Prelude.__30
+                        #Prelude.z_31
+                        (Nil ())))
+                     #Prelude.z_31)
+                     ((tuple
+                        (#Prelude.f_32
+                           #Prelude.z_33
+                           (Cons
+                              (#Prelude.x_34 #Prelude.xs_35))))
+                        (apply
+                           (apply
+                              (apply
+                                 foldl
+                                 (#Prelude.f_32))
+                              ((apply
+                                 (apply
+                                    #Prelude.f_32
+                                    (#Prelude.z_33))
+                                 (#Prelude.x_34))))
+                           (#Prelude.xs_35)))))))))
+   (const
+      (lambda
+         ($Prelude.param_721)
+         (lambda
+            ($Prelude.param_722)
+            (select
+               (tuple
+                  ($Prelude.param_721 $Prelude.param_722))
+               (((tuple
+                  (#Prelude.a_4 #Prelude.__5))
+                  #Prelude.a_4))))))
+   (cond
+      (lambda
+         ($Prelude.param_723)
+         (select
+            (tuple
+               ($Prelude.param_723))
+            (((Nil ())
+               (apply
+                  panic
+                  ((apply
+                     String#
+                     ("no branch")))))
+               ((Cons
+                  ((tuple
+                     ((True ())
+                        #Prelude.x_86))
+                     #Prelude.__87))
+                  (apply
+                     #Prelude.x_86
+                     ((tuple ()))))
+               ((Cons
+                  ((tuple
+                     ((False ())
+                        #Prelude.__88))
+                     #Prelude.xs_89))
+                  (apply
+                     cond
+                     (#Prelude.xs_89)))))))
+   (concatString
+      (lambda
+         ($Prelude.param_724)
+         (select
+            (tuple
+               ($Prelude.param_724))
+            (((Nil ())
+               (apply
+                  String#
+                  ("")))
+               ((Cons
+                  (#Prelude.x_52 #Prelude.xs_53))
+                  (apply
+                     (apply
+                        appendString
+                        (#Prelude.x_52))
+                     ((apply
+                        concatString
+                        (#Prelude.xs_53)))))))))
+   (case
+      (lambda
+         ($Prelude.param_725)
+         (lambda
+            ($Prelude.param_726)
+            (select
+               (tuple
+                  ($Prelude.param_725 $Prelude.param_726))
+               (((tuple
+                  (#Prelude.x_8 #Prelude.f_9))
+                  (apply
+                     #Prelude.f_9
+                     (#Prelude.x_8))))))))
+   (dropWhileString
+      (lambda
+         ($Prelude.param_727)
+         (lambda
+            ($Prelude.param_728)
+            (select
+               (tuple
+                  ($Prelude.param_727 $Prelude.param_728))
+               (((tuple
+                  (#Prelude.pred_49 #Prelude.str_50))
+                  (apply
+                     (apply
+                        case
+                        ((apply
+                           headString
+                           (#Prelude.str_50))))
+                     ((lambda
+                        ($Prelude.param_729)
+                        (select
+                           (tuple
+                              ($Prelude.param_729))
+                           (((Nothing ())
+                              #Prelude.str_50)
+                              ((Just
+                                 (#Prelude.c_51))
+                                 (apply
+                                    (apply
+                                       (apply
+                                          if
+                                          ((apply
+                                             #Prelude.pred_49
+                                             (#Prelude.c_51))))
+                                       ((lambda
+                                          ($Prelude.param_730)
+                                          (select
+                                             (tuple
+                                                ($Prelude.param_730))
+                                             ((#Prelude.$__605
+                                                (apply
+                                                   (apply
+                                                      dropWhileString
+                                                      (#Prelude.pred_49))
+                                                   ((apply
+                                                      tailString
+                                                      (#Prelude.str_50))))))))))
+                                    ((lambda
+                                       ($Prelude.param_731)
+                                       (select
+                                          (tuple
+                                             ($Prelude.param_731))
+                                          ((#Prelude.$__608 #Prelude.str_50))))))))))))))))))
+   (takeWhileString
+      (lambda
+         ($Prelude.param_732)
+         (lambda
+            ($Prelude.param_733)
+            (select
+               (tuple
+                  ($Prelude.param_732 $Prelude.param_733))
+               (((tuple
+                  (#Prelude.pred_46 #Prelude.str_47))
+                  (apply
+                     (apply
+                        case
+                        ((apply
+                           headString
+                           (#Prelude.str_47))))
+                     ((lambda
+                        ($Prelude.param_734)
+                        (select
+                           (tuple
+                              ($Prelude.param_734))
+                           (((Nothing ())
+                              #Prelude.str_47)
+                              ((Just
+                                 (#Prelude.c_48))
+                                 (apply
+                                    (apply
+                                       (apply
+                                          if
+                                          ((apply
+                                             #Prelude.pred_46
+                                             (#Prelude.c_48))))
+                                       ((lambda
+                                          ($Prelude.param_735)
+                                          (select
+                                             (tuple
+                                                ($Prelude.param_735))
+                                             ((#Prelude.$__651
+                                                (apply
+                                                   (apply
+                                                      consString
+                                                      (#Prelude.c_48))
+                                                   ((apply
+                                                      (apply
+                                                         takeWhileString
+                                                         (#Prelude.pred_46))
+                                                      ((apply
+                                                         tailString
+                                                         (#Prelude.str_47))))))))))))
+                                    ((lambda
+                                       ($Prelude.param_736)
+                                       (select
+                                          (tuple
+                                             ($Prelude.param_736))
+                                          ((#Prelude.$__656
+                                             (apply
+                                                String#
+                                                (""))))))))))))))))))))
+   (<|
+      (lambda
+         ($Prelude.param_737)
+         (lambda
+            ($Prelude.param_738)
+            (select
+               (tuple
+                  ($Prelude.param_737 $Prelude.param_738))
+               (((tuple
+                  (#Prelude.f_74 #Prelude.x_75))
+                  (apply
+                     #Prelude.f_74
+                     (#Prelude.x_75))))))))
+   (. (lambda    ($Prelude.param_739)    (lambda       ($Prelude.param_740)       (select          (tuple             ($Prelude.param_739 $Prelude.param_740))          (((tuple             (#Prelude.f_65 #Prelude.g_66))             (lambda                ($Prelude.param_741)                (select                   (tuple                      ($Prelude.param_741))                   ((#Prelude.x_67                      (apply                         #Prelude.f_65                         ((apply                            #Prelude.g_66                            (#Prelude.x_67)))))))))))))))

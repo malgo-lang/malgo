@@ -1,0 +1,63 @@
+((first
+   ((lambda
+      ($TestPolySynonym.param_40 $TestPolySynonym.return_42)
+      ((do $TestPolySynonym.return_43
+         ((fetch $TestPolySynonym.param_40)
+            (construct tuple 1)
+            (select
+               ((expand
+                  ((fst #TestPolySynonym.x_5)
+                     (snd #TestPolySynonym.__6)))
+                  ((fetch #TestPolySynonym.x_5)
+                     (resume $TestPolySynonym.return_43))))))
+         (resume $TestPolySynonym.return_42)))))
+   (main
+      ((lambda
+         ($TestPolySynonym.param_41 $TestPolySynonym.return_44)
+         ((do $TestPolySynonym.return_45
+            ((fetch $TestPolySynonym.param_41)
+               (construct tuple 1)
+               (select
+                  (#TestPolySynonym.$__39
+                     ((do $TestPolySynonym.return_52
+                        ((object
+                           ((fst
+                              ((do $TestPolySynonym.return_47
+                                 ((fetch Int32#)
+                                    (push 1_i32)
+                                    (suspend
+                                       ((resume $TestPolySynonym.return_47)))
+                                    (apply 2)))
+                                 (resume $TestPolySynonym.return_46)))
+                              (snd
+                                 ((do $TestPolySynonym.return_48
+                                    ((fetch String#)
+                                       (push "hoge")
+                                       (suspend
+                                          ((resume $TestPolySynonym.return_48)))
+                                       (apply 2)))
+                                    (resume $TestPolySynonym.return_46)))))
+                           (then #TestPolySynonym.x_7
+                              ((do $TestPolySynonym.return_51
+                                 ((do $TestPolySynonym.return_50
+                                    ((fetch |>)
+                                       (then $TestPolySynonym.outer_53
+                                          ((do $TestPolySynonym.return_49
+                                             ((fetch first)
+                                                (fetch #TestPolySynonym.x_7)
+                                                (suspend
+                                                   ((resume $TestPolySynonym.return_49)))
+                                                (apply 2)))
+                                             (then $TestPolySynonym.inner_54
+                                                ((fetch $TestPolySynonym.outer_53)
+                                                   (fetch $TestPolySynonym.inner_54)
+                                                   (suspend
+                                                      ((resume $TestPolySynonym.return_50)))
+                                                   (apply 2)))))))
+                                    (fetch printInt32)
+                                    (suspend
+                                       ((resume $TestPolySynonym.return_51)))
+                                    (apply 2)))
+                                 (resume $TestPolySynonym.return_52)))))
+                        (resume $TestPolySynonym.return_45))))))
+            (resume $TestPolySynonym.return_44))))))

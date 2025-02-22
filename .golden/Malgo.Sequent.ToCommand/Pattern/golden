@@ -1,0 +1,39 @@
+((main
+   ((lambda
+      ($Pattern.param_16 $Pattern.return_18)
+      ((do $Pattern.return_19
+         ((fetch $Pattern.param_16)
+            (construct tuple 1)
+            (select
+               (#Pattern.$__9
+                  ((do $Pattern.return_21
+                     ((fetch putStrLn)
+                        (then $Pattern.outer_24
+                           ((do $Pattern.return_20
+                              ((fetch String#)
+                                 (push "OK")
+                                 (suspend
+                                    ((resume $Pattern.return_20)))
+                                 (apply 2)))
+                              (then $Pattern.inner_25
+                                 ((fetch $Pattern.outer_24)
+                                    (fetch $Pattern.inner_25)
+                                    (suspend
+                                       ((resume $Pattern.return_21)))
+                                    (apply 2)))))))
+                     (resume $Pattern.return_19))))))
+         (resume $Pattern.return_18)))))
+   (isNil
+      ((lambda
+         ($Pattern.param_17 $Pattern.return_22)
+         ((do $Pattern.return_23
+            ((fetch $Pattern.param_17)
+               (construct tuple 1)
+               (select
+                  ((Nil ())
+                     ((fetch True)
+                        (resume $Pattern.return_23)))
+                  (#Pattern.__0
+                     ((fetch False)
+                        (resume $Pattern.return_23))))))
+            (resume $Pattern.return_22))))))

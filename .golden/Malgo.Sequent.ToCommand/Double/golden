@@ -1,0 +1,34 @@
+((main
+   ((lambda
+      ($Double.param_9 $Double.return_10)
+      ((do $Double.return_11
+         ((fetch $Double.param_9)
+            (construct tuple 1)
+            (select
+               (#Double.$__8
+                  ((do $Double.return_14
+                     ((fetch putStr)
+                        (then $Double.outer_15
+                           ((do $Double.return_13
+                              ((fetch toStringDouble)
+                                 (then $Double.outer_17
+                                    ((do $Double.return_12
+                                       ((fetch Double#)
+                                          (push 3.14_f64)
+                                          (suspend
+                                             ((resume $Double.return_12)))
+                                          (apply 2)))
+                                       (then $Double.inner_18
+                                          ((fetch $Double.outer_17)
+                                             (fetch $Double.inner_18)
+                                             (suspend
+                                                ((resume $Double.return_13)))
+                                             (apply 2)))))))
+                              (then $Double.inner_16
+                                 ((fetch $Double.outer_15)
+                                    (fetch $Double.inner_16)
+                                    (suspend
+                                       ((resume $Double.return_14)))
+                                    (apply 2)))))))
+                     (resume $Double.return_11))))))
+         (resume $Double.return_10))))))

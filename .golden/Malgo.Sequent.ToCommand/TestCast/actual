@@ -1,0 +1,71 @@
+((main
+   ((lambda
+      ($TestCast.param_27 $TestCast.return_28)
+      ((do $TestCast.return_29
+         ((fetch $TestCast.param_27)
+            (construct tuple 1)
+            (select
+               (#TestCast.$__26
+                  ((do $TestCast.return_37
+                     ((fetch printInt32)
+                        (then $TestCast.outer_38
+                           ((do $TestCast.return_36
+                              ((fetch malgo_unsafe_cast)
+                                 (then $TestCast.outer_40
+                                    ((do $TestCast.return_35
+                                       ((do $TestCast.return_30
+                                          ((fetch malgo_read_vector)
+                                             (push 2_i64)
+                                             (suspend
+                                                ((resume $TestCast.return_30)))
+                                             (apply 2)))
+                                          (then $TestCast.outer_42
+                                             ((do $TestCast.return_34
+                                                ((do $TestCast.return_31
+                                                   ((fetch malgo_new_vector)
+                                                      (push 10_i64)
+                                                      (suspend
+                                                         ((resume $TestCast.return_31)))
+                                                      (apply 2)))
+                                                   (then $TestCast.outer_44
+                                                      ((do $TestCast.return_33
+                                                         ((fetch malgo_unsafe_cast)
+                                                            (then $TestCast.outer_46
+                                                               ((do $TestCast.return_32
+                                                                  ((fetch Int32#)
+                                                                     (push 5_i32)
+                                                                     (suspend
+                                                                        ((resume $TestCast.return_32)))
+                                                                     (apply 2)))
+                                                                  (then $TestCast.inner_47
+                                                                     ((fetch $TestCast.outer_46)
+                                                                        (fetch $TestCast.inner_47)
+                                                                        (suspend
+                                                                           ((resume $TestCast.return_33)))
+                                                                        (apply 2)))))))
+                                                         (then $TestCast.inner_45
+                                                            ((fetch $TestCast.outer_44)
+                                                               (fetch $TestCast.inner_45)
+                                                               (suspend
+                                                                  ((resume $TestCast.return_34)))
+                                                               (apply 2)))))))
+                                                (then $TestCast.inner_43
+                                                   ((fetch $TestCast.outer_42)
+                                                      (fetch $TestCast.inner_43)
+                                                      (suspend
+                                                         ((resume $TestCast.return_35)))
+                                                      (apply 2)))))))
+                                       (then $TestCast.inner_41
+                                          ((fetch $TestCast.outer_40)
+                                             (fetch $TestCast.inner_41)
+                                             (suspend
+                                                ((resume $TestCast.return_36)))
+                                             (apply 2)))))))
+                              (then $TestCast.inner_39
+                                 ((fetch $TestCast.outer_38)
+                                    (fetch $TestCast.inner_39)
+                                    (suspend
+                                       ((resume $TestCast.return_37)))
+                                    (apply 2)))))))
+                     (resume $TestCast.return_29))))))
+         (resume $TestCast.return_28))))))

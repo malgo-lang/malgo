@@ -1,0 +1,73 @@
+((succ
+   (lambda
+      ($TestDot.param_30 $TestDot.return_32)
+      (cut
+         (do $TestDot.return_33
+            (cut
+               (construct
+                  tuple
+                  ($TestDot.param_30)
+                  ())
+               (select
+                  ((Int64#
+                     (#TestDot.x_0))
+                     (cut
+                        (do $TestDot.return_36
+                           (cut
+                              Int64#
+                              (apply
+                                 ((do $TestDot.return_35
+                                    (cut
+                                       (do $TestDot.return_34
+                                          (cut
+                                             addInt64#
+                                             (apply
+                                                (#TestDot.x_0)
+                                                ($TestDot.return_34))))
+                                       (apply
+                                          (1_i64)
+                                          ($TestDot.return_35)))))
+                                 ($TestDot.return_36))))
+                        $TestDot.return_33)))))
+         $TestDot.return_32)))
+   (main
+      (lambda
+         ($TestDot.param_31 $TestDot.return_37)
+         (cut
+            (do $TestDot.return_38
+               (cut
+                  (construct
+                     tuple
+                     ($TestDot.param_31)
+                     ())
+                  (select
+                     (#TestDot.$__29
+                        (cut
+                           (do $TestDot.return_43
+                              (cut
+                                 printInt64
+                                 (apply
+                                    ((do $TestDot.return_42
+                                       (cut
+                                          (do $TestDot.return_40
+                                             (cut
+                                                (do $TestDot.return_39
+                                                   (cut
+                                                      .
+                                                      (apply
+                                                         (succ)
+                                                         ($TestDot.return_39))))
+                                                (apply
+                                                   (succ)
+                                                   ($TestDot.return_40))))
+                                          (apply
+                                             ((do $TestDot.return_41
+                                                (cut
+                                                   Int64#
+                                                   (apply
+                                                      (0_i64)
+                                                      ($TestDot.return_41)))))
+                                             ($TestDot.return_42)))))
+                                    ($TestDot.return_43))))
+                           $TestDot.return_38)))))
+            $TestDot.return_37))))

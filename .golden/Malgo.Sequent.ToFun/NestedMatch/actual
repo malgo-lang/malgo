@@ -1,0 +1,42 @@
+((main
+   (lambda
+      ($NestedMatch.param_30)
+      (select
+         (tuple
+            ($NestedMatch.param_30))
+         ((#NestedMatch.$__29
+            (apply
+               (lambda
+                  ($NestedMatch.param_31)
+                  (select
+                     (tuple
+                        ($NestedMatch.param_31))
+                     (((True ())
+                        (apply
+                           malgo_print_string
+                           ("OK")))
+                        ((False ())
+                           (apply
+                              malgo_exit_failure
+                              ((tuple ())))))))
+               ((apply
+                  (lambda
+                     ($NestedMatch.param_32)
+                     (select
+                        (tuple
+                           ($NestedMatch.param_32))
+                        (((True1 ())
+                           False)
+                           ((False1 ())
+                              True))))
+                  ((apply
+                     (lambda
+                        ($NestedMatch.param_33)
+                        (select
+                           (tuple
+                              ($NestedMatch.param_33))
+                           (((True2 ())
+                              False1)
+                              ((False2 ())
+                                 True1))))
+                     (True2))))))))))))

@@ -1,0 +1,29 @@
+((f
+   (lambda
+      ($DeferLaw.param_22)
+      (select
+         (tuple
+            ($DeferLaw.param_22))
+         ((#DeferLaw.x_1
+            (apply
+               (lambda
+                  ($DeferLaw.param_23)
+                  (select
+                     (tuple
+                        ($DeferLaw.param_23))
+                     ((#DeferLaw.$__8 #DeferLaw.x_1))))
+               ((tuple ()))))))))
+   (main
+      (lambda
+         ($DeferLaw.param_24)
+         (select
+            (tuple
+               ($DeferLaw.param_24))
+            ((#DeferLaw.$__21
+               (apply
+                  putStrLn
+                  ((apply
+                     f
+                     ((apply
+                        String#
+                        ("Hello"))))))))))))

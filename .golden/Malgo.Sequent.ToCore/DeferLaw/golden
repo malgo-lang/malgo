@@ -1,0 +1,64 @@
+((f
+   (lambda
+      ($DeferLaw.param_22 $DeferLaw.return_25)
+      (cut
+         (do $DeferLaw.return_26
+            (cut
+               (construct
+                  tuple
+                  ($DeferLaw.param_22)
+                  ())
+               (select
+                  (#DeferLaw.x_1
+                     (cut
+                        (do $DeferLaw.return_29
+                           (cut
+                              (lambda
+                                 ($DeferLaw.param_23 $DeferLaw.return_27)
+                                 (cut
+                                    (do $DeferLaw.return_28
+                                       (cut
+                                          (construct
+                                             tuple
+                                             ($DeferLaw.param_23)
+                                             ())
+                                          (select
+                                             (#DeferLaw.$__8
+                                                (cut #DeferLaw.x_1 $DeferLaw.return_28)))))
+                                    $DeferLaw.return_27))
+                              (apply
+                                 ((construct tuple () ()))
+                                 ($DeferLaw.return_29))))
+                        $DeferLaw.return_26)))))
+         $DeferLaw.return_25)))
+   (main
+      (lambda
+         ($DeferLaw.param_24 $DeferLaw.return_30)
+         (cut
+            (do $DeferLaw.return_31
+               (cut
+                  (construct
+                     tuple
+                     ($DeferLaw.param_24)
+                     ())
+                  (select
+                     (#DeferLaw.$__21
+                        (cut
+                           (do $DeferLaw.return_34
+                              (cut
+                                 putStrLn
+                                 (apply
+                                    ((do $DeferLaw.return_33
+                                       (cut
+                                          f
+                                          (apply
+                                             ((do $DeferLaw.return_32
+                                                (cut
+                                                   String#
+                                                   (apply
+                                                      ("Hello")
+                                                      ($DeferLaw.return_32)))))
+                                             ($DeferLaw.return_33)))))
+                                    ($DeferLaw.return_34))))
+                           $DeferLaw.return_31)))))
+            $DeferLaw.return_30))))

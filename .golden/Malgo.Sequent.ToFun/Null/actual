@@ -1,0 +1,83 @@
+((|>
+   (lambda
+      ($Null.param_119)
+      (lambda
+         ($Null.param_120)
+         (select
+            (tuple
+               ($Null.param_119 $Null.param_120))
+            (((tuple
+               (#Null.x_11 #Null.f_12))
+               (apply
+                  #Null.f_12
+                  (#Null.x_11))))))))
+   (mHead
+      (lambda
+         ($Null.param_121)
+         (select
+            (tuple
+               ($Null.param_121))
+            (((Nil ())
+               Nothing)
+               ((Cons
+                  (#Null.p_5 #Null.__6))
+                  (apply
+                     Just
+                     (#Null.p_5)))))))
+   (isNothing
+      (lambda
+         ($Null.param_122)
+         (select
+            (tuple
+               ($Null.param_122))
+            (((Nothing ())
+               True)
+               ((Just
+                  (#Null.__3))
+                  False)))))
+   (null
+      (lambda
+         ($Null.param_123)
+         (select
+            (tuple
+               ($Null.param_123))
+            ((#Null.as_8
+               (apply
+                  isNothing
+                  ((apply
+                     mHead
+                     (#Null.as_8)))))))))
+   (main
+      (lambda
+         ($Null.param_124)
+         (select
+            (tuple
+               ($Null.param_124))
+            ((#Null.$__118
+               (apply
+                  (apply
+                     |>
+                     ((apply
+                        null
+                        ((apply
+                           (apply
+                              Cons
+                              (True))
+                           ((apply
+                              (apply
+                                 Cons
+                                 (True))
+                              (Nil))))))))
+                  ((lambda
+                     ($Null.param_125)
+                     (select
+                        (tuple
+                           ($Null.param_125))
+                        (((False ())
+                           (apply
+                              malgo_print_string
+                              ("OK")))
+                           ((True ())
+                              (apply
+                                 malgo_exit_failure
+                                 ((tuple ())))))))))))))))

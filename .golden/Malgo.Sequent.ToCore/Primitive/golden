@@ -1,0 +1,36 @@
+((main
+   (lambda
+      ($Primitive.param_11 $Primitive.return_12)
+      (cut
+         (do $Primitive.return_13
+            (cut
+               (construct
+                  tuple
+                  ($Primitive.param_11)
+                  ())
+               (select
+                  (#Primitive.$__10
+                     (cut
+                        (do $Primitive.return_17
+                           (cut
+                              printString#
+                              (apply
+                                 ((do $Primitive.return_16
+                                    (cut
+                                       toStringInt64#
+                                       (apply
+                                          ((do $Primitive.return_15
+                                             (cut
+                                                (do $Primitive.return_14
+                                                   (cut
+                                                      addInt64#
+                                                      (apply
+                                                         (40_i64)
+                                                         ($Primitive.return_14))))
+                                                (apply
+                                                   (2_i64)
+                                                   ($Primitive.return_15)))))
+                                          ($Primitive.return_16)))))
+                                 ($Primitive.return_17))))
+                        $Primitive.return_13)))))
+         $Primitive.return_12))))

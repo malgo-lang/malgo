@@ -1,0 +1,333 @@
+((<>
+   ((fetch appendString)))
+   (show
+      ((lambda
+         ($Punctuate.param_113 $Punctuate.return_115)
+         ((do $Punctuate.return_116
+            ((fetch $Punctuate.param_113)
+               (construct tuple 1)
+               (select
+                  ((Symbol
+                     (#Punctuate.str_0))
+                     ((do $Punctuate.return_119
+                        ((do $Punctuate.return_118
+                           ((fetch <>)
+                              (then $Punctuate.outer_160
+                                 ((do $Punctuate.return_117
+                                    ((fetch String#)
+                                       (push "Symbol ")
+                                       (suspend
+                                          ((resume $Punctuate.return_117)))
+                                       (apply 2)))
+                                    (then $Punctuate.inner_161
+                                       ((fetch $Punctuate.outer_160)
+                                          (fetch $Punctuate.inner_161)
+                                          (suspend
+                                             ((resume $Punctuate.return_118)))
+                                          (apply 2)))))))
+                           (fetch #Punctuate.str_0)
+                           (suspend
+                              ((resume $Punctuate.return_119)))
+                           (apply 2)))
+                        (resume $Punctuate.return_116)))
+                  ((SInt
+                     (#Punctuate.int_1))
+                     ((do $Punctuate.return_123
+                        ((do $Punctuate.return_121
+                           ((fetch <>)
+                              (then $Punctuate.outer_162
+                                 ((do $Punctuate.return_120
+                                    ((fetch String#)
+                                       (push "SInt ")
+                                       (suspend
+                                          ((resume $Punctuate.return_120)))
+                                       (apply 2)))
+                                    (then $Punctuate.inner_163
+                                       ((fetch $Punctuate.outer_162)
+                                          (fetch $Punctuate.inner_163)
+                                          (suspend
+                                             ((resume $Punctuate.return_121)))
+                                          (apply 2)))))))
+                           (then $Punctuate.outer_164
+                              ((do $Punctuate.return_122
+                                 ((fetch toStringInt32)
+                                    (fetch #Punctuate.int_1)
+                                    (suspend
+                                       ((resume $Punctuate.return_122)))
+                                    (apply 2)))
+                                 (then $Punctuate.inner_165
+                                    ((fetch $Punctuate.outer_164)
+                                       (fetch $Punctuate.inner_165)
+                                       (suspend
+                                          ((resume $Punctuate.return_123)))
+                                       (apply 2)))))))
+                        (resume $Punctuate.return_116)))
+                  ((SList
+                     (#Punctuate.ss_2))
+                     ((do $Punctuate.return_135
+                        ((do $Punctuate.return_125
+                           ((fetch <>)
+                              (then $Punctuate.outer_166
+                                 ((do $Punctuate.return_124
+                                    ((fetch String#)
+                                       (push "SList [")
+                                       (suspend
+                                          ((resume $Punctuate.return_124)))
+                                       (apply 2)))
+                                    (then $Punctuate.inner_167
+                                       ((fetch $Punctuate.outer_166)
+                                          (fetch $Punctuate.inner_167)
+                                          (suspend
+                                             ((resume $Punctuate.return_125)))
+                                          (apply 2)))))))
+                           (then $Punctuate.outer_168
+                              ((do $Punctuate.return_134
+                                 ((do $Punctuate.return_132
+                                    ((fetch <>)
+                                       (then $Punctuate.outer_170
+                                          ((do $Punctuate.return_131
+                                             ((fetch concatString)
+                                                (then $Punctuate.outer_172
+                                                   ((do $Punctuate.return_130
+                                                      ((do $Punctuate.return_127
+                                                         ((fetch punctuate)
+                                                            (then $Punctuate.outer_174
+                                                               ((do $Punctuate.return_126
+                                                                  ((fetch String#)
+                                                                     (push ", ")
+                                                                     (suspend
+                                                                        ((resume $Punctuate.return_126)))
+                                                                     (apply 2)))
+                                                                  (then $Punctuate.inner_175
+                                                                     ((fetch $Punctuate.outer_174)
+                                                                        (fetch $Punctuate.inner_175)
+                                                                        (suspend
+                                                                           ((resume $Punctuate.return_127)))
+                                                                        (apply 2)))))))
+                                                         (then $Punctuate.outer_176
+                                                            ((do $Punctuate.return_129
+                                                               ((do $Punctuate.return_128
+                                                                  ((fetch mapList)
+                                                                     (fetch show)
+                                                                     (suspend
+                                                                        ((resume $Punctuate.return_128)))
+                                                                     (apply 2)))
+                                                                  (fetch #Punctuate.ss_2)
+                                                                  (suspend
+                                                                     ((resume $Punctuate.return_129)))
+                                                                  (apply 2)))
+                                                               (then $Punctuate.inner_177
+                                                                  ((fetch $Punctuate.outer_176)
+                                                                     (fetch $Punctuate.inner_177)
+                                                                     (suspend
+                                                                        ((resume $Punctuate.return_130)))
+                                                                     (apply 2)))))))
+                                                      (then $Punctuate.inner_173
+                                                         ((fetch $Punctuate.outer_172)
+                                                            (fetch $Punctuate.inner_173)
+                                                            (suspend
+                                                               ((resume $Punctuate.return_131)))
+                                                            (apply 2)))))))
+                                             (then $Punctuate.inner_171
+                                                ((fetch $Punctuate.outer_170)
+                                                   (fetch $Punctuate.inner_171)
+                                                   (suspend
+                                                      ((resume $Punctuate.return_132)))
+                                                   (apply 2)))))))
+                                    (then $Punctuate.outer_178
+                                       ((do $Punctuate.return_133
+                                          ((fetch String#)
+                                             (push "]")
+                                             (suspend
+                                                ((resume $Punctuate.return_133)))
+                                             (apply 2)))
+                                          (then $Punctuate.inner_179
+                                             ((fetch $Punctuate.outer_178)
+                                                (fetch $Punctuate.inner_179)
+                                                (suspend
+                                                   ((resume $Punctuate.return_134)))
+                                                (apply 2)))))))
+                                 (then $Punctuate.inner_169
+                                    ((fetch $Punctuate.outer_168)
+                                       (fetch $Punctuate.inner_169)
+                                       (suspend
+                                          ((resume $Punctuate.return_135)))
+                                       (apply 2)))))))
+                        (resume $Punctuate.return_116))))))
+            (resume $Punctuate.return_115)))))
+   (main
+      ((lambda
+         ($Punctuate.param_114 $Punctuate.return_136)
+         ((do $Punctuate.return_137
+            ((fetch $Punctuate.param_114)
+               (construct tuple 1)
+               (select
+                  (#Punctuate.$__112
+                     ((do $Punctuate.return_159
+                        ((do $Punctuate.return_156
+                           ((fetch SList)
+                              (then $Punctuate.outer_180
+                                 ((do $Punctuate.return_155
+                                    ((do $Punctuate.return_140
+                                       ((fetch Cons)
+                                          (then $Punctuate.outer_182
+                                             ((do $Punctuate.return_139
+                                                ((fetch Symbol)
+                                                   (then $Punctuate.outer_184
+                                                      ((do $Punctuate.return_138
+                                                         ((fetch String#)
+                                                            (push "x")
+                                                            (suspend
+                                                               ((resume $Punctuate.return_138)))
+                                                            (apply 2)))
+                                                         (then $Punctuate.inner_185
+                                                            ((fetch $Punctuate.outer_184)
+                                                               (fetch $Punctuate.inner_185)
+                                                               (suspend
+                                                                  ((resume $Punctuate.return_139)))
+                                                               (apply 2)))))))
+                                                (then $Punctuate.inner_183
+                                                   ((fetch $Punctuate.outer_182)
+                                                      (fetch $Punctuate.inner_183)
+                                                      (suspend
+                                                         ((resume $Punctuate.return_140)))
+                                                      (apply 2)))))))
+                                       (then $Punctuate.outer_186
+                                          ((do $Punctuate.return_154
+                                             ((do $Punctuate.return_153
+                                                ((fetch Cons)
+                                                   (then $Punctuate.outer_188
+                                                      ((do $Punctuate.return_152
+                                                         ((fetch SList)
+                                                            (then $Punctuate.outer_190
+                                                               ((do $Punctuate.return_151
+                                                                  ((do $Punctuate.return_143
+                                                                     ((fetch Cons)
+                                                                        (then $Punctuate.outer_192
+                                                                           ((do $Punctuate.return_142
+                                                                              ((fetch Symbol)
+                                                                                 (then $Punctuate.outer_194
+                                                                                    ((do $Punctuate.return_141
+                                                                                       ((fetch String#)
+                                                                                          (push "y")
+                                                                                          (suspend
+                                                                                             ((resume $Punctuate.return_141)))
+                                                                                          (apply 2)))
+                                                                                       (then $Punctuate.inner_195
+                                                                                          ((fetch $Punctuate.outer_194)
+                                                                                             (fetch $Punctuate.inner_195)
+                                                                                             (suspend
+                                                                                                ((resume $Punctuate.return_142)))
+                                                                                             (apply 2)))))))
+                                                                              (then $Punctuate.inner_193
+                                                                                 ((fetch $Punctuate.outer_192)
+                                                                                    (fetch $Punctuate.inner_193)
+                                                                                    (suspend
+                                                                                       ((resume $Punctuate.return_143)))
+                                                                                    (apply 2)))))))
+                                                                     (then $Punctuate.outer_196
+                                                                        ((do $Punctuate.return_150
+                                                                           ((do $Punctuate.return_149
+                                                                              ((fetch Cons)
+                                                                                 (then $Punctuate.outer_198
+                                                                                    ((do $Punctuate.return_148
+                                                                                       ((fetch SList)
+                                                                                          (then $Punctuate.outer_200
+                                                                                             ((do $Punctuate.return_147
+                                                                                                ((do $Punctuate.return_146
+                                                                                                   ((fetch Cons)
+                                                                                                      (then $Punctuate.outer_202
+                                                                                                         ((do $Punctuate.return_145
+                                                                                                            ((fetch Symbol)
+                                                                                                               (then $Punctuate.outer_204
+                                                                                                                  ((do $Punctuate.return_144
+                                                                                                                     ((fetch String#)
+                                                                                                                        (push "z")
+                                                                                                                        (suspend
+                                                                                                                           ((resume $Punctuate.return_144)))
+                                                                                                                        (apply 2)))
+                                                                                                                     (then $Punctuate.inner_205
+                                                                                                                        ((fetch $Punctuate.outer_204)
+                                                                                                                           (fetch $Punctuate.inner_205)
+                                                                                                                           (suspend
+                                                                                                                              ((resume $Punctuate.return_145)))
+                                                                                                                           (apply 2)))))))
+                                                                                                            (then $Punctuate.inner_203
+                                                                                                               ((fetch $Punctuate.outer_202)
+                                                                                                                  (fetch $Punctuate.inner_203)
+                                                                                                                  (suspend
+                                                                                                                     ((resume $Punctuate.return_146)))
+                                                                                                                  (apply 2)))))))
+                                                                                                   (fetch Nil)
+                                                                                                   (suspend
+                                                                                                      ((resume $Punctuate.return_147)))
+                                                                                                   (apply 2)))
+                                                                                                (then $Punctuate.inner_201
+                                                                                                   ((fetch $Punctuate.outer_200)
+                                                                                                      (fetch $Punctuate.inner_201)
+                                                                                                      (suspend
+                                                                                                         ((resume $Punctuate.return_148)))
+                                                                                                      (apply 2)))))))
+                                                                                       (then $Punctuate.inner_199
+                                                                                          ((fetch $Punctuate.outer_198)
+                                                                                             (fetch $Punctuate.inner_199)
+                                                                                             (suspend
+                                                                                                ((resume $Punctuate.return_149)))
+                                                                                             (apply 2)))))))
+                                                                              (fetch Nil)
+                                                                              (suspend
+                                                                                 ((resume $Punctuate.return_150)))
+                                                                              (apply 2)))
+                                                                           (then $Punctuate.inner_197
+                                                                              ((fetch $Punctuate.outer_196)
+                                                                                 (fetch $Punctuate.inner_197)
+                                                                                 (suspend
+                                                                                    ((resume $Punctuate.return_151)))
+                                                                                 (apply 2)))))))
+                                                                  (then $Punctuate.inner_191
+                                                                     ((fetch $Punctuate.outer_190)
+                                                                        (fetch $Punctuate.inner_191)
+                                                                        (suspend
+                                                                           ((resume $Punctuate.return_152)))
+                                                                        (apply 2)))))))
+                                                         (then $Punctuate.inner_189
+                                                            ((fetch $Punctuate.outer_188)
+                                                               (fetch $Punctuate.inner_189)
+                                                               (suspend
+                                                                  ((resume $Punctuate.return_153)))
+                                                               (apply 2)))))))
+                                                (fetch Nil)
+                                                (suspend
+                                                   ((resume $Punctuate.return_154)))
+                                                (apply 2)))
+                                             (then $Punctuate.inner_187
+                                                ((fetch $Punctuate.outer_186)
+                                                   (fetch $Punctuate.inner_187)
+                                                   (suspend
+                                                      ((resume $Punctuate.return_155)))
+                                                   (apply 2)))))))
+                                    (then $Punctuate.inner_181
+                                       ((fetch $Punctuate.outer_180)
+                                          (fetch $Punctuate.inner_181)
+                                          (suspend
+                                             ((resume $Punctuate.return_156)))
+                                          (apply 2)))))))
+                           (then #Punctuate.x_3
+                              ((do $Punctuate.return_158
+                                 ((fetch putStrLn)
+                                    (then $Punctuate.outer_206
+                                       ((do $Punctuate.return_157
+                                          ((fetch show)
+                                             (fetch #Punctuate.x_3)
+                                             (suspend
+                                                ((resume $Punctuate.return_157)))
+                                             (apply 2)))
+                                          (then $Punctuate.inner_207
+                                             ((fetch $Punctuate.outer_206)
+                                                (fetch $Punctuate.inner_207)
+                                                (suspend
+                                                   ((resume $Punctuate.return_158)))
+                                                (apply 2)))))))
+                                 (resume $Punctuate.return_159)))))
+                        (resume $Punctuate.return_137))))))
+            (resume $Punctuate.return_136))))))

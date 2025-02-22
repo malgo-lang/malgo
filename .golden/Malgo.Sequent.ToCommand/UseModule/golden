@@ -1,0 +1,105 @@
+((succ
+   ((lambda
+      ($UseModule.param_36 $UseModule.return_39)
+      ((do $UseModule.return_40
+         ((fetch $UseModule.param_36)
+            (construct tuple 1)
+            (select
+               (#UseModule.x_0
+                  ((do $UseModule.return_43
+                     ((do $UseModule.return_41
+                        ((fetch addInt32)
+                           (fetch #UseModule.x_0)
+                           (suspend
+                              ((resume $UseModule.return_41)))
+                           (apply 2)))
+                        (then $UseModule.outer_56
+                           ((do $UseModule.return_42
+                              ((fetch Int32#)
+                                 (push 1_i32)
+                                 (suspend
+                                    ((resume $UseModule.return_42)))
+                                 (apply 2)))
+                              (then $UseModule.inner_57
+                                 ((fetch $UseModule.outer_56)
+                                    (fetch $UseModule.inner_57)
+                                    (suspend
+                                       ((resume $UseModule.return_43)))
+                                    (apply 2)))))))
+                     (resume $UseModule.return_40))))))
+         (resume $UseModule.return_39)))))
+   (main
+      ((lambda
+         ($UseModule.param_37 $UseModule.return_44)
+         ((do $UseModule.return_45
+            ((fetch $UseModule.param_37)
+               (construct tuple 1)
+               (select
+                  (#UseModule.$__35
+                     ((do $UseModule.return_55
+                        ((lambda
+                           ($UseModule.tmp_38 $UseModule.return_46)
+                           ((do $UseModule.return_52
+                              ((do $UseModule.return_47
+                                 ((fetch <|)
+                                    (fetch printInt32)
+                                    (suspend
+                                       ((resume $UseModule.return_47)))
+                                    (apply 2)))
+                                 (then $UseModule.outer_58
+                                    ((do $UseModule.return_51
+                                       ((do $UseModule.return_49
+                                          ((do $UseModule.return_48
+                                             ((fetch .)
+                                                (fetch succ)
+                                                (suspend
+                                                   ((resume $UseModule.return_48)))
+                                                (apply 2)))
+                                             (fetch succ)
+                                             (suspend
+                                                ((resume $UseModule.return_49)))
+                                             (apply 2)))
+                                          (then $UseModule.outer_60
+                                             ((do $UseModule.return_50
+                                                ((fetch Int32#)
+                                                   (push 1_i32)
+                                                   (suspend
+                                                      ((resume $UseModule.return_50)))
+                                                   (apply 2)))
+                                                (then $UseModule.inner_61
+                                                   ((fetch $UseModule.outer_60)
+                                                      (fetch $UseModule.inner_61)
+                                                      (suspend
+                                                         ((resume $UseModule.return_51)))
+                                                      (apply 2)))))))
+                                       (then $UseModule.inner_59
+                                          ((fetch $UseModule.outer_58)
+                                             (fetch $UseModule.inner_59)
+                                             (suspend
+                                                ((resume $UseModule.return_52)))
+                                             (apply 2)))))))
+                              (resume $UseModule.return_46)))
+                           (then $UseModule.outer_62
+                              ((do $UseModule.return_54
+                                 ((fetch putStrLn)
+                                    (then $UseModule.outer_64
+                                       ((do $UseModule.return_53
+                                          ((fetch String#)
+                                             (push "Hello, world!")
+                                             (suspend
+                                                ((resume $UseModule.return_53)))
+                                             (apply 2)))
+                                          (then $UseModule.inner_65
+                                             ((fetch $UseModule.outer_64)
+                                                (fetch $UseModule.inner_65)
+                                                (suspend
+                                                   ((resume $UseModule.return_54)))
+                                                (apply 2)))))))
+                                 (then $UseModule.inner_63
+                                    ((fetch $UseModule.outer_62)
+                                       (fetch $UseModule.inner_63)
+                                       (suspend
+                                          ((resume $UseModule.return_55)))
+                                       (apply 2)))))))
+                        (resume $UseModule.return_45))))))
+            (resume $UseModule.return_44))))))

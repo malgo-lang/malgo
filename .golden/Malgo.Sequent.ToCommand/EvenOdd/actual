@@ -1,0 +1,160 @@
+((even
+   ((lambda
+      ($EvenOdd.param_51 $EvenOdd.return_55)
+      ((do $EvenOdd.return_56
+         ((fetch $EvenOdd.param_51)
+            (construct tuple 1)
+            (select
+               ((Int32#
+                  (0_i32))
+                  ((fetch True)
+                     (resume $EvenOdd.return_56)))
+               (#EvenOdd.n_0
+                  ((do $EvenOdd.return_60
+                     ((fetch odd)
+                        (then $EvenOdd.outer_78
+                           ((do $EvenOdd.return_59
+                              ((do $EvenOdd.return_57
+                                 ((fetch subInt32)
+                                    (fetch #EvenOdd.n_0)
+                                    (suspend
+                                       ((resume $EvenOdd.return_57)))
+                                    (apply 2)))
+                                 (then $EvenOdd.outer_80
+                                    ((do $EvenOdd.return_58
+                                       ((fetch Int32#)
+                                          (push 1_i32)
+                                          (suspend
+                                             ((resume $EvenOdd.return_58)))
+                                          (apply 2)))
+                                       (then $EvenOdd.inner_81
+                                          ((fetch $EvenOdd.outer_80)
+                                             (fetch $EvenOdd.inner_81)
+                                             (suspend
+                                                ((resume $EvenOdd.return_59)))
+                                             (apply 2)))))))
+                              (then $EvenOdd.inner_79
+                                 ((fetch $EvenOdd.outer_78)
+                                    (fetch $EvenOdd.inner_79)
+                                    (suspend
+                                       ((resume $EvenOdd.return_60)))
+                                    (apply 2)))))))
+                     (resume $EvenOdd.return_56))))))
+         (resume $EvenOdd.return_55)))))
+   (odd
+      ((lambda
+         ($EvenOdd.param_52 $EvenOdd.return_61)
+         ((do $EvenOdd.return_62
+            ((fetch $EvenOdd.param_52)
+               (construct tuple 1)
+               (select
+                  ((Int32#
+                     (0_i32))
+                     ((fetch False)
+                        (resume $EvenOdd.return_62)))
+                  (#EvenOdd.n_1
+                     ((do $EvenOdd.return_66
+                        ((fetch even)
+                           (then $EvenOdd.outer_82
+                              ((do $EvenOdd.return_65
+                                 ((do $EvenOdd.return_63
+                                    ((fetch subInt32)
+                                       (fetch #EvenOdd.n_1)
+                                       (suspend
+                                          ((resume $EvenOdd.return_63)))
+                                       (apply 2)))
+                                    (then $EvenOdd.outer_84
+                                       ((do $EvenOdd.return_64
+                                          ((fetch Int32#)
+                                             (push 1_i32)
+                                             (suspend
+                                                ((resume $EvenOdd.return_64)))
+                                             (apply 2)))
+                                          (then $EvenOdd.inner_85
+                                             ((fetch $EvenOdd.outer_84)
+                                                (fetch $EvenOdd.inner_85)
+                                                (suspend
+                                                   ((resume $EvenOdd.return_65)))
+                                                (apply 2)))))))
+                                 (then $EvenOdd.inner_83
+                                    ((fetch $EvenOdd.outer_82)
+                                       (fetch $EvenOdd.inner_83)
+                                       (suspend
+                                          ((resume $EvenOdd.return_66)))
+                                       (apply 2)))))))
+                        (resume $EvenOdd.return_62))))))
+            (resume $EvenOdd.return_61)))))
+   (main
+      ((lambda
+         ($EvenOdd.param_53 $EvenOdd.return_67)
+         ((do $EvenOdd.return_68
+            ((fetch $EvenOdd.param_53)
+               (construct tuple 1)
+               (select
+                  (#EvenOdd.$__50
+                     ((do $EvenOdd.return_77
+                        ((lambda
+                           ($EvenOdd.param_54 $EvenOdd.return_69)
+                           ((do $EvenOdd.return_70
+                              ((fetch $EvenOdd.param_54)
+                                 (construct tuple 1)
+                                 (select
+                                    ((False ())
+                                       ((do $EvenOdd.return_72
+                                          ((fetch putStrLn)
+                                             (then $EvenOdd.outer_86
+                                                ((do $EvenOdd.return_71
+                                                   ((fetch String#)
+                                                      (push "False")
+                                                      (suspend
+                                                         ((resume $EvenOdd.return_71)))
+                                                      (apply 2)))
+                                                   (then $EvenOdd.inner_87
+                                                      ((fetch $EvenOdd.outer_86)
+                                                         (fetch $EvenOdd.inner_87)
+                                                         (suspend
+                                                            ((resume $EvenOdd.return_72)))
+                                                         (apply 2)))))))
+                                          (resume $EvenOdd.return_70)))
+                                    ((True ())
+                                       ((do $EvenOdd.return_74
+                                          ((fetch putStrLn)
+                                             (then $EvenOdd.outer_88
+                                                ((do $EvenOdd.return_73
+                                                   ((fetch String#)
+                                                      (push "True")
+                                                      (suspend
+                                                         ((resume $EvenOdd.return_73)))
+                                                      (apply 2)))
+                                                   (then $EvenOdd.inner_89
+                                                      ((fetch $EvenOdd.outer_88)
+                                                         (fetch $EvenOdd.inner_89)
+                                                         (suspend
+                                                            ((resume $EvenOdd.return_74)))
+                                                         (apply 2)))))))
+                                          (resume $EvenOdd.return_70))))))
+                              (resume $EvenOdd.return_69)))
+                           (then $EvenOdd.outer_90
+                              ((do $EvenOdd.return_76
+                                 ((fetch even)
+                                    (then $EvenOdd.outer_92
+                                       ((do $EvenOdd.return_75
+                                          ((fetch Int32#)
+                                             (push 10_i32)
+                                             (suspend
+                                                ((resume $EvenOdd.return_75)))
+                                             (apply 2)))
+                                          (then $EvenOdd.inner_93
+                                             ((fetch $EvenOdd.outer_92)
+                                                (fetch $EvenOdd.inner_93)
+                                                (suspend
+                                                   ((resume $EvenOdd.return_76)))
+                                                (apply 2)))))))
+                                 (then $EvenOdd.inner_91
+                                    ((fetch $EvenOdd.outer_90)
+                                       (fetch $EvenOdd.inner_91)
+                                       (suspend
+                                          ((resume $EvenOdd.return_77)))
+                                       (apply 2)))))))
+                        (resume $EvenOdd.return_68))))))
+            (resume $EvenOdd.return_67))))))

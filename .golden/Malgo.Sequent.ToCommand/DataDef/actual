@@ -1,0 +1,49 @@
+((main
+   ((lambda
+      ($DataDef.param_18 $DataDef.return_20)
+      ((do $DataDef.return_21
+         ((fetch $DataDef.param_18)
+            (construct tuple 1)
+            (select
+               (#DataDef.$__17
+                  ((do $DataDef.return_27
+                     ((lambda
+                        ($DataDef.param_19 $DataDef.return_22)
+                        ((do $DataDef.return_23
+                           ((fetch $DataDef.param_19)
+                              (construct tuple 1)
+                              (select
+                                 ((Int#
+                                    (#DataDef.x_1))
+                                    ((do $DataDef.return_25
+                                       ((fetch malgo_print_string)
+                                          (then $DataDef.outer_28
+                                             ((do $DataDef.return_24
+                                                ((fetch malgo_int64_t_to_string)
+                                                   (fetch #DataDef.x_1)
+                                                   (suspend
+                                                      ((resume $DataDef.return_24)))
+                                                   (apply 2)))
+                                                (then $DataDef.inner_29
+                                                   ((fetch $DataDef.outer_28)
+                                                      (fetch $DataDef.inner_29)
+                                                      (suspend
+                                                         ((resume $DataDef.return_25)))
+                                                      (apply 2)))))))
+                                       (resume $DataDef.return_23))))))
+                           (resume $DataDef.return_22)))
+                        (then $DataDef.outer_30
+                           ((do $DataDef.return_26
+                              ((fetch Int#)
+                                 (push 1_i64)
+                                 (suspend
+                                    ((resume $DataDef.return_26)))
+                                 (apply 2)))
+                              (then $DataDef.inner_31
+                                 ((fetch $DataDef.outer_30)
+                                    (fetch $DataDef.inner_31)
+                                    (suspend
+                                       ((resume $DataDef.return_27)))
+                                    (apply 2)))))))
+                     (resume $DataDef.return_21))))))
+         (resume $DataDef.return_20))))))

@@ -1,0 +1,50 @@
+((idOverS
+   (lambda
+      ($TypeSynonym.param_30)
+      (select
+         (tuple
+            ($TypeSynonym.param_30))
+         ((#TypeSynonym.x_1 #TypeSynonym.x_1)))))
+   (hello
+      (tuple
+         ((apply
+            String#
+            ("hello"))
+            (apply
+               String#
+               ("world")))))
+   (main
+      (lambda
+         ($TypeSynonym.param_31)
+         (select
+            (tuple
+               ($TypeSynonym.param_31))
+            ((#TypeSynonym.$__29
+               (apply
+                  (apply
+                     |>
+                     (hello))
+                  ((lambda
+                     ($TypeSynonym.param_32)
+                     (select
+                        (tuple
+                           ($TypeSynonym.param_32))
+                        (((tuple
+                           (#TypeSynonym.h_2 #TypeSynonym.w_3))
+                           (apply
+                              (lambda
+                                 ($TypeSynonym.tmp_33)
+                                 (apply
+                                    (lambda
+                                       ($TypeSynonym.tmp_34)
+                                       (apply
+                                          putStrLn
+                                          (#TypeSynonym.w_3)))
+                                    ((apply
+                                       putStr
+                                       ((apply
+                                          String#
+                                          (" ")))))))
+                              ((apply
+                                 putStr
+                                 (#TypeSynonym.h_2))))))))))))))))

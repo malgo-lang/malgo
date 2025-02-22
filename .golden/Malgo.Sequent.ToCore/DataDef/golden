@@ -1,0 +1,51 @@
+((main
+   (lambda
+      ($DataDef.param_18 $DataDef.return_20)
+      (cut
+         (do $DataDef.return_21
+            (cut
+               (construct
+                  tuple
+                  ($DataDef.param_18)
+                  ())
+               (select
+                  (#DataDef.$__17
+                     (cut
+                        (do $DataDef.return_27
+                           (cut
+                              (lambda
+                                 ($DataDef.param_19 $DataDef.return_22)
+                                 (cut
+                                    (do $DataDef.return_23
+                                       (cut
+                                          (construct
+                                             tuple
+                                             ($DataDef.param_19)
+                                             ())
+                                          (select
+                                             ((Int#
+                                                (#DataDef.x_1))
+                                                (cut
+                                                   (do $DataDef.return_25
+                                                      (cut
+                                                         malgo_print_string
+                                                         (apply
+                                                            ((do $DataDef.return_24
+                                                               (cut
+                                                                  malgo_int64_t_to_string
+                                                                  (apply
+                                                                     (#DataDef.x_1)
+                                                                     ($DataDef.return_24)))))
+                                                            ($DataDef.return_25))))
+                                                   $DataDef.return_23)))))
+                                    $DataDef.return_22))
+                              (apply
+                                 ((do $DataDef.return_26
+                                    (cut
+                                       Int#
+                                       (apply
+                                          (1_i64)
+                                          ($DataDef.return_26)))))
+                                 ($DataDef.return_27))))
+                        $DataDef.return_21)))))
+         $DataDef.return_20))))

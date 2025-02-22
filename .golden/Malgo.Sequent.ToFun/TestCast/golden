@@ -1,0 +1,24 @@
+((main
+   (lambda
+      ($TestCast.param_27)
+      (select
+         (tuple
+            ($TestCast.param_27))
+         ((#TestCast.$__26
+            (apply
+               printInt32
+               ((apply
+                  malgo_unsafe_cast
+                  ((apply
+                     (apply
+                        malgo_read_vector
+                        (2_i64))
+                     ((apply
+                        (apply
+                           malgo_new_vector
+                           (10_i64))
+                        ((apply
+                           malgo_unsafe_cast
+                           ((apply
+                              Int32#
+                              (5_i32))))))))))))))))))

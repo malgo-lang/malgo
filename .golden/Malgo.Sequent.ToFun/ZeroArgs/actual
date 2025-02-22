@@ -1,0 +1,49 @@
+((one
+   (apply
+      (lambda
+         ($ZeroArgs.param_28)
+         (select
+            (tuple
+               ($ZeroArgs.param_28))
+            ((#ZeroArgs.$__6
+               (apply
+                  Int32#
+                  (1_i32))))))
+      ((tuple ()))))
+   (id
+      (lambda
+         ($ZeroArgs.param_29)
+         (select
+            (tuple
+               ($ZeroArgs.param_29))
+            ((#ZeroArgs.x_1
+               (apply
+                  (lambda
+                     ($ZeroArgs.param_30)
+                     (select
+                        (tuple
+                           ($ZeroArgs.param_30))
+                        ((#ZeroArgs.$__11 #ZeroArgs.x_1))))
+                  ((tuple ()))))))))
+   (main
+      (apply
+         (lambda
+            ($ZeroArgs.param_31)
+            (select
+               (tuple
+                  ($ZeroArgs.param_31))
+               ((#ZeroArgs.$__25
+                  (lambda
+                     ($ZeroArgs.param_32)
+                     (select
+                        (tuple
+                           ($ZeroArgs.param_32))
+                        ((#ZeroArgs.$__24
+                           (apply
+                              printString
+                              ((apply
+                                 toStringInt32
+                                 ((apply
+                                    id
+                                    (one))))))))))))))
+         ((tuple ())))))

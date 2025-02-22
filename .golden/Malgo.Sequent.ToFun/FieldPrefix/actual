@@ -1,0 +1,84 @@
+((zero3D
+   (object
+      ((x
+         (apply
+            Float#
+            (0.0_f32)))
+         (y
+            (apply
+               Float#
+               (0.0_f32)))
+         (z
+            (apply
+               Float#
+               (0.0_f32))))))
+   (zero2D
+      (object
+         ((x
+            (apply
+               Int32#
+               (0_i32)))
+            (y
+               (apply
+                  Int32#
+                  (0_i32))))))
+   (y2D
+      (lambda
+         ($FieldPrefix.param_47)
+         (select
+            (tuple
+               ($FieldPrefix.param_47))
+            (((expand
+               ((x #FieldPrefix.__4)
+                  (y #FieldPrefix.y_5)))
+               #FieldPrefix.y_5)))))
+   (x2D
+      (lambda
+         ($FieldPrefix.param_48)
+         (select
+            (tuple
+               ($FieldPrefix.param_48))
+            (((expand
+               ((x #FieldPrefix.x_2)
+                  (y #FieldPrefix.__3)))
+               #FieldPrefix.x_2)))))
+   (print2D
+      (lambda
+         ($FieldPrefix.param_49)
+         (select
+            (tuple
+               ($FieldPrefix.param_49))
+            (((expand
+               ((x #FieldPrefix.x_0)
+                  (y #FieldPrefix.y_1)))
+               (apply
+                  (lambda
+                     ($FieldPrefix.tmp_50)
+                     (apply
+                        (lambda
+                           ($FieldPrefix.tmp_51)
+                           (apply
+                              printString
+                              ((apply
+                                 toStringInt32
+                                 (#FieldPrefix.y_1)))))
+                        ((apply
+                           printString
+                           ((apply
+                              String#
+                              (", ")))))))
+                  ((apply
+                     printString
+                     ((apply
+                        toStringInt32
+                        (#FieldPrefix.x_0)))))))))))
+   (main
+      (lambda
+         ($FieldPrefix.param_52)
+         (select
+            (tuple
+               ($FieldPrefix.param_52))
+            ((#FieldPrefix.$__46
+               (apply
+                  print2D
+                  (zero2D))))))))

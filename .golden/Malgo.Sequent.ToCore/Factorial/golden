@@ -1,0 +1,282 @@
+((==
+   (lambda
+      ($Factorial.param_98 $Factorial.return_110)
+      (cut
+         (lambda
+            ($Factorial.param_99 $Factorial.return_111)
+            (cut
+               (do $Factorial.return_112
+                  (cut
+                     (construct
+                        tuple
+                        ($Factorial.param_98 $Factorial.param_99)
+                        ())
+                     (select
+                        ((tuple
+                           (#Factorial.x_0 #Factorial.y_1))
+                           (cut
+                              (do $Factorial.return_114
+                                 (cut
+                                    (do $Factorial.return_113
+                                       (cut
+                                          eqInt64
+                                          (apply
+                                             (#Factorial.x_0)
+                                             ($Factorial.return_113))))
+                                    (apply
+                                       (#Factorial.y_1)
+                                       ($Factorial.return_114))))
+                              $Factorial.return_112)))))
+               $Factorial.return_111))
+         $Factorial.return_110)))
+   (-
+      (lambda
+         ($Factorial.param_100 $Factorial.return_115)
+         (cut
+            (lambda
+               ($Factorial.param_101 $Factorial.return_116)
+               (cut
+                  (do $Factorial.return_117
+                     (cut
+                        (construct
+                           tuple
+                           ($Factorial.param_100 $Factorial.param_101)
+                           ())
+                        (select
+                           ((tuple
+                              (#Factorial.x_2 #Factorial.y_3))
+                              (cut
+                                 (do $Factorial.return_119
+                                    (cut
+                                       (do $Factorial.return_118
+                                          (cut
+                                             subInt64
+                                             (apply
+                                                (#Factorial.x_2)
+                                                ($Factorial.return_118))))
+                                       (apply
+                                          (#Factorial.y_3)
+                                          ($Factorial.return_119))))
+                                 $Factorial.return_117)))))
+                  $Factorial.return_116))
+            $Factorial.return_115)))
+   (*
+      (lambda
+         ($Factorial.param_102 $Factorial.return_120)
+         (cut
+            (lambda
+               ($Factorial.param_103 $Factorial.return_121)
+               (cut
+                  (do $Factorial.return_122
+                     (cut
+                        (construct
+                           tuple
+                           ($Factorial.param_102 $Factorial.param_103)
+                           ())
+                        (select
+                           ((tuple
+                              (#Factorial.x_4 #Factorial.y_5))
+                              (cut
+                                 (do $Factorial.return_124
+                                    (cut
+                                       (do $Factorial.return_123
+                                          (cut
+                                             mulInt64
+                                             (apply
+                                                (#Factorial.x_4)
+                                                ($Factorial.return_123))))
+                                       (apply
+                                          (#Factorial.y_5)
+                                          ($Factorial.return_124))))
+                                 $Factorial.return_122)))))
+                  $Factorial.return_121))
+            $Factorial.return_120)))
+   (factAcc
+      (lambda
+         ($Factorial.param_104 $Factorial.return_125)
+         (cut
+            (lambda
+               ($Factorial.param_105 $Factorial.return_126)
+               (cut
+                  (do $Factorial.return_127
+                     (cut
+                        (construct
+                           tuple
+                           ($Factorial.param_104 $Factorial.param_105)
+                           ())
+                        (select
+                           ((tuple
+                              (#Factorial.n_7 #Factorial.acc_8))
+                              (cut
+                                 (do $Factorial.return_144
+                                    (cut
+                                       (do $Factorial.return_134
+                                          (cut
+                                             (do $Factorial.return_131
+                                                (cut
+                                                   if
+                                                   (apply
+                                                      ((do $Factorial.return_130
+                                                         (cut
+                                                            (do $Factorial.return_128
+                                                               (cut
+                                                                  ==
+                                                                  (apply
+                                                                     (#Factorial.n_7)
+                                                                     ($Factorial.return_128))))
+                                                            (apply
+                                                               ((do $Factorial.return_129
+                                                                  (cut
+                                                                     Int64#
+                                                                     (apply
+                                                                        (0_i64)
+                                                                        ($Factorial.return_129)))))
+                                                               ($Factorial.return_130)))))
+                                                      ($Factorial.return_131))))
+                                             (apply
+                                                ((lambda
+                                                   ($Factorial.param_106 $Factorial.return_132)
+                                                   (cut
+                                                      (do $Factorial.return_133
+                                                         (cut
+                                                            (construct
+                                                               tuple
+                                                               ($Factorial.param_106)
+                                                               ())
+                                                            (select
+                                                               (#Factorial.$__57
+                                                                  (cut #Factorial.acc_8 $Factorial.return_133)))))
+                                                      $Factorial.return_132)))
+                                                ($Factorial.return_134))))
+                                       (apply
+                                          ((lambda
+                                             ($Factorial.param_107 $Factorial.return_135)
+                                             (cut
+                                                (do $Factorial.return_136
+                                                   (cut
+                                                      (construct
+                                                         tuple
+                                                         ($Factorial.param_107)
+                                                         ())
+                                                      (select
+                                                         (#Factorial.$__70
+                                                            (cut
+                                                               (do $Factorial.return_143
+                                                                  (cut
+                                                                     (do $Factorial.return_140
+                                                                        (cut
+                                                                           factAcc
+                                                                           (apply
+                                                                              ((do $Factorial.return_139
+                                                                                 (cut
+                                                                                    (do $Factorial.return_137
+                                                                                       (cut
+                                                                                          -
+                                                                                          (apply
+                                                                                             (#Factorial.n_7)
+                                                                                             ($Factorial.return_137))))
+                                                                                    (apply
+                                                                                       ((do $Factorial.return_138
+                                                                                          (cut
+                                                                                             Int64#
+                                                                                             (apply
+                                                                                                (1_i64)
+                                                                                                ($Factorial.return_138)))))
+                                                                                       ($Factorial.return_139)))))
+                                                                              ($Factorial.return_140))))
+                                                                     (apply
+                                                                        ((do $Factorial.return_142
+                                                                           (cut
+                                                                              (do $Factorial.return_141
+                                                                                 (cut
+                                                                                    *
+                                                                                    (apply
+                                                                                       (#Factorial.n_7)
+                                                                                       ($Factorial.return_141))))
+                                                                              (apply
+                                                                                 (#Factorial.acc_8)
+                                                                                 ($Factorial.return_142)))))
+                                                                        ($Factorial.return_143))))
+                                                               $Factorial.return_136)))))
+                                                $Factorial.return_135)))
+                                          ($Factorial.return_144))))
+                                 $Factorial.return_127)))))
+                  $Factorial.return_126))
+            $Factorial.return_125)))
+   (fact
+      (lambda
+         ($Factorial.param_108 $Factorial.return_145)
+         (cut
+            (do $Factorial.return_146
+               (cut
+                  (construct
+                     tuple
+                     ($Factorial.param_108)
+                     ())
+                  (select
+                     (#Factorial.n_6
+                        (cut
+                           (do $Factorial.return_149
+                              (cut
+                                 (do $Factorial.return_147
+                                    (cut
+                                       factAcc
+                                       (apply
+                                          (#Factorial.n_6)
+                                          ($Factorial.return_147))))
+                                 (apply
+                                    ((do $Factorial.return_148
+                                       (cut
+                                          Int64#
+                                          (apply
+                                             (1_i64)
+                                             ($Factorial.return_148)))))
+                                    ($Factorial.return_149))))
+                           $Factorial.return_146)))))
+            $Factorial.return_145)))
+   (main
+      (lambda
+         ($Factorial.param_109 $Factorial.return_150)
+         (cut
+            (do $Factorial.return_151
+               (cut
+                  (construct
+                     tuple
+                     ($Factorial.param_109)
+                     ())
+                  (select
+                     (#Factorial.$__97
+                        (cut
+                           (do $Factorial.return_157
+                              (cut
+                                 (do $Factorial.return_156
+                                    (cut
+                                       |>
+                                       (apply
+                                          ((do $Factorial.return_155
+                                             (cut
+                                                (do $Factorial.return_154
+                                                   (cut
+                                                      |>
+                                                      (apply
+                                                         ((do $Factorial.return_153
+                                                            (cut
+                                                               fact
+                                                               (apply
+                                                                  ((do $Factorial.return_152
+                                                                     (cut
+                                                                        Int64#
+                                                                        (apply
+                                                                           (5_i64)
+                                                                           ($Factorial.return_152)))))
+                                                                  ($Factorial.return_153)))))
+                                                         ($Factorial.return_154))))
+                                                (apply
+                                                   (toStringInt64)
+                                                   ($Factorial.return_155)))))
+                                          ($Factorial.return_156))))
+                                 (apply
+                                    (putStrLn)
+                                    ($Factorial.return_157))))
+                           $Factorial.return_151)))))
+            $Factorial.return_150))))

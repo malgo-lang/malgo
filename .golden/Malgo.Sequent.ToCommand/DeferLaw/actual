@@ -1,0 +1,59 @@
+((f
+   ((lambda
+      ($DeferLaw.param_22 $DeferLaw.return_25)
+      ((do $DeferLaw.return_26
+         ((fetch $DeferLaw.param_22)
+            (construct tuple 1)
+            (select
+               (#DeferLaw.x_1
+                  ((do $DeferLaw.return_29
+                     ((lambda
+                        ($DeferLaw.param_23 $DeferLaw.return_27)
+                        ((do $DeferLaw.return_28
+                           ((fetch $DeferLaw.param_23)
+                              (construct tuple 1)
+                              (select
+                                 (#DeferLaw.$__8
+                                    ((fetch #DeferLaw.x_1)
+                                       (resume $DeferLaw.return_28))))))
+                           (resume $DeferLaw.return_27)))
+                        (construct tuple 0)
+                        (suspend
+                           ((resume $DeferLaw.return_29)))
+                        (apply 2)))
+                     (resume $DeferLaw.return_26))))))
+         (resume $DeferLaw.return_25)))))
+   (main
+      ((lambda
+         ($DeferLaw.param_24 $DeferLaw.return_30)
+         ((do $DeferLaw.return_31
+            ((fetch $DeferLaw.param_24)
+               (construct tuple 1)
+               (select
+                  (#DeferLaw.$__21
+                     ((do $DeferLaw.return_34
+                        ((fetch putStrLn)
+                           (then $DeferLaw.outer_35
+                              ((do $DeferLaw.return_33
+                                 ((fetch f)
+                                    (then $DeferLaw.outer_37
+                                       ((do $DeferLaw.return_32
+                                          ((fetch String#)
+                                             (push "Hello")
+                                             (suspend
+                                                ((resume $DeferLaw.return_32)))
+                                             (apply 2)))
+                                          (then $DeferLaw.inner_38
+                                             ((fetch $DeferLaw.outer_37)
+                                                (fetch $DeferLaw.inner_38)
+                                                (suspend
+                                                   ((resume $DeferLaw.return_33)))
+                                                (apply 2)))))))
+                                 (then $DeferLaw.inner_36
+                                    ((fetch $DeferLaw.outer_35)
+                                       (fetch $DeferLaw.inner_36)
+                                       (suspend
+                                          ((resume $DeferLaw.return_34)))
+                                       (apply 2)))))))
+                        (resume $DeferLaw.return_31))))))
+            (resume $DeferLaw.return_30))))))

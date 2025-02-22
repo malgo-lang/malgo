@@ -1,0 +1,92 @@
+((if
+   ((lambda
+      ($Test1.param_39 $Test1.return_45)
+      ((lambda
+         ($Test1.param_40 $Test1.return_46)
+         ((lambda
+            ($Test1.param_41 $Test1.return_47)
+            ((do $Test1.return_48
+               ((fetch $Test1.param_39)
+                  (fetch $Test1.param_40)
+                  (fetch $Test1.param_41)
+                  (construct tuple 3)
+                  (select
+                     ((tuple
+                        ((True ())
+                           #Test1.t_0
+                           #Test1.__1))
+                        ((do $Test1.return_49
+                           ((fetch #Test1.t_0)
+                              (construct tuple 0)
+                              (suspend
+                                 ((resume $Test1.return_49)))
+                              (apply 2)))
+                           (resume $Test1.return_48)))
+                     ((tuple
+                        ((False ())
+                           #Test1.__2
+                           #Test1.f_3))
+                        ((do $Test1.return_50
+                           ((fetch #Test1.f_3)
+                              (construct tuple 0)
+                              (suspend
+                                 ((resume $Test1.return_50)))
+                              (apply 2)))
+                           (resume $Test1.return_48))))))
+               (resume $Test1.return_47)))
+            (resume $Test1.return_46)))
+         (resume $Test1.return_45)))))
+   (main
+      ((lambda
+         ($Test1.param_42 $Test1.return_51)
+         ((do $Test1.return_52
+            ((fetch $Test1.param_42)
+               (construct tuple 1)
+               (select
+                  (#Test1.$__38
+                     ((do $Test1.return_61
+                        ((do $Test1.return_57
+                           ((do $Test1.return_53
+                              ((fetch if)
+                                 (fetch True)
+                                 (suspend
+                                    ((resume $Test1.return_53)))
+                                 (apply 2)))
+                              (lambda
+                                 ($Test1.param_43 $Test1.return_54)
+                                 ((do $Test1.return_55
+                                    ((fetch $Test1.param_43)
+                                       (construct tuple 1)
+                                       (select
+                                          (#Test1.$__30
+                                             ((do $Test1.return_56
+                                                ((fetch malgo_print_string)
+                                                   (push "True")
+                                                   (suspend
+                                                      ((resume $Test1.return_56)))
+                                                   (apply 2)))
+                                                (resume $Test1.return_55))))))
+                                    (resume $Test1.return_54)))
+                              (suspend
+                                 ((resume $Test1.return_57)))
+                              (apply 2)))
+                           (lambda
+                              ($Test1.param_44 $Test1.return_58)
+                              ((do $Test1.return_59
+                                 ((fetch $Test1.param_44)
+                                    (construct tuple 1)
+                                    (select
+                                       (#Test1.$__35
+                                          ((do $Test1.return_60
+                                             ((fetch malgo_print_string)
+                                                (push "False")
+                                                (suspend
+                                                   ((resume $Test1.return_60)))
+                                                (apply 2)))
+                                             (resume $Test1.return_59))))))
+                                 (resume $Test1.return_58)))
+                           (suspend
+                              ((resume $Test1.return_61)))
+                           (apply 2)))
+                        (resume $Test1.return_52))))))
+            (resume $Test1.return_51))))))

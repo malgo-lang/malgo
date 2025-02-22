@@ -1,0 +1,66 @@
+((rtob
+   ((lambda
+      ($Test6.param_30 $Test6.return_33)
+      ((do $Test6.return_34
+         ((fetch $Test6.param_30)
+            (construct tuple 1)
+            (select
+               ((R ())
+                  ((fetch B)
+                     (resume $Test6.return_34)))
+               (#Test6.__1
+                  ((do $Test6.return_35
+                     ((fetch malgo_exit_failure)
+                        (construct tuple 0)
+                        (suspend
+                           ((resume $Test6.return_35)))
+                        (apply 2)))
+                     (resume $Test6.return_34))))))
+         (resume $Test6.return_33)))))
+   (main
+      ((lambda
+         ($Test6.param_31 $Test6.return_36)
+         ((do $Test6.return_37
+            ((fetch $Test6.param_31)
+               (construct tuple 1)
+               (select
+                  (#Test6.$__29
+                     ((do $Test6.return_43
+                        ((lambda
+                           ($Test6.param_32 $Test6.return_38)
+                           ((do $Test6.return_39
+                              ((fetch $Test6.param_32)
+                                 (construct tuple 1)
+                                 (select
+                                    ((B ())
+                                       ((do $Test6.return_40
+                                          ((fetch malgo_print_string)
+                                             (push "OK")
+                                             (suspend
+                                                ((resume $Test6.return_40)))
+                                             (apply 2)))
+                                          (resume $Test6.return_39)))
+                                    (#Test6.__2
+                                       ((do $Test6.return_41
+                                          ((fetch malgo_print_string)
+                                             (push "WRONG")
+                                             (suspend
+                                                ((resume $Test6.return_41)))
+                                             (apply 2)))
+                                          (resume $Test6.return_39))))))
+                              (resume $Test6.return_38)))
+                           (then $Test6.outer_44
+                              ((do $Test6.return_42
+                                 ((fetch rtob)
+                                    (fetch R)
+                                    (suspend
+                                       ((resume $Test6.return_42)))
+                                    (apply 2)))
+                                 (then $Test6.inner_45
+                                    ((fetch $Test6.outer_44)
+                                       (fetch $Test6.inner_45)
+                                       (suspend
+                                          ((resume $Test6.return_43)))
+                                       (apply 2)))))))
+                        (resume $Test6.return_37))))))
+            (resume $Test6.return_36))))))

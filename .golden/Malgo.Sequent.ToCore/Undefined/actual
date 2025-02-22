@@ -1,0 +1,58 @@
+((g
+   (lambda
+      ($Undefined.param_20 $Undefined.return_22)
+      (cut
+         (do $Undefined.return_23
+            (cut
+               (construct
+                  tuple
+                  ($Undefined.param_20)
+                  ())
+               (select
+                  (#Undefined.x_0
+                     (cut undefined $Undefined.return_23)))))
+         $Undefined.return_22)))
+   (main
+      (lambda
+         ($Undefined.param_21 $Undefined.return_24)
+         (cut
+            (do $Undefined.return_25
+               (cut
+                  (construct
+                     tuple
+                     ($Undefined.param_21)
+                     ())
+                  (select
+                     (#Undefined.$__17
+                        (cut
+                           (do $Undefined.return_30
+                              (cut
+                                 undefined
+                                 (then #Undefined.x_1
+                                    (cut
+                                       (do $Undefined.return_29
+                                          (cut
+                                             (do $Undefined.return_26
+                                                (cut
+                                                   g
+                                                   (apply
+                                                      (#Undefined.x_1)
+                                                      ($Undefined.return_26))))
+                                             (then #Undefined.y_2
+                                                (cut
+                                                   (do $Undefined.return_28
+                                                      (cut
+                                                         printString
+                                                         (apply
+                                                            ((do $Undefined.return_27
+                                                               (cut
+                                                                  String#
+                                                                  (apply
+                                                                     ("OK")
+                                                                     ($Undefined.return_27)))))
+                                                            ($Undefined.return_28))))
+                                                   $Undefined.return_29))))
+                                       $Undefined.return_30))))
+                           $Undefined.return_25)))))
+            $Undefined.return_24)))
+   (f undefined))

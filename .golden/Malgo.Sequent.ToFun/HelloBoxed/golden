@@ -1,0 +1,39 @@
+((string#
+   (lambda
+      ($HelloBoxed.param_21)
+      (select
+         (tuple
+            ($HelloBoxed.param_21))
+         ((#HelloBoxed.x_1
+            (apply
+               String#
+               (#HelloBoxed.x_1)))))))
+   (putStrLn
+      (lambda
+         ($HelloBoxed.param_22)
+         (select
+            (tuple
+               ($HelloBoxed.param_22))
+            (((String#
+               (#HelloBoxed.str_0))
+               (apply
+                  (lambda
+                     ($HelloBoxed.tmp_23)
+                     (apply
+                        malgo_newline
+                        ((tuple ()))))
+                  ((apply
+                     malgo_print_string
+                     (#HelloBoxed.str_0)))))))))
+   (main
+      (lambda
+         ($HelloBoxed.param_24)
+         (select
+            (tuple
+               ($HelloBoxed.param_24))
+            ((#HelloBoxed.$__20
+               (apply
+                  putStrLn
+                  ((apply
+                     String#
+                     ("Hello, world"))))))))))

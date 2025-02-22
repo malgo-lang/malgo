@@ -1,0 +1,161 @@
+((|>
+   ((lambda
+      ($Null.param_119 $Null.return_126)
+      ((lambda
+         ($Null.param_120 $Null.return_127)
+         ((do $Null.return_128
+            ((fetch $Null.param_119)
+               (fetch $Null.param_120)
+               (construct tuple 2)
+               (select
+                  ((tuple
+                     (#Null.x_11 #Null.f_12))
+                     ((do $Null.return_129
+                        ((fetch #Null.f_12)
+                           (fetch #Null.x_11)
+                           (suspend
+                              ((resume $Null.return_129)))
+                           (apply 2)))
+                        (resume $Null.return_128))))))
+            (resume $Null.return_127)))
+         (resume $Null.return_126)))))
+   (mHead
+      ((lambda
+         ($Null.param_121 $Null.return_130)
+         ((do $Null.return_131
+            ((fetch $Null.param_121)
+               (construct tuple 1)
+               (select
+                  ((Nil ())
+                     ((fetch Nothing)
+                        (resume $Null.return_131)))
+                  ((Cons
+                     (#Null.p_5 #Null.__6))
+                     ((do $Null.return_132
+                        ((fetch Just)
+                           (fetch #Null.p_5)
+                           (suspend
+                              ((resume $Null.return_132)))
+                           (apply 2)))
+                        (resume $Null.return_131))))))
+            (resume $Null.return_130)))))
+   (isNothing
+      ((lambda
+         ($Null.param_122 $Null.return_133)
+         ((do $Null.return_134
+            ((fetch $Null.param_122)
+               (construct tuple 1)
+               (select
+                  ((Nothing ())
+                     ((fetch True)
+                        (resume $Null.return_134)))
+                  ((Just
+                     (#Null.__3))
+                     ((fetch False)
+                        (resume $Null.return_134))))))
+            (resume $Null.return_133)))))
+   (null
+      ((lambda
+         ($Null.param_123 $Null.return_135)
+         ((do $Null.return_136
+            ((fetch $Null.param_123)
+               (construct tuple 1)
+               (select
+                  (#Null.as_8
+                     ((do $Null.return_138
+                        ((fetch isNothing)
+                           (then $Null.outer_152
+                              ((do $Null.return_137
+                                 ((fetch mHead)
+                                    (fetch #Null.as_8)
+                                    (suspend
+                                       ((resume $Null.return_137)))
+                                    (apply 2)))
+                                 (then $Null.inner_153
+                                    ((fetch $Null.outer_152)
+                                       (fetch $Null.inner_153)
+                                       (suspend
+                                          ((resume $Null.return_138)))
+                                       (apply 2)))))))
+                        (resume $Null.return_136))))))
+            (resume $Null.return_135)))))
+   (main
+      ((lambda
+         ($Null.param_124 $Null.return_139)
+         ((do $Null.return_140
+            ((fetch $Null.param_124)
+               (construct tuple 1)
+               (select
+                  (#Null.$__118
+                     ((do $Null.return_151
+                        ((do $Null.return_146
+                           ((fetch |>)
+                              (then $Null.outer_154
+                                 ((do $Null.return_145
+                                    ((fetch null)
+                                       (then $Null.outer_156
+                                          ((do $Null.return_144
+                                             ((do $Null.return_141
+                                                ((fetch Cons)
+                                                   (fetch True)
+                                                   (suspend
+                                                      ((resume $Null.return_141)))
+                                                   (apply 2)))
+                                                (then $Null.outer_158
+                                                   ((do $Null.return_143
+                                                      ((do $Null.return_142
+                                                         ((fetch Cons)
+                                                            (fetch True)
+                                                            (suspend
+                                                               ((resume $Null.return_142)))
+                                                            (apply 2)))
+                                                         (fetch Nil)
+                                                         (suspend
+                                                            ((resume $Null.return_143)))
+                                                         (apply 2)))
+                                                      (then $Null.inner_159
+                                                         ((fetch $Null.outer_158)
+                                                            (fetch $Null.inner_159)
+                                                            (suspend
+                                                               ((resume $Null.return_144)))
+                                                            (apply 2)))))))
+                                             (then $Null.inner_157
+                                                ((fetch $Null.outer_156)
+                                                   (fetch $Null.inner_157)
+                                                   (suspend
+                                                      ((resume $Null.return_145)))
+                                                   (apply 2)))))))
+                                    (then $Null.inner_155
+                                       ((fetch $Null.outer_154)
+                                          (fetch $Null.inner_155)
+                                          (suspend
+                                             ((resume $Null.return_146)))
+                                          (apply 2)))))))
+                           (lambda
+                              ($Null.param_125 $Null.return_147)
+                              ((do $Null.return_148
+                                 ((fetch $Null.param_125)
+                                    (construct tuple 1)
+                                    (select
+                                       ((False ())
+                                          ((do $Null.return_149
+                                             ((fetch malgo_print_string)
+                                                (push "OK")
+                                                (suspend
+                                                   ((resume $Null.return_149)))
+                                                (apply 2)))
+                                             (resume $Null.return_148)))
+                                       ((True ())
+                                          ((do $Null.return_150
+                                             ((fetch malgo_exit_failure)
+                                                (construct tuple 0)
+                                                (suspend
+                                                   ((resume $Null.return_150)))
+                                                (apply 2)))
+                                             (resume $Null.return_148))))))
+                                 (resume $Null.return_147)))
+                           (suspend
+                              ((resume $Null.return_151)))
+                           (apply 2)))
+                        (resume $Null.return_140))))))
+            (resume $Null.return_139))))))

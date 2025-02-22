@@ -1,0 +1,88 @@
+((main
+   (lambda
+      ($TestList.param_41 $TestList.return_42)
+      (cut
+         (do $TestList.return_43
+            (cut
+               (construct
+                  tuple
+                  ($TestList.param_41)
+                  ())
+               (select
+                  (#TestList.$__40
+                     (cut
+                        (do $TestList.return_57
+                           (cut
+                              (do $TestList.return_52
+                                 (cut
+                                    (do $TestList.return_45
+                                       (cut
+                                          Cons
+                                          (apply
+                                             ((do $TestList.return_44
+                                                (cut
+                                                   Int32#
+                                                   (apply
+                                                      (1_i32)
+                                                      ($TestList.return_44)))))
+                                             ($TestList.return_45))))
+                                    (apply
+                                       ((do $TestList.return_51
+                                          (cut
+                                             (do $TestList.return_47
+                                                (cut
+                                                   Cons
+                                                   (apply
+                                                      ((do $TestList.return_46
+                                                         (cut
+                                                            Int32#
+                                                            (apply
+                                                               (2_i32)
+                                                               ($TestList.return_46)))))
+                                                      ($TestList.return_47))))
+                                             (apply
+                                                ((do $TestList.return_50
+                                                   (cut
+                                                      (do $TestList.return_49
+                                                         (cut
+                                                            Cons
+                                                            (apply
+                                                               ((do $TestList.return_48
+                                                                  (cut
+                                                                     Int32#
+                                                                     (apply
+                                                                        (3_i32)
+                                                                        ($TestList.return_48)))))
+                                                               ($TestList.return_49))))
+                                                      (apply
+                                                         (Nil)
+                                                         ($TestList.return_50)))))
+                                                ($TestList.return_51)))))
+                                       ($TestList.return_52))))
+                              (then #TestList.xs_0
+                                 (cut
+                                    (do $TestList.return_56
+                                       (cut
+                                          Nil
+                                          (then #TestList.nil_1
+                                             (cut
+                                                (do $TestList.return_55
+                                                   (cut
+                                                      putStrLn
+                                                      (apply
+                                                         ((do $TestList.return_54
+                                                            (cut
+                                                               toStringInt32
+                                                               (apply
+                                                                  ((do $TestList.return_53
+                                                                     (cut
+                                                                        head
+                                                                        (apply
+                                                                           (#TestList.xs_0)
+                                                                           ($TestList.return_53)))))
+                                                                  ($TestList.return_54)))))
+                                                         ($TestList.return_55))))
+                                                $TestList.return_56))))
+                                    $TestList.return_57))))
+                        $TestList.return_43)))))
+         $TestList.return_42))))

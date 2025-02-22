@@ -1,0 +1,250 @@
+((<> appendString)
+   (show
+      (lambda
+         ($Punctuate.param_113 $Punctuate.return_115)
+         (cut
+            (do $Punctuate.return_116
+               (cut
+                  (construct
+                     tuple
+                     ($Punctuate.param_113)
+                     ())
+                  (select
+                     ((Symbol
+                        (#Punctuate.str_0))
+                        (cut
+                           (do $Punctuate.return_119
+                              (cut
+                                 (do $Punctuate.return_118
+                                    (cut
+                                       <>
+                                       (apply
+                                          ((do $Punctuate.return_117
+                                             (cut
+                                                String#
+                                                (apply
+                                                   ("Symbol ")
+                                                   ($Punctuate.return_117)))))
+                                          ($Punctuate.return_118))))
+                                 (apply
+                                    (#Punctuate.str_0)
+                                    ($Punctuate.return_119))))
+                           $Punctuate.return_116))
+                     ((SInt
+                        (#Punctuate.int_1))
+                        (cut
+                           (do $Punctuate.return_123
+                              (cut
+                                 (do $Punctuate.return_121
+                                    (cut
+                                       <>
+                                       (apply
+                                          ((do $Punctuate.return_120
+                                             (cut
+                                                String#
+                                                (apply
+                                                   ("SInt ")
+                                                   ($Punctuate.return_120)))))
+                                          ($Punctuate.return_121))))
+                                 (apply
+                                    ((do $Punctuate.return_122
+                                       (cut
+                                          toStringInt32
+                                          (apply
+                                             (#Punctuate.int_1)
+                                             ($Punctuate.return_122)))))
+                                    ($Punctuate.return_123))))
+                           $Punctuate.return_116))
+                     ((SList
+                        (#Punctuate.ss_2))
+                        (cut
+                           (do $Punctuate.return_135
+                              (cut
+                                 (do $Punctuate.return_125
+                                    (cut
+                                       <>
+                                       (apply
+                                          ((do $Punctuate.return_124
+                                             (cut
+                                                String#
+                                                (apply
+                                                   ("SList [")
+                                                   ($Punctuate.return_124)))))
+                                          ($Punctuate.return_125))))
+                                 (apply
+                                    ((do $Punctuate.return_134
+                                       (cut
+                                          (do $Punctuate.return_132
+                                             (cut
+                                                <>
+                                                (apply
+                                                   ((do $Punctuate.return_131
+                                                      (cut
+                                                         concatString
+                                                         (apply
+                                                            ((do $Punctuate.return_130
+                                                               (cut
+                                                                  (do $Punctuate.return_127
+                                                                     (cut
+                                                                        punctuate
+                                                                        (apply
+                                                                           ((do $Punctuate.return_126
+                                                                              (cut
+                                                                                 String#
+                                                                                 (apply
+                                                                                    (", ")
+                                                                                    ($Punctuate.return_126)))))
+                                                                           ($Punctuate.return_127))))
+                                                                  (apply
+                                                                     ((do $Punctuate.return_129
+                                                                        (cut
+                                                                           (do $Punctuate.return_128
+                                                                              (cut
+                                                                                 mapList
+                                                                                 (apply
+                                                                                    (show)
+                                                                                    ($Punctuate.return_128))))
+                                                                           (apply
+                                                                              (#Punctuate.ss_2)
+                                                                              ($Punctuate.return_129)))))
+                                                                     ($Punctuate.return_130)))))
+                                                            ($Punctuate.return_131)))))
+                                                   ($Punctuate.return_132))))
+                                          (apply
+                                             ((do $Punctuate.return_133
+                                                (cut
+                                                   String#
+                                                   (apply
+                                                      ("]")
+                                                      ($Punctuate.return_133)))))
+                                             ($Punctuate.return_134)))))
+                                    ($Punctuate.return_135))))
+                           $Punctuate.return_116)))))
+            $Punctuate.return_115)))
+   (main
+      (lambda
+         ($Punctuate.param_114 $Punctuate.return_136)
+         (cut
+            (do $Punctuate.return_137
+               (cut
+                  (construct
+                     tuple
+                     ($Punctuate.param_114)
+                     ())
+                  (select
+                     (#Punctuate.$__112
+                        (cut
+                           (do $Punctuate.return_159
+                              (cut
+                                 (do $Punctuate.return_156
+                                    (cut
+                                       SList
+                                       (apply
+                                          ((do $Punctuate.return_155
+                                             (cut
+                                                (do $Punctuate.return_140
+                                                   (cut
+                                                      Cons
+                                                      (apply
+                                                         ((do $Punctuate.return_139
+                                                            (cut
+                                                               Symbol
+                                                               (apply
+                                                                  ((do $Punctuate.return_138
+                                                                     (cut
+                                                                        String#
+                                                                        (apply
+                                                                           ("x")
+                                                                           ($Punctuate.return_138)))))
+                                                                  ($Punctuate.return_139)))))
+                                                         ($Punctuate.return_140))))
+                                                (apply
+                                                   ((do $Punctuate.return_154
+                                                      (cut
+                                                         (do $Punctuate.return_153
+                                                            (cut
+                                                               Cons
+                                                               (apply
+                                                                  ((do $Punctuate.return_152
+                                                                     (cut
+                                                                        SList
+                                                                        (apply
+                                                                           ((do $Punctuate.return_151
+                                                                              (cut
+                                                                                 (do $Punctuate.return_143
+                                                                                    (cut
+                                                                                       Cons
+                                                                                       (apply
+                                                                                          ((do $Punctuate.return_142
+                                                                                             (cut
+                                                                                                Symbol
+                                                                                                (apply
+                                                                                                   ((do $Punctuate.return_141
+                                                                                                      (cut
+                                                                                                         String#
+                                                                                                         (apply
+                                                                                                            ("y")
+                                                                                                            ($Punctuate.return_141)))))
+                                                                                                   ($Punctuate.return_142)))))
+                                                                                          ($Punctuate.return_143))))
+                                                                                 (apply
+                                                                                    ((do $Punctuate.return_150
+                                                                                       (cut
+                                                                                          (do $Punctuate.return_149
+                                                                                             (cut
+                                                                                                Cons
+                                                                                                (apply
+                                                                                                   ((do $Punctuate.return_148
+                                                                                                      (cut
+                                                                                                         SList
+                                                                                                         (apply
+                                                                                                            ((do $Punctuate.return_147
+                                                                                                               (cut
+                                                                                                                  (do $Punctuate.return_146
+                                                                                                                     (cut
+                                                                                                                        Cons
+                                                                                                                        (apply
+                                                                                                                           ((do $Punctuate.return_145
+                                                                                                                              (cut
+                                                                                                                                 Symbol
+                                                                                                                                 (apply
+                                                                                                                                    ((do $Punctuate.return_144
+                                                                                                                                       (cut
+                                                                                                                                          String#
+                                                                                                                                          (apply
+                                                                                                                                             ("z")
+                                                                                                                                             ($Punctuate.return_144)))))
+                                                                                                                                    ($Punctuate.return_145)))))
+                                                                                                                           ($Punctuate.return_146))))
+                                                                                                                  (apply
+                                                                                                                     (Nil)
+                                                                                                                     ($Punctuate.return_147)))))
+                                                                                                            ($Punctuate.return_148)))))
+                                                                                                   ($Punctuate.return_149))))
+                                                                                          (apply
+                                                                                             (Nil)
+                                                                                             ($Punctuate.return_150)))))
+                                                                                    ($Punctuate.return_151)))))
+                                                                           ($Punctuate.return_152)))))
+                                                                  ($Punctuate.return_153))))
+                                                         (apply
+                                                            (Nil)
+                                                            ($Punctuate.return_154)))))
+                                                   ($Punctuate.return_155)))))
+                                          ($Punctuate.return_156))))
+                                 (then #Punctuate.x_3
+                                    (cut
+                                       (do $Punctuate.return_158
+                                          (cut
+                                             putStrLn
+                                             (apply
+                                                ((do $Punctuate.return_157
+                                                   (cut
+                                                      show
+                                                      (apply
+                                                         (#Punctuate.x_3)
+                                                         ($Punctuate.return_157)))))
+                                                ($Punctuate.return_158))))
+                                       $Punctuate.return_159))))
+                           $Punctuate.return_137)))))
+            $Punctuate.return_136))))
