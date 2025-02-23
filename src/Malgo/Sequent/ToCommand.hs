@@ -10,7 +10,11 @@ import Malgo.Sequent.Core
 import Malgo.Sequent.Fun (Name)
 
 toCommand :: (State Uniq :> es) => Program Zero -> Eff es C.Program
-toCommand (Program definitions) = C.Program <$> traverse convert definitions
+toCommand (Program definitions) = do
+  program <- C.Program <$> traverse convert definitions
+  C.lintProgram program >>= \case
+    Right () -> pure program
+    Left (cs, err) -> error $ show (cs, err)
 
 class Convert a b where
   convert :: a -> b

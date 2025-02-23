@@ -3,12 +3,18 @@ module Malgo.Sequent.Command
     Branch (..),
     Command (..),
     Code,
+    lintProgram,
+    LintError (..),
   )
 where
 
 import Data.Map qualified as Map
 import Data.SCargot.Repr.Basic qualified as S
-import Malgo.Prelude
+import Data.Set qualified as Set
+import Effectful
+import Effectful.Error.Static (CallStack, Error, runError, throwError)
+import Effectful.Reader.Static (Reader, local, runReader)
+import Malgo.Prelude hiding (throwError)
 import Malgo.SExpr (ToSExpr (toSExpr))
 import Malgo.SExpr qualified as S
 import Malgo.Sequent.Fun (Literal, Name, Pattern, Tag)
@@ -118,3 +124,63 @@ data Branch = Branch
 
 instance ToSExpr Branch where
   toSExpr (Branch _ pattern code) = S.L [toSExpr pattern, toSExpr code]
+
+lintProgram :: Program -> Eff es (Either (CallStack, LintError) ())
+lintProgram Program {definitions} = do
+  let toplevels = Set.fromList $ map (\(_, name, _, _) -> name) definitions
+  runError $ runReader toplevels $ traverse_ lintDefinition definitions
+
+lintDefinition :: (Reader (Set Name) :> es, Error LintError :> es) => (Range, Name, Name, Code) -> Eff es ()
+lintDefinition (_, _, return, code) = do
+  local (Set.insert return) $ lintCode code
+
+data LintError
+  = UnexpectedEndOfCode Command
+  | UnexpectedContinueOfCode Command
+  deriving stock (Show)
+
+lintCode :: (Reader (Set Name) :> es, Error LintError :> es) => [Command] -> Eff es ()
+lintCode [] = pure ()
+lintCode (cmd@(Fetch _ _) : code) = do
+  when (null code) $ throwError $ UnexpectedEndOfCode cmd
+  lintCode code
+lintCode (cmd@(Push _ _) : code) = do
+  when (null code) $ throwError $ UnexpectedEndOfCode cmd
+  lintCode code
+lintCode (cmd@(Construct _ _ _) : code) = do
+  when (null code) $ throwError $ UnexpectedEndOfCode cmd
+  lintCode code
+lintCode (cmd@(Lambda _ _ body) : code) = do
+  lintCode body
+  when (null code) $ throwError $ UnexpectedEndOfCode cmd
+  lintCode code
+lintCode (cmd@(Object _ fields) : code) = do
+  for_ fields lintCode
+  when (null code) $ throwError $ UnexpectedEndOfCode cmd
+  lintCode code
+lintCode (cmd@(Do _ _ body) : code) = do
+  lintCode body
+  when (null code) $ throwError $ UnexpectedEndOfCode cmd
+  lintCode code
+lintCode (cmd@(Suspend body) : code) = do
+  lintCode body
+  when (null code) $ throwError $ UnexpectedEndOfCode cmd
+  lintCode code
+lintCode (cmd@(Resume _ _) : code) = do
+  unless (null code) $ throwError $ UnexpectedContinueOfCode cmd
+lintCode (cmd@(Apply _ _) : code) = do
+  unless (null code) $ throwError $ UnexpectedContinueOfCode cmd
+lintCode (cmd@(Proj _ _) : code) = do
+  unless (null code) $ throwError $ UnexpectedContinueOfCode cmd
+lintCode (cmd@(Then _ _ body) : code) = do
+  lintCode body
+  unless (null code) $ throwError $ UnexpectedContinueOfCode cmd
+lintCode (cmd@(Finish _) : code) = do
+  unless (null code) $ throwError $ UnexpectedContinueOfCode cmd
+lintCode (cmd@(Primitive _ _) : code) = do
+  unless (null code) $ throwError $ UnexpectedContinueOfCode cmd
+lintCode (cmd@(Select _ branches) : code) = do
+  for_ branches $ \Branch {code} -> lintCode code
+  unless (null code) $ throwError $ UnexpectedContinueOfCode cmd
+lintCode (cmd@(Invoke _ _) : code) = do
+  unless (null code) $ throwError $ UnexpectedContinueOfCode cmd
