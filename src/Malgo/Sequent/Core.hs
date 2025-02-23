@@ -106,10 +106,10 @@ tryToZero Program {..} = do
   definitions' <- traverse (\(range, name, return, producer) -> (range,name,return,) <$> flat producer) definitions
   pure (Program definitions')
 
-class Flat es f where
-  flat :: f One -> Eff es (f One)
+class Flat a b where
+  flat :: a -> b
 
-instance (State Uniq :> es, Reader ModuleName :> es) => Flat es Producer where
+instance (State Uniq :> es, Reader ModuleName :> es) => Flat (Producer One) (Eff es (Producer One)) where
   flat :: Producer One -> Eff es (Producer One)
   flat (Var range name) = pure (Var range name)
   flat (Literal range literal) = pure (Literal range literal)
@@ -117,6 +117,7 @@ instance (State Uniq :> es, Reader ModuleName :> es) => Flat es Producer where
     let (flatProducers, mproducer, rest) = split producers
     case mproducer of
       Just producer -> do
+        -- FIXME
         label <- newTemporalId "label"
         var <- newTemporalId "var"
         producer' <- flat producer
@@ -150,7 +151,7 @@ aux acc (p : ps) = case p of
   Do {} -> (reverse acc, Just p, ps)
   _ -> aux (p : acc) ps
 
-instance (State Uniq :> es, Reader ModuleName :> es) => Flat es Consumer where
+instance (State Uniq :> es, Reader ModuleName :> es) => Flat (Consumer One) (Eff es (Consumer One)) where
   flat :: Consumer One -> Eff es (Consumer One)
   flat (Label range name) = pure (Label range name)
   flat (Apply range producers consumers) = do
@@ -181,7 +182,7 @@ instance (State Uniq :> es, Reader ModuleName :> es) => Flat es Consumer where
     branches' <- traverse flat branches
     pure (Select range branches')
 
-instance (State Uniq :> es, Reader ModuleName :> es) => Flat es Statement where
+instance (State Uniq :> es, Reader ModuleName :> es) => Flat (Statement One) (Eff es (Statement One)) where
   flat :: Statement One -> Eff es (Statement One)
   flat (Cut producer consumer) = do
     producer' <- flat producer
@@ -203,7 +204,7 @@ instance (State Uniq :> es, Reader ModuleName :> es) => Flat es Statement where
     consumer' <- flat consumer
     pure (Invoke range name consumer')
 
-instance (State Uniq :> es, Reader ModuleName :> es) => Flat es Branch where
+instance (State Uniq :> es, Reader ModuleName :> es) => Flat (Branch One) (Eff es (Branch One)) where
   flat :: Branch One -> Eff es (Branch One)
   flat (Branch range patterns statement) = do
     statement' <- flat statement
