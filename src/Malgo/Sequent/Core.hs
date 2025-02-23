@@ -198,7 +198,7 @@ flatConsumer (Apply range producers consumers) = do
         zero' <- flatProducer zero
         case zero' of
           Zero producer' -> pure producer'
-          Do' {} -> error "impossible"
+          Do' {} -> error "impossible" -- zeros only contains Rank Zero producers
       consumers' <- traverse flatConsumer consumers
       pure $ Apply range producers' consumers'
 flatConsumer (Project range field return) = do
