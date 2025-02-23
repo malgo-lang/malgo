@@ -1,0 +1,148 @@
+((|>
+   $Test3.return_70
+   (cut
+      (lambda
+         ($Test3.param_66 $Test3.return_71)
+         (cut
+            (lambda
+               ($Test3.param_67 $Test3.return_72)
+               (cut
+                  (do $Test3.return_73
+                     (cut
+                        (construct
+                           tuple
+                           ($Test3.param_66 $Test3.param_67)
+                           ())
+                        (select
+                           ((tuple
+                              (#Test3.x_3 #Test3.f_4))
+                              (cut
+                                 (do $Test3.return_74
+                                    (cut
+                                       #Test3.f_4
+                                       (apply
+                                          (#Test3.x_3)
+                                          ($Test3.return_74))))
+                                 $Test3.return_73)))))
+                  $Test3.return_72))
+            $Test3.return_71))
+      $Test3.return_70))
+   (main
+      $Test3.return_75
+      (cut
+         (lambda
+            ($Test3.param_68 $Test3.return_76)
+            (cut
+               (do $Test3.return_77
+                  (cut
+                     (construct
+                        tuple
+                        ($Test3.param_68)
+                        ())
+                     (select
+                        (#Test3.$__65
+                           (cut
+                              (do $Test3.return_95
+                                 (cut
+                                    (do $Test3.return_88
+                                       (cut
+                                          (do $Test3.return_78
+                                             (invoke |> $Test3.return_78))
+                                          (then $Test3.outer_96
+                                             (cut
+                                                (do $Test3.return_87
+                                                   (cut
+                                                      (do $Test3.return_81
+                                                         (cut
+                                                            (do $Test3.return_79
+                                                               (invoke Cons $Test3.return_79))
+                                                            (then $Test3.outer_98
+                                                               (cut
+                                                                  (do $Test3.return_80
+                                                                     (invoke A $Test3.return_80))
+                                                                  (then $Test3.inner_99
+                                                                     (cut
+                                                                        $Test3.outer_98
+                                                                        (apply
+                                                                           ($Test3.inner_99)
+                                                                           ($Test3.return_81))))))))
+                                                      (then $Test3.outer_100
+                                                         (cut
+                                                            (do $Test3.return_86
+                                                               (cut
+                                                                  (do $Test3.return_84
+                                                                     (cut
+                                                                        (do $Test3.return_82
+                                                                           (invoke Cons $Test3.return_82))
+                                                                        (then $Test3.outer_102
+                                                                           (cut
+                                                                              (do $Test3.return_83
+                                                                                 (invoke B $Test3.return_83))
+                                                                              (then $Test3.inner_103
+                                                                                 (cut
+                                                                                    $Test3.outer_102
+                                                                                    (apply
+                                                                                       ($Test3.inner_103)
+                                                                                       ($Test3.return_84))))))))
+                                                                  (then $Test3.outer_104
+                                                                     (cut
+                                                                        (do $Test3.return_85
+                                                                           (invoke Nil $Test3.return_85))
+                                                                        (then $Test3.inner_105
+                                                                           (cut
+                                                                              $Test3.outer_104
+                                                                              (apply
+                                                                                 ($Test3.inner_105)
+                                                                                 ($Test3.return_86))))))))
+                                                            (then $Test3.inner_101
+                                                               (cut
+                                                                  $Test3.outer_100
+                                                                  (apply
+                                                                     ($Test3.inner_101)
+                                                                     ($Test3.return_87))))))))
+                                                (then $Test3.inner_97
+                                                   (cut
+                                                      $Test3.outer_96
+                                                      (apply
+                                                         ($Test3.inner_97)
+                                                         ($Test3.return_88))))))))
+                                    (apply
+                                       ((lambda
+                                          ($Test3.param_69 $Test3.return_89)
+                                          (cut
+                                             (do $Test3.return_90
+                                                (cut
+                                                   (construct
+                                                      tuple
+                                                      ($Test3.param_69)
+                                                      ())
+                                                   (select
+                                                      ((Cons
+                                                         ((A ())
+                                                            (Cons
+                                                               ((B ())
+                                                                  (Nil ())))))
+                                                         (cut
+                                                            (do $Test3.return_92
+                                                               (cut
+                                                                  (do $Test3.return_91
+                                                                     (invoke malgo_print_string $Test3.return_91))
+                                                                  (apply
+                                                                     ("OK")
+                                                                     ($Test3.return_92))))
+                                                            $Test3.return_90))
+                                                      (#Test3.__5
+                                                         (cut
+                                                            (do $Test3.return_94
+                                                               (cut
+                                                                  (do $Test3.return_93
+                                                                     (invoke malgo_print_string $Test3.return_93))
+                                                                  (apply
+                                                                     ("WRONG")
+                                                                     ($Test3.return_94))))
+                                                            $Test3.return_90)))))
+                                             $Test3.return_89)))
+                                       ($Test3.return_95))))
+                              $Test3.return_77)))))
+               $Test3.return_76))
+         $Test3.return_75)))

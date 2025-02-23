@@ -1,0 +1,233 @@
+((zero3D
+   $FieldPrefix.return_53
+   (cut
+      ((x
+         (cut
+            (do $FieldPrefix.return_56
+               (cut
+                  (do $FieldPrefix.return_55
+                     (invoke Float# $FieldPrefix.return_55))
+                  (apply
+                     (0.0_f32)
+                     ($FieldPrefix.return_56))))
+            $FieldPrefix.return_54))
+         (y
+            (cut
+               (do $FieldPrefix.return_58
+                  (cut
+                     (do $FieldPrefix.return_57
+                        (invoke Float# $FieldPrefix.return_57))
+                     (apply
+                        (0.0_f32)
+                        ($FieldPrefix.return_58))))
+               $FieldPrefix.return_54))
+         (z
+            (cut
+               (do $FieldPrefix.return_60
+                  (cut
+                     (do $FieldPrefix.return_59
+                        (invoke Float# $FieldPrefix.return_59))
+                     (apply
+                        (0.0_f32)
+                        ($FieldPrefix.return_60))))
+               $FieldPrefix.return_54)))
+      $FieldPrefix.return_53))
+   (zero2D
+      $FieldPrefix.return_61
+      (cut
+         ((x
+            (cut
+               (do $FieldPrefix.return_64
+                  (cut
+                     (do $FieldPrefix.return_63
+                        (invoke Int32# $FieldPrefix.return_63))
+                     (apply
+                        (0_i32)
+                        ($FieldPrefix.return_64))))
+               $FieldPrefix.return_62))
+            (y
+               (cut
+                  (do $FieldPrefix.return_66
+                     (cut
+                        (do $FieldPrefix.return_65
+                           (invoke Int32# $FieldPrefix.return_65))
+                        (apply
+                           (0_i32)
+                           ($FieldPrefix.return_66))))
+                  $FieldPrefix.return_62)))
+         $FieldPrefix.return_61))
+   (y2D
+      $FieldPrefix.return_67
+      (cut
+         (lambda
+            ($FieldPrefix.param_47 $FieldPrefix.return_68)
+            (cut
+               (do $FieldPrefix.return_69
+                  (cut
+                     (construct
+                        tuple
+                        ($FieldPrefix.param_47)
+                        ())
+                     (select
+                        ((expand
+                           ((x #FieldPrefix.__4)
+                              (y #FieldPrefix.y_5)))
+                           (cut #FieldPrefix.y_5 $FieldPrefix.return_69)))))
+               $FieldPrefix.return_68))
+         $FieldPrefix.return_67))
+   (x2D
+      $FieldPrefix.return_70
+      (cut
+         (lambda
+            ($FieldPrefix.param_48 $FieldPrefix.return_71)
+            (cut
+               (do $FieldPrefix.return_72
+                  (cut
+                     (construct
+                        tuple
+                        ($FieldPrefix.param_48)
+                        ())
+                     (select
+                        ((expand
+                           ((x #FieldPrefix.x_2)
+                              (y #FieldPrefix.__3)))
+                           (cut #FieldPrefix.x_2 $FieldPrefix.return_72)))))
+               $FieldPrefix.return_71))
+         $FieldPrefix.return_70))
+   (print2D
+      $FieldPrefix.return_73
+      (cut
+         (lambda
+            ($FieldPrefix.param_49 $FieldPrefix.return_74)
+            (cut
+               (do $FieldPrefix.return_75
+                  (cut
+                     (construct
+                        tuple
+                        ($FieldPrefix.param_49)
+                        ())
+                     (select
+                        ((expand
+                           ((x #FieldPrefix.x_0)
+                              (y #FieldPrefix.y_1)))
+                           (cut
+                              (do $FieldPrefix.return_91
+                                 (cut
+                                    (lambda
+                                       ($FieldPrefix.tmp_50 $FieldPrefix.return_76)
+                                       (cut
+                                          (do $FieldPrefix.return_86
+                                             (cut
+                                                (lambda
+                                                   ($FieldPrefix.tmp_51 $FieldPrefix.return_77)
+                                                   (cut
+                                                      (do $FieldPrefix.return_81
+                                                         (cut
+                                                            (do $FieldPrefix.return_78
+                                                               (invoke printString $FieldPrefix.return_78))
+                                                            (then $FieldPrefix.outer_98
+                                                               (cut
+                                                                  (do $FieldPrefix.return_80
+                                                                     (cut
+                                                                        (do $FieldPrefix.return_79
+                                                                           (invoke toStringInt32 $FieldPrefix.return_79))
+                                                                        (apply
+                                                                           (#FieldPrefix.y_1)
+                                                                           ($FieldPrefix.return_80))))
+                                                                  (then $FieldPrefix.inner_99
+                                                                     (cut
+                                                                        $FieldPrefix.outer_98
+                                                                        (apply
+                                                                           ($FieldPrefix.inner_99)
+                                                                           ($FieldPrefix.return_81))))))))
+                                                      $FieldPrefix.return_77))
+                                                (then $FieldPrefix.outer_100
+                                                   (cut
+                                                      (do $FieldPrefix.return_85
+                                                         (cut
+                                                            (do $FieldPrefix.return_82
+                                                               (invoke printString $FieldPrefix.return_82))
+                                                            (then $FieldPrefix.outer_102
+                                                               (cut
+                                                                  (do $FieldPrefix.return_84
+                                                                     (cut
+                                                                        (do $FieldPrefix.return_83
+                                                                           (invoke String# $FieldPrefix.return_83))
+                                                                        (apply
+                                                                           (", ")
+                                                                           ($FieldPrefix.return_84))))
+                                                                  (then $FieldPrefix.inner_103
+                                                                     (cut
+                                                                        $FieldPrefix.outer_102
+                                                                        (apply
+                                                                           ($FieldPrefix.inner_103)
+                                                                           ($FieldPrefix.return_85))))))))
+                                                      (then $FieldPrefix.inner_101
+                                                         (cut
+                                                            $FieldPrefix.outer_100
+                                                            (apply
+                                                               ($FieldPrefix.inner_101)
+                                                               ($FieldPrefix.return_86))))))))
+                                          $FieldPrefix.return_76))
+                                    (then $FieldPrefix.outer_104
+                                       (cut
+                                          (do $FieldPrefix.return_90
+                                             (cut
+                                                (do $FieldPrefix.return_87
+                                                   (invoke printString $FieldPrefix.return_87))
+                                                (then $FieldPrefix.outer_106
+                                                   (cut
+                                                      (do $FieldPrefix.return_89
+                                                         (cut
+                                                            (do $FieldPrefix.return_88
+                                                               (invoke toStringInt32 $FieldPrefix.return_88))
+                                                            (apply
+                                                               (#FieldPrefix.x_0)
+                                                               ($FieldPrefix.return_89))))
+                                                      (then $FieldPrefix.inner_107
+                                                         (cut
+                                                            $FieldPrefix.outer_106
+                                                            (apply
+                                                               ($FieldPrefix.inner_107)
+                                                               ($FieldPrefix.return_90))))))))
+                                          (then $FieldPrefix.inner_105
+                                             (cut
+                                                $FieldPrefix.outer_104
+                                                (apply
+                                                   ($FieldPrefix.inner_105)
+                                                   ($FieldPrefix.return_91))))))))
+                              $FieldPrefix.return_75)))))
+               $FieldPrefix.return_74))
+         $FieldPrefix.return_73))
+   (main
+      $FieldPrefix.return_92
+      (cut
+         (lambda
+            ($FieldPrefix.param_52 $FieldPrefix.return_93)
+            (cut
+               (do $FieldPrefix.return_94
+                  (cut
+                     (construct
+                        tuple
+                        ($FieldPrefix.param_52)
+                        ())
+                     (select
+                        (#FieldPrefix.$__46
+                           (cut
+                              (do $FieldPrefix.return_97
+                                 (cut
+                                    (do $FieldPrefix.return_95
+                                       (invoke print2D $FieldPrefix.return_95))
+                                    (then $FieldPrefix.outer_108
+                                       (cut
+                                          (do $FieldPrefix.return_96
+                                             (invoke zero2D $FieldPrefix.return_96))
+                                          (then $FieldPrefix.inner_109
+                                             (cut
+                                                $FieldPrefix.outer_108
+                                                (apply
+                                                   ($FieldPrefix.inner_109)
+                                                   ($FieldPrefix.return_97))))))))
+                              $FieldPrefix.return_94)))))
+               $FieldPrefix.return_93))
+         $FieldPrefix.return_92)))

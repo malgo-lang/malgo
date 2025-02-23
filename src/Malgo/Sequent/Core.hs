@@ -8,6 +8,7 @@ module Malgo.Sequent.Core
     Statement (..),
     Branch (..),
     convertToZero,
+    tryToZero,
   )
 where
 
@@ -98,6 +99,11 @@ instance ToSExpr (Branch x) where
 convertToZero :: (State Uniq :> es, Reader ModuleName :> es) => Program One -> Eff es (Program Zero)
 convertToZero Program {..} = do
   definitions' <- traverse (\(range, name, return, producer) -> (range,name,return,) . castToZero <$> flat producer) definitions
+  pure (Program definitions')
+
+tryToZero :: (State Uniq :> es, Reader ModuleName :> es) => Program One -> Eff es (Program One)
+tryToZero Program {..} = do
+  definitions' <- traverse (\(range, name, return, producer) -> (range,name,return,) <$> flat producer) definitions
   pure (Program definitions')
 
 class Flat es f where

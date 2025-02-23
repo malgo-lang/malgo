@@ -1,0 +1,141 @@
+((one
+   $ZeroArgs.return_33
+   (cut
+      (do $ZeroArgs.return_38
+         (cut
+            (lambda
+               ($ZeroArgs.param_28 $ZeroArgs.return_34)
+               (cut
+                  (do $ZeroArgs.return_35
+                     (cut
+                        (construct
+                           tuple
+                           ($ZeroArgs.param_28)
+                           ())
+                        (select
+                           (#ZeroArgs.$__6
+                              (cut
+                                 (do $ZeroArgs.return_37
+                                    (cut
+                                       (do $ZeroArgs.return_36
+                                          (invoke Int32# $ZeroArgs.return_36))
+                                       (apply
+                                          (1_i32)
+                                          ($ZeroArgs.return_37))))
+                                 $ZeroArgs.return_35)))))
+                  $ZeroArgs.return_34))
+            (apply
+               ((construct tuple () ()))
+               ($ZeroArgs.return_38))))
+      $ZeroArgs.return_33))
+   (id
+      $ZeroArgs.return_39
+      (cut
+         (lambda
+            ($ZeroArgs.param_29 $ZeroArgs.return_40)
+            (cut
+               (do $ZeroArgs.return_41
+                  (cut
+                     (construct
+                        tuple
+                        ($ZeroArgs.param_29)
+                        ())
+                     (select
+                        (#ZeroArgs.x_1
+                           (cut
+                              (do $ZeroArgs.return_44
+                                 (cut
+                                    (lambda
+                                       ($ZeroArgs.param_30 $ZeroArgs.return_42)
+                                       (cut
+                                          (do $ZeroArgs.return_43
+                                             (cut
+                                                (construct
+                                                   tuple
+                                                   ($ZeroArgs.param_30)
+                                                   ())
+                                                (select
+                                                   (#ZeroArgs.$__11
+                                                      (cut #ZeroArgs.x_1 $ZeroArgs.return_43)))))
+                                          $ZeroArgs.return_42))
+                                    (apply
+                                       ((construct tuple () ()))
+                                       ($ZeroArgs.return_44))))
+                              $ZeroArgs.return_41)))))
+               $ZeroArgs.return_40))
+         $ZeroArgs.return_39))
+   (main
+      $ZeroArgs.return_45
+      (cut
+         (do $ZeroArgs.return_57
+            (cut
+               (lambda
+                  ($ZeroArgs.param_31 $ZeroArgs.return_46)
+                  (cut
+                     (do $ZeroArgs.return_47
+                        (cut
+                           (construct
+                              tuple
+                              ($ZeroArgs.param_31)
+                              ())
+                           (select
+                              (#ZeroArgs.$__25
+                                 (cut
+                                    (lambda
+                                       ($ZeroArgs.param_32 $ZeroArgs.return_48)
+                                       (cut
+                                          (do $ZeroArgs.return_49
+                                             (cut
+                                                (construct
+                                                   tuple
+                                                   ($ZeroArgs.param_32)
+                                                   ())
+                                                (select
+                                                   (#ZeroArgs.$__24
+                                                      (cut
+                                                         (do $ZeroArgs.return_56
+                                                            (cut
+                                                               (do $ZeroArgs.return_50
+                                                                  (invoke printString $ZeroArgs.return_50))
+                                                               (then $ZeroArgs.outer_58
+                                                                  (cut
+                                                                     (do $ZeroArgs.return_55
+                                                                        (cut
+                                                                           (do $ZeroArgs.return_51
+                                                                              (invoke toStringInt32 $ZeroArgs.return_51))
+                                                                           (then $ZeroArgs.outer_60
+                                                                              (cut
+                                                                                 (do $ZeroArgs.return_54
+                                                                                    (cut
+                                                                                       (do $ZeroArgs.return_52
+                                                                                          (invoke id $ZeroArgs.return_52))
+                                                                                       (then $ZeroArgs.outer_62
+                                                                                          (cut
+                                                                                             (do $ZeroArgs.return_53
+                                                                                                (invoke one $ZeroArgs.return_53))
+                                                                                             (then $ZeroArgs.inner_63
+                                                                                                (cut
+                                                                                                   $ZeroArgs.outer_62
+                                                                                                   (apply
+                                                                                                      ($ZeroArgs.inner_63)
+                                                                                                      ($ZeroArgs.return_54))))))))
+                                                                                 (then $ZeroArgs.inner_61
+                                                                                    (cut
+                                                                                       $ZeroArgs.outer_60
+                                                                                       (apply
+                                                                                          ($ZeroArgs.inner_61)
+                                                                                          ($ZeroArgs.return_55))))))))
+                                                                     (then $ZeroArgs.inner_59
+                                                                        (cut
+                                                                           $ZeroArgs.outer_58
+                                                                           (apply
+                                                                              ($ZeroArgs.inner_59)
+                                                                              ($ZeroArgs.return_56))))))))
+                                                         $ZeroArgs.return_49)))))
+                                          $ZeroArgs.return_48))
+                                    $ZeroArgs.return_47)))))
+                     $ZeroArgs.return_46))
+               (apply
+                  ((construct tuple () ()))
+                  ($ZeroArgs.return_57))))
+         $ZeroArgs.return_45)))
