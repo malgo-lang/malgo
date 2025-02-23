@@ -39,13 +39,13 @@
                            ((suspend
                               ((resume $DeferLaw.return_34)))
                               (invoke putStrLn)))
-                           (then $DeferLaw.outer_40
+                           (then $DeferLaw.outer_42
                               ((do $DeferLaw.return_38
                                  ((do $DeferLaw.return_35
                                     ((suspend
                                        ((resume $DeferLaw.return_35)))
                                        (invoke f)))
-                                    (then $DeferLaw.outer_42
+                                    (then $DeferLaw.outer_44
                                        ((do $DeferLaw.return_37
                                           ((do $DeferLaw.return_36
                                              ((suspend
@@ -55,15 +55,15 @@
                                              (suspend
                                                 ((resume $DeferLaw.return_37)))
                                              (apply 2)))
-                                          (then $DeferLaw.inner_43
-                                             ((fetch $DeferLaw.outer_42)
-                                                (fetch $DeferLaw.inner_43)
+                                          (then $DeferLaw.inner_45
+                                             ((fetch $DeferLaw.outer_44)
+                                                (fetch $DeferLaw.inner_45)
                                                 (suspend
                                                    ((resume $DeferLaw.return_38)))
                                                 (apply 2)))))))
-                                 (then $DeferLaw.inner_41
-                                    ((fetch $DeferLaw.outer_40)
-                                       (fetch $DeferLaw.inner_41)
+                                 (then $DeferLaw.inner_43
+                                    ((fetch $DeferLaw.outer_42)
+                                       (fetch $DeferLaw.inner_43)
                                        (suspend
                                           ((resume $DeferLaw.return_39)))
                                        (apply 2)))))))

@@ -111,7 +111,7 @@
                                     ((suspend
                                        ((resume $Factorial.return_135)))
                                        (invoke if)))
-                                    (then $Factorial.outer_182
+                                    (then $Factorial.outer_184
                                        ((do $Factorial.return_140
                                           ((do $Factorial.return_137
                                              ((do $Factorial.return_136
@@ -122,7 +122,7 @@
                                                 (suspend
                                                    ((resume $Factorial.return_137)))
                                                 (apply 2)))
-                                             (then $Factorial.outer_184
+                                             (then $Factorial.outer_186
                                                 ((do $Factorial.return_139
                                                    ((do $Factorial.return_138
                                                       ((suspend
@@ -132,15 +132,15 @@
                                                       (suspend
                                                          ((resume $Factorial.return_139)))
                                                       (apply 2)))
-                                                   (then $Factorial.inner_185
-                                                      ((fetch $Factorial.outer_184)
-                                                         (fetch $Factorial.inner_185)
+                                                   (then $Factorial.inner_187
+                                                      ((fetch $Factorial.outer_186)
+                                                         (fetch $Factorial.inner_187)
                                                          (suspend
                                                             ((resume $Factorial.return_140)))
                                                          (apply 2)))))))
-                                          (then $Factorial.inner_183
-                                             ((fetch $Factorial.outer_182)
-                                                (fetch $Factorial.inner_183)
+                                          (then $Factorial.inner_185
+                                             ((fetch $Factorial.outer_184)
+                                                (fetch $Factorial.inner_185)
                                                 (suspend
                                                    ((resume $Factorial.return_141)))
                                                 (apply 2)))))))
@@ -170,7 +170,7 @@
                                                       ((suspend
                                                          ((resume $Factorial.return_147)))
                                                          (invoke factAcc)))
-                                                      (then $Factorial.outer_186
+                                                      (then $Factorial.outer_198
                                                          ((do $Factorial.return_152
                                                             ((do $Factorial.return_149
                                                                ((do $Factorial.return_148
@@ -181,7 +181,7 @@
                                                                   (suspend
                                                                      ((resume $Factorial.return_149)))
                                                                   (apply 2)))
-                                                               (then $Factorial.outer_188
+                                                               (then $Factorial.outer_200
                                                                   ((do $Factorial.return_151
                                                                      ((do $Factorial.return_150
                                                                         ((suspend
@@ -191,19 +191,19 @@
                                                                         (suspend
                                                                            ((resume $Factorial.return_151)))
                                                                         (apply 2)))
-                                                                     (then $Factorial.inner_189
-                                                                        ((fetch $Factorial.outer_188)
-                                                                           (fetch $Factorial.inner_189)
+                                                                     (then $Factorial.inner_201
+                                                                        ((fetch $Factorial.outer_200)
+                                                                           (fetch $Factorial.inner_201)
                                                                            (suspend
                                                                               ((resume $Factorial.return_152)))
                                                                            (apply 2)))))))
-                                                            (then $Factorial.inner_187
-                                                               ((fetch $Factorial.outer_186)
-                                                                  (fetch $Factorial.inner_187)
+                                                            (then $Factorial.inner_199
+                                                               ((fetch $Factorial.outer_198)
+                                                                  (fetch $Factorial.inner_199)
                                                                   (suspend
                                                                      ((resume $Factorial.return_153)))
                                                                   (apply 2)))))))
-                                                   (then $Factorial.outer_190
+                                                   (then $Factorial.outer_202
                                                       ((do $Factorial.return_156
                                                          ((do $Factorial.return_155
                                                             ((do $Factorial.return_154
@@ -218,9 +218,9 @@
                                                             (suspend
                                                                ((resume $Factorial.return_156)))
                                                             (apply 2)))
-                                                         (then $Factorial.inner_191
-                                                            ((fetch $Factorial.outer_190)
-                                                               (fetch $Factorial.inner_191)
+                                                         (then $Factorial.inner_203
+                                                            ((fetch $Factorial.outer_202)
+                                                               (fetch $Factorial.inner_203)
                                                                (suspend
                                                                   ((resume $Factorial.return_157)))
                                                                (apply 2)))))))
@@ -252,7 +252,7 @@
                               (suspend
                                  ((resume $Factorial.return_163)))
                               (apply 2)))
-                           (then $Factorial.outer_192
+                           (then $Factorial.outer_204
                               ((do $Factorial.return_165
                                  ((do $Factorial.return_164
                                     ((suspend
@@ -262,9 +262,9 @@
                                     (suspend
                                        ((resume $Factorial.return_165)))
                                     (apply 2)))
-                                 (then $Factorial.inner_193
-                                    ((fetch $Factorial.outer_192)
-                                       (fetch $Factorial.inner_193)
+                                 (then $Factorial.inner_205
+                                    ((fetch $Factorial.outer_204)
+                                       (fetch $Factorial.inner_205)
                                        (suspend
                                           ((resume $Factorial.return_166)))
                                        (apply 2)))))))
@@ -286,20 +286,20 @@
                               ((suspend
                                  ((resume $Factorial.return_170)))
                                  (invoke |>)))
-                              (then $Factorial.outer_194
+                              (then $Factorial.outer_214
                                  ((do $Factorial.return_178
                                     ((do $Factorial.return_176
                                        ((do $Factorial.return_171
                                           ((suspend
                                              ((resume $Factorial.return_171)))
                                              (invoke |>)))
-                                          (then $Factorial.outer_196
+                                          (then $Factorial.outer_218
                                              ((do $Factorial.return_175
                                                 ((do $Factorial.return_172
                                                    ((suspend
                                                       ((resume $Factorial.return_172)))
                                                       (invoke fact)))
-                                                   (then $Factorial.outer_198
+                                                   (then $Factorial.outer_220
                                                       ((do $Factorial.return_174
                                                          ((do $Factorial.return_173
                                                             ((suspend
@@ -309,43 +309,43 @@
                                                             (suspend
                                                                ((resume $Factorial.return_174)))
                                                             (apply 2)))
-                                                         (then $Factorial.inner_199
-                                                            ((fetch $Factorial.outer_198)
-                                                               (fetch $Factorial.inner_199)
+                                                         (then $Factorial.inner_221
+                                                            ((fetch $Factorial.outer_220)
+                                                               (fetch $Factorial.inner_221)
                                                                (suspend
                                                                   ((resume $Factorial.return_175)))
                                                                (apply 2)))))))
-                                                (then $Factorial.inner_197
-                                                   ((fetch $Factorial.outer_196)
-                                                      (fetch $Factorial.inner_197)
+                                                (then $Factorial.inner_219
+                                                   ((fetch $Factorial.outer_218)
+                                                      (fetch $Factorial.inner_219)
                                                       (suspend
                                                          ((resume $Factorial.return_176)))
                                                       (apply 2)))))))
-                                       (then $Factorial.outer_200
+                                       (then $Factorial.outer_222
                                           ((do $Factorial.return_177
                                              ((suspend
                                                 ((resume $Factorial.return_177)))
                                                 (invoke toStringInt64)))
-                                             (then $Factorial.inner_201
-                                                ((fetch $Factorial.outer_200)
-                                                   (fetch $Factorial.inner_201)
+                                             (then $Factorial.inner_223
+                                                ((fetch $Factorial.outer_222)
+                                                   (fetch $Factorial.inner_223)
                                                    (suspend
                                                       ((resume $Factorial.return_178)))
                                                    (apply 2)))))))
-                                    (then $Factorial.inner_195
-                                       ((fetch $Factorial.outer_194)
-                                          (fetch $Factorial.inner_195)
+                                    (then $Factorial.inner_215
+                                       ((fetch $Factorial.outer_214)
+                                          (fetch $Factorial.inner_215)
                                           (suspend
                                              ((resume $Factorial.return_179)))
                                           (apply 2)))))))
-                           (then $Factorial.outer_202
+                           (then $Factorial.outer_224
                               ((do $Factorial.return_180
                                  ((suspend
                                     ((resume $Factorial.return_180)))
                                     (invoke putStrLn)))
-                                 (then $Factorial.inner_203
-                                    ((fetch $Factorial.outer_202)
-                                       (fetch $Factorial.inner_203)
+                                 (then $Factorial.inner_225
+                                    ((fetch $Factorial.outer_224)
+                                       (fetch $Factorial.inner_225)
                                        (suspend
                                           ((resume $Factorial.return_181)))
                                        (apply 2)))))))

@@ -10,7 +10,7 @@ import Malgo.Refine.Pass (refine)
 import Malgo.Rename.Pass (rename)
 import Malgo.Rename.RnEnv qualified as RnEnv
 import Malgo.SExpr (sShow)
-import Malgo.Sequent.Core (tryToZero)
+import Malgo.Sequent.Core (flatProgram)
 import Malgo.Sequent.ToCore (toCore)
 import Malgo.Sequent.ToFun (toFun)
 import Malgo.Syntax (Module (..))
@@ -60,5 +60,5 @@ driveZero srcPath = do
     (renamed, _) <- rename rnEnv parsed
     (typed, tcEnv) <- infer rnEnv renamed
     refined <- refine tcEnv typed
-    program <- runReader refined.moduleName $ toFun refined.moduleDefinition >>= toCore >>= tryToZero
+    program <- runReader refined.moduleName $ toFun refined.moduleDefinition >>= toCore >>= flatProgram
     pure $ sShow program

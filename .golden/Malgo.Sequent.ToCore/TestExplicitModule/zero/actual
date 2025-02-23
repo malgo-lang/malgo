@@ -3,35 +3,35 @@
    (cut
       (lambda
          ($TestExplicitModule.param_7 $TestExplicitModule.return_9)
-         (cut
-            (do $TestExplicitModule.return_10
-               (cut
-                  (construct
-                     tuple
-                     ($TestExplicitModule.param_7)
-                     ())
-                  (select
-                     (#TestExplicitModule.$__6
-                        (cut
-                           (do $TestExplicitModule.return_14
-                              (cut
-                                 (do $TestExplicitModule.return_11
-                                    (invoke putStrLn $TestExplicitModule.return_11))
-                                 (then $TestExplicitModule.outer_15
+         (cut-do
+            $TestExplicitModule.return_10
+            (cut
+               (construct
+                  tuple
+                  ($TestExplicitModule.param_7)
+                  ())
+               (select
+                  (#TestExplicitModule.$__6
+                     (cut-do
+                        $TestExplicitModule.return_14
+                        (cut-do
+                           $TestExplicitModule.return_11
+                           (invoke putStrLn $TestExplicitModule.return_11)
+                           (then $TestExplicitModule.outer_15
+                              (cut-do
+                                 $TestExplicitModule.return_13
+                                 (cut-do
+                                    $TestExplicitModule.return_12
+                                    (invoke String# $TestExplicitModule.return_12)
+                                    (apply
+                                       ("Hello, world")
+                                       ($TestExplicitModule.return_13)))
+                                 (then $TestExplicitModule.inner_16
                                     (cut
-                                       (do $TestExplicitModule.return_13
-                                          (cut
-                                             (do $TestExplicitModule.return_12
-                                                (invoke String# $TestExplicitModule.return_12))
-                                             (apply
-                                                ("Hello, world")
-                                                ($TestExplicitModule.return_13))))
-                                       (then $TestExplicitModule.inner_16
-                                          (cut
-                                             $TestExplicitModule.outer_15
-                                             (apply
-                                                ($TestExplicitModule.inner_16)
-                                                ($TestExplicitModule.return_14))))))))
-                           $TestExplicitModule.return_10)))))
+                                       $TestExplicitModule.outer_15
+                                       (apply
+                                          ($TestExplicitModule.inner_16)
+                                          ($TestExplicitModule.return_14)))))))
+                        $TestExplicitModule.return_10))))
             $TestExplicitModule.return_9))
       $TestExplicitModule.return_8)))

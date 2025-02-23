@@ -3,159 +3,159 @@
    (cut
       (lambda
          ($TypeSynonym.param_30 $TypeSynonym.return_36)
-         (cut
-            (do $TypeSynonym.return_37
-               (cut
-                  (construct
-                     tuple
-                     ($TypeSynonym.param_30)
-                     ())
-                  (select
-                     (#TypeSynonym.x_1
-                        (cut #TypeSynonym.x_1 $TypeSynonym.return_37)))))
+         (cut-do
+            $TypeSynonym.return_37
+            (cut
+               (construct
+                  tuple
+                  ($TypeSynonym.param_30)
+                  ())
+               (select
+                  (#TypeSynonym.x_1
+                     (cut #TypeSynonym.x_1 $TypeSynonym.return_37))))
             $TypeSynonym.return_36))
       $TypeSynonym.return_35))
    (hello
       $TypeSynonym.return_38
-      (cut
-         (do $TypeSynonym.label_64
-            (cut
-               (do $TypeSynonym.return_40
-                  (cut
-                     (do $TypeSynonym.return_39
-                        (invoke String# $TypeSynonym.return_39))
-                     (apply
-                        ("hello")
-                        ($TypeSynonym.return_40))))
-               (then $TypeSynonym.var_65
-                  (cut
-                     (do $TypeSynonym.label_66
+      (cut-do
+         $TypeSynonym.label_64
+         (cut-do
+            $TypeSynonym.return_40
+            (cut-do
+               $TypeSynonym.return_39
+               (invoke String# $TypeSynonym.return_39)
+               (apply
+                  ("hello")
+                  ($TypeSynonym.return_40)))
+            (then $TypeSynonym.var_65
+               (cut-do
+                  $TypeSynonym.label_66
+                  (cut-do
+                     $TypeSynonym.return_42
+                     (cut-do
+                        $TypeSynonym.return_41
+                        (invoke String# $TypeSynonym.return_41)
+                        (apply
+                           ("world")
+                           ($TypeSynonym.return_42)))
+                     (then $TypeSynonym.var_67
                         (cut
-                           (do $TypeSynonym.return_42
-                              (cut
-                                 (do $TypeSynonym.return_41
-                                    (invoke String# $TypeSynonym.return_41))
-                                 (apply
-                                    ("world")
-                                    ($TypeSynonym.return_42))))
-                           (then $TypeSynonym.var_67
-                              (cut
-                                 (construct
-                                    tuple
-                                    ($TypeSynonym.var_65 $TypeSynonym.var_67)
-                                    ())
-                                 $TypeSynonym.label_66))))
-                     $TypeSynonym.label_64))))
+                           (construct
+                              tuple
+                              ($TypeSynonym.var_65 $TypeSynonym.var_67)
+                              ())
+                           $TypeSynonym.label_66)))
+                  $TypeSynonym.label_64)))
          $TypeSynonym.return_38))
    (main
       $TypeSynonym.return_43
       (cut
          (lambda
             ($TypeSynonym.param_31 $TypeSynonym.return_44)
-            (cut
-               (do $TypeSynonym.return_45
-                  (cut
-                     (construct
-                        tuple
-                        ($TypeSynonym.param_31)
-                        ())
-                     (select
-                        (#TypeSynonym.$__29
-                           (cut
-                              (do $TypeSynonym.return_63
-                                 (cut
-                                    (do $TypeSynonym.return_48
-                                       (cut
-                                          (do $TypeSynonym.return_46
-                                             (invoke |> $TypeSynonym.return_46))
-                                          (then $TypeSynonym.outer_68
-                                             (cut
-                                                (do $TypeSynonym.return_47
-                                                   (invoke hello $TypeSynonym.return_47))
-                                                (then $TypeSynonym.inner_69
-                                                   (cut
-                                                      $TypeSynonym.outer_68
-                                                      (apply
-                                                         ($TypeSynonym.inner_69)
-                                                         ($TypeSynonym.return_48))))))))
-                                    (apply
-                                       ((lambda
-                                          ($TypeSynonym.param_32 $TypeSynonym.return_49)
+            (cut-do
+               $TypeSynonym.return_45
+               (cut
+                  (construct
+                     tuple
+                     ($TypeSynonym.param_31)
+                     ())
+                  (select
+                     (#TypeSynonym.$__29
+                        (cut-do
+                           $TypeSynonym.return_63
+                           (cut-do
+                              $TypeSynonym.return_48
+                              (cut-do
+                                 $TypeSynonym.return_46
+                                 (invoke |> $TypeSynonym.return_46)
+                                 (then $TypeSynonym.outer_68
+                                    (cut-do
+                                       $TypeSynonym.return_47
+                                       (invoke hello $TypeSynonym.return_47)
+                                       (then $TypeSynonym.inner_69
                                           (cut
-                                             (do $TypeSynonym.return_50
-                                                (cut
-                                                   (construct
-                                                      tuple
-                                                      ($TypeSynonym.param_32)
-                                                      ())
-                                                   (select
-                                                      ((tuple
-                                                         (#TypeSynonym.h_2 #TypeSynonym.w_3))
-                                                         (cut
-                                                            (do $TypeSynonym.return_62
+                                             $TypeSynonym.outer_68
+                                             (apply
+                                                ($TypeSynonym.inner_69)
+                                                ($TypeSynonym.return_48)))))))
+                              (apply
+                                 ((lambda
+                                    ($TypeSynonym.param_32 $TypeSynonym.return_49)
+                                    (cut-do
+                                       $TypeSynonym.return_50
+                                       (cut
+                                          (construct
+                                             tuple
+                                             ($TypeSynonym.param_32)
+                                             ())
+                                          (select
+                                             ((tuple
+                                                (#TypeSynonym.h_2 #TypeSynonym.w_3))
+                                                (cut-do
+                                                   $TypeSynonym.return_62
+                                                   (cut
+                                                      (lambda
+                                                         ($TypeSynonym.tmp_33 $TypeSynonym.return_51)
+                                                         (cut-do
+                                                            $TypeSynonym.return_59
+                                                            (cut
+                                                               (lambda
+                                                                  ($TypeSynonym.tmp_34 $TypeSynonym.return_52)
+                                                                  (cut-do
+                                                                     $TypeSynonym.return_54
+                                                                     (cut-do
+                                                                        $TypeSynonym.return_53
+                                                                        (invoke putStrLn $TypeSynonym.return_53)
+                                                                        (apply
+                                                                           (#TypeSynonym.w_3)
+                                                                           ($TypeSynonym.return_54)))
+                                                                     $TypeSynonym.return_52))
+                                                               (then $TypeSynonym.outer_80
+                                                                  (cut-do
+                                                                     $TypeSynonym.return_58
+                                                                     (cut-do
+                                                                        $TypeSynonym.return_55
+                                                                        (invoke putStr $TypeSynonym.return_55)
+                                                                        (then $TypeSynonym.outer_82
+                                                                           (cut-do
+                                                                              $TypeSynonym.return_57
+                                                                              (cut-do
+                                                                                 $TypeSynonym.return_56
+                                                                                 (invoke String# $TypeSynonym.return_56)
+                                                                                 (apply
+                                                                                    (" ")
+                                                                                    ($TypeSynonym.return_57)))
+                                                                              (then $TypeSynonym.inner_83
+                                                                                 (cut
+                                                                                    $TypeSynonym.outer_82
+                                                                                    (apply
+                                                                                       ($TypeSynonym.inner_83)
+                                                                                       ($TypeSynonym.return_58)))))))
+                                                                     (then $TypeSynonym.inner_81
+                                                                        (cut
+                                                                           $TypeSynonym.outer_80
+                                                                           (apply
+                                                                              ($TypeSynonym.inner_81)
+                                                                              ($TypeSynonym.return_59)))))))
+                                                            $TypeSynonym.return_51))
+                                                      (then $TypeSynonym.outer_84
+                                                         (cut-do
+                                                            $TypeSynonym.return_61
+                                                            (cut-do
+                                                               $TypeSynonym.return_60
+                                                               (invoke putStr $TypeSynonym.return_60)
+                                                               (apply
+                                                                  (#TypeSynonym.h_2)
+                                                                  ($TypeSynonym.return_61)))
+                                                            (then $TypeSynonym.inner_85
                                                                (cut
-                                                                  (lambda
-                                                                     ($TypeSynonym.tmp_33 $TypeSynonym.return_51)
-                                                                     (cut
-                                                                        (do $TypeSynonym.return_59
-                                                                           (cut
-                                                                              (lambda
-                                                                                 ($TypeSynonym.tmp_34 $TypeSynonym.return_52)
-                                                                                 (cut
-                                                                                    (do $TypeSynonym.return_54
-                                                                                       (cut
-                                                                                          (do $TypeSynonym.return_53
-                                                                                             (invoke putStrLn $TypeSynonym.return_53))
-                                                                                          (apply
-                                                                                             (#TypeSynonym.w_3)
-                                                                                             ($TypeSynonym.return_54))))
-                                                                                    $TypeSynonym.return_52))
-                                                                              (then $TypeSynonym.outer_70
-                                                                                 (cut
-                                                                                    (do $TypeSynonym.return_58
-                                                                                       (cut
-                                                                                          (do $TypeSynonym.return_55
-                                                                                             (invoke putStr $TypeSynonym.return_55))
-                                                                                          (then $TypeSynonym.outer_72
-                                                                                             (cut
-                                                                                                (do $TypeSynonym.return_57
-                                                                                                   (cut
-                                                                                                      (do $TypeSynonym.return_56
-                                                                                                         (invoke String# $TypeSynonym.return_56))
-                                                                                                      (apply
-                                                                                                         (" ")
-                                                                                                         ($TypeSynonym.return_57))))
-                                                                                                (then $TypeSynonym.inner_73
-                                                                                                   (cut
-                                                                                                      $TypeSynonym.outer_72
-                                                                                                      (apply
-                                                                                                         ($TypeSynonym.inner_73)
-                                                                                                         ($TypeSynonym.return_58))))))))
-                                                                                    (then $TypeSynonym.inner_71
-                                                                                       (cut
-                                                                                          $TypeSynonym.outer_70
-                                                                                          (apply
-                                                                                             ($TypeSynonym.inner_71)
-                                                                                             ($TypeSynonym.return_59))))))))
-                                                                        $TypeSynonym.return_51))
-                                                                  (then $TypeSynonym.outer_74
-                                                                     (cut
-                                                                        (do $TypeSynonym.return_61
-                                                                           (cut
-                                                                              (do $TypeSynonym.return_60
-                                                                                 (invoke putStr $TypeSynonym.return_60))
-                                                                              (apply
-                                                                                 (#TypeSynonym.h_2)
-                                                                                 ($TypeSynonym.return_61))))
-                                                                        (then $TypeSynonym.inner_75
-                                                                           (cut
-                                                                              $TypeSynonym.outer_74
-                                                                              (apply
-                                                                                 ($TypeSynonym.inner_75)
-                                                                                 ($TypeSynonym.return_62))))))))
-                                                            $TypeSynonym.return_50)))))
-                                             $TypeSynonym.return_49)))
-                                       ($TypeSynonym.return_63))))
-                              $TypeSynonym.return_45)))))
+                                                                  $TypeSynonym.outer_84
+                                                                  (apply
+                                                                     ($TypeSynonym.inner_85)
+                                                                     ($TypeSynonym.return_62)))))))
+                                                   $TypeSynonym.return_50))))
+                                       $TypeSynonym.return_49)))
+                                 ($TypeSynonym.return_63)))
+                           $TypeSynonym.return_45))))
                $TypeSynonym.return_44))
          $TypeSynonym.return_43)))

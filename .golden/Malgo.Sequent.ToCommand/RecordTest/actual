@@ -68,20 +68,20 @@
                                     ((suspend
                                        ((resume $RecordTest.return_68)))
                                        (invoke printString)))
-                                    (then $RecordTest.outer_81
+                                    (then $RecordTest.outer_91
                                        ((do $RecordTest.return_78
                                           ((do $RecordTest.return_69
                                              ((suspend
                                                 ((resume $RecordTest.return_69)))
                                                 (invoke toStringInt32)))
-                                             (then $RecordTest.outer_83
+                                             (then $RecordTest.outer_97
                                                 ((do $RecordTest.return_77
                                                    ((do $RecordTest.return_73
                                                       ((do $RecordTest.return_70
                                                          ((suspend
                                                             ((resume $RecordTest.return_70)))
                                                             (invoke addInt32)))
-                                                         (then $RecordTest.outer_85
+                                                         (then $RecordTest.outer_99
                                                             ((do $RecordTest.return_72
                                                                ((do $RecordTest.return_71
                                                                   ((suspend
@@ -91,13 +91,13 @@
                                                                   (suspend
                                                                      ((resume $RecordTest.return_72)))
                                                                   (apply 2)))
-                                                               (then $RecordTest.inner_86
-                                                                  ((fetch $RecordTest.outer_85)
-                                                                     (fetch $RecordTest.inner_86)
+                                                               (then $RecordTest.inner_100
+                                                                  ((fetch $RecordTest.outer_99)
+                                                                     (fetch $RecordTest.inner_100)
                                                                      (suspend
                                                                         ((resume $RecordTest.return_73)))
                                                                      (apply 2)))))))
-                                                      (then $RecordTest.outer_87
+                                                      (then $RecordTest.outer_101
                                                          ((do $RecordTest.return_76
                                                             ((lambda
                                                                ($RecordTest.param_53 $RecordTest.return_74)
@@ -115,21 +115,21 @@
                                                                (suspend
                                                                   ((resume $RecordTest.return_76)))
                                                                (apply 2)))
-                                                            (then $RecordTest.inner_88
-                                                               ((fetch $RecordTest.outer_87)
-                                                                  (fetch $RecordTest.inner_88)
+                                                            (then $RecordTest.inner_102
+                                                               ((fetch $RecordTest.outer_101)
+                                                                  (fetch $RecordTest.inner_102)
                                                                   (suspend
                                                                      ((resume $RecordTest.return_77)))
                                                                   (apply 2)))))))
-                                                   (then $RecordTest.inner_84
-                                                      ((fetch $RecordTest.outer_83)
-                                                         (fetch $RecordTest.inner_84)
+                                                   (then $RecordTest.inner_98
+                                                      ((fetch $RecordTest.outer_97)
+                                                         (fetch $RecordTest.inner_98)
                                                          (suspend
                                                             ((resume $RecordTest.return_78)))
                                                          (apply 2)))))))
-                                          (then $RecordTest.inner_82
-                                             ((fetch $RecordTest.outer_81)
-                                                (fetch $RecordTest.inner_82)
+                                          (then $RecordTest.inner_92
+                                             ((fetch $RecordTest.outer_91)
+                                                (fetch $RecordTest.inner_92)
                                                 (suspend
                                                    ((resume $RecordTest.return_79)))
                                                 (apply 2)))))))

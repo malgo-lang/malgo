@@ -56,26 +56,26 @@
                                              (apply 2)))
                                           (resume $Test2.return_34))))))
                               (resume $Test2.return_33)))
-                           (then $Test2.outer_43
+                           (then $Test2.outer_45
                               ((do $Test2.return_41
                                  ((do $Test2.return_39
                                     ((suspend
                                        ((resume $Test2.return_39)))
                                        (invoke rtob)))
-                                    (then $Test2.outer_45
+                                    (then $Test2.outer_47
                                        ((do $Test2.return_40
                                           ((suspend
                                              ((resume $Test2.return_40)))
                                              (invoke R)))
-                                          (then $Test2.inner_46
-                                             ((fetch $Test2.outer_45)
-                                                (fetch $Test2.inner_46)
+                                          (then $Test2.inner_48
+                                             ((fetch $Test2.outer_47)
+                                                (fetch $Test2.inner_48)
                                                 (suspend
                                                    ((resume $Test2.return_41)))
                                                 (apply 2)))))))
-                                 (then $Test2.inner_44
-                                    ((fetch $Test2.outer_43)
-                                       (fetch $Test2.inner_44)
+                                 (then $Test2.inner_46
+                                    ((fetch $Test2.outer_45)
+                                       (fetch $Test2.inner_46)
                                        (suspend
                                           ((resume $Test2.return_42)))
                                        (apply 2)))))))

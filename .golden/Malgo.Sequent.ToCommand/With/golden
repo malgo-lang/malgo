@@ -135,7 +135,7 @@
                                                    ((suspend
                                                       ((resume $With.return_120)))
                                                       (invoke printString)))
-                                                   (then $With.outer_145
+                                                   (then $With.outer_147
                                                       ((do $With.return_122
                                                          ((do $With.return_121
                                                             ((suspend
@@ -145,9 +145,9 @@
                                                             (suspend
                                                                ((resume $With.return_122)))
                                                             (apply 2)))
-                                                         (then $With.inner_146
-                                                            ((fetch $With.outer_145)
-                                                               (fetch $With.inner_146)
+                                                         (then $With.inner_148
+                                                            ((fetch $With.outer_147)
+                                                               (fetch $With.inner_148)
                                                                (suspend
                                                                   ((resume $With.return_123)))
                                                                (apply 2)))))))
@@ -181,7 +181,7 @@
                                                                         ((suspend
                                                                            ((resume $With.return_130)))
                                                                            (invoke printAndReturn)))
-                                                                        (then $With.outer_147
+                                                                        (then $With.outer_155
                                                                            ((do $With.return_132
                                                                               ((do $With.return_131
                                                                                  ((suspend
@@ -191,9 +191,9 @@
                                                                                  (suspend
                                                                                     ((resume $With.return_132)))
                                                                                  (apply 2)))
-                                                                              (then $With.inner_148
-                                                                                 ((fetch $With.outer_147)
-                                                                                    (fetch $With.inner_148)
+                                                                              (then $With.inner_156
+                                                                                 ((fetch $With.outer_155)
+                                                                                    (fetch $With.inner_156)
                                                                                     (suspend
                                                                                        ((resume $With.return_133)))
                                                                                     (apply 2)))))))

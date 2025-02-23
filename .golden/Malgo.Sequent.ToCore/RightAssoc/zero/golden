@@ -1,422 +1,470 @@
 ((<|>
    $RightAssoc.return_96
-   (cut
-      (do $RightAssoc.return_97
-         (invoke Cons $RightAssoc.return_97))
+   (cut-do
+      $RightAssoc.return_97
+      (invoke Cons $RightAssoc.return_97)
       $RightAssoc.return_96))
    (f
       $RightAssoc.return_98
       (cut
          (lambda
             ($RightAssoc.param_86 $RightAssoc.return_99)
-            (cut
-               (do $RightAssoc.return_100
-                  (cut
-                     (construct
-                        tuple
-                        ($RightAssoc.param_86)
-                        ())
-                     (select
-                        (#RightAssoc.n_1
-                           (cut
-                              (do $RightAssoc.return_168
-                                 (cut
-                                    (do $RightAssoc.return_133
-                                       (cut
-                                          (do $RightAssoc.return_107
+            (cut-do
+               $RightAssoc.return_100
+               (cut
+                  (construct
+                     tuple
+                     ($RightAssoc.param_86)
+                     ())
+                  (select
+                     (#RightAssoc.n_1
+                        (cut-do
+                           $RightAssoc.return_168
+                           (cut-do
+                              $RightAssoc.return_133
+                              (cut-do
+                                 $RightAssoc.return_107
+                                 (cut-do
+                                    $RightAssoc.return_101
+                                    (invoke <|> $RightAssoc.return_101)
+                                    (then $RightAssoc.outer_183
+                                       (cut-do
+                                          $RightAssoc.label_185
+                                          (cut-do
+                                             $RightAssoc.return_102
+                                             (invoke True $RightAssoc.return_102)
+                                             (then $RightAssoc.var_186
+                                                (cut
+                                                   (construct
+                                                      tuple
+                                                      ($RightAssoc.var_186
+                                                         (lambda
+                                                            ($RightAssoc.param_87 $RightAssoc.return_103)
+                                                            (cut-do
+                                                               $RightAssoc.return_104
+                                                               (cut
+                                                                  (construct
+                                                                     tuple
+                                                                     ($RightAssoc.param_87)
+                                                                     ())
+                                                                  (select
+                                                                     (#RightAssoc.$__17
+                                                                        (cut-do
+                                                                           $RightAssoc.return_106
+                                                                           (cut-do
+                                                                              $RightAssoc.return_105
+                                                                              (invoke Int32# $RightAssoc.return_105)
+                                                                              (apply
+                                                                                 (1_i32)
+                                                                                 ($RightAssoc.return_106)))
+                                                                           $RightAssoc.return_104))))
+                                                               $RightAssoc.return_103)))
+                                                      ())
+                                                   $RightAssoc.label_185)))
+                                          (then $RightAssoc.inner_184
                                              (cut
-                                                (do $RightAssoc.return_101
-                                                   (invoke <|> $RightAssoc.return_101))
+                                                $RightAssoc.outer_183
                                                 (apply
-                                                   ((do $RightAssoc.label_181
+                                                   ($RightAssoc.inner_184)
+                                                   ($RightAssoc.return_107)))))))
+                                 (then $RightAssoc.outer_243
+                                    (cut-do
+                                       $RightAssoc.return_132
+                                       (cut-do
+                                          $RightAssoc.return_114
+                                          (cut-do
+                                             $RightAssoc.return_108
+                                             (invoke <|> $RightAssoc.return_108)
+                                             (then $RightAssoc.outer_247
+                                                (cut-do
+                                                   $RightAssoc.label_249
+                                                   (cut-do
+                                                      $RightAssoc.return_109
+                                                      (invoke True $RightAssoc.return_109)
+                                                      (then $RightAssoc.var_250
+                                                         (cut
+                                                            (construct
+                                                               tuple
+                                                               ($RightAssoc.var_250
+                                                                  (lambda
+                                                                     ($RightAssoc.param_88 $RightAssoc.return_110)
+                                                                     (cut-do
+                                                                        $RightAssoc.return_111
+                                                                        (cut
+                                                                           (construct
+                                                                              tuple
+                                                                              ($RightAssoc.param_88)
+                                                                              ())
+                                                                           (select
+                                                                              (#RightAssoc.$__20
+                                                                                 (cut-do
+                                                                                    $RightAssoc.return_113
+                                                                                    (cut-do
+                                                                                       $RightAssoc.return_112
+                                                                                       (invoke Int32# $RightAssoc.return_112)
+                                                                                       (apply
+                                                                                          (2_i32)
+                                                                                          ($RightAssoc.return_113)))
+                                                                                    $RightAssoc.return_111))))
+                                                                        $RightAssoc.return_110)))
+                                                               ())
+                                                            $RightAssoc.label_249)))
+                                                   (then $RightAssoc.inner_248
                                                       (cut
-                                                         (do $RightAssoc.return_102
-                                                            (invoke True $RightAssoc.return_102))
-                                                         (then $RightAssoc.var_182
+                                                         $RightAssoc.outer_247
+                                                         (apply
+                                                            ($RightAssoc.inner_248)
+                                                            ($RightAssoc.return_114)))))))
+                                          (then $RightAssoc.outer_275
+                                             (cut-do
+                                                $RightAssoc.return_131
+                                                (cut-do
+                                                   $RightAssoc.return_121
+                                                   (cut-do
+                                                      $RightAssoc.return_115
+                                                      (invoke <|> $RightAssoc.return_115)
+                                                      (then $RightAssoc.outer_279
+                                                         (cut-do
+                                                            $RightAssoc.label_281
+                                                            (cut-do
+                                                               $RightAssoc.return_116
+                                                               (invoke True $RightAssoc.return_116)
+                                                               (then $RightAssoc.var_282
+                                                                  (cut
+                                                                     (construct
+                                                                        tuple
+                                                                        ($RightAssoc.var_282
+                                                                           (lambda
+                                                                              ($RightAssoc.param_89 $RightAssoc.return_117)
+                                                                              (cut-do
+                                                                                 $RightAssoc.return_118
+                                                                                 (cut
+                                                                                    (construct
+                                                                                       tuple
+                                                                                       ($RightAssoc.param_89)
+                                                                                       ())
+                                                                                    (select
+                                                                                       (#RightAssoc.$__23
+                                                                                          (cut-do
+                                                                                             $RightAssoc.return_120
+                                                                                             (cut-do
+                                                                                                $RightAssoc.return_119
+                                                                                                (invoke Int32# $RightAssoc.return_119)
+                                                                                                (apply
+                                                                                                   (3_i32)
+                                                                                                   ($RightAssoc.return_120)))
+                                                                                             $RightAssoc.return_118))))
+                                                                                 $RightAssoc.return_117)))
+                                                                        ())
+                                                                     $RightAssoc.label_281)))
+                                                            (then $RightAssoc.inner_280
+                                                               (cut
+                                                                  $RightAssoc.outer_279
+                                                                  (apply
+                                                                     ($RightAssoc.inner_280)
+                                                                     ($RightAssoc.return_121)))))))
+                                                   (then $RightAssoc.outer_291
+                                                      (cut-do
+                                                         $RightAssoc.return_130
+                                                         (cut-do
+                                                            $RightAssoc.return_128
+                                                            (cut-do
+                                                               $RightAssoc.return_122
+                                                               (invoke <|> $RightAssoc.return_122)
+                                                               (then $RightAssoc.outer_295
+                                                                  (cut-do
+                                                                     $RightAssoc.label_297
+                                                                     (cut-do
+                                                                        $RightAssoc.return_123
+                                                                        (invoke True $RightAssoc.return_123)
+                                                                        (then $RightAssoc.var_298
+                                                                           (cut
+                                                                              (construct
+                                                                                 tuple
+                                                                                 ($RightAssoc.var_298
+                                                                                    (lambda
+                                                                                       ($RightAssoc.param_90 $RightAssoc.return_124)
+                                                                                       (cut-do
+                                                                                          $RightAssoc.return_125
+                                                                                          (cut
+                                                                                             (construct
+                                                                                                tuple
+                                                                                                ($RightAssoc.param_90)
+                                                                                                ())
+                                                                                             (select
+                                                                                                (#RightAssoc.$__26
+                                                                                                   (cut-do
+                                                                                                      $RightAssoc.return_127
+                                                                                                      (cut-do
+                                                                                                         $RightAssoc.return_126
+                                                                                                         (invoke Int32# $RightAssoc.return_126)
+                                                                                                         (apply
+                                                                                                            (4_i32)
+                                                                                                            ($RightAssoc.return_127)))
+                                                                                                      $RightAssoc.return_125))))
+                                                                                          $RightAssoc.return_124)))
+                                                                                 ())
+                                                                              $RightAssoc.label_297)))
+                                                                     (then $RightAssoc.inner_296
+                                                                        (cut
+                                                                           $RightAssoc.outer_295
+                                                                           (apply
+                                                                              ($RightAssoc.inner_296)
+                                                                              ($RightAssoc.return_128)))))))
+                                                            (then $RightAssoc.outer_299
+                                                               (cut-do
+                                                                  $RightAssoc.return_129
+                                                                  (invoke Nil $RightAssoc.return_129)
+                                                                  (then $RightAssoc.inner_300
+                                                                     (cut
+                                                                        $RightAssoc.outer_299
+                                                                        (apply
+                                                                           ($RightAssoc.inner_300)
+                                                                           ($RightAssoc.return_130)))))))
+                                                         (then $RightAssoc.inner_292
                                                             (cut
-                                                               (construct
-                                                                  tuple
-                                                                  ($RightAssoc.var_182
-                                                                     (lambda
-                                                                        ($RightAssoc.param_87 $RightAssoc.return_103)
-                                                                        (cut
-                                                                           (do $RightAssoc.return_104
-                                                                              (cut
-                                                                                 (construct
-                                                                                    tuple
-                                                                                    ($RightAssoc.param_87)
-                                                                                    ())
-                                                                                 (select
-                                                                                    (#RightAssoc.$__17
-                                                                                       (cut
-                                                                                          (do $RightAssoc.return_106
-                                                                                             (cut
-                                                                                                (do $RightAssoc.return_105
-                                                                                                   (invoke Int32# $RightAssoc.return_105))
-                                                                                                (apply
-                                                                                                   (1_i32)
-                                                                                                   ($RightAssoc.return_106))))
-                                                                                          $RightAssoc.return_104)))))
-                                                                           $RightAssoc.return_103)))
-                                                                  ())
-                                                               $RightAssoc.label_181)))))
-                                                   ($RightAssoc.return_107))))
-                                          (then $RightAssoc.outer_183
-                                             (cut
-                                                (do $RightAssoc.return_132
+                                                               $RightAssoc.outer_291
+                                                               (apply
+                                                                  ($RightAssoc.inner_292)
+                                                                  ($RightAssoc.return_131)))))))
+                                                (then $RightAssoc.inner_276
                                                    (cut
-                                                      (do $RightAssoc.return_114
-                                                         (cut
-                                                            (do $RightAssoc.return_108
-                                                               (invoke <|> $RightAssoc.return_108))
-                                                            (apply
-                                                               ((do $RightAssoc.label_185
-                                                                  (cut
-                                                                     (do $RightAssoc.return_109
-                                                                        (invoke True $RightAssoc.return_109))
-                                                                     (then $RightAssoc.var_186
-                                                                        (cut
-                                                                           (construct
-                                                                              tuple
-                                                                              ($RightAssoc.var_186
-                                                                                 (lambda
-                                                                                    ($RightAssoc.param_88 $RightAssoc.return_110)
-                                                                                    (cut
-                                                                                       (do $RightAssoc.return_111
-                                                                                          (cut
-                                                                                             (construct
-                                                                                                tuple
-                                                                                                ($RightAssoc.param_88)
-                                                                                                ())
-                                                                                             (select
-                                                                                                (#RightAssoc.$__20
-                                                                                                   (cut
-                                                                                                      (do $RightAssoc.return_113
-                                                                                                         (cut
-                                                                                                            (do $RightAssoc.return_112
-                                                                                                               (invoke Int32# $RightAssoc.return_112))
-                                                                                                            (apply
-                                                                                                               (2_i32)
-                                                                                                               ($RightAssoc.return_113))))
-                                                                                                      $RightAssoc.return_111)))))
-                                                                                       $RightAssoc.return_110)))
-                                                                              ())
-                                                                           $RightAssoc.label_185)))))
-                                                               ($RightAssoc.return_114))))
-                                                      (then $RightAssoc.outer_187
-                                                         (cut
-                                                            (do $RightAssoc.return_131
-                                                               (cut
-                                                                  (do $RightAssoc.return_121
-                                                                     (cut
-                                                                        (do $RightAssoc.return_115
-                                                                           (invoke <|> $RightAssoc.return_115))
-                                                                        (apply
-                                                                           ((do $RightAssoc.label_189
-                                                                              (cut
-                                                                                 (do $RightAssoc.return_116
-                                                                                    (invoke True $RightAssoc.return_116))
-                                                                                 (then $RightAssoc.var_190
-                                                                                    (cut
-                                                                                       (construct
-                                                                                          tuple
-                                                                                          ($RightAssoc.var_190
-                                                                                             (lambda
-                                                                                                ($RightAssoc.param_89 $RightAssoc.return_117)
-                                                                                                (cut
-                                                                                                   (do $RightAssoc.return_118
-                                                                                                      (cut
-                                                                                                         (construct
-                                                                                                            tuple
-                                                                                                            ($RightAssoc.param_89)
-                                                                                                            ())
-                                                                                                         (select
-                                                                                                            (#RightAssoc.$__23
-                                                                                                               (cut
-                                                                                                                  (do $RightAssoc.return_120
-                                                                                                                     (cut
-                                                                                                                        (do $RightAssoc.return_119
-                                                                                                                           (invoke Int32# $RightAssoc.return_119))
-                                                                                                                        (apply
-                                                                                                                           (3_i32)
-                                                                                                                           ($RightAssoc.return_120))))
-                                                                                                                  $RightAssoc.return_118)))))
-                                                                                                   $RightAssoc.return_117)))
-                                                                                          ())
-                                                                                       $RightAssoc.label_189)))))
-                                                                           ($RightAssoc.return_121))))
-                                                                  (then $RightAssoc.outer_191
-                                                                     (cut
-                                                                        (do $RightAssoc.return_130
-                                                                           (cut
-                                                                              (do $RightAssoc.return_128
-                                                                                 (cut
-                                                                                    (do $RightAssoc.return_122
-                                                                                       (invoke <|> $RightAssoc.return_122))
-                                                                                    (apply
-                                                                                       ((do $RightAssoc.label_193
-                                                                                          (cut
-                                                                                             (do $RightAssoc.return_123
-                                                                                                (invoke True $RightAssoc.return_123))
-                                                                                             (then $RightAssoc.var_194
-                                                                                                (cut
-                                                                                                   (construct
-                                                                                                      tuple
-                                                                                                      ($RightAssoc.var_194
-                                                                                                         (lambda
-                                                                                                            ($RightAssoc.param_90 $RightAssoc.return_124)
-                                                                                                            (cut
-                                                                                                               (do $RightAssoc.return_125
-                                                                                                                  (cut
-                                                                                                                     (construct
-                                                                                                                        tuple
-                                                                                                                        ($RightAssoc.param_90)
-                                                                                                                        ())
-                                                                                                                     (select
-                                                                                                                        (#RightAssoc.$__26
-                                                                                                                           (cut
-                                                                                                                              (do $RightAssoc.return_127
-                                                                                                                                 (cut
-                                                                                                                                    (do $RightAssoc.return_126
-                                                                                                                                       (invoke Int32# $RightAssoc.return_126))
-                                                                                                                                    (apply
-                                                                                                                                       (4_i32)
-                                                                                                                                       ($RightAssoc.return_127))))
-                                                                                                                              $RightAssoc.return_125)))))
-                                                                                                               $RightAssoc.return_124)))
-                                                                                                      ())
-                                                                                                   $RightAssoc.label_193)))))
-                                                                                       ($RightAssoc.return_128))))
-                                                                              (then $RightAssoc.outer_195
-                                                                                 (cut
-                                                                                    (do $RightAssoc.return_129
-                                                                                       (invoke Nil $RightAssoc.return_129))
-                                                                                    (then $RightAssoc.inner_196
-                                                                                       (cut
-                                                                                          $RightAssoc.outer_195
-                                                                                          (apply
-                                                                                             ($RightAssoc.inner_196)
-                                                                                             ($RightAssoc.return_130))))))))
-                                                                        (then $RightAssoc.inner_192
-                                                                           (cut
-                                                                              $RightAssoc.outer_191
-                                                                              (apply
-                                                                                 ($RightAssoc.inner_192)
-                                                                                 ($RightAssoc.return_131))))))))
-                                                            (then $RightAssoc.inner_188
-                                                               (cut
-                                                                  $RightAssoc.outer_187
-                                                                  (apply
-                                                                     ($RightAssoc.inner_188)
-                                                                     ($RightAssoc.return_132))))))))
-                                                (then $RightAssoc.inner_184
-                                                   (cut
-                                                      $RightAssoc.outer_183
+                                                      $RightAssoc.outer_275
                                                       (apply
-                                                         ($RightAssoc.inner_184)
-                                                         ($RightAssoc.return_133))))))))
-                                    (then #RightAssoc.x_2
-                                       (cut
-                                          (do $RightAssoc.return_167
-                                             (cut
-                                                (do $RightAssoc.return_166
-                                                   (cut
-                                                      (do $RightAssoc.return_140
+                                                         ($RightAssoc.inner_276)
+                                                         ($RightAssoc.return_132)))))))
+                                       (then $RightAssoc.inner_244
+                                          (cut
+                                             $RightAssoc.outer_243
+                                             (apply
+                                                ($RightAssoc.inner_244)
+                                                ($RightAssoc.return_133)))))))
+                              (then #RightAssoc.x_2
+                                 (cut-do
+                                    $RightAssoc.return_167
+                                    (cut-do
+                                       $RightAssoc.return_166
+                                       (cut-do
+                                          $RightAssoc.return_140
+                                          (cut-do
+                                             $RightAssoc.return_134
+                                             (invoke <|> $RightAssoc.return_134)
+                                             (then $RightAssoc.outer_303
+                                                (cut-do
+                                                   $RightAssoc.label_305
+                                                   (cut-do
+                                                      $RightAssoc.return_135
+                                                      (invoke True $RightAssoc.return_135)
+                                                      (then $RightAssoc.var_306
                                                          (cut
-                                                            (do $RightAssoc.return_134
-                                                               (invoke <|> $RightAssoc.return_134))
-                                                            (apply
-                                                               ((do $RightAssoc.label_197
-                                                                  (cut
-                                                                     (do $RightAssoc.return_135
-                                                                        (invoke True $RightAssoc.return_135))
-                                                                     (then $RightAssoc.var_198
+                                                            (construct
+                                                               tuple
+                                                               ($RightAssoc.var_306
+                                                                  (lambda
+                                                                     ($RightAssoc.param_91 $RightAssoc.return_136)
+                                                                     (cut-do
+                                                                        $RightAssoc.return_137
                                                                         (cut
                                                                            (construct
                                                                               tuple
-                                                                              ($RightAssoc.var_198
-                                                                                 (lambda
-                                                                                    ($RightAssoc.param_91 $RightAssoc.return_136)
-                                                                                    (cut
-                                                                                       (do $RightAssoc.return_137
+                                                                              ($RightAssoc.param_91)
+                                                                              ())
+                                                                           (select
+                                                                              (#RightAssoc.$__47
+                                                                                 (cut-do
+                                                                                    $RightAssoc.return_139
+                                                                                    (cut-do
+                                                                                       $RightAssoc.return_138
+                                                                                       (invoke Int32# $RightAssoc.return_138)
+                                                                                       (apply
+                                                                                          (1_i32)
+                                                                                          ($RightAssoc.return_139)))
+                                                                                    $RightAssoc.return_137))))
+                                                                        $RightAssoc.return_136)))
+                                                               ())
+                                                            $RightAssoc.label_305)))
+                                                   (then $RightAssoc.inner_304
+                                                      (cut
+                                                         $RightAssoc.outer_303
+                                                         (apply
+                                                            ($RightAssoc.inner_304)
+                                                            ($RightAssoc.return_140)))))))
+                                          (then $RightAssoc.outer_363
+                                             (cut-do
+                                                $RightAssoc.return_165
+                                                (cut-do
+                                                   $RightAssoc.return_147
+                                                   (cut-do
+                                                      $RightAssoc.return_141
+                                                      (invoke <|> $RightAssoc.return_141)
+                                                      (then $RightAssoc.outer_367
+                                                         (cut-do
+                                                            $RightAssoc.label_369
+                                                            (cut-do
+                                                               $RightAssoc.return_142
+                                                               (invoke True $RightAssoc.return_142)
+                                                               (then $RightAssoc.var_370
+                                                                  (cut
+                                                                     (construct
+                                                                        tuple
+                                                                        ($RightAssoc.var_370
+                                                                           (lambda
+                                                                              ($RightAssoc.param_92 $RightAssoc.return_143)
+                                                                              (cut-do
+                                                                                 $RightAssoc.return_144
+                                                                                 (cut
+                                                                                    (construct
+                                                                                       tuple
+                                                                                       ($RightAssoc.param_92)
+                                                                                       ())
+                                                                                    (select
+                                                                                       (#RightAssoc.$__50
+                                                                                          (cut-do
+                                                                                             $RightAssoc.return_146
+                                                                                             (cut-do
+                                                                                                $RightAssoc.return_145
+                                                                                                (invoke Int32# $RightAssoc.return_145)
+                                                                                                (apply
+                                                                                                   (2_i32)
+                                                                                                   ($RightAssoc.return_146)))
+                                                                                             $RightAssoc.return_144))))
+                                                                                 $RightAssoc.return_143)))
+                                                                        ())
+                                                                     $RightAssoc.label_369)))
+                                                            (then $RightAssoc.inner_368
+                                                               (cut
+                                                                  $RightAssoc.outer_367
+                                                                  (apply
+                                                                     ($RightAssoc.inner_368)
+                                                                     ($RightAssoc.return_147)))))))
+                                                   (then $RightAssoc.outer_395
+                                                      (cut-do
+                                                         $RightAssoc.return_164
+                                                         (cut-do
+                                                            $RightAssoc.return_154
+                                                            (cut-do
+                                                               $RightAssoc.return_148
+                                                               (invoke <|> $RightAssoc.return_148)
+                                                               (then $RightAssoc.outer_399
+                                                                  (cut-do
+                                                                     $RightAssoc.label_401
+                                                                     (cut-do
+                                                                        $RightAssoc.return_149
+                                                                        (invoke True $RightAssoc.return_149)
+                                                                        (then $RightAssoc.var_402
+                                                                           (cut
+                                                                              (construct
+                                                                                 tuple
+                                                                                 ($RightAssoc.var_402
+                                                                                    (lambda
+                                                                                       ($RightAssoc.param_93 $RightAssoc.return_150)
+                                                                                       (cut-do
+                                                                                          $RightAssoc.return_151
                                                                                           (cut
                                                                                              (construct
                                                                                                 tuple
-                                                                                                ($RightAssoc.param_91)
+                                                                                                ($RightAssoc.param_93)
                                                                                                 ())
                                                                                              (select
-                                                                                                (#RightAssoc.$__47
-                                                                                                   (cut
-                                                                                                      (do $RightAssoc.return_139
-                                                                                                         (cut
-                                                                                                            (do $RightAssoc.return_138
-                                                                                                               (invoke Int32# $RightAssoc.return_138))
-                                                                                                            (apply
-                                                                                                               (1_i32)
-                                                                                                               ($RightAssoc.return_139))))
-                                                                                                      $RightAssoc.return_137)))))
-                                                                                       $RightAssoc.return_136)))
-                                                                              ())
-                                                                           $RightAssoc.label_197)))))
-                                                               ($RightAssoc.return_140))))
-                                                      (then $RightAssoc.outer_199
-                                                         (cut
-                                                            (do $RightAssoc.return_165
-                                                               (cut
-                                                                  (do $RightAssoc.return_147
-                                                                     (cut
-                                                                        (do $RightAssoc.return_141
-                                                                           (invoke <|> $RightAssoc.return_141))
-                                                                        (apply
-                                                                           ((do $RightAssoc.label_201
-                                                                              (cut
-                                                                                 (do $RightAssoc.return_142
-                                                                                    (invoke True $RightAssoc.return_142))
-                                                                                 (then $RightAssoc.var_202
+                                                                                                (#RightAssoc.$__53
+                                                                                                   (cut-do
+                                                                                                      $RightAssoc.return_153
+                                                                                                      (cut-do
+                                                                                                         $RightAssoc.return_152
+                                                                                                         (invoke Int32# $RightAssoc.return_152)
+                                                                                                         (apply
+                                                                                                            (3_i32)
+                                                                                                            ($RightAssoc.return_153)))
+                                                                                                      $RightAssoc.return_151))))
+                                                                                          $RightAssoc.return_150)))
+                                                                                 ())
+                                                                              $RightAssoc.label_401)))
+                                                                     (then $RightAssoc.inner_400
+                                                                        (cut
+                                                                           $RightAssoc.outer_399
+                                                                           (apply
+                                                                              ($RightAssoc.inner_400)
+                                                                              ($RightAssoc.return_154)))))))
+                                                            (then $RightAssoc.outer_411
+                                                               (cut-do
+                                                                  $RightAssoc.return_163
+                                                                  (cut-do
+                                                                     $RightAssoc.return_161
+                                                                     (cut-do
+                                                                        $RightAssoc.return_155
+                                                                        (invoke <|> $RightAssoc.return_155)
+                                                                        (then $RightAssoc.outer_415
+                                                                           (cut-do
+                                                                              $RightAssoc.label_417
+                                                                              (cut-do
+                                                                                 $RightAssoc.return_156
+                                                                                 (invoke True $RightAssoc.return_156)
+                                                                                 (then $RightAssoc.var_418
                                                                                     (cut
                                                                                        (construct
                                                                                           tuple
-                                                                                          ($RightAssoc.var_202
+                                                                                          ($RightAssoc.var_418
                                                                                              (lambda
-                                                                                                ($RightAssoc.param_92 $RightAssoc.return_143)
-                                                                                                (cut
-                                                                                                   (do $RightAssoc.return_144
-                                                                                                      (cut
-                                                                                                         (construct
-                                                                                                            tuple
-                                                                                                            ($RightAssoc.param_92)
-                                                                                                            ())
-                                                                                                         (select
-                                                                                                            (#RightAssoc.$__50
-                                                                                                               (cut
-                                                                                                                  (do $RightAssoc.return_146
-                                                                                                                     (cut
-                                                                                                                        (do $RightAssoc.return_145
-                                                                                                                           (invoke Int32# $RightAssoc.return_145))
-                                                                                                                        (apply
-                                                                                                                           (2_i32)
-                                                                                                                           ($RightAssoc.return_146))))
-                                                                                                                  $RightAssoc.return_144)))))
-                                                                                                   $RightAssoc.return_143)))
-                                                                                          ())
-                                                                                       $RightAssoc.label_201)))))
-                                                                           ($RightAssoc.return_147))))
-                                                                  (then $RightAssoc.outer_203
-                                                                     (cut
-                                                                        (do $RightAssoc.return_164
-                                                                           (cut
-                                                                              (do $RightAssoc.return_154
-                                                                                 (cut
-                                                                                    (do $RightAssoc.return_148
-                                                                                       (invoke <|> $RightAssoc.return_148))
-                                                                                    (apply
-                                                                                       ((do $RightAssoc.label_205
-                                                                                          (cut
-                                                                                             (do $RightAssoc.return_149
-                                                                                                (invoke True $RightAssoc.return_149))
-                                                                                             (then $RightAssoc.var_206
-                                                                                                (cut
-                                                                                                   (construct
-                                                                                                      tuple
-                                                                                                      ($RightAssoc.var_206
-                                                                                                         (lambda
-                                                                                                            ($RightAssoc.param_93 $RightAssoc.return_150)
-                                                                                                            (cut
-                                                                                                               (do $RightAssoc.return_151
-                                                                                                                  (cut
-                                                                                                                     (construct
-                                                                                                                        tuple
-                                                                                                                        ($RightAssoc.param_93)
-                                                                                                                        ())
-                                                                                                                     (select
-                                                                                                                        (#RightAssoc.$__53
-                                                                                                                           (cut
-                                                                                                                              (do $RightAssoc.return_153
-                                                                                                                                 (cut
-                                                                                                                                    (do $RightAssoc.return_152
-                                                                                                                                       (invoke Int32# $RightAssoc.return_152))
-                                                                                                                                    (apply
-                                                                                                                                       (3_i32)
-                                                                                                                                       ($RightAssoc.return_153))))
-                                                                                                                              $RightAssoc.return_151)))))
-                                                                                                               $RightAssoc.return_150)))
-                                                                                                      ())
-                                                                                                   $RightAssoc.label_205)))))
-                                                                                       ($RightAssoc.return_154))))
-                                                                              (then $RightAssoc.outer_207
-                                                                                 (cut
-                                                                                    (do $RightAssoc.return_163
-                                                                                       (cut
-                                                                                          (do $RightAssoc.return_161
-                                                                                             (cut
-                                                                                                (do $RightAssoc.return_155
-                                                                                                   (invoke <|> $RightAssoc.return_155))
-                                                                                                (apply
-                                                                                                   ((do $RightAssoc.label_209
-                                                                                                      (cut
-                                                                                                         (do $RightAssoc.return_156
-                                                                                                            (invoke True $RightAssoc.return_156))
-                                                                                                         (then $RightAssoc.var_210
-                                                                                                            (cut
-                                                                                                               (construct
-                                                                                                                  tuple
-                                                                                                                  ($RightAssoc.var_210
-                                                                                                                     (lambda
-                                                                                                                        ($RightAssoc.param_94 $RightAssoc.return_157)
-                                                                                                                        (cut
-                                                                                                                           (do $RightAssoc.return_158
-                                                                                                                              (cut
-                                                                                                                                 (construct
-                                                                                                                                    tuple
-                                                                                                                                    ($RightAssoc.param_94)
-                                                                                                                                    ())
-                                                                                                                                 (select
-                                                                                                                                    (#RightAssoc.$__56
-                                                                                                                                       (cut
-                                                                                                                                          (do $RightAssoc.return_160
-                                                                                                                                             (cut
-                                                                                                                                                (do $RightAssoc.return_159
-                                                                                                                                                   (invoke Int32# $RightAssoc.return_159))
-                                                                                                                                                (apply
-                                                                                                                                                   (4_i32)
-                                                                                                                                                   ($RightAssoc.return_160))))
-                                                                                                                                          $RightAssoc.return_158)))))
-                                                                                                                           $RightAssoc.return_157)))
-                                                                                                                  ())
-                                                                                                               $RightAssoc.label_209)))))
-                                                                                                   ($RightAssoc.return_161))))
-                                                                                          (then $RightAssoc.outer_211
-                                                                                             (cut
-                                                                                                (do $RightAssoc.return_162
-                                                                                                   (invoke Nil $RightAssoc.return_162))
-                                                                                                (then $RightAssoc.inner_212
+                                                                                                ($RightAssoc.param_94 $RightAssoc.return_157)
+                                                                                                (cut-do
+                                                                                                   $RightAssoc.return_158
                                                                                                    (cut
-                                                                                                      $RightAssoc.outer_211
-                                                                                                      (apply
-                                                                                                         ($RightAssoc.inner_212)
-                                                                                                         ($RightAssoc.return_163))))))))
-                                                                                    (then $RightAssoc.inner_208
-                                                                                       (cut
-                                                                                          $RightAssoc.outer_207
-                                                                                          (apply
-                                                                                             ($RightAssoc.inner_208)
-                                                                                             ($RightAssoc.return_164))))))))
-                                                                        (then $RightAssoc.inner_204
-                                                                           (cut
-                                                                              $RightAssoc.outer_203
-                                                                              (apply
-                                                                                 ($RightAssoc.inner_204)
-                                                                                 ($RightAssoc.return_165))))))))
-                                                            (then $RightAssoc.inner_200
-                                                               (cut
-                                                                  $RightAssoc.outer_199
-                                                                  (apply
-                                                                     ($RightAssoc.inner_200)
-                                                                     ($RightAssoc.return_166))))))))
-                                                (then #RightAssoc.y_3
-                                                   (cut #RightAssoc.y_3 $RightAssoc.return_167))))
-                                          $RightAssoc.return_168))))
-                              $RightAssoc.return_100)))))
+                                                                                                      (construct
+                                                                                                         tuple
+                                                                                                         ($RightAssoc.param_94)
+                                                                                                         ())
+                                                                                                      (select
+                                                                                                         (#RightAssoc.$__56
+                                                                                                            (cut-do
+                                                                                                               $RightAssoc.return_160
+                                                                                                               (cut-do
+                                                                                                                  $RightAssoc.return_159
+                                                                                                                  (invoke Int32# $RightAssoc.return_159)
+                                                                                                                  (apply
+                                                                                                                     (4_i32)
+                                                                                                                     ($RightAssoc.return_160)))
+                                                                                                               $RightAssoc.return_158))))
+                                                                                                   $RightAssoc.return_157)))
+                                                                                          ())
+                                                                                       $RightAssoc.label_417)))
+                                                                              (then $RightAssoc.inner_416
+                                                                                 (cut
+                                                                                    $RightAssoc.outer_415
+                                                                                    (apply
+                                                                                       ($RightAssoc.inner_416)
+                                                                                       ($RightAssoc.return_161)))))))
+                                                                     (then $RightAssoc.outer_419
+                                                                        (cut-do
+                                                                           $RightAssoc.return_162
+                                                                           (invoke Nil $RightAssoc.return_162)
+                                                                           (then $RightAssoc.inner_420
+                                                                              (cut
+                                                                                 $RightAssoc.outer_419
+                                                                                 (apply
+                                                                                    ($RightAssoc.inner_420)
+                                                                                    ($RightAssoc.return_163)))))))
+                                                                  (then $RightAssoc.inner_412
+                                                                     (cut
+                                                                        $RightAssoc.outer_411
+                                                                        (apply
+                                                                           ($RightAssoc.inner_412)
+                                                                           ($RightAssoc.return_164)))))))
+                                                         (then $RightAssoc.inner_396
+                                                            (cut
+                                                               $RightAssoc.outer_395
+                                                               (apply
+                                                                  ($RightAssoc.inner_396)
+                                                                  ($RightAssoc.return_165)))))))
+                                                (then $RightAssoc.inner_364
+                                                   (cut
+                                                      $RightAssoc.outer_363
+                                                      (apply
+                                                         ($RightAssoc.inner_364)
+                                                         ($RightAssoc.return_166)))))))
+                                       (then #RightAssoc.y_3
+                                          (cut #RightAssoc.y_3 $RightAssoc.return_167)))
+                                    $RightAssoc.return_168)))
+                           $RightAssoc.return_100))))
                $RightAssoc.return_99))
          $RightAssoc.return_98))
    (main
@@ -424,59 +472,59 @@
       (cut
          (lambda
             ($RightAssoc.param_95 $RightAssoc.return_170)
-            (cut
-               (do $RightAssoc.return_171
-                  (cut
-                     (construct
-                        tuple
-                        ($RightAssoc.param_95)
-                        ())
-                     (select
-                        (#RightAssoc.$__85
-                           (cut
-                              (do $RightAssoc.return_180
-                                 (cut
-                                    (do $RightAssoc.return_175
-                                       (cut
-                                          (do $RightAssoc.return_172
-                                             (invoke f $RightAssoc.return_172))
-                                          (then $RightAssoc.outer_213
-                                             (cut
-                                                (do $RightAssoc.return_174
-                                                   (cut
-                                                      (do $RightAssoc.return_173
-                                                         (invoke Int32# $RightAssoc.return_173))
-                                                      (apply
-                                                         (4_i32)
-                                                         ($RightAssoc.return_174))))
-                                                (then $RightAssoc.inner_214
-                                                   (cut
-                                                      $RightAssoc.outer_213
-                                                      (apply
-                                                         ($RightAssoc.inner_214)
-                                                         ($RightAssoc.return_175))))))))
-                                    (then #RightAssoc.x_4
-                                       (cut
-                                          (do $RightAssoc.return_179
-                                             (cut
-                                                (do $RightAssoc.return_176
-                                                   (invoke printString $RightAssoc.return_176))
-                                                (then $RightAssoc.outer_215
-                                                   (cut
-                                                      (do $RightAssoc.return_178
-                                                         (cut
-                                                            (do $RightAssoc.return_177
-                                                               (invoke String# $RightAssoc.return_177))
-                                                            (apply
-                                                               ("OK")
-                                                               ($RightAssoc.return_178))))
-                                                      (then $RightAssoc.inner_216
-                                                         (cut
-                                                            $RightAssoc.outer_215
-                                                            (apply
-                                                               ($RightAssoc.inner_216)
-                                                               ($RightAssoc.return_179))))))))
-                                          $RightAssoc.return_180))))
-                              $RightAssoc.return_171)))))
+            (cut-do
+               $RightAssoc.return_171
+               (cut
+                  (construct
+                     tuple
+                     ($RightAssoc.param_95)
+                     ())
+                  (select
+                     (#RightAssoc.$__85
+                        (cut-do
+                           $RightAssoc.return_180
+                           (cut-do
+                              $RightAssoc.return_175
+                              (cut-do
+                                 $RightAssoc.return_172
+                                 (invoke f $RightAssoc.return_172)
+                                 (then $RightAssoc.outer_421
+                                    (cut-do
+                                       $RightAssoc.return_174
+                                       (cut-do
+                                          $RightAssoc.return_173
+                                          (invoke Int32# $RightAssoc.return_173)
+                                          (apply
+                                             (4_i32)
+                                             ($RightAssoc.return_174)))
+                                       (then $RightAssoc.inner_422
+                                          (cut
+                                             $RightAssoc.outer_421
+                                             (apply
+                                                ($RightAssoc.inner_422)
+                                                ($RightAssoc.return_175)))))))
+                              (then #RightAssoc.x_4
+                                 (cut-do
+                                    $RightAssoc.return_179
+                                    (cut-do
+                                       $RightAssoc.return_176
+                                       (invoke printString $RightAssoc.return_176)
+                                       (then $RightAssoc.outer_423
+                                          (cut-do
+                                             $RightAssoc.return_178
+                                             (cut-do
+                                                $RightAssoc.return_177
+                                                (invoke String# $RightAssoc.return_177)
+                                                (apply
+                                                   ("OK")
+                                                   ($RightAssoc.return_178)))
+                                             (then $RightAssoc.inner_424
+                                                (cut
+                                                   $RightAssoc.outer_423
+                                                   (apply
+                                                      ($RightAssoc.inner_424)
+                                                      ($RightAssoc.return_179)))))))
+                                    $RightAssoc.return_180)))
+                           $RightAssoc.return_171))))
                $RightAssoc.return_170))
          $RightAssoc.return_169)))

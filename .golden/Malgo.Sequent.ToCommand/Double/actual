@@ -12,13 +12,13 @@
                         ((suspend
                            ((resume $Double.return_13)))
                            (invoke putStr)))
-                        (then $Double.outer_19
+                        (then $Double.outer_21
                            ((do $Double.return_17
                               ((do $Double.return_14
                                  ((suspend
                                     ((resume $Double.return_14)))
                                     (invoke toStringDouble)))
-                                 (then $Double.outer_21
+                                 (then $Double.outer_23
                                     ((do $Double.return_16
                                        ((do $Double.return_15
                                           ((suspend
@@ -28,15 +28,15 @@
                                           (suspend
                                              ((resume $Double.return_16)))
                                           (apply 2)))
-                                       (then $Double.inner_22
-                                          ((fetch $Double.outer_21)
-                                             (fetch $Double.inner_22)
+                                       (then $Double.inner_24
+                                          ((fetch $Double.outer_23)
+                                             (fetch $Double.inner_24)
                                              (suspend
                                                 ((resume $Double.return_17)))
                                              (apply 2)))))))
-                              (then $Double.inner_20
-                                 ((fetch $Double.outer_19)
-                                    (fetch $Double.inner_20)
+                              (then $Double.inner_22
+                                 ((fetch $Double.outer_21)
+                                    (fetch $Double.inner_22)
                                     (suspend
                                        ((resume $Double.return_18)))
                                     (apply 2)))))))

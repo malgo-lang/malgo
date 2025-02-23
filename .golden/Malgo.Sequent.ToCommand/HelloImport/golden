@@ -36,7 +36,7 @@
                                           (#HelloImport.f_0
                                              ((do $HelloImport.return_32
                                                 ((fetch #HelloImport.f_0)
-                                                   (then $HelloImport.outer_41
+                                                   (then $HelloImport.outer_43
                                                       ((do $HelloImport.return_31
                                                          ((do $HelloImport.return_30
                                                             ((suspend
@@ -46,9 +46,9 @@
                                                             (suspend
                                                                ((resume $HelloImport.return_31)))
                                                             (apply 2)))
-                                                         (then $HelloImport.inner_42
-                                                            ((fetch $HelloImport.outer_41)
-                                                               (fetch $HelloImport.inner_42)
+                                                         (then $HelloImport.inner_44
+                                                            ((fetch $HelloImport.outer_43)
+                                                               (fetch $HelloImport.inner_44)
                                                                (suspend
                                                                   ((resume $HelloImport.return_32)))
                                                                (apply 2)))))))
@@ -58,13 +58,13 @@
                                  ((resume $HelloImport.return_33)))
                               (apply 2)))
                            (resume $HelloImport.return_24)))
-                        (then $HelloImport.outer_43
+                        (then $HelloImport.outer_47
                            ((do $HelloImport.return_37
                               ((do $HelloImport.return_34
                                  ((suspend
                                     ((resume $HelloImport.return_34)))
                                     (invoke putStr)))
-                                 (then $HelloImport.outer_45
+                                 (then $HelloImport.outer_49
                                     ((do $HelloImport.return_36
                                        ((do $HelloImport.return_35
                                           ((suspend
@@ -74,15 +74,15 @@
                                           (suspend
                                              ((resume $HelloImport.return_36)))
                                           (apply 2)))
-                                       (then $HelloImport.inner_46
-                                          ((fetch $HelloImport.outer_45)
-                                             (fetch $HelloImport.inner_46)
+                                       (then $HelloImport.inner_50
+                                          ((fetch $HelloImport.outer_49)
+                                             (fetch $HelloImport.inner_50)
                                              (suspend
                                                 ((resume $HelloImport.return_37)))
                                              (apply 2)))))))
-                              (then $HelloImport.inner_44
-                                 ((fetch $HelloImport.outer_43)
-                                    (fetch $HelloImport.inner_44)
+                              (then $HelloImport.inner_48
+                                 ((fetch $HelloImport.outer_47)
+                                    (fetch $HelloImport.inner_48)
                                     (suspend
                                        ((resume $HelloImport.return_38)))
                                     (apply 2)))))))

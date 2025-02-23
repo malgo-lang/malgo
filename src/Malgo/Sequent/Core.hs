@@ -7,13 +7,13 @@ module Malgo.Sequent.Core
     Rank (..),
     Statement (..),
     Branch (..),
-    convertToZero,
-    tryToZero,
+    flatProgram,
   )
 where
 
 import Data.Map qualified as Map
 import Data.SCargot.Repr.Basic qualified as S
+import Data.Traversable (for)
 import Effectful
 import Effectful.Reader.Static (Reader)
 import Effectful.State.Static.Local (State)
@@ -96,151 +96,134 @@ deriving stock instance Show (Branch x)
 instance ToSExpr (Branch x) where
   toSExpr (Branch _ pattern statement) = S.L [toSExpr pattern, toSExpr statement]
 
-convertToZero :: (State Uniq :> es, Reader ModuleName :> es) => Program One -> Eff es (Program Zero)
-convertToZero Program {..} = do
-  definitions' <- traverse (\(range, name, return, producer) -> (range,name,return,) . castToZero <$> flat producer) definitions
-  pure (Program definitions')
+-- | Flattens a program into a program with no nested do expressions.
+flatProgram :: (State Uniq :> es, Reader ModuleName :> es) => Program One -> Eff es (Program Zero)
+flatProgram Program {definitions} = Program <$> traverse flatDefinition definitions
 
-tryToZero :: (State Uniq :> es, Reader ModuleName :> es) => Program One -> Eff es (Program One)
-tryToZero Program {..} = do
-  definitions' <- traverse (\(range, name, return, producer) -> (range,name,return,) <$> flat producer) definitions
-  pure (Program definitions')
+flatDefinition :: (State Uniq :> es, Reader ModuleName :> es) => (t1, t2, t3, Statement One) -> Eff es (t1, t2, t3, Statement Zero)
+flatDefinition (range, name, return, statement) = (range,name,return,) <$> flatStatement statement
 
-class Flat a b where
-  flat :: a -> b
+-- | Wip is a temporary data structure to represent the intermediate state of the flattening process.
+data Wip
+  = Do' Range Name (Statement Zero)
+  | Zero (Producer Zero)
 
-instance (State Uniq :> es, Reader ModuleName :> es) => Flat (Producer One) (Eff es (Producer One)) where
-  flat :: Producer One -> Eff es (Producer One)
-  flat (Var range name) = pure (Var range name)
-  flat (Literal range literal) = pure (Literal range literal)
-  flat (Construct range tag producers consumers) = do
-    let (flatProducers, mproducer, rest) = split producers
-    case mproducer of
-      Just producer -> do
-        -- FIXME
-        label <- newTemporalId "label"
-        var <- newTemporalId "var"
-        producer' <- flat producer
-        constructor <- flat (Construct range tag (flatProducers <> [Var range var] <> rest) consumers)
-        pure
-          $ Do range label
-          $ Cut producer'
-          $ Then range var
-          $ Cut constructor
-          $ Label range label
-      Nothing -> do
-        producers' <- traverse flat flatProducers
-        consumers' <- traverse flat consumers
-        pure (Construct range tag producers' consumers')
-  flat (Lambda range names statement) = do
-    statement' <- flat statement
-    pure (Lambda range names statement')
-  flat (Object range kvs) = do
-    kvs' <- traverse flat kvs
-    pure (Object range kvs')
-  flat (Do range name statement) = do
-    statement' <- flat statement
-    pure (Do range name statement')
+cut :: Wip -> Consumer Zero -> Statement Zero
+cut (Do' range name statement) consumer = CutDo range name statement consumer
+cut (Zero producer) consumer = Cut producer consumer
 
-split :: [Producer One] -> ([Producer One], Maybe (Producer One), [Producer One])
-split = aux []
+flatStatement :: (State Uniq :> es, Reader ModuleName :> es) => Statement One -> Eff es (Statement Zero)
+flatStatement (Cut producer consumer) = do
+  producer <- flatProducer producer
+  consumer <- flatConsumer consumer
+  case producer of
+    Do' range name statement -> pure $ CutDo range name statement consumer
+    Zero producer -> pure $ Cut producer consumer
+flatStatement (Primitive range name producers consumers) = do
+  (zeros, mproducer, rest) <- split producers
+  case mproducer of
+    Just producer -> do
+      var <- newTemporalId "var"
+      producer' <- flatProducer producer
+      primitive <- flatStatement (Primitive range name (zeros <> [Var range var] <> rest) consumers)
+      pure
+        $ cut producer'
+        $ Then range var
+        $ primitive
+    Nothing -> do
+      producers' <- for zeros \zero -> do
+        zero' <- flatProducer zero
+        case zero' of
+          Zero producer' -> pure producer'
+          Do' {} -> error "impossible"
+      consumers' <- traverse flatConsumer consumers
+      pure $ Primitive range name producers' consumers'
+flatStatement (Invoke range name consumer) = do
+  consumer' <- flatConsumer consumer
+  pure $ Invoke range name consumer'
 
-aux :: [Producer One] -> [Producer One] -> ([Producer One], Maybe (Producer One), [Producer One])
-aux acc [] = (reverse acc, Nothing, [])
-aux acc (p : ps) = case p of
-  Do {} -> (reverse acc, Just p, ps)
-  _ -> aux (p : acc) ps
+flatProducer :: (State Uniq :> es, Reader ModuleName :> es) => Producer One -> Eff es Wip
+flatProducer (Var range name) = pure $ Zero (Var range name)
+flatProducer (Literal range literal) = pure $ Zero (Literal range literal)
+flatProducer (Construct range tag producers consumers) = do
+  (zeros, mproducer, rest) <- split producers
+  case mproducer of
+    Just producer -> do
+      label <- newTemporalId "label"
+      var <- newTemporalId "var"
+      constructor <- flatProducer (Construct range tag (zeros <> [Var range var] <> rest) consumers)
+      producer' <- flatProducer producer
+      pure
+        $ Do' range label
+        $ cut producer'
+        $ Then range var
+        $ cut constructor
+        $ Label range label
+    Nothing -> do
+      producers' <- for zeros \zero -> do
+        zero' <- flatProducer zero
+        case zero' of
+          Zero producer' -> pure producer'
+          Do' {} -> error "impossible"
+      consumers' <- traverse flatConsumer consumers
+      pure $ Zero (Construct range tag producers' consumers')
+flatProducer (Lambda range names statement) = do
+  statement <- flatStatement statement
+  pure $ Zero (Lambda range names statement)
+flatProducer (Object range fields) = do
+  fields <- traverse flatStatement fields
+  pure $ Zero (Object range fields)
+flatProducer (Do range name statement) = do
+  statement' <- flatStatement statement
+  pure $ Do' range name statement'
 
-instance (State Uniq :> es, Reader ModuleName :> es) => Flat (Consumer One) (Eff es (Consumer One)) where
-  flat :: Consumer One -> Eff es (Consumer One)
-  flat (Label range name) = pure (Label range name)
-  flat (Apply range producers consumers) = do
-    let (flatProducers, mproducer, rest) = split producers
-    case mproducer of
-      Just producer -> do
-        outer <- newTemporalId "outer"
-        inner <- newTemporalId "inner"
-        producer' <- flat producer
-        apply <- flat (Apply range (flatProducers <> [Var range inner] <> rest) consumers)
-        pure
-          $ Then range outer
-          $ Cut producer'
-          $ Then range inner
-          $ Cut (Var range outer) apply
-      Nothing -> do
-        producers' <- traverse flat flatProducers
-        consumers' <- traverse flat consumers
-        pure (Apply range producers' consumers')
-  flat (Project range field return) = do
-    return' <- flat return
-    pure (Project range field return')
-  flat (Then range name statement) = do
-    statement' <- flat statement
-    pure (Then range name statement')
-  flat (Finish range) = pure (Finish range)
-  flat (Select range branches) = do
-    branches' <- traverse flat branches
-    pure (Select range branches')
+flatConsumer :: (State Uniq :> es, Reader ModuleName :> es) => Consumer One -> Eff es (Consumer Zero)
+flatConsumer (Label range name) = pure $ Label range name
+flatConsumer (Apply range producers consumers) = do
+  (zeros, mproducer, rest) <- split producers
+  case mproducer of
+    Just producer -> do
+      outer <- newTemporalId "outer"
+      inner <- newTemporalId "inner"
+      apply <- flatConsumer (Apply range (zeros <> [Var range inner] <> rest) consumers)
+      producer' <- flatProducer producer
+      pure
+        $ Then range outer
+        $ cut producer'
+        $ Then range inner
+        $ cut (Zero (Var range outer))
+        $ apply
+    Nothing -> do
+      producers' <- for zeros \zero -> do
+        zero' <- flatProducer zero
+        case zero' of
+          Zero producer' -> pure producer'
+          Do' {} -> error "impossible"
+      consumers' <- traverse flatConsumer consumers
+      pure $ Apply range producers' consumers'
+flatConsumer (Project range field return) = do
+  return' <- flatConsumer return
+  pure $ Project range field return'
+flatConsumer (Then range name statement) = do
+  statement' <- flatStatement statement
+  pure $ Then range name statement'
+flatConsumer (Finish range) = pure $ Finish range
+flatConsumer (Select range branches) = do
+  branches <- traverse flatBranch branches
+  pure $ Select range branches
 
-instance (State Uniq :> es, Reader ModuleName :> es) => Flat (Statement One) (Eff es (Statement One)) where
-  flat :: Statement One -> Eff es (Statement One)
-  flat (Cut producer consumer) = do
-    producer' <- flat producer
-    consumer' <- flat consumer
-    pure (Cut producer' consumer')
-  flat (Primitive range name producers consumers) = do
-    let (flatProducers, mproducer, rest) = split producers
-    case mproducer of
-      Just producer -> do
-        var <- newTemporalId "var"
-        producer' <- flat producer
-        primitive <- flat (Primitive range name (flatProducers <> [Var range var] <> rest) consumers)
-        pure $ Cut producer' $ Then range var primitive
-      Nothing -> do
-        producers' <- traverse flat flatProducers
-        consumers' <- traverse flat consumers
-        pure (Primitive range name producers' consumers')
-  flat (Invoke range name consumer) = do
-    consumer' <- flat consumer
-    pure (Invoke range name consumer')
+flatBranch :: (State Uniq :> es, Reader ModuleName :> es) => Branch One -> Eff es (Branch Zero)
+flatBranch (Branch range pattern statement) = do
+  statement <- flatStatement statement
+  pure $ Branch range pattern statement
 
-instance (State Uniq :> es, Reader ModuleName :> es) => Flat (Branch One) (Eff es (Branch One)) where
-  flat :: Branch One -> Eff es (Branch One)
-  flat (Branch range patterns statement) = do
-    statement' <- flat statement
-    pure (Branch range patterns statement')
-
-class CastToZero f where
-  castToZero :: f One -> f Zero
-
-instance CastToZero Producer where
-  castToZero :: Producer One -> Producer Zero
-  castToZero (Var range name) = Var range name
-  castToZero (Literal range literal) = Literal range literal
-  castToZero (Construct range tag producers consumers) =
-    Construct range tag (fmap castToZero producers) (fmap castToZero consumers)
-  castToZero (Lambda range names statement) = Lambda range names (castToZero statement)
-  castToZero (Object range kvs) = Object range (fmap castToZero kvs)
-  castToZero (Do range _ _) = error $ convertString (render $ pretty range) <> ": Do should be removed"
-
-instance CastToZero Consumer where
-  castToZero :: Consumer One -> Consumer Zero
-  castToZero (Label range name) = Label range name
-  castToZero (Apply range producers consumers) =
-    Apply range (fmap castToZero producers) (fmap castToZero consumers)
-  castToZero (Project range field return) = Project range field $ castToZero return
-  castToZero (Then range name statement) = Then range name (castToZero statement)
-  castToZero (Finish range) = Finish range
-  castToZero (Select range branches) = Select range (fmap castToZero branches)
-
-instance CastToZero Statement where
-  castToZero :: Statement One -> Statement Zero
-  castToZero (Cut (Do range name statement) consumer) = CutDo range name (castToZero statement) (castToZero consumer)
-  castToZero (Cut producer consumer) = Cut (castToZero producer) (castToZero consumer)
-  castToZero (Primitive range name producers consumers) =
-    Primitive range name (fmap castToZero producers) (fmap castToZero consumers)
-  castToZero (Invoke range name consumer) = Invoke range name (castToZero consumer)
-
-instance CastToZero Branch where
-  castToZero :: Branch One -> Branch Zero
-  castToZero (Branch range patterns statement) = Branch range patterns (castToZero statement)
+split :: (State Uniq :> es, Reader ModuleName :> es) => [Producer One] -> Eff es ([Producer One], Maybe (Producer One), [Producer One])
+split producers = aux [] producers
+  where
+    aux :: (State Uniq :> es, Reader ModuleName :> es) => [Producer One] -> [Producer One] -> Eff es ([Producer One], Maybe (Producer One), [Producer One])
+    aux acc [] = pure (reverse acc, Nothing, [])
+    aux acc (p : ps) = do
+      p' <- flatProducer p
+      case p' of
+        Do' {} -> pure (reverse acc, Just p, ps)
+        Zero {} -> aux (p : acc) ps

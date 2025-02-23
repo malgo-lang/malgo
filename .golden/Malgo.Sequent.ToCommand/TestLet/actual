@@ -119,13 +119,13 @@
                                                          (resume $TestLet.return_78)))))
                                                 (resume $TestLet.return_79)))))
                                        (resume $TestLet.return_65)))
-                                    (then $TestLet.outer_90
+                                    (then $TestLet.outer_92
                                        ((do $TestLet.return_83
                                           ((do $TestLet.return_80
                                              ((suspend
                                                 ((resume $TestLet.return_80)))
                                                 (invoke printString#)))
-                                             (then $TestLet.outer_92
+                                             (then $TestLet.outer_94
                                                 ((do $TestLet.return_82
                                                    ((do $TestLet.return_81
                                                       ((suspend
@@ -135,15 +135,15 @@
                                                       (suspend
                                                          ((resume $TestLet.return_82)))
                                                       (apply 2)))
-                                                   (then $TestLet.inner_93
-                                                      ((fetch $TestLet.outer_92)
-                                                         (fetch $TestLet.inner_93)
+                                                   (then $TestLet.inner_95
+                                                      ((fetch $TestLet.outer_94)
+                                                         (fetch $TestLet.inner_95)
                                                          (suspend
                                                             ((resume $TestLet.return_83)))
                                                          (apply 2)))))))
-                                          (then $TestLet.inner_91
-                                             ((fetch $TestLet.outer_90)
-                                                (fetch $TestLet.inner_91)
+                                          (then $TestLet.inner_93
+                                             ((fetch $TestLet.outer_92)
+                                                (fetch $TestLet.inner_93)
                                                 (suspend
                                                    ((resume $TestLet.return_84)))
                                                 (apply 2)))))))

@@ -64,26 +64,26 @@
                                              (apply 2)))
                                           (resume $Test6.return_43))))))
                               (resume $Test6.return_42)))
-                           (then $Test6.outer_52
+                           (then $Test6.outer_54
                               ((do $Test6.return_50
                                  ((do $Test6.return_48
                                     ((suspend
                                        ((resume $Test6.return_48)))
                                        (invoke rtob)))
-                                    (then $Test6.outer_54
+                                    (then $Test6.outer_56
                                        ((do $Test6.return_49
                                           ((suspend
                                              ((resume $Test6.return_49)))
                                              (invoke R)))
-                                          (then $Test6.inner_55
-                                             ((fetch $Test6.outer_54)
-                                                (fetch $Test6.inner_55)
+                                          (then $Test6.inner_57
+                                             ((fetch $Test6.outer_56)
+                                                (fetch $Test6.inner_57)
                                                 (suspend
                                                    ((resume $Test6.return_50)))
                                                 (apply 2)))))))
-                                 (then $Test6.inner_53
-                                    ((fetch $Test6.outer_52)
-                                       (fetch $Test6.inner_53)
+                                 (then $Test6.inner_55
+                                    ((fetch $Test6.outer_54)
+                                       (fetch $Test6.inner_55)
                                        (suspend
                                           ((resume $Test6.return_51)))
                                        (apply 2)))))))

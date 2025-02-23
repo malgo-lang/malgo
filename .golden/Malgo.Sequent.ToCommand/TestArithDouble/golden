@@ -45,13 +45,13 @@
                            ($TestArithDouble.tmp_93 $TestArithDouble.return_115)
                            ((fetch #TestArithDouble.x_10)
                               (resume $TestArithDouble.return_115)))
-                           (then $TestArithDouble.outer_175
+                           (then $TestArithDouble.outer_177
                               ((do $TestArithDouble.return_119
                                  ((do $TestArithDouble.return_116
                                     ((suspend
                                        ((resume $TestArithDouble.return_116)))
                                        (invoke putStrLn)))
-                                    (then $TestArithDouble.outer_177
+                                    (then $TestArithDouble.outer_179
                                        ((do $TestArithDouble.return_118
                                           ((do $TestArithDouble.return_117
                                              ((suspend
@@ -61,15 +61,15 @@
                                              (suspend
                                                 ((resume $TestArithDouble.return_118)))
                                              (apply 2)))
-                                          (then $TestArithDouble.inner_178
-                                             ((fetch $TestArithDouble.outer_177)
-                                                (fetch $TestArithDouble.inner_178)
+                                          (then $TestArithDouble.inner_180
+                                             ((fetch $TestArithDouble.outer_179)
+                                                (fetch $TestArithDouble.inner_180)
                                                 (suspend
                                                    ((resume $TestArithDouble.return_119)))
                                                 (apply 2)))))))
-                                 (then $TestArithDouble.inner_176
-                                    ((fetch $TestArithDouble.outer_175)
-                                       (fetch $TestArithDouble.inner_176)
+                                 (then $TestArithDouble.inner_178
+                                    ((fetch $TestArithDouble.outer_177)
+                                       (fetch $TestArithDouble.inner_178)
                                        (suspend
                                           ((resume $TestArithDouble.return_120)))
                                        (apply 2)))))))
@@ -241,7 +241,7 @@
                               ((suspend
                                  ((resume $TestArithDouble.return_158)))
                                  (invoke *)))
-                              (then $TestArithDouble.outer_179
+                              (then $TestArithDouble.outer_181
                                  ((do $TestArithDouble.return_161
                                     ((do $TestArithDouble.return_160
                                        ((do $TestArithDouble.return_159
@@ -256,9 +256,9 @@
                                        (suspend
                                           ((resume $TestArithDouble.return_161)))
                                        (apply 2)))
-                                    (then $TestArithDouble.inner_180
-                                       ((fetch $TestArithDouble.outer_179)
-                                          (fetch $TestArithDouble.inner_180)
+                                    (then $TestArithDouble.inner_182
+                                       ((fetch $TestArithDouble.outer_181)
+                                          (fetch $TestArithDouble.inner_182)
                                           (suspend
                                              ((resume $TestArithDouble.return_162)))
                                           (apply 2)))))))
@@ -283,13 +283,13 @@
                            ((suspend
                               ((resume $TestArithDouble.return_167)))
                               (invoke putStrLn)))
-                           (then $TestArithDouble.outer_181
+                           (then $TestArithDouble.outer_185
                               ((do $TestArithDouble.return_171
                                  ((do $TestArithDouble.return_168
                                     ((suspend
                                        ((resume $TestArithDouble.return_168)))
                                        (invoke show)))
-                                    (then $TestArithDouble.outer_183
+                                    (then $TestArithDouble.outer_187
                                        ((do $TestArithDouble.return_170
                                           ((do $TestArithDouble.return_169
                                              ((suspend
@@ -299,15 +299,15 @@
                                              (suspend
                                                 ((resume $TestArithDouble.return_170)))
                                              (apply 2)))
-                                          (then $TestArithDouble.inner_184
-                                             ((fetch $TestArithDouble.outer_183)
-                                                (fetch $TestArithDouble.inner_184)
+                                          (then $TestArithDouble.inner_188
+                                             ((fetch $TestArithDouble.outer_187)
+                                                (fetch $TestArithDouble.inner_188)
                                                 (suspend
                                                    ((resume $TestArithDouble.return_171)))
                                                 (apply 2)))))))
-                                 (then $TestArithDouble.inner_182
-                                    ((fetch $TestArithDouble.outer_181)
-                                       (fetch $TestArithDouble.inner_182)
+                                 (then $TestArithDouble.inner_186
+                                    ((fetch $TestArithDouble.outer_185)
+                                       (fetch $TestArithDouble.inner_186)
                                        (suspend
                                           ((resume $TestArithDouble.return_172)))
                                        (apply 2)))))))

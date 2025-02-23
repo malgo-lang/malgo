@@ -51,7 +51,7 @@
                            ((suspend
                               ((resume $TestDot.return_43)))
                               (invoke printInt64)))
-                           (then $TestDot.outer_55
+                           (then $TestDot.outer_61
                               ((do $TestDot.return_51
                                  ((do $TestDot.return_48
                                     ((do $TestDot.return_46
@@ -59,29 +59,29 @@
                                           ((suspend
                                              ((resume $TestDot.return_44)))
                                              (invoke .)))
-                                          (then $TestDot.outer_57
+                                          (then $TestDot.outer_63
                                              ((do $TestDot.return_45
                                                 ((suspend
                                                    ((resume $TestDot.return_45)))
                                                    (invoke succ)))
-                                                (then $TestDot.inner_58
-                                                   ((fetch $TestDot.outer_57)
-                                                      (fetch $TestDot.inner_58)
+                                                (then $TestDot.inner_64
+                                                   ((fetch $TestDot.outer_63)
+                                                      (fetch $TestDot.inner_64)
                                                       (suspend
                                                          ((resume $TestDot.return_46)))
                                                       (apply 2)))))))
-                                       (then $TestDot.outer_59
+                                       (then $TestDot.outer_65
                                           ((do $TestDot.return_47
                                              ((suspend
                                                 ((resume $TestDot.return_47)))
                                                 (invoke succ)))
-                                             (then $TestDot.inner_60
-                                                ((fetch $TestDot.outer_59)
-                                                   (fetch $TestDot.inner_60)
+                                             (then $TestDot.inner_66
+                                                ((fetch $TestDot.outer_65)
+                                                   (fetch $TestDot.inner_66)
                                                    (suspend
                                                       ((resume $TestDot.return_48)))
                                                    (apply 2)))))))
-                                    (then $TestDot.outer_61
+                                    (then $TestDot.outer_67
                                        ((do $TestDot.return_50
                                           ((do $TestDot.return_49
                                              ((suspend
@@ -91,15 +91,15 @@
                                              (suspend
                                                 ((resume $TestDot.return_50)))
                                              (apply 2)))
-                                          (then $TestDot.inner_62
-                                             ((fetch $TestDot.outer_61)
-                                                (fetch $TestDot.inner_62)
+                                          (then $TestDot.inner_68
+                                             ((fetch $TestDot.outer_67)
+                                                (fetch $TestDot.inner_68)
                                                 (suspend
                                                    ((resume $TestDot.return_51)))
                                                 (apply 2)))))))
-                                 (then $TestDot.inner_56
-                                    ((fetch $TestDot.outer_55)
-                                       (fetch $TestDot.inner_56)
+                                 (then $TestDot.inner_62
+                                    ((fetch $TestDot.outer_61)
+                                       (fetch $TestDot.inner_62)
                                        (suspend
                                           ((resume $TestDot.return_52)))
                                        (apply 2)))))))

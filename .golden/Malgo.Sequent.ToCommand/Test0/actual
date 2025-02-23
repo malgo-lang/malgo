@@ -65,7 +65,7 @@
                                                 ((suspend
                                                    ((resume $Test0.return_70)))
                                                    (invoke printString#)))
-                                                (then $Test0.outer_84
+                                                (then $Test0.outer_86
                                                    ((do $Test0.return_72
                                                       ((do $Test0.return_71
                                                          ((suspend
@@ -75,9 +75,9 @@
                                                          (suspend
                                                             ((resume $Test0.return_72)))
                                                          (apply 2)))
-                                                      (then $Test0.inner_85
-                                                         ((fetch $Test0.outer_84)
-                                                            (fetch $Test0.inner_85)
+                                                      (then $Test0.inner_87
+                                                         ((fetch $Test0.outer_86)
+                                                            (fetch $Test0.inner_87)
                                                             (suspend
                                                                ((resume $Test0.return_73)))
                                                             (apply 2)))))))

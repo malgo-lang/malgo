@@ -12,7 +12,7 @@
                         ((suspend
                            ((resume $TypeAnnotation.return_17)))
                            (invoke printString)))
-                        (then $TypeAnnotation.outer_24
+                        (then $TypeAnnotation.outer_26
                            ((do $TypeAnnotation.return_22
                               ((lambda
                                  ($TypeAnnotation.param_13 $TypeAnnotation.return_18)
@@ -24,7 +24,7 @@
                                              ((fetch #TypeAnnotation.x_0)
                                                 (resume $TypeAnnotation.return_19))))))
                                     (resume $TypeAnnotation.return_18)))
-                                 (then $TypeAnnotation.outer_26
+                                 (then $TypeAnnotation.outer_28
                                     ((do $TypeAnnotation.return_21
                                        ((do $TypeAnnotation.return_20
                                           ((suspend
@@ -34,15 +34,15 @@
                                           (suspend
                                              ((resume $TypeAnnotation.return_21)))
                                           (apply 2)))
-                                       (then $TypeAnnotation.inner_27
-                                          ((fetch $TypeAnnotation.outer_26)
-                                             (fetch $TypeAnnotation.inner_27)
+                                       (then $TypeAnnotation.inner_29
+                                          ((fetch $TypeAnnotation.outer_28)
+                                             (fetch $TypeAnnotation.inner_29)
                                              (suspend
                                                 ((resume $TypeAnnotation.return_22)))
                                              (apply 2)))))))
-                              (then $TypeAnnotation.inner_25
-                                 ((fetch $TypeAnnotation.outer_24)
-                                    (fetch $TypeAnnotation.inner_25)
+                              (then $TypeAnnotation.inner_27
+                                 ((fetch $TypeAnnotation.outer_26)
+                                    (fetch $TypeAnnotation.inner_27)
                                     (suspend
                                        ((resume $TypeAnnotation.return_23)))
                                     (apply 2)))))))
