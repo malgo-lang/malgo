@@ -20,23 +20,41 @@ class Convert a b where
 instance (State Uniq :> es, Reader ModuleName :> es) => Convert (Range, Name, Expr) (Eff es (Range, Name, Name, C.Statement One)) where
   convert (range, name, body) = do
     return <- newTemporalId "return"
-    body' <- convert body
+    body' <- convert body (C.Label range return :: C.Consumer One)
     pure
       ( range,
         name,
         return,
-        C.Cut body' (C.Label range return)
+        body'
       )
+
+instance (State Uniq :> es, Reader ModuleName :> es) => Convert Expr (C.Consumer One -> Eff es (C.Statement One)) where
+  convert (Let range name value body) consumer = do
+    body <- convert body consumer
+    convert value (C.Then range name body :: C.Consumer One)
+  convert (Apply range f args) consumer = do
+    args <- traverse convert args
+    convert f (C.Apply range args [consumer])
+  convert (Project range expr field) consumer = do
+    convert expr (C.Project range field consumer)
+  convert (Primitive range operator args) consumer = do
+    args <- traverse convert args
+    pure $ C.Primitive range operator args [consumer]
+  convert (Select range scrutinee branches) consumer = do
+    branches <- traverse (convert consumer) branches
+    convert scrutinee (C.Select range branches :: C.Consumer One)
+  convert (Invoke range name) consumer = pure $ C.Invoke range name consumer
+  convert expr consumer = do
+    expr' <- convert expr
+    pure $ Cut expr' consumer
 
 instance (State Uniq :> es, Reader ModuleName :> es) => Convert Expr (Eff es (C.Producer One)) where
   convert (Var range name) = pure $ C.Var range name
   convert (Literal range literal) = pure $ C.Literal range literal
   convert (Construct range tag arguments) = C.Construct range tag <$> traverse convert arguments <*> pure []
-  convert (Let range name value body) = do
-    value <- convert value
-    body <- convert body
-    ret <- newTemporalId "return"
-    pure $ C.Do range ret $ C.Cut value (C.Then range name (C.Cut body (C.Label range ret)))
+  convert producer@(Let range _ _ _) = do
+    return <- newTemporalId "return"
+    C.Do range return <$> convert producer (C.Label range return :: C.Consumer One)
   convert (Lambda range params body) = do
     return <- newTemporalId "return"
     body' <- convert body
@@ -46,29 +64,23 @@ instance (State Uniq :> es, Reader ModuleName :> es) => Convert Expr (Eff es (C.
     fields' <- traverse convert fields
     let fields'' = fmap (\expr -> (Cut expr (C.Label range return))) fields'
     pure $ C.Object range fields''
-  convert (Apply range f args) = do
-    f' <- convert f
-    args' <- traverse convert args
+  convert producer@(Apply range _ _) = do
     return <- newTemporalId "return"
-    pure $ Do range return $ Cut f' $ C.Apply range args' [C.Label range return]
-  convert (Project range expr field) = do
-    expr' <- convert expr
+    Do range return <$> convert producer (C.Label range return :: C.Consumer One)
+  convert producer@(Project range _ _) = do
     return <- newTemporalId "return"
-    pure $ Do range return $ Cut expr' $ C.Project range field (C.Label range return)
-  convert (Primitive range operator args) = do
-    args' <- traverse convert args
+    Do range return <$> convert producer (C.Label range return :: C.Consumer One)
+  convert producer@(Primitive range _ _) = do
     return <- newTemporalId "return"
-    pure $ Do range return $ C.Primitive range operator args' [C.Label range return]
-  convert (Select range scrutinee branches) = do
-    scrutinee' <- convert scrutinee
+    Do range return <$> convert producer (C.Label range return :: C.Consumer One)
+  convert producer@(Select range _ _) = do
     return <- newTemporalId "return"
-    branches' <- traverse (convert return) branches
-    pure $ Do range return $ Cut scrutinee' $ C.Select range branches'
-  convert (Invoke range name) = do
+    Do range return <$> convert producer (C.Label range return :: C.Consumer One)
+  convert producer@(Invoke range _) = do
     return <- newTemporalId "return"
-    pure $ Do range return $ C.Invoke range name (C.Label range return)
+    Do range return <$> convert producer (C.Label range return :: C.Consumer One)
 
-instance (State Uniq :> es, Reader ModuleName :> es) => Convert Name (Branch -> Eff es (C.Branch One)) where
-  convert return (Branch range pattern body) = do
-    body' <- convert body
-    pure $ C.Branch range pattern (C.Cut body' (C.Label range return))
+instance (State Uniq :> es, Reader ModuleName :> es) => Convert (C.Consumer One) (Branch -> Eff es (C.Branch One)) where
+  convert consumer (Branch range pattern body) = do
+    body' <- convert body consumer
+    pure $ C.Branch range pattern body'
