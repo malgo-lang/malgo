@@ -104,7 +104,7 @@ instance ToSExpr Command where
   toSExpr (Push _ lit) = S.L [S.A "push", toSExpr lit]
   toSExpr (Construct _ tag n) = S.L [S.A "construct", toSExpr tag, S.A $ S.Int (fromIntegral n) Nothing]
   toSExpr (Lambda _ names code) = S.L $ [S.A "lambda", toSExpr names] <> map toSExpr code
-  toSExpr (Object _ fields) = S.L [S.A "object", S.L $ map (\(k, v) -> S.L $ toSExpr k : map toSExpr v) $ Map.toList fields]
+  toSExpr (Object _ fields) = S.L [S.A "object", S.L $ map (\(key, (return, body)) -> S.L $ toSExpr key : toSExpr return : map toSExpr body) $ Map.toList fields]
   toSExpr (Do _ name code) = S.L $ [S.A "do", toSExpr name] <> map toSExpr code
   toSExpr (Suspend code) = S.L $ S.A "suspend" : map toSExpr code
   toSExpr (Resume _ name) = S.L [S.A "resume", toSExpr name]
