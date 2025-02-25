@@ -12,20 +12,13 @@
                      ())
                   (select
                      (#Echo.$__8
-                        (cut
-                           (do $Echo.return_16
-                              (cut
-                                 (do $Echo.return_13
-                                    (invoke putStr $Echo.return_13))
-                                 (apply
-                                    ((do $Echo.return_15
-                                       (cut
-                                          (do $Echo.return_14
-                                             (invoke getContents $Echo.return_14))
-                                          (apply
-                                             ((construct tuple () ()))
-                                             ($Echo.return_15)))))
-                                    ($Echo.return_16))))
-                           $Echo.return_12)))))
+                        (invoke putStr
+                           (apply
+                              ((do $Echo.return_13
+                                 (invoke getContents
+                                    (apply
+                                       ((construct tuple () ()))
+                                       ($Echo.return_13)))))
+                              ($Echo.return_12)))))))
             $Echo.return_11))
       $Echo.return_10)))

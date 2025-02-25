@@ -12,35 +12,25 @@
                      ())
                   (select
                      (#UseModule.x_0
-                        (cut
-                           (do $UseModule.return_46
-                              (cut
-                                 (do $UseModule.return_43
-                                    (cut
-                                       (do $UseModule.return_42
-                                          (invoke addInt32 $UseModule.return_42))
+                        (invoke addInt32
+                           (apply
+                              (#UseModule.x_0)
+                              ((apply
+                                 ((do $UseModule.return_42
+                                    (invoke Int32#
                                        (apply
-                                          (#UseModule.x_0)
-                                          ($UseModule.return_43))))
-                                 (apply
-                                    ((do $UseModule.return_45
-                                       (cut
-                                          (do $UseModule.return_44
-                                             (invoke Int32# $UseModule.return_44))
-                                          (apply
-                                             (1_i32)
-                                             ($UseModule.return_45)))))
-                                    ($UseModule.return_46))))
-                           $UseModule.return_41)))))
+                                          (1_i32)
+                                          ($UseModule.return_42)))))
+                                 ($UseModule.return_41)))))))))
             $UseModule.return_40))
       $UseModule.return_39))
    (main
-      $UseModule.return_47
+      $UseModule.return_43
       (cut
          (lambda
-            ($UseModule.param_37 $UseModule.return_48)
+            ($UseModule.param_37 $UseModule.return_44)
             (cut
-               (do $UseModule.return_49
+               (do $UseModule.return_45
                   (cut
                      (construct
                         tuple
@@ -49,64 +39,42 @@
                      (select
                         (#UseModule.$__35
                            (cut
-                              (do $UseModule.return_67
+                              (lambda
+                                 ($UseModule.tmp_38 $UseModule.return_48)
                                  (cut
-                                    (lambda
-                                       ($UseModule.tmp_38 $UseModule.return_50)
-                                       (cut
-                                          (do $UseModule.return_62
-                                             (cut
-                                                (do $UseModule.return_53
-                                                   (cut
-                                                      (do $UseModule.return_51
-                                                         (invoke <| $UseModule.return_51))
+                                    (do $UseModule.return_49
+                                       (invoke <|
+                                          (apply
+                                             ((do $UseModule.return_54
+                                                (invoke printInt32 $UseModule.return_54)))
+                                             ((apply
+                                                ((do $UseModule.return_50
+                                                   (invoke .
                                                       (apply
-                                                         ((do $UseModule.return_52
-                                                            (invoke printInt32 $UseModule.return_52)))
-                                                         ($UseModule.return_53))))
-                                                (apply
-                                                   ((do $UseModule.return_61
-                                                      (cut
-                                                         (do $UseModule.return_58
-                                                            (cut
-                                                               (do $UseModule.return_56
-                                                                  (cut
-                                                                     (do $UseModule.return_54
-                                                                        (invoke . $UseModule.return_54))
+                                                         ((do $UseModule.return_53
+                                                            (invoke succ $UseModule.return_53)))
+                                                         ((apply
+                                                            ((do $UseModule.return_52
+                                                               (invoke succ $UseModule.return_52)))
+                                                            ((apply
+                                                               ((do $UseModule.return_51
+                                                                  (invoke Int32#
                                                                      (apply
-                                                                        ((do $UseModule.return_55
-                                                                           (invoke succ $UseModule.return_55)))
-                                                                        ($UseModule.return_56))))
-                                                               (apply
-                                                                  ((do $UseModule.return_57
-                                                                     (invoke succ $UseModule.return_57)))
-                                                                  ($UseModule.return_58))))
-                                                         (apply
-                                                            ((do $UseModule.return_60
-                                                               (cut
-                                                                  (do $UseModule.return_59
-                                                                     (invoke Int32# $UseModule.return_59))
-                                                                  (apply
-                                                                     (1_i32)
-                                                                     ($UseModule.return_60)))))
-                                                            ($UseModule.return_61)))))
-                                                   ($UseModule.return_62))))
-                                          $UseModule.return_50))
-                                    (apply
-                                       ((do $UseModule.return_66
-                                          (cut
-                                             (do $UseModule.return_63
-                                                (invoke putStrLn $UseModule.return_63))
-                                             (apply
-                                                ((do $UseModule.return_65
-                                                   (cut
-                                                      (do $UseModule.return_64
-                                                         (invoke String# $UseModule.return_64))
-                                                      (apply
-                                                         ("Hello, world!")
-                                                         ($UseModule.return_65)))))
-                                                ($UseModule.return_66)))))
-                                       ($UseModule.return_67))))
-                              $UseModule.return_49)))))
-               $UseModule.return_48))
-         $UseModule.return_47)))
+                                                                        (1_i32)
+                                                                        ($UseModule.return_51)))))
+                                                               ($UseModule.return_50)))))))))
+                                                ($UseModule.return_49))))))
+                                    $UseModule.return_48))
+                              (apply
+                                 ((do $UseModule.return_46
+                                    (invoke putStrLn
+                                       (apply
+                                          ((do $UseModule.return_47
+                                             (invoke String#
+                                                (apply
+                                                   ("Hello, world!")
+                                                   ($UseModule.return_47)))))
+                                          ($UseModule.return_46)))))
+                                 ($UseModule.return_45)))))))
+               $UseModule.return_44))
+         $UseModule.return_43)))

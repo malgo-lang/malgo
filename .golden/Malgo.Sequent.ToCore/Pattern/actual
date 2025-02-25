@@ -12,30 +12,23 @@
                      ())
                   (select
                      (#Pattern.$__9
-                        (cut
-                           (do $Pattern.return_24
-                              (cut
-                                 (do $Pattern.return_21
-                                    (invoke putStrLn $Pattern.return_21))
-                                 (apply
-                                    ((do $Pattern.return_23
-                                       (cut
-                                          (do $Pattern.return_22
-                                             (invoke String# $Pattern.return_22))
-                                          (apply
-                                             ("OK")
-                                             ($Pattern.return_23)))))
-                                    ($Pattern.return_24))))
-                           $Pattern.return_20)))))
+                        (invoke putStrLn
+                           (apply
+                              ((do $Pattern.return_21
+                                 (invoke String#
+                                    (apply
+                                       ("OK")
+                                       ($Pattern.return_21)))))
+                              ($Pattern.return_20)))))))
             $Pattern.return_19))
       $Pattern.return_18))
    (isNil
-      $Pattern.return_25
+      $Pattern.return_22
       (cut
          (lambda
-            ($Pattern.param_17 $Pattern.return_26)
+            ($Pattern.param_17 $Pattern.return_23)
             (cut
-               (do $Pattern.return_27
+               (do $Pattern.return_24
                   (cut
                      (construct
                         tuple
@@ -43,14 +36,8 @@
                         ())
                      (select
                         ((Nil ())
-                           (cut
-                              (do $Pattern.return_28
-                                 (invoke True $Pattern.return_28))
-                              $Pattern.return_27))
+                           (invoke True $Pattern.return_24))
                         (#Pattern.__0
-                           (cut
-                              (do $Pattern.return_29
-                                 (invoke False $Pattern.return_29))
-                              $Pattern.return_27)))))
-               $Pattern.return_26))
-         $Pattern.return_25)))
+                           (invoke False $Pattern.return_24)))))
+               $Pattern.return_23))
+         $Pattern.return_22)))

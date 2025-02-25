@@ -12,37 +12,30 @@
                      ())
                   (select
                      (#TypeAnnotation.$__11
-                        (cut
-                           (do $TypeAnnotation.return_23
-                              (cut
-                                 (do $TypeAnnotation.return_17
-                                    (invoke printString $TypeAnnotation.return_17))
-                                 (apply
-                                    ((do $TypeAnnotation.return_22
+                        (invoke printString
+                           (apply
+                              ((do $TypeAnnotation.return_17
+                                 (cut
+                                    (lambda
+                                       ($TypeAnnotation.param_13 $TypeAnnotation.return_19)
                                        (cut
-                                          (lambda
-                                             ($TypeAnnotation.param_13 $TypeAnnotation.return_18)
+                                          (do $TypeAnnotation.return_20
                                              (cut
-                                                (do $TypeAnnotation.return_19
-                                                   (cut
-                                                      (construct
-                                                         tuple
-                                                         ($TypeAnnotation.param_13)
-                                                         ())
-                                                      (select
-                                                         (#TypeAnnotation.x_0
-                                                            (cut #TypeAnnotation.x_0 $TypeAnnotation.return_19)))))
-                                                $TypeAnnotation.return_18))
-                                          (apply
-                                             ((do $TypeAnnotation.return_21
-                                                (cut
-                                                   (do $TypeAnnotation.return_20
-                                                      (invoke String# $TypeAnnotation.return_20))
-                                                   (apply
-                                                      ("hoge")
-                                                      ($TypeAnnotation.return_21)))))
-                                             ($TypeAnnotation.return_22)))))
-                                    ($TypeAnnotation.return_23))))
-                           $TypeAnnotation.return_16)))))
+                                                (construct
+                                                   tuple
+                                                   ($TypeAnnotation.param_13)
+                                                   ())
+                                                (select
+                                                   (#TypeAnnotation.x_0
+                                                      (cut #TypeAnnotation.x_0 $TypeAnnotation.return_20)))))
+                                          $TypeAnnotation.return_19))
+                                    (apply
+                                       ((do $TypeAnnotation.return_18
+                                          (invoke String#
+                                             (apply
+                                                ("hoge")
+                                                ($TypeAnnotation.return_18)))))
+                                       ($TypeAnnotation.return_17)))))
+                              ($TypeAnnotation.return_16)))))))
             $TypeAnnotation.return_15))
       $TypeAnnotation.return_14)))

@@ -7,42 +7,34 @@
             (construct tuple 1)
             (select
                (#TestNestedLetFunc.$__12
-                  ((do $TestNestedLetFunc.return_26
-                     ((lambda
-                        ($TestNestedLetFunc.param_14 $TestNestedLetFunc.return_19)
-                        ((do $TestNestedLetFunc.return_20
-                           ((fetch $TestNestedLetFunc.param_14)
-                              (construct tuple 1)
-                              (select
-                                 (#TestNestedLetFunc.$__9
-                                    ((do $TestNestedLetFunc.return_23
-                                       ((lambda
-                                          ($TestNestedLetFunc.param_15 $TestNestedLetFunc.return_21)
-                                          ((do $TestNestedLetFunc.return_22
-                                             ((fetch $TestNestedLetFunc.param_15)
-                                                (construct tuple 1)
-                                                (select
-                                                   (#TestNestedLetFunc.a_0
-                                                      ((construct tuple 0)
-                                                         (resume $TestNestedLetFunc.return_22))))))
-                                             (resume $TestNestedLetFunc.return_21)))
-                                          (construct tuple 0)
-                                          (suspend
-                                             ((resume $TestNestedLetFunc.return_23)))
-                                          (apply 2)))
-                                       (resume $TestNestedLetFunc.return_20))))))
-                           (resume $TestNestedLetFunc.return_19)))
-                        (then #TestNestedLetFunc.f_2
-                           ((do $TestNestedLetFunc.return_25
-                              ((do $TestNestedLetFunc.return_24
-                                 ((suspend
-                                    ((resume $TestNestedLetFunc.return_24)))
-                                    (invoke malgo_print_string)))
-                                 (push "PASS")
-                                 (suspend
-                                    ((resume $TestNestedLetFunc.return_25)))
-                                 (apply 2)))
-                              (resume $TestNestedLetFunc.return_26)))))
-                     (resume $TestNestedLetFunc.return_18))))))
+                  ((lambda
+                     ($TestNestedLetFunc.param_14 $TestNestedLetFunc.return_19)
+                     ((do $TestNestedLetFunc.return_20
+                        ((fetch $TestNestedLetFunc.param_14)
+                           (construct tuple 1)
+                           (select
+                              (#TestNestedLetFunc.$__9
+                                 ((lambda
+                                    ($TestNestedLetFunc.param_15 $TestNestedLetFunc.return_21)
+                                    ((do $TestNestedLetFunc.return_22
+                                       ((fetch $TestNestedLetFunc.param_15)
+                                          (construct tuple 1)
+                                          (select
+                                             (#TestNestedLetFunc.a_0
+                                                ((construct tuple 0)
+                                                   (resume $TestNestedLetFunc.return_22))))))
+                                       (resume $TestNestedLetFunc.return_21)))
+                                    (construct tuple 0)
+                                    (suspend
+                                       ((resume $TestNestedLetFunc.return_20)))
+                                    (apply 2))))))
+                        (resume $TestNestedLetFunc.return_19)))
+                     (then #TestNestedLetFunc.f_2
+                        ((suspend
+                           ((push "PASS")
+                              (suspend
+                                 ((resume $TestNestedLetFunc.return_18)))
+                              (apply 2)))
+                           (invoke malgo_print_string))))))))
          (resume $TestNestedLetFunc.return_17)))
       (resume $TestNestedLetFunc.return_16))))

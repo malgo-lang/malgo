@@ -11,126 +11,102 @@
                (select
                   ((tuple
                      (#Test3.x_3 #Test3.f_4))
-                     ((do $Test3.return_74
-                        ((fetch #Test3.f_4)
-                           (fetch #Test3.x_3)
-                           (suspend
-                              ((resume $Test3.return_74)))
-                           (apply 2)))
-                        (resume $Test3.return_73))))))
+                     ((fetch #Test3.f_4)
+                        (fetch #Test3.x_3)
+                        (suspend
+                           ((resume $Test3.return_73)))
+                        (apply 2))))))
             (resume $Test3.return_72)))
          (resume $Test3.return_71)))
       (resume $Test3.return_70)))
    (main
-      $Test3.return_75
+      $Test3.return_74
       ((lambda
-         ($Test3.param_68 $Test3.return_76)
-         ((do $Test3.return_77
+         ($Test3.param_68 $Test3.return_75)
+         ((do $Test3.return_76
             ((fetch $Test3.param_68)
                (construct tuple 1)
                (select
                   (#Test3.$__65
-                     ((do $Test3.return_95
-                        ((do $Test3.return_88
-                           ((do $Test3.return_78
+                     ((suspend
+                        ((then $Test3.outer_96
+                           ((do $Test3.return_79
                               ((suspend
-                                 ((resume $Test3.return_78)))
-                                 (invoke |>)))
-                              (then $Test3.outer_108
-                                 ((do $Test3.return_87
-                                    ((do $Test3.return_81
-                                       ((do $Test3.return_79
-                                          ((suspend
-                                             ((resume $Test3.return_79)))
-                                             (invoke Cons)))
-                                          (then $Test3.outer_110
-                                             ((do $Test3.return_80
-                                                ((suspend
-                                                   ((resume $Test3.return_80)))
-                                                   (invoke A)))
-                                                (then $Test3.inner_111
-                                                   ((fetch $Test3.outer_110)
-                                                      (fetch $Test3.inner_111)
-                                                      (suspend
-                                                         ((resume $Test3.return_81)))
-                                                      (apply 2)))))))
-                                       (then $Test3.outer_116
-                                          ((do $Test3.return_86
-                                             ((do $Test3.return_84
-                                                ((do $Test3.return_82
-                                                   ((suspend
-                                                      ((resume $Test3.return_82)))
-                                                      (invoke Cons)))
-                                                   (then $Test3.outer_118
-                                                      ((do $Test3.return_83
-                                                         ((suspend
-                                                            ((resume $Test3.return_83)))
-                                                            (invoke B)))
-                                                         (then $Test3.inner_119
-                                                            ((fetch $Test3.outer_118)
-                                                               (fetch $Test3.inner_119)
-                                                               (suspend
-                                                                  ((resume $Test3.return_84)))
-                                                               (apply 2)))))))
-                                                (then $Test3.outer_120
-                                                   ((do $Test3.return_85
+                                 ((then $Test3.outer_98
+                                    ((do $Test3.return_83
+                                       ((suspend
+                                          ((resume $Test3.return_83)))
+                                          (invoke A)))
+                                       (then $Test3.inner_99
+                                          ((fetch $Test3.outer_98)
+                                             (fetch $Test3.inner_99)
+                                             (suspend
+                                                ((then $Test3.outer_104
+                                                   ((do $Test3.return_80
                                                       ((suspend
-                                                         ((resume $Test3.return_85)))
-                                                         (invoke Nil)))
-                                                      (then $Test3.inner_121
-                                                         ((fetch $Test3.outer_120)
-                                                            (fetch $Test3.inner_121)
+                                                         ((then $Test3.outer_106
+                                                            ((do $Test3.return_82
+                                                               ((suspend
+                                                                  ((resume $Test3.return_82)))
+                                                                  (invoke B)))
+                                                               (then $Test3.inner_107
+                                                                  ((fetch $Test3.outer_106)
+                                                                     (fetch $Test3.inner_107)
+                                                                     (suspend
+                                                                        ((then $Test3.outer_108
+                                                                           ((do $Test3.return_81
+                                                                              ((suspend
+                                                                                 ((resume $Test3.return_81)))
+                                                                                 (invoke Nil)))
+                                                                              (then $Test3.inner_109
+                                                                                 ((fetch $Test3.outer_108)
+                                                                                    (fetch $Test3.inner_109)
+                                                                                    (suspend
+                                                                                       ((resume $Test3.return_80)))
+                                                                                    (apply 2)))))))
+                                                                     (apply 2)))))))
+                                                         (invoke Cons)))
+                                                      (then $Test3.inner_105
+                                                         ((fetch $Test3.outer_104)
+                                                            (fetch $Test3.inner_105)
                                                             (suspend
-                                                               ((resume $Test3.return_86)))
+                                                               ((resume $Test3.return_79)))
                                                             (apply 2)))))))
-                                             (then $Test3.inner_117
-                                                ((fetch $Test3.outer_116)
-                                                   (fetch $Test3.inner_117)
-                                                   (suspend
-                                                      ((resume $Test3.return_87)))
-                                                   (apply 2)))))))
-                                    (then $Test3.inner_109
-                                       ((fetch $Test3.outer_108)
-                                          (fetch $Test3.inner_109)
+                                             (apply 2)))))))
+                                 (invoke Cons)))
+                              (then $Test3.inner_97
+                                 ((fetch $Test3.outer_96)
+                                    (fetch $Test3.inner_97)
+                                    (suspend
+                                       ((lambda
+                                          ($Test3.param_69 $Test3.return_77)
+                                          ((do $Test3.return_78
+                                             ((fetch $Test3.param_69)
+                                                (construct tuple 1)
+                                                (select
+                                                   ((Cons
+                                                      ((A ())
+                                                         (Cons
+                                                            ((B ())
+                                                               (Nil ())))))
+                                                      ((suspend
+                                                         ((push "OK")
+                                                            (suspend
+                                                               ((resume $Test3.return_78)))
+                                                            (apply 2)))
+                                                         (invoke malgo_print_string)))
+                                                   (#Test3.__5
+                                                      ((suspend
+                                                         ((push "WRONG")
+                                                            (suspend
+                                                               ((resume $Test3.return_78)))
+                                                            (apply 2)))
+                                                         (invoke malgo_print_string))))))
+                                             (resume $Test3.return_77)))
                                           (suspend
-                                             ((resume $Test3.return_88)))
-                                          (apply 2)))))))
-                           (lambda
-                              ($Test3.param_69 $Test3.return_89)
-                              ((do $Test3.return_90
-                                 ((fetch $Test3.param_69)
-                                    (construct tuple 1)
-                                    (select
-                                       ((Cons
-                                          ((A ())
-                                             (Cons
-                                                ((B ())
-                                                   (Nil ())))))
-                                          ((do $Test3.return_92
-                                             ((do $Test3.return_91
-                                                ((suspend
-                                                   ((resume $Test3.return_91)))
-                                                   (invoke malgo_print_string)))
-                                                (push "OK")
-                                                (suspend
-                                                   ((resume $Test3.return_92)))
-                                                (apply 2)))
-                                             (resume $Test3.return_90)))
-                                       (#Test3.__5
-                                          ((do $Test3.return_94
-                                             ((do $Test3.return_93
-                                                ((suspend
-                                                   ((resume $Test3.return_93)))
-                                                   (invoke malgo_print_string)))
-                                                (push "WRONG")
-                                                (suspend
-                                                   ((resume $Test3.return_94)))
-                                                (apply 2)))
-                                             (resume $Test3.return_90))))))
-                                 (resume $Test3.return_89)))
-                           (suspend
-                              ((resume $Test3.return_95)))
-                           (apply 2)))
-                        (resume $Test3.return_77))))))
-            (resume $Test3.return_76)))
-         (resume $Test3.return_75))))
+                                             ((resume $Test3.return_76)))
+                                          (apply 2)))
+                                    (apply 2)))))))
+                        (invoke |>))))))
+            (resume $Test3.return_75)))
+         (resume $Test3.return_74))))

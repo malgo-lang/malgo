@@ -12,20 +12,13 @@
                      ())
                   (select
                      (#TestExplicitModule.$__6
-                        (cut
-                           (do $TestExplicitModule.return_14
-                              (cut
-                                 (do $TestExplicitModule.return_11
-                                    (invoke putStrLn $TestExplicitModule.return_11))
-                                 (apply
-                                    ((do $TestExplicitModule.return_13
-                                       (cut
-                                          (do $TestExplicitModule.return_12
-                                             (invoke String# $TestExplicitModule.return_12))
-                                          (apply
-                                             ("Hello, world")
-                                             ($TestExplicitModule.return_13)))))
-                                    ($TestExplicitModule.return_14))))
-                           $TestExplicitModule.return_10)))))
+                        (invoke putStrLn
+                           (apply
+                              ((do $TestExplicitModule.return_11
+                                 (invoke String#
+                                    (apply
+                                       ("Hello, world")
+                                       ($TestExplicitModule.return_11)))))
+                              ($TestExplicitModule.return_10)))))))
             $TestExplicitModule.return_9))
       $TestExplicitModule.return_8)))

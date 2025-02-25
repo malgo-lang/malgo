@@ -1,82 +1,56 @@
 ((one
    $ToplevelVariable.return_86
-   (cut
-      (do $ToplevelVariable.return_88
-         (cut
-            (do $ToplevelVariable.return_87
-               (invoke Int32# $ToplevelVariable.return_87))
-            (apply
-               (1_i32)
-               ($ToplevelVariable.return_88))))
-      $ToplevelVariable.return_86))
+   (invoke Int32#
+      (apply
+         (1_i32)
+         ($ToplevelVariable.return_86))))
    (constId
+      $ToplevelVariable.return_87
+      (invoke const
+         (apply
+            ((do $ToplevelVariable.return_88
+               (invoke identity $ToplevelVariable.return_88)))
+            ($ToplevelVariable.return_87))))
+   (comp
       $ToplevelVariable.return_89
       (cut
-         (do $ToplevelVariable.return_92
+         (lambda
+            ($ToplevelVariable.param_82 $ToplevelVariable.return_91)
             (cut
-               (do $ToplevelVariable.return_90
-                  (invoke const $ToplevelVariable.return_90))
-               (apply
-                  ((do $ToplevelVariable.return_91
-                     (invoke identity $ToplevelVariable.return_91)))
-                  ($ToplevelVariable.return_92))))
-         $ToplevelVariable.return_89))
-   (comp
-      $ToplevelVariable.return_93
-      (cut
-         (do $ToplevelVariable.return_100
-            (cut
-               (lambda
-                  ($ToplevelVariable.param_82 $ToplevelVariable.return_94)
+               (do $ToplevelVariable.return_92
                   (cut
-                     (do $ToplevelVariable.return_95
-                        (cut
-                           (construct
-                              tuple
-                              ($ToplevelVariable.param_82)
-                              ())
-                           (select
-                              ((Nothing ())
-                                 (cut
-                                    (do $ToplevelVariable.return_96
-                                       (invoke Nothing $ToplevelVariable.return_96))
-                                    $ToplevelVariable.return_95))
-                              ((Just
-                                 (#ToplevelVariable.x_1))
-                                 (cut
-                                    (do $ToplevelVariable.return_97
-                                       (invoke Nothing $ToplevelVariable.return_97))
-                                    $ToplevelVariable.return_95)))))
-                     $ToplevelVariable.return_94))
-               (apply
-                  ((do $ToplevelVariable.return_99
-                     (cut
-                        (do $ToplevelVariable.return_98
-                           (invoke Just $ToplevelVariable.return_98))
-                        (apply
-                           ((construct tuple () ()))
-                           ($ToplevelVariable.return_99)))))
-                  ($ToplevelVariable.return_100))))
-         $ToplevelVariable.return_93))
+                     (construct
+                        tuple
+                        ($ToplevelVariable.param_82)
+                        ())
+                     (select
+                        ((Nothing ())
+                           (invoke Nothing $ToplevelVariable.return_92))
+                        ((Just
+                           (#ToplevelVariable.x_1))
+                           (invoke Nothing $ToplevelVariable.return_92)))))
+               $ToplevelVariable.return_91))
+         (apply
+            ((do $ToplevelVariable.return_90
+               (invoke Just
+                  (apply
+                     ((construct tuple () ()))
+                     ($ToplevelVariable.return_90)))))
+            ($ToplevelVariable.return_89))))
    (addOne
-      $ToplevelVariable.return_101
-      (cut
-         (do $ToplevelVariable.return_104
-            (cut
-               (do $ToplevelVariable.return_102
-                  (invoke addInt32 $ToplevelVariable.return_102))
-               (apply
-                  ((do $ToplevelVariable.return_103
-                     (invoke one $ToplevelVariable.return_103)))
-                  ($ToplevelVariable.return_104))))
-         $ToplevelVariable.return_101))
+      $ToplevelVariable.return_93
+      (invoke addInt32
+         (apply
+            ((do $ToplevelVariable.return_94
+               (invoke one $ToplevelVariable.return_94)))
+            ($ToplevelVariable.return_93))))
    (main
-      $ToplevelVariable.return_105
+      $ToplevelVariable.return_95
       (cut
          (lambda
-            ($ToplevelVariable.param_83 $ToplevelVariable.return_106)
+            ($ToplevelVariable.param_83 $ToplevelVariable.return_96)
             (cut
-               (do $ToplevelVariable.return_107
+               (do $ToplevelVariable.return_97
                   (cut
                      (construct
                         tuple
@@ -85,78 +59,59 @@
                      (select
                         (#ToplevelVariable.$__81
                            (cut
-                              (do $ToplevelVariable.return_126
+                              (lambda
+                                 ($ToplevelVariable.tmp_84 $ToplevelVariable.return_103)
                                  (cut
-                                    (lambda
-                                       ($ToplevelVariable.tmp_84 $ToplevelVariable.return_108)
-                                       (cut
-                                          (do $ToplevelVariable.return_117
-                                             (cut
-                                                (do $ToplevelVariable.return_109
-                                                   (invoke printInt32 $ToplevelVariable.return_109))
-                                                (apply
-                                                   ((do $ToplevelVariable.return_116
-                                                      (cut
-                                                         (do $ToplevelVariable.return_112
-                                                            (cut
-                                                               (do $ToplevelVariable.return_110
-                                                                  (invoke constId $ToplevelVariable.return_110))
+                                    (do $ToplevelVariable.return_104
+                                       (invoke printInt32
+                                          (apply
+                                             ((do $ToplevelVariable.return_105
+                                                (invoke constId
+                                                   (apply
+                                                      ((do $ToplevelVariable.return_108
+                                                         (invoke const $ToplevelVariable.return_108)))
+                                                      ((apply
+                                                         ((do $ToplevelVariable.return_106
+                                                            (invoke addOne
                                                                (apply
-                                                                  ((do $ToplevelVariable.return_111
-                                                                     (invoke const $ToplevelVariable.return_111)))
-                                                                  ($ToplevelVariable.return_112))))
-                                                         (apply
-                                                            ((do $ToplevelVariable.return_115
-                                                               (cut
-                                                                  (do $ToplevelVariable.return_113
-                                                                     (invoke addOne $ToplevelVariable.return_113))
-                                                                  (apply
-                                                                     ((do $ToplevelVariable.return_114
-                                                                        (invoke one $ToplevelVariable.return_114)))
-                                                                     ($ToplevelVariable.return_115)))))
-                                                            ($ToplevelVariable.return_116)))))
-                                                   ($ToplevelVariable.return_117))))
-                                          $ToplevelVariable.return_108))
-                                    (apply
-                                       ((do $ToplevelVariable.return_125
+                                                                  ((do $ToplevelVariable.return_107
+                                                                     (invoke one $ToplevelVariable.return_107)))
+                                                                  ($ToplevelVariable.return_106)))))
+                                                         ($ToplevelVariable.return_105)))))))
+                                             ($ToplevelVariable.return_104))))
+                                    $ToplevelVariable.return_103))
+                              (apply
+                                 ((do $ToplevelVariable.return_98
+                                    (cut
+                                       (lambda
+                                          ($ToplevelVariable.param_85 $ToplevelVariable.return_100)
                                           (cut
-                                             (lambda
-                                                ($ToplevelVariable.param_85 $ToplevelVariable.return_118)
+                                             (do $ToplevelVariable.return_101
                                                 (cut
-                                                   (do $ToplevelVariable.return_119
-                                                      (cut
-                                                         (construct
-                                                            tuple
-                                                            ($ToplevelVariable.param_85)
-                                                            ())
-                                                         (select
-                                                            ((Nothing ())
-                                                               (cut
-                                                                  (do $ToplevelVariable.return_123
-                                                                     (cut
-                                                                        (do $ToplevelVariable.return_120
-                                                                           (invoke printString $ToplevelVariable.return_120))
-                                                                        (apply
-                                                                           ((do $ToplevelVariable.return_122
-                                                                              (cut
-                                                                                 (do $ToplevelVariable.return_121
-                                                                                    (invoke String# $ToplevelVariable.return_121))
-                                                                                 (apply
-                                                                                    ("OK")
-                                                                                    ($ToplevelVariable.return_122)))))
-                                                                           ($ToplevelVariable.return_123))))
-                                                                  $ToplevelVariable.return_119))
-                                                            ((Just
-                                                               (#ToplevelVariable.__2))
-                                                               (cut
-                                                                  (construct tuple () ())
-                                                                  $ToplevelVariable.return_119)))))
-                                                   $ToplevelVariable.return_118))
-                                             (apply
-                                                ((do $ToplevelVariable.return_124
-                                                   (invoke comp $ToplevelVariable.return_124)))
-                                                ($ToplevelVariable.return_125)))))
-                                       ($ToplevelVariable.return_126))))
-                              $ToplevelVariable.return_107)))))
-               $ToplevelVariable.return_106))
-         $ToplevelVariable.return_105)))
+                                                   (construct
+                                                      tuple
+                                                      ($ToplevelVariable.param_85)
+                                                      ())
+                                                   (select
+                                                      ((Nothing ())
+                                                         (invoke printString
+                                                            (apply
+                                                               ((do $ToplevelVariable.return_102
+                                                                  (invoke String#
+                                                                     (apply
+                                                                        ("OK")
+                                                                        ($ToplevelVariable.return_102)))))
+                                                               ($ToplevelVariable.return_101))))
+                                                      ((Just
+                                                         (#ToplevelVariable.__2))
+                                                         (cut
+                                                            (construct tuple () ())
+                                                            $ToplevelVariable.return_101)))))
+                                             $ToplevelVariable.return_100))
+                                       (apply
+                                          ((do $ToplevelVariable.return_99
+                                             (invoke comp $ToplevelVariable.return_99)))
+                                          ($ToplevelVariable.return_98)))))
+                                 ($ToplevelVariable.return_97)))))))
+               $ToplevelVariable.return_96))
+         $ToplevelVariable.return_95)))

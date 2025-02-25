@@ -12,26 +12,19 @@
                   ())
                (select
                   (#TestExplicitModule.$__6
-                     (cut-do
-                        $TestExplicitModule.return_14
-                        (cut-do
-                           $TestExplicitModule.return_11
-                           (invoke putStrLn $TestExplicitModule.return_11)
-                           (then $TestExplicitModule.outer_15
-                              (cut-do
-                                 $TestExplicitModule.return_13
-                                 (cut-do
-                                    $TestExplicitModule.return_12
-                                    (invoke String# $TestExplicitModule.return_12)
+                     (invoke putStrLn
+                        (then $TestExplicitModule.outer_12
+                           (cut-do
+                              $TestExplicitModule.return_11
+                              (invoke String#
+                                 (apply
+                                    ("Hello, world")
+                                    ($TestExplicitModule.return_11)))
+                              (then $TestExplicitModule.inner_13
+                                 (cut
+                                    $TestExplicitModule.outer_12
                                     (apply
-                                       ("Hello, world")
-                                       ($TestExplicitModule.return_13)))
-                                 (then $TestExplicitModule.inner_16
-                                    (cut
-                                       $TestExplicitModule.outer_15
-                                       (apply
-                                          ($TestExplicitModule.inner_16)
-                                          ($TestExplicitModule.return_14)))))))
-                        $TestExplicitModule.return_10))))
+                                       ($TestExplicitModule.inner_13)
+                                       ($TestExplicitModule.return_10))))))))))
             $TestExplicitModule.return_9))
       $TestExplicitModule.return_8)))

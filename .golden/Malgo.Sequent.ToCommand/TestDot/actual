@@ -8,101 +8,81 @@
             (select
                ((Int64#
                   (#TestDot.x_0))
-                  ((do $TestDot.return_39
-                     ((do $TestDot.return_35
-                        ((suspend
-                           ((resume $TestDot.return_35)))
-                           (invoke Int64#)))
-                        (then $TestDot.outer_53
-                           ((do $TestDot.return_38
-                              ((do $TestDot.return_37
-                                 ((do $TestDot.return_36
-                                    ((suspend
-                                       ((resume $TestDot.return_36)))
-                                       (invoke addInt64#)))
-                                    (fetch #TestDot.x_0)
-                                    (suspend
-                                       ((resume $TestDot.return_37)))
-                                    (apply 2)))
-                                 (push 1_i64)
+                  ((suspend
+                     ((then $TestDot.outer_43
+                        ((do $TestDot.return_35
+                           ((suspend
+                              ((fetch #TestDot.x_0)
                                  (suspend
-                                    ((resume $TestDot.return_38)))
+                                    ((push 1_i64)
+                                       (suspend
+                                          ((resume $TestDot.return_35)))
+                                       (apply 2)))
                                  (apply 2)))
-                              (then $TestDot.inner_54
-                                 ((fetch $TestDot.outer_53)
-                                    (fetch $TestDot.inner_54)
-                                    (suspend
-                                       ((resume $TestDot.return_39)))
-                                    (apply 2)))))))
-                     (resume $TestDot.return_34))))))
+                              (invoke addInt64#)))
+                           (then $TestDot.inner_44
+                              ((fetch $TestDot.outer_43)
+                                 (fetch $TestDot.inner_44)
+                                 (suspend
+                                    ((resume $TestDot.return_34)))
+                                 (apply 2)))))))
+                     (invoke Int64#))))))
          (resume $TestDot.return_33)))
       (resume $TestDot.return_32)))
    (main
-      $TestDot.return_40
+      $TestDot.return_36
       ((lambda
-         ($TestDot.param_31 $TestDot.return_41)
-         ((do $TestDot.return_42
+         ($TestDot.param_31 $TestDot.return_37)
+         ((do $TestDot.return_38
             ((fetch $TestDot.param_31)
                (construct tuple 1)
                (select
                   (#TestDot.$__29
-                     ((do $TestDot.return_52
-                        ((do $TestDot.return_43
-                           ((suspend
-                              ((resume $TestDot.return_43)))
-                              (invoke printInt64)))
-                           (then $TestDot.outer_61
-                              ((do $TestDot.return_51
-                                 ((do $TestDot.return_48
-                                    ((do $TestDot.return_46
-                                       ((do $TestDot.return_44
-                                          ((suspend
-                                             ((resume $TestDot.return_44)))
-                                             (invoke .)))
-                                          (then $TestDot.outer_63
-                                             ((do $TestDot.return_45
-                                                ((suspend
-                                                   ((resume $TestDot.return_45)))
-                                                   (invoke succ)))
-                                                (then $TestDot.inner_64
-                                                   ((fetch $TestDot.outer_63)
-                                                      (fetch $TestDot.inner_64)
-                                                      (suspend
-                                                         ((resume $TestDot.return_46)))
-                                                      (apply 2)))))))
-                                       (then $TestDot.outer_65
-                                          ((do $TestDot.return_47
-                                             ((suspend
-                                                ((resume $TestDot.return_47)))
-                                                (invoke succ)))
-                                             (then $TestDot.inner_66
-                                                ((fetch $TestDot.outer_65)
-                                                   (fetch $TestDot.inner_66)
-                                                   (suspend
-                                                      ((resume $TestDot.return_48)))
-                                                   (apply 2)))))))
-                                    (then $TestDot.outer_67
-                                       ((do $TestDot.return_50
-                                          ((do $TestDot.return_49
-                                             ((suspend
-                                                ((resume $TestDot.return_49)))
-                                                (invoke Int64#)))
-                                             (push 0_i64)
+                     ((suspend
+                        ((then $TestDot.outer_51
+                           ((do $TestDot.return_39
+                              ((suspend
+                                 ((then $TestDot.outer_53
+                                    ((do $TestDot.return_42
+                                       ((suspend
+                                          ((resume $TestDot.return_42)))
+                                          (invoke succ)))
+                                       (then $TestDot.inner_54
+                                          ((fetch $TestDot.outer_53)
+                                             (fetch $TestDot.inner_54)
                                              (suspend
-                                                ((resume $TestDot.return_50)))
-                                             (apply 2)))
-                                          (then $TestDot.inner_68
-                                             ((fetch $TestDot.outer_67)
-                                                (fetch $TestDot.inner_68)
-                                                (suspend
-                                                   ((resume $TestDot.return_51)))
-                                                (apply 2)))))))
-                                 (then $TestDot.inner_62
-                                    ((fetch $TestDot.outer_61)
-                                       (fetch $TestDot.inner_62)
-                                       (suspend
-                                          ((resume $TestDot.return_52)))
-                                       (apply 2)))))))
-                        (resume $TestDot.return_42))))))
-            (resume $TestDot.return_41)))
-         (resume $TestDot.return_40))))
+                                                ((then $TestDot.outer_55
+                                                   ((do $TestDot.return_41
+                                                      ((suspend
+                                                         ((resume $TestDot.return_41)))
+                                                         (invoke succ)))
+                                                      (then $TestDot.inner_56
+                                                         ((fetch $TestDot.outer_55)
+                                                            (fetch $TestDot.inner_56)
+                                                            (suspend
+                                                               ((then $TestDot.outer_57
+                                                                  ((do $TestDot.return_40
+                                                                     ((suspend
+                                                                        ((push 0_i64)
+                                                                           (suspend
+                                                                              ((resume $TestDot.return_40)))
+                                                                           (apply 2)))
+                                                                        (invoke Int64#)))
+                                                                     (then $TestDot.inner_58
+                                                                        ((fetch $TestDot.outer_57)
+                                                                           (fetch $TestDot.inner_58)
+                                                                           (suspend
+                                                                              ((resume $TestDot.return_39)))
+                                                                           (apply 2)))))))
+                                                            (apply 2)))))))
+                                             (apply 2)))))))
+                                 (invoke .)))
+                              (then $TestDot.inner_52
+                                 ((fetch $TestDot.outer_51)
+                                    (fetch $TestDot.inner_52)
+                                    (suspend
+                                       ((resume $TestDot.return_38)))
+                                    (apply 2)))))))
+                        (invoke printInt64))))))
+            (resume $TestDot.return_37)))
+         (resume $TestDot.return_36))))

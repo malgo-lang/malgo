@@ -12,31 +12,19 @@
                      ())
                   (select
                      (#Primitive.$__10
-                        (cut
-                           (do $Primitive.return_21
-                              (cut
-                                 (do $Primitive.return_15
-                                    (invoke printString# $Primitive.return_15))
-                                 (apply
-                                    ((do $Primitive.return_20
-                                       (cut
-                                          (do $Primitive.return_16
-                                             (invoke toStringInt64# $Primitive.return_16))
-                                          (apply
-                                             ((do $Primitive.return_19
-                                                (cut
-                                                   (do $Primitive.return_18
-                                                      (cut
-                                                         (do $Primitive.return_17
-                                                            (invoke addInt64# $Primitive.return_17))
-                                                         (apply
-                                                            (40_i64)
-                                                            ($Primitive.return_18))))
-                                                   (apply
-                                                      (2_i64)
-                                                      ($Primitive.return_19)))))
-                                             ($Primitive.return_20)))))
-                                    ($Primitive.return_21))))
-                           $Primitive.return_14)))))
+                        (invoke printString#
+                           (apply
+                              ((do $Primitive.return_15
+                                 (invoke toStringInt64#
+                                    (apply
+                                       ((do $Primitive.return_16
+                                          (invoke addInt64#
+                                             (apply
+                                                (40_i64)
+                                                ((apply
+                                                   (2_i64)
+                                                   ($Primitive.return_16)))))))
+                                       ($Primitive.return_15)))))
+                              ($Primitive.return_14)))))))
             $Primitive.return_13))
       $Primitive.return_12)))

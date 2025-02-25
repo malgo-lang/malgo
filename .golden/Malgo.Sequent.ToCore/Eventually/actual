@@ -13,34 +13,26 @@
                   (select
                      ((Done
                         (#Eventually.value_11))
-                        (cut
-                           (do $Eventually.return_275
-                              (cut
-                                 (do $Eventually.return_274
-                                    (invoke Done $Eventually.return_274))
-                                 (apply
-                                    (#Eventually.value_11)
-                                    ($Eventually.return_275))))
-                           $Eventually.return_273))
+                        (invoke Done
+                           (apply
+                              (#Eventually.value_11)
+                              ($Eventually.return_273))))
                      ((NotYetDone
                         (#Eventually.work_12))
                         (cut
-                           (do $Eventually.return_276
-                              (cut
-                                 #Eventually.work_12
-                                 (apply
-                                    ((construct tuple () ()))
-                                    ($Eventually.return_276))))
-                           $Eventually.return_273)))))
+                           #Eventually.work_12
+                           (apply
+                              ((construct tuple () ()))
+                              ($Eventually.return_273)))))))
             $Eventually.return_272))
       $Eventually.return_271))
    (return
-      $Eventually.return_277
+      $Eventually.return_274
       (cut
          (lambda
-            ($Eventually.param_259 $Eventually.return_278)
+            ($Eventually.param_259 $Eventually.return_275)
             (cut
-               (do $Eventually.return_279
+               (do $Eventually.return_276
                   (cut
                      (construct
                         tuple
@@ -50,19 +42,19 @@
                         ((expand
                            ((bind #Eventually.__19)
                               (return #Eventually.x_20)))
-                           (cut #Eventually.x_20 $Eventually.return_279)))))
-               $Eventually.return_278))
-         $Eventually.return_277))
+                           (cut #Eventually.x_20 $Eventually.return_276)))))
+               $Eventually.return_275))
+         $Eventually.return_274))
    (eventuallyBind
-      $Eventually.return_280
+      $Eventually.return_277
       (cut
          (lambda
-            ($Eventually.param_260 $Eventually.return_281)
+            ($Eventually.param_260 $Eventually.return_278)
             (cut
                (lambda
-                  ($Eventually.param_261 $Eventually.return_282)
+                  ($Eventually.param_261 $Eventually.return_279)
                   (cut
-                     (do $Eventually.return_283
+                     (do $Eventually.return_280
                         (cut
                            (construct
                               tuple
@@ -74,80 +66,64 @@
                                     (#Eventually.value_7))
                                     #Eventually.k_8))
                                  (cut
-                                    (do $Eventually.return_284
-                                       (cut
-                                          #Eventually.k_8
-                                          (apply
-                                             (#Eventually.value_7)
-                                             ($Eventually.return_284))))
-                                    $Eventually.return_283))
+                                    #Eventually.k_8
+                                    (apply
+                                       (#Eventually.value_7)
+                                       ($Eventually.return_280))))
                               ((tuple
                                  ((NotYetDone
                                     (#Eventually.work_9))
                                     #Eventually.k_10))
-                                 (cut
-                                    (do $Eventually.return_292
-                                       (cut
-                                          (do $Eventually.return_285
-                                             (invoke NotYetDone $Eventually.return_285))
-                                          (apply
-                                             ((lambda
-                                                ($Eventually.param_262 $Eventually.return_286)
+                                 (invoke NotYetDone
+                                    (apply
+                                       ((lambda
+                                          ($Eventually.param_262 $Eventually.return_281)
+                                          (cut
+                                             (do $Eventually.return_282
                                                 (cut
-                                                   (do $Eventually.return_287
-                                                      (cut
-                                                         (construct
-                                                            tuple
-                                                            ($Eventually.param_262)
-                                                            ())
-                                                         (select
-                                                            (#Eventually.$__102
-                                                               (cut
-                                                                  (do $Eventually.return_291
-                                                                     (cut
-                                                                        (do $Eventually.return_290
-                                                                           (cut
-                                                                              (do $Eventually.return_288
-                                                                                 (invoke eventuallyBind $Eventually.return_288))
-                                                                              (apply
-                                                                                 ((do $Eventually.return_289
-                                                                                    (cut
-                                                                                       #Eventually.work_9
-                                                                                       (apply
-                                                                                          ((construct tuple () ()))
-                                                                                          ($Eventually.return_289)))))
-                                                                                 ($Eventually.return_290))))
-                                                                        (apply
-                                                                           (#Eventually.k_10)
-                                                                           ($Eventually.return_291))))
-                                                                  $Eventually.return_287)))))
-                                                   $Eventually.return_286)))
-                                             ($Eventually.return_292))))
-                                    $Eventually.return_283)))))
-                     $Eventually.return_282))
-               $Eventually.return_281))
-         $Eventually.return_280))
+                                                   (construct
+                                                      tuple
+                                                      ($Eventually.param_262)
+                                                      ())
+                                                   (select
+                                                      (#Eventually.$__102
+                                                         (invoke eventuallyBind
+                                                            (apply
+                                                               ((do $Eventually.return_283
+                                                                  (cut
+                                                                     #Eventually.work_9
+                                                                     (apply
+                                                                        ((construct tuple () ()))
+                                                                        ($Eventually.return_283)))))
+                                                               ((apply
+                                                                  (#Eventually.k_10)
+                                                                  ($Eventually.return_282)))))))))
+                                             $Eventually.return_281)))
+                                       ($Eventually.return_280)))))))
+                     $Eventually.return_279))
+               $Eventually.return_278))
+         $Eventually.return_277))
    (eventually
-      $Eventually.return_293
+      $Eventually.return_284
       (cut
          ((bind
             (cut
-               (do $Eventually.return_295
-                  (invoke eventuallyBind $Eventually.return_295))
-               $Eventually.return_294))
+               (do $Eventually.return_286
+                  (invoke eventuallyBind $Eventually.return_286))
+               $Eventually.return_285))
             (return
                (cut
-                  (do $Eventually.return_296
-                     (invoke Done $Eventually.return_296))
-                  $Eventually.return_294)))
-         $Eventually.return_293))
+                  (do $Eventually.return_287
+                     (invoke Done $Eventually.return_287))
+                  $Eventually.return_285)))
+         $Eventually.return_284))
    (bind
-      $Eventually.return_297
+      $Eventually.return_288
       (cut
          (lambda
-            ($Eventually.param_263 $Eventually.return_298)
+            ($Eventually.param_263 $Eventually.return_289)
             (cut
-               (do $Eventually.return_299
+               (do $Eventually.return_290
                   (cut
                      (construct
                         tuple
@@ -157,70 +133,49 @@
                         ((expand
                            ((bind #Eventually.x_15)
                               (return #Eventually.__16)))
-                           (cut #Eventually.x_15 $Eventually.return_299)))))
-               $Eventually.return_298))
-         $Eventually.return_297))
+                           (cut #Eventually.x_15 $Eventually.return_290)))))
+               $Eventually.return_289))
+         $Eventually.return_288))
    (comp
-      $Eventually.return_300
-      (cut
-         (do $Eventually.return_340
-            (cut
-               (do $Eventually.return_314
-                  (cut
-                     (do $Eventually.return_303
-                        (cut
-                           (do $Eventually.return_301
-                              (invoke bind $Eventually.return_301))
-                           (apply
-                              ((do $Eventually.return_302
-                                 (invoke eventually $Eventually.return_302)))
-                              ($Eventually.return_303))))
+      $Eventually.return_291
+      (invoke bind
+         (apply
+            ((do $Eventually.return_309
+               (invoke eventually $Eventually.return_309)))
+            ((apply
+               ((do $Eventually.return_304
+                  (invoke NotYetDone
                      (apply
-                        ((do $Eventually.return_313
+                        ((lambda
+                           ($Eventually.param_264 $Eventually.return_305)
                            (cut
-                              (do $Eventually.return_304
-                                 (invoke NotYetDone $Eventually.return_304))
-                              (apply
-                                 ((lambda
-                                    ($Eventually.param_264 $Eventually.return_305)
-                                    (cut
-                                       (do $Eventually.return_306
-                                          (cut
-                                             (construct
-                                                tuple
-                                                ($Eventually.param_264)
-                                                ())
-                                             (select
-                                                (#Eventually.$__147
-                                                   (cut
-                                                      (do $Eventually.return_312
-                                                         (cut
-                                                            (do $Eventually.return_307
-                                                               (invoke Done $Eventually.return_307))
-                                                            (apply
-                                                               ((do $Eventually.return_311
-                                                                  (cut
-                                                                     (do $Eventually.return_308
-                                                                        (invoke printString $Eventually.return_308))
-                                                                     (apply
-                                                                        ((do $Eventually.return_310
-                                                                           (cut
-                                                                              (do $Eventually.return_309
-                                                                                 (invoke String# $Eventually.return_309))
-                                                                              (apply
-                                                                                 ("1")
-                                                                                 ($Eventually.return_310)))))
-                                                                        ($Eventually.return_311)))))
-                                                               ($Eventually.return_312))))
-                                                      $Eventually.return_306)))))
-                                       $Eventually.return_305)))
-                                 ($Eventually.return_313)))))
-                        ($Eventually.return_314))))
-               (apply
+                              (do $Eventually.return_306
+                                 (cut
+                                    (construct
+                                       tuple
+                                       ($Eventually.param_264)
+                                       ())
+                                    (select
+                                       (#Eventually.$__147
+                                          (invoke Done
+                                             (apply
+                                                ((do $Eventually.return_307
+                                                   (invoke printString
+                                                      (apply
+                                                         ((do $Eventually.return_308
+                                                            (invoke String#
+                                                               (apply
+                                                                  ("1")
+                                                                  ($Eventually.return_308)))))
+                                                         ($Eventually.return_307)))))
+                                                ($Eventually.return_306)))))))
+                              $Eventually.return_305)))
+                        ($Eventually.return_304)))))
+               ((apply
                   ((lambda
-                     ($Eventually.param_265 $Eventually.return_315)
+                     ($Eventually.param_265 $Eventually.return_292)
                      (cut
-                        (do $Eventually.return_316
+                        (do $Eventually.return_293
                            (cut
                               (construct
                                  tuple
@@ -228,65 +183,44 @@
                                  ())
                               (select
                                  (#Eventually.__21
-                                    (cut
-                                       (do $Eventually.return_339
-                                          (cut
-                                             (do $Eventually.return_330
-                                                (cut
-                                                   (do $Eventually.return_319
-                                                      (cut
-                                                         (do $Eventually.return_317
-                                                            (invoke bind $Eventually.return_317))
-                                                         (apply
-                                                            ((do $Eventually.return_318
-                                                               (invoke eventually $Eventually.return_318)))
-                                                            ($Eventually.return_319))))
+                                    (invoke bind
+                                       (apply
+                                          ((do $Eventually.return_303
+                                             (invoke eventually $Eventually.return_303)))
+                                          ((apply
+                                             ((do $Eventually.return_298
+                                                (invoke NotYetDone
                                                    (apply
-                                                      ((do $Eventually.return_329
+                                                      ((lambda
+                                                         ($Eventually.param_266 $Eventually.return_299)
                                                          (cut
-                                                            (do $Eventually.return_320
-                                                               (invoke NotYetDone $Eventually.return_320))
-                                                            (apply
-                                                               ((lambda
-                                                                  ($Eventually.param_266 $Eventually.return_321)
-                                                                  (cut
-                                                                     (do $Eventually.return_322
-                                                                        (cut
-                                                                           (construct
-                                                                              tuple
-                                                                              ($Eventually.param_266)
-                                                                              ())
-                                                                           (select
-                                                                              (#Eventually.$__174
-                                                                                 (cut
-                                                                                    (do $Eventually.return_328
-                                                                                       (cut
-                                                                                          (do $Eventually.return_323
-                                                                                             (invoke Done $Eventually.return_323))
-                                                                                          (apply
-                                                                                             ((do $Eventually.return_327
-                                                                                                (cut
-                                                                                                   (do $Eventually.return_324
-                                                                                                      (invoke printString $Eventually.return_324))
-                                                                                                   (apply
-                                                                                                      ((do $Eventually.return_326
-                                                                                                         (cut
-                                                                                                            (do $Eventually.return_325
-                                                                                                               (invoke String# $Eventually.return_325))
-                                                                                                            (apply
-                                                                                                               ("2")
-                                                                                                               ($Eventually.return_326)))))
-                                                                                                      ($Eventually.return_327)))))
-                                                                                             ($Eventually.return_328))))
-                                                                                    $Eventually.return_322)))))
-                                                                     $Eventually.return_321)))
-                                                               ($Eventually.return_329)))))
-                                                      ($Eventually.return_330))))
-                                             (apply
+                                                            (do $Eventually.return_300
+                                                               (cut
+                                                                  (construct
+                                                                     tuple
+                                                                     ($Eventually.param_266)
+                                                                     ())
+                                                                  (select
+                                                                     (#Eventually.$__174
+                                                                        (invoke Done
+                                                                           (apply
+                                                                              ((do $Eventually.return_301
+                                                                                 (invoke printString
+                                                                                    (apply
+                                                                                       ((do $Eventually.return_302
+                                                                                          (invoke String#
+                                                                                             (apply
+                                                                                                ("2")
+                                                                                                ($Eventually.return_302)))))
+                                                                                       ($Eventually.return_301)))))
+                                                                              ($Eventually.return_300)))))))
+                                                            $Eventually.return_299)))
+                                                      ($Eventually.return_298)))))
+                                             ((apply
                                                 ((lambda
-                                                   ($Eventually.param_267 $Eventually.return_331)
+                                                   ($Eventually.param_267 $Eventually.return_294)
                                                    (cut
-                                                      (do $Eventually.return_332
+                                                      (do $Eventually.return_295
                                                          (cut
                                                             (construct
                                                                tuple
@@ -294,40 +228,28 @@
                                                                ())
                                                             (select
                                                                (#Eventually.__22
-                                                                  (cut
-                                                                     (do $Eventually.return_338
-                                                                        (cut
-                                                                           (do $Eventually.return_335
-                                                                              (cut
-                                                                                 (do $Eventually.return_333
-                                                                                    (invoke return $Eventually.return_333))
+                                                                  (invoke return
+                                                                     (apply
+                                                                        ((do $Eventually.return_297
+                                                                           (invoke eventually $Eventually.return_297)))
+                                                                        ((apply
+                                                                           ((do $Eventually.return_296
+                                                                              (invoke Int32#
                                                                                  (apply
-                                                                                    ((do $Eventually.return_334
-                                                                                       (invoke eventually $Eventually.return_334)))
-                                                                                    ($Eventually.return_335))))
-                                                                           (apply
-                                                                              ((do $Eventually.return_337
-                                                                                 (cut
-                                                                                    (do $Eventually.return_336
-                                                                                       (invoke Int32# $Eventually.return_336))
-                                                                                    (apply
-                                                                                       (3_i32)
-                                                                                       ($Eventually.return_337)))))
-                                                                              ($Eventually.return_338))))
-                                                                     $Eventually.return_332)))))
-                                                      $Eventually.return_331)))
-                                                ($Eventually.return_339))))
-                                       $Eventually.return_316)))))
-                        $Eventually.return_315)))
-                  ($Eventually.return_340))))
-         $Eventually.return_300))
+                                                                                    (3_i32)
+                                                                                    ($Eventually.return_296)))))
+                                                                           ($Eventually.return_295)))))))))
+                                                      $Eventually.return_294)))
+                                                ($Eventually.return_293)))))))))))
+                        $Eventually.return_292)))
+                  ($Eventually.return_291))))))))
    (main
-      $Eventually.return_341
+      $Eventually.return_310
       (cut
          (lambda
-            ($Eventually.param_268 $Eventually.return_342)
+            ($Eventually.param_268 $Eventually.return_311)
             (cut
-               (do $Eventually.return_343
+               (do $Eventually.return_312
                   (cut
                      (construct
                         tuple
@@ -336,121 +258,79 @@
                      (select
                         (#Eventually.$__257
                            (cut
-                              (do $Eventually.return_376
+                              (lambda
+                                 ($Eventually.tmp_269 $Eventually.return_316)
                                  (cut
-                                    (lambda
-                                       ($Eventually.tmp_269 $Eventually.return_344)
-                                       (cut
-                                          (do $Eventually.return_370
-                                             (cut
-                                                (do $Eventually.return_359
-                                                   (cut
-                                                      (do $Eventually.return_345
-                                                         (invoke |> $Eventually.return_345))
-                                                      (apply
-                                                         ((do $Eventually.return_358
-                                                            (cut
-                                                               (do $Eventually.return_356
-                                                                  (cut
-                                                                     (do $Eventually.return_346
-                                                                        (invoke |> $Eventually.return_346))
-                                                                     (apply
-                                                                        ((do $Eventually.return_355
-                                                                           (cut
-                                                                              (do $Eventually.return_353
-                                                                                 (cut
-                                                                                    (do $Eventually.return_347
-                                                                                       (invoke |> $Eventually.return_347))
-                                                                                    (apply
-                                                                                       ((do $Eventually.return_352
-                                                                                          (cut
-                                                                                             (do $Eventually.return_350
-                                                                                                (cut
-                                                                                                   (do $Eventually.return_348
-                                                                                                      (invoke |> $Eventually.return_348))
-                                                                                                   (apply
-                                                                                                      ((do $Eventually.return_349
-                                                                                                         (invoke comp $Eventually.return_349)))
-                                                                                                      ($Eventually.return_350))))
-                                                                                             (apply
-                                                                                                ((do $Eventually.return_351
-                                                                                                   (invoke step $Eventually.return_351)))
-                                                                                                ($Eventually.return_352)))))
-                                                                                       ($Eventually.return_353))))
-                                                                              (apply
-                                                                                 ((do $Eventually.return_354
-                                                                                    (invoke step $Eventually.return_354)))
-                                                                                 ($Eventually.return_355)))))
-                                                                        ($Eventually.return_356))))
-                                                               (apply
-                                                                  ((do $Eventually.return_357
-                                                                     (invoke step $Eventually.return_357)))
-                                                                  ($Eventually.return_358)))))
-                                                         ($Eventually.return_359))))
-                                                (apply
-                                                   ((lambda
-                                                      ($Eventually.param_270 $Eventually.return_360)
-                                                      (cut
-                                                         (do $Eventually.return_361
-                                                            (cut
-                                                               (construct
-                                                                  tuple
-                                                                  ($Eventually.param_270)
-                                                                  ())
-                                                               (select
-                                                                  ((Done
-                                                                     (#Eventually.x_23))
-                                                                     (cut
-                                                                        (do $Eventually.return_365
-                                                                           (cut
-                                                                              (do $Eventually.return_362
-                                                                                 (invoke printString $Eventually.return_362))
-                                                                              (apply
-                                                                                 ((do $Eventually.return_364
-                                                                                    (cut
-                                                                                       (do $Eventually.return_363
-                                                                                          (invoke toStringInt32 $Eventually.return_363))
-                                                                                       (apply
-                                                                                          (#Eventually.x_23)
-                                                                                          ($Eventually.return_364)))))
-                                                                                 ($Eventually.return_365))))
-                                                                        $Eventually.return_361))
-                                                                  ((NotYetDone
-                                                                     (#Eventually.__24))
-                                                                     (cut
-                                                                        (do $Eventually.return_369
-                                                                           (cut
-                                                                              (do $Eventually.return_366
-                                                                                 (invoke printString $Eventually.return_366))
-                                                                              (apply
-                                                                                 ((do $Eventually.return_368
-                                                                                    (cut
-                                                                                       (do $Eventually.return_367
-                                                                                          (invoke String# $Eventually.return_367))
-                                                                                       (apply
-                                                                                          ("not yet")
-                                                                                          ($Eventually.return_368)))))
-                                                                                 ($Eventually.return_369))))
-                                                                        $Eventually.return_361)))))
-                                                         $Eventually.return_360)))
-                                                   ($Eventually.return_370))))
-                                          $Eventually.return_344))
-                                    (apply
-                                       ((do $Eventually.return_375
-                                          (cut
-                                             (do $Eventually.return_373
-                                                (cut
-                                                   (do $Eventually.return_371
-                                                      (invoke |> $Eventually.return_371))
+                                    (do $Eventually.return_317
+                                       (invoke |>
+                                          (apply
+                                             ((do $Eventually.return_322
+                                                (invoke |>
                                                    (apply
-                                                      ((do $Eventually.return_372
-                                                         (invoke comp $Eventually.return_372)))
-                                                      ($Eventually.return_373))))
-                                             (apply
-                                                ((do $Eventually.return_374
-                                                   (invoke step $Eventually.return_374)))
-                                                ($Eventually.return_375)))))
-                                       ($Eventually.return_376))))
-                              $Eventually.return_343)))))
-               $Eventually.return_342))
-         $Eventually.return_341)))
+                                                      ((do $Eventually.return_324
+                                                         (invoke |>
+                                                            (apply
+                                                               ((do $Eventually.return_326
+                                                                  (invoke |>
+                                                                     (apply
+                                                                        ((do $Eventually.return_328
+                                                                           (invoke comp $Eventually.return_328)))
+                                                                        ((apply
+                                                                           ((do $Eventually.return_327
+                                                                              (invoke step $Eventually.return_327)))
+                                                                           ($Eventually.return_326)))))))
+                                                               ((apply
+                                                                  ((do $Eventually.return_325
+                                                                     (invoke step $Eventually.return_325)))
+                                                                  ($Eventually.return_324)))))))
+                                                      ((apply
+                                                         ((do $Eventually.return_323
+                                                            (invoke step $Eventually.return_323)))
+                                                         ($Eventually.return_322)))))))
+                                             ((apply
+                                                ((lambda
+                                                   ($Eventually.param_270 $Eventually.return_318)
+                                                   (cut
+                                                      (do $Eventually.return_319
+                                                         (cut
+                                                            (construct
+                                                               tuple
+                                                               ($Eventually.param_270)
+                                                               ())
+                                                            (select
+                                                               ((Done
+                                                                  (#Eventually.x_23))
+                                                                  (invoke printString
+                                                                     (apply
+                                                                        ((do $Eventually.return_320
+                                                                           (invoke toStringInt32
+                                                                              (apply
+                                                                                 (#Eventually.x_23)
+                                                                                 ($Eventually.return_320)))))
+                                                                        ($Eventually.return_319))))
+                                                               ((NotYetDone
+                                                                  (#Eventually.__24))
+                                                                  (invoke printString
+                                                                     (apply
+                                                                        ((do $Eventually.return_321
+                                                                           (invoke String#
+                                                                              (apply
+                                                                                 ("not yet")
+                                                                                 ($Eventually.return_321)))))
+                                                                        ($Eventually.return_319)))))))
+                                                      $Eventually.return_318)))
+                                                ($Eventually.return_317))))))
+                                    $Eventually.return_316))
+                              (apply
+                                 ((do $Eventually.return_313
+                                    (invoke |>
+                                       (apply
+                                          ((do $Eventually.return_315
+                                             (invoke comp $Eventually.return_315)))
+                                          ((apply
+                                             ((do $Eventually.return_314
+                                                (invoke step $Eventually.return_314)))
+                                             ($Eventually.return_313)))))))
+                                 ($Eventually.return_312)))))))
+               $Eventually.return_311))
+         $Eventually.return_310)))

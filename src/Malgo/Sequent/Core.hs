@@ -38,7 +38,7 @@ data Producer (x :: Rank) where
   Literal :: Range -> Literal -> Producer x
   Construct :: Range -> Tag -> [Producer x] -> [Consumer x] -> Producer x
   Lambda :: Range -> [Name] -> Statement x -> Producer x
-  Object :: Range -> Map Text (Statement x) -> Producer x
+  Object :: Range -> Map Text (Statement x) -> Producer x -- FIXME: take a consumer as argument
   Do :: Range -> Name -> Statement One -> Producer One
 
 deriving stock instance Show (Producer x)

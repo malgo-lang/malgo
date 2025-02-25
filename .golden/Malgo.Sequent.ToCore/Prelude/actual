@@ -17,23 +17,20 @@
                            ((tuple
                               (#Prelude.x_70 #Prelude.f_71))
                               (cut
-                                 (do $Prelude.return_746
-                                    (cut
-                                       #Prelude.f_71
-                                       (apply
-                                          (#Prelude.x_70)
-                                          ($Prelude.return_746))))
-                                 $Prelude.return_745)))))
+                                 #Prelude.f_71
+                                 (apply
+                                    (#Prelude.x_70)
+                                    ($Prelude.return_745)))))))
                   $Prelude.return_744))
             $Prelude.return_743))
       $Prelude.return_742))
    (tail
-      $Prelude.return_747
+      $Prelude.return_746
       (cut
          (lambda
-            ($Prelude.param_689 $Prelude.return_748)
+            ($Prelude.param_689 $Prelude.return_747)
             (cut
-               (do $Prelude.return_749
+               (do $Prelude.return_748
                   (cut
                      (construct
                         tuple
@@ -42,26 +39,21 @@
                      (select
                         ((Cons
                            (#Prelude.__25 #Prelude.xs_26))
-                           (cut #Prelude.xs_26 $Prelude.return_749))
+                           (cut #Prelude.xs_26 $Prelude.return_748))
                         (#Prelude.__27
-                           (cut
-                              (do $Prelude.return_751
-                                 (cut
-                                    (do $Prelude.return_750
-                                       (invoke exitFailure $Prelude.return_750))
-                                    (apply
-                                       ((construct tuple () ()))
-                                       ($Prelude.return_751))))
-                              $Prelude.return_749)))))
-               $Prelude.return_748))
-         $Prelude.return_747))
+                           (invoke exitFailure
+                              (apply
+                                 ((construct tuple () ()))
+                                 ($Prelude.return_748)))))))
+               $Prelude.return_747))
+         $Prelude.return_746))
    (snd
-      $Prelude.return_752
+      $Prelude.return_749
       (cut
          (lambda
-            ($Prelude.param_690 $Prelude.return_753)
+            ($Prelude.param_690 $Prelude.return_750)
             (cut
-               (do $Prelude.return_754
+               (do $Prelude.return_751
                   (cut
                      (construct
                         tuple
@@ -70,16 +62,16 @@
                      (select
                         ((tuple
                            (#Prelude.a_16 #Prelude.b_17))
-                           (cut #Prelude.b_17 $Prelude.return_754)))))
-               $Prelude.return_753))
-         $Prelude.return_752))
+                           (cut #Prelude.b_17 $Prelude.return_751)))))
+               $Prelude.return_750))
+         $Prelude.return_749))
    (putStrLn
-      $Prelude.return_755
+      $Prelude.return_752
       (cut
          (lambda
-            ($Prelude.param_691 $Prelude.return_756)
+            ($Prelude.param_691 $Prelude.return_753)
             (cut
-               (do $Prelude.return_757
+               (do $Prelude.return_754
                   (cut
                      (construct
                         tuple
@@ -88,38 +80,31 @@
                      (select
                         (#Prelude.str_91
                            (cut
-                              (do $Prelude.return_763
+                              (lambda
+                                 ($Prelude.tmp_692 $Prelude.return_756)
                                  (cut
-                                    (lambda
-                                       ($Prelude.tmp_692 $Prelude.return_758)
-                                       (cut
-                                          (do $Prelude.return_760
-                                             (cut
-                                                (do $Prelude.return_759
-                                                   (invoke newline $Prelude.return_759))
-                                                (apply
-                                                   ((construct tuple () ()))
-                                                   ($Prelude.return_760))))
-                                          $Prelude.return_758))
-                                    (apply
-                                       ((do $Prelude.return_762
-                                          (cut
-                                             (do $Prelude.return_761
-                                                (invoke printString $Prelude.return_761))
-                                             (apply
-                                                (#Prelude.str_91)
-                                                ($Prelude.return_762)))))
-                                       ($Prelude.return_763))))
-                              $Prelude.return_757)))))
-               $Prelude.return_756))
-         $Prelude.return_755))
+                                    (do $Prelude.return_757
+                                       (invoke newline
+                                          (apply
+                                             ((construct tuple () ()))
+                                             ($Prelude.return_757))))
+                                    $Prelude.return_756))
+                              (apply
+                                 ((do $Prelude.return_755
+                                    (invoke printString
+                                       (apply
+                                          (#Prelude.str_91)
+                                          ($Prelude.return_755)))))
+                                 ($Prelude.return_754)))))))
+               $Prelude.return_753))
+         $Prelude.return_752))
    (putStr
-      $Prelude.return_764
+      $Prelude.return_758
       (cut
          (lambda
-            ($Prelude.param_693 $Prelude.return_765)
+            ($Prelude.param_693 $Prelude.return_759)
             (cut
-               (do $Prelude.return_766
+               (do $Prelude.return_760
                   (cut
                      (construct
                         tuple
@@ -127,27 +112,22 @@
                         ())
                      (select
                         (#Prelude.str_90
-                           (cut
-                              (do $Prelude.return_768
-                                 (cut
-                                    (do $Prelude.return_767
-                                       (invoke printString $Prelude.return_767))
-                                    (apply
-                                       (#Prelude.str_90)
-                                       ($Prelude.return_768))))
-                              $Prelude.return_766)))))
-               $Prelude.return_765))
-         $Prelude.return_764))
+                           (invoke printString
+                              (apply
+                                 (#Prelude.str_90)
+                                 ($Prelude.return_760)))))))
+               $Prelude.return_759))
+         $Prelude.return_758))
    (punctuate
-      $Prelude.return_769
+      $Prelude.return_761
       (cut
          (lambda
-            ($Prelude.param_694 $Prelude.return_770)
+            ($Prelude.param_694 $Prelude.return_762)
             (cut
                (lambda
-                  ($Prelude.param_695 $Prelude.return_771)
+                  ($Prelude.param_695 $Prelude.return_763)
                   (cut
-                     (do $Prelude.return_772
+                     (do $Prelude.return_764
                         (cut
                            (construct
                               tuple
@@ -157,80 +137,51 @@
                               ((tuple
                                  (#Prelude.__55
                                     (Nil ())))
-                                 (cut
-                                    (do $Prelude.return_773
-                                       (invoke Nil $Prelude.return_773))
-                                    $Prelude.return_772))
+                                 (invoke Nil $Prelude.return_764))
                               ((tuple
                                  (#Prelude.__56
                                     (Cons
                                        (#Prelude.x_57
                                           (Nil ())))))
-                                 (cut
-                                    (do $Prelude.return_777
-                                       (cut
-                                          (do $Prelude.return_775
-                                             (cut
-                                                (do $Prelude.return_774
-                                                   (invoke Cons $Prelude.return_774))
-                                                (apply
-                                                   (#Prelude.x_57)
-                                                   ($Prelude.return_775))))
-                                          (apply
-                                             ((do $Prelude.return_776
-                                                (invoke Nil $Prelude.return_776)))
-                                             ($Prelude.return_777))))
-                                    $Prelude.return_772))
+                                 (invoke Cons
+                                    (apply
+                                       (#Prelude.x_57)
+                                       ((apply
+                                          ((do $Prelude.return_765
+                                             (invoke Nil $Prelude.return_765)))
+                                          ($Prelude.return_764))))))
                               ((tuple
                                  (#Prelude.sep_58
                                     (Cons
                                        (#Prelude.x_59 #Prelude.xs_60))))
-                                 (cut
-                                    (do $Prelude.return_786
-                                       (cut
-                                          (do $Prelude.return_779
-                                             (cut
-                                                (do $Prelude.return_778
-                                                   (invoke Cons $Prelude.return_778))
+                                 (invoke Cons
+                                    (apply
+                                       (#Prelude.x_59)
+                                       ((apply
+                                          ((do $Prelude.return_766
+                                             (invoke Cons
                                                 (apply
-                                                   (#Prelude.x_59)
-                                                   ($Prelude.return_779))))
-                                          (apply
-                                             ((do $Prelude.return_785
-                                                (cut
-                                                   (do $Prelude.return_781
-                                                      (cut
-                                                         (do $Prelude.return_780
-                                                            (invoke Cons $Prelude.return_780))
-                                                         (apply
-                                                            (#Prelude.sep_58)
-                                                            ($Prelude.return_781))))
-                                                   (apply
-                                                      ((do $Prelude.return_784
-                                                         (cut
-                                                            (do $Prelude.return_783
-                                                               (cut
-                                                                  (do $Prelude.return_782
-                                                                     (invoke punctuate $Prelude.return_782))
-                                                                  (apply
-                                                                     (#Prelude.sep_58)
-                                                                     ($Prelude.return_783))))
+                                                   (#Prelude.sep_58)
+                                                   ((apply
+                                                      ((do $Prelude.return_767
+                                                         (invoke punctuate
                                                             (apply
-                                                               (#Prelude.xs_60)
-                                                               ($Prelude.return_784)))))
-                                                      ($Prelude.return_785)))))
-                                             ($Prelude.return_786))))
-                                    $Prelude.return_772)))))
-                     $Prelude.return_771))
-               $Prelude.return_770))
-         $Prelude.return_769))
+                                                               (#Prelude.sep_58)
+                                                               ((apply
+                                                                  (#Prelude.xs_60)
+                                                                  ($Prelude.return_767)))))))
+                                                      ($Prelude.return_766)))))))
+                                          ($Prelude.return_764)))))))))
+                     $Prelude.return_763))
+               $Prelude.return_762))
+         $Prelude.return_761))
    (printInt64
-      $Prelude.return_787
+      $Prelude.return_768
       (cut
          (lambda
-            ($Prelude.param_696 $Prelude.return_788)
+            ($Prelude.param_696 $Prelude.return_769)
             (cut
-               (do $Prelude.return_789
+               (do $Prelude.return_770
                   (cut
                      (construct
                         tuple
@@ -238,30 +189,23 @@
                         ())
                      (select
                         (#Prelude.i_93
-                           (cut
-                              (do $Prelude.return_793
-                                 (cut
-                                    (do $Prelude.return_790
-                                       (invoke printString $Prelude.return_790))
-                                    (apply
-                                       ((do $Prelude.return_792
-                                          (cut
-                                             (do $Prelude.return_791
-                                                (invoke toStringInt64 $Prelude.return_791))
-                                             (apply
-                                                (#Prelude.i_93)
-                                                ($Prelude.return_792)))))
-                                       ($Prelude.return_793))))
-                              $Prelude.return_789)))))
-               $Prelude.return_788))
-         $Prelude.return_787))
+                           (invoke printString
+                              (apply
+                                 ((do $Prelude.return_771
+                                    (invoke toStringInt64
+                                       (apply
+                                          (#Prelude.i_93)
+                                          ($Prelude.return_771)))))
+                                 ($Prelude.return_770)))))))
+               $Prelude.return_769))
+         $Prelude.return_768))
    (printInt32
-      $Prelude.return_794
+      $Prelude.return_772
       (cut
          (lambda
-            ($Prelude.param_697 $Prelude.return_795)
+            ($Prelude.param_697 $Prelude.return_773)
             (cut
-               (do $Prelude.return_796
+               (do $Prelude.return_774
                   (cut
                      (construct
                         tuple
@@ -269,33 +213,26 @@
                         ())
                      (select
                         (#Prelude.i_92
-                           (cut
-                              (do $Prelude.return_800
-                                 (cut
-                                    (do $Prelude.return_797
-                                       (invoke printString $Prelude.return_797))
-                                    (apply
-                                       ((do $Prelude.return_799
-                                          (cut
-                                             (do $Prelude.return_798
-                                                (invoke toStringInt32 $Prelude.return_798))
-                                             (apply
-                                                (#Prelude.i_92)
-                                                ($Prelude.return_799)))))
-                                       ($Prelude.return_800))))
-                              $Prelude.return_796)))))
-               $Prelude.return_795))
-         $Prelude.return_794))
+                           (invoke printString
+                              (apply
+                                 ((do $Prelude.return_775
+                                    (invoke toStringInt32
+                                       (apply
+                                          (#Prelude.i_92)
+                                          ($Prelude.return_775)))))
+                                 ($Prelude.return_774)))))))
+               $Prelude.return_773))
+         $Prelude.return_772))
    (mapList
-      $Prelude.return_801
+      $Prelude.return_776
       (cut
          (lambda
-            ($Prelude.param_698 $Prelude.return_802)
+            ($Prelude.param_698 $Prelude.return_777)
             (cut
                (lambda
-                  ($Prelude.param_699 $Prelude.return_803)
+                  ($Prelude.param_699 $Prelude.return_778)
                   (cut
-                     (do $Prelude.return_804
+                     (do $Prelude.return_779
                         (cut
                            (construct
                               tuple
@@ -305,54 +242,38 @@
                               ((tuple
                                  (#Prelude.__38
                                     (Nil ())))
-                                 (cut
-                                    (do $Prelude.return_805
-                                       (invoke Nil $Prelude.return_805))
-                                    $Prelude.return_804))
+                                 (invoke Nil $Prelude.return_779))
                               ((tuple
                                  (#Prelude.f_39
                                     (Cons
                                        (#Prelude.x_40 #Prelude.xs_41))))
-                                 (cut
-                                    (do $Prelude.return_812
-                                       (cut
-                                          (do $Prelude.return_808
-                                             (cut
-                                                (do $Prelude.return_806
-                                                   (invoke Cons $Prelude.return_806))
+                                 (invoke Cons
+                                    (apply
+                                       ((do $Prelude.return_781
+                                          (cut
+                                             #Prelude.f_39
+                                             (apply
+                                                (#Prelude.x_40)
+                                                ($Prelude.return_781)))))
+                                       ((apply
+                                          ((do $Prelude.return_780
+                                             (invoke mapList
                                                 (apply
-                                                   ((do $Prelude.return_807
-                                                      (cut
-                                                         #Prelude.f_39
-                                                         (apply
-                                                            (#Prelude.x_40)
-                                                            ($Prelude.return_807)))))
-                                                   ($Prelude.return_808))))
-                                          (apply
-                                             ((do $Prelude.return_811
-                                                (cut
-                                                   (do $Prelude.return_810
-                                                      (cut
-                                                         (do $Prelude.return_809
-                                                            (invoke mapList $Prelude.return_809))
-                                                         (apply
-                                                            (#Prelude.f_39)
-                                                            ($Prelude.return_810))))
-                                                   (apply
+                                                   (#Prelude.f_39)
+                                                   ((apply
                                                       (#Prelude.xs_41)
-                                                      ($Prelude.return_811)))))
-                                             ($Prelude.return_812))))
-                                    $Prelude.return_804)))))
-                     $Prelude.return_803))
-               $Prelude.return_802))
-         $Prelude.return_801))
+                                                      ($Prelude.return_780)))))))
+                                          ($Prelude.return_779)))))))))
+                     $Prelude.return_778))
+               $Prelude.return_777))
+         $Prelude.return_776))
    (listToString
-      $Prelude.return_813
+      $Prelude.return_782
       (cut
          (lambda
-            ($Prelude.param_700 $Prelude.return_814)
+            ($Prelude.param_700 $Prelude.return_783)
             (cut
-               (do $Prelude.return_815
+               (do $Prelude.return_784
                   (cut
                      (construct
                         tuple
@@ -360,46 +281,31 @@
                         ())
                      (select
                         ((Nil ())
-                           (cut
-                              (do $Prelude.return_817
-                                 (cut
-                                    (do $Prelude.return_816
-                                       (invoke String# $Prelude.return_816))
-                                    (apply
-                                       ("")
-                                       ($Prelude.return_817))))
-                              $Prelude.return_815))
+                           (invoke String#
+                              (apply
+                                 ("")
+                                 ($Prelude.return_784))))
                         ((Cons
                            (#Prelude.c_42 #Prelude.cs_43))
-                           (cut
-                              (do $Prelude.return_822
-                                 (cut
-                                    (do $Prelude.return_819
-                                       (cut
-                                          (do $Prelude.return_818
-                                             (invoke consString $Prelude.return_818))
+                           (invoke consString
+                              (apply
+                                 (#Prelude.c_42)
+                                 ((apply
+                                    ((do $Prelude.return_785
+                                       (invoke listToString
                                           (apply
-                                             (#Prelude.c_42)
-                                             ($Prelude.return_819))))
-                                    (apply
-                                       ((do $Prelude.return_821
-                                          (cut
-                                             (do $Prelude.return_820
-                                                (invoke listToString $Prelude.return_820))
-                                             (apply
-                                                (#Prelude.cs_43)
-                                                ($Prelude.return_821)))))
-                                       ($Prelude.return_822))))
-                              $Prelude.return_815)))))
-               $Prelude.return_814))
-         $Prelude.return_813))
+                                             (#Prelude.cs_43)
+                                             ($Prelude.return_785)))))
+                                    ($Prelude.return_784)))))))))
+               $Prelude.return_783))
+         $Prelude.return_782))
    (isWhiteSpace
-      $Prelude.return_823
+      $Prelude.return_786
       (cut
          (lambda
-            ($Prelude.param_701 $Prelude.return_824)
+            ($Prelude.param_701 $Prelude.return_787)
             (cut
-               (do $Prelude.return_825
+               (do $Prelude.return_788
                   (cut
                      (construct
                         tuple
@@ -408,48 +314,33 @@
                      (select
                         ((Char#
                            (' '))
-                           (cut
-                              (do $Prelude.return_826
-                                 (invoke True $Prelude.return_826))
-                              $Prelude.return_825))
+                           (invoke True $Prelude.return_788))
                         ((Char#
                            ('\n'))
-                           (cut
-                              (do $Prelude.return_827
-                                 (invoke True $Prelude.return_827))
-                              $Prelude.return_825))
+                           (invoke True $Prelude.return_788))
                         ((Char#
                            ('\r'))
-                           (cut
-                              (do $Prelude.return_828
-                                 (invoke True $Prelude.return_828))
-                              $Prelude.return_825))
+                           (invoke True $Prelude.return_788))
                         ((Char#
                            ('\t'))
-                           (cut
-                              (do $Prelude.return_829
-                                 (invoke True $Prelude.return_829))
-                              $Prelude.return_825))
+                           (invoke True $Prelude.return_788))
                         (#Prelude.__61
-                           (cut
-                              (do $Prelude.return_830
-                                 (invoke False $Prelude.return_830))
-                              $Prelude.return_825)))))
-               $Prelude.return_824))
-         $Prelude.return_823))
+                           (invoke False $Prelude.return_788)))))
+               $Prelude.return_787))
+         $Prelude.return_786))
    (if
-      $Prelude.return_831
+      $Prelude.return_789
       (cut
          (lambda
-            ($Prelude.param_702 $Prelude.return_832)
+            ($Prelude.param_702 $Prelude.return_790)
             (cut
                (lambda
-                  ($Prelude.param_703 $Prelude.return_833)
+                  ($Prelude.param_703 $Prelude.return_791)
                   (cut
                      (lambda
-                        ($Prelude.param_704 $Prelude.return_834)
+                        ($Prelude.param_704 $Prelude.return_792)
                         (cut
-                           (do $Prelude.return_835
+                           (do $Prelude.return_793
                               (cut
                                  (construct
                                     tuple
@@ -461,36 +352,30 @@
                                           #Prelude.t_77
                                           #Prelude.__78))
                                        (cut
-                                          (do $Prelude.return_836
-                                             (cut
-                                                #Prelude.t_77
-                                                (apply
-                                                   ((construct tuple () ()))
-                                                   ($Prelude.return_836))))
-                                          $Prelude.return_835))
+                                          #Prelude.t_77
+                                          (apply
+                                             ((construct tuple () ()))
+                                             ($Prelude.return_793))))
                                     ((tuple
                                        ((False ())
                                           #Prelude.__79
                                           #Prelude.f_80))
                                        (cut
-                                          (do $Prelude.return_837
-                                             (cut
-                                                #Prelude.f_80
-                                                (apply
-                                                   ((construct tuple () ()))
-                                                   ($Prelude.return_837))))
-                                          $Prelude.return_835)))))
-                           $Prelude.return_834))
-                     $Prelude.return_833))
-               $Prelude.return_832))
-         $Prelude.return_831))
+                                          #Prelude.f_80
+                                          (apply
+                                             ((construct tuple () ()))
+                                             ($Prelude.return_793)))))))
+                           $Prelude.return_792))
+                     $Prelude.return_791))
+               $Prelude.return_790))
+         $Prelude.return_789))
    (tailString
-      $Prelude.return_838
+      $Prelude.return_794
       (cut
          (lambda
-            ($Prelude.param_705 $Prelude.return_839)
+            ($Prelude.param_705 $Prelude.return_795)
             (cut
-               (do $Prelude.return_840
+               (do $Prelude.return_796
                   (cut
                      (construct
                         tuple
@@ -498,55 +383,38 @@
                         ())
                      (select
                         (#Prelude.str_45
-                           (cut
-                              (do $Prelude.return_861
-                                 (cut
-                                    (do $Prelude.return_850
+                           (invoke if
+                              (apply
+                                 ((do $Prelude.return_803
+                                    (invoke eqString
+                                       (apply
+                                          (#Prelude.str_45)
+                                          ((apply
+                                             ((do $Prelude.return_804
+                                                (invoke String#
+                                                   (apply
+                                                      ("")
+                                                      ($Prelude.return_804)))))
+                                             ($Prelude.return_803)))))))
+                                 ((apply
+                                    ((lambda
+                                       ($Prelude.param_706 $Prelude.return_801)
                                        (cut
-                                          (do $Prelude.return_847
+                                          (do $Prelude.return_802
                                              (cut
-                                                (do $Prelude.return_841
-                                                   (invoke if $Prelude.return_841))
-                                                (apply
-                                                   ((do $Prelude.return_846
-                                                      (cut
-                                                         (do $Prelude.return_843
-                                                            (cut
-                                                               (do $Prelude.return_842
-                                                                  (invoke eqString $Prelude.return_842))
-                                                               (apply
-                                                                  (#Prelude.str_45)
-                                                                  ($Prelude.return_843))))
-                                                         (apply
-                                                            ((do $Prelude.return_845
-                                                               (cut
-                                                                  (do $Prelude.return_844
-                                                                     (invoke String# $Prelude.return_844))
-                                                                  (apply
-                                                                     ("")
-                                                                     ($Prelude.return_845)))))
-                                                            ($Prelude.return_846)))))
-                                                   ($Prelude.return_847))))
-                                          (apply
-                                             ((lambda
-                                                ($Prelude.param_706 $Prelude.return_848)
-                                                (cut
-                                                   (do $Prelude.return_849
-                                                      (cut
-                                                         (construct
-                                                            tuple
-                                                            ($Prelude.param_706)
-                                                            ())
-                                                         (select
-                                                            (#Prelude.$__366
-                                                               (cut #Prelude.str_45 $Prelude.return_849)))))
-                                                   $Prelude.return_848)))
-                                             ($Prelude.return_850))))
-                                    (apply
+                                                (construct
+                                                   tuple
+                                                   ($Prelude.param_706)
+                                                   ())
+                                                (select
+                                                   (#Prelude.$__366
+                                                      (cut #Prelude.str_45 $Prelude.return_802)))))
+                                          $Prelude.return_801)))
+                                    ((apply
                                        ((lambda
-                                          ($Prelude.param_707 $Prelude.return_851)
+                                          ($Prelude.param_707 $Prelude.return_797)
                                           (cut
-                                             (do $Prelude.return_852
+                                             (do $Prelude.return_798
                                                 (cut
                                                    (construct
                                                       tuple
@@ -554,55 +422,39 @@
                                                       ())
                                                    (select
                                                       (#Prelude.$__379
-                                                         (cut
-                                                            (do $Prelude.return_860
-                                                               (cut
-                                                                  (do $Prelude.return_857
-                                                                     (cut
-                                                                        (do $Prelude.return_854
-                                                                           (cut
-                                                                              (do $Prelude.return_853
-                                                                                 (invoke substring $Prelude.return_853))
-                                                                              (apply
-                                                                                 (#Prelude.str_45)
-                                                                                 ($Prelude.return_854))))
+                                                         (invoke substring
+                                                            (apply
+                                                               (#Prelude.str_45)
+                                                               ((apply
+                                                                  ((do $Prelude.return_800
+                                                                     (invoke Int64#
                                                                         (apply
-                                                                           ((do $Prelude.return_856
-                                                                              (cut
-                                                                                 (do $Prelude.return_855
-                                                                                    (invoke Int64# $Prelude.return_855))
-                                                                                 (apply
-                                                                                    (1_i64)
-                                                                                    ($Prelude.return_856)))))
-                                                                           ($Prelude.return_857))))
-                                                                  (apply
-                                                                     ((do $Prelude.return_859
-                                                                        (cut
-                                                                           (do $Prelude.return_858
-                                                                              (invoke lengthString $Prelude.return_858))
+                                                                           (1_i64)
+                                                                           ($Prelude.return_800)))))
+                                                                  ((apply
+                                                                     ((do $Prelude.return_799
+                                                                        (invoke lengthString
                                                                            (apply
                                                                               (#Prelude.str_45)
-                                                                              ($Prelude.return_859)))))
-                                                                     ($Prelude.return_860))))
-                                                            $Prelude.return_852)))))
-                                             $Prelude.return_851)))
-                                       ($Prelude.return_861))))
-                              $Prelude.return_840)))))
-               $Prelude.return_839))
-         $Prelude.return_838))
+                                                                              ($Prelude.return_799)))))
+                                                                     ($Prelude.return_798)))))))))))
+                                             $Prelude.return_797)))
+                                       ($Prelude.return_796)))))))))))
+               $Prelude.return_795))
+         $Prelude.return_794))
    (unless
-      $Prelude.return_862
+      $Prelude.return_805
       (cut
          (lambda
-            ($Prelude.param_708 $Prelude.return_863)
+            ($Prelude.param_708 $Prelude.return_806)
             (cut
                (lambda
-                  ($Prelude.param_709 $Prelude.return_864)
+                  ($Prelude.param_709 $Prelude.return_807)
                   (cut
                      (lambda
-                        ($Prelude.param_710 $Prelude.return_865)
+                        ($Prelude.param_710 $Prelude.return_808)
                         (cut
-                           (do $Prelude.return_866
+                           (do $Prelude.return_809
                               (cut
                                  (construct
                                     tuple
@@ -611,48 +463,37 @@
                                  (select
                                     ((tuple
                                        (#Prelude.c_82 #Prelude.tValue_83 #Prelude.f_84))
-                                       (cut
-                                          (do $Prelude.return_872
-                                             (cut
-                                                (do $Prelude.return_871
+                                       (invoke if
+                                          (apply
+                                             (#Prelude.c_82)
+                                             ((apply
+                                                ((lambda
+                                                   ($Prelude.param_711 $Prelude.return_810)
                                                    (cut
-                                                      (do $Prelude.return_868
+                                                      (do $Prelude.return_811
                                                          (cut
-                                                            (do $Prelude.return_867
-                                                               (invoke if $Prelude.return_867))
-                                                            (apply
-                                                               (#Prelude.c_82)
-                                                               ($Prelude.return_868))))
-                                                      (apply
-                                                         ((lambda
-                                                            ($Prelude.param_711 $Prelude.return_869)
-                                                            (cut
-                                                               (do $Prelude.return_870
-                                                                  (cut
-                                                                     (construct
-                                                                        tuple
-                                                                        ($Prelude.param_711)
-                                                                        ())
-                                                                     (select
-                                                                        (#Prelude.$__392
-                                                                           (cut #Prelude.tValue_83 $Prelude.return_870)))))
-                                                               $Prelude.return_869)))
-                                                         ($Prelude.return_871))))
-                                                (apply
+                                                            (construct
+                                                               tuple
+                                                               ($Prelude.param_711)
+                                                               ())
+                                                            (select
+                                                               (#Prelude.$__392
+                                                                  (cut #Prelude.tValue_83 $Prelude.return_811)))))
+                                                      $Prelude.return_810)))
+                                                ((apply
                                                    (#Prelude.f_84)
-                                                   ($Prelude.return_872))))
-                                          $Prelude.return_866)))))
-                           $Prelude.return_865))
-                     $Prelude.return_864))
-               $Prelude.return_863))
-         $Prelude.return_862))
+                                                   ($Prelude.return_809)))))))))))
+                           $Prelude.return_808))
+                     $Prelude.return_807))
+               $Prelude.return_806))
+         $Prelude.return_805))
    (identity
-      $Prelude.return_873
+      $Prelude.return_812
       (cut
          (lambda
-            ($Prelude.param_712 $Prelude.return_874)
+            ($Prelude.param_712 $Prelude.return_813)
             (cut
-               (do $Prelude.return_875
+               (do $Prelude.return_814
                   (cut
                      (construct
                         tuple
@@ -660,16 +501,16 @@
                         ())
                      (select
                         (#Prelude.x_1
-                           (cut #Prelude.x_1 $Prelude.return_875)))))
-               $Prelude.return_874))
-         $Prelude.return_873))
+                           (cut #Prelude.x_1 $Prelude.return_814)))))
+               $Prelude.return_813))
+         $Prelude.return_812))
    (headString
-      $Prelude.return_876
+      $Prelude.return_815
       (cut
          (lambda
-            ($Prelude.param_713 $Prelude.return_877)
+            ($Prelude.param_713 $Prelude.return_816)
             (cut
-               (do $Prelude.return_878
+               (do $Prelude.return_817
                   (cut
                      (construct
                         tuple
@@ -677,58 +518,38 @@
                         ())
                      (select
                         (#Prelude.str_44
-                           (cut
-                              (do $Prelude.return_899
-                                 (cut
-                                    (do $Prelude.return_889
+                           (invoke if
+                              (apply
+                                 ((do $Prelude.return_824
+                                    (invoke eqString
+                                       (apply
+                                          (#Prelude.str_44)
+                                          ((apply
+                                             ((do $Prelude.return_825
+                                                (invoke String#
+                                                   (apply
+                                                      ("")
+                                                      ($Prelude.return_825)))))
+                                             ($Prelude.return_824)))))))
+                                 ((apply
+                                    ((lambda
+                                       ($Prelude.param_714 $Prelude.return_822)
                                        (cut
-                                          (do $Prelude.return_885
+                                          (do $Prelude.return_823
                                              (cut
-                                                (do $Prelude.return_879
-                                                   (invoke if $Prelude.return_879))
-                                                (apply
-                                                   ((do $Prelude.return_884
-                                                      (cut
-                                                         (do $Prelude.return_881
-                                                            (cut
-                                                               (do $Prelude.return_880
-                                                                  (invoke eqString $Prelude.return_880))
-                                                               (apply
-                                                                  (#Prelude.str_44)
-                                                                  ($Prelude.return_881))))
-                                                         (apply
-                                                            ((do $Prelude.return_883
-                                                               (cut
-                                                                  (do $Prelude.return_882
-                                                                     (invoke String# $Prelude.return_882))
-                                                                  (apply
-                                                                     ("")
-                                                                     ($Prelude.return_883)))))
-                                                            ($Prelude.return_884)))))
-                                                   ($Prelude.return_885))))
-                                          (apply
-                                             ((lambda
-                                                ($Prelude.param_714 $Prelude.return_886)
-                                                (cut
-                                                   (do $Prelude.return_887
-                                                      (cut
-                                                         (construct
-                                                            tuple
-                                                            ($Prelude.param_714)
-                                                            ())
-                                                         (select
-                                                            (#Prelude.$__417
-                                                               (cut
-                                                                  (do $Prelude.return_888
-                                                                     (invoke Nothing $Prelude.return_888))
-                                                                  $Prelude.return_887)))))
-                                                   $Prelude.return_886)))
-                                             ($Prelude.return_889))))
-                                    (apply
+                                                (construct
+                                                   tuple
+                                                   ($Prelude.param_714)
+                                                   ())
+                                                (select
+                                                   (#Prelude.$__417
+                                                      (invoke Nothing $Prelude.return_823)))))
+                                          $Prelude.return_822)))
+                                    ((apply
                                        ((lambda
-                                          ($Prelude.param_715 $Prelude.return_890)
+                                          ($Prelude.param_715 $Prelude.return_818)
                                           (cut
-                                             (do $Prelude.return_891
+                                             (do $Prelude.return_819
                                                 (cut
                                                    (construct
                                                       tuple
@@ -736,44 +557,31 @@
                                                       ())
                                                    (select
                                                       (#Prelude.$__430
-                                                         (cut
-                                                            (do $Prelude.return_898
-                                                               (cut
-                                                                  (do $Prelude.return_892
-                                                                     (invoke Just $Prelude.return_892))
-                                                                  (apply
-                                                                     ((do $Prelude.return_897
-                                                                        (cut
-                                                                           (do $Prelude.return_896
-                                                                              (cut
-                                                                                 (do $Prelude.return_893
-                                                                                    (invoke atString $Prelude.return_893))
-                                                                                 (apply
-                                                                                    ((do $Prelude.return_895
-                                                                                       (cut
-                                                                                          (do $Prelude.return_894
-                                                                                             (invoke Int64# $Prelude.return_894))
-                                                                                          (apply
-                                                                                             (0_i64)
-                                                                                             ($Prelude.return_895)))))
-                                                                                    ($Prelude.return_896))))
-                                                                           (apply
-                                                                              (#Prelude.str_44)
-                                                                              ($Prelude.return_897)))))
-                                                                     ($Prelude.return_898))))
-                                                            $Prelude.return_891)))))
-                                             $Prelude.return_890)))
-                                       ($Prelude.return_899))))
-                              $Prelude.return_878)))))
-               $Prelude.return_877))
-         $Prelude.return_876))
+                                                         (invoke Just
+                                                            (apply
+                                                               ((do $Prelude.return_820
+                                                                  (invoke atString
+                                                                     (apply
+                                                                        ((do $Prelude.return_821
+                                                                           (invoke Int64#
+                                                                              (apply
+                                                                                 (0_i64)
+                                                                                 ($Prelude.return_821)))))
+                                                                        ((apply
+                                                                           (#Prelude.str_44)
+                                                                           ($Prelude.return_820)))))))
+                                                               ($Prelude.return_819)))))))
+                                             $Prelude.return_818)))
+                                       ($Prelude.return_817)))))))))))
+               $Prelude.return_816))
+         $Prelude.return_815))
    (head
-      $Prelude.return_900
+      $Prelude.return_826
       (cut
          (lambda
-            ($Prelude.param_716 $Prelude.return_901)
+            ($Prelude.param_716 $Prelude.return_827)
             (cut
-               (do $Prelude.return_902
+               (do $Prelude.return_828
                   (cut
                      (construct
                         tuple
@@ -782,26 +590,21 @@
                      (select
                         ((Cons
                            (#Prelude.x_21 #Prelude.__22))
-                           (cut #Prelude.x_21 $Prelude.return_902))
+                           (cut #Prelude.x_21 $Prelude.return_828))
                         (#Prelude.__23
-                           (cut
-                              (do $Prelude.return_904
-                                 (cut
-                                    (do $Prelude.return_903
-                                       (invoke exitFailure $Prelude.return_903))
-                                    (apply
-                                       ((construct tuple () ()))
-                                       ($Prelude.return_904))))
-                              $Prelude.return_902)))))
-               $Prelude.return_901))
-         $Prelude.return_900))
+                           (invoke exitFailure
+                              (apply
+                                 ((construct tuple () ()))
+                                 ($Prelude.return_828)))))))
+               $Prelude.return_827))
+         $Prelude.return_826))
    (fst
-      $Prelude.return_905
+      $Prelude.return_829
       (cut
          (lambda
-            ($Prelude.param_717 $Prelude.return_906)
+            ($Prelude.param_717 $Prelude.return_830)
             (cut
-               (do $Prelude.return_907
+               (do $Prelude.return_831
                   (cut
                      (construct
                         tuple
@@ -810,22 +613,22 @@
                      (select
                         ((tuple
                            (#Prelude.a_12 #Prelude.b_13))
-                           (cut #Prelude.a_12 $Prelude.return_907)))))
-               $Prelude.return_906))
-         $Prelude.return_905))
+                           (cut #Prelude.a_12 $Prelude.return_831)))))
+               $Prelude.return_830))
+         $Prelude.return_829))
    (foldl
-      $Prelude.return_908
+      $Prelude.return_832
       (cut
          (lambda
-            ($Prelude.param_718 $Prelude.return_909)
+            ($Prelude.param_718 $Prelude.return_833)
             (cut
                (lambda
-                  ($Prelude.param_719 $Prelude.return_910)
+                  ($Prelude.param_719 $Prelude.return_834)
                   (cut
                      (lambda
-                        ($Prelude.param_720 $Prelude.return_911)
+                        ($Prelude.param_720 $Prelude.return_835)
                         (cut
-                           (do $Prelude.return_912
+                           (do $Prelude.return_836
                               (cut
                                  (construct
                                     tuple
@@ -836,55 +639,41 @@
                                        (#Prelude.__30
                                           #Prelude.z_31
                                           (Nil ())))
-                                       (cut #Prelude.z_31 $Prelude.return_912))
+                                       (cut #Prelude.z_31 $Prelude.return_836))
                                     ((tuple
                                        (#Prelude.f_32
                                           #Prelude.z_33
                                           (Cons
                                              (#Prelude.x_34 #Prelude.xs_35))))
-                                       (cut
-                                          (do $Prelude.return_918
-                                             (cut
-                                                (do $Prelude.return_917
+                                       (invoke foldl
+                                          (apply
+                                             (#Prelude.f_32)
+                                             ((apply
+                                                ((do $Prelude.return_837
                                                    (cut
-                                                      (do $Prelude.return_914
-                                                         (cut
-                                                            (do $Prelude.return_913
-                                                               (invoke foldl $Prelude.return_913))
-                                                            (apply
-                                                               (#Prelude.f_32)
-                                                               ($Prelude.return_914))))
+                                                      #Prelude.f_32
                                                       (apply
-                                                         ((do $Prelude.return_916
-                                                            (cut
-                                                               (do $Prelude.return_915
-                                                                  (cut
-                                                                     #Prelude.f_32
-                                                                     (apply
-                                                                        (#Prelude.z_33)
-                                                                        ($Prelude.return_915))))
-                                                               (apply
-                                                                  (#Prelude.x_34)
-                                                                  ($Prelude.return_916)))))
-                                                         ($Prelude.return_917))))
-                                                (apply
+                                                         (#Prelude.z_33)
+                                                         ((apply
+                                                            (#Prelude.x_34)
+                                                            ($Prelude.return_837)))))))
+                                                ((apply
                                                    (#Prelude.xs_35)
-                                                   ($Prelude.return_918))))
-                                          $Prelude.return_912)))))
-                           $Prelude.return_911))
-                     $Prelude.return_910))
-               $Prelude.return_909))
-         $Prelude.return_908))
+                                                   ($Prelude.return_836)))))))))))
+                           $Prelude.return_835))
+                     $Prelude.return_834))
+               $Prelude.return_833))
+         $Prelude.return_832))
    (const
-      $Prelude.return_919
+      $Prelude.return_838
       (cut
          (lambda
-            ($Prelude.param_721 $Prelude.return_920)
+            ($Prelude.param_721 $Prelude.return_839)
             (cut
                (lambda
-                  ($Prelude.param_722 $Prelude.return_921)
+                  ($Prelude.param_722 $Prelude.return_840)
                   (cut
-                     (do $Prelude.return_922
+                     (do $Prelude.return_841
                         (cut
                            (construct
                               tuple
@@ -893,17 +682,17 @@
                            (select
                               ((tuple
                                  (#Prelude.a_4 #Prelude.__5))
-                                 (cut #Prelude.a_4 $Prelude.return_922)))))
-                     $Prelude.return_921))
-               $Prelude.return_920))
-         $Prelude.return_919))
+                                 (cut #Prelude.a_4 $Prelude.return_841)))))
+                     $Prelude.return_840))
+               $Prelude.return_839))
+         $Prelude.return_838))
    (cond
-      $Prelude.return_923
+      $Prelude.return_842
       (cut
          (lambda
-            ($Prelude.param_723 $Prelude.return_924)
+            ($Prelude.param_723 $Prelude.return_843)
             (cut
-               (do $Prelude.return_925
+               (do $Prelude.return_844
                   (cut
                      (construct
                         tuple
@@ -911,57 +700,42 @@
                         ())
                      (select
                         ((Nil ())
-                           (cut
-                              (do $Prelude.return_929
-                                 (cut
-                                    (do $Prelude.return_926
-                                       (invoke panic $Prelude.return_926))
-                                    (apply
-                                       ((do $Prelude.return_928
-                                          (cut
-                                             (do $Prelude.return_927
-                                                (invoke String# $Prelude.return_927))
-                                             (apply
-                                                ("no branch")
-                                                ($Prelude.return_928)))))
-                                       ($Prelude.return_929))))
-                              $Prelude.return_925))
+                           (invoke panic
+                              (apply
+                                 ((do $Prelude.return_845
+                                    (invoke String#
+                                       (apply
+                                          ("no branch")
+                                          ($Prelude.return_845)))))
+                                 ($Prelude.return_844))))
                         ((Cons
                            ((tuple
                               ((True ())
                                  #Prelude.x_86))
                               #Prelude.__87))
                            (cut
-                              (do $Prelude.return_930
-                                 (cut
-                                    #Prelude.x_86
-                                    (apply
-                                       ((construct tuple () ()))
-                                       ($Prelude.return_930))))
-                              $Prelude.return_925))
+                              #Prelude.x_86
+                              (apply
+                                 ((construct tuple () ()))
+                                 ($Prelude.return_844))))
                         ((Cons
                            ((tuple
                               ((False ())
                                  #Prelude.__88))
                               #Prelude.xs_89))
-                           (cut
-                              (do $Prelude.return_932
-                                 (cut
-                                    (do $Prelude.return_931
-                                       (invoke cond $Prelude.return_931))
-                                    (apply
-                                       (#Prelude.xs_89)
-                                       ($Prelude.return_932))))
-                              $Prelude.return_925)))))
-               $Prelude.return_924))
-         $Prelude.return_923))
+                           (invoke cond
+                              (apply
+                                 (#Prelude.xs_89)
+                                 ($Prelude.return_844)))))))
+               $Prelude.return_843))
+         $Prelude.return_842))
    (concatString
-      $Prelude.return_933
+      $Prelude.return_846
       (cut
          (lambda
-            ($Prelude.param_724 $Prelude.return_934)
+            ($Prelude.param_724 $Prelude.return_847)
             (cut
-               (do $Prelude.return_935
+               (do $Prelude.return_848
                   (cut
                      (construct
                         tuple
@@ -969,49 +743,34 @@
                         ())
                      (select
                         ((Nil ())
-                           (cut
-                              (do $Prelude.return_937
-                                 (cut
-                                    (do $Prelude.return_936
-                                       (invoke String# $Prelude.return_936))
-                                    (apply
-                                       ("")
-                                       ($Prelude.return_937))))
-                              $Prelude.return_935))
+                           (invoke String#
+                              (apply
+                                 ("")
+                                 ($Prelude.return_848))))
                         ((Cons
                            (#Prelude.x_52 #Prelude.xs_53))
-                           (cut
-                              (do $Prelude.return_942
-                                 (cut
-                                    (do $Prelude.return_939
-                                       (cut
-                                          (do $Prelude.return_938
-                                             (invoke appendString $Prelude.return_938))
+                           (invoke appendString
+                              (apply
+                                 (#Prelude.x_52)
+                                 ((apply
+                                    ((do $Prelude.return_849
+                                       (invoke concatString
                                           (apply
-                                             (#Prelude.x_52)
-                                             ($Prelude.return_939))))
-                                    (apply
-                                       ((do $Prelude.return_941
-                                          (cut
-                                             (do $Prelude.return_940
-                                                (invoke concatString $Prelude.return_940))
-                                             (apply
-                                                (#Prelude.xs_53)
-                                                ($Prelude.return_941)))))
-                                       ($Prelude.return_942))))
-                              $Prelude.return_935)))))
-               $Prelude.return_934))
-         $Prelude.return_933))
+                                             (#Prelude.xs_53)
+                                             ($Prelude.return_849)))))
+                                    ($Prelude.return_848)))))))))
+               $Prelude.return_847))
+         $Prelude.return_846))
    (case
-      $Prelude.return_943
+      $Prelude.return_850
       (cut
          (lambda
-            ($Prelude.param_725 $Prelude.return_944)
+            ($Prelude.param_725 $Prelude.return_851)
             (cut
                (lambda
-                  ($Prelude.param_726 $Prelude.return_945)
+                  ($Prelude.param_726 $Prelude.return_852)
                   (cut
-                     (do $Prelude.return_946
+                     (do $Prelude.return_853
                         (cut
                            (construct
                               tuple
@@ -1021,26 +780,23 @@
                               ((tuple
                                  (#Prelude.x_8 #Prelude.f_9))
                                  (cut
-                                    (do $Prelude.return_947
-                                       (cut
-                                          #Prelude.f_9
-                                          (apply
-                                             (#Prelude.x_8)
-                                             ($Prelude.return_947))))
-                                    $Prelude.return_946)))))
-                     $Prelude.return_945))
-               $Prelude.return_944))
-         $Prelude.return_943))
+                                    #Prelude.f_9
+                                    (apply
+                                       (#Prelude.x_8)
+                                       ($Prelude.return_853)))))))
+                     $Prelude.return_852))
+               $Prelude.return_851))
+         $Prelude.return_850))
    (dropWhileString
-      $Prelude.return_948
+      $Prelude.return_854
       (cut
          (lambda
-            ($Prelude.param_727 $Prelude.return_949)
+            ($Prelude.param_727 $Prelude.return_855)
             (cut
                (lambda
-                  ($Prelude.param_728 $Prelude.return_950)
+                  ($Prelude.param_728 $Prelude.return_856)
                   (cut
-                     (do $Prelude.return_951
+                     (do $Prelude.return_857
                         (cut
                            (construct
                               tuple
@@ -1049,120 +805,89 @@
                            (select
                               ((tuple
                                  (#Prelude.pred_49 #Prelude.str_50))
-                                 (cut
-                                    (do $Prelude.return_972
-                                       (cut
-                                          (do $Prelude.return_955
+                                 (invoke case
+                                    (apply
+                                       ((do $Prelude.return_866
+                                          (invoke headString
+                                             (apply
+                                                (#Prelude.str_50)
+                                                ($Prelude.return_866)))))
+                                       ((apply
+                                          ((lambda
+                                             ($Prelude.param_729 $Prelude.return_858)
                                              (cut
-                                                (do $Prelude.return_952
-                                                   (invoke case $Prelude.return_952))
-                                                (apply
-                                                   ((do $Prelude.return_954
-                                                      (cut
-                                                         (do $Prelude.return_953
-                                                            (invoke headString $Prelude.return_953))
-                                                         (apply
-                                                            (#Prelude.str_50)
-                                                            ($Prelude.return_954)))))
-                                                   ($Prelude.return_955))))
-                                          (apply
-                                             ((lambda
-                                                ($Prelude.param_729 $Prelude.return_956)
-                                                (cut
-                                                   (do $Prelude.return_957
-                                                      (cut
-                                                         (construct
-                                                            tuple
-                                                            ($Prelude.param_729)
-                                                            ())
-                                                         (select
-                                                            ((Nothing ())
-                                                               (cut #Prelude.str_50 $Prelude.return_957))
-                                                            ((Just
-                                                               (#Prelude.c_51))
-                                                               (cut
-                                                                  (do $Prelude.return_971
+                                                (do $Prelude.return_859
+                                                   (cut
+                                                      (construct
+                                                         tuple
+                                                         ($Prelude.param_729)
+                                                         ())
+                                                      (select
+                                                         ((Nothing ())
+                                                            (cut #Prelude.str_50 $Prelude.return_859))
+                                                         ((Just
+                                                            (#Prelude.c_51))
+                                                            (invoke if
+                                                               (apply
+                                                                  ((do $Prelude.return_865
                                                                      (cut
-                                                                        (do $Prelude.return_968
-                                                                           (cut
-                                                                              (do $Prelude.return_960
-                                                                                 (cut
-                                                                                    (do $Prelude.return_958
-                                                                                       (invoke if $Prelude.return_958))
-                                                                                    (apply
-                                                                                       ((do $Prelude.return_959
-                                                                                          (cut
-                                                                                             #Prelude.pred_49
-                                                                                             (apply
-                                                                                                (#Prelude.c_51)
-                                                                                                ($Prelude.return_959)))))
-                                                                                       ($Prelude.return_960))))
-                                                                              (apply
-                                                                                 ((lambda
-                                                                                    ($Prelude.param_730 $Prelude.return_961)
-                                                                                    (cut
-                                                                                       (do $Prelude.return_962
-                                                                                          (cut
-                                                                                             (construct
-                                                                                                tuple
-                                                                                                ($Prelude.param_730)
-                                                                                                ())
-                                                                                             (select
-                                                                                                (#Prelude.$__605
-                                                                                                   (cut
-                                                                                                      (do $Prelude.return_967
-                                                                                                         (cut
-                                                                                                            (do $Prelude.return_964
-                                                                                                               (cut
-                                                                                                                  (do $Prelude.return_963
-                                                                                                                     (invoke dropWhileString $Prelude.return_963))
-                                                                                                                  (apply
-                                                                                                                     (#Prelude.pred_49)
-                                                                                                                     ($Prelude.return_964))))
-                                                                                                            (apply
-                                                                                                               ((do $Prelude.return_966
-                                                                                                                  (cut
-                                                                                                                     (do $Prelude.return_965
-                                                                                                                        (invoke tailString $Prelude.return_965))
-                                                                                                                     (apply
-                                                                                                                        (#Prelude.str_50)
-                                                                                                                        ($Prelude.return_966)))))
-                                                                                                               ($Prelude.return_967))))
-                                                                                                      $Prelude.return_962)))))
-                                                                                       $Prelude.return_961)))
-                                                                                 ($Prelude.return_968))))
+                                                                        #Prelude.pred_49
                                                                         (apply
-                                                                           ((lambda
-                                                                              ($Prelude.param_731 $Prelude.return_969)
+                                                                           (#Prelude.c_51)
+                                                                           ($Prelude.return_865)))))
+                                                                  ((apply
+                                                                     ((lambda
+                                                                        ($Prelude.param_730 $Prelude.return_862)
+                                                                        (cut
+                                                                           (do $Prelude.return_863
                                                                               (cut
-                                                                                 (do $Prelude.return_970
-                                                                                    (cut
-                                                                                       (construct
-                                                                                          tuple
-                                                                                          ($Prelude.param_731)
-                                                                                          ())
-                                                                                       (select
-                                                                                          (#Prelude.$__608
-                                                                                             (cut #Prelude.str_50 $Prelude.return_970)))))
-                                                                                 $Prelude.return_969)))
-                                                                           ($Prelude.return_971))))
-                                                                  $Prelude.return_957)))))
-                                                   $Prelude.return_956)))
-                                             ($Prelude.return_972))))
-                                    $Prelude.return_951)))))
-                     $Prelude.return_950))
-               $Prelude.return_949))
-         $Prelude.return_948))
+                                                                                 (construct
+                                                                                    tuple
+                                                                                    ($Prelude.param_730)
+                                                                                    ())
+                                                                                 (select
+                                                                                    (#Prelude.$__605
+                                                                                       (invoke dropWhileString
+                                                                                          (apply
+                                                                                             (#Prelude.pred_49)
+                                                                                             ((apply
+                                                                                                ((do $Prelude.return_864
+                                                                                                   (invoke tailString
+                                                                                                      (apply
+                                                                                                         (#Prelude.str_50)
+                                                                                                         ($Prelude.return_864)))))
+                                                                                                ($Prelude.return_863)))))))))
+                                                                           $Prelude.return_862)))
+                                                                     ((apply
+                                                                        ((lambda
+                                                                           ($Prelude.param_731 $Prelude.return_860)
+                                                                           (cut
+                                                                              (do $Prelude.return_861
+                                                                                 (cut
+                                                                                    (construct
+                                                                                       tuple
+                                                                                       ($Prelude.param_731)
+                                                                                       ())
+                                                                                    (select
+                                                                                       (#Prelude.$__608
+                                                                                          (cut #Prelude.str_50 $Prelude.return_861)))))
+                                                                              $Prelude.return_860)))
+                                                                        ($Prelude.return_859)))))))))))
+                                                $Prelude.return_858)))
+                                          ($Prelude.return_857)))))))))
+                     $Prelude.return_856))
+               $Prelude.return_855))
+         $Prelude.return_854))
    (takeWhileString
-      $Prelude.return_973
+      $Prelude.return_867
       (cut
          (lambda
-            ($Prelude.param_732 $Prelude.return_974)
+            ($Prelude.param_732 $Prelude.return_868)
             (cut
                (lambda
-                  ($Prelude.param_733 $Prelude.return_975)
+                  ($Prelude.param_733 $Prelude.return_869)
                   (cut
-                     (do $Prelude.return_976
+                     (do $Prelude.return_870
                         (cut
                            (construct
                               tuple
@@ -1171,139 +896,98 @@
                            (select
                               ((tuple
                                  (#Prelude.pred_46 #Prelude.str_47))
-                                 (cut
-                                    (do $Prelude.return_1002
-                                       (cut
-                                          (do $Prelude.return_980
+                                 (invoke case
+                                    (apply
+                                       ((do $Prelude.return_880
+                                          (invoke headString
+                                             (apply
+                                                (#Prelude.str_47)
+                                                ($Prelude.return_880)))))
+                                       ((apply
+                                          ((lambda
+                                             ($Prelude.param_734 $Prelude.return_871)
                                              (cut
-                                                (do $Prelude.return_977
-                                                   (invoke case $Prelude.return_977))
-                                                (apply
-                                                   ((do $Prelude.return_979
-                                                      (cut
-                                                         (do $Prelude.return_978
-                                                            (invoke headString $Prelude.return_978))
-                                                         (apply
-                                                            (#Prelude.str_47)
-                                                            ($Prelude.return_979)))))
-                                                   ($Prelude.return_980))))
-                                          (apply
-                                             ((lambda
-                                                ($Prelude.param_734 $Prelude.return_981)
-                                                (cut
-                                                   (do $Prelude.return_982
-                                                      (cut
-                                                         (construct
-                                                            tuple
-                                                            ($Prelude.param_734)
-                                                            ())
-                                                         (select
-                                                            ((Nothing ())
-                                                               (cut #Prelude.str_47 $Prelude.return_982))
-                                                            ((Just
-                                                               (#Prelude.c_48))
-                                                               (cut
-                                                                  (do $Prelude.return_1001
+                                                (do $Prelude.return_872
+                                                   (cut
+                                                      (construct
+                                                         tuple
+                                                         ($Prelude.param_734)
+                                                         ())
+                                                      (select
+                                                         ((Nothing ())
+                                                            (cut #Prelude.str_47 $Prelude.return_872))
+                                                         ((Just
+                                                            (#Prelude.c_48))
+                                                            (invoke if
+                                                               (apply
+                                                                  ((do $Prelude.return_879
                                                                      (cut
-                                                                        (do $Prelude.return_996
-                                                                           (cut
-                                                                              (do $Prelude.return_985
-                                                                                 (cut
-                                                                                    (do $Prelude.return_983
-                                                                                       (invoke if $Prelude.return_983))
-                                                                                    (apply
-                                                                                       ((do $Prelude.return_984
-                                                                                          (cut
-                                                                                             #Prelude.pred_46
-                                                                                             (apply
-                                                                                                (#Prelude.c_48)
-                                                                                                ($Prelude.return_984)))))
-                                                                                       ($Prelude.return_985))))
-                                                                              (apply
-                                                                                 ((lambda
-                                                                                    ($Prelude.param_735 $Prelude.return_986)
-                                                                                    (cut
-                                                                                       (do $Prelude.return_987
-                                                                                          (cut
-                                                                                             (construct
-                                                                                                tuple
-                                                                                                ($Prelude.param_735)
-                                                                                                ())
-                                                                                             (select
-                                                                                                (#Prelude.$__651
-                                                                                                   (cut
-                                                                                                      (do $Prelude.return_995
-                                                                                                         (cut
-                                                                                                            (do $Prelude.return_989
-                                                                                                               (cut
-                                                                                                                  (do $Prelude.return_988
-                                                                                                                     (invoke consString $Prelude.return_988))
-                                                                                                                  (apply
-                                                                                                                     (#Prelude.c_48)
-                                                                                                                     ($Prelude.return_989))))
-                                                                                                            (apply
-                                                                                                               ((do $Prelude.return_994
-                                                                                                                  (cut
-                                                                                                                     (do $Prelude.return_991
-                                                                                                                        (cut
-                                                                                                                           (do $Prelude.return_990
-                                                                                                                              (invoke takeWhileString $Prelude.return_990))
-                                                                                                                           (apply
-                                                                                                                              (#Prelude.pred_46)
-                                                                                                                              ($Prelude.return_991))))
-                                                                                                                     (apply
-                                                                                                                        ((do $Prelude.return_993
-                                                                                                                           (cut
-                                                                                                                              (do $Prelude.return_992
-                                                                                                                                 (invoke tailString $Prelude.return_992))
-                                                                                                                              (apply
-                                                                                                                                 (#Prelude.str_47)
-                                                                                                                                 ($Prelude.return_993)))))
-                                                                                                                        ($Prelude.return_994)))))
-                                                                                                               ($Prelude.return_995))))
-                                                                                                      $Prelude.return_987)))))
-                                                                                       $Prelude.return_986)))
-                                                                                 ($Prelude.return_996))))
+                                                                        #Prelude.pred_46
                                                                         (apply
-                                                                           ((lambda
-                                                                              ($Prelude.param_736 $Prelude.return_997)
+                                                                           (#Prelude.c_48)
+                                                                           ($Prelude.return_879)))))
+                                                                  ((apply
+                                                                     ((lambda
+                                                                        ($Prelude.param_735 $Prelude.return_875)
+                                                                        (cut
+                                                                           (do $Prelude.return_876
                                                                               (cut
-                                                                                 (do $Prelude.return_998
-                                                                                    (cut
-                                                                                       (construct
-                                                                                          tuple
-                                                                                          ($Prelude.param_736)
-                                                                                          ())
-                                                                                       (select
-                                                                                          (#Prelude.$__656
-                                                                                             (cut
-                                                                                                (do $Prelude.return_1000
-                                                                                                   (cut
-                                                                                                      (do $Prelude.return_999
-                                                                                                         (invoke String# $Prelude.return_999))
+                                                                                 (construct
+                                                                                    tuple
+                                                                                    ($Prelude.param_735)
+                                                                                    ())
+                                                                                 (select
+                                                                                    (#Prelude.$__651
+                                                                                       (invoke consString
+                                                                                          (apply
+                                                                                             (#Prelude.c_48)
+                                                                                             ((apply
+                                                                                                ((do $Prelude.return_877
+                                                                                                   (invoke takeWhileString
                                                                                                       (apply
-                                                                                                         ("")
-                                                                                                         ($Prelude.return_1000))))
-                                                                                                $Prelude.return_998)))))
-                                                                                 $Prelude.return_997)))
-                                                                           ($Prelude.return_1001))))
-                                                                  $Prelude.return_982)))))
-                                                   $Prelude.return_981)))
-                                             ($Prelude.return_1002))))
-                                    $Prelude.return_976)))))
-                     $Prelude.return_975))
-               $Prelude.return_974))
-         $Prelude.return_973))
+                                                                                                         (#Prelude.pred_46)
+                                                                                                         ((apply
+                                                                                                            ((do $Prelude.return_878
+                                                                                                               (invoke tailString
+                                                                                                                  (apply
+                                                                                                                     (#Prelude.str_47)
+                                                                                                                     ($Prelude.return_878)))))
+                                                                                                            ($Prelude.return_877)))))))
+                                                                                                ($Prelude.return_876)))))))))
+                                                                           $Prelude.return_875)))
+                                                                     ((apply
+                                                                        ((lambda
+                                                                           ($Prelude.param_736 $Prelude.return_873)
+                                                                           (cut
+                                                                              (do $Prelude.return_874
+                                                                                 (cut
+                                                                                    (construct
+                                                                                       tuple
+                                                                                       ($Prelude.param_736)
+                                                                                       ())
+                                                                                    (select
+                                                                                       (#Prelude.$__656
+                                                                                          (invoke String#
+                                                                                             (apply
+                                                                                                ("")
+                                                                                                ($Prelude.return_874)))))))
+                                                                              $Prelude.return_873)))
+                                                                        ($Prelude.return_872)))))))))))
+                                                $Prelude.return_871)))
+                                          ($Prelude.return_870)))))))))
+                     $Prelude.return_869))
+               $Prelude.return_868))
+         $Prelude.return_867))
    (<|
-      $Prelude.return_1003
+      $Prelude.return_881
       (cut
          (lambda
-            ($Prelude.param_737 $Prelude.return_1004)
+            ($Prelude.param_737 $Prelude.return_882)
             (cut
                (lambda
-                  ($Prelude.param_738 $Prelude.return_1005)
+                  ($Prelude.param_738 $Prelude.return_883)
                   (cut
-                     (do $Prelude.return_1006
+                     (do $Prelude.return_884
                         (cut
                            (construct
                               tuple
@@ -1313,25 +997,22 @@
                               ((tuple
                                  (#Prelude.f_74 #Prelude.x_75))
                                  (cut
-                                    (do $Prelude.return_1007
-                                       (cut
-                                          #Prelude.f_74
-                                          (apply
-                                             (#Prelude.x_75)
-                                             ($Prelude.return_1007))))
-                                    $Prelude.return_1006)))))
-                     $Prelude.return_1005))
-               $Prelude.return_1004))
-         $Prelude.return_1003))
-   (. $Prelude.return_1008
+                                    #Prelude.f_74
+                                    (apply
+                                       (#Prelude.x_75)
+                                       ($Prelude.return_884)))))))
+                     $Prelude.return_883))
+               $Prelude.return_882))
+         $Prelude.return_881))
+   (. $Prelude.return_885
       (cut
          (lambda
-            ($Prelude.param_739 $Prelude.return_1009)
+            ($Prelude.param_739 $Prelude.return_886)
             (cut
                (lambda
-                  ($Prelude.param_740 $Prelude.return_1010)
+                  ($Prelude.param_740 $Prelude.return_887)
                   (cut
-                     (do $Prelude.return_1011
+                     (do $Prelude.return_888
                         (cut
                            (construct
                               tuple
@@ -1342,9 +1023,9 @@
                                  (#Prelude.f_65 #Prelude.g_66))
                                  (cut
                                     (lambda
-                                       ($Prelude.param_741 $Prelude.return_1012)
+                                       ($Prelude.param_741 $Prelude.return_889)
                                        (cut
-                                          (do $Prelude.return_1013
+                                          (do $Prelude.return_890
                                              (cut
                                                 (construct
                                                    tuple
@@ -1353,20 +1034,17 @@
                                                 (select
                                                    (#Prelude.x_67
                                                       (cut
-                                                         (do $Prelude.return_1015
-                                                            (cut
-                                                               #Prelude.f_65
-                                                               (apply
-                                                                  ((do $Prelude.return_1014
-                                                                     (cut
-                                                                        #Prelude.g_66
-                                                                        (apply
-                                                                           (#Prelude.x_67)
-                                                                           ($Prelude.return_1014)))))
-                                                                  ($Prelude.return_1015))))
-                                                         $Prelude.return_1013)))))
-                                          $Prelude.return_1012))
-                                    $Prelude.return_1011)))))
-                     $Prelude.return_1010))
-               $Prelude.return_1009))
-         $Prelude.return_1008)))
+                                                         #Prelude.f_65
+                                                         (apply
+                                                            ((do $Prelude.return_891
+                                                               (cut
+                                                                  #Prelude.g_66
+                                                                  (apply
+                                                                     (#Prelude.x_67)
+                                                                     ($Prelude.return_891)))))
+                                                            ($Prelude.return_890)))))))
+                                          $Prelude.return_889))
+                                    $Prelude.return_888)))))
+                     $Prelude.return_887))
+               $Prelude.return_886))
+         $Prelude.return_885)))

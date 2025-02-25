@@ -7,45 +7,39 @@
             (construct tuple 1)
             (select
                (#TypeAnnotation.$__11
-                  ((do $TypeAnnotation.return_23
-                     ((do $TypeAnnotation.return_17
-                        ((suspend
-                           ((resume $TypeAnnotation.return_17)))
-                           (invoke printString)))
-                        (then $TypeAnnotation.outer_26
-                           ((do $TypeAnnotation.return_22
-                              ((lambda
-                                 ($TypeAnnotation.param_13 $TypeAnnotation.return_18)
-                                 ((do $TypeAnnotation.return_19
-                                    ((fetch $TypeAnnotation.param_13)
-                                       (construct tuple 1)
-                                       (select
-                                          (#TypeAnnotation.x_0
-                                             ((fetch #TypeAnnotation.x_0)
-                                                (resume $TypeAnnotation.return_19))))))
-                                    (resume $TypeAnnotation.return_18)))
-                                 (then $TypeAnnotation.outer_28
-                                    ((do $TypeAnnotation.return_21
-                                       ((do $TypeAnnotation.return_20
-                                          ((suspend
-                                             ((resume $TypeAnnotation.return_20)))
-                                             (invoke String#)))
-                                          (push "hoge")
+                  ((suspend
+                     ((then $TypeAnnotation.outer_23
+                        ((do $TypeAnnotation.return_17
+                           ((lambda
+                              ($TypeAnnotation.param_13 $TypeAnnotation.return_19)
+                              ((do $TypeAnnotation.return_20
+                                 ((fetch $TypeAnnotation.param_13)
+                                    (construct tuple 1)
+                                    (select
+                                       (#TypeAnnotation.x_0
+                                          ((fetch #TypeAnnotation.x_0)
+                                             (resume $TypeAnnotation.return_20))))))
+                                 (resume $TypeAnnotation.return_19)))
+                              (then $TypeAnnotation.outer_25
+                                 ((do $TypeAnnotation.return_18
+                                    ((suspend
+                                       ((push "hoge")
                                           (suspend
-                                             ((resume $TypeAnnotation.return_21)))
+                                             ((resume $TypeAnnotation.return_18)))
                                           (apply 2)))
-                                       (then $TypeAnnotation.inner_29
-                                          ((fetch $TypeAnnotation.outer_28)
-                                             (fetch $TypeAnnotation.inner_29)
-                                             (suspend
-                                                ((resume $TypeAnnotation.return_22)))
-                                             (apply 2)))))))
-                              (then $TypeAnnotation.inner_27
-                                 ((fetch $TypeAnnotation.outer_26)
-                                    (fetch $TypeAnnotation.inner_27)
-                                    (suspend
-                                       ((resume $TypeAnnotation.return_23)))
-                                    (apply 2)))))))
-                     (resume $TypeAnnotation.return_16))))))
+                                       (invoke String#)))
+                                    (then $TypeAnnotation.inner_26
+                                       ((fetch $TypeAnnotation.outer_25)
+                                          (fetch $TypeAnnotation.inner_26)
+                                          (suspend
+                                             ((resume $TypeAnnotation.return_17)))
+                                          (apply 2)))))))
+                           (then $TypeAnnotation.inner_24
+                              ((fetch $TypeAnnotation.outer_23)
+                                 (fetch $TypeAnnotation.inner_24)
+                                 (suspend
+                                    ((resume $TypeAnnotation.return_16)))
+                                 (apply 2)))))))
+                     (invoke printString))))))
          (resume $TypeAnnotation.return_15)))
       (resume $TypeAnnotation.return_14))))
