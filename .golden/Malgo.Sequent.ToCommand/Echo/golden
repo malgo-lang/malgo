@@ -7,27 +7,21 @@
             (construct tuple 1)
             (select
                (#Echo.$__8
-                  ((do $Echo.return_16
-                     ((do $Echo.return_13
-                        ((suspend
-                           ((resume $Echo.return_13)))
-                           (invoke putStr)))
-                        (then $Echo.outer_17
-                           ((do $Echo.return_15
-                              ((do $Echo.return_14
-                                 ((suspend
-                                    ((resume $Echo.return_14)))
-                                    (invoke getContents)))
-                                 (construct tuple 0)
+                  ((suspend
+                     ((then $Echo.outer_14
+                        ((do $Echo.return_13
+                           ((suspend
+                              ((construct tuple 0)
                                  (suspend
-                                    ((resume $Echo.return_15)))
+                                    ((resume $Echo.return_13)))
                                  (apply 2)))
-                              (then $Echo.inner_18
-                                 ((fetch $Echo.outer_17)
-                                    (fetch $Echo.inner_18)
-                                    (suspend
-                                       ((resume $Echo.return_16)))
-                                    (apply 2)))))))
-                     (resume $Echo.return_12))))))
+                              (invoke getContents)))
+                           (then $Echo.inner_15
+                              ((fetch $Echo.outer_14)
+                                 (fetch $Echo.inner_15)
+                                 (suspend
+                                    ((resume $Echo.return_12)))
+                                 (apply 2)))))))
+                     (invoke putStr))))))
          (resume $Echo.return_11)))
       (resume $Echo.return_10))))

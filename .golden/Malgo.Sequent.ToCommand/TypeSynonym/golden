@@ -13,134 +13,114 @@
       (resume $TypeSynonym.return_35)))
    (hello
       $TypeSynonym.return_38
-      ((do $TypeSynonym.label_64
-         ((do $TypeSynonym.return_40
-            ((do $TypeSynonym.return_39
-               ((suspend
-                  ((resume $TypeSynonym.return_39)))
-                  (invoke String#)))
-               (push "hello")
-               (suspend
-                  ((resume $TypeSynonym.return_40)))
-               (apply 2)))
-            (then $TypeSynonym.var_65
-               ((do $TypeSynonym.label_66
-                  ((do $TypeSynonym.return_42
-                     ((do $TypeSynonym.return_41
-                        ((suspend
-                           ((resume $TypeSynonym.return_41)))
-                           (invoke String#)))
-                        (push "world")
-                        (suspend
-                           ((resume $TypeSynonym.return_42)))
-                        (apply 2)))
-                     (then $TypeSynonym.var_67
-                        ((fetch $TypeSynonym.var_65)
-                           (fetch $TypeSynonym.var_67)
+      ((do $TypeSynonym.label_54
+         ((do $TypeSynonym.return_39
+            ((suspend
+               ((push "hello")
+                  (suspend
+                     ((resume $TypeSynonym.return_39)))
+                  (apply 2)))
+               (invoke String#)))
+            (then $TypeSynonym.var_55
+               ((do $TypeSynonym.label_56
+                  ((do $TypeSynonym.return_40
+                     ((suspend
+                        ((push "world")
+                           (suspend
+                              ((resume $TypeSynonym.return_40)))
+                           (apply 2)))
+                        (invoke String#)))
+                     (then $TypeSynonym.var_57
+                        ((fetch $TypeSynonym.var_55)
+                           (fetch $TypeSynonym.var_57)
                            (construct tuple 2)
-                           (resume $TypeSynonym.label_66)))))
-                  (resume $TypeSynonym.label_64)))))
+                           (resume $TypeSynonym.label_56)))))
+                  (resume $TypeSynonym.label_54)))))
          (resume $TypeSynonym.return_38)))
    (main
-      $TypeSynonym.return_43
+      $TypeSynonym.return_41
       ((lambda
-         ($TypeSynonym.param_31 $TypeSynonym.return_44)
-         ((do $TypeSynonym.return_45
+         ($TypeSynonym.param_31 $TypeSynonym.return_42)
+         ((do $TypeSynonym.return_43
             ((fetch $TypeSynonym.param_31)
                (construct tuple 1)
                (select
                   (#TypeSynonym.$__29
-                     ((do $TypeSynonym.return_63
-                        ((do $TypeSynonym.return_48
-                           ((do $TypeSynonym.return_46
+                     ((suspend
+                        ((then $TypeSynonym.outer_58
+                           ((do $TypeSynonym.return_53
                               ((suspend
-                                 ((resume $TypeSynonym.return_46)))
-                                 (invoke |>)))
-                              (then $TypeSynonym.outer_68
-                                 ((do $TypeSynonym.return_47
-                                    ((suspend
-                                       ((resume $TypeSynonym.return_47)))
-                                       (invoke hello)))
-                                    (then $TypeSynonym.inner_69
-                                       ((fetch $TypeSynonym.outer_68)
-                                          (fetch $TypeSynonym.inner_69)
-                                          (suspend
-                                             ((resume $TypeSynonym.return_48)))
-                                          (apply 2)))))))
-                           (lambda
-                              ($TypeSynonym.param_32 $TypeSynonym.return_49)
-                              ((do $TypeSynonym.return_50
-                                 ((fetch $TypeSynonym.param_32)
-                                    (construct tuple 1)
-                                    (select
-                                       ((tuple
-                                          (#TypeSynonym.h_2 #TypeSynonym.w_3))
-                                          ((do $TypeSynonym.return_62
-                                             ((lambda
-                                                ($TypeSynonym.tmp_33 $TypeSynonym.return_51)
-                                                ((do $TypeSynonym.return_59
-                                                   ((lambda
-                                                      ($TypeSynonym.tmp_34 $TypeSynonym.return_52)
-                                                      ((do $TypeSynonym.return_54
-                                                         ((do $TypeSynonym.return_53
-                                                            ((suspend
-                                                               ((resume $TypeSynonym.return_53)))
-                                                               (invoke putStrLn)))
-                                                            (fetch #TypeSynonym.w_3)
-                                                            (suspend
-                                                               ((resume $TypeSynonym.return_54)))
-                                                            (apply 2)))
-                                                         (resume $TypeSynonym.return_52)))
-                                                      (then $TypeSynonym.outer_80
-                                                         ((do $TypeSynonym.return_58
-                                                            ((do $TypeSynonym.return_55
-                                                               ((suspend
-                                                                  ((resume $TypeSynonym.return_55)))
-                                                                  (invoke putStr)))
-                                                               (then $TypeSynonym.outer_82
-                                                                  ((do $TypeSynonym.return_57
-                                                                     ((do $TypeSynonym.return_56
-                                                                        ((suspend
-                                                                           ((resume $TypeSynonym.return_56)))
-                                                                           (invoke String#)))
-                                                                        (push " ")
+                                 ((resume $TypeSynonym.return_53)))
+                                 (invoke hello)))
+                              (then $TypeSynonym.inner_59
+                                 ((fetch $TypeSynonym.outer_58)
+                                    (fetch $TypeSynonym.inner_59)
+                                    (suspend
+                                       ((lambda
+                                          ($TypeSynonym.param_32 $TypeSynonym.return_44)
+                                          ((do $TypeSynonym.return_45
+                                             ((fetch $TypeSynonym.param_32)
+                                                (construct tuple 1)
+                                                (select
+                                                   ((tuple
+                                                      (#TypeSynonym.h_2 #TypeSynonym.w_3))
+                                                      ((lambda
+                                                         ($TypeSynonym.tmp_33 $TypeSynonym.return_47)
+                                                         ((do $TypeSynonym.return_48
+                                                            ((lambda
+                                                               ($TypeSynonym.tmp_34 $TypeSynonym.return_51)
+                                                               ((do $TypeSynonym.return_52
+                                                                  ((suspend
+                                                                     ((fetch #TypeSynonym.w_3)
                                                                         (suspend
-                                                                           ((resume $TypeSynonym.return_57)))
+                                                                           ((resume $TypeSynonym.return_52)))
                                                                         (apply 2)))
-                                                                     (then $TypeSynonym.inner_83
-                                                                        ((fetch $TypeSynonym.outer_82)
-                                                                           (fetch $TypeSynonym.inner_83)
+                                                                     (invoke putStrLn)))
+                                                                  (resume $TypeSynonym.return_51)))
+                                                               (then $TypeSynonym.outer_70
+                                                                  ((do $TypeSynonym.return_49
+                                                                     ((suspend
+                                                                        ((then $TypeSynonym.outer_72
+                                                                           ((do $TypeSynonym.return_50
+                                                                              ((suspend
+                                                                                 ((push " ")
+                                                                                    (suspend
+                                                                                       ((resume $TypeSynonym.return_50)))
+                                                                                    (apply 2)))
+                                                                                 (invoke String#)))
+                                                                              (then $TypeSynonym.inner_73
+                                                                                 ((fetch $TypeSynonym.outer_72)
+                                                                                    (fetch $TypeSynonym.inner_73)
+                                                                                    (suspend
+                                                                                       ((resume $TypeSynonym.return_49)))
+                                                                                    (apply 2)))))))
+                                                                        (invoke putStr)))
+                                                                     (then $TypeSynonym.inner_71
+                                                                        ((fetch $TypeSynonym.outer_70)
+                                                                           (fetch $TypeSynonym.inner_71)
                                                                            (suspend
-                                                                              ((resume $TypeSynonym.return_58)))
+                                                                              ((resume $TypeSynonym.return_48)))
                                                                            (apply 2)))))))
-                                                            (then $TypeSynonym.inner_81
-                                                               ((fetch $TypeSynonym.outer_80)
-                                                                  (fetch $TypeSynonym.inner_81)
-                                                                  (suspend
-                                                                     ((resume $TypeSynonym.return_59)))
-                                                                  (apply 2)))))))
-                                                   (resume $TypeSynonym.return_51)))
-                                                (then $TypeSynonym.outer_84
-                                                   ((do $TypeSynonym.return_61
-                                                      ((do $TypeSynonym.return_60
-                                                         ((suspend
-                                                            ((resume $TypeSynonym.return_60)))
-                                                            (invoke putStr)))
-                                                         (fetch #TypeSynonym.h_2)
-                                                         (suspend
-                                                            ((resume $TypeSynonym.return_61)))
-                                                         (apply 2)))
-                                                      (then $TypeSynonym.inner_85
-                                                         ((fetch $TypeSynonym.outer_84)
-                                                            (fetch $TypeSynonym.inner_85)
-                                                            (suspend
-                                                               ((resume $TypeSynonym.return_62)))
-                                                            (apply 2)))))))
-                                             (resume $TypeSynonym.return_50))))))
-                                 (resume $TypeSynonym.return_49)))
-                           (suspend
-                              ((resume $TypeSynonym.return_63)))
-                           (apply 2)))
-                        (resume $TypeSynonym.return_45))))))
-            (resume $TypeSynonym.return_44)))
-         (resume $TypeSynonym.return_43))))
+                                                            (resume $TypeSynonym.return_47)))
+                                                         (then $TypeSynonym.outer_74
+                                                            ((do $TypeSynonym.return_46
+                                                               ((suspend
+                                                                  ((fetch #TypeSynonym.h_2)
+                                                                     (suspend
+                                                                        ((resume $TypeSynonym.return_46)))
+                                                                     (apply 2)))
+                                                                  (invoke putStr)))
+                                                               (then $TypeSynonym.inner_75
+                                                                  ((fetch $TypeSynonym.outer_74)
+                                                                     (fetch $TypeSynonym.inner_75)
+                                                                     (suspend
+                                                                        ((resume $TypeSynonym.return_45)))
+                                                                     (apply 2))))))))))
+                                             (resume $TypeSynonym.return_44)))
+                                          (suspend
+                                             ((resume $TypeSynonym.return_43)))
+                                          (apply 2)))
+                                    (apply 2)))))))
+                        (invoke |>))))))
+            (resume $TypeSynonym.return_42)))
+         (resume $TypeSynonym.return_41))))

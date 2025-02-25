@@ -7,81 +7,69 @@
             (construct tuple 1)
             (select
                (#TuplePattern.$__25
-                  ((do $TuplePattern.return_41
-                     ((do $TuplePattern.return_34
-                        ((do $TuplePattern.return_31
-                           ((suspend
-                              ((resume $TuplePattern.return_31)))
-                              (invoke |>)))
-                           (then $TuplePattern.outer_46
-                              ((do $TuplePattern.label_48
-                                 ((do $TuplePattern.return_32
-                                    ((suspend
-                                       ((resume $TuplePattern.return_32)))
-                                       (invoke A)))
-                                    (then $TuplePattern.var_49
-                                       ((do $TuplePattern.label_50
-                                          ((do $TuplePattern.return_33
-                                             ((suspend
-                                                ((resume $TuplePattern.return_33)))
-                                                (invoke B)))
-                                             (then $TuplePattern.var_51
-                                                ((fetch $TuplePattern.var_49)
-                                                   (fetch $TuplePattern.var_51)
-                                                   (construct tuple 2)
-                                                   (resume $TuplePattern.label_50)))))
-                                          (resume $TuplePattern.label_48)))))
-                                 (then $TuplePattern.inner_47
-                                    ((fetch $TuplePattern.outer_46)
-                                       (fetch $TuplePattern.inner_47)
+                  ((suspend
+                     ((then $TuplePattern.outer_40
+                        ((do $TuplePattern.label_46
+                           ((do $TuplePattern.return_34
+                              ((suspend
+                                 ((resume $TuplePattern.return_34)))
+                                 (invoke A)))
+                              (then $TuplePattern.var_47
+                                 ((do $TuplePattern.label_48
+                                    ((do $TuplePattern.return_35
+                                       ((suspend
+                                          ((resume $TuplePattern.return_35)))
+                                          (invoke B)))
+                                       (then $TuplePattern.var_49
+                                          ((fetch $TuplePattern.var_47)
+                                             (fetch $TuplePattern.var_49)
+                                             (construct tuple 2)
+                                             (resume $TuplePattern.label_48)))))
+                                    (resume $TuplePattern.label_46)))))
+                           (then $TuplePattern.inner_41
+                              ((fetch $TuplePattern.outer_40)
+                                 (fetch $TuplePattern.inner_41)
+                                 (suspend
+                                    ((lambda
+                                       ($TuplePattern.param_27 $TuplePattern.return_31)
+                                       ((do $TuplePattern.return_32
+                                          ((fetch $TuplePattern.param_27)
+                                             (construct tuple 1)
+                                             (select
+                                                ((tuple
+                                                   ((A ())
+                                                      #TuplePattern.rest_0))
+                                                   ((suspend
+                                                      ((then $TuplePattern.outer_44
+                                                         ((do $TuplePattern.return_33
+                                                            ((suspend
+                                                               ((push "A")
+                                                                  (suspend
+                                                                     ((resume $TuplePattern.return_33)))
+                                                                  (apply 2)))
+                                                               (invoke String#)))
+                                                            (then $TuplePattern.inner_45
+                                                               ((fetch $TuplePattern.outer_44)
+                                                                  (fetch $TuplePattern.inner_45)
+                                                                  (suspend
+                                                                     ((resume $TuplePattern.return_32)))
+                                                                  (apply 2)))))))
+                                                      (invoke printString)))
+                                                ((tuple
+                                                   ((B ())
+                                                      #TuplePattern.rest_1))
+                                                   ((construct tuple 0)
+                                                      (resume $TuplePattern.return_32)))
+                                                ((tuple
+                                                   ((C ())
+                                                      #TuplePattern.rest_2))
+                                                   ((construct tuple 0)
+                                                      (resume $TuplePattern.return_32))))))
+                                          (resume $TuplePattern.return_31)))
                                        (suspend
-                                          ((resume $TuplePattern.return_34)))
-                                       (apply 2)))))))
-                        (lambda
-                           ($TuplePattern.param_27 $TuplePattern.return_35)
-                           ((do $TuplePattern.return_36
-                              ((fetch $TuplePattern.param_27)
-                                 (construct tuple 1)
-                                 (select
-                                    ((tuple
-                                       ((A ())
-                                          #TuplePattern.rest_0))
-                                       ((do $TuplePattern.return_40
-                                          ((do $TuplePattern.return_37
-                                             ((suspend
-                                                ((resume $TuplePattern.return_37)))
-                                                (invoke printString)))
-                                             (then $TuplePattern.outer_54
-                                                ((do $TuplePattern.return_39
-                                                   ((do $TuplePattern.return_38
-                                                      ((suspend
-                                                         ((resume $TuplePattern.return_38)))
-                                                         (invoke String#)))
-                                                      (push "A")
-                                                      (suspend
-                                                         ((resume $TuplePattern.return_39)))
-                                                      (apply 2)))
-                                                   (then $TuplePattern.inner_55
-                                                      ((fetch $TuplePattern.outer_54)
-                                                         (fetch $TuplePattern.inner_55)
-                                                         (suspend
-                                                            ((resume $TuplePattern.return_40)))
-                                                         (apply 2)))))))
-                                          (resume $TuplePattern.return_36)))
-                                    ((tuple
-                                       ((B ())
-                                          #TuplePattern.rest_1))
-                                       ((construct tuple 0)
-                                          (resume $TuplePattern.return_36)))
-                                    ((tuple
-                                       ((C ())
-                                          #TuplePattern.rest_2))
-                                       ((construct tuple 0)
-                                          (resume $TuplePattern.return_36))))))
-                              (resume $TuplePattern.return_35)))
-                        (suspend
-                           ((resume $TuplePattern.return_41)))
-                        (apply 2)))
-                     (resume $TuplePattern.return_30))))))
+                                          ((resume $TuplePattern.return_30)))
+                                       (apply 2)))
+                                 (apply 2)))))))
+                     (invoke |>))))))
          (resume $TuplePattern.return_29)))
       (resume $TuplePattern.return_28))))

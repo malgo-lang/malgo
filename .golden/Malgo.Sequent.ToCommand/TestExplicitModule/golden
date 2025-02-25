@@ -7,27 +7,21 @@
             (construct tuple 1)
             (select
                (#TestExplicitModule.$__6
-                  ((do $TestExplicitModule.return_14
-                     ((do $TestExplicitModule.return_11
-                        ((suspend
-                           ((resume $TestExplicitModule.return_11)))
-                           (invoke putStrLn)))
-                        (then $TestExplicitModule.outer_15
-                           ((do $TestExplicitModule.return_13
-                              ((do $TestExplicitModule.return_12
-                                 ((suspend
-                                    ((resume $TestExplicitModule.return_12)))
-                                    (invoke String#)))
-                                 (push "Hello, world")
+                  ((suspend
+                     ((then $TestExplicitModule.outer_12
+                        ((do $TestExplicitModule.return_11
+                           ((suspend
+                              ((push "Hello, world")
                                  (suspend
-                                    ((resume $TestExplicitModule.return_13)))
+                                    ((resume $TestExplicitModule.return_11)))
                                  (apply 2)))
-                              (then $TestExplicitModule.inner_16
-                                 ((fetch $TestExplicitModule.outer_15)
-                                    (fetch $TestExplicitModule.inner_16)
-                                    (suspend
-                                       ((resume $TestExplicitModule.return_14)))
-                                    (apply 2)))))))
-                     (resume $TestExplicitModule.return_10))))))
+                              (invoke String#)))
+                           (then $TestExplicitModule.inner_13
+                              ((fetch $TestExplicitModule.outer_12)
+                                 (fetch $TestExplicitModule.inner_13)
+                                 (suspend
+                                    ((resume $TestExplicitModule.return_10)))
+                                 (apply 2)))))))
+                     (invoke putStrLn))))))
          (resume $TestExplicitModule.return_9)))
       (resume $TestExplicitModule.return_8))))

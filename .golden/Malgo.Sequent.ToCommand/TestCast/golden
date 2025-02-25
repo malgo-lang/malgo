@@ -7,85 +7,67 @@
             (construct tuple 1)
             (select
                (#TestCast.$__26
-                  ((do $TestCast.return_44
-                     ((do $TestCast.return_31
-                        ((suspend
-                           ((resume $TestCast.return_31)))
-                           (invoke printInt32)))
-                        (then $TestCast.outer_75
-                           ((do $TestCast.return_43
-                              ((do $TestCast.return_32
-                                 ((suspend
-                                    ((resume $TestCast.return_32)))
-                                    (invoke malgo_unsafe_cast)))
-                                 (then $TestCast.outer_91
-                                    ((do $TestCast.return_42
-                                       ((do $TestCast.return_34
-                                          ((do $TestCast.return_33
-                                             ((suspend
-                                                ((resume $TestCast.return_33)))
-                                                (invoke malgo_read_vector)))
-                                             (push 2_i64)
-                                             (suspend
-                                                ((resume $TestCast.return_34)))
-                                             (apply 2)))
-                                          (then $TestCast.outer_99
-                                             ((do $TestCast.return_41
-                                                ((do $TestCast.return_36
-                                                   ((do $TestCast.return_35
-                                                      ((suspend
-                                                         ((resume $TestCast.return_35)))
-                                                         (invoke malgo_new_vector)))
-                                                      (push 10_i64)
-                                                      (suspend
-                                                         ((resume $TestCast.return_36)))
-                                                      (apply 2)))
-                                                   (then $TestCast.outer_103
-                                                      ((do $TestCast.return_40
-                                                         ((do $TestCast.return_37
-                                                            ((suspend
-                                                               ((resume $TestCast.return_37)))
-                                                               (invoke malgo_unsafe_cast)))
-                                                            (then $TestCast.outer_105
-                                                               ((do $TestCast.return_39
-                                                                  ((do $TestCast.return_38
-                                                                     ((suspend
-                                                                        ((resume $TestCast.return_38)))
-                                                                        (invoke Int32#)))
-                                                                     (push 5_i32)
-                                                                     (suspend
-                                                                        ((resume $TestCast.return_39)))
-                                                                     (apply 2)))
-                                                                  (then $TestCast.inner_106
-                                                                     ((fetch $TestCast.outer_105)
-                                                                        (fetch $TestCast.inner_106)
+                  ((suspend
+                     ((then $TestCast.outer_66
+                        ((do $TestCast.return_31
+                           ((suspend
+                              ((then $TestCast.outer_82
+                                 ((do $TestCast.return_32
+                                    ((suspend
+                                       ((push 2_i64)
+                                          (suspend
+                                             ((then $TestCast.outer_90
+                                                ((do $TestCast.return_33
+                                                   ((suspend
+                                                      ((push 10_i64)
+                                                         (suspend
+                                                            ((then $TestCast.outer_94
+                                                               ((do $TestCast.return_34
+                                                                  ((suspend
+                                                                     ((then $TestCast.outer_96
+                                                                        ((do $TestCast.return_35
+                                                                           ((suspend
+                                                                              ((push 5_i32)
+                                                                                 (suspend
+                                                                                    ((resume $TestCast.return_35)))
+                                                                                 (apply 2)))
+                                                                              (invoke Int32#)))
+                                                                           (then $TestCast.inner_97
+                                                                              ((fetch $TestCast.outer_96)
+                                                                                 (fetch $TestCast.inner_97)
+                                                                                 (suspend
+                                                                                    ((resume $TestCast.return_34)))
+                                                                                 (apply 2)))))))
+                                                                     (invoke malgo_unsafe_cast)))
+                                                                  (then $TestCast.inner_95
+                                                                     ((fetch $TestCast.outer_94)
+                                                                        (fetch $TestCast.inner_95)
                                                                         (suspend
-                                                                           ((resume $TestCast.return_40)))
+                                                                           ((resume $TestCast.return_33)))
                                                                         (apply 2)))))))
-                                                         (then $TestCast.inner_104
-                                                            ((fetch $TestCast.outer_103)
-                                                               (fetch $TestCast.inner_104)
-                                                               (suspend
-                                                                  ((resume $TestCast.return_41)))
-                                                               (apply 2)))))))
-                                                (then $TestCast.inner_100
-                                                   ((fetch $TestCast.outer_99)
-                                                      (fetch $TestCast.inner_100)
-                                                      (suspend
-                                                         ((resume $TestCast.return_42)))
-                                                      (apply 2)))))))
-                                       (then $TestCast.inner_92
-                                          ((fetch $TestCast.outer_91)
-                                             (fetch $TestCast.inner_92)
-                                             (suspend
-                                                ((resume $TestCast.return_43)))
-                                             (apply 2)))))))
-                              (then $TestCast.inner_76
-                                 ((fetch $TestCast.outer_75)
-                                    (fetch $TestCast.inner_76)
-                                    (suspend
-                                       ((resume $TestCast.return_44)))
-                                    (apply 2)))))))
-                     (resume $TestCast.return_30))))))
+                                                         (apply 2)))
+                                                      (invoke malgo_new_vector)))
+                                                   (then $TestCast.inner_91
+                                                      ((fetch $TestCast.outer_90)
+                                                         (fetch $TestCast.inner_91)
+                                                         (suspend
+                                                            ((resume $TestCast.return_32)))
+                                                         (apply 2)))))))
+                                          (apply 2)))
+                                       (invoke malgo_read_vector)))
+                                    (then $TestCast.inner_83
+                                       ((fetch $TestCast.outer_82)
+                                          (fetch $TestCast.inner_83)
+                                          (suspend
+                                             ((resume $TestCast.return_31)))
+                                          (apply 2)))))))
+                              (invoke malgo_unsafe_cast)))
+                           (then $TestCast.inner_67
+                              ((fetch $TestCast.outer_66)
+                                 (fetch $TestCast.inner_67)
+                                 (suspend
+                                    ((resume $TestCast.return_30)))
+                                 (apply 2)))))))
+                     (invoke printInt32))))))
          (resume $TestCast.return_29)))
       (resume $TestCast.return_28))))

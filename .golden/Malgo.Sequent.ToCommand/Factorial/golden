@@ -11,344 +11,274 @@
                (select
                   ((tuple
                      (#Factorial.x_0 #Factorial.y_1))
-                     ((do $Factorial.return_116
-                        ((do $Factorial.return_115
-                           ((do $Factorial.return_114
-                              ((suspend
-                                 ((resume $Factorial.return_114)))
-                                 (invoke eqInt64)))
-                              (fetch #Factorial.x_0)
-                              (suspend
-                                 ((resume $Factorial.return_115)))
-                              (apply 2)))
-                           (fetch #Factorial.y_1)
+                     ((suspend
+                        ((fetch #Factorial.x_0)
                            (suspend
-                              ((resume $Factorial.return_116)))
+                              ((fetch #Factorial.y_1)
+                                 (suspend
+                                    ((resume $Factorial.return_113)))
+                                 (apply 2)))
                            (apply 2)))
-                        (resume $Factorial.return_113))))))
+                        (invoke eqInt64))))))
             (resume $Factorial.return_112)))
          (resume $Factorial.return_111)))
       (resume $Factorial.return_110)))
    (-
-      $Factorial.return_117
+      $Factorial.return_114
       ((lambda
-         ($Factorial.param_100 $Factorial.return_118)
+         ($Factorial.param_100 $Factorial.return_115)
          ((lambda
-            ($Factorial.param_101 $Factorial.return_119)
-            ((do $Factorial.return_120
+            ($Factorial.param_101 $Factorial.return_116)
+            ((do $Factorial.return_117
                ((fetch $Factorial.param_100)
                   (fetch $Factorial.param_101)
                   (construct tuple 2)
                   (select
                      ((tuple
                         (#Factorial.x_2 #Factorial.y_3))
-                        ((do $Factorial.return_123
-                           ((do $Factorial.return_122
-                              ((do $Factorial.return_121
-                                 ((suspend
-                                    ((resume $Factorial.return_121)))
-                                    (invoke subInt64)))
-                                 (fetch #Factorial.x_2)
-                                 (suspend
-                                    ((resume $Factorial.return_122)))
-                                 (apply 2)))
-                              (fetch #Factorial.y_3)
+                        ((suspend
+                           ((fetch #Factorial.x_2)
                               (suspend
-                                 ((resume $Factorial.return_123)))
+                                 ((fetch #Factorial.y_3)
+                                    (suspend
+                                       ((resume $Factorial.return_117)))
+                                    (apply 2)))
                               (apply 2)))
-                           (resume $Factorial.return_120))))))
-               (resume $Factorial.return_119)))
-            (resume $Factorial.return_118)))
-         (resume $Factorial.return_117)))
+                           (invoke subInt64))))))
+               (resume $Factorial.return_116)))
+            (resume $Factorial.return_115)))
+         (resume $Factorial.return_114)))
    (*
-      $Factorial.return_124
+      $Factorial.return_118
       ((lambda
-         ($Factorial.param_102 $Factorial.return_125)
+         ($Factorial.param_102 $Factorial.return_119)
          ((lambda
-            ($Factorial.param_103 $Factorial.return_126)
-            ((do $Factorial.return_127
+            ($Factorial.param_103 $Factorial.return_120)
+            ((do $Factorial.return_121
                ((fetch $Factorial.param_102)
                   (fetch $Factorial.param_103)
                   (construct tuple 2)
                   (select
                      ((tuple
                         (#Factorial.x_4 #Factorial.y_5))
-                        ((do $Factorial.return_130
-                           ((do $Factorial.return_129
-                              ((do $Factorial.return_128
-                                 ((suspend
-                                    ((resume $Factorial.return_128)))
-                                    (invoke mulInt64)))
-                                 (fetch #Factorial.x_4)
-                                 (suspend
-                                    ((resume $Factorial.return_129)))
-                                 (apply 2)))
-                              (fetch #Factorial.y_5)
+                        ((suspend
+                           ((fetch #Factorial.x_4)
                               (suspend
-                                 ((resume $Factorial.return_130)))
+                                 ((fetch #Factorial.y_5)
+                                    (suspend
+                                       ((resume $Factorial.return_121)))
+                                    (apply 2)))
                               (apply 2)))
-                           (resume $Factorial.return_127))))))
-               (resume $Factorial.return_126)))
-            (resume $Factorial.return_125)))
-         (resume $Factorial.return_124)))
+                           (invoke mulInt64))))))
+               (resume $Factorial.return_120)))
+            (resume $Factorial.return_119)))
+         (resume $Factorial.return_118)))
    (factAcc
-      $Factorial.return_131
+      $Factorial.return_122
       ((lambda
-         ($Factorial.param_104 $Factorial.return_132)
+         ($Factorial.param_104 $Factorial.return_123)
          ((lambda
-            ($Factorial.param_105 $Factorial.return_133)
-            ((do $Factorial.return_134
+            ($Factorial.param_105 $Factorial.return_124)
+            ((do $Factorial.return_125
                ((fetch $Factorial.param_104)
                   (fetch $Factorial.param_105)
                   (construct tuple 2)
                   (select
                      ((tuple
                         (#Factorial.n_7 #Factorial.acc_8))
-                        ((do $Factorial.return_158
-                           ((do $Factorial.return_144
-                              ((do $Factorial.return_141
-                                 ((do $Factorial.return_135
-                                    ((suspend
-                                       ((resume $Factorial.return_135)))
-                                       (invoke if)))
-                                    (then $Factorial.outer_184
-                                       ((do $Factorial.return_140
-                                          ((do $Factorial.return_137
-                                             ((do $Factorial.return_136
+                        ((suspend
+                           ((then $Factorial.outer_149
+                              ((do $Factorial.return_133
+                                 ((suspend
+                                    ((fetch #Factorial.n_7)
+                                       (suspend
+                                          ((then $Factorial.outer_167
+                                             ((do $Factorial.return_134
                                                 ((suspend
-                                                   ((resume $Factorial.return_136)))
-                                                   (invoke ==)))
-                                                (fetch #Factorial.n_7)
-                                                (suspend
-                                                   ((resume $Factorial.return_137)))
-                                                (apply 2)))
-                                             (then $Factorial.outer_186
-                                                ((do $Factorial.return_139
-                                                   ((do $Factorial.return_138
-                                                      ((suspend
-                                                         ((resume $Factorial.return_138)))
-                                                         (invoke Int64#)))
-                                                      (push 0_i64)
+                                                   ((push 0_i64)
                                                       (suspend
-                                                         ((resume $Factorial.return_139)))
+                                                         ((resume $Factorial.return_134)))
                                                       (apply 2)))
-                                                   (then $Factorial.inner_187
-                                                      ((fetch $Factorial.outer_186)
-                                                         (fetch $Factorial.inner_187)
-                                                         (suspend
-                                                            ((resume $Factorial.return_140)))
-                                                         (apply 2)))))))
-                                          (then $Factorial.inner_185
-                                             ((fetch $Factorial.outer_184)
-                                                (fetch $Factorial.inner_185)
-                                                (suspend
-                                                   ((resume $Factorial.return_141)))
-                                                (apply 2)))))))
-                                 (lambda
-                                    ($Factorial.param_106 $Factorial.return_142)
-                                    ((do $Factorial.return_143
-                                       ((fetch $Factorial.param_106)
-                                          (construct tuple 1)
-                                          (select
-                                             (#Factorial.$__57
-                                                ((fetch #Factorial.acc_8)
-                                                   (resume $Factorial.return_143))))))
-                                       (resume $Factorial.return_142)))
-                                 (suspend
-                                    ((resume $Factorial.return_144)))
-                                 (apply 2)))
-                              (lambda
-                                 ($Factorial.param_107 $Factorial.return_145)
-                                 ((do $Factorial.return_146
-                                    ((fetch $Factorial.param_107)
-                                       (construct tuple 1)
-                                       (select
-                                          (#Factorial.$__70
-                                             ((do $Factorial.return_157
-                                                ((do $Factorial.return_153
-                                                   ((do $Factorial.return_147
-                                                      ((suspend
-                                                         ((resume $Factorial.return_147)))
-                                                         (invoke factAcc)))
-                                                      (then $Factorial.outer_198
-                                                         ((do $Factorial.return_152
-                                                            ((do $Factorial.return_149
-                                                               ((do $Factorial.return_148
-                                                                  ((suspend
-                                                                     ((resume $Factorial.return_148)))
-                                                                     (invoke -)))
-                                                                  (fetch #Factorial.n_7)
-                                                                  (suspend
-                                                                     ((resume $Factorial.return_149)))
-                                                                  (apply 2)))
-                                                               (then $Factorial.outer_200
-                                                                  ((do $Factorial.return_151
-                                                                     ((do $Factorial.return_150
-                                                                        ((suspend
-                                                                           ((resume $Factorial.return_150)))
-                                                                           (invoke Int64#)))
-                                                                        (push 1_i64)
-                                                                        (suspend
-                                                                           ((resume $Factorial.return_151)))
-                                                                        (apply 2)))
-                                                                     (then $Factorial.inner_201
-                                                                        ((fetch $Factorial.outer_200)
-                                                                           (fetch $Factorial.inner_201)
-                                                                           (suspend
-                                                                              ((resume $Factorial.return_152)))
-                                                                           (apply 2)))))))
-                                                            (then $Factorial.inner_199
-                                                               ((fetch $Factorial.outer_198)
-                                                                  (fetch $Factorial.inner_199)
-                                                                  (suspend
-                                                                     ((resume $Factorial.return_153)))
-                                                                  (apply 2)))))))
-                                                   (then $Factorial.outer_202
-                                                      ((do $Factorial.return_156
-                                                         ((do $Factorial.return_155
-                                                            ((do $Factorial.return_154
+                                                   (invoke Int64#)))
+                                                (then $Factorial.inner_168
+                                                   ((fetch $Factorial.outer_167)
+                                                      (fetch $Factorial.inner_168)
+                                                      (suspend
+                                                         ((resume $Factorial.return_133)))
+                                                      (apply 2)))))))
+                                       (apply 2)))
+                                    (invoke ==)))
+                                 (then $Factorial.inner_150
+                                    ((fetch $Factorial.outer_149)
+                                       (fetch $Factorial.inner_150)
+                                       (suspend
+                                          ((lambda
+                                             ($Factorial.param_106 $Factorial.return_131)
+                                             ((do $Factorial.return_132
+                                                ((fetch $Factorial.param_106)
+                                                   (construct tuple 1)
+                                                   (select
+                                                      (#Factorial.$__57
+                                                         ((fetch #Factorial.acc_8)
+                                                            (resume $Factorial.return_132))))))
+                                                (resume $Factorial.return_131)))
+                                             (suspend
+                                                ((lambda
+                                                   ($Factorial.param_107 $Factorial.return_126)
+                                                   ((do $Factorial.return_127
+                                                      ((fetch $Factorial.param_107)
+                                                         (construct tuple 1)
+                                                         (select
+                                                            (#Factorial.$__70
                                                                ((suspend
-                                                                  ((resume $Factorial.return_154)))
-                                                                  (invoke *)))
-                                                               (fetch #Factorial.n_7)
-                                                               (suspend
-                                                                  ((resume $Factorial.return_155)))
-                                                               (apply 2)))
-                                                            (fetch #Factorial.acc_8)
-                                                            (suspend
-                                                               ((resume $Factorial.return_156)))
-                                                            (apply 2)))
-                                                         (then $Factorial.inner_203
-                                                            ((fetch $Factorial.outer_202)
-                                                               (fetch $Factorial.inner_203)
-                                                               (suspend
-                                                                  ((resume $Factorial.return_157)))
-                                                               (apply 2)))))))
-                                                (resume $Factorial.return_146))))))
-                                    (resume $Factorial.return_145)))
-                              (suspend
-                                 ((resume $Factorial.return_158)))
-                              (apply 2)))
-                           (resume $Factorial.return_134))))))
-               (resume $Factorial.return_133)))
-            (resume $Factorial.return_132)))
-         (resume $Factorial.return_131)))
+                                                                  ((then $Factorial.outer_161
+                                                                     ((do $Factorial.return_129
+                                                                        ((suspend
+                                                                           ((fetch #Factorial.n_7)
+                                                                              (suspend
+                                                                                 ((then $Factorial.outer_165
+                                                                                    ((do $Factorial.return_130
+                                                                                       ((suspend
+                                                                                          ((push 1_i64)
+                                                                                             (suspend
+                                                                                                ((resume $Factorial.return_130)))
+                                                                                             (apply 2)))
+                                                                                          (invoke Int64#)))
+                                                                                       (then $Factorial.inner_166
+                                                                                          ((fetch $Factorial.outer_165)
+                                                                                             (fetch $Factorial.inner_166)
+                                                                                             (suspend
+                                                                                                ((resume $Factorial.return_129)))
+                                                                                             (apply 2)))))))
+                                                                              (apply 2)))
+                                                                           (invoke -)))
+                                                                        (then $Factorial.inner_162
+                                                                           ((fetch $Factorial.outer_161)
+                                                                              (fetch $Factorial.inner_162)
+                                                                              (suspend
+                                                                                 ((then $Factorial.outer_163
+                                                                                    ((do $Factorial.return_128
+                                                                                       ((suspend
+                                                                                          ((fetch #Factorial.n_7)
+                                                                                             (suspend
+                                                                                                ((fetch #Factorial.acc_8)
+                                                                                                   (suspend
+                                                                                                      ((resume $Factorial.return_128)))
+                                                                                                   (apply 2)))
+                                                                                             (apply 2)))
+                                                                                          (invoke *)))
+                                                                                       (then $Factorial.inner_164
+                                                                                          ((fetch $Factorial.outer_163)
+                                                                                             (fetch $Factorial.inner_164)
+                                                                                             (suspend
+                                                                                                ((resume $Factorial.return_127)))
+                                                                                             (apply 2)))))))
+                                                                              (apply 2)))))))
+                                                                  (invoke factAcc))))))
+                                                      (resume $Factorial.return_126)))
+                                                   (suspend
+                                                      ((resume $Factorial.return_125)))
+                                                   (apply 2)))
+                                             (apply 2)))
+                                       (apply 2)))))))
+                           (invoke if))))))
+               (resume $Factorial.return_124)))
+            (resume $Factorial.return_123)))
+         (resume $Factorial.return_122)))
    (fact
-      $Factorial.return_159
+      $Factorial.return_135
       ((lambda
-         ($Factorial.param_108 $Factorial.return_160)
-         ((do $Factorial.return_161
+         ($Factorial.param_108 $Factorial.return_136)
+         ((do $Factorial.return_137
             ((fetch $Factorial.param_108)
                (construct tuple 1)
                (select
                   (#Factorial.n_6
-                     ((do $Factorial.return_166
-                        ((do $Factorial.return_163
-                           ((do $Factorial.return_162
-                              ((suspend
-                                 ((resume $Factorial.return_162)))
-                                 (invoke factAcc)))
-                              (fetch #Factorial.n_6)
-                              (suspend
-                                 ((resume $Factorial.return_163)))
-                              (apply 2)))
-                           (then $Factorial.outer_204
-                              ((do $Factorial.return_165
-                                 ((do $Factorial.return_164
+                     ((suspend
+                        ((fetch #Factorial.n_6)
+                           (suspend
+                              ((then $Factorial.outer_169
+                                 ((do $Factorial.return_138
                                     ((suspend
-                                       ((resume $Factorial.return_164)))
+                                       ((push 1_i64)
+                                          (suspend
+                                             ((resume $Factorial.return_138)))
+                                          (apply 2)))
                                        (invoke Int64#)))
-                                    (push 1_i64)
-                                    (suspend
-                                       ((resume $Factorial.return_165)))
-                                    (apply 2)))
-                                 (then $Factorial.inner_205
-                                    ((fetch $Factorial.outer_204)
-                                       (fetch $Factorial.inner_205)
-                                       (suspend
-                                          ((resume $Factorial.return_166)))
-                                       (apply 2)))))))
-                        (resume $Factorial.return_161))))))
-            (resume $Factorial.return_160)))
-         (resume $Factorial.return_159)))
+                                    (then $Factorial.inner_170
+                                       ((fetch $Factorial.outer_169)
+                                          (fetch $Factorial.inner_170)
+                                          (suspend
+                                             ((resume $Factorial.return_137)))
+                                          (apply 2)))))))
+                           (apply 2)))
+                        (invoke factAcc))))))
+            (resume $Factorial.return_136)))
+         (resume $Factorial.return_135)))
    (main
-      $Factorial.return_167
+      $Factorial.return_139
       ((lambda
-         ($Factorial.param_109 $Factorial.return_168)
-         ((do $Factorial.return_169
+         ($Factorial.param_109 $Factorial.return_140)
+         ((do $Factorial.return_141
             ((fetch $Factorial.param_109)
                (construct tuple 1)
                (select
                   (#Factorial.$__97
-                     ((do $Factorial.return_181
-                        ((do $Factorial.return_179
-                           ((do $Factorial.return_170
+                     ((suspend
+                        ((then $Factorial.outer_179
+                           ((do $Factorial.return_143
                               ((suspend
-                                 ((resume $Factorial.return_170)))
-                                 (invoke |>)))
-                              (then $Factorial.outer_214
-                                 ((do $Factorial.return_178
-                                    ((do $Factorial.return_176
-                                       ((do $Factorial.return_171
-                                          ((suspend
-                                             ((resume $Factorial.return_171)))
-                                             (invoke |>)))
-                                          (then $Factorial.outer_218
-                                             ((do $Factorial.return_175
-                                                ((do $Factorial.return_172
-                                                   ((suspend
-                                                      ((resume $Factorial.return_172)))
-                                                      (invoke fact)))
-                                                   (then $Factorial.outer_220
-                                                      ((do $Factorial.return_174
-                                                         ((do $Factorial.return_173
-                                                            ((suspend
-                                                               ((resume $Factorial.return_173)))
-                                                               (invoke Int64#)))
-                                                            (push 5_i64)
-                                                            (suspend
-                                                               ((resume $Factorial.return_174)))
-                                                            (apply 2)))
-                                                         (then $Factorial.inner_221
-                                                            ((fetch $Factorial.outer_220)
-                                                               (fetch $Factorial.inner_221)
-                                                               (suspend
-                                                                  ((resume $Factorial.return_175)))
-                                                               (apply 2)))))))
-                                                (then $Factorial.inner_219
-                                                   ((fetch $Factorial.outer_218)
-                                                      (fetch $Factorial.inner_219)
+                                 ((then $Factorial.outer_185
+                                    ((do $Factorial.return_145
+                                       ((suspend
+                                          ((then $Factorial.outer_189
+                                             ((do $Factorial.return_146
+                                                ((suspend
+                                                   ((push 5_i64)
                                                       (suspend
-                                                         ((resume $Factorial.return_176)))
+                                                         ((resume $Factorial.return_146)))
+                                                      (apply 2)))
+                                                   (invoke Int64#)))
+                                                (then $Factorial.inner_190
+                                                   ((fetch $Factorial.outer_189)
+                                                      (fetch $Factorial.inner_190)
+                                                      (suspend
+                                                         ((resume $Factorial.return_145)))
                                                       (apply 2)))))))
-                                       (then $Factorial.outer_222
-                                          ((do $Factorial.return_177
+                                          (invoke fact)))
+                                       (then $Factorial.inner_186
+                                          ((fetch $Factorial.outer_185)
+                                             (fetch $Factorial.inner_186)
+                                             (suspend
+                                                ((then $Factorial.outer_187
+                                                   ((do $Factorial.return_144
+                                                      ((suspend
+                                                         ((resume $Factorial.return_144)))
+                                                         (invoke toStringInt64)))
+                                                      (then $Factorial.inner_188
+                                                         ((fetch $Factorial.outer_187)
+                                                            (fetch $Factorial.inner_188)
+                                                            (suspend
+                                                               ((resume $Factorial.return_143)))
+                                                            (apply 2)))))))
+                                             (apply 2)))))))
+                                 (invoke |>)))
+                              (then $Factorial.inner_180
+                                 ((fetch $Factorial.outer_179)
+                                    (fetch $Factorial.inner_180)
+                                    (suspend
+                                       ((then $Factorial.outer_181
+                                          ((do $Factorial.return_142
                                              ((suspend
-                                                ((resume $Factorial.return_177)))
-                                                (invoke toStringInt64)))
-                                             (then $Factorial.inner_223
-                                                ((fetch $Factorial.outer_222)
-                                                   (fetch $Factorial.inner_223)
+                                                ((resume $Factorial.return_142)))
+                                                (invoke putStrLn)))
+                                             (then $Factorial.inner_182
+                                                ((fetch $Factorial.outer_181)
+                                                   (fetch $Factorial.inner_182)
                                                    (suspend
-                                                      ((resume $Factorial.return_178)))
+                                                      ((resume $Factorial.return_141)))
                                                    (apply 2)))))))
-                                    (then $Factorial.inner_215
-                                       ((fetch $Factorial.outer_214)
-                                          (fetch $Factorial.inner_215)
-                                          (suspend
-                                             ((resume $Factorial.return_179)))
-                                          (apply 2)))))))
-                           (then $Factorial.outer_224
-                              ((do $Factorial.return_180
-                                 ((suspend
-                                    ((resume $Factorial.return_180)))
-                                    (invoke putStrLn)))
-                                 (then $Factorial.inner_225
-                                    ((fetch $Factorial.outer_224)
-                                       (fetch $Factorial.inner_225)
-                                       (suspend
-                                          ((resume $Factorial.return_181)))
-                                       (apply 2)))))))
-                        (resume $Factorial.return_169))))))
-            (resume $Factorial.return_168)))
-         (resume $Factorial.return_167))))
+                                    (apply 2)))))))
+                        (invoke |>))))))
+            (resume $Factorial.return_140)))
+         (resume $Factorial.return_139))))

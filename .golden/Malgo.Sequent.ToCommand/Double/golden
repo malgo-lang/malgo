@@ -7,39 +7,31 @@
             (construct tuple 1)
             (select
                (#Double.$__8
-                  ((do $Double.return_18
-                     ((do $Double.return_13
-                        ((suspend
-                           ((resume $Double.return_13)))
-                           (invoke putStr)))
-                        (then $Double.outer_21
-                           ((do $Double.return_17
-                              ((do $Double.return_14
-                                 ((suspend
-                                    ((resume $Double.return_14)))
-                                    (invoke toStringDouble)))
-                                 (then $Double.outer_23
-                                    ((do $Double.return_16
-                                       ((do $Double.return_15
-                                          ((suspend
-                                             ((resume $Double.return_15)))
-                                             (invoke Double#)))
-                                          (push 3.14_f64)
+                  ((suspend
+                     ((then $Double.outer_17
+                        ((do $Double.return_13
+                           ((suspend
+                              ((then $Double.outer_19
+                                 ((do $Double.return_14
+                                    ((suspend
+                                       ((push 3.14_f64)
                                           (suspend
-                                             ((resume $Double.return_16)))
+                                             ((resume $Double.return_14)))
                                           (apply 2)))
-                                       (then $Double.inner_24
-                                          ((fetch $Double.outer_23)
-                                             (fetch $Double.inner_24)
-                                             (suspend
-                                                ((resume $Double.return_17)))
-                                             (apply 2)))))))
-                              (then $Double.inner_22
-                                 ((fetch $Double.outer_21)
-                                    (fetch $Double.inner_22)
-                                    (suspend
-                                       ((resume $Double.return_18)))
-                                    (apply 2)))))))
-                     (resume $Double.return_12))))))
+                                       (invoke Double#)))
+                                    (then $Double.inner_20
+                                       ((fetch $Double.outer_19)
+                                          (fetch $Double.inner_20)
+                                          (suspend
+                                             ((resume $Double.return_13)))
+                                          (apply 2)))))))
+                              (invoke toStringDouble)))
+                           (then $Double.inner_18
+                              ((fetch $Double.outer_17)
+                                 (fetch $Double.inner_18)
+                                 (suspend
+                                    ((resume $Double.return_12)))
+                                 (apply 2)))))))
+                     (invoke putStr))))))
          (resume $Double.return_11)))
       (resume $Double.return_10))))

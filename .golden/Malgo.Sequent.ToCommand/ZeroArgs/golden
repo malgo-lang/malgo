@@ -1,119 +1,101 @@
 ((one
    $ZeroArgs.return_33
-   ((do $ZeroArgs.return_38
-      ((lambda
-         ($ZeroArgs.param_28 $ZeroArgs.return_34)
-         ((do $ZeroArgs.return_35
-            ((fetch $ZeroArgs.param_28)
-               (construct tuple 1)
-               (select
-                  (#ZeroArgs.$__6
-                     ((do $ZeroArgs.return_37
-                        ((do $ZeroArgs.return_36
-                           ((suspend
-                              ((resume $ZeroArgs.return_36)))
-                              (invoke Int32#)))
-                           (push 1_i32)
-                           (suspend
-                              ((resume $ZeroArgs.return_37)))
-                           (apply 2)))
-                        (resume $ZeroArgs.return_35))))))
-            (resume $ZeroArgs.return_34)))
-         (construct tuple 0)
-         (suspend
-            ((resume $ZeroArgs.return_38)))
-         (apply 2)))
-      (resume $ZeroArgs.return_33)))
+   ((lambda
+      ($ZeroArgs.param_28 $ZeroArgs.return_34)
+      ((do $ZeroArgs.return_35
+         ((fetch $ZeroArgs.param_28)
+            (construct tuple 1)
+            (select
+               (#ZeroArgs.$__6
+                  ((suspend
+                     ((push 1_i32)
+                        (suspend
+                           ((resume $ZeroArgs.return_35)))
+                        (apply 2)))
+                     (invoke Int32#))))))
+         (resume $ZeroArgs.return_34)))
+      (construct tuple 0)
+      (suspend
+         ((resume $ZeroArgs.return_33)))
+      (apply 2)))
    (id
-      $ZeroArgs.return_39
+      $ZeroArgs.return_36
       ((lambda
-         ($ZeroArgs.param_29 $ZeroArgs.return_40)
-         ((do $ZeroArgs.return_41
+         ($ZeroArgs.param_29 $ZeroArgs.return_37)
+         ((do $ZeroArgs.return_38
             ((fetch $ZeroArgs.param_29)
                (construct tuple 1)
                (select
                   (#ZeroArgs.x_1
-                     ((do $ZeroArgs.return_44
-                        ((lambda
-                           ($ZeroArgs.param_30 $ZeroArgs.return_42)
-                           ((do $ZeroArgs.return_43
-                              ((fetch $ZeroArgs.param_30)
-                                 (construct tuple 1)
-                                 (select
-                                    (#ZeroArgs.$__11
-                                       ((fetch #ZeroArgs.x_1)
-                                          (resume $ZeroArgs.return_43))))))
-                              (resume $ZeroArgs.return_42)))
-                           (construct tuple 0)
-                           (suspend
-                              ((resume $ZeroArgs.return_44)))
-                           (apply 2)))
-                        (resume $ZeroArgs.return_41))))))
-            (resume $ZeroArgs.return_40)))
-         (resume $ZeroArgs.return_39)))
+                     ((lambda
+                        ($ZeroArgs.param_30 $ZeroArgs.return_39)
+                        ((do $ZeroArgs.return_40
+                           ((fetch $ZeroArgs.param_30)
+                              (construct tuple 1)
+                              (select
+                                 (#ZeroArgs.$__11
+                                    ((fetch #ZeroArgs.x_1)
+                                       (resume $ZeroArgs.return_40))))))
+                           (resume $ZeroArgs.return_39)))
+                        (construct tuple 0)
+                        (suspend
+                           ((resume $ZeroArgs.return_38)))
+                        (apply 2))))))
+            (resume $ZeroArgs.return_37)))
+         (resume $ZeroArgs.return_36)))
    (main
-      $ZeroArgs.return_45
-      ((do $ZeroArgs.return_57
-         ((lambda
-            ($ZeroArgs.param_31 $ZeroArgs.return_46)
-            ((do $ZeroArgs.return_47
-               ((fetch $ZeroArgs.param_31)
-                  (construct tuple 1)
-                  (select
-                     (#ZeroArgs.$__25
-                        ((lambda
-                           ($ZeroArgs.param_32 $ZeroArgs.return_48)
-                           ((do $ZeroArgs.return_49
-                              ((fetch $ZeroArgs.param_32)
-                                 (construct tuple 1)
-                                 (select
-                                    (#ZeroArgs.$__24
-                                       ((do $ZeroArgs.return_56
-                                          ((do $ZeroArgs.return_50
+      $ZeroArgs.return_41
+      ((lambda
+         ($ZeroArgs.param_31 $ZeroArgs.return_42)
+         ((do $ZeroArgs.return_43
+            ((fetch $ZeroArgs.param_31)
+               (construct tuple 1)
+               (select
+                  (#ZeroArgs.$__25
+                     ((lambda
+                        ($ZeroArgs.param_32 $ZeroArgs.return_44)
+                        ((do $ZeroArgs.return_45
+                           ((fetch $ZeroArgs.param_32)
+                              (construct tuple 1)
+                              (select
+                                 (#ZeroArgs.$__24
+                                    ((suspend
+                                       ((then $ZeroArgs.outer_55
+                                          ((do $ZeroArgs.return_46
                                              ((suspend
-                                                ((resume $ZeroArgs.return_50)))
-                                                (invoke printString)))
-                                             (then $ZeroArgs.outer_64
-                                                ((do $ZeroArgs.return_55
-                                                   ((do $ZeroArgs.return_51
+                                                ((then $ZeroArgs.outer_59
+                                                   ((do $ZeroArgs.return_47
                                                       ((suspend
-                                                         ((resume $ZeroArgs.return_51)))
-                                                         (invoke toStringInt32)))
-                                                      (then $ZeroArgs.outer_68
-                                                         ((do $ZeroArgs.return_54
-                                                            ((do $ZeroArgs.return_52
+                                                         ((then $ZeroArgs.outer_61
+                                                            ((do $ZeroArgs.return_48
                                                                ((suspend
-                                                                  ((resume $ZeroArgs.return_52)))
-                                                                  (invoke id)))
-                                                               (then $ZeroArgs.outer_70
-                                                                  ((do $ZeroArgs.return_53
-                                                                     ((suspend
-                                                                        ((resume $ZeroArgs.return_53)))
-                                                                        (invoke one)))
-                                                                     (then $ZeroArgs.inner_71
-                                                                        ((fetch $ZeroArgs.outer_70)
-                                                                           (fetch $ZeroArgs.inner_71)
-                                                                           (suspend
-                                                                              ((resume $ZeroArgs.return_54)))
-                                                                           (apply 2)))))))
-                                                            (then $ZeroArgs.inner_69
-                                                               ((fetch $ZeroArgs.outer_68)
-                                                                  (fetch $ZeroArgs.inner_69)
-                                                                  (suspend
-                                                                     ((resume $ZeroArgs.return_55)))
-                                                                  (apply 2)))))))
-                                                   (then $ZeroArgs.inner_65
-                                                      ((fetch $ZeroArgs.outer_64)
-                                                         (fetch $ZeroArgs.inner_65)
-                                                         (suspend
-                                                            ((resume $ZeroArgs.return_56)))
-                                                         (apply 2)))))))
-                                          (resume $ZeroArgs.return_49))))))
-                              (resume $ZeroArgs.return_48)))
-                           (resume $ZeroArgs.return_47))))))
-               (resume $ZeroArgs.return_46)))
-            (construct tuple 0)
-            (suspend
-               ((resume $ZeroArgs.return_57)))
-            (apply 2)))
-         (resume $ZeroArgs.return_45))))
+                                                                  ((resume $ZeroArgs.return_48)))
+                                                                  (invoke one)))
+                                                               (then $ZeroArgs.inner_62
+                                                                  ((fetch $ZeroArgs.outer_61)
+                                                                     (fetch $ZeroArgs.inner_62)
+                                                                     (suspend
+                                                                        ((resume $ZeroArgs.return_47)))
+                                                                     (apply 2)))))))
+                                                         (invoke id)))
+                                                      (then $ZeroArgs.inner_60
+                                                         ((fetch $ZeroArgs.outer_59)
+                                                            (fetch $ZeroArgs.inner_60)
+                                                            (suspend
+                                                               ((resume $ZeroArgs.return_46)))
+                                                            (apply 2)))))))
+                                                (invoke toStringInt32)))
+                                             (then $ZeroArgs.inner_56
+                                                ((fetch $ZeroArgs.outer_55)
+                                                   (fetch $ZeroArgs.inner_56)
+                                                   (suspend
+                                                      ((resume $ZeroArgs.return_45)))
+                                                   (apply 2)))))))
+                                       (invoke printString))))))
+                           (resume $ZeroArgs.return_44)))
+                        (resume $ZeroArgs.return_43))))))
+            (resume $ZeroArgs.return_42)))
+         (construct tuple 0)
+         (suspend
+            ((resume $ZeroArgs.return_41)))
+         (apply 2))))

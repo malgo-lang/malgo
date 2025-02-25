@@ -22,65 +22,51 @@
                (construct tuple 1)
                (select
                   (#TestPolySynonym.$__39
-                     ((do $TestPolySynonym.return_59
-                        ((object
-                           ((fst
-                              ((do $TestPolySynonym.return_50
-                                 ((do $TestPolySynonym.return_49
-                                    ((suspend
-                                       ((resume $TestPolySynonym.return_49)))
-                                       (invoke Int32#)))
-                                    (push 1_i32)
+                     ((object
+                        ((fst
+                           ((do $TestPolySynonym.return_51
+                              ((suspend
+                                 ((push 1_i32)
                                     (suspend
-                                       ((resume $TestPolySynonym.return_50)))
+                                       ((resume $TestPolySynonym.return_51)))
                                     (apply 2)))
-                                 (resume $TestPolySynonym.return_48)))
-                              (snd
-                                 ((do $TestPolySynonym.return_52
-                                    ((do $TestPolySynonym.return_51
-                                       ((suspend
-                                          ((resume $TestPolySynonym.return_51)))
-                                          (invoke String#)))
-                                       (push "hoge")
+                                 (invoke Int32#)))
+                              (resume $TestPolySynonym.return_50)))
+                           (snd
+                              ((do $TestPolySynonym.return_52
+                                 ((suspend
+                                    ((push "hoge")
                                        (suspend
                                           ((resume $TestPolySynonym.return_52)))
                                        (apply 2)))
-                                    (resume $TestPolySynonym.return_48)))))
-                           (then #TestPolySynonym.x_7
-                              ((do $TestPolySynonym.return_58
-                                 ((do $TestPolySynonym.return_56
-                                    ((do $TestPolySynonym.return_53
-                                       ((suspend
-                                          ((resume $TestPolySynonym.return_53)))
-                                          (invoke |>)))
-                                       (then $TestPolySynonym.outer_60
-                                          ((do $TestPolySynonym.return_55
-                                             ((do $TestPolySynonym.return_54
-                                                ((suspend
-                                                   ((resume $TestPolySynonym.return_54)))
-                                                   (invoke first)))
-                                                (fetch #TestPolySynonym.x_7)
-                                                (suspend
-                                                   ((resume $TestPolySynonym.return_55)))
-                                                (apply 2)))
-                                             (then $TestPolySynonym.inner_61
-                                                ((fetch $TestPolySynonym.outer_60)
-                                                   (fetch $TestPolySynonym.inner_61)
-                                                   (suspend
-                                                      ((resume $TestPolySynonym.return_56)))
-                                                   (apply 2)))))))
-                                    (then $TestPolySynonym.outer_62
-                                       ((do $TestPolySynonym.return_57
-                                          ((suspend
-                                             ((resume $TestPolySynonym.return_57)))
-                                             (invoke printInt32)))
-                                          (then $TestPolySynonym.inner_63
-                                             ((fetch $TestPolySynonym.outer_62)
-                                                (fetch $TestPolySynonym.inner_63)
-                                                (suspend
-                                                   ((resume $TestPolySynonym.return_58)))
-                                                (apply 2)))))))
-                                 (resume $TestPolySynonym.return_59)))))
-                        (resume $TestPolySynonym.return_47))))))
+                                    (invoke String#)))
+                                 (resume $TestPolySynonym.return_50)))))
+                        (then #TestPolySynonym.x_7
+                           ((suspend
+                              ((then $TestPolySynonym.outer_53
+                                 ((do $TestPolySynonym.return_49
+                                    ((suspend
+                                       ((fetch #TestPolySynonym.x_7)
+                                          (suspend
+                                             ((resume $TestPolySynonym.return_49)))
+                                          (apply 2)))
+                                       (invoke first)))
+                                    (then $TestPolySynonym.inner_54
+                                       ((fetch $TestPolySynonym.outer_53)
+                                          (fetch $TestPolySynonym.inner_54)
+                                          (suspend
+                                             ((then $TestPolySynonym.outer_55
+                                                ((do $TestPolySynonym.return_48
+                                                   ((suspend
+                                                      ((resume $TestPolySynonym.return_48)))
+                                                      (invoke printInt32)))
+                                                   (then $TestPolySynonym.inner_56
+                                                      ((fetch $TestPolySynonym.outer_55)
+                                                         (fetch $TestPolySynonym.inner_56)
+                                                         (suspend
+                                                            ((resume $TestPolySynonym.return_47)))
+                                                         (apply 2)))))))
+                                          (apply 2)))))))
+                              (invoke |>))))))))
             (resume $TestPolySynonym.return_46)))
          (resume $TestPolySynonym.return_45))))

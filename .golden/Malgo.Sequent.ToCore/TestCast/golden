@@ -12,54 +12,33 @@
                      ())
                   (select
                      (#TestCast.$__26
-                        (cut
-                           (do $TestCast.return_44
-                              (cut
-                                 (do $TestCast.return_31
-                                    (invoke printInt32 $TestCast.return_31))
-                                 (apply
-                                    ((do $TestCast.return_43
-                                       (cut
-                                          (do $TestCast.return_32
-                                             (invoke malgo_unsafe_cast $TestCast.return_32))
-                                          (apply
-                                             ((do $TestCast.return_42
-                                                (cut
-                                                   (do $TestCast.return_34
-                                                      (cut
-                                                         (do $TestCast.return_33
-                                                            (invoke malgo_read_vector $TestCast.return_33))
+                        (invoke printInt32
+                           (apply
+                              ((do $TestCast.return_31
+                                 (invoke malgo_unsafe_cast
+                                    (apply
+                                       ((do $TestCast.return_32
+                                          (invoke malgo_read_vector
+                                             (apply
+                                                (2_i64)
+                                                ((apply
+                                                   ((do $TestCast.return_33
+                                                      (invoke malgo_new_vector
                                                          (apply
-                                                            (2_i64)
-                                                            ($TestCast.return_34))))
-                                                   (apply
-                                                      ((do $TestCast.return_41
-                                                         (cut
-                                                            (do $TestCast.return_36
-                                                               (cut
-                                                                  (do $TestCast.return_35
-                                                                     (invoke malgo_new_vector $TestCast.return_35))
-                                                                  (apply
-                                                                     (10_i64)
-                                                                     ($TestCast.return_36))))
-                                                            (apply
-                                                               ((do $TestCast.return_40
-                                                                  (cut
-                                                                     (do $TestCast.return_37
-                                                                        (invoke malgo_unsafe_cast $TestCast.return_37))
+                                                            (10_i64)
+                                                            ((apply
+                                                               ((do $TestCast.return_34
+                                                                  (invoke malgo_unsafe_cast
                                                                      (apply
-                                                                        ((do $TestCast.return_39
-                                                                           (cut
-                                                                              (do $TestCast.return_38
-                                                                                 (invoke Int32# $TestCast.return_38))
+                                                                        ((do $TestCast.return_35
+                                                                           (invoke Int32#
                                                                               (apply
                                                                                  (5_i32)
-                                                                                 ($TestCast.return_39)))))
-                                                                        ($TestCast.return_40)))))
-                                                               ($TestCast.return_41)))))
-                                                      ($TestCast.return_42)))))
-                                             ($TestCast.return_43)))))
-                                    ($TestCast.return_44))))
-                           $TestCast.return_30)))))
+                                                                                 ($TestCast.return_35)))))
+                                                                        ($TestCast.return_34)))))
+                                                               ($TestCast.return_33)))))))
+                                                   ($TestCast.return_32)))))))
+                                       ($TestCast.return_31)))))
+                              ($TestCast.return_30)))))))
             $TestCast.return_29))
       $TestCast.return_28)))

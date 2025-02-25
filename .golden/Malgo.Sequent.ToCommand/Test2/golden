@@ -7,78 +7,64 @@
             (construct tuple 1)
             (select
                ((R ())
-                  ((do $Test2.return_29
-                     ((suspend
-                        ((resume $Test2.return_29)))
-                        (invoke B)))
-                     (resume $Test2.return_28)))
+                  ((suspend
+                     ((resume $Test2.return_28)))
+                     (invoke B)))
                (#Test2.a_0
                   ((fetch #Test2.a_0)
                      (resume $Test2.return_28))))))
          (resume $Test2.return_27)))
       (resume $Test2.return_26)))
    (main
-      $Test2.return_30
+      $Test2.return_29
       ((lambda
-         ($Test2.param_24 $Test2.return_31)
-         ((do $Test2.return_32
+         ($Test2.param_24 $Test2.return_30)
+         ((do $Test2.return_31
             ((fetch $Test2.param_24)
                (construct tuple 1)
                (select
                   (#Test2.$__22
-                     ((do $Test2.return_42
-                        ((lambda
-                           ($Test2.param_25 $Test2.return_33)
-                           ((do $Test2.return_34
-                              ((fetch $Test2.param_25)
-                                 (construct tuple 1)
-                                 (select
-                                    ((B ())
-                                       ((do $Test2.return_36
-                                          ((do $Test2.return_35
-                                             ((suspend
-                                                ((resume $Test2.return_35)))
-                                                (invoke malgo_print_string)))
-                                             (push "OK")
-                                             (suspend
-                                                ((resume $Test2.return_36)))
-                                             (apply 2)))
-                                          (resume $Test2.return_34)))
-                                    (#Test2.__1
-                                       ((do $Test2.return_38
-                                          ((do $Test2.return_37
-                                             ((suspend
-                                                ((resume $Test2.return_37)))
-                                                (invoke malgo_print_string)))
-                                             (push "WRONG")
-                                             (suspend
-                                                ((resume $Test2.return_38)))
-                                             (apply 2)))
-                                          (resume $Test2.return_34))))))
-                              (resume $Test2.return_33)))
-                           (then $Test2.outer_45
-                              ((do $Test2.return_41
-                                 ((do $Test2.return_39
+                     ((lambda
+                        ($Test2.param_25 $Test2.return_34)
+                        ((do $Test2.return_35
+                           ((fetch $Test2.param_25)
+                              (construct tuple 1)
+                              (select
+                                 ((B ())
                                     ((suspend
-                                       ((resume $Test2.return_39)))
-                                       (invoke rtob)))
-                                    (then $Test2.outer_47
-                                       ((do $Test2.return_40
-                                          ((suspend
-                                             ((resume $Test2.return_40)))
-                                             (invoke R)))
-                                          (then $Test2.inner_48
-                                             ((fetch $Test2.outer_47)
-                                                (fetch $Test2.inner_48)
-                                                (suspend
-                                                   ((resume $Test2.return_41)))
-                                                (apply 2)))))))
-                                 (then $Test2.inner_46
-                                    ((fetch $Test2.outer_45)
-                                       (fetch $Test2.inner_46)
-                                       (suspend
-                                          ((resume $Test2.return_42)))
-                                       (apply 2)))))))
-                        (resume $Test2.return_32))))))
-            (resume $Test2.return_31)))
-         (resume $Test2.return_30))))
+                                       ((push "OK")
+                                          (suspend
+                                             ((resume $Test2.return_35)))
+                                          (apply 2)))
+                                       (invoke malgo_print_string)))
+                                 (#Test2.__1
+                                    ((suspend
+                                       ((push "WRONG")
+                                          (suspend
+                                             ((resume $Test2.return_35)))
+                                          (apply 2)))
+                                       (invoke malgo_print_string))))))
+                           (resume $Test2.return_34)))
+                        (then $Test2.outer_38
+                           ((do $Test2.return_32
+                              ((suspend
+                                 ((then $Test2.outer_40
+                                    ((do $Test2.return_33
+                                       ((suspend
+                                          ((resume $Test2.return_33)))
+                                          (invoke R)))
+                                       (then $Test2.inner_41
+                                          ((fetch $Test2.outer_40)
+                                             (fetch $Test2.inner_41)
+                                             (suspend
+                                                ((resume $Test2.return_32)))
+                                             (apply 2)))))))
+                                 (invoke rtob)))
+                              (then $Test2.inner_39
+                                 ((fetch $Test2.outer_38)
+                                    (fetch $Test2.inner_39)
+                                    (suspend
+                                       ((resume $Test2.return_31)))
+                                    (apply 2))))))))))
+            (resume $Test2.return_30)))
+         (resume $Test2.return_29))))

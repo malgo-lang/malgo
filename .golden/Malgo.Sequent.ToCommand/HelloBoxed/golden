@@ -7,90 +7,74 @@
             (construct tuple 1)
             (select
                (#HelloBoxed.x_1
-                  ((do $HelloBoxed.return_29
-                     ((do $HelloBoxed.return_28
-                        ((suspend
-                           ((resume $HelloBoxed.return_28)))
-                           (invoke String#)))
-                        (fetch #HelloBoxed.x_1)
+                  ((suspend
+                     ((fetch #HelloBoxed.x_1)
                         (suspend
-                           ((resume $HelloBoxed.return_29)))
+                           ((resume $HelloBoxed.return_27)))
                         (apply 2)))
-                     (resume $HelloBoxed.return_27))))))
+                     (invoke String#))))))
          (resume $HelloBoxed.return_26)))
       (resume $HelloBoxed.return_25)))
    (putStrLn
-      $HelloBoxed.return_30
+      $HelloBoxed.return_28
       ((lambda
-         ($HelloBoxed.param_22 $HelloBoxed.return_31)
-         ((do $HelloBoxed.return_32
+         ($HelloBoxed.param_22 $HelloBoxed.return_29)
+         ((do $HelloBoxed.return_30
             ((fetch $HelloBoxed.param_22)
                (construct tuple 1)
                (select
                   ((String#
                      (#HelloBoxed.str_0))
-                     ((do $HelloBoxed.return_38
-                        ((lambda
-                           ($HelloBoxed.tmp_23 $HelloBoxed.return_33)
-                           ((do $HelloBoxed.return_35
-                              ((do $HelloBoxed.return_34
-                                 ((suspend
-                                    ((resume $HelloBoxed.return_34)))
-                                    (invoke malgo_newline)))
-                                 (construct tuple 0)
+                     ((lambda
+                        ($HelloBoxed.tmp_23 $HelloBoxed.return_32)
+                        ((do $HelloBoxed.return_33
+                           ((suspend
+                              ((construct tuple 0)
                                  (suspend
-                                    ((resume $HelloBoxed.return_35)))
+                                    ((resume $HelloBoxed.return_33)))
                                  (apply 2)))
-                              (resume $HelloBoxed.return_33)))
-                           (then $HelloBoxed.outer_46
-                              ((do $HelloBoxed.return_37
-                                 ((do $HelloBoxed.return_36
-                                    ((suspend
-                                       ((resume $HelloBoxed.return_36)))
-                                       (invoke malgo_print_string)))
-                                    (fetch #HelloBoxed.str_0)
+                              (invoke malgo_newline)))
+                           (resume $HelloBoxed.return_32)))
+                        (then $HelloBoxed.outer_38
+                           ((do $HelloBoxed.return_31
+                              ((suspend
+                                 ((fetch #HelloBoxed.str_0)
                                     (suspend
-                                       ((resume $HelloBoxed.return_37)))
+                                       ((resume $HelloBoxed.return_31)))
                                     (apply 2)))
-                                 (then $HelloBoxed.inner_47
-                                    ((fetch $HelloBoxed.outer_46)
-                                       (fetch $HelloBoxed.inner_47)
-                                       (suspend
-                                          ((resume $HelloBoxed.return_38)))
-                                       (apply 2)))))))
-                        (resume $HelloBoxed.return_32))))))
-            (resume $HelloBoxed.return_31)))
-         (resume $HelloBoxed.return_30)))
+                                 (invoke malgo_print_string)))
+                              (then $HelloBoxed.inner_39
+                                 ((fetch $HelloBoxed.outer_38)
+                                    (fetch $HelloBoxed.inner_39)
+                                    (suspend
+                                       ((resume $HelloBoxed.return_30)))
+                                    (apply 2))))))))))
+            (resume $HelloBoxed.return_29)))
+         (resume $HelloBoxed.return_28)))
    (main
-      $HelloBoxed.return_39
+      $HelloBoxed.return_34
       ((lambda
-         ($HelloBoxed.param_24 $HelloBoxed.return_40)
-         ((do $HelloBoxed.return_41
+         ($HelloBoxed.param_24 $HelloBoxed.return_35)
+         ((do $HelloBoxed.return_36
             ((fetch $HelloBoxed.param_24)
                (construct tuple 1)
                (select
                   (#HelloBoxed.$__20
-                     ((do $HelloBoxed.return_45
-                        ((do $HelloBoxed.return_42
-                           ((suspend
-                              ((resume $HelloBoxed.return_42)))
-                              (invoke putStrLn)))
-                           (then $HelloBoxed.outer_48
-                              ((do $HelloBoxed.return_44
-                                 ((do $HelloBoxed.return_43
-                                    ((suspend
-                                       ((resume $HelloBoxed.return_43)))
-                                       (invoke String#)))
-                                    (push "Hello, world")
+                     ((suspend
+                        ((then $HelloBoxed.outer_40
+                           ((do $HelloBoxed.return_37
+                              ((suspend
+                                 ((push "Hello, world")
                                     (suspend
-                                       ((resume $HelloBoxed.return_44)))
+                                       ((resume $HelloBoxed.return_37)))
                                     (apply 2)))
-                                 (then $HelloBoxed.inner_49
-                                    ((fetch $HelloBoxed.outer_48)
-                                       (fetch $HelloBoxed.inner_49)
-                                       (suspend
-                                          ((resume $HelloBoxed.return_45)))
-                                       (apply 2)))))))
-                        (resume $HelloBoxed.return_41))))))
-            (resume $HelloBoxed.return_40)))
-         (resume $HelloBoxed.return_39))))
+                                 (invoke String#)))
+                              (then $HelloBoxed.inner_41
+                                 ((fetch $HelloBoxed.outer_40)
+                                    (fetch $HelloBoxed.inner_41)
+                                    (suspend
+                                       ((resume $HelloBoxed.return_36)))
+                                    (apply 2)))))))
+                        (invoke putStrLn))))))
+            (resume $HelloBoxed.return_35)))
+         (resume $HelloBoxed.return_34))))
