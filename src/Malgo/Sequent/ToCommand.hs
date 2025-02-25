@@ -68,7 +68,7 @@ instance (State Uniq :> es) => Convert (Consumer Zero) (Eff es Code) where
     pure $ [C.Proj range field] <> consumer
   convert (Then range name consumer) = do
     consumer <- convert consumer
-    pure [C.Then range name consumer]
+    pure $ C.Assign range name : consumer
   convert (Finish range) = pure [C.Finish range]
   convert (Select range branches) = do
     branches <- traverse convert branches

@@ -25,7 +25,7 @@ data Program = Program
   deriving stock (Show)
 
 instance ToSExpr Program where
-  toSExpr (Program defs) = S.L $ map (\(_, name, return, body) -> toSExpr (name, return, body)) defs
+  toSExpr (Program defs) = S.L $ map (\(_, name, return, body) -> S.L $ toSExpr name : toSExpr return : map toSExpr body) defs
 
 type Code = [Command]
 
@@ -75,10 +75,10 @@ data Command
     --
     -- @({E field: code, ...} : S, _, Proj(field, return)) -> (S, E, code : return)@
     Proj Range Text
-  | -- | Then assigns a value to a variable.
+  | -- | Assign assigns a value to a variable.
     --
-    -- @(value : S, E, Then(name, code)) -> (S, E {name = value}, code)@
-    Then Range Name Code
+    -- @(value : S, E, Assign(name) : C) -> (S, E {name = value}, C)@
+    Assign Range Name
   | -- | Finish finishes the evaluation.
     --
     -- @(value : S, E, Finish) -> exit with value@
@@ -103,14 +103,14 @@ instance ToSExpr Command where
   toSExpr (Fetch _ name) = S.L [S.A "fetch", toSExpr name]
   toSExpr (Push _ lit) = S.L [S.A "push", toSExpr lit]
   toSExpr (Construct _ tag n) = S.L [S.A "construct", toSExpr tag, S.A $ S.Int (fromIntegral n) Nothing]
-  toSExpr (Lambda _ names code) = S.L [S.A "lambda", S.L $ map toSExpr names, toSExpr code]
-  toSExpr (Object _ fields) = S.L [S.A "object", S.L $ map (\(k, v) -> S.L [toSExpr k, toSExpr v]) $ Map.toList fields]
-  toSExpr (Do _ name code) = S.L [S.A "do", toSExpr name, toSExpr code]
-  toSExpr (Suspend code) = S.L [S.A "suspend", S.L $ map toSExpr code]
+  toSExpr (Lambda _ names code) = S.L $ [S.A "lambda", toSExpr names] <> map toSExpr code
+  toSExpr (Object _ fields) = S.L [S.A "object", S.L $ map (\(k, v) -> S.L $ toSExpr k : map toSExpr v) $ Map.toList fields]
+  toSExpr (Do _ name code) = S.L $ [S.A "do", toSExpr name] <> map toSExpr code
+  toSExpr (Suspend code) = S.L $ S.A "suspend" : map toSExpr code
   toSExpr (Resume _ name) = S.L [S.A "resume", toSExpr name]
   toSExpr (Apply _ n) = S.L [S.A "apply", S.A $ S.Int (fromIntegral n) Nothing]
   toSExpr (Proj _ field) = S.L [S.A "proj", toSExpr field]
-  toSExpr (Then _ name code) = S.L [S.A "then", toSExpr name, toSExpr code]
+  toSExpr (Assign _ name) = S.L [S.A "assign", toSExpr name]
   toSExpr (Finish _) = S.A "finish"
   toSExpr (Primitive _ name) = S.L [S.A "primitive", toSExpr name]
   toSExpr (Select _ branches) = S.L $ S.A "select" : map toSExpr branches
@@ -124,7 +124,7 @@ data Branch = Branch
   deriving stock (Show)
 
 instance ToSExpr Branch where
-  toSExpr (Branch _ pattern code) = S.L [toSExpr pattern, toSExpr code]
+  toSExpr (Branch _ pattern code) = S.L $ toSExpr pattern : map toSExpr code
 
 lintProgram :: Program -> Eff es (Either (CallStack, LintError) ())
 lintProgram Program {definitions} = do
@@ -173,9 +173,9 @@ lintCode (cmd@(Apply _ _) : code) = do
   unless (null code) $ throwError $ UnexpectedContinueOfCode cmd
 lintCode (cmd@(Proj _ _) : code) = do
   unless (null code) $ throwError $ UnexpectedContinueOfCode cmd
-lintCode (cmd@(Then _ _ body) : code) = do
-  lintCode body
-  unless (null code) $ throwError $ UnexpectedContinueOfCode cmd
+lintCode (cmd@(Assign _ _) : code) = do
+  lintCode code
+  when (null code) $ throwError $ UnexpectedEndOfCode cmd
 lintCode (cmd@(Finish _) : code) = do
   unless (null code) $ throwError $ UnexpectedContinueOfCode cmd
 lintCode (cmd@(Primitive _ _) : code) = do
