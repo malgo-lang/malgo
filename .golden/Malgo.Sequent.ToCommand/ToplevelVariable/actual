@@ -1,175 +1,175 @@
 ((one
    $ToplevelVariable.return_86
-   ((suspend
-      ((push 1_i32)
-         (suspend
-            ((resume $ToplevelVariable.return_86)))
-         (apply 2)))
-      (invoke Int32#)))
+   (suspend
+      (push 1_i32)
+      (suspend
+         (resume $ToplevelVariable.return_86))
+      (apply 2))
+   (invoke Int32#))
    (constId
       $ToplevelVariable.return_87
-      ((suspend
-         ((then $ToplevelVariable.outer_109
-            ((do $ToplevelVariable.return_88
-               ((suspend
-                  ((resume $ToplevelVariable.return_88)))
-                  (invoke identity)))
-               (then $ToplevelVariable.inner_110
-                  ((fetch $ToplevelVariable.outer_109)
-                     (fetch $ToplevelVariable.inner_110)
-                     (suspend
-                        ((resume $ToplevelVariable.return_87)))
-                     (apply 2)))))))
-         (invoke const)))
+      (suspend
+         (assign $ToplevelVariable.outer_109)
+         (do $ToplevelVariable.return_88
+            (suspend
+               (resume $ToplevelVariable.return_88))
+            (invoke identity))
+         (assign $ToplevelVariable.inner_110)
+         (fetch $ToplevelVariable.outer_109)
+         (fetch $ToplevelVariable.inner_110)
+         (suspend
+            (resume $ToplevelVariable.return_87))
+         (apply 2))
+      (invoke const))
    (comp
       $ToplevelVariable.return_89
-      ((lambda
+      (lambda
          ($ToplevelVariable.param_82 $ToplevelVariable.return_91)
-         ((do $ToplevelVariable.return_92
-            ((fetch $ToplevelVariable.param_82)
-               (construct tuple 1)
-               (select
-                  ((Nothing ())
-                     ((suspend
-                        ((resume $ToplevelVariable.return_92)))
-                        (invoke Nothing)))
-                  ((Just
-                     (#ToplevelVariable.x_1))
-                     ((suspend
-                        ((resume $ToplevelVariable.return_92)))
-                        (invoke Nothing))))))
-            (resume $ToplevelVariable.return_91)))
-         (then $ToplevelVariable.outer_111
-            ((do $ToplevelVariable.return_90
-               ((suspend
-                  ((construct tuple 0)
-                     (suspend
-                        ((resume $ToplevelVariable.return_90)))
-                     (apply 2)))
-                  (invoke Just)))
-               (then $ToplevelVariable.inner_112
-                  ((fetch $ToplevelVariable.outer_111)
-                     (fetch $ToplevelVariable.inner_112)
-                     (suspend
-                        ((resume $ToplevelVariable.return_89)))
-                     (apply 2)))))))
+         (do $ToplevelVariable.return_92
+            (fetch $ToplevelVariable.param_82)
+            (construct tuple 1)
+            (select
+               ((Nothing ())
+                  (suspend
+                     (resume $ToplevelVariable.return_92))
+                  (invoke Nothing))
+               ((Just
+                  (#ToplevelVariable.x_1))
+                  (suspend
+                     (resume $ToplevelVariable.return_92))
+                  (invoke Nothing))))
+         (resume $ToplevelVariable.return_91))
+      (assign $ToplevelVariable.outer_111)
+      (do $ToplevelVariable.return_90
+         (suspend
+            (construct tuple 0)
+            (suspend
+               (resume $ToplevelVariable.return_90))
+            (apply 2))
+         (invoke Just))
+      (assign $ToplevelVariable.inner_112)
+      (fetch $ToplevelVariable.outer_111)
+      (fetch $ToplevelVariable.inner_112)
+      (suspend
+         (resume $ToplevelVariable.return_89))
+      (apply 2))
    (addOne
       $ToplevelVariable.return_93
-      ((suspend
-         ((then $ToplevelVariable.outer_113
-            ((do $ToplevelVariable.return_94
-               ((suspend
-                  ((resume $ToplevelVariable.return_94)))
-                  (invoke one)))
-               (then $ToplevelVariable.inner_114
-                  ((fetch $ToplevelVariable.outer_113)
-                     (fetch $ToplevelVariable.inner_114)
-                     (suspend
-                        ((resume $ToplevelVariable.return_93)))
-                     (apply 2)))))))
-         (invoke addInt32)))
+      (suspend
+         (assign $ToplevelVariable.outer_113)
+         (do $ToplevelVariable.return_94
+            (suspend
+               (resume $ToplevelVariable.return_94))
+            (invoke one))
+         (assign $ToplevelVariable.inner_114)
+         (fetch $ToplevelVariable.outer_113)
+         (fetch $ToplevelVariable.inner_114)
+         (suspend
+            (resume $ToplevelVariable.return_93))
+         (apply 2))
+      (invoke addInt32))
    (main
       $ToplevelVariable.return_95
-      ((lambda
+      (lambda
          ($ToplevelVariable.param_83 $ToplevelVariable.return_96)
-         ((do $ToplevelVariable.return_97
-            ((fetch $ToplevelVariable.param_83)
-               (construct tuple 1)
-               (select
-                  (#ToplevelVariable.$__81
-                     ((lambda
-                        ($ToplevelVariable.tmp_84 $ToplevelVariable.return_103)
-                        ((do $ToplevelVariable.return_104
-                           ((suspend
-                              ((then $ToplevelVariable.outer_123
-                                 ((do $ToplevelVariable.return_105
-                                    ((suspend
-                                       ((then $ToplevelVariable.outer_125
-                                          ((do $ToplevelVariable.return_108
-                                             ((suspend
-                                                ((resume $ToplevelVariable.return_108)))
-                                                (invoke const)))
-                                             (then $ToplevelVariable.inner_126
-                                                ((fetch $ToplevelVariable.outer_125)
-                                                   (fetch $ToplevelVariable.inner_126)
-                                                   (suspend
-                                                      ((then $ToplevelVariable.outer_129
-                                                         ((do $ToplevelVariable.return_106
-                                                            ((suspend
-                                                               ((then $ToplevelVariable.outer_131
-                                                                  ((do $ToplevelVariable.return_107
-                                                                     ((suspend
-                                                                        ((resume $ToplevelVariable.return_107)))
-                                                                        (invoke one)))
-                                                                     (then $ToplevelVariable.inner_132
-                                                                        ((fetch $ToplevelVariable.outer_131)
-                                                                           (fetch $ToplevelVariable.inner_132)
-                                                                           (suspend
-                                                                              ((resume $ToplevelVariable.return_106)))
-                                                                           (apply 2)))))))
-                                                               (invoke addOne)))
-                                                            (then $ToplevelVariable.inner_130
-                                                               ((fetch $ToplevelVariable.outer_129)
-                                                                  (fetch $ToplevelVariable.inner_130)
-                                                                  (suspend
-                                                                     ((resume $ToplevelVariable.return_105)))
-                                                                  (apply 2)))))))
-                                                   (apply 2)))))))
-                                       (invoke constId)))
-                                    (then $ToplevelVariable.inner_124
-                                       ((fetch $ToplevelVariable.outer_123)
-                                          (fetch $ToplevelVariable.inner_124)
-                                          (suspend
-                                             ((resume $ToplevelVariable.return_104)))
-                                          (apply 2)))))))
-                              (invoke printInt32)))
-                           (resume $ToplevelVariable.return_103)))
-                        (then $ToplevelVariable.outer_137
-                           ((do $ToplevelVariable.return_98
-                              ((lambda
-                                 ($ToplevelVariable.param_85 $ToplevelVariable.return_100)
-                                 ((do $ToplevelVariable.return_101
-                                    ((fetch $ToplevelVariable.param_85)
-                                       (construct tuple 1)
-                                       (select
-                                          ((Nothing ())
-                                             ((suspend
-                                                ((then $ToplevelVariable.outer_139
-                                                   ((do $ToplevelVariable.return_102
-                                                      ((suspend
-                                                         ((push "OK")
-                                                            (suspend
-                                                               ((resume $ToplevelVariable.return_102)))
-                                                            (apply 2)))
-                                                         (invoke String#)))
-                                                      (then $ToplevelVariable.inner_140
-                                                         ((fetch $ToplevelVariable.outer_139)
-                                                            (fetch $ToplevelVariable.inner_140)
-                                                            (suspend
-                                                               ((resume $ToplevelVariable.return_101)))
-                                                            (apply 2)))))))
-                                                (invoke printString)))
-                                          ((Just
-                                             (#ToplevelVariable.__2))
-                                             ((construct tuple 0)
-                                                (resume $ToplevelVariable.return_101))))))
-                                    (resume $ToplevelVariable.return_100)))
-                                 (then $ToplevelVariable.outer_141
-                                    ((do $ToplevelVariable.return_99
-                                       ((suspend
-                                          ((resume $ToplevelVariable.return_99)))
-                                          (invoke comp)))
-                                       (then $ToplevelVariable.inner_142
-                                          ((fetch $ToplevelVariable.outer_141)
-                                             (fetch $ToplevelVariable.inner_142)
-                                             (suspend
-                                                ((resume $ToplevelVariable.return_98)))
-                                             (apply 2)))))))
-                              (then $ToplevelVariable.inner_138
-                                 ((fetch $ToplevelVariable.outer_137)
-                                    (fetch $ToplevelVariable.inner_138)
+         (do $ToplevelVariable.return_97
+            (fetch $ToplevelVariable.param_83)
+            (construct tuple 1)
+            (select
+               (#ToplevelVariable.$__81
+                  (lambda
+                     ($ToplevelVariable.tmp_84 $ToplevelVariable.return_103)
+                     (do $ToplevelVariable.return_104
+                        (suspend
+                           (assign $ToplevelVariable.outer_123)
+                           (do $ToplevelVariable.return_105
+                              (suspend
+                                 (assign $ToplevelVariable.outer_125)
+                                 (do $ToplevelVariable.return_108
                                     (suspend
-                                       ((resume $ToplevelVariable.return_97)))
-                                    (apply 2))))))))))
-            (resume $ToplevelVariable.return_96)))
-         (resume $ToplevelVariable.return_95))))
+                                       (resume $ToplevelVariable.return_108))
+                                    (invoke const))
+                                 (assign $ToplevelVariable.inner_126)
+                                 (fetch $ToplevelVariable.outer_125)
+                                 (fetch $ToplevelVariable.inner_126)
+                                 (suspend
+                                    (assign $ToplevelVariable.outer_129)
+                                    (do $ToplevelVariable.return_106
+                                       (suspend
+                                          (assign $ToplevelVariable.outer_131)
+                                          (do $ToplevelVariable.return_107
+                                             (suspend
+                                                (resume $ToplevelVariable.return_107))
+                                             (invoke one))
+                                          (assign $ToplevelVariable.inner_132)
+                                          (fetch $ToplevelVariable.outer_131)
+                                          (fetch $ToplevelVariable.inner_132)
+                                          (suspend
+                                             (resume $ToplevelVariable.return_106))
+                                          (apply 2))
+                                       (invoke addOne))
+                                    (assign $ToplevelVariable.inner_130)
+                                    (fetch $ToplevelVariable.outer_129)
+                                    (fetch $ToplevelVariable.inner_130)
+                                    (suspend
+                                       (resume $ToplevelVariable.return_105))
+                                    (apply 2))
+                                 (apply 2))
+                              (invoke constId))
+                           (assign $ToplevelVariable.inner_124)
+                           (fetch $ToplevelVariable.outer_123)
+                           (fetch $ToplevelVariable.inner_124)
+                           (suspend
+                              (resume $ToplevelVariable.return_104))
+                           (apply 2))
+                        (invoke printInt32))
+                     (resume $ToplevelVariable.return_103))
+                  (assign $ToplevelVariable.outer_137)
+                  (do $ToplevelVariable.return_98
+                     (lambda
+                        ($ToplevelVariable.param_85 $ToplevelVariable.return_100)
+                        (do $ToplevelVariable.return_101
+                           (fetch $ToplevelVariable.param_85)
+                           (construct tuple 1)
+                           (select
+                              ((Nothing ())
+                                 (suspend
+                                    (assign $ToplevelVariable.outer_139)
+                                    (do $ToplevelVariable.return_102
+                                       (suspend
+                                          (push "OK")
+                                          (suspend
+                                             (resume $ToplevelVariable.return_102))
+                                          (apply 2))
+                                       (invoke String#))
+                                    (assign $ToplevelVariable.inner_140)
+                                    (fetch $ToplevelVariable.outer_139)
+                                    (fetch $ToplevelVariable.inner_140)
+                                    (suspend
+                                       (resume $ToplevelVariable.return_101))
+                                    (apply 2))
+                                 (invoke printString))
+                              ((Just
+                                 (#ToplevelVariable.__2))
+                                 (construct tuple 0)
+                                 (resume $ToplevelVariable.return_101))))
+                        (resume $ToplevelVariable.return_100))
+                     (assign $ToplevelVariable.outer_141)
+                     (do $ToplevelVariable.return_99
+                        (suspend
+                           (resume $ToplevelVariable.return_99))
+                        (invoke comp))
+                     (assign $ToplevelVariable.inner_142)
+                     (fetch $ToplevelVariable.outer_141)
+                     (fetch $ToplevelVariable.inner_142)
+                     (suspend
+                        (resume $ToplevelVariable.return_98))
+                     (apply 2))
+                  (assign $ToplevelVariable.inner_138)
+                  (fetch $ToplevelVariable.outer_137)
+                  (fetch $ToplevelVariable.inner_138)
+                  (suspend
+                     (resume $ToplevelVariable.return_97))
+                  (apply 2))))
+         (resume $ToplevelVariable.return_96))
+      (resume $ToplevelVariable.return_95)))

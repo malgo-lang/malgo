@@ -1,376 +1,376 @@
 ((toStringInt32#
    $ToplevelVariableNoImport.return_183
-   ((lambda
+   (lambda
       ($ToplevelVariableNoImport.param_167 $ToplevelVariableNoImport.return_184)
-      ((do $ToplevelVariableNoImport.return_185
-         ((fetch $ToplevelVariableNoImport.param_167)
-            (construct tuple 1)
-            (select
-               (#ToplevelVariableNoImport.x_14
-                  ((suspend
-                     ((fetch #ToplevelVariableNoImport.x_14)
-                        (suspend
-                           ((resume $ToplevelVariableNoImport.return_185)))
-                        (apply 2)))
-                     (invoke malgo_int32_t_to_string))))))
-         (resume $ToplevelVariableNoImport.return_184)))
-      (resume $ToplevelVariableNoImport.return_183)))
+      (do $ToplevelVariableNoImport.return_185
+         (fetch $ToplevelVariableNoImport.param_167)
+         (construct tuple 1)
+         (select
+            (#ToplevelVariableNoImport.x_14
+               (suspend
+                  (fetch #ToplevelVariableNoImport.x_14)
+                  (suspend
+                     (resume $ToplevelVariableNoImport.return_185))
+                  (apply 2))
+               (invoke malgo_int32_t_to_string))))
+      (resume $ToplevelVariableNoImport.return_184))
+   (resume $ToplevelVariableNoImport.return_183))
    (toStringInt32
       $ToplevelVariableNoImport.return_186
-      ((lambda
+      (lambda
          ($ToplevelVariableNoImport.param_168 $ToplevelVariableNoImport.return_187)
-         ((do $ToplevelVariableNoImport.return_188
-            ((fetch $ToplevelVariableNoImport.param_168)
-               (construct tuple 1)
-               (select
-                  ((Int32#
-                     (#ToplevelVariableNoImport.x_15))
-                     ((suspend
-                        ((then $ToplevelVariableNoImport.outer_239
-                           ((do $ToplevelVariableNoImport.return_189
-                              ((suspend
-                                 ((fetch #ToplevelVariableNoImport.x_15)
-                                    (suspend
-                                       ((resume $ToplevelVariableNoImport.return_189)))
-                                    (apply 2)))
-                                 (invoke toStringInt32#)))
-                              (then $ToplevelVariableNoImport.inner_240
-                                 ((fetch $ToplevelVariableNoImport.outer_239)
-                                    (fetch $ToplevelVariableNoImport.inner_240)
-                                    (suspend
-                                       ((resume $ToplevelVariableNoImport.return_188)))
-                                    (apply 2)))))))
-                        (invoke String#))))))
-            (resume $ToplevelVariableNoImport.return_187)))
-         (resume $ToplevelVariableNoImport.return_186)))
+         (do $ToplevelVariableNoImport.return_188
+            (fetch $ToplevelVariableNoImport.param_168)
+            (construct tuple 1)
+            (select
+               ((Int32#
+                  (#ToplevelVariableNoImport.x_15))
+                  (suspend
+                     (assign $ToplevelVariableNoImport.outer_239)
+                     (do $ToplevelVariableNoImport.return_189
+                        (suspend
+                           (fetch #ToplevelVariableNoImport.x_15)
+                           (suspend
+                              (resume $ToplevelVariableNoImport.return_189))
+                           (apply 2))
+                        (invoke toStringInt32#))
+                     (assign $ToplevelVariableNoImport.inner_240)
+                     (fetch $ToplevelVariableNoImport.outer_239)
+                     (fetch $ToplevelVariableNoImport.inner_240)
+                     (suspend
+                        (resume $ToplevelVariableNoImport.return_188))
+                     (apply 2))
+                  (invoke String#))))
+         (resume $ToplevelVariableNoImport.return_187))
+      (resume $ToplevelVariableNoImport.return_186))
    (printString#
       $ToplevelVariableNoImport.return_190
-      ((lambda
+      (lambda
          ($ToplevelVariableNoImport.param_169 $ToplevelVariableNoImport.return_191)
-         ((do $ToplevelVariableNoImport.return_192
-            ((fetch $ToplevelVariableNoImport.param_169)
-               (construct tuple 1)
-               (select
-                  (#ToplevelVariableNoImport.x_4
-                     ((suspend
-                        ((fetch #ToplevelVariableNoImport.x_4)
-                           (suspend
-                              ((resume $ToplevelVariableNoImport.return_192)))
-                           (apply 2)))
-                        (invoke malgo_print_string))))))
-            (resume $ToplevelVariableNoImport.return_191)))
-         (resume $ToplevelVariableNoImport.return_190)))
+         (do $ToplevelVariableNoImport.return_192
+            (fetch $ToplevelVariableNoImport.param_169)
+            (construct tuple 1)
+            (select
+               (#ToplevelVariableNoImport.x_4
+                  (suspend
+                     (fetch #ToplevelVariableNoImport.x_4)
+                     (suspend
+                        (resume $ToplevelVariableNoImport.return_192))
+                     (apply 2))
+                  (invoke malgo_print_string))))
+         (resume $ToplevelVariableNoImport.return_191))
+      (resume $ToplevelVariableNoImport.return_190))
    (printString
       $ToplevelVariableNoImport.return_193
-      ((lambda
+      (lambda
          ($ToplevelVariableNoImport.param_170 $ToplevelVariableNoImport.return_194)
-         ((do $ToplevelVariableNoImport.return_195
-            ((fetch $ToplevelVariableNoImport.param_170)
-               (construct tuple 1)
-               (select
-                  ((String#
-                     (#ToplevelVariableNoImport.x_5))
-                     ((suspend
-                        ((fetch #ToplevelVariableNoImport.x_5)
-                           (suspend
-                              ((resume $ToplevelVariableNoImport.return_195)))
-                           (apply 2)))
-                        (invoke printString#))))))
-            (resume $ToplevelVariableNoImport.return_194)))
-         (resume $ToplevelVariableNoImport.return_193)))
+         (do $ToplevelVariableNoImport.return_195
+            (fetch $ToplevelVariableNoImport.param_170)
+            (construct tuple 1)
+            (select
+               ((String#
+                  (#ToplevelVariableNoImport.x_5))
+                  (suspend
+                     (fetch #ToplevelVariableNoImport.x_5)
+                     (suspend
+                        (resume $ToplevelVariableNoImport.return_195))
+                     (apply 2))
+                  (invoke printString#))))
+         (resume $ToplevelVariableNoImport.return_194))
+      (resume $ToplevelVariableNoImport.return_193))
    (printInt32
       $ToplevelVariableNoImport.return_196
-      ((lambda
+      (lambda
          ($ToplevelVariableNoImport.param_171 $ToplevelVariableNoImport.return_197)
-         ((do $ToplevelVariableNoImport.return_198
-            ((fetch $ToplevelVariableNoImport.param_171)
-               (construct tuple 1)
-               (select
-                  (#ToplevelVariableNoImport.i_13
-                     ((suspend
-                        ((then $ToplevelVariableNoImport.outer_241
-                           ((do $ToplevelVariableNoImport.return_199
-                              ((suspend
-                                 ((fetch #ToplevelVariableNoImport.i_13)
-                                    (suspend
-                                       ((resume $ToplevelVariableNoImport.return_199)))
-                                    (apply 2)))
-                                 (invoke toStringInt32)))
-                              (then $ToplevelVariableNoImport.inner_242
-                                 ((fetch $ToplevelVariableNoImport.outer_241)
-                                    (fetch $ToplevelVariableNoImport.inner_242)
-                                    (suspend
-                                       ((resume $ToplevelVariableNoImport.return_198)))
-                                    (apply 2)))))))
-                        (invoke printString))))))
-            (resume $ToplevelVariableNoImport.return_197)))
-         (resume $ToplevelVariableNoImport.return_196)))
+         (do $ToplevelVariableNoImport.return_198
+            (fetch $ToplevelVariableNoImport.param_171)
+            (construct tuple 1)
+            (select
+               (#ToplevelVariableNoImport.i_13
+                  (suspend
+                     (assign $ToplevelVariableNoImport.outer_241)
+                     (do $ToplevelVariableNoImport.return_199
+                        (suspend
+                           (fetch #ToplevelVariableNoImport.i_13)
+                           (suspend
+                              (resume $ToplevelVariableNoImport.return_199))
+                           (apply 2))
+                        (invoke toStringInt32))
+                     (assign $ToplevelVariableNoImport.inner_242)
+                     (fetch $ToplevelVariableNoImport.outer_241)
+                     (fetch $ToplevelVariableNoImport.inner_242)
+                     (suspend
+                        (resume $ToplevelVariableNoImport.return_198))
+                     (apply 2))
+                  (invoke printString))))
+         (resume $ToplevelVariableNoImport.return_197))
+      (resume $ToplevelVariableNoImport.return_196))
    (one
       $ToplevelVariableNoImport.return_200
-      ((suspend
-         ((push 1_i32)
-            (suspend
-               ((resume $ToplevelVariableNoImport.return_200)))
-            (apply 2)))
-         (invoke Int32#)))
+      (suspend
+         (push 1_i32)
+         (suspend
+            (resume $ToplevelVariableNoImport.return_200))
+         (apply 2))
+      (invoke Int32#))
    (identity
       $ToplevelVariableNoImport.return_201
-      ((lambda
+      (lambda
          ($ToplevelVariableNoImport.param_172 $ToplevelVariableNoImport.return_202)
-         ((do $ToplevelVariableNoImport.return_203
-            ((fetch $ToplevelVariableNoImport.param_172)
-               (construct tuple 1)
-               (select
-                  (#ToplevelVariableNoImport.x_7
-                     ((fetch #ToplevelVariableNoImport.x_7)
-                        (resume $ToplevelVariableNoImport.return_203))))))
-            (resume $ToplevelVariableNoImport.return_202)))
-         (resume $ToplevelVariableNoImport.return_201)))
+         (do $ToplevelVariableNoImport.return_203
+            (fetch $ToplevelVariableNoImport.param_172)
+            (construct tuple 1)
+            (select
+               (#ToplevelVariableNoImport.x_7
+                  (fetch #ToplevelVariableNoImport.x_7)
+                  (resume $ToplevelVariableNoImport.return_203))))
+         (resume $ToplevelVariableNoImport.return_202))
+      (resume $ToplevelVariableNoImport.return_201))
    (const
       $ToplevelVariableNoImport.return_204
-      ((lambda
+      (lambda
          ($ToplevelVariableNoImport.param_173 $ToplevelVariableNoImport.return_205)
-         ((lambda
+         (lambda
             ($ToplevelVariableNoImport.param_174 $ToplevelVariableNoImport.return_206)
-            ((do $ToplevelVariableNoImport.return_207
-               ((fetch $ToplevelVariableNoImport.param_173)
-                  (fetch $ToplevelVariableNoImport.param_174)
-                  (construct tuple 2)
-                  (select
-                     ((tuple
-                        (#ToplevelVariableNoImport.a_10 #ToplevelVariableNoImport.__11))
-                        ((fetch #ToplevelVariableNoImport.a_10)
-                           (resume $ToplevelVariableNoImport.return_207))))))
-               (resume $ToplevelVariableNoImport.return_206)))
-            (resume $ToplevelVariableNoImport.return_205)))
-         (resume $ToplevelVariableNoImport.return_204)))
+            (do $ToplevelVariableNoImport.return_207
+               (fetch $ToplevelVariableNoImport.param_173)
+               (fetch $ToplevelVariableNoImport.param_174)
+               (construct tuple 2)
+               (select
+                  ((tuple
+                     (#ToplevelVariableNoImport.a_10 #ToplevelVariableNoImport.__11))
+                     (fetch #ToplevelVariableNoImport.a_10)
+                     (resume $ToplevelVariableNoImport.return_207))))
+            (resume $ToplevelVariableNoImport.return_206))
+         (resume $ToplevelVariableNoImport.return_205))
+      (resume $ToplevelVariableNoImport.return_204))
    (constId
       $ToplevelVariableNoImport.return_208
-      ((suspend
-         ((then $ToplevelVariableNoImport.outer_243
-            ((do $ToplevelVariableNoImport.return_209
-               ((suspend
-                  ((resume $ToplevelVariableNoImport.return_209)))
-                  (invoke identity)))
-               (then $ToplevelVariableNoImport.inner_244
-                  ((fetch $ToplevelVariableNoImport.outer_243)
-                     (fetch $ToplevelVariableNoImport.inner_244)
-                     (suspend
-                        ((resume $ToplevelVariableNoImport.return_208)))
-                     (apply 2)))))))
-         (invoke const)))
+      (suspend
+         (assign $ToplevelVariableNoImport.outer_243)
+         (do $ToplevelVariableNoImport.return_209
+            (suspend
+               (resume $ToplevelVariableNoImport.return_209))
+            (invoke identity))
+         (assign $ToplevelVariableNoImport.inner_244)
+         (fetch $ToplevelVariableNoImport.outer_243)
+         (fetch $ToplevelVariableNoImport.inner_244)
+         (suspend
+            (resume $ToplevelVariableNoImport.return_208))
+         (apply 2))
+      (invoke const))
    (comp
       $ToplevelVariableNoImport.return_210
-      ((lambda
+      (lambda
          ($ToplevelVariableNoImport.param_175 $ToplevelVariableNoImport.return_212)
-         ((do $ToplevelVariableNoImport.return_213
-            ((fetch $ToplevelVariableNoImport.param_175)
-               (construct tuple 1)
-               (select
-                  ((Nothing ())
-                     ((suspend
-                        ((resume $ToplevelVariableNoImport.return_213)))
-                        (invoke Nothing)))
-                  ((Just
-                     (#ToplevelVariableNoImport.x_17))
-                     ((suspend
-                        ((resume $ToplevelVariableNoImport.return_213)))
-                        (invoke Nothing))))))
-            (resume $ToplevelVariableNoImport.return_212)))
-         (then $ToplevelVariableNoImport.outer_245
-            ((do $ToplevelVariableNoImport.return_211
-               ((suspend
-                  ((construct tuple 0)
-                     (suspend
-                        ((resume $ToplevelVariableNoImport.return_211)))
-                     (apply 2)))
-                  (invoke Just)))
-               (then $ToplevelVariableNoImport.inner_246
-                  ((fetch $ToplevelVariableNoImport.outer_245)
-                     (fetch $ToplevelVariableNoImport.inner_246)
-                     (suspend
-                        ((resume $ToplevelVariableNoImport.return_210)))
-                     (apply 2)))))))
+         (do $ToplevelVariableNoImport.return_213
+            (fetch $ToplevelVariableNoImport.param_175)
+            (construct tuple 1)
+            (select
+               ((Nothing ())
+                  (suspend
+                     (resume $ToplevelVariableNoImport.return_213))
+                  (invoke Nothing))
+               ((Just
+                  (#ToplevelVariableNoImport.x_17))
+                  (suspend
+                     (resume $ToplevelVariableNoImport.return_213))
+                  (invoke Nothing))))
+         (resume $ToplevelVariableNoImport.return_212))
+      (assign $ToplevelVariableNoImport.outer_245)
+      (do $ToplevelVariableNoImport.return_211
+         (suspend
+            (construct tuple 0)
+            (suspend
+               (resume $ToplevelVariableNoImport.return_211))
+            (apply 2))
+         (invoke Just))
+      (assign $ToplevelVariableNoImport.inner_246)
+      (fetch $ToplevelVariableNoImport.outer_245)
+      (fetch $ToplevelVariableNoImport.inner_246)
+      (suspend
+         (resume $ToplevelVariableNoImport.return_210))
+      (apply 2))
    (addInt32#
       $ToplevelVariableNoImport.return_214
-      ((lambda
+      (lambda
          ($ToplevelVariableNoImport.param_176 $ToplevelVariableNoImport.return_215)
-         ((lambda
+         (lambda
             ($ToplevelVariableNoImport.param_177 $ToplevelVariableNoImport.return_216)
-            ((do $ToplevelVariableNoImport.return_217
-               ((fetch $ToplevelVariableNoImport.param_176)
-                  (fetch $ToplevelVariableNoImport.param_177)
-                  (construct tuple 2)
-                  (select
-                     ((tuple
-                        (#ToplevelVariableNoImport.x_0 #ToplevelVariableNoImport.y_1))
-                        ((suspend
-                           ((fetch #ToplevelVariableNoImport.x_0)
-                              (suspend
-                                 ((fetch #ToplevelVariableNoImport.y_1)
-                                    (suspend
-                                       ((resume $ToplevelVariableNoImport.return_217)))
-                                    (apply 2)))
-                              (apply 2)))
-                           (invoke malgo_add_int32_t))))))
-               (resume $ToplevelVariableNoImport.return_216)))
-            (resume $ToplevelVariableNoImport.return_215)))
-         (resume $ToplevelVariableNoImport.return_214)))
+            (do $ToplevelVariableNoImport.return_217
+               (fetch $ToplevelVariableNoImport.param_176)
+               (fetch $ToplevelVariableNoImport.param_177)
+               (construct tuple 2)
+               (select
+                  ((tuple
+                     (#ToplevelVariableNoImport.x_0 #ToplevelVariableNoImport.y_1))
+                     (suspend
+                        (fetch #ToplevelVariableNoImport.x_0)
+                        (suspend
+                           (fetch #ToplevelVariableNoImport.y_1)
+                           (suspend
+                              (resume $ToplevelVariableNoImport.return_217))
+                           (apply 2))
+                        (apply 2))
+                     (invoke malgo_add_int32_t))))
+            (resume $ToplevelVariableNoImport.return_216))
+         (resume $ToplevelVariableNoImport.return_215))
+      (resume $ToplevelVariableNoImport.return_214))
    (addInt32
       $ToplevelVariableNoImport.return_218
-      ((lambda
+      (lambda
          ($ToplevelVariableNoImport.param_178 $ToplevelVariableNoImport.return_219)
-         ((lambda
+         (lambda
             ($ToplevelVariableNoImport.param_179 $ToplevelVariableNoImport.return_220)
-            ((do $ToplevelVariableNoImport.return_221
-               ((fetch $ToplevelVariableNoImport.param_178)
-                  (fetch $ToplevelVariableNoImport.param_179)
-                  (construct tuple 2)
-                  (select
-                     ((tuple
-                        ((Int32#
-                           (#ToplevelVariableNoImport.x_2))
-                           (Int32#
-                              (#ToplevelVariableNoImport.y_3))))
-                        ((suspend
-                           ((then $ToplevelVariableNoImport.outer_247
-                              ((do $ToplevelVariableNoImport.return_222
-                                 ((suspend
-                                    ((fetch #ToplevelVariableNoImport.x_2)
-                                       (suspend
-                                          ((fetch #ToplevelVariableNoImport.y_3)
-                                             (suspend
-                                                ((resume $ToplevelVariableNoImport.return_222)))
-                                             (apply 2)))
-                                       (apply 2)))
-                                    (invoke addInt32#)))
-                                 (then $ToplevelVariableNoImport.inner_248
-                                    ((fetch $ToplevelVariableNoImport.outer_247)
-                                       (fetch $ToplevelVariableNoImport.inner_248)
-                                       (suspend
-                                          ((resume $ToplevelVariableNoImport.return_221)))
-                                       (apply 2)))))))
-                           (invoke Int32#))))))
-               (resume $ToplevelVariableNoImport.return_220)))
-            (resume $ToplevelVariableNoImport.return_219)))
-         (resume $ToplevelVariableNoImport.return_218)))
+            (do $ToplevelVariableNoImport.return_221
+               (fetch $ToplevelVariableNoImport.param_178)
+               (fetch $ToplevelVariableNoImport.param_179)
+               (construct tuple 2)
+               (select
+                  ((tuple
+                     ((Int32#
+                        (#ToplevelVariableNoImport.x_2))
+                        (Int32#
+                           (#ToplevelVariableNoImport.y_3))))
+                     (suspend
+                        (assign $ToplevelVariableNoImport.outer_247)
+                        (do $ToplevelVariableNoImport.return_222
+                           (suspend
+                              (fetch #ToplevelVariableNoImport.x_2)
+                              (suspend
+                                 (fetch #ToplevelVariableNoImport.y_3)
+                                 (suspend
+                                    (resume $ToplevelVariableNoImport.return_222))
+                                 (apply 2))
+                              (apply 2))
+                           (invoke addInt32#))
+                        (assign $ToplevelVariableNoImport.inner_248)
+                        (fetch $ToplevelVariableNoImport.outer_247)
+                        (fetch $ToplevelVariableNoImport.inner_248)
+                        (suspend
+                           (resume $ToplevelVariableNoImport.return_221))
+                        (apply 2))
+                     (invoke Int32#))))
+            (resume $ToplevelVariableNoImport.return_220))
+         (resume $ToplevelVariableNoImport.return_219))
+      (resume $ToplevelVariableNoImport.return_218))
    (addOne
       $ToplevelVariableNoImport.return_223
-      ((suspend
-         ((then $ToplevelVariableNoImport.outer_249
-            ((do $ToplevelVariableNoImport.return_224
-               ((suspend
-                  ((resume $ToplevelVariableNoImport.return_224)))
-                  (invoke one)))
-               (then $ToplevelVariableNoImport.inner_250
-                  ((fetch $ToplevelVariableNoImport.outer_249)
-                     (fetch $ToplevelVariableNoImport.inner_250)
-                     (suspend
-                        ((resume $ToplevelVariableNoImport.return_223)))
-                     (apply 2)))))))
-         (invoke addInt32)))
+      (suspend
+         (assign $ToplevelVariableNoImport.outer_249)
+         (do $ToplevelVariableNoImport.return_224
+            (suspend
+               (resume $ToplevelVariableNoImport.return_224))
+            (invoke one))
+         (assign $ToplevelVariableNoImport.inner_250)
+         (fetch $ToplevelVariableNoImport.outer_249)
+         (fetch $ToplevelVariableNoImport.inner_250)
+         (suspend
+            (resume $ToplevelVariableNoImport.return_223))
+         (apply 2))
+      (invoke addInt32))
    (main
       $ToplevelVariableNoImport.return_225
-      ((lambda
+      (lambda
          ($ToplevelVariableNoImport.param_180 $ToplevelVariableNoImport.return_226)
-         ((do $ToplevelVariableNoImport.return_227
-            ((fetch $ToplevelVariableNoImport.param_180)
-               (construct tuple 1)
-               (select
-                  (#ToplevelVariableNoImport.$__166
-                     ((lambda
-                        ($ToplevelVariableNoImport.tmp_181 $ToplevelVariableNoImport.return_233)
-                        ((do $ToplevelVariableNoImport.return_234
-                           ((suspend
-                              ((then $ToplevelVariableNoImport.outer_259
-                                 ((do $ToplevelVariableNoImport.return_235
-                                    ((suspend
-                                       ((then $ToplevelVariableNoImport.outer_261
-                                          ((do $ToplevelVariableNoImport.return_238
-                                             ((suspend
-                                                ((resume $ToplevelVariableNoImport.return_238)))
-                                                (invoke const)))
-                                             (then $ToplevelVariableNoImport.inner_262
-                                                ((fetch $ToplevelVariableNoImport.outer_261)
-                                                   (fetch $ToplevelVariableNoImport.inner_262)
-                                                   (suspend
-                                                      ((then $ToplevelVariableNoImport.outer_265
-                                                         ((do $ToplevelVariableNoImport.return_236
-                                                            ((suspend
-                                                               ((then $ToplevelVariableNoImport.outer_267
-                                                                  ((do $ToplevelVariableNoImport.return_237
-                                                                     ((suspend
-                                                                        ((resume $ToplevelVariableNoImport.return_237)))
-                                                                        (invoke one)))
-                                                                     (then $ToplevelVariableNoImport.inner_268
-                                                                        ((fetch $ToplevelVariableNoImport.outer_267)
-                                                                           (fetch $ToplevelVariableNoImport.inner_268)
-                                                                           (suspend
-                                                                              ((resume $ToplevelVariableNoImport.return_236)))
-                                                                           (apply 2)))))))
-                                                               (invoke addOne)))
-                                                            (then $ToplevelVariableNoImport.inner_266
-                                                               ((fetch $ToplevelVariableNoImport.outer_265)
-                                                                  (fetch $ToplevelVariableNoImport.inner_266)
-                                                                  (suspend
-                                                                     ((resume $ToplevelVariableNoImport.return_235)))
-                                                                  (apply 2)))))))
-                                                   (apply 2)))))))
-                                       (invoke constId)))
-                                    (then $ToplevelVariableNoImport.inner_260
-                                       ((fetch $ToplevelVariableNoImport.outer_259)
-                                          (fetch $ToplevelVariableNoImport.inner_260)
-                                          (suspend
-                                             ((resume $ToplevelVariableNoImport.return_234)))
-                                          (apply 2)))))))
-                              (invoke printInt32)))
-                           (resume $ToplevelVariableNoImport.return_233)))
-                        (then $ToplevelVariableNoImport.outer_273
-                           ((do $ToplevelVariableNoImport.return_228
-                              ((lambda
-                                 ($ToplevelVariableNoImport.param_182 $ToplevelVariableNoImport.return_230)
-                                 ((do $ToplevelVariableNoImport.return_231
-                                    ((fetch $ToplevelVariableNoImport.param_182)
-                                       (construct tuple 1)
-                                       (select
-                                          ((Nothing ())
-                                             ((suspend
-                                                ((then $ToplevelVariableNoImport.outer_275
-                                                   ((do $ToplevelVariableNoImport.return_232
-                                                      ((suspend
-                                                         ((push "OK")
-                                                            (suspend
-                                                               ((resume $ToplevelVariableNoImport.return_232)))
-                                                            (apply 2)))
-                                                         (invoke String#)))
-                                                      (then $ToplevelVariableNoImport.inner_276
-                                                         ((fetch $ToplevelVariableNoImport.outer_275)
-                                                            (fetch $ToplevelVariableNoImport.inner_276)
-                                                            (suspend
-                                                               ((resume $ToplevelVariableNoImport.return_231)))
-                                                            (apply 2)))))))
-                                                (invoke printString)))
-                                          ((Just
-                                             (#ToplevelVariableNoImport.__18))
-                                             ((construct tuple 0)
-                                                (resume $ToplevelVariableNoImport.return_231))))))
-                                    (resume $ToplevelVariableNoImport.return_230)))
-                                 (then $ToplevelVariableNoImport.outer_277
-                                    ((do $ToplevelVariableNoImport.return_229
-                                       ((suspend
-                                          ((resume $ToplevelVariableNoImport.return_229)))
-                                          (invoke comp)))
-                                       (then $ToplevelVariableNoImport.inner_278
-                                          ((fetch $ToplevelVariableNoImport.outer_277)
-                                             (fetch $ToplevelVariableNoImport.inner_278)
-                                             (suspend
-                                                ((resume $ToplevelVariableNoImport.return_228)))
-                                             (apply 2)))))))
-                              (then $ToplevelVariableNoImport.inner_274
-                                 ((fetch $ToplevelVariableNoImport.outer_273)
-                                    (fetch $ToplevelVariableNoImport.inner_274)
+         (do $ToplevelVariableNoImport.return_227
+            (fetch $ToplevelVariableNoImport.param_180)
+            (construct tuple 1)
+            (select
+               (#ToplevelVariableNoImport.$__166
+                  (lambda
+                     ($ToplevelVariableNoImport.tmp_181 $ToplevelVariableNoImport.return_233)
+                     (do $ToplevelVariableNoImport.return_234
+                        (suspend
+                           (assign $ToplevelVariableNoImport.outer_259)
+                           (do $ToplevelVariableNoImport.return_235
+                              (suspend
+                                 (assign $ToplevelVariableNoImport.outer_261)
+                                 (do $ToplevelVariableNoImport.return_238
                                     (suspend
-                                       ((resume $ToplevelVariableNoImport.return_227)))
-                                    (apply 2))))))))))
-            (resume $ToplevelVariableNoImport.return_226)))
-         (resume $ToplevelVariableNoImport.return_225))))
+                                       (resume $ToplevelVariableNoImport.return_238))
+                                    (invoke const))
+                                 (assign $ToplevelVariableNoImport.inner_262)
+                                 (fetch $ToplevelVariableNoImport.outer_261)
+                                 (fetch $ToplevelVariableNoImport.inner_262)
+                                 (suspend
+                                    (assign $ToplevelVariableNoImport.outer_265)
+                                    (do $ToplevelVariableNoImport.return_236
+                                       (suspend
+                                          (assign $ToplevelVariableNoImport.outer_267)
+                                          (do $ToplevelVariableNoImport.return_237
+                                             (suspend
+                                                (resume $ToplevelVariableNoImport.return_237))
+                                             (invoke one))
+                                          (assign $ToplevelVariableNoImport.inner_268)
+                                          (fetch $ToplevelVariableNoImport.outer_267)
+                                          (fetch $ToplevelVariableNoImport.inner_268)
+                                          (suspend
+                                             (resume $ToplevelVariableNoImport.return_236))
+                                          (apply 2))
+                                       (invoke addOne))
+                                    (assign $ToplevelVariableNoImport.inner_266)
+                                    (fetch $ToplevelVariableNoImport.outer_265)
+                                    (fetch $ToplevelVariableNoImport.inner_266)
+                                    (suspend
+                                       (resume $ToplevelVariableNoImport.return_235))
+                                    (apply 2))
+                                 (apply 2))
+                              (invoke constId))
+                           (assign $ToplevelVariableNoImport.inner_260)
+                           (fetch $ToplevelVariableNoImport.outer_259)
+                           (fetch $ToplevelVariableNoImport.inner_260)
+                           (suspend
+                              (resume $ToplevelVariableNoImport.return_234))
+                           (apply 2))
+                        (invoke printInt32))
+                     (resume $ToplevelVariableNoImport.return_233))
+                  (assign $ToplevelVariableNoImport.outer_273)
+                  (do $ToplevelVariableNoImport.return_228
+                     (lambda
+                        ($ToplevelVariableNoImport.param_182 $ToplevelVariableNoImport.return_230)
+                        (do $ToplevelVariableNoImport.return_231
+                           (fetch $ToplevelVariableNoImport.param_182)
+                           (construct tuple 1)
+                           (select
+                              ((Nothing ())
+                                 (suspend
+                                    (assign $ToplevelVariableNoImport.outer_275)
+                                    (do $ToplevelVariableNoImport.return_232
+                                       (suspend
+                                          (push "OK")
+                                          (suspend
+                                             (resume $ToplevelVariableNoImport.return_232))
+                                          (apply 2))
+                                       (invoke String#))
+                                    (assign $ToplevelVariableNoImport.inner_276)
+                                    (fetch $ToplevelVariableNoImport.outer_275)
+                                    (fetch $ToplevelVariableNoImport.inner_276)
+                                    (suspend
+                                       (resume $ToplevelVariableNoImport.return_231))
+                                    (apply 2))
+                                 (invoke printString))
+                              ((Just
+                                 (#ToplevelVariableNoImport.__18))
+                                 (construct tuple 0)
+                                 (resume $ToplevelVariableNoImport.return_231))))
+                        (resume $ToplevelVariableNoImport.return_230))
+                     (assign $ToplevelVariableNoImport.outer_277)
+                     (do $ToplevelVariableNoImport.return_229
+                        (suspend
+                           (resume $ToplevelVariableNoImport.return_229))
+                        (invoke comp))
+                     (assign $ToplevelVariableNoImport.inner_278)
+                     (fetch $ToplevelVariableNoImport.outer_277)
+                     (fetch $ToplevelVariableNoImport.inner_278)
+                     (suspend
+                        (resume $ToplevelVariableNoImport.return_228))
+                     (apply 2))
+                  (assign $ToplevelVariableNoImport.inner_274)
+                  (fetch $ToplevelVariableNoImport.outer_273)
+                  (fetch $ToplevelVariableNoImport.inner_274)
+                  (suspend
+                     (resume $ToplevelVariableNoImport.return_227))
+                  (apply 2))))
+         (resume $ToplevelVariableNoImport.return_226))
+      (resume $ToplevelVariableNoImport.return_225)))

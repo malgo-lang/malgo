@@ -1,256 +1,256 @@
 ((show
    $TestArithDouble.return_105
-   ((lambda
+   (lambda
       ($TestArithDouble.param_91 $TestArithDouble.return_106)
-      ((do $TestArithDouble.return_107
-         ((fetch $TestArithDouble.param_91)
-            (construct tuple 1)
-            (select
-               (#TestArithDouble.x_9
-                  ((suspend
-                     ((then $TestArithDouble.outer_143
-                        ((do $TestArithDouble.return_108
-                           ((suspend
-                              ((fetch #TestArithDouble.x_9)
-                                 (suspend
-                                    ((resume $TestArithDouble.return_108)))
-                                 (apply 2)))
-                              (invoke toStringDouble#)))
-                           (then $TestArithDouble.inner_144
-                              ((fetch $TestArithDouble.outer_143)
-                                 (fetch $TestArithDouble.inner_144)
-                                 (suspend
-                                    ((resume $TestArithDouble.return_107)))
-                                 (apply 2)))))))
-                     (invoke String#))))))
-         (resume $TestArithDouble.return_106)))
-      (resume $TestArithDouble.return_105)))
+      (do $TestArithDouble.return_107
+         (fetch $TestArithDouble.param_91)
+         (construct tuple 1)
+         (select
+            (#TestArithDouble.x_9
+               (suspend
+                  (assign $TestArithDouble.outer_143)
+                  (do $TestArithDouble.return_108
+                     (suspend
+                        (fetch #TestArithDouble.x_9)
+                        (suspend
+                           (resume $TestArithDouble.return_108))
+                        (apply 2))
+                     (invoke toStringDouble#))
+                  (assign $TestArithDouble.inner_144)
+                  (fetch $TestArithDouble.outer_143)
+                  (fetch $TestArithDouble.inner_144)
+                  (suspend
+                     (resume $TestArithDouble.return_107))
+                  (apply 2))
+               (invoke String#))))
+      (resume $TestArithDouble.return_106))
+   (resume $TestArithDouble.return_105))
    (traceShowId
       $TestArithDouble.return_109
-      ((lambda
+      (lambda
          ($TestArithDouble.param_92 $TestArithDouble.return_110)
-         ((do $TestArithDouble.return_111
-            ((fetch $TestArithDouble.param_92)
-               (construct tuple 1)
-               (select
-                  (#TestArithDouble.x_10
-                     ((lambda
-                        ($TestArithDouble.tmp_93 $TestArithDouble.return_114)
-                        ((fetch #TestArithDouble.x_10)
-                           (resume $TestArithDouble.return_114)))
-                        (then $TestArithDouble.outer_147
-                           ((do $TestArithDouble.return_112
-                              ((suspend
-                                 ((then $TestArithDouble.outer_149
-                                    ((do $TestArithDouble.return_113
-                                       ((suspend
-                                          ((fetch #TestArithDouble.x_10)
-                                             (suspend
-                                                ((resume $TestArithDouble.return_113)))
-                                             (apply 2)))
-                                          (invoke show)))
-                                       (then $TestArithDouble.inner_150
-                                          ((fetch $TestArithDouble.outer_149)
-                                             (fetch $TestArithDouble.inner_150)
-                                             (suspend
-                                                ((resume $TestArithDouble.return_112)))
-                                             (apply 2)))))))
-                                 (invoke putStrLn)))
-                              (then $TestArithDouble.inner_148
-                                 ((fetch $TestArithDouble.outer_147)
-                                    (fetch $TestArithDouble.inner_148)
-                                    (suspend
-                                       ((resume $TestArithDouble.return_111)))
-                                    (apply 2))))))))))
-            (resume $TestArithDouble.return_110)))
-         (resume $TestArithDouble.return_109)))
+         (do $TestArithDouble.return_111
+            (fetch $TestArithDouble.param_92)
+            (construct tuple 1)
+            (select
+               (#TestArithDouble.x_10
+                  (lambda
+                     ($TestArithDouble.tmp_93 $TestArithDouble.return_114)
+                     (fetch #TestArithDouble.x_10)
+                     (resume $TestArithDouble.return_114))
+                  (assign $TestArithDouble.outer_147)
+                  (do $TestArithDouble.return_112
+                     (suspend
+                        (assign $TestArithDouble.outer_149)
+                        (do $TestArithDouble.return_113
+                           (suspend
+                              (fetch #TestArithDouble.x_10)
+                              (suspend
+                                 (resume $TestArithDouble.return_113))
+                              (apply 2))
+                           (invoke show))
+                        (assign $TestArithDouble.inner_150)
+                        (fetch $TestArithDouble.outer_149)
+                        (fetch $TestArithDouble.inner_150)
+                        (suspend
+                           (resume $TestArithDouble.return_112))
+                        (apply 2))
+                     (invoke putStrLn))
+                  (assign $TestArithDouble.inner_148)
+                  (fetch $TestArithDouble.outer_147)
+                  (fetch $TestArithDouble.inner_148)
+                  (suspend
+                     (resume $TestArithDouble.return_111))
+                  (apply 2))))
+         (resume $TestArithDouble.return_110))
+      (resume $TestArithDouble.return_109))
    (neg
       $TestArithDouble.return_115
-      ((lambda
+      (lambda
          ($TestArithDouble.param_94 $TestArithDouble.return_116)
-         ((do $TestArithDouble.return_117
-            ((fetch $TestArithDouble.param_94)
-               (construct tuple 1)
-               (select
-                  (#TestArithDouble.x_0
-                     ((suspend
-                        ((push 0.0_f64)
-                           (suspend
-                              ((fetch #TestArithDouble.x_0)
-                                 (suspend
-                                    ((resume $TestArithDouble.return_117)))
-                                 (apply 2)))
-                           (apply 2)))
-                        (invoke subDouble#))))))
-            (resume $TestArithDouble.return_116)))
-         (resume $TestArithDouble.return_115)))
+         (do $TestArithDouble.return_117
+            (fetch $TestArithDouble.param_94)
+            (construct tuple 1)
+            (select
+               (#TestArithDouble.x_0
+                  (suspend
+                     (push 0.0_f64)
+                     (suspend
+                        (fetch #TestArithDouble.x_0)
+                        (suspend
+                           (resume $TestArithDouble.return_117))
+                        (apply 2))
+                     (apply 2))
+                  (invoke subDouble#))))
+         (resume $TestArithDouble.return_116))
+      (resume $TestArithDouble.return_115))
    (mul
       $TestArithDouble.return_118
-      ((lambda
+      (lambda
          ($TestArithDouble.param_95 $TestArithDouble.return_119)
-         ((lambda
+         (lambda
             ($TestArithDouble.param_96 $TestArithDouble.return_120)
-            ((do $TestArithDouble.return_121
-               ((fetch $TestArithDouble.param_95)
-                  (fetch $TestArithDouble.param_96)
-                  (construct tuple 2)
-                  (select
-                     ((tuple
-                        (#TestArithDouble.x_3 #TestArithDouble.y_4))
-                        ((suspend
-                           ((fetch #TestArithDouble.x_3)
-                              (suspend
-                                 ((fetch #TestArithDouble.y_4)
-                                    (suspend
-                                       ((resume $TestArithDouble.return_121)))
-                                    (apply 2)))
-                              (apply 2)))
-                           (invoke mulDouble#))))))
-               (resume $TestArithDouble.return_120)))
-            (resume $TestArithDouble.return_119)))
-         (resume $TestArithDouble.return_118)))
+            (do $TestArithDouble.return_121
+               (fetch $TestArithDouble.param_95)
+               (fetch $TestArithDouble.param_96)
+               (construct tuple 2)
+               (select
+                  ((tuple
+                     (#TestArithDouble.x_3 #TestArithDouble.y_4))
+                     (suspend
+                        (fetch #TestArithDouble.x_3)
+                        (suspend
+                           (fetch #TestArithDouble.y_4)
+                           (suspend
+                              (resume $TestArithDouble.return_121))
+                           (apply 2))
+                        (apply 2))
+                     (invoke mulDouble#))))
+            (resume $TestArithDouble.return_120))
+         (resume $TestArithDouble.return_119))
+      (resume $TestArithDouble.return_118))
    (add
       $TestArithDouble.return_122
-      ((lambda
+      (lambda
          ($TestArithDouble.param_97 $TestArithDouble.return_123)
-         ((lambda
+         (lambda
             ($TestArithDouble.param_98 $TestArithDouble.return_124)
-            ((do $TestArithDouble.return_125
-               ((fetch $TestArithDouble.param_97)
-                  (fetch $TestArithDouble.param_98)
-                  (construct tuple 2)
-                  (select
-                     ((tuple
-                        (#TestArithDouble.x_7 #TestArithDouble.y_8))
-                        ((suspend
-                           ((fetch #TestArithDouble.x_7)
-                              (suspend
-                                 ((fetch #TestArithDouble.y_8)
-                                    (suspend
-                                       ((resume $TestArithDouble.return_125)))
-                                    (apply 2)))
-                              (apply 2)))
-                           (invoke addDouble#))))))
-               (resume $TestArithDouble.return_124)))
-            (resume $TestArithDouble.return_123)))
-         (resume $TestArithDouble.return_122)))
+            (do $TestArithDouble.return_125
+               (fetch $TestArithDouble.param_97)
+               (fetch $TestArithDouble.param_98)
+               (construct tuple 2)
+               (select
+                  ((tuple
+                     (#TestArithDouble.x_7 #TestArithDouble.y_8))
+                     (suspend
+                        (fetch #TestArithDouble.x_7)
+                        (suspend
+                           (fetch #TestArithDouble.y_8)
+                           (suspend
+                              (resume $TestArithDouble.return_125))
+                           (apply 2))
+                        (apply 2))
+                     (invoke addDouble#))))
+            (resume $TestArithDouble.return_124))
+         (resume $TestArithDouble.return_123))
+      (resume $TestArithDouble.return_122))
    (+
       $TestArithDouble.return_126
-      ((lambda
+      (lambda
          ($TestArithDouble.param_99 $TestArithDouble.return_127)
-         ((lambda
+         (lambda
             ($TestArithDouble.param_100 $TestArithDouble.return_128)
-            ((do $TestArithDouble.return_129
-               ((fetch $TestArithDouble.param_99)
-                  (fetch $TestArithDouble.param_100)
-                  (construct tuple 2)
-                  (select
-                     ((tuple
-                        (#TestArithDouble.x_5 #TestArithDouble.y_6))
-                        ((suspend
-                           ((fetch #TestArithDouble.x_5)
-                              (suspend
-                                 ((fetch #TestArithDouble.y_6)
-                                    (suspend
-                                       ((resume $TestArithDouble.return_129)))
-                                    (apply 2)))
-                              (apply 2)))
-                           (invoke addDouble#))))))
-               (resume $TestArithDouble.return_128)))
-            (resume $TestArithDouble.return_127)))
-         (resume $TestArithDouble.return_126)))
+            (do $TestArithDouble.return_129
+               (fetch $TestArithDouble.param_99)
+               (fetch $TestArithDouble.param_100)
+               (construct tuple 2)
+               (select
+                  ((tuple
+                     (#TestArithDouble.x_5 #TestArithDouble.y_6))
+                     (suspend
+                        (fetch #TestArithDouble.x_5)
+                        (suspend
+                           (fetch #TestArithDouble.y_6)
+                           (suspend
+                              (resume $TestArithDouble.return_129))
+                           (apply 2))
+                        (apply 2))
+                     (invoke addDouble#))))
+            (resume $TestArithDouble.return_128))
+         (resume $TestArithDouble.return_127))
+      (resume $TestArithDouble.return_126))
    (*
       $TestArithDouble.return_130
-      ((lambda
+      (lambda
          ($TestArithDouble.param_101 $TestArithDouble.return_131)
-         ((lambda
+         (lambda
             ($TestArithDouble.param_102 $TestArithDouble.return_132)
-            ((do $TestArithDouble.return_133
-               ((fetch $TestArithDouble.param_101)
-                  (fetch $TestArithDouble.param_102)
-                  (construct tuple 2)
-                  (select
-                     ((tuple
-                        (#TestArithDouble.x_1 #TestArithDouble.y_2))
-                        ((suspend
-                           ((fetch #TestArithDouble.x_1)
-                              (suspend
-                                 ((fetch #TestArithDouble.y_2)
-                                    (suspend
-                                       ((resume $TestArithDouble.return_133)))
-                                    (apply 2)))
-                              (apply 2)))
-                           (invoke mulDouble#))))))
-               (resume $TestArithDouble.return_132)))
-            (resume $TestArithDouble.return_131)))
-         (resume $TestArithDouble.return_130)))
+            (do $TestArithDouble.return_133
+               (fetch $TestArithDouble.param_101)
+               (fetch $TestArithDouble.param_102)
+               (construct tuple 2)
+               (select
+                  ((tuple
+                     (#TestArithDouble.x_1 #TestArithDouble.y_2))
+                     (suspend
+                        (fetch #TestArithDouble.x_1)
+                        (suspend
+                           (fetch #TestArithDouble.y_2)
+                           (suspend
+                              (resume $TestArithDouble.return_133))
+                           (apply 2))
+                        (apply 2))
+                     (invoke mulDouble#))))
+            (resume $TestArithDouble.return_132))
+         (resume $TestArithDouble.return_131))
+      (resume $TestArithDouble.return_130))
    (f
       $TestArithDouble.return_134
-      ((lambda
+      (lambda
          ($TestArithDouble.param_103 $TestArithDouble.return_135)
-         ((do $TestArithDouble.return_136
-            ((fetch $TestArithDouble.param_103)
-               (construct tuple 1)
-               (select
-                  (#TestArithDouble.x_11
-                     ((suspend
-                        ((then $TestArithDouble.outer_151
-                           ((do $TestArithDouble.return_137
-                              ((suspend
-                                 ((fetch #TestArithDouble.x_11)
-                                    (suspend
-                                       ((push 0.0_f64)
-                                          (suspend
-                                             ((resume $TestArithDouble.return_137)))
-                                          (apply 2)))
-                                    (apply 2)))
-                                 (invoke +)))
-                              (then $TestArithDouble.inner_152
-                                 ((fetch $TestArithDouble.outer_151)
-                                    (fetch $TestArithDouble.inner_152)
-                                    (suspend
-                                       ((fetch #TestArithDouble.x_11)
-                                          (suspend
-                                             ((resume $TestArithDouble.return_136)))
-                                          (apply 2)))
-                                    (apply 2)))))))
-                        (invoke *))))))
-            (resume $TestArithDouble.return_135)))
-         (resume $TestArithDouble.return_134)))
+         (do $TestArithDouble.return_136
+            (fetch $TestArithDouble.param_103)
+            (construct tuple 1)
+            (select
+               (#TestArithDouble.x_11
+                  (suspend
+                     (assign $TestArithDouble.outer_151)
+                     (do $TestArithDouble.return_137
+                        (suspend
+                           (fetch #TestArithDouble.x_11)
+                           (suspend
+                              (push 0.0_f64)
+                              (suspend
+                                 (resume $TestArithDouble.return_137))
+                              (apply 2))
+                           (apply 2))
+                        (invoke +))
+                     (assign $TestArithDouble.inner_152)
+                     (fetch $TestArithDouble.outer_151)
+                     (fetch $TestArithDouble.inner_152)
+                     (suspend
+                        (fetch #TestArithDouble.x_11)
+                        (suspend
+                           (resume $TestArithDouble.return_136))
+                        (apply 2))
+                     (apply 2))
+                  (invoke *))))
+         (resume $TestArithDouble.return_135))
+      (resume $TestArithDouble.return_134))
    (main
       $TestArithDouble.return_138
-      ((lambda
+      (lambda
          ($TestArithDouble.param_104 $TestArithDouble.return_139)
-         ((do $TestArithDouble.return_140
-            ((fetch $TestArithDouble.param_104)
-               (construct tuple 1)
-               (select
-                  (#TestArithDouble.$__90
-                     ((suspend
-                        ((then $TestArithDouble.outer_155
-                           ((do $TestArithDouble.return_141
-                              ((suspend
-                                 ((then $TestArithDouble.outer_157
-                                    ((do $TestArithDouble.return_142
-                                       ((suspend
-                                          ((push 0.5_f64)
-                                             (suspend
-                                                ((resume $TestArithDouble.return_142)))
-                                             (apply 2)))
-                                          (invoke f)))
-                                       (then $TestArithDouble.inner_158
-                                          ((fetch $TestArithDouble.outer_157)
-                                             (fetch $TestArithDouble.inner_158)
-                                             (suspend
-                                                ((resume $TestArithDouble.return_141)))
-                                             (apply 2)))))))
-                                 (invoke show)))
-                              (then $TestArithDouble.inner_156
-                                 ((fetch $TestArithDouble.outer_155)
-                                    (fetch $TestArithDouble.inner_156)
-                                    (suspend
-                                       ((resume $TestArithDouble.return_140)))
-                                    (apply 2)))))))
-                        (invoke putStrLn))))))
-            (resume $TestArithDouble.return_139)))
-         (resume $TestArithDouble.return_138))))
+         (do $TestArithDouble.return_140
+            (fetch $TestArithDouble.param_104)
+            (construct tuple 1)
+            (select
+               (#TestArithDouble.$__90
+                  (suspend
+                     (assign $TestArithDouble.outer_155)
+                     (do $TestArithDouble.return_141
+                        (suspend
+                           (assign $TestArithDouble.outer_157)
+                           (do $TestArithDouble.return_142
+                              (suspend
+                                 (push 0.5_f64)
+                                 (suspend
+                                    (resume $TestArithDouble.return_142))
+                                 (apply 2))
+                              (invoke f))
+                           (assign $TestArithDouble.inner_158)
+                           (fetch $TestArithDouble.outer_157)
+                           (fetch $TestArithDouble.inner_158)
+                           (suspend
+                              (resume $TestArithDouble.return_141))
+                           (apply 2))
+                        (invoke show))
+                     (assign $TestArithDouble.inner_156)
+                     (fetch $TestArithDouble.outer_155)
+                     (fetch $TestArithDouble.inner_156)
+                     (suspend
+                        (resume $TestArithDouble.return_140))
+                     (apply 2))
+                  (invoke putStrLn))))
+         (resume $TestArithDouble.return_139))
+      (resume $TestArithDouble.return_138)))

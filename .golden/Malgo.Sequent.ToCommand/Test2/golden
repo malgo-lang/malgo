@@ -1,70 +1,70 @@
 ((rtob
    $Test2.return_26
-   ((lambda
+   (lambda
       ($Test2.param_23 $Test2.return_27)
-      ((do $Test2.return_28
-         ((fetch $Test2.param_23)
-            (construct tuple 1)
-            (select
-               ((R ())
-                  ((suspend
-                     ((resume $Test2.return_28)))
-                     (invoke B)))
-               (#Test2.a_0
-                  ((fetch #Test2.a_0)
-                     (resume $Test2.return_28))))))
-         (resume $Test2.return_27)))
-      (resume $Test2.return_26)))
+      (do $Test2.return_28
+         (fetch $Test2.param_23)
+         (construct tuple 1)
+         (select
+            ((R ())
+               (suspend
+                  (resume $Test2.return_28))
+               (invoke B))
+            (#Test2.a_0
+               (fetch #Test2.a_0)
+               (resume $Test2.return_28))))
+      (resume $Test2.return_27))
+   (resume $Test2.return_26))
    (main
       $Test2.return_29
-      ((lambda
+      (lambda
          ($Test2.param_24 $Test2.return_30)
-         ((do $Test2.return_31
-            ((fetch $Test2.param_24)
-               (construct tuple 1)
-               (select
-                  (#Test2.$__22
-                     ((lambda
-                        ($Test2.param_25 $Test2.return_34)
-                        ((do $Test2.return_35
-                           ((fetch $Test2.param_25)
-                              (construct tuple 1)
-                              (select
-                                 ((B ())
-                                    ((suspend
-                                       ((push "OK")
-                                          (suspend
-                                             ((resume $Test2.return_35)))
-                                          (apply 2)))
-                                       (invoke malgo_print_string)))
-                                 (#Test2.__1
-                                    ((suspend
-                                       ((push "WRONG")
-                                          (suspend
-                                             ((resume $Test2.return_35)))
-                                          (apply 2)))
-                                       (invoke malgo_print_string))))))
-                           (resume $Test2.return_34)))
-                        (then $Test2.outer_38
-                           ((do $Test2.return_32
-                              ((suspend
-                                 ((then $Test2.outer_40
-                                    ((do $Test2.return_33
-                                       ((suspend
-                                          ((resume $Test2.return_33)))
-                                          (invoke R)))
-                                       (then $Test2.inner_41
-                                          ((fetch $Test2.outer_40)
-                                             (fetch $Test2.inner_41)
-                                             (suspend
-                                                ((resume $Test2.return_32)))
-                                             (apply 2)))))))
-                                 (invoke rtob)))
-                              (then $Test2.inner_39
-                                 ((fetch $Test2.outer_38)
-                                    (fetch $Test2.inner_39)
-                                    (suspend
-                                       ((resume $Test2.return_31)))
-                                    (apply 2))))))))))
-            (resume $Test2.return_30)))
-         (resume $Test2.return_29))))
+         (do $Test2.return_31
+            (fetch $Test2.param_24)
+            (construct tuple 1)
+            (select
+               (#Test2.$__22
+                  (lambda
+                     ($Test2.param_25 $Test2.return_34)
+                     (do $Test2.return_35
+                        (fetch $Test2.param_25)
+                        (construct tuple 1)
+                        (select
+                           ((B ())
+                              (suspend
+                                 (push "OK")
+                                 (suspend
+                                    (resume $Test2.return_35))
+                                 (apply 2))
+                              (invoke malgo_print_string))
+                           (#Test2.__1
+                              (suspend
+                                 (push "WRONG")
+                                 (suspend
+                                    (resume $Test2.return_35))
+                                 (apply 2))
+                              (invoke malgo_print_string))))
+                     (resume $Test2.return_34))
+                  (assign $Test2.outer_38)
+                  (do $Test2.return_32
+                     (suspend
+                        (assign $Test2.outer_40)
+                        (do $Test2.return_33
+                           (suspend
+                              (resume $Test2.return_33))
+                           (invoke R))
+                        (assign $Test2.inner_41)
+                        (fetch $Test2.outer_40)
+                        (fetch $Test2.inner_41)
+                        (suspend
+                           (resume $Test2.return_32))
+                        (apply 2))
+                     (invoke rtob))
+                  (assign $Test2.inner_39)
+                  (fetch $Test2.outer_38)
+                  (fetch $Test2.inner_39)
+                  (suspend
+                     (resume $Test2.return_31))
+                  (apply 2))))
+         (resume $Test2.return_30))
+      (resume $Test2.return_29)))

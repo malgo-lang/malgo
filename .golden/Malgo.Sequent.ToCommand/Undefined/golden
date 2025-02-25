@@ -1,55 +1,55 @@
 ((g
    $Undefined.return_22
-   ((lambda
+   (lambda
       ($Undefined.param_20 $Undefined.return_23)
-      ((do $Undefined.return_24
-         ((fetch $Undefined.param_20)
-            (construct tuple 1)
-            (select
-               (#Undefined.x_0
-                  ((suspend
-                     ((resume $Undefined.return_24)))
-                     (invoke undefined))))))
-         (resume $Undefined.return_23)))
-      (resume $Undefined.return_22)))
+      (do $Undefined.return_24
+         (fetch $Undefined.param_20)
+         (construct tuple 1)
+         (select
+            (#Undefined.x_0
+               (suspend
+                  (resume $Undefined.return_24))
+               (invoke undefined))))
+      (resume $Undefined.return_23))
+   (resume $Undefined.return_22))
    (main
       $Undefined.return_25
-      ((lambda
+      (lambda
          ($Undefined.param_21 $Undefined.return_26)
-         ((do $Undefined.return_27
-            ((fetch $Undefined.param_21)
-               (construct tuple 1)
-               (select
-                  (#Undefined.$__17
-                     ((suspend
-                        ((then #Undefined.x_1
-                           ((suspend
-                              ((fetch #Undefined.x_1)
+         (do $Undefined.return_27
+            (fetch $Undefined.param_21)
+            (construct tuple 1)
+            (select
+               (#Undefined.$__17
+                  (suspend
+                     (assign #Undefined.x_1)
+                     (suspend
+                        (fetch #Undefined.x_1)
+                        (suspend
+                           (assign #Undefined.y_2)
+                           (suspend
+                              (assign $Undefined.outer_30)
+                              (do $Undefined.return_28
                                  (suspend
-                                    ((then #Undefined.y_2
-                                       ((suspend
-                                          ((then $Undefined.outer_30
-                                             ((do $Undefined.return_28
-                                                ((suspend
-                                                   ((push "OK")
-                                                      (suspend
-                                                         ((resume $Undefined.return_28)))
-                                                      (apply 2)))
-                                                   (invoke String#)))
-                                                (then $Undefined.inner_31
-                                                   ((fetch $Undefined.outer_30)
-                                                      (fetch $Undefined.inner_31)
-                                                      (suspend
-                                                         ((resume $Undefined.return_27)))
-                                                      (apply 2)))))))
-                                          (invoke printString)))))
-                                 (apply 2)))
-                              (invoke g)))))
-                        (invoke undefined))))))
-            (resume $Undefined.return_26)))
-         (resume $Undefined.return_25)))
+                                    (push "OK")
+                                    (suspend
+                                       (resume $Undefined.return_28))
+                                    (apply 2))
+                                 (invoke String#))
+                              (assign $Undefined.inner_31)
+                              (fetch $Undefined.outer_30)
+                              (fetch $Undefined.inner_31)
+                              (suspend
+                                 (resume $Undefined.return_27))
+                              (apply 2))
+                           (invoke printString))
+                        (apply 2))
+                     (invoke g))
+                  (invoke undefined))))
+         (resume $Undefined.return_26))
+      (resume $Undefined.return_25))
    (f
       $Undefined.return_29
-      ((suspend
-         ((resume $Undefined.return_29)))
-         (invoke undefined))))
+      (suspend
+         (resume $Undefined.return_29))
+      (invoke undefined)))

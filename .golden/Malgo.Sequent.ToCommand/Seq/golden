@@ -1,98 +1,98 @@
 ((executeWhenLoaded
    $Seq.return_29
-   ((suspend
-      ((push 1_i32)
+   (suspend
+      (push 1_i32)
+      (suspend
+         (assign #Seq.x_0)
          (suspend
-            ((then #Seq.x_0
-               ((suspend
-                  ((push 2_i32)
+            (push 2_i32)
+            (suspend
+               (assign #Seq.y_1)
+               (lambda
+                  ($Seq.tmp_27 $Seq.return_33)
+                  (do $Seq.return_34
                      (suspend
-                        ((then #Seq.y_1
-                           ((lambda
-                              ($Seq.tmp_27 $Seq.return_33)
-                              ((do $Seq.return_34
-                                 ((suspend
-                                    ((fetch #Seq.x_0)
-                                       (suspend
-                                          ((fetch #Seq.y_1)
-                                             (suspend
-                                                ((resume $Seq.return_34)))
-                                             (apply 2)))
-                                       (apply 2)))
-                                    (invoke addInt32)))
-                                 (resume $Seq.return_33)))
-                              (then $Seq.outer_46
-                                 ((do $Seq.return_30
-                                    ((suspend
-                                       ((then $Seq.outer_50
-                                          ((do $Seq.return_31
-                                             ((suspend
-                                                ((then $Seq.outer_52
-                                                   ((do $Seq.return_32
-                                                      ((suspend
-                                                         ((fetch #Seq.x_0)
-                                                            (suspend
-                                                               ((fetch #Seq.y_1)
-                                                                  (suspend
-                                                                     ((resume $Seq.return_32)))
-                                                                  (apply 2)))
-                                                            (apply 2)))
-                                                         (invoke addInt32)))
-                                                      (then $Seq.inner_53
-                                                         ((fetch $Seq.outer_52)
-                                                            (fetch $Seq.inner_53)
-                                                            (suspend
-                                                               ((resume $Seq.return_31)))
-                                                            (apply 2)))))))
-                                                (invoke toStringInt32)))
-                                             (then $Seq.inner_51
-                                                ((fetch $Seq.outer_50)
-                                                   (fetch $Seq.inner_51)
-                                                   (suspend
-                                                      ((resume $Seq.return_30)))
-                                                   (apply 2)))))))
-                                       (invoke printString)))
-                                    (then $Seq.inner_47
-                                       ((fetch $Seq.outer_46)
-                                          (fetch $Seq.inner_47)
-                                          (suspend
-                                             ((resume $Seq.return_29)))
-                                          (apply 2)))))))))
-                     (apply 2)))
-                  (invoke Int32#)))))
-         (apply 2)))
-      (invoke Int32#)))
+                        (fetch #Seq.x_0)
+                        (suspend
+                           (fetch #Seq.y_1)
+                           (suspend
+                              (resume $Seq.return_34))
+                           (apply 2))
+                        (apply 2))
+                     (invoke addInt32))
+                  (resume $Seq.return_33))
+               (assign $Seq.outer_46)
+               (do $Seq.return_30
+                  (suspend
+                     (assign $Seq.outer_50)
+                     (do $Seq.return_31
+                        (suspend
+                           (assign $Seq.outer_52)
+                           (do $Seq.return_32
+                              (suspend
+                                 (fetch #Seq.x_0)
+                                 (suspend
+                                    (fetch #Seq.y_1)
+                                    (suspend
+                                       (resume $Seq.return_32))
+                                    (apply 2))
+                                 (apply 2))
+                              (invoke addInt32))
+                           (assign $Seq.inner_53)
+                           (fetch $Seq.outer_52)
+                           (fetch $Seq.inner_53)
+                           (suspend
+                              (resume $Seq.return_31))
+                           (apply 2))
+                        (invoke toStringInt32))
+                     (assign $Seq.inner_51)
+                     (fetch $Seq.outer_50)
+                     (fetch $Seq.inner_51)
+                     (suspend
+                        (resume $Seq.return_30))
+                     (apply 2))
+                  (invoke printString))
+               (assign $Seq.inner_47)
+               (fetch $Seq.outer_46)
+               (fetch $Seq.inner_47)
+               (suspend
+                  (resume $Seq.return_29))
+               (apply 2))
+            (apply 2))
+         (invoke Int32#))
+      (apply 2))
+   (invoke Int32#))
    (main
       $Seq.return_35
-      ((lambda
+      (lambda
          ($Seq.param_28 $Seq.return_36)
-         ((do $Seq.return_37
-            ((fetch $Seq.param_28)
-               (construct tuple 1)
-               (select
-                  (#Seq.$__26
-                     ((suspend
-                        ((then $Seq.outer_56
-                           ((do $Seq.return_38
-                              ((suspend
-                                 ((then $Seq.outer_58
-                                    ((do $Seq.return_39
-                                       ((suspend
-                                          ((resume $Seq.return_39)))
-                                          (invoke executeWhenLoaded)))
-                                       (then $Seq.inner_59
-                                          ((fetch $Seq.outer_58)
-                                             (fetch $Seq.inner_59)
-                                             (suspend
-                                                ((resume $Seq.return_38)))
-                                             (apply 2)))))))
-                                 (invoke toStringInt32)))
-                              (then $Seq.inner_57
-                                 ((fetch $Seq.outer_56)
-                                    (fetch $Seq.inner_57)
-                                    (suspend
-                                       ((resume $Seq.return_37)))
-                                    (apply 2)))))))
-                        (invoke printString))))))
-            (resume $Seq.return_36)))
-         (resume $Seq.return_35))))
+         (do $Seq.return_37
+            (fetch $Seq.param_28)
+            (construct tuple 1)
+            (select
+               (#Seq.$__26
+                  (suspend
+                     (assign $Seq.outer_56)
+                     (do $Seq.return_38
+                        (suspend
+                           (assign $Seq.outer_58)
+                           (do $Seq.return_39
+                              (suspend
+                                 (resume $Seq.return_39))
+                              (invoke executeWhenLoaded))
+                           (assign $Seq.inner_59)
+                           (fetch $Seq.outer_58)
+                           (fetch $Seq.inner_59)
+                           (suspend
+                              (resume $Seq.return_38))
+                           (apply 2))
+                        (invoke toStringInt32))
+                     (assign $Seq.inner_57)
+                     (fetch $Seq.outer_56)
+                     (fetch $Seq.inner_57)
+                     (suspend
+                        (resume $Seq.return_37))
+                     (apply 2))
+                  (invoke printString))))
+         (resume $Seq.return_36))
+      (resume $Seq.return_35)))

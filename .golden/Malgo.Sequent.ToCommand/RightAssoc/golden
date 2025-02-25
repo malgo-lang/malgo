@@ -1,379 +1,379 @@
 ((<|>
    $RightAssoc.return_96
-   ((suspend
-      ((resume $RightAssoc.return_96)))
-      (invoke Cons)))
+   (suspend
+      (resume $RightAssoc.return_96))
+   (invoke Cons))
    (f
       $RightAssoc.return_97
-      ((lambda
+      (lambda
          ($RightAssoc.param_86 $RightAssoc.return_98)
-         ((do $RightAssoc.return_99
-            ((fetch $RightAssoc.param_86)
-               (construct tuple 1)
-               (select
-                  (#RightAssoc.n_1
-                     ((suspend
-                        ((then $RightAssoc.outer_139
-                           ((do $RightAssoc.label_375
-                              ((do $RightAssoc.return_129
-                                 ((suspend
-                                    ((resume $RightAssoc.return_129)))
-                                    (invoke True)))
-                                 (then $RightAssoc.var_376
-                                    ((fetch $RightAssoc.var_376)
-                                       (lambda
-                                          ($RightAssoc.param_87 $RightAssoc.return_130)
-                                          ((do $RightAssoc.return_131
-                                             ((fetch $RightAssoc.param_87)
+         (do $RightAssoc.return_99
+            (fetch $RightAssoc.param_86)
+            (construct tuple 1)
+            (select
+               (#RightAssoc.n_1
+                  (suspend
+                     (assign $RightAssoc.outer_139)
+                     (do $RightAssoc.label_375
+                        (do $RightAssoc.return_129
+                           (suspend
+                              (resume $RightAssoc.return_129))
+                           (invoke True))
+                        (assign $RightAssoc.var_376)
+                        (fetch $RightAssoc.var_376)
+                        (lambda
+                           ($RightAssoc.param_87 $RightAssoc.return_130)
+                           (do $RightAssoc.return_131
+                              (fetch $RightAssoc.param_87)
+                              (construct tuple 1)
+                              (select
+                                 (#RightAssoc.$__17
+                                    (suspend
+                                       (push 1_i32)
+                                       (suspend
+                                          (resume $RightAssoc.return_131))
+                                       (apply 2))
+                                    (invoke Int32#))))
+                           (resume $RightAssoc.return_130))
+                        (construct tuple 2)
+                        (resume $RightAssoc.label_375))
+                     (assign $RightAssoc.inner_140)
+                     (fetch $RightAssoc.outer_139)
+                     (fetch $RightAssoc.inner_140)
+                     (suspend
+                        (assign $RightAssoc.outer_197)
+                        (do $RightAssoc.return_116
+                           (suspend
+                              (assign $RightAssoc.outer_321)
+                              (do $RightAssoc.label_373
+                                 (do $RightAssoc.return_126
+                                    (suspend
+                                       (resume $RightAssoc.return_126))
+                                    (invoke True))
+                                 (assign $RightAssoc.var_374)
+                                 (fetch $RightAssoc.var_374)
+                                 (lambda
+                                    ($RightAssoc.param_88 $RightAssoc.return_127)
+                                    (do $RightAssoc.return_128
+                                       (fetch $RightAssoc.param_88)
+                                       (construct tuple 1)
+                                       (select
+                                          (#RightAssoc.$__20
+                                             (suspend
+                                                (push 2_i32)
+                                                (suspend
+                                                   (resume $RightAssoc.return_128))
+                                                (apply 2))
+                                             (invoke Int32#))))
+                                    (resume $RightAssoc.return_127))
+                                 (construct tuple 2)
+                                 (resume $RightAssoc.label_373))
+                              (assign $RightAssoc.inner_322)
+                              (fetch $RightAssoc.outer_321)
+                              (fetch $RightAssoc.inner_322)
+                              (suspend
+                                 (assign $RightAssoc.outer_347)
+                                 (do $RightAssoc.return_117
+                                    (suspend
+                                       (assign $RightAssoc.outer_351)
+                                       (do $RightAssoc.label_371
+                                          (do $RightAssoc.return_123
+                                             (suspend
+                                                (resume $RightAssoc.return_123))
+                                             (invoke True))
+                                          (assign $RightAssoc.var_372)
+                                          (fetch $RightAssoc.var_372)
+                                          (lambda
+                                             ($RightAssoc.param_89 $RightAssoc.return_124)
+                                             (do $RightAssoc.return_125
+                                                (fetch $RightAssoc.param_89)
                                                 (construct tuple 1)
                                                 (select
-                                                   (#RightAssoc.$__17
-                                                      ((suspend
-                                                         ((push 1_i32)
-                                                            (suspend
-                                                               ((resume $RightAssoc.return_131)))
-                                                            (apply 2)))
-                                                         (invoke Int32#))))))
-                                             (resume $RightAssoc.return_130)))
-                                       (construct tuple 2)
-                                       (resume $RightAssoc.label_375)))))
-                              (then $RightAssoc.inner_140
-                                 ((fetch $RightAssoc.outer_139)
-                                    (fetch $RightAssoc.inner_140)
-                                    (suspend
-                                       ((then $RightAssoc.outer_197
-                                          ((do $RightAssoc.return_116
-                                             ((suspend
-                                                ((then $RightAssoc.outer_321
-                                                   ((do $RightAssoc.label_373
-                                                      ((do $RightAssoc.return_126
-                                                         ((suspend
-                                                            ((resume $RightAssoc.return_126)))
-                                                            (invoke True)))
-                                                         (then $RightAssoc.var_374
-                                                            ((fetch $RightAssoc.var_374)
-                                                               (lambda
-                                                                  ($RightAssoc.param_88 $RightAssoc.return_127)
-                                                                  ((do $RightAssoc.return_128
-                                                                     ((fetch $RightAssoc.param_88)
-                                                                        (construct tuple 1)
-                                                                        (select
-                                                                           (#RightAssoc.$__20
-                                                                              ((suspend
-                                                                                 ((push 2_i32)
-                                                                                    (suspend
-                                                                                       ((resume $RightAssoc.return_128)))
-                                                                                    (apply 2)))
-                                                                                 (invoke Int32#))))))
-                                                                     (resume $RightAssoc.return_127)))
-                                                               (construct tuple 2)
-                                                               (resume $RightAssoc.label_373)))))
-                                                      (then $RightAssoc.inner_322
-                                                         ((fetch $RightAssoc.outer_321)
-                                                            (fetch $RightAssoc.inner_322)
-                                                            (suspend
-                                                               ((then $RightAssoc.outer_347
-                                                                  ((do $RightAssoc.return_117
-                                                                     ((suspend
-                                                                        ((then $RightAssoc.outer_351
-                                                                           ((do $RightAssoc.label_371
-                                                                              ((do $RightAssoc.return_123
-                                                                                 ((suspend
-                                                                                    ((resume $RightAssoc.return_123)))
-                                                                                    (invoke True)))
-                                                                                 (then $RightAssoc.var_372
-                                                                                    ((fetch $RightAssoc.var_372)
-                                                                                       (lambda
-                                                                                          ($RightAssoc.param_89 $RightAssoc.return_124)
-                                                                                          ((do $RightAssoc.return_125
-                                                                                             ((fetch $RightAssoc.param_89)
-                                                                                                (construct tuple 1)
-                                                                                                (select
-                                                                                                   (#RightAssoc.$__23
-                                                                                                      ((suspend
-                                                                                                         ((push 3_i32)
-                                                                                                            (suspend
-                                                                                                               ((resume $RightAssoc.return_125)))
-                                                                                                            (apply 2)))
-                                                                                                         (invoke Int32#))))))
-                                                                                             (resume $RightAssoc.return_124)))
-                                                                                       (construct tuple 2)
-                                                                                       (resume $RightAssoc.label_371)))))
-                                                                              (then $RightAssoc.inner_352
-                                                                                 ((fetch $RightAssoc.outer_351)
-                                                                                    (fetch $RightAssoc.inner_352)
-                                                                                    (suspend
-                                                                                       ((then $RightAssoc.outer_361
-                                                                                          ((do $RightAssoc.return_118
-                                                                                             ((suspend
-                                                                                                ((then $RightAssoc.outer_365
-                                                                                                   ((do $RightAssoc.label_369
-                                                                                                      ((do $RightAssoc.return_120
-                                                                                                         ((suspend
-                                                                                                            ((resume $RightAssoc.return_120)))
-                                                                                                            (invoke True)))
-                                                                                                         (then $RightAssoc.var_370
-                                                                                                            ((fetch $RightAssoc.var_370)
-                                                                                                               (lambda
-                                                                                                                  ($RightAssoc.param_90 $RightAssoc.return_121)
-                                                                                                                  ((do $RightAssoc.return_122
-                                                                                                                     ((fetch $RightAssoc.param_90)
-                                                                                                                        (construct tuple 1)
-                                                                                                                        (select
-                                                                                                                           (#RightAssoc.$__26
-                                                                                                                              ((suspend
-                                                                                                                                 ((push 4_i32)
-                                                                                                                                    (suspend
-                                                                                                                                       ((resume $RightAssoc.return_122)))
-                                                                                                                                    (apply 2)))
-                                                                                                                                 (invoke Int32#))))))
-                                                                                                                     (resume $RightAssoc.return_121)))
-                                                                                                               (construct tuple 2)
-                                                                                                               (resume $RightAssoc.label_369)))))
-                                                                                                      (then $RightAssoc.inner_366
-                                                                                                         ((fetch $RightAssoc.outer_365)
-                                                                                                            (fetch $RightAssoc.inner_366)
-                                                                                                            (suspend
-                                                                                                               ((then $RightAssoc.outer_367
-                                                                                                                  ((do $RightAssoc.return_119
-                                                                                                                     ((suspend
-                                                                                                                        ((resume $RightAssoc.return_119)))
-                                                                                                                        (invoke Nil)))
-                                                                                                                     (then $RightAssoc.inner_368
-                                                                                                                        ((fetch $RightAssoc.outer_367)
-                                                                                                                           (fetch $RightAssoc.inner_368)
-                                                                                                                           (suspend
-                                                                                                                              ((resume $RightAssoc.return_118)))
-                                                                                                                           (apply 2)))))))
-                                                                                                            (apply 2)))))))
-                                                                                                (invoke <|>)))
-                                                                                             (then $RightAssoc.inner_362
-                                                                                                ((fetch $RightAssoc.outer_361)
-                                                                                                   (fetch $RightAssoc.inner_362)
-                                                                                                   (suspend
-                                                                                                      ((resume $RightAssoc.return_117)))
-                                                                                                   (apply 2)))))))
-                                                                                    (apply 2)))))))
-                                                                        (invoke <|>)))
-                                                                     (then $RightAssoc.inner_348
-                                                                        ((fetch $RightAssoc.outer_347)
-                                                                           (fetch $RightAssoc.inner_348)
-                                                                           (suspend
-                                                                              ((resume $RightAssoc.return_116)))
-                                                                           (apply 2)))))))
-                                                            (apply 2)))))))
-                                                (invoke <|>)))
-                                             (then $RightAssoc.inner_198
-                                                ((fetch $RightAssoc.outer_197)
-                                                   (fetch $RightAssoc.inner_198)
+                                                   (#RightAssoc.$__23
+                                                      (suspend
+                                                         (push 3_i32)
+                                                         (suspend
+                                                            (resume $RightAssoc.return_125))
+                                                         (apply 2))
+                                                      (invoke Int32#))))
+                                             (resume $RightAssoc.return_124))
+                                          (construct tuple 2)
+                                          (resume $RightAssoc.label_371))
+                                       (assign $RightAssoc.inner_352)
+                                       (fetch $RightAssoc.outer_351)
+                                       (fetch $RightAssoc.inner_352)
+                                       (suspend
+                                          (assign $RightAssoc.outer_361)
+                                          (do $RightAssoc.return_118
+                                             (suspend
+                                                (assign $RightAssoc.outer_365)
+                                                (do $RightAssoc.label_369
+                                                   (do $RightAssoc.return_120
+                                                      (suspend
+                                                         (resume $RightAssoc.return_120))
+                                                      (invoke True))
+                                                   (assign $RightAssoc.var_370)
+                                                   (fetch $RightAssoc.var_370)
+                                                   (lambda
+                                                      ($RightAssoc.param_90 $RightAssoc.return_121)
+                                                      (do $RightAssoc.return_122
+                                                         (fetch $RightAssoc.param_90)
+                                                         (construct tuple 1)
+                                                         (select
+                                                            (#RightAssoc.$__26
+                                                               (suspend
+                                                                  (push 4_i32)
+                                                                  (suspend
+                                                                     (resume $RightAssoc.return_122))
+                                                                  (apply 2))
+                                                               (invoke Int32#))))
+                                                      (resume $RightAssoc.return_121))
+                                                   (construct tuple 2)
+                                                   (resume $RightAssoc.label_369))
+                                                (assign $RightAssoc.inner_366)
+                                                (fetch $RightAssoc.outer_365)
+                                                (fetch $RightAssoc.inner_366)
+                                                (suspend
+                                                   (assign $RightAssoc.outer_367)
+                                                   (do $RightAssoc.return_119
+                                                      (suspend
+                                                         (resume $RightAssoc.return_119))
+                                                      (invoke Nil))
+                                                   (assign $RightAssoc.inner_368)
+                                                   (fetch $RightAssoc.outer_367)
+                                                   (fetch $RightAssoc.inner_368)
                                                    (suspend
-                                                      ((then #RightAssoc.x_2
-                                                         ((suspend
-                                                            ((then $RightAssoc.outer_201
-                                                               ((do $RightAssoc.label_317
-                                                                  ((do $RightAssoc.return_113
-                                                                     ((suspend
-                                                                        ((resume $RightAssoc.return_113)))
-                                                                        (invoke True)))
-                                                                     (then $RightAssoc.var_318
-                                                                        ((fetch $RightAssoc.var_318)
-                                                                           (lambda
-                                                                              ($RightAssoc.param_91 $RightAssoc.return_114)
-                                                                              ((do $RightAssoc.return_115
-                                                                                 ((fetch $RightAssoc.param_91)
-                                                                                    (construct tuple 1)
-                                                                                    (select
-                                                                                       (#RightAssoc.$__47
-                                                                                          ((suspend
-                                                                                             ((push 1_i32)
-                                                                                                (suspend
-                                                                                                   ((resume $RightAssoc.return_115)))
-                                                                                                (apply 2)))
-                                                                                             (invoke Int32#))))))
-                                                                                 (resume $RightAssoc.return_114)))
-                                                                           (construct tuple 2)
-                                                                           (resume $RightAssoc.label_317)))))
-                                                                  (then $RightAssoc.inner_202
-                                                                     ((fetch $RightAssoc.outer_201)
-                                                                        (fetch $RightAssoc.inner_202)
+                                                      (resume $RightAssoc.return_118))
+                                                   (apply 2))
+                                                (apply 2))
+                                             (invoke <|>))
+                                          (assign $RightAssoc.inner_362)
+                                          (fetch $RightAssoc.outer_361)
+                                          (fetch $RightAssoc.inner_362)
+                                          (suspend
+                                             (resume $RightAssoc.return_117))
+                                          (apply 2))
+                                       (apply 2))
+                                    (invoke <|>))
+                                 (assign $RightAssoc.inner_348)
+                                 (fetch $RightAssoc.outer_347)
+                                 (fetch $RightAssoc.inner_348)
+                                 (suspend
+                                    (resume $RightAssoc.return_116))
+                                 (apply 2))
+                              (apply 2))
+                           (invoke <|>))
+                        (assign $RightAssoc.inner_198)
+                        (fetch $RightAssoc.outer_197)
+                        (fetch $RightAssoc.inner_198)
+                        (suspend
+                           (assign #RightAssoc.x_2)
+                           (suspend
+                              (assign $RightAssoc.outer_201)
+                              (do $RightAssoc.label_317
+                                 (do $RightAssoc.return_113
+                                    (suspend
+                                       (resume $RightAssoc.return_113))
+                                    (invoke True))
+                                 (assign $RightAssoc.var_318)
+                                 (fetch $RightAssoc.var_318)
+                                 (lambda
+                                    ($RightAssoc.param_91 $RightAssoc.return_114)
+                                    (do $RightAssoc.return_115
+                                       (fetch $RightAssoc.param_91)
+                                       (construct tuple 1)
+                                       (select
+                                          (#RightAssoc.$__47
+                                             (suspend
+                                                (push 1_i32)
+                                                (suspend
+                                                   (resume $RightAssoc.return_115))
+                                                (apply 2))
+                                             (invoke Int32#))))
+                                    (resume $RightAssoc.return_114))
+                                 (construct tuple 2)
+                                 (resume $RightAssoc.label_317))
+                              (assign $RightAssoc.inner_202)
+                              (fetch $RightAssoc.outer_201)
+                              (fetch $RightAssoc.inner_202)
+                              (suspend
+                                 (assign $RightAssoc.outer_259)
+                                 (do $RightAssoc.return_100
+                                    (suspend
+                                       (assign $RightAssoc.outer_263)
+                                       (do $RightAssoc.label_315
+                                          (do $RightAssoc.return_110
+                                             (suspend
+                                                (resume $RightAssoc.return_110))
+                                             (invoke True))
+                                          (assign $RightAssoc.var_316)
+                                          (fetch $RightAssoc.var_316)
+                                          (lambda
+                                             ($RightAssoc.param_92 $RightAssoc.return_111)
+                                             (do $RightAssoc.return_112
+                                                (fetch $RightAssoc.param_92)
+                                                (construct tuple 1)
+                                                (select
+                                                   (#RightAssoc.$__50
+                                                      (suspend
+                                                         (push 2_i32)
+                                                         (suspend
+                                                            (resume $RightAssoc.return_112))
+                                                         (apply 2))
+                                                      (invoke Int32#))))
+                                             (resume $RightAssoc.return_111))
+                                          (construct tuple 2)
+                                          (resume $RightAssoc.label_315))
+                                       (assign $RightAssoc.inner_264)
+                                       (fetch $RightAssoc.outer_263)
+                                       (fetch $RightAssoc.inner_264)
+                                       (suspend
+                                          (assign $RightAssoc.outer_289)
+                                          (do $RightAssoc.return_101
+                                             (suspend
+                                                (assign $RightAssoc.outer_293)
+                                                (do $RightAssoc.label_313
+                                                   (do $RightAssoc.return_107
+                                                      (suspend
+                                                         (resume $RightAssoc.return_107))
+                                                      (invoke True))
+                                                   (assign $RightAssoc.var_314)
+                                                   (fetch $RightAssoc.var_314)
+                                                   (lambda
+                                                      ($RightAssoc.param_93 $RightAssoc.return_108)
+                                                      (do $RightAssoc.return_109
+                                                         (fetch $RightAssoc.param_93)
+                                                         (construct tuple 1)
+                                                         (select
+                                                            (#RightAssoc.$__53
+                                                               (suspend
+                                                                  (push 3_i32)
+                                                                  (suspend
+                                                                     (resume $RightAssoc.return_109))
+                                                                  (apply 2))
+                                                               (invoke Int32#))))
+                                                      (resume $RightAssoc.return_108))
+                                                   (construct tuple 2)
+                                                   (resume $RightAssoc.label_313))
+                                                (assign $RightAssoc.inner_294)
+                                                (fetch $RightAssoc.outer_293)
+                                                (fetch $RightAssoc.inner_294)
+                                                (suspend
+                                                   (assign $RightAssoc.outer_303)
+                                                   (do $RightAssoc.return_102
+                                                      (suspend
+                                                         (assign $RightAssoc.outer_307)
+                                                         (do $RightAssoc.label_311
+                                                            (do $RightAssoc.return_104
+                                                               (suspend
+                                                                  (resume $RightAssoc.return_104))
+                                                               (invoke True))
+                                                            (assign $RightAssoc.var_312)
+                                                            (fetch $RightAssoc.var_312)
+                                                            (lambda
+                                                               ($RightAssoc.param_94 $RightAssoc.return_105)
+                                                               (do $RightAssoc.return_106
+                                                                  (fetch $RightAssoc.param_94)
+                                                                  (construct tuple 1)
+                                                                  (select
+                                                                     (#RightAssoc.$__56
                                                                         (suspend
-                                                                           ((then $RightAssoc.outer_259
-                                                                              ((do $RightAssoc.return_100
-                                                                                 ((suspend
-                                                                                    ((then $RightAssoc.outer_263
-                                                                                       ((do $RightAssoc.label_315
-                                                                                          ((do $RightAssoc.return_110
-                                                                                             ((suspend
-                                                                                                ((resume $RightAssoc.return_110)))
-                                                                                                (invoke True)))
-                                                                                             (then $RightAssoc.var_316
-                                                                                                ((fetch $RightAssoc.var_316)
-                                                                                                   (lambda
-                                                                                                      ($RightAssoc.param_92 $RightAssoc.return_111)
-                                                                                                      ((do $RightAssoc.return_112
-                                                                                                         ((fetch $RightAssoc.param_92)
-                                                                                                            (construct tuple 1)
-                                                                                                            (select
-                                                                                                               (#RightAssoc.$__50
-                                                                                                                  ((suspend
-                                                                                                                     ((push 2_i32)
-                                                                                                                        (suspend
-                                                                                                                           ((resume $RightAssoc.return_112)))
-                                                                                                                        (apply 2)))
-                                                                                                                     (invoke Int32#))))))
-                                                                                                         (resume $RightAssoc.return_111)))
-                                                                                                   (construct tuple 2)
-                                                                                                   (resume $RightAssoc.label_315)))))
-                                                                                          (then $RightAssoc.inner_264
-                                                                                             ((fetch $RightAssoc.outer_263)
-                                                                                                (fetch $RightAssoc.inner_264)
-                                                                                                (suspend
-                                                                                                   ((then $RightAssoc.outer_289
-                                                                                                      ((do $RightAssoc.return_101
-                                                                                                         ((suspend
-                                                                                                            ((then $RightAssoc.outer_293
-                                                                                                               ((do $RightAssoc.label_313
-                                                                                                                  ((do $RightAssoc.return_107
-                                                                                                                     ((suspend
-                                                                                                                        ((resume $RightAssoc.return_107)))
-                                                                                                                        (invoke True)))
-                                                                                                                     (then $RightAssoc.var_314
-                                                                                                                        ((fetch $RightAssoc.var_314)
-                                                                                                                           (lambda
-                                                                                                                              ($RightAssoc.param_93 $RightAssoc.return_108)
-                                                                                                                              ((do $RightAssoc.return_109
-                                                                                                                                 ((fetch $RightAssoc.param_93)
-                                                                                                                                    (construct tuple 1)
-                                                                                                                                    (select
-                                                                                                                                       (#RightAssoc.$__53
-                                                                                                                                          ((suspend
-                                                                                                                                             ((push 3_i32)
-                                                                                                                                                (suspend
-                                                                                                                                                   ((resume $RightAssoc.return_109)))
-                                                                                                                                                (apply 2)))
-                                                                                                                                             (invoke Int32#))))))
-                                                                                                                                 (resume $RightAssoc.return_108)))
-                                                                                                                           (construct tuple 2)
-                                                                                                                           (resume $RightAssoc.label_313)))))
-                                                                                                                  (then $RightAssoc.inner_294
-                                                                                                                     ((fetch $RightAssoc.outer_293)
-                                                                                                                        (fetch $RightAssoc.inner_294)
-                                                                                                                        (suspend
-                                                                                                                           ((then $RightAssoc.outer_303
-                                                                                                                              ((do $RightAssoc.return_102
-                                                                                                                                 ((suspend
-                                                                                                                                    ((then $RightAssoc.outer_307
-                                                                                                                                       ((do $RightAssoc.label_311
-                                                                                                                                          ((do $RightAssoc.return_104
-                                                                                                                                             ((suspend
-                                                                                                                                                ((resume $RightAssoc.return_104)))
-                                                                                                                                                (invoke True)))
-                                                                                                                                             (then $RightAssoc.var_312
-                                                                                                                                                ((fetch $RightAssoc.var_312)
-                                                                                                                                                   (lambda
-                                                                                                                                                      ($RightAssoc.param_94 $RightAssoc.return_105)
-                                                                                                                                                      ((do $RightAssoc.return_106
-                                                                                                                                                         ((fetch $RightAssoc.param_94)
-                                                                                                                                                            (construct tuple 1)
-                                                                                                                                                            (select
-                                                                                                                                                               (#RightAssoc.$__56
-                                                                                                                                                                  ((suspend
-                                                                                                                                                                     ((push 4_i32)
-                                                                                                                                                                        (suspend
-                                                                                                                                                                           ((resume $RightAssoc.return_106)))
-                                                                                                                                                                        (apply 2)))
-                                                                                                                                                                     (invoke Int32#))))))
-                                                                                                                                                         (resume $RightAssoc.return_105)))
-                                                                                                                                                   (construct tuple 2)
-                                                                                                                                                   (resume $RightAssoc.label_311)))))
-                                                                                                                                          (then $RightAssoc.inner_308
-                                                                                                                                             ((fetch $RightAssoc.outer_307)
-                                                                                                                                                (fetch $RightAssoc.inner_308)
-                                                                                                                                                (suspend
-                                                                                                                                                   ((then $RightAssoc.outer_309
-                                                                                                                                                      ((do $RightAssoc.return_103
-                                                                                                                                                         ((suspend
-                                                                                                                                                            ((resume $RightAssoc.return_103)))
-                                                                                                                                                            (invoke Nil)))
-                                                                                                                                                         (then $RightAssoc.inner_310
-                                                                                                                                                            ((fetch $RightAssoc.outer_309)
-                                                                                                                                                               (fetch $RightAssoc.inner_310)
-                                                                                                                                                               (suspend
-                                                                                                                                                                  ((resume $RightAssoc.return_102)))
-                                                                                                                                                               (apply 2)))))))
-                                                                                                                                                (apply 2)))))))
-                                                                                                                                    (invoke <|>)))
-                                                                                                                                 (then $RightAssoc.inner_304
-                                                                                                                                    ((fetch $RightAssoc.outer_303)
-                                                                                                                                       (fetch $RightAssoc.inner_304)
-                                                                                                                                       (suspend
-                                                                                                                                          ((resume $RightAssoc.return_101)))
-                                                                                                                                       (apply 2)))))))
-                                                                                                                        (apply 2)))))))
-                                                                                                            (invoke <|>)))
-                                                                                                         (then $RightAssoc.inner_290
-                                                                                                            ((fetch $RightAssoc.outer_289)
-                                                                                                               (fetch $RightAssoc.inner_290)
-                                                                                                               (suspend
-                                                                                                                  ((resume $RightAssoc.return_100)))
-                                                                                                               (apply 2)))))))
-                                                                                                (apply 2)))))))
-                                                                                    (invoke <|>)))
-                                                                                 (then $RightAssoc.inner_260
-                                                                                    ((fetch $RightAssoc.outer_259)
-                                                                                       (fetch $RightAssoc.inner_260)
-                                                                                       (suspend
-                                                                                          ((then #RightAssoc.y_3
-                                                                                             ((fetch #RightAssoc.y_3)
-                                                                                                (resume $RightAssoc.return_99)))))
-                                                                                       (apply 2)))))))
-                                                                        (apply 2)))))))
-                                                            (invoke <|>)))))
-                                                   (apply 2)))))))
-                                    (apply 2)))))))
-                        (invoke <|>))))))
-            (resume $RightAssoc.return_98)))
-         (resume $RightAssoc.return_97)))
+                                                                           (push 4_i32)
+                                                                           (suspend
+                                                                              (resume $RightAssoc.return_106))
+                                                                           (apply 2))
+                                                                        (invoke Int32#))))
+                                                               (resume $RightAssoc.return_105))
+                                                            (construct tuple 2)
+                                                            (resume $RightAssoc.label_311))
+                                                         (assign $RightAssoc.inner_308)
+                                                         (fetch $RightAssoc.outer_307)
+                                                         (fetch $RightAssoc.inner_308)
+                                                         (suspend
+                                                            (assign $RightAssoc.outer_309)
+                                                            (do $RightAssoc.return_103
+                                                               (suspend
+                                                                  (resume $RightAssoc.return_103))
+                                                               (invoke Nil))
+                                                            (assign $RightAssoc.inner_310)
+                                                            (fetch $RightAssoc.outer_309)
+                                                            (fetch $RightAssoc.inner_310)
+                                                            (suspend
+                                                               (resume $RightAssoc.return_102))
+                                                            (apply 2))
+                                                         (apply 2))
+                                                      (invoke <|>))
+                                                   (assign $RightAssoc.inner_304)
+                                                   (fetch $RightAssoc.outer_303)
+                                                   (fetch $RightAssoc.inner_304)
+                                                   (suspend
+                                                      (resume $RightAssoc.return_101))
+                                                   (apply 2))
+                                                (apply 2))
+                                             (invoke <|>))
+                                          (assign $RightAssoc.inner_290)
+                                          (fetch $RightAssoc.outer_289)
+                                          (fetch $RightAssoc.inner_290)
+                                          (suspend
+                                             (resume $RightAssoc.return_100))
+                                          (apply 2))
+                                       (apply 2))
+                                    (invoke <|>))
+                                 (assign $RightAssoc.inner_260)
+                                 (fetch $RightAssoc.outer_259)
+                                 (fetch $RightAssoc.inner_260)
+                                 (suspend
+                                    (assign #RightAssoc.y_3)
+                                    (fetch #RightAssoc.y_3)
+                                    (resume $RightAssoc.return_99))
+                                 (apply 2))
+                              (apply 2))
+                           (invoke <|>))
+                        (apply 2))
+                     (apply 2))
+                  (invoke <|>))))
+         (resume $RightAssoc.return_98))
+      (resume $RightAssoc.return_97))
    (main
       $RightAssoc.return_132
-      ((lambda
+      (lambda
          ($RightAssoc.param_95 $RightAssoc.return_133)
-         ((do $RightAssoc.return_134
-            ((fetch $RightAssoc.param_95)
-               (construct tuple 1)
-               (select
-                  (#RightAssoc.$__85
-                     ((suspend
-                        ((then $RightAssoc.outer_377
-                           ((do $RightAssoc.return_136
-                              ((suspend
-                                 ((push 4_i32)
-                                    (suspend
-                                       ((resume $RightAssoc.return_136)))
-                                    (apply 2)))
-                                 (invoke Int32#)))
-                              (then $RightAssoc.inner_378
-                                 ((fetch $RightAssoc.outer_377)
-                                    (fetch $RightAssoc.inner_378)
-                                    (suspend
-                                       ((then #RightAssoc.x_4
-                                          ((suspend
-                                             ((then $RightAssoc.outer_379
-                                                ((do $RightAssoc.return_135
-                                                   ((suspend
-                                                      ((push "OK")
-                                                         (suspend
-                                                            ((resume $RightAssoc.return_135)))
-                                                         (apply 2)))
-                                                      (invoke String#)))
-                                                   (then $RightAssoc.inner_380
-                                                      ((fetch $RightAssoc.outer_379)
-                                                         (fetch $RightAssoc.inner_380)
-                                                         (suspend
-                                                            ((resume $RightAssoc.return_134)))
-                                                         (apply 2)))))))
-                                             (invoke printString)))))
-                                    (apply 2)))))))
-                        (invoke f))))))
-            (resume $RightAssoc.return_133)))
-         (resume $RightAssoc.return_132))))
+         (do $RightAssoc.return_134
+            (fetch $RightAssoc.param_95)
+            (construct tuple 1)
+            (select
+               (#RightAssoc.$__85
+                  (suspend
+                     (assign $RightAssoc.outer_377)
+                     (do $RightAssoc.return_136
+                        (suspend
+                           (push 4_i32)
+                           (suspend
+                              (resume $RightAssoc.return_136))
+                           (apply 2))
+                        (invoke Int32#))
+                     (assign $RightAssoc.inner_378)
+                     (fetch $RightAssoc.outer_377)
+                     (fetch $RightAssoc.inner_378)
+                     (suspend
+                        (assign #RightAssoc.x_4)
+                        (suspend
+                           (assign $RightAssoc.outer_379)
+                           (do $RightAssoc.return_135
+                              (suspend
+                                 (push "OK")
+                                 (suspend
+                                    (resume $RightAssoc.return_135))
+                                 (apply 2))
+                              (invoke String#))
+                           (assign $RightAssoc.inner_380)
+                           (fetch $RightAssoc.outer_379)
+                           (fetch $RightAssoc.inner_380)
+                           (suspend
+                              (resume $RightAssoc.return_134))
+                           (apply 2))
+                        (invoke printString))
+                     (apply 2))
+                  (invoke f))))
+         (resume $RightAssoc.return_133))
+      (resume $RightAssoc.return_132)))

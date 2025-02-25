@@ -1,1138 +1,1138 @@
 ((|>
    $Prelude.return_742
-   ((lambda
+   (lambda
       ($Prelude.param_687 $Prelude.return_743)
-      ((lambda
+      (lambda
          ($Prelude.param_688 $Prelude.return_744)
-         ((do $Prelude.return_745
-            ((fetch $Prelude.param_687)
-               (fetch $Prelude.param_688)
+         (do $Prelude.return_745
+            (fetch $Prelude.param_687)
+            (fetch $Prelude.param_688)
+            (construct tuple 2)
+            (select
+               ((tuple
+                  (#Prelude.x_70 #Prelude.f_71))
+                  (fetch #Prelude.f_71)
+                  (fetch #Prelude.x_70)
+                  (suspend
+                     (resume $Prelude.return_745))
+                  (apply 2))))
+         (resume $Prelude.return_744))
+      (resume $Prelude.return_743))
+   (resume $Prelude.return_742))
+   (tail
+      $Prelude.return_746
+      (lambda
+         ($Prelude.param_689 $Prelude.return_747)
+         (do $Prelude.return_748
+            (fetch $Prelude.param_689)
+            (construct tuple 1)
+            (select
+               ((Cons
+                  (#Prelude.__25 #Prelude.xs_26))
+                  (fetch #Prelude.xs_26)
+                  (resume $Prelude.return_748))
+               (#Prelude.__27
+                  (suspend
+                     (construct tuple 0)
+                     (suspend
+                        (resume $Prelude.return_748))
+                     (apply 2))
+                  (invoke exitFailure))))
+         (resume $Prelude.return_747))
+      (resume $Prelude.return_746))
+   (snd
+      $Prelude.return_749
+      (lambda
+         ($Prelude.param_690 $Prelude.return_750)
+         (do $Prelude.return_751
+            (fetch $Prelude.param_690)
+            (construct tuple 1)
+            (select
+               ((tuple
+                  (#Prelude.a_16 #Prelude.b_17))
+                  (fetch #Prelude.b_17)
+                  (resume $Prelude.return_751))))
+         (resume $Prelude.return_750))
+      (resume $Prelude.return_749))
+   (putStrLn
+      $Prelude.return_752
+      (lambda
+         ($Prelude.param_691 $Prelude.return_753)
+         (do $Prelude.return_754
+            (fetch $Prelude.param_691)
+            (construct tuple 1)
+            (select
+               (#Prelude.str_91
+                  (lambda
+                     ($Prelude.tmp_692 $Prelude.return_756)
+                     (do $Prelude.return_757
+                        (suspend
+                           (construct tuple 0)
+                           (suspend
+                              (resume $Prelude.return_757))
+                           (apply 2))
+                        (invoke newline))
+                     (resume $Prelude.return_756))
+                  (assign $Prelude.outer_892)
+                  (do $Prelude.return_755
+                     (suspend
+                        (fetch #Prelude.str_91)
+                        (suspend
+                           (resume $Prelude.return_755))
+                        (apply 2))
+                     (invoke printString))
+                  (assign $Prelude.inner_893)
+                  (fetch $Prelude.outer_892)
+                  (fetch $Prelude.inner_893)
+                  (suspend
+                     (resume $Prelude.return_754))
+                  (apply 2))))
+         (resume $Prelude.return_753))
+      (resume $Prelude.return_752))
+   (putStr
+      $Prelude.return_758
+      (lambda
+         ($Prelude.param_693 $Prelude.return_759)
+         (do $Prelude.return_760
+            (fetch $Prelude.param_693)
+            (construct tuple 1)
+            (select
+               (#Prelude.str_90
+                  (suspend
+                     (fetch #Prelude.str_90)
+                     (suspend
+                        (resume $Prelude.return_760))
+                     (apply 2))
+                  (invoke printString))))
+         (resume $Prelude.return_759))
+      (resume $Prelude.return_758))
+   (punctuate
+      $Prelude.return_761
+      (lambda
+         ($Prelude.param_694 $Prelude.return_762)
+         (lambda
+            ($Prelude.param_695 $Prelude.return_763)
+            (do $Prelude.return_764
+               (fetch $Prelude.param_694)
+               (fetch $Prelude.param_695)
                (construct tuple 2)
                (select
                   ((tuple
-                     (#Prelude.x_70 #Prelude.f_71))
-                     ((fetch #Prelude.f_71)
-                        (fetch #Prelude.x_70)
-                        (suspend
-                           ((resume $Prelude.return_745)))
-                        (apply 2))))))
-            (resume $Prelude.return_744)))
-         (resume $Prelude.return_743)))
-      (resume $Prelude.return_742)))
-   (tail
-      $Prelude.return_746
-      ((lambda
-         ($Prelude.param_689 $Prelude.return_747)
-         ((do $Prelude.return_748
-            ((fetch $Prelude.param_689)
-               (construct tuple 1)
-               (select
-                  ((Cons
-                     (#Prelude.__25 #Prelude.xs_26))
-                     ((fetch #Prelude.xs_26)
-                        (resume $Prelude.return_748)))
-                  (#Prelude.__27
-                     ((suspend
-                        ((construct tuple 0)
-                           (suspend
-                              ((resume $Prelude.return_748)))
-                           (apply 2)))
-                        (invoke exitFailure))))))
-            (resume $Prelude.return_747)))
-         (resume $Prelude.return_746)))
-   (snd
-      $Prelude.return_749
-      ((lambda
-         ($Prelude.param_690 $Prelude.return_750)
-         ((do $Prelude.return_751
-            ((fetch $Prelude.param_690)
-               (construct tuple 1)
-               (select
+                     (#Prelude.__55
+                        (Nil ())))
+                     (suspend
+                        (resume $Prelude.return_764))
+                     (invoke Nil))
                   ((tuple
-                     (#Prelude.a_16 #Prelude.b_17))
-                     ((fetch #Prelude.b_17)
-                        (resume $Prelude.return_751))))))
-            (resume $Prelude.return_750)))
-         (resume $Prelude.return_749)))
-   (putStrLn
-      $Prelude.return_752
-      ((lambda
-         ($Prelude.param_691 $Prelude.return_753)
-         ((do $Prelude.return_754
-            ((fetch $Prelude.param_691)
-               (construct tuple 1)
-               (select
-                  (#Prelude.str_91
-                     ((lambda
-                        ($Prelude.tmp_692 $Prelude.return_756)
-                        ((do $Prelude.return_757
-                           ((suspend
-                              ((construct tuple 0)
-                                 (suspend
-                                    ((resume $Prelude.return_757)))
-                                 (apply 2)))
-                              (invoke newline)))
-                           (resume $Prelude.return_756)))
-                        (then $Prelude.outer_892
-                           ((do $Prelude.return_755
-                              ((suspend
-                                 ((fetch #Prelude.str_91)
-                                    (suspend
-                                       ((resume $Prelude.return_755)))
-                                    (apply 2)))
-                                 (invoke printString)))
-                              (then $Prelude.inner_893
-                                 ((fetch $Prelude.outer_892)
-                                    (fetch $Prelude.inner_893)
-                                    (suspend
-                                       ((resume $Prelude.return_754)))
-                                    (apply 2))))))))))
-            (resume $Prelude.return_753)))
-         (resume $Prelude.return_752)))
-   (putStr
-      $Prelude.return_758
-      ((lambda
-         ($Prelude.param_693 $Prelude.return_759)
-         ((do $Prelude.return_760
-            ((fetch $Prelude.param_693)
-               (construct tuple 1)
-               (select
-                  (#Prelude.str_90
-                     ((suspend
-                        ((fetch #Prelude.str_90)
+                     (#Prelude.__56
+                        (Cons
+                           (#Prelude.x_57
+                              (Nil ())))))
+                     (suspend
+                        (fetch #Prelude.x_57)
+                        (suspend
+                           (assign $Prelude.outer_894)
+                           (do $Prelude.return_765
+                              (suspend
+                                 (resume $Prelude.return_765))
+                              (invoke Nil))
+                           (assign $Prelude.inner_895)
+                           (fetch $Prelude.outer_894)
+                           (fetch $Prelude.inner_895)
                            (suspend
-                              ((resume $Prelude.return_760)))
-                           (apply 2)))
-                        (invoke printString))))))
-            (resume $Prelude.return_759)))
-         (resume $Prelude.return_758)))
-   (punctuate
-      $Prelude.return_761
-      ((lambda
-         ($Prelude.param_694 $Prelude.return_762)
-         ((lambda
-            ($Prelude.param_695 $Prelude.return_763)
-            ((do $Prelude.return_764
-               ((fetch $Prelude.param_694)
-                  (fetch $Prelude.param_695)
-                  (construct tuple 2)
-                  (select
-                     ((tuple
-                        (#Prelude.__55
-                           (Nil ())))
-                        ((suspend
-                           ((resume $Prelude.return_764)))
-                           (invoke Nil)))
-                     ((tuple
-                        (#Prelude.__56
-                           (Cons
-                              (#Prelude.x_57
-                                 (Nil ())))))
-                        ((suspend
-                           ((fetch #Prelude.x_57)
+                              (resume $Prelude.return_764))
+                           (apply 2))
+                        (apply 2))
+                     (invoke Cons))
+                  ((tuple
+                     (#Prelude.sep_58
+                        (Cons
+                           (#Prelude.x_59 #Prelude.xs_60))))
+                     (suspend
+                        (fetch #Prelude.x_59)
+                        (suspend
+                           (assign $Prelude.outer_898)
+                           (do $Prelude.return_766
                               (suspend
-                                 ((then $Prelude.outer_894
-                                    ((do $Prelude.return_765
-                                       ((suspend
-                                          ((resume $Prelude.return_765)))
-                                          (invoke Nil)))
-                                       (then $Prelude.inner_895
-                                          ((fetch $Prelude.outer_894)
-                                             (fetch $Prelude.inner_895)
+                                 (fetch #Prelude.sep_58)
+                                 (suspend
+                                    (assign $Prelude.outer_900)
+                                    (do $Prelude.return_767
+                                       (suspend
+                                          (fetch #Prelude.sep_58)
+                                          (suspend
+                                             (fetch #Prelude.xs_60)
                                              (suspend
-                                                ((resume $Prelude.return_764)))
-                                             (apply 2)))))))
-                              (apply 2)))
-                           (invoke Cons)))
-                     ((tuple
-                        (#Prelude.sep_58
-                           (Cons
-                              (#Prelude.x_59 #Prelude.xs_60))))
-                        ((suspend
-                           ((fetch #Prelude.x_59)
-                              (suspend
-                                 ((then $Prelude.outer_898
-                                    ((do $Prelude.return_766
-                                       ((suspend
-                                          ((fetch #Prelude.sep_58)
-                                             (suspend
-                                                ((then $Prelude.outer_900
-                                                   ((do $Prelude.return_767
-                                                      ((suspend
-                                                         ((fetch #Prelude.sep_58)
-                                                            (suspend
-                                                               ((fetch #Prelude.xs_60)
-                                                                  (suspend
-                                                                     ((resume $Prelude.return_767)))
-                                                                  (apply 2)))
-                                                            (apply 2)))
-                                                         (invoke punctuate)))
-                                                      (then $Prelude.inner_901
-                                                         ((fetch $Prelude.outer_900)
-                                                            (fetch $Prelude.inner_901)
-                                                            (suspend
-                                                               ((resume $Prelude.return_766)))
-                                                            (apply 2)))))))
-                                             (apply 2)))
-                                          (invoke Cons)))
-                                       (then $Prelude.inner_899
-                                          ((fetch $Prelude.outer_898)
-                                             (fetch $Prelude.inner_899)
-                                             (suspend
-                                                ((resume $Prelude.return_764)))
-                                             (apply 2)))))))
-                              (apply 2)))
-                           (invoke Cons))))))
-               (resume $Prelude.return_763)))
-            (resume $Prelude.return_762)))
-         (resume $Prelude.return_761)))
+                                                (resume $Prelude.return_767))
+                                             (apply 2))
+                                          (apply 2))
+                                       (invoke punctuate))
+                                    (assign $Prelude.inner_901)
+                                    (fetch $Prelude.outer_900)
+                                    (fetch $Prelude.inner_901)
+                                    (suspend
+                                       (resume $Prelude.return_766))
+                                    (apply 2))
+                                 (apply 2))
+                              (invoke Cons))
+                           (assign $Prelude.inner_899)
+                           (fetch $Prelude.outer_898)
+                           (fetch $Prelude.inner_899)
+                           (suspend
+                              (resume $Prelude.return_764))
+                           (apply 2))
+                        (apply 2))
+                     (invoke Cons))))
+            (resume $Prelude.return_763))
+         (resume $Prelude.return_762))
+      (resume $Prelude.return_761))
    (printInt64
       $Prelude.return_768
-      ((lambda
+      (lambda
          ($Prelude.param_696 $Prelude.return_769)
-         ((do $Prelude.return_770
-            ((fetch $Prelude.param_696)
-               (construct tuple 1)
-               (select
-                  (#Prelude.i_93
-                     ((suspend
-                        ((then $Prelude.outer_902
-                           ((do $Prelude.return_771
-                              ((suspend
-                                 ((fetch #Prelude.i_93)
-                                    (suspend
-                                       ((resume $Prelude.return_771)))
-                                    (apply 2)))
-                                 (invoke toStringInt64)))
-                              (then $Prelude.inner_903
-                                 ((fetch $Prelude.outer_902)
-                                    (fetch $Prelude.inner_903)
-                                    (suspend
-                                       ((resume $Prelude.return_770)))
-                                    (apply 2)))))))
-                        (invoke printString))))))
-            (resume $Prelude.return_769)))
-         (resume $Prelude.return_768)))
+         (do $Prelude.return_770
+            (fetch $Prelude.param_696)
+            (construct tuple 1)
+            (select
+               (#Prelude.i_93
+                  (suspend
+                     (assign $Prelude.outer_902)
+                     (do $Prelude.return_771
+                        (suspend
+                           (fetch #Prelude.i_93)
+                           (suspend
+                              (resume $Prelude.return_771))
+                           (apply 2))
+                        (invoke toStringInt64))
+                     (assign $Prelude.inner_903)
+                     (fetch $Prelude.outer_902)
+                     (fetch $Prelude.inner_903)
+                     (suspend
+                        (resume $Prelude.return_770))
+                     (apply 2))
+                  (invoke printString))))
+         (resume $Prelude.return_769))
+      (resume $Prelude.return_768))
    (printInt32
       $Prelude.return_772
-      ((lambda
+      (lambda
          ($Prelude.param_697 $Prelude.return_773)
-         ((do $Prelude.return_774
-            ((fetch $Prelude.param_697)
-               (construct tuple 1)
-               (select
-                  (#Prelude.i_92
-                     ((suspend
-                        ((then $Prelude.outer_904
-                           ((do $Prelude.return_775
-                              ((suspend
-                                 ((fetch #Prelude.i_92)
-                                    (suspend
-                                       ((resume $Prelude.return_775)))
-                                    (apply 2)))
-                                 (invoke toStringInt32)))
-                              (then $Prelude.inner_905
-                                 ((fetch $Prelude.outer_904)
-                                    (fetch $Prelude.inner_905)
-                                    (suspend
-                                       ((resume $Prelude.return_774)))
-                                    (apply 2)))))))
-                        (invoke printString))))))
-            (resume $Prelude.return_773)))
-         (resume $Prelude.return_772)))
+         (do $Prelude.return_774
+            (fetch $Prelude.param_697)
+            (construct tuple 1)
+            (select
+               (#Prelude.i_92
+                  (suspend
+                     (assign $Prelude.outer_904)
+                     (do $Prelude.return_775
+                        (suspend
+                           (fetch #Prelude.i_92)
+                           (suspend
+                              (resume $Prelude.return_775))
+                           (apply 2))
+                        (invoke toStringInt32))
+                     (assign $Prelude.inner_905)
+                     (fetch $Prelude.outer_904)
+                     (fetch $Prelude.inner_905)
+                     (suspend
+                        (resume $Prelude.return_774))
+                     (apply 2))
+                  (invoke printString))))
+         (resume $Prelude.return_773))
+      (resume $Prelude.return_772))
    (mapList
       $Prelude.return_776
-      ((lambda
+      (lambda
          ($Prelude.param_698 $Prelude.return_777)
-         ((lambda
+         (lambda
             ($Prelude.param_699 $Prelude.return_778)
-            ((do $Prelude.return_779
-               ((fetch $Prelude.param_698)
-                  (fetch $Prelude.param_699)
-                  (construct tuple 2)
-                  (select
-                     ((tuple
-                        (#Prelude.__38
-                           (Nil ())))
-                        ((suspend
-                           ((resume $Prelude.return_779)))
-                           (invoke Nil)))
-                     ((tuple
-                        (#Prelude.f_39
-                           (Cons
-                              (#Prelude.x_40 #Prelude.xs_41))))
-                        ((suspend
-                           ((then $Prelude.outer_906
-                              ((do $Prelude.return_781
-                                 ((fetch #Prelude.f_39)
-                                    (fetch #Prelude.x_40)
-                                    (suspend
-                                       ((resume $Prelude.return_781)))
-                                    (apply 2)))
-                                 (then $Prelude.inner_907
-                                    ((fetch $Prelude.outer_906)
-                                       (fetch $Prelude.inner_907)
-                                       (suspend
-                                          ((then $Prelude.outer_908
-                                             ((do $Prelude.return_780
-                                                ((suspend
-                                                   ((fetch #Prelude.f_39)
-                                                      (suspend
-                                                         ((fetch #Prelude.xs_41)
-                                                            (suspend
-                                                               ((resume $Prelude.return_780)))
-                                                            (apply 2)))
-                                                      (apply 2)))
-                                                   (invoke mapList)))
-                                                (then $Prelude.inner_909
-                                                   ((fetch $Prelude.outer_908)
-                                                      (fetch $Prelude.inner_909)
-                                                      (suspend
-                                                         ((resume $Prelude.return_779)))
-                                                      (apply 2)))))))
-                                       (apply 2)))))))
-                           (invoke Cons))))))
-               (resume $Prelude.return_778)))
-            (resume $Prelude.return_777)))
-         (resume $Prelude.return_776)))
-   (listToString
-      $Prelude.return_782
-      ((lambda
-         ($Prelude.param_700 $Prelude.return_783)
-         ((do $Prelude.return_784
-            ((fetch $Prelude.param_700)
-               (construct tuple 1)
-               (select
-                  ((Nil ())
-                     ((suspend
-                        ((push "")
-                           (suspend
-                              ((resume $Prelude.return_784)))
-                           (apply 2)))
-                        (invoke String#)))
-                  ((Cons
-                     (#Prelude.c_42 #Prelude.cs_43))
-                     ((suspend
-                        ((fetch #Prelude.c_42)
-                           (suspend
-                              ((then $Prelude.outer_910
-                                 ((do $Prelude.return_785
-                                    ((suspend
-                                       ((fetch #Prelude.cs_43)
-                                          (suspend
-                                             ((resume $Prelude.return_785)))
-                                          (apply 2)))
-                                       (invoke listToString)))
-                                    (then $Prelude.inner_911
-                                       ((fetch $Prelude.outer_910)
-                                          (fetch $Prelude.inner_911)
-                                          (suspend
-                                             ((resume $Prelude.return_784)))
-                                          (apply 2)))))))
-                           (apply 2)))
-                        (invoke consString))))))
-            (resume $Prelude.return_783)))
-         (resume $Prelude.return_782)))
-   (isWhiteSpace
-      $Prelude.return_786
-      ((lambda
-         ($Prelude.param_701 $Prelude.return_787)
-         ((do $Prelude.return_788
-            ((fetch $Prelude.param_701)
-               (construct tuple 1)
-               (select
-                  ((Char#
-                     (' '))
-                     ((suspend
-                        ((resume $Prelude.return_788)))
-                        (invoke True)))
-                  ((Char#
-                     ('\n'))
-                     ((suspend
-                        ((resume $Prelude.return_788)))
-                        (invoke True)))
-                  ((Char#
-                     ('\r'))
-                     ((suspend
-                        ((resume $Prelude.return_788)))
-                        (invoke True)))
-                  ((Char#
-                     ('\t'))
-                     ((suspend
-                        ((resume $Prelude.return_788)))
-                        (invoke True)))
-                  (#Prelude.__61
-                     ((suspend
-                        ((resume $Prelude.return_788)))
-                        (invoke False))))))
-            (resume $Prelude.return_787)))
-         (resume $Prelude.return_786)))
-   (if
-      $Prelude.return_789
-      ((lambda
-         ($Prelude.param_702 $Prelude.return_790)
-         ((lambda
-            ($Prelude.param_703 $Prelude.return_791)
-            ((lambda
-               ($Prelude.param_704 $Prelude.return_792)
-               ((do $Prelude.return_793
-                  ((fetch $Prelude.param_702)
-                     (fetch $Prelude.param_703)
-                     (fetch $Prelude.param_704)
-                     (construct tuple 3)
-                     (select
-                        ((tuple
-                           ((True ())
-                              #Prelude.t_77
-                              #Prelude.__78))
-                           ((fetch #Prelude.t_77)
-                              (construct tuple 0)
-                              (suspend
-                                 ((resume $Prelude.return_793)))
-                              (apply 2)))
-                        ((tuple
-                           ((False ())
-                              #Prelude.__79
-                              #Prelude.f_80))
-                           ((fetch #Prelude.f_80)
-                              (construct tuple 0)
-                              (suspend
-                                 ((resume $Prelude.return_793)))
-                              (apply 2))))))
-                  (resume $Prelude.return_792)))
-               (resume $Prelude.return_791)))
-            (resume $Prelude.return_790)))
-         (resume $Prelude.return_789)))
-   (tailString
-      $Prelude.return_794
-      ((lambda
-         ($Prelude.param_705 $Prelude.return_795)
-         ((do $Prelude.return_796
-            ((fetch $Prelude.param_705)
-               (construct tuple 1)
-               (select
-                  (#Prelude.str_45
-                     ((suspend
-                        ((then $Prelude.outer_914
-                           ((do $Prelude.return_803
-                              ((suspend
-                                 ((fetch #Prelude.str_45)
-                                    (suspend
-                                       ((then $Prelude.outer_924
-                                          ((do $Prelude.return_804
-                                             ((suspend
-                                                ((push "")
-                                                   (suspend
-                                                      ((resume $Prelude.return_804)))
-                                                   (apply 2)))
-                                                (invoke String#)))
-                                             (then $Prelude.inner_925
-                                                ((fetch $Prelude.outer_924)
-                                                   (fetch $Prelude.inner_925)
-                                                   (suspend
-                                                      ((resume $Prelude.return_803)))
-                                                   (apply 2)))))))
-                                    (apply 2)))
-                                 (invoke eqString)))
-                              (then $Prelude.inner_915
-                                 ((fetch $Prelude.outer_914)
-                                    (fetch $Prelude.inner_915)
-                                    (suspend
-                                       ((lambda
-                                          ($Prelude.param_706 $Prelude.return_801)
-                                          ((do $Prelude.return_802
-                                             ((fetch $Prelude.param_706)
-                                                (construct tuple 1)
-                                                (select
-                                                   (#Prelude.$__366
-                                                      ((fetch #Prelude.str_45)
-                                                         (resume $Prelude.return_802))))))
-                                             (resume $Prelude.return_801)))
-                                          (suspend
-                                             ((lambda
-                                                ($Prelude.param_707 $Prelude.return_797)
-                                                ((do $Prelude.return_798
-                                                   ((fetch $Prelude.param_707)
-                                                      (construct tuple 1)
-                                                      (select
-                                                         (#Prelude.$__379
-                                                            ((suspend
-                                                               ((fetch #Prelude.str_45)
-                                                                  (suspend
-                                                                     ((then $Prelude.outer_920
-                                                                        ((do $Prelude.return_800
-                                                                           ((suspend
-                                                                              ((push 1_i64)
-                                                                                 (suspend
-                                                                                    ((resume $Prelude.return_800)))
-                                                                                 (apply 2)))
-                                                                              (invoke Int64#)))
-                                                                           (then $Prelude.inner_921
-                                                                              ((fetch $Prelude.outer_920)
-                                                                                 (fetch $Prelude.inner_921)
-                                                                                 (suspend
-                                                                                    ((then $Prelude.outer_922
-                                                                                       ((do $Prelude.return_799
-                                                                                          ((suspend
-                                                                                             ((fetch #Prelude.str_45)
-                                                                                                (suspend
-                                                                                                   ((resume $Prelude.return_799)))
-                                                                                                (apply 2)))
-                                                                                             (invoke lengthString)))
-                                                                                          (then $Prelude.inner_923
-                                                                                             ((fetch $Prelude.outer_922)
-                                                                                                (fetch $Prelude.inner_923)
-                                                                                                (suspend
-                                                                                                   ((resume $Prelude.return_798)))
-                                                                                                (apply 2)))))))
-                                                                                 (apply 2)))))))
-                                                                  (apply 2)))
-                                                               (invoke substring))))))
-                                                   (resume $Prelude.return_797)))
-                                                (suspend
-                                                   ((resume $Prelude.return_796)))
-                                                (apply 2)))
-                                          (apply 2)))
-                                    (apply 2)))))))
-                        (invoke if))))))
-            (resume $Prelude.return_795)))
-         (resume $Prelude.return_794)))
-   (unless
-      $Prelude.return_805
-      ((lambda
-         ($Prelude.param_708 $Prelude.return_806)
-         ((lambda
-            ($Prelude.param_709 $Prelude.return_807)
-            ((lambda
-               ($Prelude.param_710 $Prelude.return_808)
-               ((do $Prelude.return_809
-                  ((fetch $Prelude.param_708)
-                     (fetch $Prelude.param_709)
-                     (fetch $Prelude.param_710)
-                     (construct tuple 3)
-                     (select
-                        ((tuple
-                           (#Prelude.c_82 #Prelude.tValue_83 #Prelude.f_84))
-                           ((suspend
-                              ((fetch #Prelude.c_82)
-                                 (suspend
-                                    ((lambda
-                                       ($Prelude.param_711 $Prelude.return_810)
-                                       ((do $Prelude.return_811
-                                          ((fetch $Prelude.param_711)
-                                             (construct tuple 1)
-                                             (select
-                                                (#Prelude.$__392
-                                                   ((fetch #Prelude.tValue_83)
-                                                      (resume $Prelude.return_811))))))
-                                          (resume $Prelude.return_810)))
-                                       (suspend
-                                          ((fetch #Prelude.f_84)
-                                             (suspend
-                                                ((resume $Prelude.return_809)))
-                                             (apply 2)))
-                                       (apply 2)))
-                                 (apply 2)))
-                              (invoke if))))))
-                  (resume $Prelude.return_808)))
-               (resume $Prelude.return_807)))
-            (resume $Prelude.return_806)))
-         (resume $Prelude.return_805)))
-   (identity
-      $Prelude.return_812
-      ((lambda
-         ($Prelude.param_712 $Prelude.return_813)
-         ((do $Prelude.return_814
-            ((fetch $Prelude.param_712)
-               (construct tuple 1)
-               (select
-                  (#Prelude.x_1
-                     ((fetch #Prelude.x_1)
-                        (resume $Prelude.return_814))))))
-            (resume $Prelude.return_813)))
-         (resume $Prelude.return_812)))
-   (headString
-      $Prelude.return_815
-      ((lambda
-         ($Prelude.param_713 $Prelude.return_816)
-         ((do $Prelude.return_817
-            ((fetch $Prelude.param_713)
-               (construct tuple 1)
-               (select
-                  (#Prelude.str_44
-                     ((suspend
-                        ((then $Prelude.outer_928
-                           ((do $Prelude.return_824
-                              ((suspend
-                                 ((fetch #Prelude.str_44)
-                                    (suspend
-                                       ((then $Prelude.outer_942
-                                          ((do $Prelude.return_825
-                                             ((suspend
-                                                ((push "")
-                                                   (suspend
-                                                      ((resume $Prelude.return_825)))
-                                                   (apply 2)))
-                                                (invoke String#)))
-                                             (then $Prelude.inner_943
-                                                ((fetch $Prelude.outer_942)
-                                                   (fetch $Prelude.inner_943)
-                                                   (suspend
-                                                      ((resume $Prelude.return_824)))
-                                                   (apply 2)))))))
-                                    (apply 2)))
-                                 (invoke eqString)))
-                              (then $Prelude.inner_929
-                                 ((fetch $Prelude.outer_928)
-                                    (fetch $Prelude.inner_929)
-                                    (suspend
-                                       ((lambda
-                                          ($Prelude.param_714 $Prelude.return_822)
-                                          ((do $Prelude.return_823
-                                             ((fetch $Prelude.param_714)
-                                                (construct tuple 1)
-                                                (select
-                                                   (#Prelude.$__417
-                                                      ((suspend
-                                                         ((resume $Prelude.return_823)))
-                                                         (invoke Nothing))))))
-                                             (resume $Prelude.return_822)))
-                                          (suspend
-                                             ((lambda
-                                                ($Prelude.param_715 $Prelude.return_818)
-                                                ((do $Prelude.return_819
-                                                   ((fetch $Prelude.param_715)
-                                                      (construct tuple 1)
-                                                      (select
-                                                         (#Prelude.$__430
-                                                            ((suspend
-                                                               ((then $Prelude.outer_938
-                                                                  ((do $Prelude.return_820
-                                                                     ((suspend
-                                                                        ((then $Prelude.outer_940
-                                                                           ((do $Prelude.return_821
-                                                                              ((suspend
-                                                                                 ((push 0_i64)
-                                                                                    (suspend
-                                                                                       ((resume $Prelude.return_821)))
-                                                                                    (apply 2)))
-                                                                                 (invoke Int64#)))
-                                                                              (then $Prelude.inner_941
-                                                                                 ((fetch $Prelude.outer_940)
-                                                                                    (fetch $Prelude.inner_941)
-                                                                                    (suspend
-                                                                                       ((fetch #Prelude.str_44)
-                                                                                          (suspend
-                                                                                             ((resume $Prelude.return_820)))
-                                                                                          (apply 2)))
-                                                                                    (apply 2)))))))
-                                                                        (invoke atString)))
-                                                                     (then $Prelude.inner_939
-                                                                        ((fetch $Prelude.outer_938)
-                                                                           (fetch $Prelude.inner_939)
-                                                                           (suspend
-                                                                              ((resume $Prelude.return_819)))
-                                                                           (apply 2)))))))
-                                                               (invoke Just))))))
-                                                   (resume $Prelude.return_818)))
-                                                (suspend
-                                                   ((resume $Prelude.return_817)))
-                                                (apply 2)))
-                                          (apply 2)))
-                                    (apply 2)))))))
-                        (invoke if))))))
-            (resume $Prelude.return_816)))
-         (resume $Prelude.return_815)))
-   (head
-      $Prelude.return_826
-      ((lambda
-         ($Prelude.param_716 $Prelude.return_827)
-         ((do $Prelude.return_828
-            ((fetch $Prelude.param_716)
-               (construct tuple 1)
-               (select
-                  ((Cons
-                     (#Prelude.x_21 #Prelude.__22))
-                     ((fetch #Prelude.x_21)
-                        (resume $Prelude.return_828)))
-                  (#Prelude.__23
-                     ((suspend
-                        ((construct tuple 0)
-                           (suspend
-                              ((resume $Prelude.return_828)))
-                           (apply 2)))
-                        (invoke exitFailure))))))
-            (resume $Prelude.return_827)))
-         (resume $Prelude.return_826)))
-   (fst
-      $Prelude.return_829
-      ((lambda
-         ($Prelude.param_717 $Prelude.return_830)
-         ((do $Prelude.return_831
-            ((fetch $Prelude.param_717)
-               (construct tuple 1)
+            (do $Prelude.return_779
+               (fetch $Prelude.param_698)
+               (fetch $Prelude.param_699)
+               (construct tuple 2)
                (select
                   ((tuple
-                     (#Prelude.a_12 #Prelude.b_13))
-                     ((fetch #Prelude.a_12)
-                        (resume $Prelude.return_831))))))
-            (resume $Prelude.return_830)))
-         (resume $Prelude.return_829)))
-   (foldl
-      $Prelude.return_832
-      ((lambda
-         ($Prelude.param_718 $Prelude.return_833)
-         ((lambda
-            ($Prelude.param_719 $Prelude.return_834)
-            ((lambda
-               ($Prelude.param_720 $Prelude.return_835)
-               ((do $Prelude.return_836
-                  ((fetch $Prelude.param_718)
-                     (fetch $Prelude.param_719)
-                     (fetch $Prelude.param_720)
-                     (construct tuple 3)
-                     (select
-                        ((tuple
-                           (#Prelude.__30
-                              #Prelude.z_31
-                              (Nil ())))
-                           ((fetch #Prelude.z_31)
-                              (resume $Prelude.return_836)))
-                        ((tuple
-                           (#Prelude.f_32
-                              #Prelude.z_33
-                              (Cons
-                                 (#Prelude.x_34 #Prelude.xs_35))))
-                           ((suspend
-                              ((fetch #Prelude.f_32)
+                     (#Prelude.__38
+                        (Nil ())))
+                     (suspend
+                        (resume $Prelude.return_779))
+                     (invoke Nil))
+                  ((tuple
+                     (#Prelude.f_39
+                        (Cons
+                           (#Prelude.x_40 #Prelude.xs_41))))
+                     (suspend
+                        (assign $Prelude.outer_906)
+                        (do $Prelude.return_781
+                           (fetch #Prelude.f_39)
+                           (fetch #Prelude.x_40)
+                           (suspend
+                              (resume $Prelude.return_781))
+                           (apply 2))
+                        (assign $Prelude.inner_907)
+                        (fetch $Prelude.outer_906)
+                        (fetch $Prelude.inner_907)
+                        (suspend
+                           (assign $Prelude.outer_908)
+                           (do $Prelude.return_780
+                              (suspend
+                                 (fetch #Prelude.f_39)
                                  (suspend
-                                    ((then $Prelude.outer_944
-                                       ((do $Prelude.return_837
-                                          ((fetch #Prelude.f_32)
-                                             (fetch #Prelude.z_33)
-                                             (suspend
-                                                ((fetch #Prelude.x_34)
-                                                   (suspend
-                                                      ((resume $Prelude.return_837)))
-                                                   (apply 2)))
-                                             (apply 2)))
-                                          (then $Prelude.inner_945
-                                             ((fetch $Prelude.outer_944)
-                                                (fetch $Prelude.inner_945)
-                                                (suspend
-                                                   ((fetch #Prelude.xs_35)
-                                                      (suspend
-                                                         ((resume $Prelude.return_836)))
-                                                      (apply 2)))
-                                                (apply 2)))))))
-                                 (apply 2)))
-                              (invoke foldl))))))
-                  (resume $Prelude.return_835)))
-               (resume $Prelude.return_834)))
-            (resume $Prelude.return_833)))
-         (resume $Prelude.return_832)))
-   (const
-      $Prelude.return_838
-      ((lambda
-         ($Prelude.param_721 $Prelude.return_839)
-         ((lambda
-            ($Prelude.param_722 $Prelude.return_840)
-            ((do $Prelude.return_841
-               ((fetch $Prelude.param_721)
-                  (fetch $Prelude.param_722)
-                  (construct tuple 2)
+                                    (fetch #Prelude.xs_41)
+                                    (suspend
+                                       (resume $Prelude.return_780))
+                                    (apply 2))
+                                 (apply 2))
+                              (invoke mapList))
+                           (assign $Prelude.inner_909)
+                           (fetch $Prelude.outer_908)
+                           (fetch $Prelude.inner_909)
+                           (suspend
+                              (resume $Prelude.return_779))
+                           (apply 2))
+                        (apply 2))
+                     (invoke Cons))))
+            (resume $Prelude.return_778))
+         (resume $Prelude.return_777))
+      (resume $Prelude.return_776))
+   (listToString
+      $Prelude.return_782
+      (lambda
+         ($Prelude.param_700 $Prelude.return_783)
+         (do $Prelude.return_784
+            (fetch $Prelude.param_700)
+            (construct tuple 1)
+            (select
+               ((Nil ())
+                  (suspend
+                     (push "")
+                     (suspend
+                        (resume $Prelude.return_784))
+                     (apply 2))
+                  (invoke String#))
+               ((Cons
+                  (#Prelude.c_42 #Prelude.cs_43))
+                  (suspend
+                     (fetch #Prelude.c_42)
+                     (suspend
+                        (assign $Prelude.outer_910)
+                        (do $Prelude.return_785
+                           (suspend
+                              (fetch #Prelude.cs_43)
+                              (suspend
+                                 (resume $Prelude.return_785))
+                              (apply 2))
+                           (invoke listToString))
+                        (assign $Prelude.inner_911)
+                        (fetch $Prelude.outer_910)
+                        (fetch $Prelude.inner_911)
+                        (suspend
+                           (resume $Prelude.return_784))
+                        (apply 2))
+                     (apply 2))
+                  (invoke consString))))
+         (resume $Prelude.return_783))
+      (resume $Prelude.return_782))
+   (isWhiteSpace
+      $Prelude.return_786
+      (lambda
+         ($Prelude.param_701 $Prelude.return_787)
+         (do $Prelude.return_788
+            (fetch $Prelude.param_701)
+            (construct tuple 1)
+            (select
+               ((Char#
+                  (' '))
+                  (suspend
+                     (resume $Prelude.return_788))
+                  (invoke True))
+               ((Char#
+                  ('\n'))
+                  (suspend
+                     (resume $Prelude.return_788))
+                  (invoke True))
+               ((Char#
+                  ('\r'))
+                  (suspend
+                     (resume $Prelude.return_788))
+                  (invoke True))
+               ((Char#
+                  ('\t'))
+                  (suspend
+                     (resume $Prelude.return_788))
+                  (invoke True))
+               (#Prelude.__61
+                  (suspend
+                     (resume $Prelude.return_788))
+                  (invoke False))))
+         (resume $Prelude.return_787))
+      (resume $Prelude.return_786))
+   (if
+      $Prelude.return_789
+      (lambda
+         ($Prelude.param_702 $Prelude.return_790)
+         (lambda
+            ($Prelude.param_703 $Prelude.return_791)
+            (lambda
+               ($Prelude.param_704 $Prelude.return_792)
+               (do $Prelude.return_793
+                  (fetch $Prelude.param_702)
+                  (fetch $Prelude.param_703)
+                  (fetch $Prelude.param_704)
+                  (construct tuple 3)
                   (select
-                     ((tuple
-                        (#Prelude.a_4 #Prelude.__5))
-                        ((fetch #Prelude.a_4)
-                           (resume $Prelude.return_841))))))
-               (resume $Prelude.return_840)))
-            (resume $Prelude.return_839)))
-         (resume $Prelude.return_838)))
-   (cond
-      $Prelude.return_842
-      ((lambda
-         ($Prelude.param_723 $Prelude.return_843)
-         ((do $Prelude.return_844
-            ((fetch $Prelude.param_723)
-               (construct tuple 1)
-               (select
-                  ((Nil ())
-                     ((suspend
-                        ((then $Prelude.outer_946
-                           ((do $Prelude.return_845
-                              ((suspend
-                                 ((push "no branch")
-                                    (suspend
-                                       ((resume $Prelude.return_845)))
-                                    (apply 2)))
-                                 (invoke String#)))
-                              (then $Prelude.inner_947
-                                 ((fetch $Prelude.outer_946)
-                                    (fetch $Prelude.inner_947)
-                                    (suspend
-                                       ((resume $Prelude.return_844)))
-                                    (apply 2)))))))
-                        (invoke panic)))
-                  ((Cons
                      ((tuple
                         ((True ())
-                           #Prelude.x_86))
-                        #Prelude.__87))
-                     ((fetch #Prelude.x_86)
+                           #Prelude.t_77
+                           #Prelude.__78))
+                        (fetch #Prelude.t_77)
                         (construct tuple 0)
                         (suspend
-                           ((resume $Prelude.return_844)))
-                        (apply 2)))
-                  ((Cons
+                           (resume $Prelude.return_793))
+                        (apply 2))
                      ((tuple
                         ((False ())
-                           #Prelude.__88))
-                        #Prelude.xs_89))
-                     ((suspend
-                        ((fetch #Prelude.xs_89)
+                           #Prelude.__79
+                           #Prelude.f_80))
+                        (fetch #Prelude.f_80)
+                        (construct tuple 0)
+                        (suspend
+                           (resume $Prelude.return_793))
+                        (apply 2))))
+               (resume $Prelude.return_792))
+            (resume $Prelude.return_791))
+         (resume $Prelude.return_790))
+      (resume $Prelude.return_789))
+   (tailString
+      $Prelude.return_794
+      (lambda
+         ($Prelude.param_705 $Prelude.return_795)
+         (do $Prelude.return_796
+            (fetch $Prelude.param_705)
+            (construct tuple 1)
+            (select
+               (#Prelude.str_45
+                  (suspend
+                     (assign $Prelude.outer_914)
+                     (do $Prelude.return_803
+                        (suspend
+                           (fetch #Prelude.str_45)
                            (suspend
-                              ((resume $Prelude.return_844)))
-                           (apply 2)))
-                        (invoke cond))))))
-            (resume $Prelude.return_843)))
-         (resume $Prelude.return_842)))
-   (concatString
-      $Prelude.return_846
-      ((lambda
-         ($Prelude.param_724 $Prelude.return_847)
-         ((do $Prelude.return_848
-            ((fetch $Prelude.param_724)
-               (construct tuple 1)
-               (select
-                  ((Nil ())
-                     ((suspend
-                        ((push "")
-                           (suspend
-                              ((resume $Prelude.return_848)))
-                           (apply 2)))
-                        (invoke String#)))
-                  ((Cons
-                     (#Prelude.x_52 #Prelude.xs_53))
-                     ((suspend
-                        ((fetch #Prelude.x_52)
-                           (suspend
-                              ((then $Prelude.outer_948
-                                 ((do $Prelude.return_849
-                                    ((suspend
-                                       ((fetch #Prelude.xs_53)
-                                          (suspend
-                                             ((resume $Prelude.return_849)))
-                                          (apply 2)))
-                                       (invoke concatString)))
-                                    (then $Prelude.inner_949
-                                       ((fetch $Prelude.outer_948)
-                                          (fetch $Prelude.inner_949)
-                                          (suspend
-                                             ((resume $Prelude.return_848)))
-                                          (apply 2)))))))
-                           (apply 2)))
-                        (invoke appendString))))))
-            (resume $Prelude.return_847)))
-         (resume $Prelude.return_846)))
-   (case
-      $Prelude.return_850
-      ((lambda
-         ($Prelude.param_725 $Prelude.return_851)
-         ((lambda
-            ($Prelude.param_726 $Prelude.return_852)
-            ((do $Prelude.return_853
-               ((fetch $Prelude.param_725)
-                  (fetch $Prelude.param_726)
-                  (construct tuple 2)
-                  (select
-                     ((tuple
-                        (#Prelude.x_8 #Prelude.f_9))
-                        ((fetch #Prelude.f_9)
-                           (fetch #Prelude.x_8)
-                           (suspend
-                              ((resume $Prelude.return_853)))
-                           (apply 2))))))
-               (resume $Prelude.return_852)))
-            (resume $Prelude.return_851)))
-         (resume $Prelude.return_850)))
-   (dropWhileString
-      $Prelude.return_854
-      ((lambda
-         ($Prelude.param_727 $Prelude.return_855)
-         ((lambda
-            ($Prelude.param_728 $Prelude.return_856)
-            ((do $Prelude.return_857
-               ((fetch $Prelude.param_727)
-                  (fetch $Prelude.param_728)
-                  (construct tuple 2)
-                  (select
-                     ((tuple
-                        (#Prelude.pred_49 #Prelude.str_50))
-                        ((suspend
-                           ((then $Prelude.outer_950
-                              ((do $Prelude.return_866
-                                 ((suspend
-                                    ((fetch #Prelude.str_50)
-                                       (suspend
-                                          ((resume $Prelude.return_866)))
-                                       (apply 2)))
-                                    (invoke headString)))
-                                 (then $Prelude.inner_951
-                                    ((fetch $Prelude.outer_950)
-                                       (fetch $Prelude.inner_951)
-                                       (suspend
-                                          ((lambda
-                                             ($Prelude.param_729 $Prelude.return_858)
-                                             ((do $Prelude.return_859
-                                                ((fetch $Prelude.param_729)
-                                                   (construct tuple 1)
-                                                   (select
-                                                      ((Nothing ())
-                                                         ((fetch #Prelude.str_50)
-                                                            (resume $Prelude.return_859)))
-                                                      ((Just
-                                                         (#Prelude.c_51))
-                                                         ((suspend
-                                                            ((then $Prelude.outer_958
-                                                               ((do $Prelude.return_865
-                                                                  ((fetch #Prelude.pred_49)
-                                                                     (fetch #Prelude.c_51)
-                                                                     (suspend
-                                                                        ((resume $Prelude.return_865)))
-                                                                     (apply 2)))
-                                                                  (then $Prelude.inner_959
-                                                                     ((fetch $Prelude.outer_958)
-                                                                        (fetch $Prelude.inner_959)
-                                                                        (suspend
-                                                                           ((lambda
-                                                                              ($Prelude.param_730 $Prelude.return_862)
-                                                                              ((do $Prelude.return_863
-                                                                                 ((fetch $Prelude.param_730)
-                                                                                    (construct tuple 1)
-                                                                                    (select
-                                                                                       (#Prelude.$__605
-                                                                                          ((suspend
-                                                                                             ((fetch #Prelude.pred_49)
-                                                                                                (suspend
-                                                                                                   ((then $Prelude.outer_962
-                                                                                                      ((do $Prelude.return_864
-                                                                                                         ((suspend
-                                                                                                            ((fetch #Prelude.str_50)
-                                                                                                               (suspend
-                                                                                                                  ((resume $Prelude.return_864)))
-                                                                                                               (apply 2)))
-                                                                                                            (invoke tailString)))
-                                                                                                         (then $Prelude.inner_963
-                                                                                                            ((fetch $Prelude.outer_962)
-                                                                                                               (fetch $Prelude.inner_963)
-                                                                                                               (suspend
-                                                                                                                  ((resume $Prelude.return_863)))
-                                                                                                               (apply 2)))))))
-                                                                                                (apply 2)))
-                                                                                             (invoke dropWhileString))))))
-                                                                                 (resume $Prelude.return_862)))
-                                                                              (suspend
-                                                                                 ((lambda
-                                                                                    ($Prelude.param_731 $Prelude.return_860)
-                                                                                    ((do $Prelude.return_861
-                                                                                       ((fetch $Prelude.param_731)
-                                                                                          (construct tuple 1)
-                                                                                          (select
-                                                                                             (#Prelude.$__608
-                                                                                                ((fetch #Prelude.str_50)
-                                                                                                   (resume $Prelude.return_861))))))
-                                                                                       (resume $Prelude.return_860)))
-                                                                                    (suspend
-                                                                                       ((resume $Prelude.return_859)))
-                                                                                    (apply 2)))
-                                                                              (apply 2)))
-                                                                        (apply 2)))))))
-                                                            (invoke if))))))
-                                                (resume $Prelude.return_858)))
-                                             (suspend
-                                                ((resume $Prelude.return_857)))
-                                             (apply 2)))
-                                       (apply 2)))))))
-                           (invoke case))))))
-               (resume $Prelude.return_856)))
-            (resume $Prelude.return_855)))
-         (resume $Prelude.return_854)))
-   (takeWhileString
-      $Prelude.return_867
-      ((lambda
-         ($Prelude.param_732 $Prelude.return_868)
-         ((lambda
-            ($Prelude.param_733 $Prelude.return_869)
-            ((do $Prelude.return_870
-               ((fetch $Prelude.param_732)
-                  (fetch $Prelude.param_733)
-                  (construct tuple 2)
-                  (select
-                     ((tuple
-                        (#Prelude.pred_46 #Prelude.str_47))
-                        ((suspend
-                           ((then $Prelude.outer_964
-                              ((do $Prelude.return_880
-                                 ((suspend
-                                    ((fetch #Prelude.str_47)
-                                       (suspend
-                                          ((resume $Prelude.return_880)))
-                                       (apply 2)))
-                                    (invoke headString)))
-                                 (then $Prelude.inner_965
-                                    ((fetch $Prelude.outer_964)
-                                       (fetch $Prelude.inner_965)
-                                       (suspend
-                                          ((lambda
-                                             ($Prelude.param_734 $Prelude.return_871)
-                                             ((do $Prelude.return_872
-                                                ((fetch $Prelude.param_734)
-                                                   (construct tuple 1)
-                                                   (select
-                                                      ((Nothing ())
-                                                         ((fetch #Prelude.str_47)
-                                                            (resume $Prelude.return_872)))
-                                                      ((Just
-                                                         (#Prelude.c_48))
-                                                         ((suspend
-                                                            ((then $Prelude.outer_980
-                                                               ((do $Prelude.return_879
-                                                                  ((fetch #Prelude.pred_46)
-                                                                     (fetch #Prelude.c_48)
-                                                                     (suspend
-                                                                        ((resume $Prelude.return_879)))
-                                                                     (apply 2)))
-                                                                  (then $Prelude.inner_981
-                                                                     ((fetch $Prelude.outer_980)
-                                                                        (fetch $Prelude.inner_981)
-                                                                        (suspend
-                                                                           ((lambda
-                                                                              ($Prelude.param_735 $Prelude.return_875)
-                                                                              ((do $Prelude.return_876
-                                                                                 ((fetch $Prelude.param_735)
-                                                                                    (construct tuple 1)
-                                                                                    (select
-                                                                                       (#Prelude.$__651
-                                                                                          ((suspend
-                                                                                             ((fetch #Prelude.c_48)
-                                                                                                (suspend
-                                                                                                   ((then $Prelude.outer_990
-                                                                                                      ((do $Prelude.return_877
-                                                                                                         ((suspend
-                                                                                                            ((fetch #Prelude.pred_46)
-                                                                                                               (suspend
-                                                                                                                  ((then $Prelude.outer_992
-                                                                                                                     ((do $Prelude.return_878
-                                                                                                                        ((suspend
-                                                                                                                           ((fetch #Prelude.str_47)
-                                                                                                                              (suspend
-                                                                                                                                 ((resume $Prelude.return_878)))
-                                                                                                                              (apply 2)))
-                                                                                                                           (invoke tailString)))
-                                                                                                                        (then $Prelude.inner_993
-                                                                                                                           ((fetch $Prelude.outer_992)
-                                                                                                                              (fetch $Prelude.inner_993)
-                                                                                                                              (suspend
-                                                                                                                                 ((resume $Prelude.return_877)))
-                                                                                                                              (apply 2)))))))
-                                                                                                               (apply 2)))
-                                                                                                            (invoke takeWhileString)))
-                                                                                                         (then $Prelude.inner_991
-                                                                                                            ((fetch $Prelude.outer_990)
-                                                                                                               (fetch $Prelude.inner_991)
-                                                                                                               (suspend
-                                                                                                                  ((resume $Prelude.return_876)))
-                                                                                                               (apply 2)))))))
-                                                                                                (apply 2)))
-                                                                                             (invoke consString))))))
-                                                                                 (resume $Prelude.return_875)))
-                                                                              (suspend
-                                                                                 ((lambda
-                                                                                    ($Prelude.param_736 $Prelude.return_873)
-                                                                                    ((do $Prelude.return_874
-                                                                                       ((fetch $Prelude.param_736)
-                                                                                          (construct tuple 1)
-                                                                                          (select
-                                                                                             (#Prelude.$__656
-                                                                                                ((suspend
-                                                                                                   ((push "")
-                                                                                                      (suspend
-                                                                                                         ((resume $Prelude.return_874)))
-                                                                                                      (apply 2)))
-                                                                                                   (invoke String#))))))
-                                                                                       (resume $Prelude.return_873)))
-                                                                                    (suspend
-                                                                                       ((resume $Prelude.return_872)))
-                                                                                    (apply 2)))
-                                                                              (apply 2)))
-                                                                        (apply 2)))))))
-                                                            (invoke if))))))
-                                                (resume $Prelude.return_871)))
-                                             (suspend
-                                                ((resume $Prelude.return_870)))
-                                             (apply 2)))
-                                       (apply 2)))))))
-                           (invoke case))))))
-               (resume $Prelude.return_869)))
-            (resume $Prelude.return_868)))
-         (resume $Prelude.return_867)))
-   (<|
-      $Prelude.return_881
-      ((lambda
-         ($Prelude.param_737 $Prelude.return_882)
-         ((lambda
-            ($Prelude.param_738 $Prelude.return_883)
-            ((do $Prelude.return_884
-               ((fetch $Prelude.param_737)
-                  (fetch $Prelude.param_738)
-                  (construct tuple 2)
-                  (select
-                     ((tuple
-                        (#Prelude.f_74 #Prelude.x_75))
-                        ((fetch #Prelude.f_74)
-                           (fetch #Prelude.x_75)
-                           (suspend
-                              ((resume $Prelude.return_884)))
-                           (apply 2))))))
-               (resume $Prelude.return_883)))
-            (resume $Prelude.return_882)))
-         (resume $Prelude.return_881)))
-   (. $Prelude.return_885
-      ((lambda
-         ($Prelude.param_739 $Prelude.return_886)
-         ((lambda
-            ($Prelude.param_740 $Prelude.return_887)
-            ((do $Prelude.return_888
-               ((fetch $Prelude.param_739)
-                  (fetch $Prelude.param_740)
-                  (construct tuple 2)
-                  (select
-                     ((tuple
-                        (#Prelude.f_65 #Prelude.g_66))
-                        ((lambda
-                           ($Prelude.param_741 $Prelude.return_889)
-                           ((do $Prelude.return_890
-                              ((fetch $Prelude.param_741)
+                              (assign $Prelude.outer_924)
+                              (do $Prelude.return_804
+                                 (suspend
+                                    (push "")
+                                    (suspend
+                                       (resume $Prelude.return_804))
+                                    (apply 2))
+                                 (invoke String#))
+                              (assign $Prelude.inner_925)
+                              (fetch $Prelude.outer_924)
+                              (fetch $Prelude.inner_925)
+                              (suspend
+                                 (resume $Prelude.return_803))
+                              (apply 2))
+                           (apply 2))
+                        (invoke eqString))
+                     (assign $Prelude.inner_915)
+                     (fetch $Prelude.outer_914)
+                     (fetch $Prelude.inner_915)
+                     (suspend
+                        (lambda
+                           ($Prelude.param_706 $Prelude.return_801)
+                           (do $Prelude.return_802
+                              (fetch $Prelude.param_706)
+                              (construct tuple 1)
+                              (select
+                                 (#Prelude.$__366
+                                    (fetch #Prelude.str_45)
+                                    (resume $Prelude.return_802))))
+                           (resume $Prelude.return_801))
+                        (suspend
+                           (lambda
+                              ($Prelude.param_707 $Prelude.return_797)
+                              (do $Prelude.return_798
+                                 (fetch $Prelude.param_707)
                                  (construct tuple 1)
                                  (select
-                                    (#Prelude.x_67
-                                       ((fetch #Prelude.f_65)
-                                          (then $Prelude.outer_994
-                                             ((do $Prelude.return_891
-                                                ((fetch #Prelude.g_66)
-                                                   (fetch #Prelude.x_67)
+                                    (#Prelude.$__379
+                                       (suspend
+                                          (fetch #Prelude.str_45)
+                                          (suspend
+                                             (assign $Prelude.outer_920)
+                                             (do $Prelude.return_800
+                                                (suspend
+                                                   (push 1_i64)
                                                    (suspend
-                                                      ((resume $Prelude.return_891)))
-                                                   (apply 2)))
-                                                (then $Prelude.inner_995
-                                                   ((fetch $Prelude.outer_994)
-                                                      (fetch $Prelude.inner_995)
+                                                      (resume $Prelude.return_800))
+                                                   (apply 2))
+                                                (invoke Int64#))
+                                             (assign $Prelude.inner_921)
+                                             (fetch $Prelude.outer_920)
+                                             (fetch $Prelude.inner_921)
+                                             (suspend
+                                                (assign $Prelude.outer_922)
+                                                (do $Prelude.return_799
+                                                   (suspend
+                                                      (fetch #Prelude.str_45)
                                                       (suspend
-                                                         ((resume $Prelude.return_890)))
-                                                      (apply 2))))))))))
-                              (resume $Prelude.return_889)))
-                           (resume $Prelude.return_888))))))
-               (resume $Prelude.return_887)))
-            (resume $Prelude.return_886)))
-         (resume $Prelude.return_885))))
+                                                         (resume $Prelude.return_799))
+                                                      (apply 2))
+                                                   (invoke lengthString))
+                                                (assign $Prelude.inner_923)
+                                                (fetch $Prelude.outer_922)
+                                                (fetch $Prelude.inner_923)
+                                                (suspend
+                                                   (resume $Prelude.return_798))
+                                                (apply 2))
+                                             (apply 2))
+                                          (apply 2))
+                                       (invoke substring))))
+                              (resume $Prelude.return_797))
+                           (suspend
+                              (resume $Prelude.return_796))
+                           (apply 2))
+                        (apply 2))
+                     (apply 2))
+                  (invoke if))))
+         (resume $Prelude.return_795))
+      (resume $Prelude.return_794))
+   (unless
+      $Prelude.return_805
+      (lambda
+         ($Prelude.param_708 $Prelude.return_806)
+         (lambda
+            ($Prelude.param_709 $Prelude.return_807)
+            (lambda
+               ($Prelude.param_710 $Prelude.return_808)
+               (do $Prelude.return_809
+                  (fetch $Prelude.param_708)
+                  (fetch $Prelude.param_709)
+                  (fetch $Prelude.param_710)
+                  (construct tuple 3)
+                  (select
+                     ((tuple
+                        (#Prelude.c_82 #Prelude.tValue_83 #Prelude.f_84))
+                        (suspend
+                           (fetch #Prelude.c_82)
+                           (suspend
+                              (lambda
+                                 ($Prelude.param_711 $Prelude.return_810)
+                                 (do $Prelude.return_811
+                                    (fetch $Prelude.param_711)
+                                    (construct tuple 1)
+                                    (select
+                                       (#Prelude.$__392
+                                          (fetch #Prelude.tValue_83)
+                                          (resume $Prelude.return_811))))
+                                 (resume $Prelude.return_810))
+                              (suspend
+                                 (fetch #Prelude.f_84)
+                                 (suspend
+                                    (resume $Prelude.return_809))
+                                 (apply 2))
+                              (apply 2))
+                           (apply 2))
+                        (invoke if))))
+               (resume $Prelude.return_808))
+            (resume $Prelude.return_807))
+         (resume $Prelude.return_806))
+      (resume $Prelude.return_805))
+   (identity
+      $Prelude.return_812
+      (lambda
+         ($Prelude.param_712 $Prelude.return_813)
+         (do $Prelude.return_814
+            (fetch $Prelude.param_712)
+            (construct tuple 1)
+            (select
+               (#Prelude.x_1
+                  (fetch #Prelude.x_1)
+                  (resume $Prelude.return_814))))
+         (resume $Prelude.return_813))
+      (resume $Prelude.return_812))
+   (headString
+      $Prelude.return_815
+      (lambda
+         ($Prelude.param_713 $Prelude.return_816)
+         (do $Prelude.return_817
+            (fetch $Prelude.param_713)
+            (construct tuple 1)
+            (select
+               (#Prelude.str_44
+                  (suspend
+                     (assign $Prelude.outer_928)
+                     (do $Prelude.return_824
+                        (suspend
+                           (fetch #Prelude.str_44)
+                           (suspend
+                              (assign $Prelude.outer_942)
+                              (do $Prelude.return_825
+                                 (suspend
+                                    (push "")
+                                    (suspend
+                                       (resume $Prelude.return_825))
+                                    (apply 2))
+                                 (invoke String#))
+                              (assign $Prelude.inner_943)
+                              (fetch $Prelude.outer_942)
+                              (fetch $Prelude.inner_943)
+                              (suspend
+                                 (resume $Prelude.return_824))
+                              (apply 2))
+                           (apply 2))
+                        (invoke eqString))
+                     (assign $Prelude.inner_929)
+                     (fetch $Prelude.outer_928)
+                     (fetch $Prelude.inner_929)
+                     (suspend
+                        (lambda
+                           ($Prelude.param_714 $Prelude.return_822)
+                           (do $Prelude.return_823
+                              (fetch $Prelude.param_714)
+                              (construct tuple 1)
+                              (select
+                                 (#Prelude.$__417
+                                    (suspend
+                                       (resume $Prelude.return_823))
+                                    (invoke Nothing))))
+                           (resume $Prelude.return_822))
+                        (suspend
+                           (lambda
+                              ($Prelude.param_715 $Prelude.return_818)
+                              (do $Prelude.return_819
+                                 (fetch $Prelude.param_715)
+                                 (construct tuple 1)
+                                 (select
+                                    (#Prelude.$__430
+                                       (suspend
+                                          (assign $Prelude.outer_938)
+                                          (do $Prelude.return_820
+                                             (suspend
+                                                (assign $Prelude.outer_940)
+                                                (do $Prelude.return_821
+                                                   (suspend
+                                                      (push 0_i64)
+                                                      (suspend
+                                                         (resume $Prelude.return_821))
+                                                      (apply 2))
+                                                   (invoke Int64#))
+                                                (assign $Prelude.inner_941)
+                                                (fetch $Prelude.outer_940)
+                                                (fetch $Prelude.inner_941)
+                                                (suspend
+                                                   (fetch #Prelude.str_44)
+                                                   (suspend
+                                                      (resume $Prelude.return_820))
+                                                   (apply 2))
+                                                (apply 2))
+                                             (invoke atString))
+                                          (assign $Prelude.inner_939)
+                                          (fetch $Prelude.outer_938)
+                                          (fetch $Prelude.inner_939)
+                                          (suspend
+                                             (resume $Prelude.return_819))
+                                          (apply 2))
+                                       (invoke Just))))
+                              (resume $Prelude.return_818))
+                           (suspend
+                              (resume $Prelude.return_817))
+                           (apply 2))
+                        (apply 2))
+                     (apply 2))
+                  (invoke if))))
+         (resume $Prelude.return_816))
+      (resume $Prelude.return_815))
+   (head
+      $Prelude.return_826
+      (lambda
+         ($Prelude.param_716 $Prelude.return_827)
+         (do $Prelude.return_828
+            (fetch $Prelude.param_716)
+            (construct tuple 1)
+            (select
+               ((Cons
+                  (#Prelude.x_21 #Prelude.__22))
+                  (fetch #Prelude.x_21)
+                  (resume $Prelude.return_828))
+               (#Prelude.__23
+                  (suspend
+                     (construct tuple 0)
+                     (suspend
+                        (resume $Prelude.return_828))
+                     (apply 2))
+                  (invoke exitFailure))))
+         (resume $Prelude.return_827))
+      (resume $Prelude.return_826))
+   (fst
+      $Prelude.return_829
+      (lambda
+         ($Prelude.param_717 $Prelude.return_830)
+         (do $Prelude.return_831
+            (fetch $Prelude.param_717)
+            (construct tuple 1)
+            (select
+               ((tuple
+                  (#Prelude.a_12 #Prelude.b_13))
+                  (fetch #Prelude.a_12)
+                  (resume $Prelude.return_831))))
+         (resume $Prelude.return_830))
+      (resume $Prelude.return_829))
+   (foldl
+      $Prelude.return_832
+      (lambda
+         ($Prelude.param_718 $Prelude.return_833)
+         (lambda
+            ($Prelude.param_719 $Prelude.return_834)
+            (lambda
+               ($Prelude.param_720 $Prelude.return_835)
+               (do $Prelude.return_836
+                  (fetch $Prelude.param_718)
+                  (fetch $Prelude.param_719)
+                  (fetch $Prelude.param_720)
+                  (construct tuple 3)
+                  (select
+                     ((tuple
+                        (#Prelude.__30
+                           #Prelude.z_31
+                           (Nil ())))
+                        (fetch #Prelude.z_31)
+                        (resume $Prelude.return_836))
+                     ((tuple
+                        (#Prelude.f_32
+                           #Prelude.z_33
+                           (Cons
+                              (#Prelude.x_34 #Prelude.xs_35))))
+                        (suspend
+                           (fetch #Prelude.f_32)
+                           (suspend
+                              (assign $Prelude.outer_944)
+                              (do $Prelude.return_837
+                                 (fetch #Prelude.f_32)
+                                 (fetch #Prelude.z_33)
+                                 (suspend
+                                    (fetch #Prelude.x_34)
+                                    (suspend
+                                       (resume $Prelude.return_837))
+                                    (apply 2))
+                                 (apply 2))
+                              (assign $Prelude.inner_945)
+                              (fetch $Prelude.outer_944)
+                              (fetch $Prelude.inner_945)
+                              (suspend
+                                 (fetch #Prelude.xs_35)
+                                 (suspend
+                                    (resume $Prelude.return_836))
+                                 (apply 2))
+                              (apply 2))
+                           (apply 2))
+                        (invoke foldl))))
+               (resume $Prelude.return_835))
+            (resume $Prelude.return_834))
+         (resume $Prelude.return_833))
+      (resume $Prelude.return_832))
+   (const
+      $Prelude.return_838
+      (lambda
+         ($Prelude.param_721 $Prelude.return_839)
+         (lambda
+            ($Prelude.param_722 $Prelude.return_840)
+            (do $Prelude.return_841
+               (fetch $Prelude.param_721)
+               (fetch $Prelude.param_722)
+               (construct tuple 2)
+               (select
+                  ((tuple
+                     (#Prelude.a_4 #Prelude.__5))
+                     (fetch #Prelude.a_4)
+                     (resume $Prelude.return_841))))
+            (resume $Prelude.return_840))
+         (resume $Prelude.return_839))
+      (resume $Prelude.return_838))
+   (cond
+      $Prelude.return_842
+      (lambda
+         ($Prelude.param_723 $Prelude.return_843)
+         (do $Prelude.return_844
+            (fetch $Prelude.param_723)
+            (construct tuple 1)
+            (select
+               ((Nil ())
+                  (suspend
+                     (assign $Prelude.outer_946)
+                     (do $Prelude.return_845
+                        (suspend
+                           (push "no branch")
+                           (suspend
+                              (resume $Prelude.return_845))
+                           (apply 2))
+                        (invoke String#))
+                     (assign $Prelude.inner_947)
+                     (fetch $Prelude.outer_946)
+                     (fetch $Prelude.inner_947)
+                     (suspend
+                        (resume $Prelude.return_844))
+                     (apply 2))
+                  (invoke panic))
+               ((Cons
+                  ((tuple
+                     ((True ())
+                        #Prelude.x_86))
+                     #Prelude.__87))
+                  (fetch #Prelude.x_86)
+                  (construct tuple 0)
+                  (suspend
+                     (resume $Prelude.return_844))
+                  (apply 2))
+               ((Cons
+                  ((tuple
+                     ((False ())
+                        #Prelude.__88))
+                     #Prelude.xs_89))
+                  (suspend
+                     (fetch #Prelude.xs_89)
+                     (suspend
+                        (resume $Prelude.return_844))
+                     (apply 2))
+                  (invoke cond))))
+         (resume $Prelude.return_843))
+      (resume $Prelude.return_842))
+   (concatString
+      $Prelude.return_846
+      (lambda
+         ($Prelude.param_724 $Prelude.return_847)
+         (do $Prelude.return_848
+            (fetch $Prelude.param_724)
+            (construct tuple 1)
+            (select
+               ((Nil ())
+                  (suspend
+                     (push "")
+                     (suspend
+                        (resume $Prelude.return_848))
+                     (apply 2))
+                  (invoke String#))
+               ((Cons
+                  (#Prelude.x_52 #Prelude.xs_53))
+                  (suspend
+                     (fetch #Prelude.x_52)
+                     (suspend
+                        (assign $Prelude.outer_948)
+                        (do $Prelude.return_849
+                           (suspend
+                              (fetch #Prelude.xs_53)
+                              (suspend
+                                 (resume $Prelude.return_849))
+                              (apply 2))
+                           (invoke concatString))
+                        (assign $Prelude.inner_949)
+                        (fetch $Prelude.outer_948)
+                        (fetch $Prelude.inner_949)
+                        (suspend
+                           (resume $Prelude.return_848))
+                        (apply 2))
+                     (apply 2))
+                  (invoke appendString))))
+         (resume $Prelude.return_847))
+      (resume $Prelude.return_846))
+   (case
+      $Prelude.return_850
+      (lambda
+         ($Prelude.param_725 $Prelude.return_851)
+         (lambda
+            ($Prelude.param_726 $Prelude.return_852)
+            (do $Prelude.return_853
+               (fetch $Prelude.param_725)
+               (fetch $Prelude.param_726)
+               (construct tuple 2)
+               (select
+                  ((tuple
+                     (#Prelude.x_8 #Prelude.f_9))
+                     (fetch #Prelude.f_9)
+                     (fetch #Prelude.x_8)
+                     (suspend
+                        (resume $Prelude.return_853))
+                     (apply 2))))
+            (resume $Prelude.return_852))
+         (resume $Prelude.return_851))
+      (resume $Prelude.return_850))
+   (dropWhileString
+      $Prelude.return_854
+      (lambda
+         ($Prelude.param_727 $Prelude.return_855)
+         (lambda
+            ($Prelude.param_728 $Prelude.return_856)
+            (do $Prelude.return_857
+               (fetch $Prelude.param_727)
+               (fetch $Prelude.param_728)
+               (construct tuple 2)
+               (select
+                  ((tuple
+                     (#Prelude.pred_49 #Prelude.str_50))
+                     (suspend
+                        (assign $Prelude.outer_950)
+                        (do $Prelude.return_866
+                           (suspend
+                              (fetch #Prelude.str_50)
+                              (suspend
+                                 (resume $Prelude.return_866))
+                              (apply 2))
+                           (invoke headString))
+                        (assign $Prelude.inner_951)
+                        (fetch $Prelude.outer_950)
+                        (fetch $Prelude.inner_951)
+                        (suspend
+                           (lambda
+                              ($Prelude.param_729 $Prelude.return_858)
+                              (do $Prelude.return_859
+                                 (fetch $Prelude.param_729)
+                                 (construct tuple 1)
+                                 (select
+                                    ((Nothing ())
+                                       (fetch #Prelude.str_50)
+                                       (resume $Prelude.return_859))
+                                    ((Just
+                                       (#Prelude.c_51))
+                                       (suspend
+                                          (assign $Prelude.outer_958)
+                                          (do $Prelude.return_865
+                                             (fetch #Prelude.pred_49)
+                                             (fetch #Prelude.c_51)
+                                             (suspend
+                                                (resume $Prelude.return_865))
+                                             (apply 2))
+                                          (assign $Prelude.inner_959)
+                                          (fetch $Prelude.outer_958)
+                                          (fetch $Prelude.inner_959)
+                                          (suspend
+                                             (lambda
+                                                ($Prelude.param_730 $Prelude.return_862)
+                                                (do $Prelude.return_863
+                                                   (fetch $Prelude.param_730)
+                                                   (construct tuple 1)
+                                                   (select
+                                                      (#Prelude.$__605
+                                                         (suspend
+                                                            (fetch #Prelude.pred_49)
+                                                            (suspend
+                                                               (assign $Prelude.outer_962)
+                                                               (do $Prelude.return_864
+                                                                  (suspend
+                                                                     (fetch #Prelude.str_50)
+                                                                     (suspend
+                                                                        (resume $Prelude.return_864))
+                                                                     (apply 2))
+                                                                  (invoke tailString))
+                                                               (assign $Prelude.inner_963)
+                                                               (fetch $Prelude.outer_962)
+                                                               (fetch $Prelude.inner_963)
+                                                               (suspend
+                                                                  (resume $Prelude.return_863))
+                                                               (apply 2))
+                                                            (apply 2))
+                                                         (invoke dropWhileString))))
+                                                (resume $Prelude.return_862))
+                                             (suspend
+                                                (lambda
+                                                   ($Prelude.param_731 $Prelude.return_860)
+                                                   (do $Prelude.return_861
+                                                      (fetch $Prelude.param_731)
+                                                      (construct tuple 1)
+                                                      (select
+                                                         (#Prelude.$__608
+                                                            (fetch #Prelude.str_50)
+                                                            (resume $Prelude.return_861))))
+                                                   (resume $Prelude.return_860))
+                                                (suspend
+                                                   (resume $Prelude.return_859))
+                                                (apply 2))
+                                             (apply 2))
+                                          (apply 2))
+                                       (invoke if))))
+                              (resume $Prelude.return_858))
+                           (suspend
+                              (resume $Prelude.return_857))
+                           (apply 2))
+                        (apply 2))
+                     (invoke case))))
+            (resume $Prelude.return_856))
+         (resume $Prelude.return_855))
+      (resume $Prelude.return_854))
+   (takeWhileString
+      $Prelude.return_867
+      (lambda
+         ($Prelude.param_732 $Prelude.return_868)
+         (lambda
+            ($Prelude.param_733 $Prelude.return_869)
+            (do $Prelude.return_870
+               (fetch $Prelude.param_732)
+               (fetch $Prelude.param_733)
+               (construct tuple 2)
+               (select
+                  ((tuple
+                     (#Prelude.pred_46 #Prelude.str_47))
+                     (suspend
+                        (assign $Prelude.outer_964)
+                        (do $Prelude.return_880
+                           (suspend
+                              (fetch #Prelude.str_47)
+                              (suspend
+                                 (resume $Prelude.return_880))
+                              (apply 2))
+                           (invoke headString))
+                        (assign $Prelude.inner_965)
+                        (fetch $Prelude.outer_964)
+                        (fetch $Prelude.inner_965)
+                        (suspend
+                           (lambda
+                              ($Prelude.param_734 $Prelude.return_871)
+                              (do $Prelude.return_872
+                                 (fetch $Prelude.param_734)
+                                 (construct tuple 1)
+                                 (select
+                                    ((Nothing ())
+                                       (fetch #Prelude.str_47)
+                                       (resume $Prelude.return_872))
+                                    ((Just
+                                       (#Prelude.c_48))
+                                       (suspend
+                                          (assign $Prelude.outer_980)
+                                          (do $Prelude.return_879
+                                             (fetch #Prelude.pred_46)
+                                             (fetch #Prelude.c_48)
+                                             (suspend
+                                                (resume $Prelude.return_879))
+                                             (apply 2))
+                                          (assign $Prelude.inner_981)
+                                          (fetch $Prelude.outer_980)
+                                          (fetch $Prelude.inner_981)
+                                          (suspend
+                                             (lambda
+                                                ($Prelude.param_735 $Prelude.return_875)
+                                                (do $Prelude.return_876
+                                                   (fetch $Prelude.param_735)
+                                                   (construct tuple 1)
+                                                   (select
+                                                      (#Prelude.$__651
+                                                         (suspend
+                                                            (fetch #Prelude.c_48)
+                                                            (suspend
+                                                               (assign $Prelude.outer_990)
+                                                               (do $Prelude.return_877
+                                                                  (suspend
+                                                                     (fetch #Prelude.pred_46)
+                                                                     (suspend
+                                                                        (assign $Prelude.outer_992)
+                                                                        (do $Prelude.return_878
+                                                                           (suspend
+                                                                              (fetch #Prelude.str_47)
+                                                                              (suspend
+                                                                                 (resume $Prelude.return_878))
+                                                                              (apply 2))
+                                                                           (invoke tailString))
+                                                                        (assign $Prelude.inner_993)
+                                                                        (fetch $Prelude.outer_992)
+                                                                        (fetch $Prelude.inner_993)
+                                                                        (suspend
+                                                                           (resume $Prelude.return_877))
+                                                                        (apply 2))
+                                                                     (apply 2))
+                                                                  (invoke takeWhileString))
+                                                               (assign $Prelude.inner_991)
+                                                               (fetch $Prelude.outer_990)
+                                                               (fetch $Prelude.inner_991)
+                                                               (suspend
+                                                                  (resume $Prelude.return_876))
+                                                               (apply 2))
+                                                            (apply 2))
+                                                         (invoke consString))))
+                                                (resume $Prelude.return_875))
+                                             (suspend
+                                                (lambda
+                                                   ($Prelude.param_736 $Prelude.return_873)
+                                                   (do $Prelude.return_874
+                                                      (fetch $Prelude.param_736)
+                                                      (construct tuple 1)
+                                                      (select
+                                                         (#Prelude.$__656
+                                                            (suspend
+                                                               (push "")
+                                                               (suspend
+                                                                  (resume $Prelude.return_874))
+                                                               (apply 2))
+                                                            (invoke String#))))
+                                                   (resume $Prelude.return_873))
+                                                (suspend
+                                                   (resume $Prelude.return_872))
+                                                (apply 2))
+                                             (apply 2))
+                                          (apply 2))
+                                       (invoke if))))
+                              (resume $Prelude.return_871))
+                           (suspend
+                              (resume $Prelude.return_870))
+                           (apply 2))
+                        (apply 2))
+                     (invoke case))))
+            (resume $Prelude.return_869))
+         (resume $Prelude.return_868))
+      (resume $Prelude.return_867))
+   (<|
+      $Prelude.return_881
+      (lambda
+         ($Prelude.param_737 $Prelude.return_882)
+         (lambda
+            ($Prelude.param_738 $Prelude.return_883)
+            (do $Prelude.return_884
+               (fetch $Prelude.param_737)
+               (fetch $Prelude.param_738)
+               (construct tuple 2)
+               (select
+                  ((tuple
+                     (#Prelude.f_74 #Prelude.x_75))
+                     (fetch #Prelude.f_74)
+                     (fetch #Prelude.x_75)
+                     (suspend
+                        (resume $Prelude.return_884))
+                     (apply 2))))
+            (resume $Prelude.return_883))
+         (resume $Prelude.return_882))
+      (resume $Prelude.return_881))
+   (. $Prelude.return_885
+      (lambda
+         ($Prelude.param_739 $Prelude.return_886)
+         (lambda
+            ($Prelude.param_740 $Prelude.return_887)
+            (do $Prelude.return_888
+               (fetch $Prelude.param_739)
+               (fetch $Prelude.param_740)
+               (construct tuple 2)
+               (select
+                  ((tuple
+                     (#Prelude.f_65 #Prelude.g_66))
+                     (lambda
+                        ($Prelude.param_741 $Prelude.return_889)
+                        (do $Prelude.return_890
+                           (fetch $Prelude.param_741)
+                           (construct tuple 1)
+                           (select
+                              (#Prelude.x_67
+                                 (fetch #Prelude.f_65)
+                                 (assign $Prelude.outer_994)
+                                 (do $Prelude.return_891
+                                    (fetch #Prelude.g_66)
+                                    (fetch #Prelude.x_67)
+                                    (suspend
+                                       (resume $Prelude.return_891))
+                                    (apply 2))
+                                 (assign $Prelude.inner_995)
+                                 (fetch $Prelude.outer_994)
+                                 (fetch $Prelude.inner_995)
+                                 (suspend
+                                    (resume $Prelude.return_890))
+                                 (apply 2))))
+                        (resume $Prelude.return_889))
+                     (resume $Prelude.return_888))))
+            (resume $Prelude.return_887))
+         (resume $Prelude.return_886))
+      (resume $Prelude.return_885)))

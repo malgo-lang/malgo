@@ -1,321 +1,321 @@
 ((fix
    $InlineFunction.return_125
-   ((lambda
+   (lambda
       ($InlineFunction.param_112 $InlineFunction.return_126)
-      ((lambda
+      (lambda
          ($InlineFunction.param_113 $InlineFunction.return_127)
-         ((do $InlineFunction.return_128
-            ((fetch $InlineFunction.param_112)
-               (fetch $InlineFunction.param_113)
+         (do $InlineFunction.return_128
+            (fetch $InlineFunction.param_112)
+            (fetch $InlineFunction.param_113)
+            (construct tuple 2)
+            (select
+               ((tuple
+                  (#InlineFunction.f_6 #InlineFunction.x_7))
+                  (fetch #InlineFunction.f_6)
+                  (assign $InlineFunction.outer_165)
+                  (do $InlineFunction.return_129
+                     (suspend
+                        (fetch #InlineFunction.f_6)
+                        (suspend
+                           (resume $InlineFunction.return_129))
+                        (apply 2))
+                     (invoke fix))
+                  (assign $InlineFunction.inner_166)
+                  (fetch $InlineFunction.outer_165)
+                  (fetch $InlineFunction.inner_166)
+                  (suspend
+                     (fetch #InlineFunction.x_7)
+                     (suspend
+                        (resume $InlineFunction.return_128))
+                     (apply 2))
+                  (apply 2))))
+         (resume $InlineFunction.return_127))
+      (resume $InlineFunction.return_126))
+   (resume $InlineFunction.return_125))
+   (<=
+      $InlineFunction.return_130
+      (lambda
+         ($InlineFunction.param_114 $InlineFunction.return_131)
+         (lambda
+            ($InlineFunction.param_115 $InlineFunction.return_132)
+            (do $InlineFunction.return_133
+               (fetch $InlineFunction.param_114)
+               (fetch $InlineFunction.param_115)
                (construct tuple 2)
                (select
                   ((tuple
-                     (#InlineFunction.f_6 #InlineFunction.x_7))
-                     ((fetch #InlineFunction.f_6)
-                        (then $InlineFunction.outer_165
-                           ((do $InlineFunction.return_129
-                              ((suspend
-                                 ((fetch #InlineFunction.f_6)
-                                    (suspend
-                                       ((resume $InlineFunction.return_129)))
-                                    (apply 2)))
-                                 (invoke fix)))
-                              (then $InlineFunction.inner_166
-                                 ((fetch $InlineFunction.outer_165)
-                                    (fetch $InlineFunction.inner_166)
-                                    (suspend
-                                       ((fetch #InlineFunction.x_7)
-                                          (suspend
-                                             ((resume $InlineFunction.return_128)))
-                                          (apply 2)))
-                                    (apply 2))))))))))
-            (resume $InlineFunction.return_127)))
-         (resume $InlineFunction.return_126)))
-      (resume $InlineFunction.return_125)))
-   (<=
-      $InlineFunction.return_130
-      ((lambda
-         ($InlineFunction.param_114 $InlineFunction.return_131)
-         ((lambda
-            ($InlineFunction.param_115 $InlineFunction.return_132)
-            ((do $InlineFunction.return_133
-               ((fetch $InlineFunction.param_114)
-                  (fetch $InlineFunction.param_115)
-                  (construct tuple 2)
-                  (select
-                     ((tuple
-                        (#InlineFunction.x_0 #InlineFunction.y_1))
-                        ((suspend
-                           ((fetch #InlineFunction.x_0)
-                              (suspend
-                                 ((fetch #InlineFunction.y_1)
-                                    (suspend
-                                       ((resume $InlineFunction.return_133)))
-                                    (apply 2)))
-                              (apply 2)))
-                           (invoke leInt32))))))
-               (resume $InlineFunction.return_132)))
-            (resume $InlineFunction.return_131)))
-         (resume $InlineFunction.return_130)))
+                     (#InlineFunction.x_0 #InlineFunction.y_1))
+                     (suspend
+                        (fetch #InlineFunction.x_0)
+                        (suspend
+                           (fetch #InlineFunction.y_1)
+                           (suspend
+                              (resume $InlineFunction.return_133))
+                           (apply 2))
+                        (apply 2))
+                     (invoke leInt32))))
+            (resume $InlineFunction.return_132))
+         (resume $InlineFunction.return_131))
+      (resume $InlineFunction.return_130))
    (-
       $InlineFunction.return_134
-      ((lambda
+      (lambda
          ($InlineFunction.param_116 $InlineFunction.return_135)
-         ((lambda
+         (lambda
             ($InlineFunction.param_117 $InlineFunction.return_136)
-            ((do $InlineFunction.return_137
-               ((fetch $InlineFunction.param_116)
-                  (fetch $InlineFunction.param_117)
-                  (construct tuple 2)
-                  (select
-                     ((tuple
-                        (#InlineFunction.x_4 #InlineFunction.y_5))
-                        ((suspend
-                           ((fetch #InlineFunction.x_4)
-                              (suspend
-                                 ((fetch #InlineFunction.y_5)
-                                    (suspend
-                                       ((resume $InlineFunction.return_137)))
-                                    (apply 2)))
-                              (apply 2)))
-                           (invoke subInt32))))))
-               (resume $InlineFunction.return_136)))
-            (resume $InlineFunction.return_135)))
-         (resume $InlineFunction.return_134)))
+            (do $InlineFunction.return_137
+               (fetch $InlineFunction.param_116)
+               (fetch $InlineFunction.param_117)
+               (construct tuple 2)
+               (select
+                  ((tuple
+                     (#InlineFunction.x_4 #InlineFunction.y_5))
+                     (suspend
+                        (fetch #InlineFunction.x_4)
+                        (suspend
+                           (fetch #InlineFunction.y_5)
+                           (suspend
+                              (resume $InlineFunction.return_137))
+                           (apply 2))
+                        (apply 2))
+                     (invoke subInt32))))
+            (resume $InlineFunction.return_136))
+         (resume $InlineFunction.return_135))
+      (resume $InlineFunction.return_134))
    (+
       $InlineFunction.return_138
-      ((lambda
+      (lambda
          ($InlineFunction.param_118 $InlineFunction.return_139)
-         ((lambda
+         (lambda
             ($InlineFunction.param_119 $InlineFunction.return_140)
-            ((do $InlineFunction.return_141
-               ((fetch $InlineFunction.param_118)
-                  (fetch $InlineFunction.param_119)
-                  (construct tuple 2)
-                  (select
-                     ((tuple
-                        (#InlineFunction.x_2 #InlineFunction.y_3))
-                        ((suspend
-                           ((fetch #InlineFunction.x_2)
-                              (suspend
-                                 ((fetch #InlineFunction.y_3)
-                                    (suspend
-                                       ((resume $InlineFunction.return_141)))
-                                    (apply 2)))
-                              (apply 2)))
-                           (invoke addInt32))))))
-               (resume $InlineFunction.return_140)))
-            (resume $InlineFunction.return_139)))
-         (resume $InlineFunction.return_138)))
+            (do $InlineFunction.return_141
+               (fetch $InlineFunction.param_118)
+               (fetch $InlineFunction.param_119)
+               (construct tuple 2)
+               (select
+                  ((tuple
+                     (#InlineFunction.x_2 #InlineFunction.y_3))
+                     (suspend
+                        (fetch #InlineFunction.x_2)
+                        (suspend
+                           (fetch #InlineFunction.y_3)
+                           (suspend
+                              (resume $InlineFunction.return_141))
+                           (apply 2))
+                        (apply 2))
+                     (invoke addInt32))))
+            (resume $InlineFunction.return_140))
+         (resume $InlineFunction.return_139))
+      (resume $InlineFunction.return_138))
    (main
       $InlineFunction.return_142
-      ((lambda
+      (lambda
          ($InlineFunction.param_120 $InlineFunction.return_143)
-         ((do $InlineFunction.return_144
-            ((fetch $InlineFunction.param_120)
-               (construct tuple 1)
-               (select
-                  (#InlineFunction.$__111
-                     ((suspend
-                        ((lambda
-                           ($InlineFunction.param_121 $InlineFunction.return_150)
-                           ((lambda
-                              ($InlineFunction.param_122 $InlineFunction.return_151)
-                              ((do $InlineFunction.return_152
-                                 ((fetch $InlineFunction.param_121)
-                                    (fetch $InlineFunction.param_122)
-                                    (construct tuple 2)
-                                    (select
-                                       ((tuple
-                                          (#InlineFunction.f_8 #InlineFunction.n_9))
-                                          ((suspend
-                                             ((then $InlineFunction.outer_231
-                                                ((do $InlineFunction.return_163
-                                                   ((suspend
-                                                      ((fetch #InlineFunction.n_9)
-                                                         (suspend
-                                                            ((then $InlineFunction.outer_289
-                                                               ((do $InlineFunction.return_164
-                                                                  ((suspend
-                                                                     ((push 1_i32)
-                                                                        (suspend
-                                                                           ((resume $InlineFunction.return_164)))
-                                                                        (apply 2)))
-                                                                     (invoke Int32#)))
-                                                                  (then $InlineFunction.inner_290
-                                                                     ((fetch $InlineFunction.outer_289)
-                                                                        (fetch $InlineFunction.inner_290)
-                                                                        (suspend
-                                                                           ((resume $InlineFunction.return_163)))
-                                                                        (apply 2)))))))
-                                                         (apply 2)))
-                                                      (invoke <=)))
-                                                   (then $InlineFunction.inner_232
-                                                      ((fetch $InlineFunction.outer_231)
-                                                         (fetch $InlineFunction.inner_232)
-                                                         (suspend
-                                                            ((lambda
-                                                               ($InlineFunction.param_123 $InlineFunction.return_161)
-                                                               ((do $InlineFunction.return_162
-                                                                  ((fetch $InlineFunction.param_123)
-                                                                     (construct tuple 1)
-                                                                     (select
-                                                                        (#InlineFunction.$__73
-                                                                           ((suspend
-                                                                              ((push 1_i32)
-                                                                                 (suspend
-                                                                                    ((resume $InlineFunction.return_162)))
-                                                                                 (apply 2)))
-                                                                              (invoke Int32#))))))
-                                                                  (resume $InlineFunction.return_161)))
-                                                               (suspend
-                                                                  ((lambda
-                                                                     ($InlineFunction.param_124 $InlineFunction.return_153)
-                                                                     ((do $InlineFunction.return_154
-                                                                        ((fetch $InlineFunction.param_124)
-                                                                           (construct tuple 1)
-                                                                           (select
-                                                                              (#InlineFunction.$__90
-                                                                                 ((suspend
-                                                                                    ((then $InlineFunction.outer_267
-                                                                                       ((do $InlineFunction.return_158
-                                                                                          ((fetch #InlineFunction.f_8)
-                                                                                             (then $InlineFunction.outer_285
-                                                                                                ((do $InlineFunction.return_159
-                                                                                                   ((suspend
-                                                                                                      ((fetch #InlineFunction.n_9)
-                                                                                                         (suspend
-                                                                                                            ((then $InlineFunction.outer_287
-                                                                                                               ((do $InlineFunction.return_160
-                                                                                                                  ((suspend
-                                                                                                                     ((push 1_i32)
-                                                                                                                        (suspend
-                                                                                                                           ((resume $InlineFunction.return_160)))
-                                                                                                                        (apply 2)))
-                                                                                                                     (invoke Int32#)))
-                                                                                                                  (then $InlineFunction.inner_288
-                                                                                                                     ((fetch $InlineFunction.outer_287)
-                                                                                                                        (fetch $InlineFunction.inner_288)
-                                                                                                                        (suspend
-                                                                                                                           ((resume $InlineFunction.return_159)))
-                                                                                                                        (apply 2)))))))
-                                                                                                         (apply 2)))
-                                                                                                      (invoke -)))
-                                                                                                   (then $InlineFunction.inner_286
-                                                                                                      ((fetch $InlineFunction.outer_285)
-                                                                                                         (fetch $InlineFunction.inner_286)
-                                                                                                         (suspend
-                                                                                                            ((resume $InlineFunction.return_158)))
-                                                                                                         (apply 2)))))))
-                                                                                          (then $InlineFunction.inner_268
-                                                                                             ((fetch $InlineFunction.outer_267)
-                                                                                                (fetch $InlineFunction.inner_268)
-                                                                                                (suspend
-                                                                                                   ((then $InlineFunction.outer_275
-                                                                                                      ((do $InlineFunction.return_155
-                                                                                                         ((fetch #InlineFunction.f_8)
-                                                                                                            (then $InlineFunction.outer_279
-                                                                                                               ((do $InlineFunction.return_156
-                                                                                                                  ((suspend
-                                                                                                                     ((fetch #InlineFunction.n_9)
-                                                                                                                        (suspend
-                                                                                                                           ((then $InlineFunction.outer_281
-                                                                                                                              ((do $InlineFunction.return_157
-                                                                                                                                 ((suspend
-                                                                                                                                    ((push 2_i32)
-                                                                                                                                       (suspend
-                                                                                                                                          ((resume $InlineFunction.return_157)))
-                                                                                                                                       (apply 2)))
-                                                                                                                                    (invoke Int32#)))
-                                                                                                                                 (then $InlineFunction.inner_282
-                                                                                                                                    ((fetch $InlineFunction.outer_281)
-                                                                                                                                       (fetch $InlineFunction.inner_282)
-                                                                                                                                       (suspend
-                                                                                                                                          ((resume $InlineFunction.return_156)))
-                                                                                                                                       (apply 2)))))))
-                                                                                                                        (apply 2)))
-                                                                                                                     (invoke -)))
-                                                                                                                  (then $InlineFunction.inner_280
-                                                                                                                     ((fetch $InlineFunction.outer_279)
-                                                                                                                        (fetch $InlineFunction.inner_280)
-                                                                                                                        (suspend
-                                                                                                                           ((resume $InlineFunction.return_155)))
-                                                                                                                        (apply 2)))))))
-                                                                                                         (then $InlineFunction.inner_276
-                                                                                                            ((fetch $InlineFunction.outer_275)
-                                                                                                               (fetch $InlineFunction.inner_276)
-                                                                                                               (suspend
-                                                                                                                  ((resume $InlineFunction.return_154)))
-                                                                                                               (apply 2)))))))
-                                                                                                (apply 2)))))))
-                                                                                    (invoke +))))))
-                                                                        (resume $InlineFunction.return_153)))
-                                                                     (suspend
-                                                                        ((resume $InlineFunction.return_152)))
-                                                                     (apply 2)))
-                                                               (apply 2)))
-                                                         (apply 2)))))))
-                                             (invoke if))))))
-                                 (resume $InlineFunction.return_151)))
-                              (resume $InlineFunction.return_150)))
-                           (suspend
-                              ((then #InlineFunction.fib_10
-                                 ((suspend
-                                    ((then $InlineFunction.outer_299
-                                       ((do $InlineFunction.return_146
-                                          ((suspend
-                                             ((then $InlineFunction.outer_305
-                                                ((do $InlineFunction.return_148
-                                                   ((fetch #InlineFunction.fib_10)
-                                                      (then $InlineFunction.outer_309
-                                                         ((do $InlineFunction.return_149
-                                                            ((suspend
-                                                               ((push 5_i32)
-                                                                  (suspend
-                                                                     ((resume $InlineFunction.return_149)))
-                                                                  (apply 2)))
-                                                               (invoke Int32#)))
-                                                            (then $InlineFunction.inner_310
-                                                               ((fetch $InlineFunction.outer_309)
-                                                                  (fetch $InlineFunction.inner_310)
-                                                                  (suspend
-                                                                     ((resume $InlineFunction.return_148)))
-                                                                  (apply 2)))))))
-                                                   (then $InlineFunction.inner_306
-                                                      ((fetch $InlineFunction.outer_305)
-                                                         (fetch $InlineFunction.inner_306)
-                                                         (suspend
-                                                            ((then $InlineFunction.outer_307
-                                                               ((do $InlineFunction.return_147
-                                                                  ((suspend
-                                                                     ((resume $InlineFunction.return_147)))
-                                                                     (invoke toStringInt32)))
-                                                                  (then $InlineFunction.inner_308
-                                                                     ((fetch $InlineFunction.outer_307)
-                                                                        (fetch $InlineFunction.inner_308)
-                                                                        (suspend
-                                                                           ((resume $InlineFunction.return_146)))
-                                                                        (apply 2)))))))
-                                                         (apply 2)))))))
-                                             (invoke |>)))
-                                          (then $InlineFunction.inner_300
-                                             ((fetch $InlineFunction.outer_299)
-                                                (fetch $InlineFunction.inner_300)
+         (do $InlineFunction.return_144
+            (fetch $InlineFunction.param_120)
+            (construct tuple 1)
+            (select
+               (#InlineFunction.$__111
+                  (suspend
+                     (lambda
+                        ($InlineFunction.param_121 $InlineFunction.return_150)
+                        (lambda
+                           ($InlineFunction.param_122 $InlineFunction.return_151)
+                           (do $InlineFunction.return_152
+                              (fetch $InlineFunction.param_121)
+                              (fetch $InlineFunction.param_122)
+                              (construct tuple 2)
+                              (select
+                                 ((tuple
+                                    (#InlineFunction.f_8 #InlineFunction.n_9))
+                                    (suspend
+                                       (assign $InlineFunction.outer_231)
+                                       (do $InlineFunction.return_163
+                                          (suspend
+                                             (fetch #InlineFunction.n_9)
+                                             (suspend
+                                                (assign $InlineFunction.outer_289)
+                                                (do $InlineFunction.return_164
+                                                   (suspend
+                                                      (push 1_i32)
+                                                      (suspend
+                                                         (resume $InlineFunction.return_164))
+                                                      (apply 2))
+                                                   (invoke Int32#))
+                                                (assign $InlineFunction.inner_290)
+                                                (fetch $InlineFunction.outer_289)
+                                                (fetch $InlineFunction.inner_290)
                                                 (suspend
-                                                   ((then $InlineFunction.outer_301
-                                                      ((do $InlineFunction.return_145
-                                                         ((suspend
-                                                            ((resume $InlineFunction.return_145)))
-                                                            (invoke putStrLn)))
-                                                         (then $InlineFunction.inner_302
-                                                            ((fetch $InlineFunction.outer_301)
-                                                               (fetch $InlineFunction.inner_302)
+                                                   (resume $InlineFunction.return_163))
+                                                (apply 2))
+                                             (apply 2))
+                                          (invoke <=))
+                                       (assign $InlineFunction.inner_232)
+                                       (fetch $InlineFunction.outer_231)
+                                       (fetch $InlineFunction.inner_232)
+                                       (suspend
+                                          (lambda
+                                             ($InlineFunction.param_123 $InlineFunction.return_161)
+                                             (do $InlineFunction.return_162
+                                                (fetch $InlineFunction.param_123)
+                                                (construct tuple 1)
+                                                (select
+                                                   (#InlineFunction.$__73
+                                                      (suspend
+                                                         (push 1_i32)
+                                                         (suspend
+                                                            (resume $InlineFunction.return_162))
+                                                         (apply 2))
+                                                      (invoke Int32#))))
+                                             (resume $InlineFunction.return_161))
+                                          (suspend
+                                             (lambda
+                                                ($InlineFunction.param_124 $InlineFunction.return_153)
+                                                (do $InlineFunction.return_154
+                                                   (fetch $InlineFunction.param_124)
+                                                   (construct tuple 1)
+                                                   (select
+                                                      (#InlineFunction.$__90
+                                                         (suspend
+                                                            (assign $InlineFunction.outer_267)
+                                                            (do $InlineFunction.return_158
+                                                               (fetch #InlineFunction.f_8)
+                                                               (assign $InlineFunction.outer_285)
+                                                               (do $InlineFunction.return_159
+                                                                  (suspend
+                                                                     (fetch #InlineFunction.n_9)
+                                                                     (suspend
+                                                                        (assign $InlineFunction.outer_287)
+                                                                        (do $InlineFunction.return_160
+                                                                           (suspend
+                                                                              (push 1_i32)
+                                                                              (suspend
+                                                                                 (resume $InlineFunction.return_160))
+                                                                              (apply 2))
+                                                                           (invoke Int32#))
+                                                                        (assign $InlineFunction.inner_288)
+                                                                        (fetch $InlineFunction.outer_287)
+                                                                        (fetch $InlineFunction.inner_288)
+                                                                        (suspend
+                                                                           (resume $InlineFunction.return_159))
+                                                                        (apply 2))
+                                                                     (apply 2))
+                                                                  (invoke -))
+                                                               (assign $InlineFunction.inner_286)
+                                                               (fetch $InlineFunction.outer_285)
+                                                               (fetch $InlineFunction.inner_286)
                                                                (suspend
-                                                                  ((resume $InlineFunction.return_144)))
-                                                               (apply 2)))))))
-                                                (apply 2)))))))
-                                    (invoke |>)))))
-                           (apply 2)))
-                        (invoke fix))))))
-            (resume $InlineFunction.return_143)))
-         (resume $InlineFunction.return_142))))
+                                                                  (resume $InlineFunction.return_158))
+                                                               (apply 2))
+                                                            (assign $InlineFunction.inner_268)
+                                                            (fetch $InlineFunction.outer_267)
+                                                            (fetch $InlineFunction.inner_268)
+                                                            (suspend
+                                                               (assign $InlineFunction.outer_275)
+                                                               (do $InlineFunction.return_155
+                                                                  (fetch #InlineFunction.f_8)
+                                                                  (assign $InlineFunction.outer_279)
+                                                                  (do $InlineFunction.return_156
+                                                                     (suspend
+                                                                        (fetch #InlineFunction.n_9)
+                                                                        (suspend
+                                                                           (assign $InlineFunction.outer_281)
+                                                                           (do $InlineFunction.return_157
+                                                                              (suspend
+                                                                                 (push 2_i32)
+                                                                                 (suspend
+                                                                                    (resume $InlineFunction.return_157))
+                                                                                 (apply 2))
+                                                                              (invoke Int32#))
+                                                                           (assign $InlineFunction.inner_282)
+                                                                           (fetch $InlineFunction.outer_281)
+                                                                           (fetch $InlineFunction.inner_282)
+                                                                           (suspend
+                                                                              (resume $InlineFunction.return_156))
+                                                                           (apply 2))
+                                                                        (apply 2))
+                                                                     (invoke -))
+                                                                  (assign $InlineFunction.inner_280)
+                                                                  (fetch $InlineFunction.outer_279)
+                                                                  (fetch $InlineFunction.inner_280)
+                                                                  (suspend
+                                                                     (resume $InlineFunction.return_155))
+                                                                  (apply 2))
+                                                               (assign $InlineFunction.inner_276)
+                                                               (fetch $InlineFunction.outer_275)
+                                                               (fetch $InlineFunction.inner_276)
+                                                               (suspend
+                                                                  (resume $InlineFunction.return_154))
+                                                               (apply 2))
+                                                            (apply 2))
+                                                         (invoke +))))
+                                                (resume $InlineFunction.return_153))
+                                             (suspend
+                                                (resume $InlineFunction.return_152))
+                                             (apply 2))
+                                          (apply 2))
+                                       (apply 2))
+                                    (invoke if))))
+                           (resume $InlineFunction.return_151))
+                        (resume $InlineFunction.return_150))
+                     (suspend
+                        (assign #InlineFunction.fib_10)
+                        (suspend
+                           (assign $InlineFunction.outer_299)
+                           (do $InlineFunction.return_146
+                              (suspend
+                                 (assign $InlineFunction.outer_305)
+                                 (do $InlineFunction.return_148
+                                    (fetch #InlineFunction.fib_10)
+                                    (assign $InlineFunction.outer_309)
+                                    (do $InlineFunction.return_149
+                                       (suspend
+                                          (push 5_i32)
+                                          (suspend
+                                             (resume $InlineFunction.return_149))
+                                          (apply 2))
+                                       (invoke Int32#))
+                                    (assign $InlineFunction.inner_310)
+                                    (fetch $InlineFunction.outer_309)
+                                    (fetch $InlineFunction.inner_310)
+                                    (suspend
+                                       (resume $InlineFunction.return_148))
+                                    (apply 2))
+                                 (assign $InlineFunction.inner_306)
+                                 (fetch $InlineFunction.outer_305)
+                                 (fetch $InlineFunction.inner_306)
+                                 (suspend
+                                    (assign $InlineFunction.outer_307)
+                                    (do $InlineFunction.return_147
+                                       (suspend
+                                          (resume $InlineFunction.return_147))
+                                       (invoke toStringInt32))
+                                    (assign $InlineFunction.inner_308)
+                                    (fetch $InlineFunction.outer_307)
+                                    (fetch $InlineFunction.inner_308)
+                                    (suspend
+                                       (resume $InlineFunction.return_146))
+                                    (apply 2))
+                                 (apply 2))
+                              (invoke |>))
+                           (assign $InlineFunction.inner_300)
+                           (fetch $InlineFunction.outer_299)
+                           (fetch $InlineFunction.inner_300)
+                           (suspend
+                              (assign $InlineFunction.outer_301)
+                              (do $InlineFunction.return_145
+                                 (suspend
+                                    (resume $InlineFunction.return_145))
+                                 (invoke putStrLn))
+                              (assign $InlineFunction.inner_302)
+                              (fetch $InlineFunction.outer_301)
+                              (fetch $InlineFunction.inner_302)
+                              (suspend
+                                 (resume $InlineFunction.return_144))
+                              (apply 2))
+                           (apply 2))
+                        (invoke |>))
+                     (apply 2))
+                  (invoke fix))))
+         (resume $InlineFunction.return_143))
+      (resume $InlineFunction.return_142)))

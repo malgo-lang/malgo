@@ -1,50 +1,50 @@
 ((main
    $DataDef.return_20
-   ((lambda
+   (lambda
       ($DataDef.param_18 $DataDef.return_21)
-      ((do $DataDef.return_22
-         ((fetch $DataDef.param_18)
-            (construct tuple 1)
-            (select
-               (#DataDef.$__17
-                  ((lambda
-                     ($DataDef.param_19 $DataDef.return_24)
-                     ((do $DataDef.return_25
-                        ((fetch $DataDef.param_19)
-                           (construct tuple 1)
-                           (select
-                              ((Int#
-                                 (#DataDef.x_1))
-                                 ((suspend
-                                    ((then $DataDef.outer_27
-                                       ((do $DataDef.return_26
-                                          ((suspend
-                                             ((fetch #DataDef.x_1)
-                                                (suspend
-                                                   ((resume $DataDef.return_26)))
-                                                (apply 2)))
-                                             (invoke malgo_int64_t_to_string)))
-                                          (then $DataDef.inner_28
-                                             ((fetch $DataDef.outer_27)
-                                                (fetch $DataDef.inner_28)
-                                                (suspend
-                                                   ((resume $DataDef.return_25)))
-                                                (apply 2)))))))
-                                    (invoke malgo_print_string))))))
-                        (resume $DataDef.return_24)))
-                     (then $DataDef.outer_29
-                        ((do $DataDef.return_23
-                           ((suspend
-                              ((push 1_i64)
+      (do $DataDef.return_22
+         (fetch $DataDef.param_18)
+         (construct tuple 1)
+         (select
+            (#DataDef.$__17
+               (lambda
+                  ($DataDef.param_19 $DataDef.return_24)
+                  (do $DataDef.return_25
+                     (fetch $DataDef.param_19)
+                     (construct tuple 1)
+                     (select
+                        ((Int#
+                           (#DataDef.x_1))
+                           (suspend
+                              (assign $DataDef.outer_27)
+                              (do $DataDef.return_26
                                  (suspend
-                                    ((resume $DataDef.return_23)))
-                                 (apply 2)))
-                              (invoke Int#)))
-                           (then $DataDef.inner_30
-                              ((fetch $DataDef.outer_29)
-                                 (fetch $DataDef.inner_30)
-                                 (suspend
-                                    ((resume $DataDef.return_22)))
-                                 (apply 2))))))))))
-         (resume $DataDef.return_21)))
-      (resume $DataDef.return_20))))
+                                    (fetch #DataDef.x_1)
+                                    (suspend
+                                       (resume $DataDef.return_26))
+                                    (apply 2))
+                                 (invoke malgo_int64_t_to_string))
+                              (assign $DataDef.inner_28)
+                              (fetch $DataDef.outer_27)
+                              (fetch $DataDef.inner_28)
+                              (suspend
+                                 (resume $DataDef.return_25))
+                              (apply 2))
+                           (invoke malgo_print_string))))
+                  (resume $DataDef.return_24))
+               (assign $DataDef.outer_29)
+               (do $DataDef.return_23
+                  (suspend
+                     (push 1_i64)
+                     (suspend
+                        (resume $DataDef.return_23))
+                     (apply 2))
+                  (invoke Int#))
+               (assign $DataDef.inner_30)
+               (fetch $DataDef.outer_29)
+               (fetch $DataDef.inner_30)
+               (suspend
+                  (resume $DataDef.return_22))
+               (apply 2))))
+      (resume $DataDef.return_21))
+   (resume $DataDef.return_20)))

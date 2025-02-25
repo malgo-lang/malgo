@@ -1,100 +1,100 @@
 ((|>
    $Test0.return_56
-   ((lambda
+   (lambda
       ($Test0.param_50 $Test0.return_57)
-      ((lambda
+      (lambda
          ($Test0.param_51 $Test0.return_58)
-         ((do $Test0.return_59
-            ((fetch $Test0.param_50)
-               (fetch $Test0.param_51)
+         (do $Test0.return_59
+            (fetch $Test0.param_50)
+            (fetch $Test0.param_51)
+            (construct tuple 2)
+            (select
+               ((tuple
+                  (#Test0.x_2 #Test0.f_3))
+                  (fetch #Test0.f_3)
+                  (fetch #Test0.x_2)
+                  (suspend
+                     (resume $Test0.return_59))
+                  (apply 2))))
+         (resume $Test0.return_58))
+      (resume $Test0.return_57))
+   (resume $Test0.return_56))
+   (main
+      $Test0.return_60
+      (lambda
+         ($Test0.param_52 $Test0.return_61)
+         (do $Test0.return_62
+            (fetch $Test0.param_52)
+            (construct tuple 1)
+            (select
+               (#Test0.$__41
+                  (suspend
+                     (assign $Test0.outer_71)
+                     (do $Test0.return_66
+                        (suspend
+                           (push 1_i64)
+                           (suspend
+                              (resume $Test0.return_66))
+                           (apply 2))
+                        (invoke Int64#))
+                     (assign $Test0.inner_72)
+                     (fetch $Test0.outer_71)
+                     (fetch $Test0.inner_72)
+                     (suspend
+                        (lambda
+                           ($Test0.param_53 $Test0.return_63)
+                           (do $Test0.return_64
+                              (fetch $Test0.param_53)
+                              (construct tuple 1)
+                              (select
+                                 ((Int64#
+                                    (#Test0.i_6))
+                                    (suspend
+                                       (assign $Test0.outer_75)
+                                       (do $Test0.return_65
+                                          (suspend
+                                             (fetch #Test0.i_6)
+                                             (suspend
+                                                (resume $Test0.return_65))
+                                             (apply 2))
+                                          (invoke toStringInt64#))
+                                       (assign $Test0.inner_76)
+                                       (fetch $Test0.outer_75)
+                                       (fetch $Test0.inner_76)
+                                       (suspend
+                                          (resume $Test0.return_64))
+                                       (apply 2))
+                                    (invoke printString#))))
+                           (resume $Test0.return_63))
+                        (suspend
+                           (resume $Test0.return_62))
+                        (apply 2))
+                     (apply 2))
+                  (invoke |>))))
+         (resume $Test0.return_61))
+      (resume $Test0.return_60))
+   (+#
+      $Test0.return_67
+      (lambda
+         ($Test0.param_54 $Test0.return_68)
+         (lambda
+            ($Test0.param_55 $Test0.return_69)
+            (do $Test0.return_70
+               (fetch $Test0.param_54)
+               (fetch $Test0.param_55)
                (construct tuple 2)
                (select
                   ((tuple
-                     (#Test0.x_2 #Test0.f_3))
-                     ((fetch #Test0.f_3)
-                        (fetch #Test0.x_2)
+                     (#Test0.x_4 #Test0.y_5))
+                     (suspend
+                        (fetch #Test0.x_4)
                         (suspend
-                           ((resume $Test0.return_59)))
-                        (apply 2))))))
-            (resume $Test0.return_58)))
-         (resume $Test0.return_57)))
-      (resume $Test0.return_56)))
-   (main
-      $Test0.return_60
-      ((lambda
-         ($Test0.param_52 $Test0.return_61)
-         ((do $Test0.return_62
-            ((fetch $Test0.param_52)
-               (construct tuple 1)
-               (select
-                  (#Test0.$__41
-                     ((suspend
-                        ((then $Test0.outer_71
-                           ((do $Test0.return_66
-                              ((suspend
-                                 ((push 1_i64)
-                                    (suspend
-                                       ((resume $Test0.return_66)))
-                                    (apply 2)))
-                                 (invoke Int64#)))
-                              (then $Test0.inner_72
-                                 ((fetch $Test0.outer_71)
-                                    (fetch $Test0.inner_72)
-                                    (suspend
-                                       ((lambda
-                                          ($Test0.param_53 $Test0.return_63)
-                                          ((do $Test0.return_64
-                                             ((fetch $Test0.param_53)
-                                                (construct tuple 1)
-                                                (select
-                                                   ((Int64#
-                                                      (#Test0.i_6))
-                                                      ((suspend
-                                                         ((then $Test0.outer_75
-                                                            ((do $Test0.return_65
-                                                               ((suspend
-                                                                  ((fetch #Test0.i_6)
-                                                                     (suspend
-                                                                        ((resume $Test0.return_65)))
-                                                                     (apply 2)))
-                                                                  (invoke toStringInt64#)))
-                                                               (then $Test0.inner_76
-                                                                  ((fetch $Test0.outer_75)
-                                                                     (fetch $Test0.inner_76)
-                                                                     (suspend
-                                                                        ((resume $Test0.return_64)))
-                                                                     (apply 2)))))))
-                                                         (invoke printString#))))))
-                                             (resume $Test0.return_63)))
-                                          (suspend
-                                             ((resume $Test0.return_62)))
-                                          (apply 2)))
-                                    (apply 2)))))))
-                        (invoke |>))))))
-            (resume $Test0.return_61)))
-         (resume $Test0.return_60)))
-   (+#
-      $Test0.return_67
-      ((lambda
-         ($Test0.param_54 $Test0.return_68)
-         ((lambda
-            ($Test0.param_55 $Test0.return_69)
-            ((do $Test0.return_70
-               ((fetch $Test0.param_54)
-                  (fetch $Test0.param_55)
-                  (construct tuple 2)
-                  (select
-                     ((tuple
-                        (#Test0.x_4 #Test0.y_5))
-                        ((suspend
-                           ((fetch #Test0.x_4)
-                              (suspend
-                                 ((fetch #Test0.y_5)
-                                    (suspend
-                                       ((resume $Test0.return_70)))
-                                    (apply 2)))
-                              (apply 2)))
-                           (invoke addInt64#))))))
-               (resume $Test0.return_69)))
-            (resume $Test0.return_68)))
-         (resume $Test0.return_67))))
+                           (fetch #Test0.y_5)
+                           (suspend
+                              (resume $Test0.return_70))
+                           (apply 2))
+                        (apply 2))
+                     (invoke addInt64#))))
+            (resume $Test0.return_69))
+         (resume $Test0.return_68))
+      (resume $Test0.return_67)))
