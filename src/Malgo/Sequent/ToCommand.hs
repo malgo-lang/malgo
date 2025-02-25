@@ -1,5 +1,6 @@
 module Malgo.Sequent.ToCommand (toCommand) where
 
+import Control.Lens (traverseOf, _2)
 import Effectful
 import Effectful.State.Static.Local (State)
 import Malgo.MonadUniq
@@ -53,7 +54,7 @@ instance (State Uniq :> es) => Convert (Producer Zero) (Eff es Code) where
     body <- convert body
     pure [C.Lambda range parameters body]
   convert (Object range fields) = do
-    fields <- traverse convert fields
+    fields <- traverseOf (traverse . _2) convert fields
     pure $ [C.Object range fields]
 
 instance (State Uniq :> es) => Convert (Consumer Zero) (Eff es Code) where

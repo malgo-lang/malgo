@@ -8,6 +8,7 @@ module Malgo.Sequent.Command
   )
 where
 
+import Control.Lens (traverseOf_, _2)
 import Data.Map qualified as Map
 import Data.SCargot.Repr.Basic qualified as S
 import Data.Set qualified as Set
@@ -50,7 +51,7 @@ data Command
     -- Unlike other languages, Object's fields are lazy.
     --
     -- @(S, E, Object(field*) : C) -> ({E field*} : S, E, C)@
-    Object Range (Map Text Code)
+    Object Range (Map Text (Name, Code))
   | -- | Do captures rest of the code and switch to the new block.
     --
     -- @(S, E, Do(name, code) : C) -> (S, E {name = C}, code)@
@@ -155,7 +156,7 @@ lintCode (cmd@(Lambda _ _ body) : code) = do
   when (null code) $ throwError $ UnexpectedEndOfCode cmd
   lintCode code
 lintCode (cmd@(Object _ fields) : code) = do
-  for_ fields lintCode
+  traverseOf_ (traverse . _2) lintCode fields
   when (null code) $ throwError $ UnexpectedEndOfCode cmd
   lintCode code
 lintCode (cmd@(Do _ _ body) : code) = do

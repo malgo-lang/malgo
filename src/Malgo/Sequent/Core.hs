@@ -11,6 +11,7 @@ module Malgo.Sequent.Core
   )
 where
 
+import Control.Lens (_2, traverseOf)
 import Data.Map qualified as Map
 import Data.SCargot.Repr.Basic qualified as S
 import Data.Traversable (for)
@@ -38,7 +39,7 @@ data Producer (x :: Rank) where
   Literal :: Range -> Literal -> Producer x
   Construct :: Range -> Tag -> [Producer x] -> [Consumer x] -> Producer x
   Lambda :: Range -> [Name] -> Statement x -> Producer x
-  Object :: Range -> Map Text (Statement x) -> Producer x -- FIXME: take a consumer as argument
+  Object :: Range -> Map Text (Name, Statement x) -> Producer x
   Do :: Range -> Name -> Statement One -> Producer One
 
 deriving stock instance Show (Producer x)
@@ -171,7 +172,7 @@ flatProducer (Lambda range names statement) = do
   statement <- flatStatement statement
   pure $ Zero (Lambda range names statement)
 flatProducer (Object range fields) = do
-  fields <- traverse flatStatement fields
+  fields <- traverseOf (traverse . _2) flatStatement fields
   pure $ Zero (Object range fields)
 flatProducer (Do range name statement) = do
   statement' <- flatStatement statement

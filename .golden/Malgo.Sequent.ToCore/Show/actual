@@ -2,24 +2,25 @@
    $Show.return_123
    (cut
       ((show
-         (cut
-            (lambda
-               ($Show.param_113 $Show.return_125)
-               (cut
-                  (do $Show.return_126
-                     (cut
-                        (construct
-                           tuple
-                           ($Show.param_113)
-                           ())
-                        (select
-                           (#Show.x_3
-                              (invoke toStringInt32
-                                 (apply
-                                    (#Show.x_3)
-                                    ($Show.return_126)))))))
-                  $Show.return_125))
-            $Show.return_124)))
+         ($Show.return_126
+            (cut
+               (lambda
+                  ($Show.param_113 $Show.return_124)
+                  (cut
+                     (do $Show.return_125
+                        (cut
+                           (construct
+                              tuple
+                              ($Show.param_113)
+                              ())
+                           (select
+                              (#Show.x_3
+                                 (invoke toStringInt32
+                                    (apply
+                                       (#Show.x_3)
+                                       ($Show.return_125)))))))
+                     $Show.return_124))
+               $Show.return_126))))
       $Show.return_123))
    (show
       $Show.return_127
@@ -117,69 +118,70 @@
                                  (#Show.showDictA_8 #Show.showDictB_9))
                                  (cut
                                     ((show
-                                       (cut
-                                          (lambda
-                                             ($Show.param_121 $Show.return_144)
-                                             (cut
-                                                (do $Show.return_145
-                                                   (cut
-                                                      (construct
-                                                         tuple
-                                                         ($Show.param_121)
-                                                         ())
-                                                      (select
-                                                         ((tuple
-                                                            (#Show.a_10 #Show.b_11))
-                                                            (invoke <>
-                                                               (apply
-                                                                  ((do $Show.return_153
-                                                                     (invoke String#
-                                                                        (apply
-                                                                           ("(")
-                                                                           ($Show.return_153)))))
-                                                                  ((apply
-                                                                     ((do $Show.return_146
-                                                                        (invoke <>
+                                       ($Show.return_153
+                                          (cut
+                                             (lambda
+                                                ($Show.param_121 $Show.return_143)
+                                                (cut
+                                                   (do $Show.return_144
+                                                      (cut
+                                                         (construct
+                                                            tuple
+                                                            ($Show.param_121)
+                                                            ())
+                                                         (select
+                                                            ((tuple
+                                                               (#Show.a_10 #Show.b_11))
+                                                               (invoke <>
+                                                                  (apply
+                                                                     ((do $Show.return_152
+                                                                        (invoke String#
                                                                            (apply
-                                                                              ((do $Show.return_152
-                                                                                 (invoke show
-                                                                                    (apply
-                                                                                       (#Show.showDictA_8)
-                                                                                       ((apply
-                                                                                          (#Show.a_10)
-                                                                                          ($Show.return_152)))))))
-                                                                              ((apply
-                                                                                 ((do $Show.return_147
-                                                                                    (invoke <>
+                                                                              ("(")
+                                                                              ($Show.return_152)))))
+                                                                     ((apply
+                                                                        ((do $Show.return_145
+                                                                           (invoke <>
+                                                                              (apply
+                                                                                 ((do $Show.return_151
+                                                                                    (invoke show
                                                                                        (apply
-                                                                                          ((do $Show.return_151
-                                                                                             (invoke String#
-                                                                                                (apply
-                                                                                                   (", ")
-                                                                                                   ($Show.return_151)))))
+                                                                                          (#Show.showDictA_8)
                                                                                           ((apply
-                                                                                             ((do $Show.return_148
-                                                                                                (invoke <>
+                                                                                             (#Show.a_10)
+                                                                                             ($Show.return_151)))))))
+                                                                                 ((apply
+                                                                                    ((do $Show.return_146
+                                                                                       (invoke <>
+                                                                                          (apply
+                                                                                             ((do $Show.return_150
+                                                                                                (invoke String#
                                                                                                    (apply
-                                                                                                      ((do $Show.return_150
-                                                                                                         (invoke show
-                                                                                                            (apply
-                                                                                                               (#Show.showDictB_9)
-                                                                                                               ((apply
-                                                                                                                  (#Show.b_11)
-                                                                                                                  ($Show.return_150)))))))
-                                                                                                      ((apply
+                                                                                                      (", ")
+                                                                                                      ($Show.return_150)))))
+                                                                                             ((apply
+                                                                                                ((do $Show.return_147
+                                                                                                   (invoke <>
+                                                                                                      (apply
                                                                                                          ((do $Show.return_149
-                                                                                                            (invoke String#
+                                                                                                            (invoke show
                                                                                                                (apply
-                                                                                                                  (")")
-                                                                                                                  ($Show.return_149)))))
-                                                                                                         ($Show.return_148)))))))
-                                                                                             ($Show.return_147)))))))
-                                                                                 ($Show.return_146)))))))
-                                                                     ($Show.return_145)))))))))
-                                                $Show.return_144))
-                                          $Show.return_143)))
+                                                                                                                  (#Show.showDictB_9)
+                                                                                                                  ((apply
+                                                                                                                     (#Show.b_11)
+                                                                                                                     ($Show.return_149)))))))
+                                                                                                         ((apply
+                                                                                                            ((do $Show.return_148
+                                                                                                               (invoke String#
+                                                                                                                  (apply
+                                                                                                                     (")")
+                                                                                                                     ($Show.return_148)))))
+                                                                                                            ($Show.return_147)))))))
+                                                                                                ($Show.return_146)))))))
+                                                                                    ($Show.return_145)))))))
+                                                                        ($Show.return_144)))))))))
+                                                   $Show.return_143))
+                                             $Show.return_153))))
                                     $Show.return_142)))))
                      $Show.return_141))
                $Show.return_140))

@@ -24,26 +24,28 @@
                   (#TestPolySynonym.$__39
                      ((object
                         ((fst
-                           ((do $TestPolySynonym.return_51
-                              ((suspend
-                                 ((push 1_i32)
-                                    (suspend
-                                       ((resume $TestPolySynonym.return_51)))
-                                    (apply 2)))
-                                 (invoke Int32#)))
-                              (resume $TestPolySynonym.return_50)))
-                           (snd
-                              ((do $TestPolySynonym.return_52
+                           ($TestPolySynonym.return_51
+                              ((do $TestPolySynonym.return_50
                                  ((suspend
-                                    ((push "hoge")
+                                    ((push 1_i32)
                                        (suspend
-                                          ((resume $TestPolySynonym.return_52)))
+                                          ((resume $TestPolySynonym.return_50)))
                                        (apply 2)))
-                                    (invoke String#)))
-                                 (resume $TestPolySynonym.return_50)))))
+                                    (invoke Int32#)))
+                                 (resume $TestPolySynonym.return_51))))
+                           (snd
+                              ($TestPolySynonym.return_53
+                                 ((do $TestPolySynonym.return_52
+                                    ((suspend
+                                       ((push "hoge")
+                                          (suspend
+                                             ((resume $TestPolySynonym.return_52)))
+                                          (apply 2)))
+                                       (invoke String#)))
+                                    (resume $TestPolySynonym.return_53))))))
                         (then #TestPolySynonym.x_7
                            ((suspend
-                              ((then $TestPolySynonym.outer_53
+                              ((then $TestPolySynonym.outer_54
                                  ((do $TestPolySynonym.return_49
                                     ((suspend
                                        ((fetch #TestPolySynonym.x_7)
@@ -51,18 +53,18 @@
                                              ((resume $TestPolySynonym.return_49)))
                                           (apply 2)))
                                        (invoke first)))
-                                    (then $TestPolySynonym.inner_54
-                                       ((fetch $TestPolySynonym.outer_53)
-                                          (fetch $TestPolySynonym.inner_54)
+                                    (then $TestPolySynonym.inner_55
+                                       ((fetch $TestPolySynonym.outer_54)
+                                          (fetch $TestPolySynonym.inner_55)
                                           (suspend
-                                             ((then $TestPolySynonym.outer_55
+                                             ((then $TestPolySynonym.outer_56
                                                 ((do $TestPolySynonym.return_48
                                                    ((suspend
                                                       ((resume $TestPolySynonym.return_48)))
                                                       (invoke printInt32)))
-                                                   (then $TestPolySynonym.inner_56
-                                                      ((fetch $TestPolySynonym.outer_55)
-                                                         (fetch $TestPolySynonym.inner_56)
+                                                   (then $TestPolySynonym.inner_57
+                                                      ((fetch $TestPolySynonym.outer_56)
+                                                         (fetch $TestPolySynonym.inner_57)
                                                          (suspend
                                                             ((resume $TestPolySynonym.return_47)))
                                                          (apply 2)))))))

@@ -2,21 +2,22 @@
    $Show.return_123
    ((object
       ((show
-         ((lambda
-            ($Show.param_113 $Show.return_125)
-            ((do $Show.return_126
-               ((fetch $Show.param_113)
-                  (construct tuple 1)
-                  (select
-                     (#Show.x_3
-                        ((suspend
-                           ((fetch #Show.x_3)
-                              (suspend
-                                 ((resume $Show.return_126)))
-                              (apply 2)))
-                           (invoke toStringInt32))))))
-               (resume $Show.return_125)))
-            (resume $Show.return_124)))))
+         ($Show.return_126
+            ((lambda
+               ($Show.param_113 $Show.return_124)
+               ((do $Show.return_125
+                  ((fetch $Show.param_113)
+                     (construct tuple 1)
+                     (select
+                        (#Show.x_3
+                           ((suspend
+                              ((fetch #Show.x_3)
+                                 (suspend
+                                    ((resume $Show.return_125)))
+                                 (apply 2)))
+                              (invoke toStringInt32))))))
+                  (resume $Show.return_124)))
+               (resume $Show.return_126))))))
       (resume $Show.return_123)))
    (show
       $Show.return_127
@@ -107,120 +108,121 @@
                         (#Show.showDictA_8 #Show.showDictB_9))
                         ((object
                            ((show
-                              ((lambda
-                                 ($Show.param_121 $Show.return_144)
-                                 ((do $Show.return_145
-                                    ((fetch $Show.param_121)
-                                       (construct tuple 1)
-                                       (select
-                                          ((tuple
-                                             (#Show.a_10 #Show.b_11))
-                                             ((suspend
-                                                ((then $Show.outer_164
-                                                   ((do $Show.return_153
-                                                      ((suspend
-                                                         ((push "(")
-                                                            (suspend
-                                                               ((resume $Show.return_153)))
-                                                            (apply 2)))
-                                                         (invoke String#)))
-                                                      (then $Show.inner_165
-                                                         ((fetch $Show.outer_164)
-                                                            (fetch $Show.inner_165)
-                                                            (suspend
-                                                               ((then $Show.outer_194
-                                                                  ((do $Show.return_146
-                                                                     ((suspend
-                                                                        ((then $Show.outer_196
-                                                                           ((do $Show.return_152
-                                                                              ((suspend
-                                                                                 ((fetch #Show.showDictA_8)
-                                                                                    (suspend
-                                                                                       ((fetch #Show.a_10)
-                                                                                          (suspend
-                                                                                             ((resume $Show.return_152)))
-                                                                                          (apply 2)))
-                                                                                    (apply 2)))
-                                                                                 (invoke show)))
-                                                                              (then $Show.inner_197
-                                                                                 ((fetch $Show.outer_196)
-                                                                                    (fetch $Show.inner_197)
-                                                                                    (suspend
-                                                                                       ((then $Show.outer_210
-                                                                                          ((do $Show.return_147
-                                                                                             ((suspend
-                                                                                                ((then $Show.outer_212
-                                                                                                   ((do $Show.return_151
-                                                                                                      ((suspend
-                                                                                                         ((push ", ")
-                                                                                                            (suspend
-                                                                                                               ((resume $Show.return_151)))
-                                                                                                            (apply 2)))
-                                                                                                         (invoke String#)))
-                                                                                                      (then $Show.inner_213
-                                                                                                         ((fetch $Show.outer_212)
-                                                                                                            (fetch $Show.inner_213)
-                                                                                                            (suspend
-                                                                                                               ((then $Show.outer_218
-                                                                                                                  ((do $Show.return_148
-                                                                                                                     ((suspend
-                                                                                                                        ((then $Show.outer_220
-                                                                                                                           ((do $Show.return_150
-                                                                                                                              ((suspend
-                                                                                                                                 ((fetch #Show.showDictB_9)
-                                                                                                                                    (suspend
-                                                                                                                                       ((fetch #Show.b_11)
-                                                                                                                                          (suspend
-                                                                                                                                             ((resume $Show.return_150)))
-                                                                                                                                          (apply 2)))
-                                                                                                                                    (apply 2)))
-                                                                                                                                 (invoke show)))
-                                                                                                                              (then $Show.inner_221
-                                                                                                                                 ((fetch $Show.outer_220)
-                                                                                                                                    (fetch $Show.inner_221)
-                                                                                                                                    (suspend
-                                                                                                                                       ((then $Show.outer_222
-                                                                                                                                          ((do $Show.return_149
-                                                                                                                                             ((suspend
-                                                                                                                                                ((push ")")
-                                                                                                                                                   (suspend
-                                                                                                                                                      ((resume $Show.return_149)))
-                                                                                                                                                   (apply 2)))
-                                                                                                                                                (invoke String#)))
-                                                                                                                                             (then $Show.inner_223
-                                                                                                                                                ((fetch $Show.outer_222)
-                                                                                                                                                   (fetch $Show.inner_223)
-                                                                                                                                                   (suspend
-                                                                                                                                                      ((resume $Show.return_148)))
-                                                                                                                                                   (apply 2)))))))
-                                                                                                                                    (apply 2)))))))
-                                                                                                                        (invoke <>)))
-                                                                                                                     (then $Show.inner_219
-                                                                                                                        ((fetch $Show.outer_218)
-                                                                                                                           (fetch $Show.inner_219)
-                                                                                                                           (suspend
-                                                                                                                              ((resume $Show.return_147)))
-                                                                                                                           (apply 2)))))))
-                                                                                                            (apply 2)))))))
-                                                                                                (invoke <>)))
-                                                                                             (then $Show.inner_211
-                                                                                                ((fetch $Show.outer_210)
-                                                                                                   (fetch $Show.inner_211)
-                                                                                                   (suspend
-                                                                                                      ((resume $Show.return_146)))
-                                                                                                   (apply 2)))))))
-                                                                                    (apply 2)))))))
-                                                                        (invoke <>)))
-                                                                     (then $Show.inner_195
-                                                                        ((fetch $Show.outer_194)
-                                                                           (fetch $Show.inner_195)
-                                                                           (suspend
-                                                                              ((resume $Show.return_145)))
-                                                                           (apply 2)))))))
-                                                            (apply 2)))))))
-                                                (invoke <>))))))
-                                    (resume $Show.return_144)))
-                                 (resume $Show.return_143)))))
+                              ($Show.return_153
+                                 ((lambda
+                                    ($Show.param_121 $Show.return_143)
+                                    ((do $Show.return_144
+                                       ((fetch $Show.param_121)
+                                          (construct tuple 1)
+                                          (select
+                                             ((tuple
+                                                (#Show.a_10 #Show.b_11))
+                                                ((suspend
+                                                   ((then $Show.outer_164
+                                                      ((do $Show.return_152
+                                                         ((suspend
+                                                            ((push "(")
+                                                               (suspend
+                                                                  ((resume $Show.return_152)))
+                                                               (apply 2)))
+                                                            (invoke String#)))
+                                                         (then $Show.inner_165
+                                                            ((fetch $Show.outer_164)
+                                                               (fetch $Show.inner_165)
+                                                               (suspend
+                                                                  ((then $Show.outer_194
+                                                                     ((do $Show.return_145
+                                                                        ((suspend
+                                                                           ((then $Show.outer_196
+                                                                              ((do $Show.return_151
+                                                                                 ((suspend
+                                                                                    ((fetch #Show.showDictA_8)
+                                                                                       (suspend
+                                                                                          ((fetch #Show.a_10)
+                                                                                             (suspend
+                                                                                                ((resume $Show.return_151)))
+                                                                                             (apply 2)))
+                                                                                       (apply 2)))
+                                                                                    (invoke show)))
+                                                                                 (then $Show.inner_197
+                                                                                    ((fetch $Show.outer_196)
+                                                                                       (fetch $Show.inner_197)
+                                                                                       (suspend
+                                                                                          ((then $Show.outer_210
+                                                                                             ((do $Show.return_146
+                                                                                                ((suspend
+                                                                                                   ((then $Show.outer_212
+                                                                                                      ((do $Show.return_150
+                                                                                                         ((suspend
+                                                                                                            ((push ", ")
+                                                                                                               (suspend
+                                                                                                                  ((resume $Show.return_150)))
+                                                                                                               (apply 2)))
+                                                                                                            (invoke String#)))
+                                                                                                         (then $Show.inner_213
+                                                                                                            ((fetch $Show.outer_212)
+                                                                                                               (fetch $Show.inner_213)
+                                                                                                               (suspend
+                                                                                                                  ((then $Show.outer_218
+                                                                                                                     ((do $Show.return_147
+                                                                                                                        ((suspend
+                                                                                                                           ((then $Show.outer_220
+                                                                                                                              ((do $Show.return_149
+                                                                                                                                 ((suspend
+                                                                                                                                    ((fetch #Show.showDictB_9)
+                                                                                                                                       (suspend
+                                                                                                                                          ((fetch #Show.b_11)
+                                                                                                                                             (suspend
+                                                                                                                                                ((resume $Show.return_149)))
+                                                                                                                                             (apply 2)))
+                                                                                                                                       (apply 2)))
+                                                                                                                                    (invoke show)))
+                                                                                                                                 (then $Show.inner_221
+                                                                                                                                    ((fetch $Show.outer_220)
+                                                                                                                                       (fetch $Show.inner_221)
+                                                                                                                                       (suspend
+                                                                                                                                          ((then $Show.outer_222
+                                                                                                                                             ((do $Show.return_148
+                                                                                                                                                ((suspend
+                                                                                                                                                   ((push ")")
+                                                                                                                                                      (suspend
+                                                                                                                                                         ((resume $Show.return_148)))
+                                                                                                                                                      (apply 2)))
+                                                                                                                                                   (invoke String#)))
+                                                                                                                                                (then $Show.inner_223
+                                                                                                                                                   ((fetch $Show.outer_222)
+                                                                                                                                                      (fetch $Show.inner_223)
+                                                                                                                                                      (suspend
+                                                                                                                                                         ((resume $Show.return_147)))
+                                                                                                                                                      (apply 2)))))))
+                                                                                                                                       (apply 2)))))))
+                                                                                                                           (invoke <>)))
+                                                                                                                        (then $Show.inner_219
+                                                                                                                           ((fetch $Show.outer_218)
+                                                                                                                              (fetch $Show.inner_219)
+                                                                                                                              (suspend
+                                                                                                                                 ((resume $Show.return_146)))
+                                                                                                                              (apply 2)))))))
+                                                                                                               (apply 2)))))))
+                                                                                                   (invoke <>)))
+                                                                                                (then $Show.inner_211
+                                                                                                   ((fetch $Show.outer_210)
+                                                                                                      (fetch $Show.inner_211)
+                                                                                                      (suspend
+                                                                                                         ((resume $Show.return_145)))
+                                                                                                      (apply 2)))))))
+                                                                                       (apply 2)))))))
+                                                                           (invoke <>)))
+                                                                        (then $Show.inner_195
+                                                                           ((fetch $Show.outer_194)
+                                                                              (fetch $Show.inner_195)
+                                                                              (suspend
+                                                                                 ((resume $Show.return_144)))
+                                                                              (apply 2)))))))
+                                                               (apply 2)))))))
+                                                   (invoke <>))))))
+                                       (resume $Show.return_143)))
+                                    (resume $Show.return_153))))))
                            (resume $Show.return_142))))))
                (resume $Show.return_141)))
             (resume $Show.return_140)))

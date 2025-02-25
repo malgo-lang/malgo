@@ -53,21 +53,23 @@
                         (#RecordTest.$__49
                            (cut
                               ((a
-                                 (cut
-                                    (do $RecordTest.return_70
-                                       (invoke Int32#
-                                          (apply
-                                             (32_i32)
-                                             ($RecordTest.return_70))))
-                                    $RecordTest.return_69))
-                                 (b
+                                 ($RecordTest.return_70
                                     (cut
-                                       (do $RecordTest.return_71
+                                       (do $RecordTest.return_69
                                           (invoke Int32#
                                              (apply
-                                                (10_i32)
-                                                ($RecordTest.return_71))))
-                                       $RecordTest.return_69)))
+                                                (32_i32)
+                                                ($RecordTest.return_69))))
+                                       $RecordTest.return_70)))
+                                 (b
+                                    ($RecordTest.return_72
+                                       (cut
+                                          (do $RecordTest.return_71
+                                             (invoke Int32#
+                                                (apply
+                                                   (10_i32)
+                                                   ($RecordTest.return_71))))
+                                          $RecordTest.return_72))))
                               (then #RecordTest.x_5
                                  (invoke printString
                                     (apply

@@ -33,44 +33,46 @@
                      (#TestPolySynonym.$__39
                         (cut
                            ((fst
-                              (cut-do
-                                 $TestPolySynonym.return_51
-                                 (invoke Int32#
-                                    (apply
-                                       (1_i32)
-                                       ($TestPolySynonym.return_51)))
-                                 $TestPolySynonym.return_50))
-                              (snd
+                              ($TestPolySynonym.return_51
                                  (cut-do
-                                    $TestPolySynonym.return_52
-                                    (invoke String#
+                                    $TestPolySynonym.return_50
+                                    (invoke Int32#
                                        (apply
-                                          ("hoge")
-                                          ($TestPolySynonym.return_52)))
-                                    $TestPolySynonym.return_50)))
+                                          (1_i32)
+                                          ($TestPolySynonym.return_50)))
+                                    $TestPolySynonym.return_51)))
+                              (snd
+                                 ($TestPolySynonym.return_53
+                                    (cut-do
+                                       $TestPolySynonym.return_52
+                                       (invoke String#
+                                          (apply
+                                             ("hoge")
+                                             ($TestPolySynonym.return_52)))
+                                       $TestPolySynonym.return_53))))
                            (then #TestPolySynonym.x_7
                               (invoke |>
-                                 (then $TestPolySynonym.outer_53
+                                 (then $TestPolySynonym.outer_54
                                     (cut-do
                                        $TestPolySynonym.return_49
                                        (invoke first
                                           (apply
                                              (#TestPolySynonym.x_7)
                                              ($TestPolySynonym.return_49)))
-                                       (then $TestPolySynonym.inner_54
+                                       (then $TestPolySynonym.inner_55
                                           (cut
-                                             $TestPolySynonym.outer_53
+                                             $TestPolySynonym.outer_54
                                              (apply
-                                                ($TestPolySynonym.inner_54)
-                                                ((then $TestPolySynonym.outer_55
+                                                ($TestPolySynonym.inner_55)
+                                                ((then $TestPolySynonym.outer_56
                                                    (cut-do
                                                       $TestPolySynonym.return_48
                                                       (invoke printInt32 $TestPolySynonym.return_48)
-                                                      (then $TestPolySynonym.inner_56
+                                                      (then $TestPolySynonym.inner_57
                                                          (cut
-                                                            $TestPolySynonym.outer_55
+                                                            $TestPolySynonym.outer_56
                                                             (apply
-                                                               ($TestPolySynonym.inner_56)
+                                                               ($TestPolySynonym.inner_57)
                                                                ($TestPolySynonym.return_47))))))))))))))))))
                $TestPolySynonym.return_46))
          $TestPolySynonym.return_45)))

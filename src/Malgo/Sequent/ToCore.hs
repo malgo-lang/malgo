@@ -1,5 +1,6 @@
 module Malgo.Sequent.ToCore (toCore) where
 
+import Data.Traversable (for)
 import Effectful
 import Effectful.Reader.Static (Reader)
 import Effectful.State.Static.Local (State)
@@ -60,10 +61,11 @@ instance (State Uniq :> es, Reader ModuleName :> es) => Convert Expr (Eff es (C.
     body' <- convert body
     pure $ C.Lambda range (params <> [return]) (C.Cut body' (C.Label range return))
   convert (Object range fields) = do
-    return <- newTemporalId "return"
-    fields' <- traverse convert fields
-    let fields'' = fmap (\expr -> (Cut expr (C.Label range return))) fields'
-    pure $ C.Object range fields''
+    fields <- for fields \body -> do
+      body <- convert body
+      return <- newTemporalId "return"
+      pure (return, Cut body (C.Label range return))
+    pure $ C.Object range fields
   convert producer@(Apply range _ _) = do
     return <- newTemporalId "return"
     Do range return <$> convert producer (C.Label range return :: C.Consumer One)

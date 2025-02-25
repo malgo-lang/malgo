@@ -53,44 +53,46 @@
                      (#RecordTest.$__49
                         (cut
                            ((a
-                              (cut-do
-                                 $RecordTest.return_70
-                                 (invoke Int32#
-                                    (apply
-                                       (32_i32)
-                                       ($RecordTest.return_70)))
-                                 $RecordTest.return_69))
-                              (b
+                              ($RecordTest.return_70
                                  (cut-do
-                                    $RecordTest.return_71
+                                    $RecordTest.return_69
                                     (invoke Int32#
                                        (apply
-                                          (10_i32)
-                                          ($RecordTest.return_71)))
-                                    $RecordTest.return_69)))
+                                          (32_i32)
+                                          ($RecordTest.return_69)))
+                                    $RecordTest.return_70)))
+                              (b
+                                 ($RecordTest.return_72
+                                    (cut-do
+                                       $RecordTest.return_71
+                                       (invoke Int32#
+                                          (apply
+                                             (10_i32)
+                                             ($RecordTest.return_71)))
+                                       $RecordTest.return_72))))
                            (then #RecordTest.x_5
                               (invoke printString
-                                 (then $RecordTest.outer_82
+                                 (then $RecordTest.outer_83
                                     (cut-do
                                        $RecordTest.return_63
                                        (invoke toStringInt32
-                                          (then $RecordTest.outer_88
+                                          (then $RecordTest.outer_89
                                              (cut-do
                                                 $RecordTest.return_64
                                                 (invoke addInt32
-                                                   (then $RecordTest.outer_90
+                                                   (then $RecordTest.outer_91
                                                       (cut-do
                                                          $RecordTest.return_68
                                                          (invoke f
                                                             (apply
                                                                (#RecordTest.x_5)
                                                                ($RecordTest.return_68)))
-                                                         (then $RecordTest.inner_91
+                                                         (then $RecordTest.inner_92
                                                             (cut
-                                                               $RecordTest.outer_90
+                                                               $RecordTest.outer_91
                                                                (apply
-                                                                  ($RecordTest.inner_91)
-                                                                  ((then $RecordTest.outer_92
+                                                                  ($RecordTest.inner_92)
+                                                                  ((then $RecordTest.outer_93
                                                                      (cut-do
                                                                         $RecordTest.return_65
                                                                         (cut
@@ -112,23 +114,23 @@
                                                                            (apply
                                                                               (#RecordTest.x_5)
                                                                               ($RecordTest.return_65)))
-                                                                        (then $RecordTest.inner_93
+                                                                        (then $RecordTest.inner_94
                                                                            (cut
-                                                                              $RecordTest.outer_92
+                                                                              $RecordTest.outer_93
                                                                               (apply
-                                                                                 ($RecordTest.inner_93)
+                                                                                 ($RecordTest.inner_94)
                                                                                  ($RecordTest.return_64)))))))))))))
-                                                (then $RecordTest.inner_89
+                                                (then $RecordTest.inner_90
                                                    (cut
-                                                      $RecordTest.outer_88
+                                                      $RecordTest.outer_89
                                                       (apply
-                                                         ($RecordTest.inner_89)
+                                                         ($RecordTest.inner_90)
                                                          ($RecordTest.return_63)))))))
-                                       (then $RecordTest.inner_83
+                                       (then $RecordTest.inner_84
                                           (cut
-                                             $RecordTest.outer_82
+                                             $RecordTest.outer_83
                                              (apply
-                                                ($RecordTest.inner_83)
+                                                ($RecordTest.inner_84)
                                                 ($RecordTest.return_62))))))))))))
                $RecordTest.return_61))
          $RecordTest.return_60)))

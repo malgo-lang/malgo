@@ -33,21 +33,23 @@
                         (#TestPolySynonym.$__39
                            (cut
                               ((fst
-                                 (cut
-                                    (do $TestPolySynonym.return_51
-                                       (invoke Int32#
-                                          (apply
-                                             (1_i32)
-                                             ($TestPolySynonym.return_51))))
-                                    $TestPolySynonym.return_50))
-                                 (snd
+                                 ($TestPolySynonym.return_51
                                     (cut
-                                       (do $TestPolySynonym.return_52
-                                          (invoke String#
+                                       (do $TestPolySynonym.return_50
+                                          (invoke Int32#
                                              (apply
-                                                ("hoge")
-                                                ($TestPolySynonym.return_52))))
-                                       $TestPolySynonym.return_50)))
+                                                (1_i32)
+                                                ($TestPolySynonym.return_50))))
+                                       $TestPolySynonym.return_51)))
+                                 (snd
+                                    ($TestPolySynonym.return_53
+                                       (cut
+                                          (do $TestPolySynonym.return_52
+                                             (invoke String#
+                                                (apply
+                                                   ("hoge")
+                                                   ($TestPolySynonym.return_52))))
+                                          $TestPolySynonym.return_53))))
                               (then #TestPolySynonym.x_7
                                  (invoke |>
                                     (apply
