@@ -11,7 +11,7 @@ module Malgo.Sequent.Core
   )
 where
 
-import Control.Lens (_2, traverseOf)
+import Control.Lens (traverseOf, _2)
 import Data.Map qualified as Map
 import Data.SCargot.Repr.Basic qualified as S
 import Data.Traversable (for)
