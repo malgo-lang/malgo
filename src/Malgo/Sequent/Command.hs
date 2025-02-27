@@ -1,3 +1,4 @@
+-- FIXME: Rewrite as basic-block based IR.
 module Malgo.Sequent.Command
   ( Program (..),
     Branch (..),
