@@ -153,7 +153,7 @@ rnExpr (Seq pos ss) = Seq pos <$> rnStmts ss
 rnExpr (Parens _ e) = rnExpr e
 
 -- | Renamed identifier corresponding Boxed literals.
-lookupBox :: (Reader RnEnv :> es, IOE :> es, Reader Flag :> es) => Range -> Literal x -> Eff es Id
+lookupBox :: (Reader RnEnv :> es, IOE :> es) => Range -> Literal x -> Eff es Id
 lookupBox pos Int32 {} = lookupVarName pos "Int32#"
 lookupBox pos Int64 {} = lookupVarName pos "Int64#"
 lookupBox pos Float {} = lookupVarName pos "Float#"
@@ -251,7 +251,7 @@ rnStmts (With x Nothing e :| s : ss) = do
 rnStmts (With x _ _ :| []) = errorOn x "`with` statement cannnot appear in the last line of the sequence expression."
 
 -- | Convert infix declarations to a Map. Infix for an undefined identifier is an error.
-infixDecls :: (Reader RnEnv :> es, IOE :> es, Reader Flag :> es) => [Decl (Malgo 'Parse)] -> Eff es (Map RnId (Assoc, Int))
+infixDecls :: (Reader RnEnv :> es, IOE :> es) => [Decl (Malgo 'Parse)] -> Eff es (Map RnId (Assoc, Int))
 infixDecls ds =
   foldMapM ?? ds $ \case
     (Infix pos assoc order name) -> do
@@ -310,7 +310,7 @@ mkOpApp pos2 fix2 op2 (OpApp (pos1, fix1) op1 e11 e12) e2
 mkOpApp pos fix op e1 e2 = pure $ OpApp (pos, fix) op e1 e2
 
 -- | Generate toplevel environment.
-genToplevelEnv :: (IOE :> es, Reader ModuleName :> es, State (Map ModuleName Interface) :> es, Reader Flag :> es, Workspace :> es) => [Decl (Malgo 'Parse)] -> RnEnv -> Eff es RnEnv
+genToplevelEnv :: (IOE :> es, Reader ModuleName :> es, State (Map ModuleName Interface) :> es, Workspace :> es) => [Decl (Malgo 'Parse)] -> RnEnv -> Eff es RnEnv
 genToplevelEnv (ds :: [Decl (Malgo 'Parse)]) env = do
   execState env (traverse aux ds)
   where
