@@ -6,8 +6,14 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachDefaultSystem (system:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      flake-utils,
+    }:
+    flake-utils.lib.eachDefaultSystem (
+      system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
 
@@ -15,15 +21,20 @@
           overrides = import ./nix/haskell-overrides.nix;
         };
 
-        jailbreakUnbreak = pkg:
-          pkgs.haskell.lib.doJailbreak (pkg.overrideAttrs (_: { meta = { }; }));
+        jailbreakUnbreak =
+          pkg:
+          pkgs.haskell.lib.doJailbreak (
+            pkg.overrideAttrs (_: {
+              meta = { };
+            })
+          );
 
         packageName = "malgo";
-      in {
-        packages.${packageName} =
-          haskellPackages.callCabal2nix packageName self rec {
-            # Dependency overrides go here
-          };
+      in
+      {
+        packages.${packageName} = haskellPackages.callCabal2nix packageName self rec {
+          # Dependency overrides go here
+        };
 
         packages.default = self.packages.${system}.${packageName};
         defaultPackage = self.packages.${system}.default;
@@ -33,9 +44,11 @@
             haskellPackages.haskell-language-server # you must build it with your ghc to work
             ghcid
             cabal-install
+            nixfmt-rfc-style
           ];
           inputsFrom = map (__getAttr "env") (__attrValues self.packages.${system});
         };
         devShell = self.devShells.${system}.default;
-      });
+      }
+    );
 }
