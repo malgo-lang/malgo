@@ -13,12 +13,6 @@
 
         haskellPackages = pkgs.haskell.packages.ghc910.override {
           overrides = final: prev: {
-            binary-instances = jailbreakUnbreak prev.binary-instances;
-            containers = final.callHackage "containers" "0.6.8" { };
-            diagnose = jailbreakUnbreak (pkgs.haskell.lib.overrideCabal prev.diagnose (drv: {
-              configureFlags = [ "-fmegaparsec-compat" ];
-              buildDepends = (drv.buildDepends or []) ++ [ final.megaparsec ];
-            }));
           };
         };
 
