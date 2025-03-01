@@ -2,13 +2,10 @@
 module Malgo.Driver (compile, compileFromAST, withDump) where
 
 import Data.ByteString qualified as BS
-import Data.String.Conversions.Monomorphic (toString)
 import Effectful
 import Effectful.Error.Static (prettyCallStack, runError)
 import Effectful.Reader.Static
 import Effectful.State.Static.Local
-import Error.Diagnose (TabSize (..), WithUnicode (..), addFile, prettyDiagnostic)
-import Error.Diagnose.Compat.Megaparsec
 import Malgo.Core.Eval (EvalError, defaultStderr, defaultStdin, defaultStdout, eval)
 import Malgo.Core.Flat qualified as Flat
 import Malgo.Core.LambdaLift (lambdalift)
@@ -31,10 +28,8 @@ import Malgo.Rename.Pass (rename)
 import Malgo.Rename.RnEnv qualified as RnEnv
 import Malgo.Syntax qualified as Syntax
 import Malgo.Syntax.Extension
-import Prettyprinter qualified as PrettyPrinter
-import Prettyprinter.Render.Text qualified as PrettyPrinter
 import System.Exit (exitFailure)
-import System.IO (hFlush)
+import Text.Megaparsec (errorBundlePretty)
 
 -- | `withDump` is the wrapper for check `dump` flag and output dump if that flag is `True`.
 withDump ::
@@ -172,16 +167,7 @@ compile srcPath = do
   parsedAst <- case parseResult of
     Right x -> pure x
     Left err -> liftIO do
-      let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
-      let diag' = addFile diag srcPath (toString src)
-      let message =
-            convertString
-              $ PrettyPrinter.renderStrict
-              $ PrettyPrinter.layoutPretty PrettyPrinter.defaultLayoutOptions
-              $ PrettyPrinter.unAnnotate
-              $ prettyDiagnostic WithUnicode (TabSize 4) diag'
-      BS.hPutStr stderr message -- ByteString.hPutStr is an atomic operation.
-      hFlush stderr
+      hPutStrLn stderr $ errorBundlePretty err
       exitFailure
   when flags.debugMode do
     hPutStrLn stderr "=== PARSE ==="

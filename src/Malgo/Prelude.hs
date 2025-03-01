@@ -85,7 +85,6 @@ module Malgo.Prelude
     HasStart (..),
     HasEnd (..),
     errorOn,
-    rangeToPosition,
     warningOn,
   )
 where
@@ -101,7 +100,6 @@ import Control.Monad.Extra (ifM)
 import Control.Monad.IO.Class
 import Data.Bifunctor
 import Data.Bitraversable
-import Data.ByteString qualified as BS
 import Data.ByteString.Short (ShortByteString)
 import Data.Char
 import Data.Coerce
@@ -130,10 +128,6 @@ import Data.String.Conversions
 import Data.Text (Text)
 import Data.Text.IO qualified as T
 import Data.Void
-import Effectful
-import Effectful.Reader.Static
-import Error.Diagnose (Marker (This), Position (..), Report (Err, Warn), TabSize (..), WithUnicode (..), addFile, addReport, defaultStyle, prettyDiagnostic)
-import Error.Diagnose.Compat.Megaparsec (HasHints (hints))
 import GHC.Exts (sortWith)
 import GHC.Generics (Generic)
 import GHC.Stack (HasCallStack)
@@ -221,9 +215,6 @@ hPutTextLn handle x = liftIO $ T.hPutStrLn handle x
 putText :: (MonadIO m) => Text -> m ()
 putText = hPutText stdout
 
-instance HasHints Void Text where
-  hints = const []
-
 newIORef :: (MonadIO m) => a -> m (IORef a)
 newIORef = liftIO . IORef.newIORef
 
@@ -278,41 +269,11 @@ instance Pretty Range where
 
 makeFieldsNoPrefix ''Range
 
-errorOn :: (Reader Flag :> es, IOE :> es) => Range -> Doc x -> Eff es a
+errorOn :: (MonadIO m, Pretty a) => a -> Doc ann -> m b
 errorOn range x = do
-  Flag {testMode} <- ask
-  let srcFileName = sourceName range._start
-  src <- liftIO $ BS.readFile srcFileName
-  let diag =
-        addReport mempty (Err Nothing "compile error" [(rangeToPosition range, This $ render x)] []) & \diag ->
-          addFile diag (sourceName range._start) (convertString src)
-  let doc = (if testMode then unAnnotate else reAnnotate defaultStyle) $ prettyDiagnostic WithUnicode (TabSize 4) diag
-  liftIO $ hPutDoc stderr doc
+  liftIO $ hPutDoc stderr $ pretty range <> ": " <> x
   liftIO exitFailure
 
-rangeToPosition :: Range -> Error.Diagnose.Position
-rangeToPosition (Range start end) =
-  Error.Diagnose.Position
-    { begin = (unPos $ sourceLine start, unPos $ sourceColumn start),
-      end = (unPos $ sourceLine end, unPos $ sourceColumn end),
-      file = sourceName start
-    }
-
-warningOn :: (Reader Flag :> es, IOE :> es) => Range -> Doc x -> Eff es ()
+warningOn :: (MonadIO m, Pretty a) => a -> Doc ann -> m ()
 warningOn range x = do
-  Flag {testMode} <- ask
-  let srcFileName = sourceName range._start
-  src <- liftIO $ BS.readFile srcFileName
-  let diag =
-        addReport mempty (Warn Nothing "compile error" [(rangeToPosition range, This $ render x)] []) & \diag ->
-          addFile diag (sourceName range._start) (convertString src)
-  let doc = (if testMode then unAnnotate else reAnnotate defaultStyle) $ prettyDiagnostic WithUnicode (TabSize 4) diag
-  liftIO $ hPutDoc stderr doc
-  liftIO exitFailure
-  where
-    rangeToPosition (Range start end) =
-      Error.Diagnose.Position
-        { begin = (unPos $ sourceLine start, unPos $ sourceColumn start),
-          end = (unPos $ sourceLine end, unPos $ sourceColumn end),
-          file = sourceName start
-        }
+  liftIO $ hPutDoc stderr $ pretty range <> ": " <> x
