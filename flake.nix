@@ -12,8 +12,7 @@
         pkgs = nixpkgs.legacyPackages.${system};
 
         haskellPackages = pkgs.haskell.packages.ghc910.override {
-          overrides = final: prev: {
-          };
+          overrides = import ./nix/haskell-overrides.nix;
         };
 
         jailbreakUnbreak = pkg:
