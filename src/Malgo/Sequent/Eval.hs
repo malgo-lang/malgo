@@ -3,6 +3,7 @@
 module Malgo.Sequent.Eval (Value (..), EvalError (..), Env (..), emptyEnv) where
 
 import Data.Map qualified as Map
+import Data.Traversable (for)
 import Debug.Trace (traceShowM)
 import Effectful
 import Effectful.Error.Static
@@ -135,14 +136,25 @@ instance (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es) => Ev
             local (extendEnv' bindings) $ eval statement
           Nothing -> go rest
 
-match :: (Error EvalError :> es) => Pattern -> Value -> Eff es (Maybe [(Name, Value)])
+match :: (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es) => Pattern -> Value -> Eff es (Maybe [(Name, Value)])
 match (PVar _ name) value = pure $ Just [(name, value)]
 match (PLiteral _ literal) (Immediate literal') | literal == literal' = pure $ Just []
 match (Destruct _ tag patterns) (Struct tag' values) | tag == tag' = do
   bindings <- zipWithM match patterns values
   pure $ foldr (liftA2 (<>)) (Just []) bindings
+match (Expand range patterns) (Record _ fields) = do
+  let pairs = Map.intersectionWith (,) patterns fields
+  pairs <- for pairs \(pattern, (return, statement)) -> do
+    env <- ask @Env
+    -- If the evaluation of `statement` finishes normally, the last consumer will be `Label range return`.
+    -- By setting `return` to `Finish`, `eval statement` will return the value of the last producer.
+    local (extendEnv return (Consumer env (Finish range))) do
+      value <- eval statement
+      match pattern value
+  pure $ foldr (liftA2 (<>)) (Just []) pairs
+match _ _ = pure Nothing
 
-instance (Error EvalError :> es, Reader Env :> es) => Eval (Consumer Zero) (Eff es Value) where
+instance (Reader Env :> es) => Eval (Consumer Zero) (Eff es Value) where
   eval consumer = do
     env <- ask @Env
     pure $ Consumer env consumer
