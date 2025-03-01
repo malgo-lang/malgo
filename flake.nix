@@ -2,7 +2,7 @@
   description = "Malgo";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
@@ -11,7 +11,16 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
 
-        haskellPackages = pkgs.haskell.packages.ghc910;
+        haskellPackages = pkgs.haskell.packages.ghc910.override {
+          overrides = final: prev: {
+            binary-instances = jailbreakUnbreak prev.binary-instances;
+            containers = final.callHackage "containers" "0.6.8" { };
+            diagnose = jailbreakUnbreak (pkgs.haskell.lib.overrideCabal prev.diagnose (drv: {
+              configureFlags = [ "-fmegaparsec-compat" ];
+              buildDepends = (drv.buildDepends or []) ++ [ final.megaparsec ];
+            }));
+          };
+        };
 
         jailbreakUnbreak = pkg:
           pkgs.haskell.lib.doJailbreak (pkg.overrideAttrs (_: { meta = { }; }));
@@ -21,8 +30,6 @@
         packages.${packageName} =
           haskellPackages.callCabal2nix packageName self rec {
             # Dependency overrides go here
-            diagnose = jailbreakUnbreak haskellPackages.diagnose;
-            binary-instances = jailbreakUnbreak haskellPackages.binary-instances;
           };
 
         packages.default = self.packages.${system}.${packageName};
