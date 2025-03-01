@@ -24,7 +24,7 @@ type Name = Id
 
 -- | Tag is used to distinguish different structures.
 data Tag = Tuple | Tag Text
-  deriving stock (Show)
+  deriving stock (Show, Eq)
 
 instance ToSExpr Tag where
   toSExpr Tuple = S.A "tuple"
@@ -37,7 +37,7 @@ data Literal
   | Double Double
   | Char Char
   | String Text
-  deriving stock (Show)
+  deriving stock (Show, Eq)
 
 instance ToSExpr Literal where
   toSExpr (Int32 n) = S.A $ S.Int (fromIntegral n) (Just "i32")
