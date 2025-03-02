@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.38.0.
+-- This file has been generated from package.yaml by hpack version 0.36.1.
 --
 -- see: https://github.com/sol/hpack
 
@@ -56,11 +56,9 @@ library
       Malgo.Rename.Pass
       Malgo.Rename.RnEnv
       Malgo.Rename.RnState
-      Malgo.Sequent.Command
       Malgo.Sequent.Core
       Malgo.Sequent.Eval
       Malgo.Sequent.Fun
-      Malgo.Sequent.ToCommand
       Malgo.Sequent.ToCore
       Malgo.Sequent.ToFun
       Malgo.SExpr
@@ -192,7 +190,6 @@ test-suite malgo-test
       Malgo.ParserSpec
       Malgo.RefineSpec
       Malgo.RenameSpec
-      Malgo.Sequent.ToCommandSpec
       Malgo.Sequent.ToCoreSpec
       Malgo.Sequent.ToFunSpec
       Malgo.TestUtils

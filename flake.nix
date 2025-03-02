@@ -32,9 +32,9 @@
         packageName = "malgo";
       in
       {
-        packages.${packageName} = haskellPackages.callCabal2nix packageName self rec {
+        packages.${packageName} = pkgs.haskell.lib.doCheck (haskellPackages.callCabal2nix packageName self rec {
           # Dependency overrides go here
-        };
+        });
 
         packages.default = self.packages.${system}.${packageName};
         defaultPackage = self.packages.${system}.default;
@@ -44,6 +44,7 @@
             haskellPackages.haskell-language-server # you must build it with your ghc to work
             ghcid
             cabal-install
+            haskellPackages.hpack
             nixfmt-rfc-style
           ];
           inputsFrom = map (__getAttr "env") (__attrValues self.packages.${system});
