@@ -40,7 +40,7 @@ instance (State Uniq :> es, Reader ModuleName :> es) => Convert Expr (C.Consumer
     convert expr (C.Project range field consumer)
   convert (Primitive range operator args) consumer = do
     args <- traverse convert args
-    pure $ C.Primitive range operator args [consumer]
+    pure $ C.Primitive range operator args consumer
   convert (Select range scrutinee branches) consumer = do
     branches <- traverse (convert consumer) branches
     convert scrutinee (C.Select range branches :: C.Consumer One)

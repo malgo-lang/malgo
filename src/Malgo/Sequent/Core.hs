@@ -74,7 +74,7 @@ instance ToSExpr (Consumer x) where
 data Statement x where
   Cut :: Producer x -> Consumer x -> Statement x
   CutDo :: Range -> Name -> Statement Zero -> Consumer Zero -> Statement Zero
-  Primitive :: Range -> Text -> [Producer x] -> [Consumer x] -> Statement x
+  Primitive :: Range -> Text -> [Producer x] -> Consumer x -> Statement x
   Invoke :: Range -> Name -> Consumer x -> Statement x
 
 deriving stock instance Show (Statement x)
@@ -82,8 +82,8 @@ deriving stock instance Show (Statement x)
 instance ToSExpr (Statement x) where
   toSExpr (Cut producer consumer) = S.L ["cut", toSExpr producer, toSExpr consumer]
   toSExpr (CutDo _ name statement consumer) = S.L ["cut-do", toSExpr name, toSExpr statement, toSExpr consumer]
-  toSExpr (Primitive _ name producers consumers) =
-    S.L [S.A "prim", toSExpr name, S.L $ map toSExpr producers, S.L $ map toSExpr consumers]
+  toSExpr (Primitive _ name producers consumer) =
+    S.L [S.A "prim", toSExpr name, S.L $ map toSExpr producers, toSExpr consumer]
   toSExpr (Invoke _ name consumer) = S.L ["invoke", toSExpr name, toSExpr consumer]
 
 data Branch x = Branch
@@ -120,13 +120,13 @@ flatStatement (Cut producer consumer) = do
   case producer of
     Do' range name statement -> pure $ CutDo range name statement consumer
     Zero producer -> pure $ Cut producer consumer
-flatStatement (Primitive range name producers consumers) = do
+flatStatement (Primitive range name producers consumer) = do
   (zeros, mproducer, rest) <- split producers
   case mproducer of
     Just producer -> do
       var <- newTemporalId "var"
       producer' <- flatProducer producer
-      primitive <- flatStatement (Primitive range name (zeros <> [Var range var] <> rest) consumers)
+      primitive <- flatStatement (Primitive range name (zeros <> [Var range var] <> rest) consumer)
       pure
         $ cut producer'
         $ Then range var
@@ -137,8 +137,8 @@ flatStatement (Primitive range name producers consumers) = do
         case zero' of
           Zero producer' -> pure producer'
           Do' {} -> error "impossible"
-      consumers' <- traverse flatConsumer consumers
-      pure $ Primitive range name producers' consumers'
+      consumer' <- flatConsumer consumer
+      pure $ Primitive range name producers' consumer'
 flatStatement (Invoke range name consumer) = do
   consumer' <- flatConsumer consumer
   pure $ Invoke range name consumer'

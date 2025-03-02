@@ -35,10 +35,10 @@ instance (State Uniq :> es) => Convert (Statement Zero) (Eff es Code) where
     let producer = [C.Do range name body]
     consumer <- convert consumer
     pure $ producer <> consumer
-  convert (Primitive range operator producers consumers) = do
+  convert (Primitive range operator producers consumer) = do
     producers <- foldMap convert producers
-    consumers <- map C.Suspend <$> traverse convert consumers
-    pure $ producers <> consumers <> [C.Primitive range operator]
+    consumer <- C.Suspend <$> convert consumer
+    pure $ producers <> [consumer] <> [C.Primitive range operator]
   convert (Invoke range name consumer) = do
     consumer <- C.Suspend <$> convert consumer
     pure $ consumer : [C.Invoke range name]

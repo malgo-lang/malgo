@@ -73,10 +73,10 @@ instance (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es) => Ev
     let value = Consumer env consumer
     local (extendEnv label value) do
       eval statement
-  eval (Primitive _ name producers consumers) = do
+  eval (Primitive _ name producers consumer) = do
     producers <- traverse eval producers
-    consumers <- traverse eval consumers
-    traceShowM (name, producers :: [Value], consumers :: [Value])
+    consumer <- eval consumer
+    traceShowM (name, producers :: [Value], consumer :: Value)
     pure $ Struct Tuple []
   eval (Invoke range name consumer) = do
     (return, statement) <- lookupToplevel range name
