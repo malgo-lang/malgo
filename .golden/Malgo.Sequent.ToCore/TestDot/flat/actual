@@ -10,20 +10,20 @@
                   (#TestDot.x_0))
                   (invoke Int64#
                      (then $TestDot.outer_41
-                        (cut-do
-                           $TestDot.return_34
+                        (join
+                           (($TestDot.return_34
+                              (then $TestDot.inner_42
+                                 (cut
+                                    $TestDot.outer_41
+                                    (apply
+                                       ($TestDot.inner_42)
+                                       ($TestDot.return_33))))))
                            (invoke addInt64#
                               (apply
                                  (#TestDot.x_0)
                                  ((apply
                                     (1_i64)
-                                    ($TestDot.return_34)))))
-                           (then $TestDot.inner_42
-                              (cut
-                                 $TestDot.outer_41
-                                 (apply
-                                    ($TestDot.inner_42)
-                                    ($TestDot.return_33)))))))))))
+                                    ($TestDot.return_34))))))))))))
       $TestDot.return_32))
    (main
       $TestDot.return_35
@@ -36,44 +36,44 @@
                   (#TestDot.$__29
                      (invoke printInt64
                         (then $TestDot.outer_49
-                           (cut-do
-                              $TestDot.return_37
+                           (join
+                              (($TestDot.return_37
+                                 (then $TestDot.inner_50
+                                    (cut
+                                       $TestDot.outer_49
+                                       (apply
+                                          ($TestDot.inner_50)
+                                          ($TestDot.return_36))))))
                               (invoke .
                                  (then $TestDot.outer_51
-                                    (cut-do
-                                       $TestDot.return_40
-                                       (invoke succ $TestDot.return_40)
-                                       (then $TestDot.inner_52
-                                          (cut
-                                             $TestDot.outer_51
-                                             (apply
-                                                ($TestDot.inner_52)
-                                                ((then $TestDot.outer_53
-                                                   (cut-do
-                                                      $TestDot.return_39
-                                                      (invoke succ $TestDot.return_39)
-                                                      (then $TestDot.inner_54
-                                                         (cut
-                                                            $TestDot.outer_53
-                                                            (apply
-                                                               ($TestDot.inner_54)
-                                                               ((then $TestDot.outer_55
-                                                                  (cut-do
-                                                                     $TestDot.return_38
-                                                                     (invoke Int64#
-                                                                        (apply
-                                                                           (0_i64)
-                                                                           ($TestDot.return_38)))
-                                                                     (then $TestDot.inner_56
-                                                                        (cut
-                                                                           $TestDot.outer_55
-                                                                           (apply
-                                                                              ($TestDot.inner_56)
-                                                                              ($TestDot.return_37)))))))))))))))))))
-                              (then $TestDot.inner_50
-                                 (cut
-                                    $TestDot.outer_49
-                                    (apply
-                                       ($TestDot.inner_50)
-                                       ($TestDot.return_36)))))))))))
+                                    (join
+                                       (($TestDot.return_40
+                                          (then $TestDot.inner_52
+                                             (cut
+                                                $TestDot.outer_51
+                                                (apply
+                                                   ($TestDot.inner_52)
+                                                   ((then $TestDot.outer_53
+                                                      (join
+                                                         (($TestDot.return_39
+                                                            (then $TestDot.inner_54
+                                                               (cut
+                                                                  $TestDot.outer_53
+                                                                  (apply
+                                                                     ($TestDot.inner_54)
+                                                                     ((then $TestDot.outer_55
+                                                                        (join
+                                                                           (($TestDot.return_38
+                                                                              (then $TestDot.inner_56
+                                                                                 (cut
+                                                                                    $TestDot.outer_55
+                                                                                    (apply
+                                                                                       ($TestDot.inner_56)
+                                                                                       ($TestDot.return_37))))))
+                                                                           (invoke Int64#
+                                                                              (apply
+                                                                                 (0_i64)
+                                                                                 ($TestDot.return_38)))))))))))
+                                                         (invoke succ $TestDot.return_39)))))))))
+                                       (invoke succ $TestDot.return_40)))))))))))
          $TestDot.return_35)))

@@ -63,18 +63,18 @@
                   (#Null.as_8
                      (invoke isNothing
                         (then $Null.outer_145
-                           (cut-do
-                              $Null.return_135
+                           (join
+                              (($Null.return_135
+                                 (then $Null.inner_146
+                                    (cut
+                                       $Null.outer_145
+                                       (apply
+                                          ($Null.inner_146)
+                                          ($Null.return_134))))))
                               (invoke mHead
                                  (apply
                                     (#Null.as_8)
-                                    ($Null.return_135)))
-                              (then $Null.inner_146
-                                 (cut
-                                    $Null.outer_145
-                                    (apply
-                                       ($Null.inner_146)
-                                       ($Null.return_134)))))))))))
+                                    ($Null.return_135))))))))))
          $Null.return_133))
    (main
       $Null.return_136
@@ -87,77 +87,77 @@
                   (#Null.$__118
                      (invoke |>
                         (then $Null.outer_173
-                           (cut-do
-                              $Null.return_139
+                           (join
+                              (($Null.return_139
+                                 (then $Null.inner_174
+                                    (cut
+                                       $Null.outer_173
+                                       (apply
+                                          ($Null.inner_174)
+                                          ((apply
+                                             ((lambda
+                                                ($Null.param_125 $Null.return_138)
+                                                (cut
+                                                   $Null.param_125
+                                                   (select
+                                                      ((False ())
+                                                         (invoke malgo_print_string
+                                                            (apply
+                                                               ("OK")
+                                                               ($Null.return_138))))
+                                                      ((True ())
+                                                         (invoke malgo_exit_failure
+                                                            (apply
+                                                               ((construct tuple () ()))
+                                                               ($Null.return_138))))))))
+                                             ($Null.return_137))))))))
                               (invoke null
                                  (then $Null.outer_187
-                                    (cut-do
-                                       $Null.return_140
+                                    (join
+                                       (($Null.return_140
+                                          (then $Null.inner_188
+                                             (cut
+                                                $Null.outer_187
+                                                (apply
+                                                   ($Null.inner_188)
+                                                   ($Null.return_139))))))
                                        (invoke Cons
                                           (then $Null.outer_189
-                                             (cut-do
-                                                $Null.return_144
-                                                (invoke True $Null.return_144)
-                                                (then $Null.inner_190
-                                                   (cut
-                                                      $Null.outer_189
-                                                      (apply
-                                                         ($Null.inner_190)
-                                                         ((then $Null.outer_195
-                                                            (cut-do
-                                                               $Null.return_141
-                                                               (invoke Cons
-                                                                  (then $Null.outer_197
-                                                                     (cut-do
-                                                                        $Null.return_143
-                                                                        (invoke True $Null.return_143)
-                                                                        (then $Null.inner_198
-                                                                           (cut
-                                                                              $Null.outer_197
-                                                                              (apply
-                                                                                 ($Null.inner_198)
-                                                                                 ((then $Null.outer_199
-                                                                                    (cut-do
-                                                                                       $Null.return_142
-                                                                                       (invoke Nil $Null.return_142)
-                                                                                       (then $Null.inner_200
-                                                                                          (cut
-                                                                                             $Null.outer_199
-                                                                                             (apply
-                                                                                                ($Null.inner_200)
-                                                                                                ($Null.return_141)))))))))))))
-                                                               (then $Null.inner_196
-                                                                  (cut
-                                                                     $Null.outer_195
-                                                                     (apply
-                                                                        ($Null.inner_196)
-                                                                        ($Null.return_140)))))))))))))
-                                       (then $Null.inner_188
-                                          (cut
-                                             $Null.outer_187
-                                             (apply
-                                                ($Null.inner_188)
-                                                ($Null.return_139)))))))
-                              (then $Null.inner_174
-                                 (cut
-                                    $Null.outer_173
-                                    (apply
-                                       ($Null.inner_174)
-                                       ((apply
-                                          ((lambda
-                                             ($Null.param_125 $Null.return_138)
-                                             (cut
-                                                $Null.param_125
-                                                (select
-                                                   ((False ())
-                                                      (invoke malgo_print_string
+                                             (join
+                                                (($Null.return_144
+                                                   (then $Null.inner_190
+                                                      (cut
+                                                         $Null.outer_189
                                                          (apply
-                                                            ("OK")
-                                                            ($Null.return_138))))
-                                                   ((True ())
-                                                      (invoke malgo_exit_failure
-                                                         (apply
-                                                            ((construct tuple () ()))
-                                                            ($Null.return_138))))))))
-                                          ($Null.return_137)))))))))))))
+                                                            ($Null.inner_190)
+                                                            ((then $Null.outer_195
+                                                               (join
+                                                                  (($Null.return_141
+                                                                     (then $Null.inner_196
+                                                                        (cut
+                                                                           $Null.outer_195
+                                                                           (apply
+                                                                              ($Null.inner_196)
+                                                                              ($Null.return_140))))))
+                                                                  (invoke Cons
+                                                                     (then $Null.outer_197
+                                                                        (join
+                                                                           (($Null.return_143
+                                                                              (then $Null.inner_198
+                                                                                 (cut
+                                                                                    $Null.outer_197
+                                                                                    (apply
+                                                                                       ($Null.inner_198)
+                                                                                       ((then $Null.outer_199
+                                                                                          (join
+                                                                                             (($Null.return_142
+                                                                                                (then $Null.inner_200
+                                                                                                   (cut
+                                                                                                      $Null.outer_199
+                                                                                                      (apply
+                                                                                                         ($Null.inner_200)
+                                                                                                         ($Null.return_141))))))
+                                                                                             (invoke Nil $Null.return_142)))))))))
+                                                                           (invoke True $Null.return_143))))))))))))
+                                                (invoke True $Null.return_144))))))))))))))
          $Null.return_136)))

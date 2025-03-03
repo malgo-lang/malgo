@@ -9,18 +9,18 @@
                (#Pattern.$__9
                   (invoke putStrLn
                      (then $Pattern.outer_23
-                        (cut-do
-                           $Pattern.return_20
+                        (join
+                           (($Pattern.return_20
+                              (then $Pattern.inner_24
+                                 (cut
+                                    $Pattern.outer_23
+                                    (apply
+                                       ($Pattern.inner_24)
+                                       ($Pattern.return_19))))))
                            (invoke String#
                               (apply
                                  ("OK")
-                                 ($Pattern.return_20)))
-                           (then $Pattern.inner_24
-                              (cut
-                                 $Pattern.outer_23
-                                 (apply
-                                    ($Pattern.inner_24)
-                                    ($Pattern.return_19)))))))))))
+                                 ($Pattern.return_20))))))))))
       $Pattern.return_18))
    (isNil
       $Pattern.return_21

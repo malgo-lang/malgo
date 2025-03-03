@@ -37,23 +37,23 @@
                                           ("WRONG")
                                           ($Test2.return_32)))))))
                         (then $Test2.outer_35
-                           (cut-do
-                              $Test2.return_30
+                           (join
+                              (($Test2.return_30
+                                 (then $Test2.inner_36
+                                    (cut
+                                       $Test2.outer_35
+                                       (apply
+                                          ($Test2.inner_36)
+                                          ($Test2.return_29))))))
                               (invoke rtob
                                  (then $Test2.outer_37
-                                    (cut-do
-                                       $Test2.return_31
-                                       (invoke R $Test2.return_31)
-                                       (then $Test2.inner_38
-                                          (cut
-                                             $Test2.outer_37
-                                             (apply
-                                                ($Test2.inner_38)
-                                                ($Test2.return_30)))))))
-                              (then $Test2.inner_36
-                                 (cut
-                                    $Test2.outer_35
-                                    (apply
-                                       ($Test2.inner_36)
-                                       ($Test2.return_29)))))))))))
+                                    (join
+                                       (($Test2.return_31
+                                          (then $Test2.inner_38
+                                             (cut
+                                                $Test2.outer_37
+                                                (apply
+                                                   ($Test2.inner_38)
+                                                   ($Test2.return_30))))))
+                                       (invoke R $Test2.return_31)))))))))))
          $Test2.return_28)))

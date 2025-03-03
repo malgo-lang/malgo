@@ -30,18 +30,18 @@
                                  ((construct tuple () ()))
                                  ($HelloBoxed.return_30))))
                         (then $HelloBoxed.outer_34
-                           (cut-do
-                              $HelloBoxed.return_29
+                           (join
+                              (($HelloBoxed.return_29
+                                 (then $HelloBoxed.inner_35
+                                    (cut
+                                       $HelloBoxed.outer_34
+                                       (apply
+                                          ($HelloBoxed.inner_35)
+                                          ($HelloBoxed.return_28))))))
                               (invoke malgo_print_string
                                  (apply
                                     (#HelloBoxed.str_0)
-                                    ($HelloBoxed.return_29)))
-                              (then $HelloBoxed.inner_35
-                                 (cut
-                                    $HelloBoxed.outer_34
-                                    (apply
-                                       ($HelloBoxed.inner_35)
-                                       ($HelloBoxed.return_28)))))))))))
+                                    ($HelloBoxed.return_29))))))))))
          $HelloBoxed.return_27))
    (main
       $HelloBoxed.return_31
@@ -54,16 +54,16 @@
                   (#HelloBoxed.$__20
                      (invoke putStrLn
                         (then $HelloBoxed.outer_36
-                           (cut-do
-                              $HelloBoxed.return_33
+                           (join
+                              (($HelloBoxed.return_33
+                                 (then $HelloBoxed.inner_37
+                                    (cut
+                                       $HelloBoxed.outer_36
+                                       (apply
+                                          ($HelloBoxed.inner_37)
+                                          ($HelloBoxed.return_32))))))
                               (invoke String#
                                  (apply
                                     ("Hello, world")
-                                    ($HelloBoxed.return_33)))
-                              (then $HelloBoxed.inner_37
-                                 (cut
-                                    $HelloBoxed.outer_36
-                                    (apply
-                                       ($HelloBoxed.inner_37)
-                                       ($HelloBoxed.return_32)))))))))))
+                                    ($HelloBoxed.return_33))))))))))
          $HelloBoxed.return_31)))

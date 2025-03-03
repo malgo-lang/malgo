@@ -32,40 +32,40 @@
                   (#Test0.$__41
                      (invoke |>
                         (then $Test0.outer_67
-                           (cut-do
-                              $Test0.return_63
+                           (join
+                              (($Test0.return_63
+                                 (then $Test0.inner_68
+                                    (cut
+                                       $Test0.outer_67
+                                       (apply
+                                          ($Test0.inner_68)
+                                          ((apply
+                                             ((lambda
+                                                ($Test0.param_53 $Test0.return_61)
+                                                (cut
+                                                   $Test0.param_53
+                                                   (select
+                                                      ((Int64#
+                                                         (#Test0.i_6))
+                                                         (invoke printString#
+                                                            (then $Test0.outer_71
+                                                               (join
+                                                                  (($Test0.return_62
+                                                                     (then $Test0.inner_72
+                                                                        (cut
+                                                                           $Test0.outer_71
+                                                                           (apply
+                                                                              ($Test0.inner_72)
+                                                                              ($Test0.return_61))))))
+                                                                  (invoke toStringInt64#
+                                                                     (apply
+                                                                        (#Test0.i_6)
+                                                                        ($Test0.return_62)))))))))))
+                                             ($Test0.return_60))))))))
                               (invoke Int64#
                                  (apply
                                     (1_i64)
-                                    ($Test0.return_63)))
-                              (then $Test0.inner_68
-                                 (cut
-                                    $Test0.outer_67
-                                    (apply
-                                       ($Test0.inner_68)
-                                       ((apply
-                                          ((lambda
-                                             ($Test0.param_53 $Test0.return_61)
-                                             (cut
-                                                $Test0.param_53
-                                                (select
-                                                   ((Int64#
-                                                      (#Test0.i_6))
-                                                      (invoke printString#
-                                                         (then $Test0.outer_71
-                                                            (cut-do
-                                                               $Test0.return_62
-                                                               (invoke toStringInt64#
-                                                                  (apply
-                                                                     (#Test0.i_6)
-                                                                     ($Test0.return_62)))
-                                                               (then $Test0.inner_72
-                                                                  (cut
-                                                                     $Test0.outer_71
-                                                                     (apply
-                                                                        ($Test0.inner_72)
-                                                                        ($Test0.return_61))))))))))))
-                                          ($Test0.return_60)))))))))))))
+                                    ($Test0.return_63))))))))))
          $Test0.return_59))
    (+#
       $Test0.return_64

@@ -56,367 +56,367 @@
                            ($TestEither.tmp_253 $TestEither.return_274)
                            (invoke Right
                               (then $TestEither.outer_303
-                                 (cut-do
-                                    $TestEither.return_302
-                                    (invoke Int32#
-                                       (apply
-                                          (1_i32)
-                                          ($TestEither.return_302)))
-                                    (then $TestEither.inner_304
-                                       (cut
-                                          $TestEither.outer_303
-                                          (apply
-                                             ($TestEither.inner_304)
-                                             ((then #TestEither.x_9
-                                                (cut
-                                                   (lambda
-                                                      ($TestEither.tmp_255 $TestEither.return_288)
-                                                      (invoke |>
-                                                         (then $TestEither.outer_353
-                                                            (cut-do
-                                                               $TestEither.return_293
-                                                               (invoke |>
-                                                                  (then $TestEither.outer_381
-                                                                     (cut-do
-                                                                        $TestEither.return_298
-                                                                        (invoke |>
+                                 (join
+                                    (($TestEither.return_302
+                                       (then $TestEither.inner_304
+                                          (cut
+                                             $TestEither.outer_303
+                                             (apply
+                                                ($TestEither.inner_304)
+                                                ((then #TestEither.x_9
+                                                   (cut
+                                                      (lambda
+                                                         ($TestEither.tmp_255 $TestEither.return_288)
+                                                         (invoke |>
+                                                            (then $TestEither.outer_353
+                                                               (join
+                                                                  (($TestEither.return_293
+                                                                     (then $TestEither.inner_354
+                                                                        (cut
+                                                                           $TestEither.outer_353
                                                                            (apply
-                                                                              (#TestEither.x_9)
-                                                                              ((then $TestEither.outer_413
-                                                                                 (cut-do
-                                                                                    $TestEither.return_299
-                                                                                    (invoke andThen
-                                                                                       (apply
-                                                                                          ((lambda
-                                                                                             ($TestEither.param_258 $TestEither.return_300)
-                                                                                             (cut
-                                                                                                $TestEither.param_258
-                                                                                                (select
-                                                                                                   (#TestEither.__12
-                                                                                                      (invoke Left
-                                                                                                         (then $TestEither.outer_417
-                                                                                                            (cut-do
-                                                                                                               $TestEither.return_301
-                                                                                                               (invoke String#
-                                                                                                                  (apply
-                                                                                                                     ("error")
-                                                                                                                     ($TestEither.return_301)))
-                                                                                                               (then $TestEither.inner_418
-                                                                                                                  (cut
-                                                                                                                     $TestEither.outer_417
-                                                                                                                     (apply
-                                                                                                                        ($TestEither.inner_418)
-                                                                                                                        ($TestEither.return_300))))))))))))
-                                                                                          ($TestEither.return_299)))
-                                                                                    (then $TestEither.inner_414
-                                                                                       (cut
-                                                                                          $TestEither.outer_413
-                                                                                          (apply
-                                                                                             ($TestEither.inner_414)
-                                                                                             ($TestEither.return_298)))))))))
-                                                                        (then $TestEither.inner_382
-                                                                           (cut
-                                                                              $TestEither.outer_381
+                                                                              ($TestEither.inner_354)
+                                                                              ((apply
+                                                                                 ((lambda
+                                                                                    ($TestEither.param_260 $TestEither.return_289)
+                                                                                    (cut
+                                                                                       $TestEither.param_260
+                                                                                       (select
+                                                                                          ((Left
+                                                                                             (#TestEither.err_14))
+                                                                                             (invoke putStrLn
+                                                                                                (apply
+                                                                                                   (#TestEither.err_14)
+                                                                                                   ($TestEither.return_289))))
+                                                                                          ((Right
+                                                                                             (#TestEither.x_15))
+                                                                                             (invoke |>
+                                                                                                (then $TestEither.outer_365
+                                                                                                   (join
+                                                                                                      (($TestEither.return_291
+                                                                                                         (then $TestEither.inner_366
+                                                                                                            (cut
+                                                                                                               $TestEither.outer_365
+                                                                                                               (apply
+                                                                                                                  ($TestEither.inner_366)
+                                                                                                                  ((then $TestEither.outer_367
+                                                                                                                     (join
+                                                                                                                        (($TestEither.return_290
+                                                                                                                           (then $TestEither.inner_368
+                                                                                                                              (cut
+                                                                                                                                 $TestEither.outer_367
+                                                                                                                                 (apply
+                                                                                                                                    ($TestEither.inner_368)
+                                                                                                                                    ($TestEither.return_289))))))
+                                                                                                                        (invoke putStrLn $TestEither.return_290)))))))))
+                                                                                                      (invoke |>
+                                                                                                         (apply
+                                                                                                            (#TestEither.x_15)
+                                                                                                            ((then $TestEither.outer_369
+                                                                                                               (join
+                                                                                                                  (($TestEither.return_292
+                                                                                                                     (then $TestEither.inner_370
+                                                                                                                        (cut
+                                                                                                                           $TestEither.outer_369
+                                                                                                                           (apply
+                                                                                                                              ($TestEither.inner_370)
+                                                                                                                              ($TestEither.return_291))))))
+                                                                                                                  (invoke toStringInt32 $TestEither.return_292))))))))))))))
+                                                                                 ($TestEither.return_288))))))))
+                                                                  (invoke |>
+                                                                     (then $TestEither.outer_381
+                                                                        (join
+                                                                           (($TestEither.return_298
+                                                                              (then $TestEither.inner_382
+                                                                                 (cut
+                                                                                    $TestEither.outer_381
+                                                                                    (apply
+                                                                                       ($TestEither.inner_382)
+                                                                                       ((then $TestEither.outer_395
+                                                                                          (join
+                                                                                             (($TestEither.return_294
+                                                                                                (then $TestEither.inner_396
+                                                                                                   (cut
+                                                                                                      $TestEither.outer_395
+                                                                                                      (apply
+                                                                                                         ($TestEither.inner_396)
+                                                                                                         ($TestEither.return_293))))))
+                                                                                             (invoke andThen
+                                                                                                (apply
+                                                                                                   ((lambda
+                                                                                                      ($TestEither.param_259 $TestEither.return_295)
+                                                                                                      (cut
+                                                                                                         $TestEither.param_259
+                                                                                                         (select
+                                                                                                            (#TestEither.x_13
+                                                                                                               (invoke Right
+                                                                                                                  (then $TestEither.outer_405
+                                                                                                                     (join
+                                                                                                                        (($TestEither.return_296
+                                                                                                                           (then $TestEither.inner_406
+                                                                                                                              (cut
+                                                                                                                                 $TestEither.outer_405
+                                                                                                                                 (apply
+                                                                                                                                    ($TestEither.inner_406)
+                                                                                                                                    ($TestEither.return_295))))))
+                                                                                                                        (invoke addInt32
+                                                                                                                           (apply
+                                                                                                                              (#TestEither.x_13)
+                                                                                                                              ((then $TestEither.outer_407
+                                                                                                                                 (join
+                                                                                                                                    (($TestEither.return_297
+                                                                                                                                       (then $TestEither.inner_408
+                                                                                                                                          (cut
+                                                                                                                                             $TestEither.outer_407
+                                                                                                                                             (apply
+                                                                                                                                                ($TestEither.inner_408)
+                                                                                                                                                ($TestEither.return_296))))))
+                                                                                                                                    (invoke Int32#
+                                                                                                                                       (apply
+                                                                                                                                          (1_i32)
+                                                                                                                                          ($TestEither.return_297))))))))))))))))
+                                                                                                   ($TestEither.return_294)))))))))))
+                                                                           (invoke |>
                                                                               (apply
-                                                                                 ($TestEither.inner_382)
-                                                                                 ((then $TestEither.outer_395
-                                                                                    (cut-do
-                                                                                       $TestEither.return_294
+                                                                                 (#TestEither.x_9)
+                                                                                 ((then $TestEither.outer_413
+                                                                                    (join
+                                                                                       (($TestEither.return_299
+                                                                                          (then $TestEither.inner_414
+                                                                                             (cut
+                                                                                                $TestEither.outer_413
+                                                                                                (apply
+                                                                                                   ($TestEither.inner_414)
+                                                                                                   ($TestEither.return_298))))))
                                                                                        (invoke andThen
                                                                                           (apply
                                                                                              ((lambda
-                                                                                                ($TestEither.param_259 $TestEither.return_295)
+                                                                                                ($TestEither.param_258 $TestEither.return_300)
                                                                                                 (cut
-                                                                                                   $TestEither.param_259
+                                                                                                   $TestEither.param_258
                                                                                                    (select
-                                                                                                      (#TestEither.x_13
-                                                                                                         (invoke Right
-                                                                                                            (then $TestEither.outer_405
-                                                                                                               (cut-do
-                                                                                                                  $TestEither.return_296
-                                                                                                                  (invoke addInt32
-                                                                                                                     (apply
-                                                                                                                        (#TestEither.x_13)
-                                                                                                                        ((then $TestEither.outer_407
-                                                                                                                           (cut-do
-                                                                                                                              $TestEither.return_297
-                                                                                                                              (invoke Int32#
-                                                                                                                                 (apply
-                                                                                                                                    (1_i32)
-                                                                                                                                    ($TestEither.return_297)))
-                                                                                                                              (then $TestEither.inner_408
-                                                                                                                                 (cut
-                                                                                                                                    $TestEither.outer_407
-                                                                                                                                    (apply
-                                                                                                                                       ($TestEither.inner_408)
-                                                                                                                                       ($TestEither.return_296)))))))))
-                                                                                                                  (then $TestEither.inner_406
-                                                                                                                     (cut
-                                                                                                                        $TestEither.outer_405
-                                                                                                                        (apply
-                                                                                                                           ($TestEither.inner_406)
-                                                                                                                           ($TestEither.return_295))))))))))))
-                                                                                             ($TestEither.return_294)))
-                                                                                       (then $TestEither.inner_396
-                                                                                          (cut
-                                                                                             $TestEither.outer_395
-                                                                                             (apply
-                                                                                                ($TestEither.inner_396)
-                                                                                                ($TestEither.return_293)))))))))))))
-                                                               (then $TestEither.inner_354
-                                                                  (cut
-                                                                     $TestEither.outer_353
-                                                                     (apply
-                                                                        ($TestEither.inner_354)
-                                                                        ((apply
-                                                                           ((lambda
-                                                                              ($TestEither.param_260 $TestEither.return_289)
-                                                                              (cut
-                                                                                 $TestEither.param_260
-                                                                                 (select
-                                                                                    ((Left
-                                                                                       (#TestEither.err_14))
-                                                                                       (invoke putStrLn
-                                                                                          (apply
-                                                                                             (#TestEither.err_14)
-                                                                                             ($TestEither.return_289))))
-                                                                                    ((Right
-                                                                                       (#TestEither.x_15))
-                                                                                       (invoke |>
-                                                                                          (then $TestEither.outer_365
-                                                                                             (cut-do
-                                                                                                $TestEither.return_291
-                                                                                                (invoke |>
-                                                                                                   (apply
-                                                                                                      (#TestEither.x_15)
-                                                                                                      ((then $TestEither.outer_369
-                                                                                                         (cut-do
-                                                                                                            $TestEither.return_292
-                                                                                                            (invoke toStringInt32 $TestEither.return_292)
-                                                                                                            (then $TestEither.inner_370
-                                                                                                               (cut
-                                                                                                                  $TestEither.outer_369
-                                                                                                                  (apply
-                                                                                                                     ($TestEither.inner_370)
-                                                                                                                     ($TestEither.return_291)))))))))
-                                                                                                (then $TestEither.inner_366
-                                                                                                   (cut
-                                                                                                      $TestEither.outer_365
-                                                                                                      (apply
-                                                                                                         ($TestEither.inner_366)
-                                                                                                         ((then $TestEither.outer_367
-                                                                                                            (cut-do
-                                                                                                               $TestEither.return_290
-                                                                                                               (invoke putStrLn $TestEither.return_290)
-                                                                                                               (then $TestEither.inner_368
-                                                                                                                  (cut
-                                                                                                                     $TestEither.outer_367
-                                                                                                                     (apply
-                                                                                                                        ($TestEither.inner_368)
-                                                                                                                        ($TestEither.return_289))))))))))))))))))
-                                                                           ($TestEither.return_288))))))))))
-                                                   (then $TestEither.outer_555
-                                                      (cut-do
-                                                         $TestEither.return_275
-                                                         (invoke |>
-                                                            (then $TestEither.outer_583
-                                                               (cut-do
-                                                                  $TestEither.return_283
-                                                                  (invoke |>
-                                                                     (apply
-                                                                        (#TestEither.x_9)
-                                                                        ((then $TestEither.outer_679
-                                                                           (cut-do
-                                                                              $TestEither.return_284
-                                                                              (invoke andThen
-                                                                                 (apply
-                                                                                    ((lambda
-                                                                                       ($TestEither.param_256 $TestEither.return_285)
-                                                                                       (cut
-                                                                                          $TestEither.param_256
-                                                                                          (select
-                                                                                             (#TestEither.x_10
-                                                                                                (invoke Right
-                                                                                                   (then $TestEither.outer_689
-                                                                                                      (cut-do
-                                                                                                         $TestEither.return_286
-                                                                                                         (invoke addInt32
-                                                                                                            (apply
-                                                                                                               (#TestEither.x_10)
-                                                                                                               ((then $TestEither.outer_691
-                                                                                                                  (cut-do
-                                                                                                                     $TestEither.return_287
-                                                                                                                     (invoke Int32#
-                                                                                                                        (apply
-                                                                                                                           (1_i32)
-                                                                                                                           ($TestEither.return_287)))
-                                                                                                                     (then $TestEither.inner_692
+                                                                                                      (#TestEither.__12
+                                                                                                         (invoke Left
+                                                                                                            (then $TestEither.outer_417
+                                                                                                               (join
+                                                                                                                  (($TestEither.return_301
+                                                                                                                     (then $TestEither.inner_418
                                                                                                                         (cut
-                                                                                                                           $TestEither.outer_691
+                                                                                                                           $TestEither.outer_417
                                                                                                                            (apply
-                                                                                                                              ($TestEither.inner_692)
-                                                                                                                              ($TestEither.return_286)))))))))
-                                                                                                         (then $TestEither.inner_690
-                                                                                                            (cut
-                                                                                                               $TestEither.outer_689
-                                                                                                               (apply
-                                                                                                                  ($TestEither.inner_690)
-                                                                                                                  ($TestEither.return_285))))))))))))
-                                                                                    ($TestEither.return_284)))
-                                                                              (then $TestEither.inner_680
-                                                                                 (cut
-                                                                                    $TestEither.outer_679
-                                                                                    (apply
-                                                                                       ($TestEither.inner_680)
-                                                                                       ($TestEither.return_283)))))))))
-                                                                  (then $TestEither.inner_584
-                                                                     (cut
-                                                                        $TestEither.outer_583
+                                                                                                                              ($TestEither.inner_418)
+                                                                                                                              ($TestEither.return_300))))))
+                                                                                                                  (invoke String#
+                                                                                                                     (apply
+                                                                                                                        ("error")
+                                                                                                                        ($TestEither.return_301)))))))))))
+                                                                                             ($TestEither.return_299)))))))))))))))
+                                                      (then $TestEither.outer_555
+                                                         (join
+                                                            (($TestEither.return_275
+                                                               (then $TestEither.inner_556
+                                                                  (cut
+                                                                     $TestEither.outer_555
+                                                                     (apply
+                                                                        ($TestEither.inner_556)
+                                                                        ($TestEither.return_274))))))
+                                                            (invoke |>
+                                                               (then $TestEither.outer_583
+                                                                  (join
+                                                                     (($TestEither.return_283
+                                                                        (then $TestEither.inner_584
+                                                                           (cut
+                                                                              $TestEither.outer_583
+                                                                              (apply
+                                                                                 ($TestEither.inner_584)
+                                                                                 ((then $TestEither.outer_625
+                                                                                    (join
+                                                                                       (($TestEither.return_276
+                                                                                          (then $TestEither.inner_626
+                                                                                             (cut
+                                                                                                $TestEither.outer_625
+                                                                                                (apply
+                                                                                                   ($TestEither.inner_626)
+                                                                                                   ($TestEither.return_275))))))
+                                                                                       (invoke andThen
+                                                                                          (apply
+                                                                                             ((lambda
+                                                                                                ($TestEither.param_257 $TestEither.return_277)
+                                                                                                (cut
+                                                                                                   $TestEither.param_257
+                                                                                                   (select
+                                                                                                      (#TestEither.y_11
+                                                                                                         (invoke |>
+                                                                                                            (then $TestEither.outer_655
+                                                                                                               (join
+                                                                                                                  (($TestEither.return_279
+                                                                                                                     (then $TestEither.inner_656
+                                                                                                                        (cut
+                                                                                                                           $TestEither.outer_655
+                                                                                                                           (apply
+                                                                                                                              ($TestEither.inner_656)
+                                                                                                                              ((then $TestEither.outer_657
+                                                                                                                                 (join
+                                                                                                                                    (($TestEither.return_278
+                                                                                                                                       (then $TestEither.inner_658
+                                                                                                                                          (cut
+                                                                                                                                             $TestEither.outer_657
+                                                                                                                                             (apply
+                                                                                                                                                ($TestEither.inner_658)
+                                                                                                                                                ($TestEither.return_277))))))
+                                                                                                                                    (invoke Right $TestEither.return_278)))))))))
+                                                                                                                  (invoke |>
+                                                                                                                     (then $TestEither.outer_661
+                                                                                                                        (join
+                                                                                                                           (($TestEither.return_281
+                                                                                                                              (then $TestEither.inner_662
+                                                                                                                                 (cut
+                                                                                                                                    $TestEither.outer_661
+                                                                                                                                    (apply
+                                                                                                                                       ($TestEither.inner_662)
+                                                                                                                                       ((then $TestEither.outer_663
+                                                                                                                                          (join
+                                                                                                                                             (($TestEither.return_280
+                                                                                                                                                (then $TestEither.inner_664
+                                                                                                                                                   (cut
+                                                                                                                                                      $TestEither.outer_663
+                                                                                                                                                      (apply
+                                                                                                                                                         ($TestEither.inner_664)
+                                                                                                                                                         ($TestEither.return_279))))))
+                                                                                                                                             (invoke putStr $TestEither.return_280)))))))))
+                                                                                                                           (invoke |>
+                                                                                                                              (apply
+                                                                                                                                 (#TestEither.y_11)
+                                                                                                                                 ((then $TestEither.outer_665
+                                                                                                                                    (join
+                                                                                                                                       (($TestEither.return_282
+                                                                                                                                          (then $TestEither.inner_666
+                                                                                                                                             (cut
+                                                                                                                                                $TestEither.outer_665
+                                                                                                                                                (apply
+                                                                                                                                                   ($TestEither.inner_666)
+                                                                                                                                                   ($TestEither.return_281))))))
+                                                                                                                                       (invoke toStringInt32 $TestEither.return_282)))))))))))))))))
+                                                                                             ($TestEither.return_276)))))))))))
+                                                                     (invoke |>
                                                                         (apply
-                                                                           ($TestEither.inner_584)
-                                                                           ((then $TestEither.outer_625
-                                                                              (cut-do
-                                                                                 $TestEither.return_276
+                                                                           (#TestEither.x_9)
+                                                                           ((then $TestEither.outer_679
+                                                                              (join
+                                                                                 (($TestEither.return_284
+                                                                                    (then $TestEither.inner_680
+                                                                                       (cut
+                                                                                          $TestEither.outer_679
+                                                                                          (apply
+                                                                                             ($TestEither.inner_680)
+                                                                                             ($TestEither.return_283))))))
                                                                                  (invoke andThen
                                                                                     (apply
                                                                                        ((lambda
-                                                                                          ($TestEither.param_257 $TestEither.return_277)
+                                                                                          ($TestEither.param_256 $TestEither.return_285)
                                                                                           (cut
-                                                                                             $TestEither.param_257
+                                                                                             $TestEither.param_256
                                                                                              (select
-                                                                                                (#TestEither.y_11
-                                                                                                   (invoke |>
-                                                                                                      (then $TestEither.outer_655
-                                                                                                         (cut-do
-                                                                                                            $TestEither.return_279
-                                                                                                            (invoke |>
-                                                                                                               (then $TestEither.outer_661
-                                                                                                                  (cut-do
-                                                                                                                     $TestEither.return_281
-                                                                                                                     (invoke |>
-                                                                                                                        (apply
-                                                                                                                           (#TestEither.y_11)
-                                                                                                                           ((then $TestEither.outer_665
-                                                                                                                              (cut-do
-                                                                                                                                 $TestEither.return_282
-                                                                                                                                 (invoke toStringInt32 $TestEither.return_282)
-                                                                                                                                 (then $TestEither.inner_666
-                                                                                                                                    (cut
-                                                                                                                                       $TestEither.outer_665
-                                                                                                                                       (apply
-                                                                                                                                          ($TestEither.inner_666)
-                                                                                                                                          ($TestEither.return_281)))))))))
-                                                                                                                     (then $TestEither.inner_662
-                                                                                                                        (cut
-                                                                                                                           $TestEither.outer_661
-                                                                                                                           (apply
-                                                                                                                              ($TestEither.inner_662)
-                                                                                                                              ((then $TestEither.outer_663
-                                                                                                                                 (cut-do
-                                                                                                                                    $TestEither.return_280
-                                                                                                                                    (invoke putStr $TestEither.return_280)
-                                                                                                                                    (then $TestEither.inner_664
-                                                                                                                                       (cut
-                                                                                                                                          $TestEither.outer_663
-                                                                                                                                          (apply
-                                                                                                                                             ($TestEither.inner_664)
-                                                                                                                                             ($TestEither.return_279)))))))))))))
-                                                                                                            (then $TestEither.inner_656
-                                                                                                               (cut
-                                                                                                                  $TestEither.outer_655
-                                                                                                                  (apply
-                                                                                                                     ($TestEither.inner_656)
-                                                                                                                     ((then $TestEither.outer_657
-                                                                                                                        (cut-do
-                                                                                                                           $TestEither.return_278
-                                                                                                                           (invoke Right $TestEither.return_278)
-                                                                                                                           (then $TestEither.inner_658
+                                                                                                (#TestEither.x_10
+                                                                                                   (invoke Right
+                                                                                                      (then $TestEither.outer_689
+                                                                                                         (join
+                                                                                                            (($TestEither.return_286
+                                                                                                               (then $TestEither.inner_690
+                                                                                                                  (cut
+                                                                                                                     $TestEither.outer_689
+                                                                                                                     (apply
+                                                                                                                        ($TestEither.inner_690)
+                                                                                                                        ($TestEither.return_285))))))
+                                                                                                            (invoke addInt32
+                                                                                                               (apply
+                                                                                                                  (#TestEither.x_10)
+                                                                                                                  ((then $TestEither.outer_691
+                                                                                                                     (join
+                                                                                                                        (($TestEither.return_287
+                                                                                                                           (then $TestEither.inner_692
                                                                                                                               (cut
-                                                                                                                                 $TestEither.outer_657
+                                                                                                                                 $TestEither.outer_691
                                                                                                                                  (apply
-                                                                                                                                    ($TestEither.inner_658)
-                                                                                                                                    ($TestEither.return_277))))))))))))))))))
-                                                                                       ($TestEither.return_276)))
-                                                                                 (then $TestEither.inner_626
-                                                                                    (cut
-                                                                                       $TestEither.outer_625
-                                                                                       (apply
-                                                                                          ($TestEither.inner_626)
-                                                                                          ($TestEither.return_275)))))))))))))
-                                                         (then $TestEither.inner_556
-                                                            (cut
-                                                               $TestEither.outer_555
-                                                               (apply
-                                                                  ($TestEither.inner_556)
-                                                                  ($TestEither.return_274))))))))))))))))
+                                                                                                                                    ($TestEither.inner_692)
+                                                                                                                                    ($TestEither.return_286))))))
+                                                                                                                        (invoke Int32#
+                                                                                                                           (apply
+                                                                                                                              (1_i32)
+                                                                                                                              ($TestEither.return_287))))))))))))))))
+                                                                                       ($TestEither.return_284)))))))))))))))))))))
+                                    (invoke Int32#
+                                       (apply
+                                          (1_i32)
+                                          ($TestEither.return_302)))))))
                         (then $TestEither.outer_707
-                           (cut-do
-                              $TestEither.return_268
+                           (join
+                              (($TestEither.return_268
+                                 (then $TestEither.inner_708
+                                    (cut
+                                       $TestEither.outer_707
+                                       (apply
+                                          ($TestEither.inner_708)
+                                          ($TestEither.return_267))))))
                               (invoke |>
                                  (then $TestEither.outer_711
-                                    (cut-do
-                                       $TestEither.return_272
+                                    (join
+                                       (($TestEither.return_272
+                                          (then $TestEither.inner_712
+                                             (cut
+                                                $TestEither.outer_711
+                                                (apply
+                                                   ($TestEither.inner_712)
+                                                   ((apply
+                                                      ((lambda
+                                                         ($TestEither.param_254 $TestEither.return_269)
+                                                         (cut
+                                                            $TestEither.param_254
+                                                            (select
+                                                               ((Right
+                                                                  (#TestEither.x_7))
+                                                                  (invoke putStr
+                                                                     (then $TestEither.outer_717
+                                                                        (join
+                                                                           (($TestEither.return_270
+                                                                              (then $TestEither.inner_718
+                                                                                 (cut
+                                                                                    $TestEither.outer_717
+                                                                                    (apply
+                                                                                       ($TestEither.inner_718)
+                                                                                       ($TestEither.return_269))))))
+                                                                           (invoke toStringInt32
+                                                                              (apply
+                                                                                 (#TestEither.x_7)
+                                                                                 ($TestEither.return_270)))))))
+                                                               (#TestEither.__8
+                                                                  (invoke putStrLn
+                                                                     (then $TestEither.outer_719
+                                                                        (join
+                                                                           (($TestEither.return_271
+                                                                              (then $TestEither.inner_720
+                                                                                 (cut
+                                                                                    $TestEither.outer_719
+                                                                                    (apply
+                                                                                       ($TestEither.inner_720)
+                                                                                       ($TestEither.return_269))))))
+                                                                           (invoke String#
+                                                                              (apply
+                                                                                 ("unreachable")
+                                                                                 ($TestEither.return_271)))))))))))
+                                                      ($TestEither.return_268))))))))
                                        (invoke Right
                                           (then $TestEither.outer_721
-                                             (cut-do
-                                                $TestEither.return_273
+                                             (join
+                                                (($TestEither.return_273
+                                                   (then $TestEither.inner_722
+                                                      (cut
+                                                         $TestEither.outer_721
+                                                         (apply
+                                                            ($TestEither.inner_722)
+                                                            ($TestEither.return_272))))))
                                                 (invoke Int32#
                                                    (apply
                                                       (1_i32)
-                                                      ($TestEither.return_273)))
-                                                (then $TestEither.inner_722
-                                                   (cut
-                                                      $TestEither.outer_721
-                                                      (apply
-                                                         ($TestEither.inner_722)
-                                                         ($TestEither.return_272)))))))
-                                       (then $TestEither.inner_712
-                                          (cut
-                                             $TestEither.outer_711
-                                             (apply
-                                                ($TestEither.inner_712)
-                                                ((apply
-                                                   ((lambda
-                                                      ($TestEither.param_254 $TestEither.return_269)
-                                                      (cut
-                                                         $TestEither.param_254
-                                                         (select
-                                                            ((Right
-                                                               (#TestEither.x_7))
-                                                               (invoke putStr
-                                                                  (then $TestEither.outer_717
-                                                                     (cut-do
-                                                                        $TestEither.return_270
-                                                                        (invoke toStringInt32
-                                                                           (apply
-                                                                              (#TestEither.x_7)
-                                                                              ($TestEither.return_270)))
-                                                                        (then $TestEither.inner_718
-                                                                           (cut
-                                                                              $TestEither.outer_717
-                                                                              (apply
-                                                                                 ($TestEither.inner_718)
-                                                                                 ($TestEither.return_269))))))))
-                                                            (#TestEither.__8
-                                                               (invoke putStrLn
-                                                                  (then $TestEither.outer_719
-                                                                     (cut-do
-                                                                        $TestEither.return_271
-                                                                        (invoke String#
-                                                                           (apply
-                                                                              ("unreachable")
-                                                                              ($TestEither.return_271)))
-                                                                        (then $TestEither.inner_720
-                                                                           (cut
-                                                                              $TestEither.outer_719
-                                                                              (apply
-                                                                                 ($TestEither.inner_720)
-                                                                                 ($TestEither.return_269))))))))))))
-                                                   ($TestEither.return_268)))))))))
-                              (then $TestEither.inner_708
-                                 (cut
-                                    $TestEither.outer_707
-                                    (apply
-                                       ($TestEither.inner_708)
-                                       ($TestEither.return_267)))))))))))
+                                                      ($TestEither.return_273))))))))))))))))
          $TestEither.return_266)))

@@ -9,16 +9,16 @@
                (#TestExplicitModule.$__6
                   (invoke putStrLn
                      (then $TestExplicitModule.outer_11
-                        (cut-do
-                           $TestExplicitModule.return_10
+                        (join
+                           (($TestExplicitModule.return_10
+                              (then $TestExplicitModule.inner_12
+                                 (cut
+                                    $TestExplicitModule.outer_11
+                                    (apply
+                                       ($TestExplicitModule.inner_12)
+                                       ($TestExplicitModule.return_9))))))
                            (invoke String#
                               (apply
                                  ("Hello, world")
-                                 ($TestExplicitModule.return_10)))
-                           (then $TestExplicitModule.inner_12
-                              (cut
-                                 $TestExplicitModule.outer_11
-                                 (apply
-                                    ($TestExplicitModule.inner_12)
-                                    ($TestExplicitModule.return_9)))))))))))
+                                 ($TestExplicitModule.return_10))))))))))
       $TestExplicitModule.return_8)))

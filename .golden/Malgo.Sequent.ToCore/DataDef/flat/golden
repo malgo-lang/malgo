@@ -17,29 +17,29 @@
                                  (#DataDef.x_1))
                                  (invoke malgo_print_string
                                     (then $DataDef.outer_25
-                                       (cut-do
-                                          $DataDef.return_24
+                                       (join
+                                          (($DataDef.return_24
+                                             (then $DataDef.inner_26
+                                                (cut
+                                                   $DataDef.outer_25
+                                                   (apply
+                                                      ($DataDef.inner_26)
+                                                      ($DataDef.return_23))))))
                                           (invoke malgo_int64_t_to_string
                                              (apply
                                                 (#DataDef.x_1)
-                                                ($DataDef.return_24)))
-                                          (then $DataDef.inner_26
-                                             (cut
-                                                $DataDef.outer_25
-                                                (apply
-                                                   ($DataDef.inner_26)
-                                                   ($DataDef.return_23)))))))))))
+                                                ($DataDef.return_24))))))))))
                      (then $DataDef.outer_27
-                        (cut-do
-                           $DataDef.return_22
+                        (join
+                           (($DataDef.return_22
+                              (then $DataDef.inner_28
+                                 (cut
+                                    $DataDef.outer_27
+                                    (apply
+                                       ($DataDef.inner_28)
+                                       ($DataDef.return_21))))))
                            (invoke Int#
                               (apply
                                  (1_i64)
-                                 ($DataDef.return_22)))
-                           (then $DataDef.inner_28
-                              (cut
-                                 $DataDef.outer_27
-                                 (apply
-                                    ($DataDef.inner_28)
-                                    ($DataDef.return_21)))))))))))
+                                 ($DataDef.return_22))))))))))
       $DataDef.return_20)))

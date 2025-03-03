@@ -9,28 +9,28 @@
                (#Primitive.$__10
                   (invoke printString#
                      (then $Primitive.outer_18
-                        (cut-do
-                           $Primitive.return_14
+                        (join
+                           (($Primitive.return_14
+                              (then $Primitive.inner_19
+                                 (cut
+                                    $Primitive.outer_18
+                                    (apply
+                                       ($Primitive.inner_19)
+                                       ($Primitive.return_13))))))
                            (invoke toStringInt64#
                               (then $Primitive.outer_20
-                                 (cut-do
-                                    $Primitive.return_15
+                                 (join
+                                    (($Primitive.return_15
+                                       (then $Primitive.inner_21
+                                          (cut
+                                             $Primitive.outer_20
+                                             (apply
+                                                ($Primitive.inner_21)
+                                                ($Primitive.return_14))))))
                                     (invoke addInt64#
                                        (apply
                                           (40_i64)
                                           ((apply
                                              (2_i64)
-                                             ($Primitive.return_15)))))
-                                    (then $Primitive.inner_21
-                                       (cut
-                                          $Primitive.outer_20
-                                          (apply
-                                             ($Primitive.inner_21)
-                                             ($Primitive.return_14)))))))
-                           (then $Primitive.inner_19
-                              (cut
-                                 $Primitive.outer_18
-                                 (apply
-                                    ($Primitive.inner_19)
-                                    ($Primitive.return_13)))))))))))
+                                             ($Primitive.return_15)))))))))))))))
       $Primitive.return_12)))

@@ -24,18 +24,18 @@
                      (#ToplevelVariableNoImport.x_15))
                      (invoke String#
                         (then $ToplevelVariableNoImport.outer_226
-                           (cut-do
-                              $ToplevelVariableNoImport.return_187
+                           (join
+                              (($ToplevelVariableNoImport.return_187
+                                 (then $ToplevelVariableNoImport.inner_227
+                                    (cut
+                                       $ToplevelVariableNoImport.outer_226
+                                       (apply
+                                          ($ToplevelVariableNoImport.inner_227)
+                                          ($ToplevelVariableNoImport.return_186))))))
                               (invoke toStringInt32#
                                  (apply
                                     (#ToplevelVariableNoImport.x_15)
-                                    ($ToplevelVariableNoImport.return_187)))
-                              (then $ToplevelVariableNoImport.inner_227
-                                 (cut
-                                    $ToplevelVariableNoImport.outer_226
-                                    (apply
-                                       ($ToplevelVariableNoImport.inner_227)
-                                       ($ToplevelVariableNoImport.return_186)))))))))))
+                                    ($ToplevelVariableNoImport.return_187))))))))))
          $ToplevelVariableNoImport.return_185))
    (printString#
       $ToplevelVariableNoImport.return_188
@@ -77,18 +77,18 @@
                   (#ToplevelVariableNoImport.i_13
                      (invoke printString
                         (then $ToplevelVariableNoImport.outer_228
-                           (cut-do
-                              $ToplevelVariableNoImport.return_194
+                           (join
+                              (($ToplevelVariableNoImport.return_194
+                                 (then $ToplevelVariableNoImport.inner_229
+                                    (cut
+                                       $ToplevelVariableNoImport.outer_228
+                                       (apply
+                                          ($ToplevelVariableNoImport.inner_229)
+                                          ($ToplevelVariableNoImport.return_193))))))
                               (invoke toStringInt32
                                  (apply
                                     (#ToplevelVariableNoImport.i_13)
-                                    ($ToplevelVariableNoImport.return_194)))
-                              (then $ToplevelVariableNoImport.inner_229
-                                 (cut
-                                    $ToplevelVariableNoImport.outer_228
-                                    (apply
-                                       ($ToplevelVariableNoImport.inner_229)
-                                       ($ToplevelVariableNoImport.return_193)))))))))))
+                                    ($ToplevelVariableNoImport.return_194))))))))))
          $ToplevelVariableNoImport.return_192))
    (one
       $ToplevelVariableNoImport.return_195
@@ -130,15 +130,15 @@
       $ToplevelVariableNoImport.return_201
       (invoke const
          (then $ToplevelVariableNoImport.outer_230
-            (cut-do
-               $ToplevelVariableNoImport.return_202
-               (invoke identity $ToplevelVariableNoImport.return_202)
-               (then $ToplevelVariableNoImport.inner_231
-                  (cut
-                     $ToplevelVariableNoImport.outer_230
-                     (apply
-                        ($ToplevelVariableNoImport.inner_231)
-                        ($ToplevelVariableNoImport.return_201))))))))
+            (join
+               (($ToplevelVariableNoImport.return_202
+                  (then $ToplevelVariableNoImport.inner_231
+                     (cut
+                        $ToplevelVariableNoImport.outer_230
+                        (apply
+                           ($ToplevelVariableNoImport.inner_231)
+                           ($ToplevelVariableNoImport.return_201))))))
+               (invoke identity $ToplevelVariableNoImport.return_202)))))
    (comp
       $ToplevelVariableNoImport.return_203
       (cut
@@ -153,18 +153,18 @@
                      (#ToplevelVariableNoImport.x_17))
                      (invoke Nothing $ToplevelVariableNoImport.return_205)))))
          (then $ToplevelVariableNoImport.outer_232
-            (cut-do
-               $ToplevelVariableNoImport.return_204
+            (join
+               (($ToplevelVariableNoImport.return_204
+                  (then $ToplevelVariableNoImport.inner_233
+                     (cut
+                        $ToplevelVariableNoImport.outer_232
+                        (apply
+                           ($ToplevelVariableNoImport.inner_233)
+                           ($ToplevelVariableNoImport.return_203))))))
                (invoke Just
                   (apply
                      ((construct tuple () ()))
-                     ($ToplevelVariableNoImport.return_204)))
-               (then $ToplevelVariableNoImport.inner_233
-                  (cut
-                     $ToplevelVariableNoImport.outer_232
-                     (apply
-                        ($ToplevelVariableNoImport.inner_233)
-                        ($ToplevelVariableNoImport.return_203))))))))
+                     ($ToplevelVariableNoImport.return_204)))))))
    (addInt32#
       $ToplevelVariableNoImport.return_206
       (cut
@@ -210,35 +210,35 @@
                                  (#ToplevelVariableNoImport.y_3))))
                            (invoke Int32#
                               (then $ToplevelVariableNoImport.outer_234
-                                 (cut-do
-                                    $ToplevelVariableNoImport.return_212
+                                 (join
+                                    (($ToplevelVariableNoImport.return_212
+                                       (then $ToplevelVariableNoImport.inner_235
+                                          (cut
+                                             $ToplevelVariableNoImport.outer_234
+                                             (apply
+                                                ($ToplevelVariableNoImport.inner_235)
+                                                ($ToplevelVariableNoImport.return_211))))))
                                     (invoke addInt32#
                                        (apply
                                           (#ToplevelVariableNoImport.x_2)
                                           ((apply
                                              (#ToplevelVariableNoImport.y_3)
-                                             ($ToplevelVariableNoImport.return_212)))))
-                                    (then $ToplevelVariableNoImport.inner_235
-                                       (cut
-                                          $ToplevelVariableNoImport.outer_234
-                                          (apply
-                                             ($ToplevelVariableNoImport.inner_235)
-                                             ($ToplevelVariableNoImport.return_211)))))))))))
+                                             ($ToplevelVariableNoImport.return_212))))))))))))
                $ToplevelVariableNoImport.return_210))
          $ToplevelVariableNoImport.return_209))
    (addOne
       $ToplevelVariableNoImport.return_213
       (invoke addInt32
          (then $ToplevelVariableNoImport.outer_236
-            (cut-do
-               $ToplevelVariableNoImport.return_214
-               (invoke one $ToplevelVariableNoImport.return_214)
-               (then $ToplevelVariableNoImport.inner_237
-                  (cut
-                     $ToplevelVariableNoImport.outer_236
-                     (apply
-                        ($ToplevelVariableNoImport.inner_237)
-                        ($ToplevelVariableNoImport.return_213))))))))
+            (join
+               (($ToplevelVariableNoImport.return_214
+                  (then $ToplevelVariableNoImport.inner_237
+                     (cut
+                        $ToplevelVariableNoImport.outer_236
+                        (apply
+                           ($ToplevelVariableNoImport.inner_237)
+                           ($ToplevelVariableNoImport.return_213))))))
+               (invoke one $ToplevelVariableNoImport.return_214)))))
    (main
       $ToplevelVariableNoImport.return_215
       (cut
@@ -253,47 +253,53 @@
                            ($ToplevelVariableNoImport.tmp_181 $ToplevelVariableNoImport.return_221)
                            (invoke printInt32
                               (then $ToplevelVariableNoImport.outer_246
-                                 (cut-do
-                                    $ToplevelVariableNoImport.return_222
+                                 (join
+                                    (($ToplevelVariableNoImport.return_222
+                                       (then $ToplevelVariableNoImport.inner_247
+                                          (cut
+                                             $ToplevelVariableNoImport.outer_246
+                                             (apply
+                                                ($ToplevelVariableNoImport.inner_247)
+                                                ($ToplevelVariableNoImport.return_221))))))
                                     (invoke constId
                                        (then $ToplevelVariableNoImport.outer_248
-                                          (cut-do
-                                             $ToplevelVariableNoImport.return_225
-                                             (invoke const $ToplevelVariableNoImport.return_225)
-                                             (then $ToplevelVariableNoImport.inner_249
-                                                (cut
-                                                   $ToplevelVariableNoImport.outer_248
-                                                   (apply
-                                                      ($ToplevelVariableNoImport.inner_249)
-                                                      ((then $ToplevelVariableNoImport.outer_252
-                                                         (cut-do
-                                                            $ToplevelVariableNoImport.return_223
-                                                            (invoke addOne
-                                                               (then $ToplevelVariableNoImport.outer_254
-                                                                  (cut-do
-                                                                     $ToplevelVariableNoImport.return_224
-                                                                     (invoke one $ToplevelVariableNoImport.return_224)
-                                                                     (then $ToplevelVariableNoImport.inner_255
-                                                                        (cut
-                                                                           $ToplevelVariableNoImport.outer_254
-                                                                           (apply
-                                                                              ($ToplevelVariableNoImport.inner_255)
-                                                                              ($ToplevelVariableNoImport.return_223)))))))
-                                                            (then $ToplevelVariableNoImport.inner_253
-                                                               (cut
-                                                                  $ToplevelVariableNoImport.outer_252
-                                                                  (apply
-                                                                     ($ToplevelVariableNoImport.inner_253)
-                                                                     ($ToplevelVariableNoImport.return_222)))))))))))))
-                                    (then $ToplevelVariableNoImport.inner_247
-                                       (cut
-                                          $ToplevelVariableNoImport.outer_246
-                                          (apply
-                                             ($ToplevelVariableNoImport.inner_247)
-                                             ($ToplevelVariableNoImport.return_221))))))))
+                                          (join
+                                             (($ToplevelVariableNoImport.return_225
+                                                (then $ToplevelVariableNoImport.inner_249
+                                                   (cut
+                                                      $ToplevelVariableNoImport.outer_248
+                                                      (apply
+                                                         ($ToplevelVariableNoImport.inner_249)
+                                                         ((then $ToplevelVariableNoImport.outer_252
+                                                            (join
+                                                               (($ToplevelVariableNoImport.return_223
+                                                                  (then $ToplevelVariableNoImport.inner_253
+                                                                     (cut
+                                                                        $ToplevelVariableNoImport.outer_252
+                                                                        (apply
+                                                                           ($ToplevelVariableNoImport.inner_253)
+                                                                           ($ToplevelVariableNoImport.return_222))))))
+                                                               (invoke addOne
+                                                                  (then $ToplevelVariableNoImport.outer_254
+                                                                     (join
+                                                                        (($ToplevelVariableNoImport.return_224
+                                                                           (then $ToplevelVariableNoImport.inner_255
+                                                                              (cut
+                                                                                 $ToplevelVariableNoImport.outer_254
+                                                                                 (apply
+                                                                                    ($ToplevelVariableNoImport.inner_255)
+                                                                                    ($ToplevelVariableNoImport.return_223))))))
+                                                                        (invoke one $ToplevelVariableNoImport.return_224))))))))))))
+                                             (invoke const $ToplevelVariableNoImport.return_225))))))))
                         (then $ToplevelVariableNoImport.outer_260
-                           (cut-do
-                              $ToplevelVariableNoImport.return_217
+                           (join
+                              (($ToplevelVariableNoImport.return_217
+                                 (then $ToplevelVariableNoImport.inner_261
+                                    (cut
+                                       $ToplevelVariableNoImport.outer_260
+                                       (apply
+                                          ($ToplevelVariableNoImport.inner_261)
+                                          ($ToplevelVariableNoImport.return_216))))))
                               (cut
                                  (lambda
                                     ($ToplevelVariableNoImport.param_182 $ToplevelVariableNoImport.return_219)
@@ -303,37 +309,31 @@
                                           ((Nothing ())
                                              (invoke printString
                                                 (then $ToplevelVariableNoImport.outer_262
-                                                   (cut-do
-                                                      $ToplevelVariableNoImport.return_220
+                                                   (join
+                                                      (($ToplevelVariableNoImport.return_220
+                                                         (then $ToplevelVariableNoImport.inner_263
+                                                            (cut
+                                                               $ToplevelVariableNoImport.outer_262
+                                                               (apply
+                                                                  ($ToplevelVariableNoImport.inner_263)
+                                                                  ($ToplevelVariableNoImport.return_219))))))
                                                       (invoke String#
                                                          (apply
                                                             ("OK")
-                                                            ($ToplevelVariableNoImport.return_220)))
-                                                      (then $ToplevelVariableNoImport.inner_263
-                                                         (cut
-                                                            $ToplevelVariableNoImport.outer_262
-                                                            (apply
-                                                               ($ToplevelVariableNoImport.inner_263)
-                                                               ($ToplevelVariableNoImport.return_219))))))))
+                                                            ($ToplevelVariableNoImport.return_220)))))))
                                           ((Just
                                              (#ToplevelVariableNoImport.__18))
                                              (cut
                                                 (construct tuple () ())
                                                 $ToplevelVariableNoImport.return_219)))))
                                  (then $ToplevelVariableNoImport.outer_264
-                                    (cut-do
-                                       $ToplevelVariableNoImport.return_218
-                                       (invoke comp $ToplevelVariableNoImport.return_218)
-                                       (then $ToplevelVariableNoImport.inner_265
-                                          (cut
-                                             $ToplevelVariableNoImport.outer_264
-                                             (apply
-                                                ($ToplevelVariableNoImport.inner_265)
-                                                ($ToplevelVariableNoImport.return_217)))))))
-                              (then $ToplevelVariableNoImport.inner_261
-                                 (cut
-                                    $ToplevelVariableNoImport.outer_260
-                                    (apply
-                                       ($ToplevelVariableNoImport.inner_261)
-                                       ($ToplevelVariableNoImport.return_216)))))))))))
+                                    (join
+                                       (($ToplevelVariableNoImport.return_218
+                                          (then $ToplevelVariableNoImport.inner_265
+                                             (cut
+                                                $ToplevelVariableNoImport.outer_264
+                                                (apply
+                                                   ($ToplevelVariableNoImport.inner_265)
+                                                   ($ToplevelVariableNoImport.return_217))))))
+                                       (invoke comp $ToplevelVariableNoImport.return_218)))))))))))
          $ToplevelVariableNoImport.return_215)))

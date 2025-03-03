@@ -24,8 +24,14 @@
                                        ((construct tuple () ()))
                                        ($NestedMatch.return_41)))))))
                      (then $NestedMatch.outer_48
-                        (cut-do
-                           $NestedMatch.return_36
+                        (join
+                           (($NestedMatch.return_36
+                              (then $NestedMatch.inner_49
+                                 (cut
+                                    $NestedMatch.outer_48
+                                    (apply
+                                       ($NestedMatch.inner_49)
+                                       ($NestedMatch.return_35))))))
                            (cut
                               (lambda
                                  ($NestedMatch.param_32 $NestedMatch.return_40)
@@ -37,8 +43,14 @@
                                        ((False1 ())
                                           (invoke True $NestedMatch.return_40)))))
                               (then $NestedMatch.outer_52
-                                 (cut-do
-                                    $NestedMatch.return_37
+                                 (join
+                                    (($NestedMatch.return_37
+                                       (then $NestedMatch.inner_53
+                                          (cut
+                                             $NestedMatch.outer_52
+                                             (apply
+                                                ($NestedMatch.inner_53)
+                                                ($NestedMatch.return_36))))))
                                     (cut
                                        (lambda
                                           ($NestedMatch.param_33 $NestedMatch.return_39)
@@ -50,25 +62,13 @@
                                                 ((False2 ())
                                                    (invoke True1 $NestedMatch.return_39)))))
                                        (then $NestedMatch.outer_54
-                                          (cut-do
-                                             $NestedMatch.return_38
-                                             (invoke True2 $NestedMatch.return_38)
-                                             (then $NestedMatch.inner_55
-                                                (cut
-                                                   $NestedMatch.outer_54
-                                                   (apply
-                                                      ($NestedMatch.inner_55)
-                                                      ($NestedMatch.return_37)))))))
-                                    (then $NestedMatch.inner_53
-                                       (cut
-                                          $NestedMatch.outer_52
-                                          (apply
-                                             ($NestedMatch.inner_53)
-                                             ($NestedMatch.return_36)))))))
-                           (then $NestedMatch.inner_49
-                              (cut
-                                 $NestedMatch.outer_48
-                                 (apply
-                                    ($NestedMatch.inner_49)
-                                    ($NestedMatch.return_35)))))))))))
+                                          (join
+                                             (($NestedMatch.return_38
+                                                (then $NestedMatch.inner_55
+                                                   (cut
+                                                      $NestedMatch.outer_54
+                                                      (apply
+                                                         ($NestedMatch.inner_55)
+                                                         ($NestedMatch.return_37))))))
+                                             (invoke True2 $NestedMatch.return_38))))))))))))))
       $NestedMatch.return_34)))

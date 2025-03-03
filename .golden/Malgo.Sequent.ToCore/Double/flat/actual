@@ -9,26 +9,26 @@
                (#Double.$__8
                   (invoke putStr
                      (then $Double.outer_16
-                        (cut-do
-                           $Double.return_12
+                        (join
+                           (($Double.return_12
+                              (then $Double.inner_17
+                                 (cut
+                                    $Double.outer_16
+                                    (apply
+                                       ($Double.inner_17)
+                                       ($Double.return_11))))))
                            (invoke toStringDouble
                               (then $Double.outer_18
-                                 (cut-do
-                                    $Double.return_13
+                                 (join
+                                    (($Double.return_13
+                                       (then $Double.inner_19
+                                          (cut
+                                             $Double.outer_18
+                                             (apply
+                                                ($Double.inner_19)
+                                                ($Double.return_12))))))
                                     (invoke Double#
                                        (apply
                                           (3.14_f64)
-                                          ($Double.return_13)))
-                                    (then $Double.inner_19
-                                       (cut
-                                          $Double.outer_18
-                                          (apply
-                                             ($Double.inner_19)
-                                             ($Double.return_12)))))))
-                           (then $Double.inner_17
-                              (cut
-                                 $Double.outer_16
-                                 (apply
-                                    ($Double.inner_17)
-                                    ($Double.return_11)))))))))))
+                                          ($Double.return_13)))))))))))))
       $Double.return_10)))

@@ -9,16 +9,16 @@
                (#Echo.$__8
                   (invoke putStr
                      (then $Echo.outer_13
-                        (cut-do
-                           $Echo.return_12
+                        (join
+                           (($Echo.return_12
+                              (then $Echo.inner_14
+                                 (cut
+                                    $Echo.outer_13
+                                    (apply
+                                       ($Echo.inner_14)
+                                       ($Echo.return_11))))))
                            (invoke getContents
                               (apply
                                  ((construct tuple () ()))
-                                 ($Echo.return_12)))
-                           (then $Echo.inner_14
-                              (cut
-                                 $Echo.outer_13
-                                 (apply
-                                    ($Echo.inner_14)
-                                    ($Echo.return_11)))))))))))
+                                 ($Echo.return_12))))))))))
       $Echo.return_10)))
