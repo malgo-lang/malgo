@@ -7,7 +7,7 @@ module Malgo.Sequent.Core
     Rank (..),
     Statement (..),
     Branch (..),
-    -- Removed flatProgram export
+    Return
   )
 where
 
