@@ -27,9 +27,10 @@ import Malgo.Sequent.Fun (Literal, Name, Pattern, Tag)
 
 data Program x = Program
   {definitions :: [(Range, Name, Name, Statement x)]}
-  deriving stock (Show)
 
-instance ToSExpr (Program x) where
+deriving stock instance (Show (Return x)) => Show (Program x)
+
+instance (ToSExpr (Return x)) => ToSExpr (Program x) where
   toSExpr (Program defs) = S.L $ map (\(_, name, return, body) -> toSExpr (name, return, body)) defs
 
 type data Rank = Zero | One
@@ -37,14 +38,18 @@ type data Rank = Zero | One
 data Producer (x :: Rank) where
   Var :: Range -> Name -> Producer x
   Literal :: Range -> Literal -> Producer x
-  Construct :: Range -> Tag -> [Producer x] -> [Consumer x] -> Producer x
+  Construct :: Range -> Tag -> [Producer x] -> [Return x] -> Producer x
   Lambda :: Range -> [Name] -> Statement x -> Producer x
   Object :: Range -> Map Text (Name, Statement x) -> Producer x
   Do :: Range -> Name -> Statement One -> Producer One
 
-deriving stock instance Show (Producer x)
+deriving stock instance (Show (Return x)) => Show (Producer x)
 
-instance ToSExpr (Producer x) where
+type family Return (x :: Rank) where
+  Return Zero = Consumer Zero
+  Return One = Consumer One
+
+instance (ToSExpr (Return x)) => ToSExpr (Producer x) where
   toSExpr (Var _ name) = toSExpr name
   toSExpr (Literal _ literal) = toSExpr literal
   toSExpr (Construct _ tag producers consumers) =
@@ -55,15 +60,15 @@ instance ToSExpr (Producer x) where
 
 data Consumer x where
   Label :: Range -> Name -> Consumer x
-  Apply :: Range -> [Producer x] -> [Consumer x] -> Consumer x
-  Project :: Range -> Text -> Consumer x -> Consumer x
+  Apply :: Range -> [Producer x] -> [Return x] -> Consumer x
+  Project :: Range -> Text -> Return x -> Consumer x
   Then :: Range -> Name -> Statement x -> Consumer x
   Finish :: Range -> Consumer x
   Select :: Range -> [Branch x] -> Consumer x
 
-deriving stock instance Show (Consumer x)
+deriving stock instance (Show (Return x)) => Show (Consumer x)
 
-instance ToSExpr (Consumer x) where
+instance (ToSExpr (Return x)) => ToSExpr (Consumer x) where
   toSExpr (Label _ name) = toSExpr name
   toSExpr (Apply _ producers consumers) = S.L [S.A "apply", S.L $ map toSExpr producers, S.L $ map toSExpr consumers]
   toSExpr (Project _ field return) = S.L [S.A "project", toSExpr field, toSExpr return]
@@ -74,12 +79,12 @@ instance ToSExpr (Consumer x) where
 data Statement x where
   Cut :: Producer x -> Consumer x -> Statement x
   CutDo :: Range -> Name -> Statement Zero -> Consumer Zero -> Statement Zero
-  Primitive :: Range -> Text -> [Producer x] -> Consumer x -> Statement x
-  Invoke :: Range -> Name -> Consumer x -> Statement x
+  Primitive :: Range -> Text -> [Producer x] -> Return x -> Statement x
+  Invoke :: Range -> Name -> Return x -> Statement x
 
-deriving stock instance Show (Statement x)
+deriving stock instance (Show (Return x)) => Show (Statement x)
 
-instance ToSExpr (Statement x) where
+instance (ToSExpr (Return x)) => ToSExpr (Statement x) where
   toSExpr (Cut producer consumer) = S.L ["cut", toSExpr producer, toSExpr consumer]
   toSExpr (CutDo _ name statement consumer) = S.L ["cut-do", toSExpr name, toSExpr statement, toSExpr consumer]
   toSExpr (Primitive _ name producers consumer) =
@@ -92,9 +97,9 @@ data Branch x = Branch
     statement :: Statement x
   }
 
-deriving stock instance Show (Branch x)
+deriving stock instance (Show (Return x)) => Show (Branch x)
 
-instance ToSExpr (Branch x) where
+instance (ToSExpr (Return x)) => ToSExpr (Branch x) where
   toSExpr (Branch _ pattern statement) = S.L [toSExpr pattern, toSExpr statement]
 
 -- | Flattens a program into a program with no nested do expressions.
