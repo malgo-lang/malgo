@@ -13,12 +13,7 @@
                               (#ToplevelVariableNoImport.x_14)
                               ($ToplevelVariableNoImport.return_184))))
                         (invoke malgo_int32_t_to_string $ToplevelVariableNoImport.apply_266))))))
-            (cut
-               (construct
-                  tuple
-                  ($ToplevelVariableNoImport.param_167)
-                  ())
-               $ToplevelVariableNoImport.select_267)))
+            (cut $ToplevelVariableNoImport.param_167 $ToplevelVariableNoImport.select_267)))
       $ToplevelVariableNoImport.return_183))
    (toStringInt32
       $ToplevelVariableNoImport.return_185
@@ -48,12 +43,7 @@
                                                 (cut $ToplevelVariableNoImport.outer_226 $ToplevelVariableNoImport.apply_269)))))
                                     (invoke toStringInt32# $ToplevelVariableNoImport.apply_268)))))
                            (invoke String# $ToplevelVariableNoImport.then_270))))))
-               (cut
-                  (construct
-                     tuple
-                     ($ToplevelVariableNoImport.param_168)
-                     ())
-                  $ToplevelVariableNoImport.select_271)))
+               (cut $ToplevelVariableNoImport.param_168 $ToplevelVariableNoImport.select_271)))
          $ToplevelVariableNoImport.return_185))
    (printString#
       $ToplevelVariableNoImport.return_188
@@ -70,12 +60,7 @@
                                  (#ToplevelVariableNoImport.x_4)
                                  ($ToplevelVariableNoImport.return_189))))
                            (invoke malgo_print_string $ToplevelVariableNoImport.apply_272))))))
-               (cut
-                  (construct
-                     tuple
-                     ($ToplevelVariableNoImport.param_169)
-                     ())
-                  $ToplevelVariableNoImport.select_273)))
+               (cut $ToplevelVariableNoImport.param_169 $ToplevelVariableNoImport.select_273)))
          $ToplevelVariableNoImport.return_188))
    (printString
       $ToplevelVariableNoImport.return_190
@@ -93,12 +78,7 @@
                                  (#ToplevelVariableNoImport.x_5)
                                  ($ToplevelVariableNoImport.return_191))))
                            (invoke printString# $ToplevelVariableNoImport.apply_274))))))
-               (cut
-                  (construct
-                     tuple
-                     ($ToplevelVariableNoImport.param_170)
-                     ())
-                  $ToplevelVariableNoImport.select_275)))
+               (cut $ToplevelVariableNoImport.param_170 $ToplevelVariableNoImport.select_275)))
          $ToplevelVariableNoImport.return_190))
    (printInt32
       $ToplevelVariableNoImport.return_192
@@ -127,12 +107,7 @@
                                                 (cut $ToplevelVariableNoImport.outer_228 $ToplevelVariableNoImport.apply_277)))))
                                     (invoke toStringInt32 $ToplevelVariableNoImport.apply_276)))))
                            (invoke printString $ToplevelVariableNoImport.then_278))))))
-               (cut
-                  (construct
-                     tuple
-                     ($ToplevelVariableNoImport.param_171)
-                     ())
-                  $ToplevelVariableNoImport.select_279)))
+               (cut $ToplevelVariableNoImport.param_171 $ToplevelVariableNoImport.select_279)))
          $ToplevelVariableNoImport.return_192))
    (one
       $ToplevelVariableNoImport.return_195
@@ -152,12 +127,7 @@
                   (select
                      (#ToplevelVariableNoImport.x_7
                         (cut #ToplevelVariableNoImport.x_7 $ToplevelVariableNoImport.return_197)))))
-               (cut
-                  (construct
-                     tuple
-                     ($ToplevelVariableNoImport.param_172)
-                     ())
-                  $ToplevelVariableNoImport.select_281)))
+               (cut $ToplevelVariableNoImport.param_172 $ToplevelVariableNoImport.select_281)))
          $ToplevelVariableNoImport.return_196))
    (const
       $ToplevelVariableNoImport.return_198
@@ -227,12 +197,7 @@
                         ((Just
                            (#ToplevelVariableNoImport.x_17))
                            (invoke Nothing $ToplevelVariableNoImport.return_205)))))
-                  (cut
-                     (construct
-                        tuple
-                        ($ToplevelVariableNoImport.param_175)
-                        ())
-                     $ToplevelVariableNoImport.select_285)))
+                  (cut $ToplevelVariableNoImport.param_175 $ToplevelVariableNoImport.select_285)))
             $ToplevelVariableNoImport.then_288)))
    (addInt32#
       $ToplevelVariableNoImport.return_206
@@ -390,12 +355,7 @@
                                                       (cut
                                                          (construct tuple () ())
                                                          $ToplevelVariableNoImport.return_219)))))
-                                             (cut
-                                                (construct
-                                                   tuple
-                                                   ($ToplevelVariableNoImport.param_182)
-                                                   ())
-                                                $ToplevelVariableNoImport.select_310)))
+                                             (cut $ToplevelVariableNoImport.param_182 $ToplevelVariableNoImport.select_310)))
                                        $ToplevelVariableNoImport.then_312)))))
                            (cut
                               (lambda
@@ -451,10 +411,5 @@
                                              (invoke constId $ToplevelVariableNoImport.then_304)))))
                                     (invoke printInt32 $ToplevelVariableNoImport.then_306)))
                               $ToplevelVariableNoImport.then_314))))))
-               (cut
-                  (construct
-                     tuple
-                     ($ToplevelVariableNoImport.param_180)
-                     ())
-                  $ToplevelVariableNoImport.select_315)))
+               (cut $ToplevelVariableNoImport.param_180 $ToplevelVariableNoImport.select_315)))
          $ToplevelVariableNoImport.return_215)))

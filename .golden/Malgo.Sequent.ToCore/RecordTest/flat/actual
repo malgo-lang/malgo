@@ -4,10 +4,7 @@
       (lambda
          ($RecordTest.param_50 $RecordTest.return_55)
          (cut
-            (construct
-               tuple
-               ($RecordTest.param_50)
-               ())
+            $RecordTest.param_50
             (select
                ((B
                   ((expand
@@ -21,10 +18,7 @@
          (lambda
             ($RecordTest.param_51 $RecordTest.return_57)
             (cut
-               (construct
-                  tuple
-                  ($RecordTest.param_51)
-                  ())
+               $RecordTest.param_51
                (select
                   ((expand
                      ((a #RecordTest.a_1)
@@ -37,10 +31,7 @@
          (lambda
             ($RecordTest.param_52 $RecordTest.return_59)
             (cut
-               (construct
-                  tuple
-                  ($RecordTest.param_52)
-                  ())
+               $RecordTest.param_52
                (select
                   (#RecordTest.$__49
                      (cut
@@ -85,10 +76,7 @@
                                                                         (lambda
                                                                            ($RecordTest.param_53 $RecordTest.return_63)
                                                                            (cut
-                                                                              (construct
-                                                                                 tuple
-                                                                                 ($RecordTest.param_53)
-                                                                                 ())
+                                                                              $RecordTest.param_53
                                                                               (select
                                                                                  ((expand
                                                                                     ((a #RecordTest.__6)

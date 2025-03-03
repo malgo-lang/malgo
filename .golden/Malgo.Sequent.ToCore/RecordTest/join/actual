@@ -11,12 +11,7 @@
                         ((a #RecordTest.a_3)
                            (b #RecordTest.__4)))))
                      (cut #RecordTest.a_3 $RecordTest.return_55)))))
-            (cut
-               (construct
-                  tuple
-                  ($RecordTest.param_50)
-                  ())
-               $RecordTest.select_89)))
+            (cut $RecordTest.param_50 $RecordTest.select_89)))
       $RecordTest.return_54))
    (f
       $RecordTest.return_56
@@ -30,12 +25,7 @@
                         ((a #RecordTest.a_1)
                            (b #RecordTest.__2)))
                         (cut #RecordTest.a_1 $RecordTest.return_57)))))
-               (cut
-                  (construct
-                     tuple
-                     ($RecordTest.param_51)
-                     ())
-                  $RecordTest.select_90)))
+               (cut $RecordTest.param_51 $RecordTest.select_90)))
          $RecordTest.return_56))
    (main
       $RecordTest.return_58
@@ -91,12 +81,7 @@
                                                                                                       ((a #RecordTest.__6)
                                                                                                          (b #RecordTest.b_7)))
                                                                                                       (cut #RecordTest.b_7 $RecordTest.return_63)))))
-                                                                                             (cut
-                                                                                                (construct
-                                                                                                   tuple
-                                                                                                   ($RecordTest.param_53)
-                                                                                                   ())
-                                                                                                $RecordTest.select_94)))
+                                                                                             (cut $RecordTest.param_53 $RecordTest.select_94)))
                                                                                        $RecordTest.apply_95))))
                                                                               ($RecordTest.apply_98
                                                                                  (apply
@@ -141,10 +126,5 @@
                                                 ($RecordTest.return_66))))
                                           (invoke Int32# $RecordTest.apply_92)))))
                               $RecordTest.then_104))))))
-               (cut
-                  (construct
-                     tuple
-                     ($RecordTest.param_52)
-                     ())
-                  $RecordTest.select_105)))
+               (cut $RecordTest.param_52 $RecordTest.select_105)))
          $RecordTest.return_58)))

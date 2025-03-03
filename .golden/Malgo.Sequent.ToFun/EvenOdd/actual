@@ -2,8 +2,7 @@
    (lambda
       ($EvenOdd.param_51)
       (select
-         (tuple
-            ($EvenOdd.param_51))
+         $EvenOdd.param_51
          (((Int32#
             (0_i32))
             (invoke True))
@@ -21,8 +20,7 @@
       (lambda
          ($EvenOdd.param_52)
          (select
-            (tuple
-               ($EvenOdd.param_52))
+            $EvenOdd.param_52
             (((Int32#
                (0_i32))
                (invoke False))
@@ -40,15 +38,13 @@
       (lambda
          ($EvenOdd.param_53)
          (select
-            (tuple
-               ($EvenOdd.param_53))
+            $EvenOdd.param_53
             ((#EvenOdd.$__50
                (apply
                   (lambda
                      ($EvenOdd.param_54)
                      (select
-                        (tuple
-                           ($EvenOdd.param_54))
+                        $EvenOdd.param_54
                         (((False ())
                            (apply
                               (invoke putStrLn)

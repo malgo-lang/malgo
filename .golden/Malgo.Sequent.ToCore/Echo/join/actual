@@ -25,10 +25,5 @@
                                              (cut $Echo.outer_13 $Echo.apply_16)))))
                                  (invoke getContents $Echo.apply_15)))))
                         (invoke putStr $Echo.then_17))))))
-            (cut
-               (construct
-                  tuple
-                  ($Echo.param_9)
-                  ())
-               $Echo.select_18)))
+            (cut $Echo.param_9 $Echo.select_18)))
       $Echo.return_10)))

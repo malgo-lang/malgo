@@ -4,10 +4,7 @@
       (lambda
          ($TuplePattern.param_26 $TuplePattern.return_29)
          (cut
-            (construct
-               tuple
-               ($TuplePattern.param_26)
-               ())
+            $TuplePattern.param_26
             (select
                (#TuplePattern.$__25
                   (invoke |>
@@ -23,10 +20,7 @@
                            ((lambda
                               ($TuplePattern.param_27 $TuplePattern.return_30)
                               (cut
-                                 (construct
-                                    tuple
-                                    ($TuplePattern.param_27)
-                                    ())
+                                 $TuplePattern.param_27
                                  (select
                                     ((tuple
                                        ((A ())

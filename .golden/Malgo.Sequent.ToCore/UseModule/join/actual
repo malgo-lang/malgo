@@ -29,12 +29,7 @@
                                  (#UseModule.x_0)
                                  ($UseModule.then_78))))
                         (invoke addInt32 $UseModule.apply_79))))))
-            (cut
-               (construct
-                  tuple
-                  ($UseModule.param_36)
-                  ())
-               $UseModule.select_80)))
+            (cut $UseModule.param_36 $UseModule.select_80)))
       $UseModule.return_39))
    (main
       $UseModule.return_42
@@ -144,10 +139,5 @@
                                              (invoke printInt32 $UseModule.return_51)))))
                                     (invoke <| $UseModule.then_91)))
                               $UseModule.then_96))))))
-               (cut
-                  (construct
-                     tuple
-                     ($UseModule.param_37)
-                     ())
-                  $UseModule.select_97)))
+               (cut $UseModule.param_37 $UseModule.select_97)))
          $UseModule.return_42)))

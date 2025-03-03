@@ -4,10 +4,7 @@
       (lambda
          ($Pattern.param_16 $Pattern.return_19)
          (cut
-            (construct
-               tuple
-               ($Pattern.param_16)
-               ())
+            $Pattern.param_16
             (select
                (#Pattern.$__9
                   (invoke putStrLn
@@ -31,10 +28,7 @@
          (lambda
             ($Pattern.param_17 $Pattern.return_22)
             (cut
-               (construct
-                  tuple
-                  ($Pattern.param_17)
-                  ())
+               $Pattern.param_17
                (select
                   ((Nil ())
                      (invoke True $Pattern.return_22))

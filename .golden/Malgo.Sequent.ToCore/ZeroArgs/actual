@@ -4,10 +4,7 @@
       (lambda
          ($ZeroArgs.param_28 $ZeroArgs.return_34)
          (cut
-            (construct
-               tuple
-               ($ZeroArgs.param_28)
-               ())
+            $ZeroArgs.param_28
             (select
                (#ZeroArgs.$__6
                   (invoke Int32#
@@ -23,20 +20,14 @@
          (lambda
             ($ZeroArgs.param_29 $ZeroArgs.return_36)
             (cut
-               (construct
-                  tuple
-                  ($ZeroArgs.param_29)
-                  ())
+               $ZeroArgs.param_29
                (select
                   (#ZeroArgs.x_1
                      (cut
                         (lambda
                            ($ZeroArgs.param_30 $ZeroArgs.return_37)
                            (cut
-                              (construct
-                                 tuple
-                                 ($ZeroArgs.param_30)
-                                 ())
+                              $ZeroArgs.param_30
                               (select
                                  (#ZeroArgs.$__11
                                     (cut #ZeroArgs.x_1 $ZeroArgs.return_37)))))
@@ -50,20 +41,14 @@
          (lambda
             ($ZeroArgs.param_31 $ZeroArgs.return_39)
             (cut
-               (construct
-                  tuple
-                  ($ZeroArgs.param_31)
-                  ())
+               $ZeroArgs.param_31
                (select
                   (#ZeroArgs.$__25
                      (cut
                         (lambda
                            ($ZeroArgs.param_32 $ZeroArgs.return_40)
                            (cut
-                              (construct
-                                 tuple
-                                 ($ZeroArgs.param_32)
-                                 ())
+                              $ZeroArgs.param_32
                               (select
                                  (#ZeroArgs.$__24
                                     (invoke printString

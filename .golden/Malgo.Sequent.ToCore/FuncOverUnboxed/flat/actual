@@ -4,10 +4,7 @@
       (lambda
          ($FuncOverUnboxed.param_22 $FuncOverUnboxed.return_25)
          (cut
-            (construct
-               tuple
-               ($FuncOverUnboxed.param_22)
-               ())
+            $FuncOverUnboxed.param_22
             (select
                (0_i64
                   (invoke printString#
@@ -61,10 +58,7 @@
          (lambda
             ($FuncOverUnboxed.param_23 $FuncOverUnboxed.return_30)
             (cut
-               (construct
-                  tuple
-                  ($FuncOverUnboxed.param_23)
-                  ())
+               $FuncOverUnboxed.param_23
                (select
                   (#FuncOverUnboxed.$__21
                      (invoke f

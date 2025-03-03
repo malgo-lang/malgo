@@ -10,12 +10,7 @@
                      (invoke B $Test2.return_27))
                   (#Test2.a_0
                      (cut #Test2.a_0 $Test2.return_27)))))
-            (cut
-               (construct
-                  tuple
-                  ($Test2.param_23)
-                  ())
-               $Test2.select_39)))
+            (cut $Test2.param_23 $Test2.select_39)))
       $Test2.return_26))
    (main
       $Test2.return_28
@@ -71,17 +66,7 @@
                                                       ("WRONG")
                                                       ($Test2.return_32))))
                                                 (invoke malgo_print_string $Test2.apply_41))))))
-                                    (cut
-                                       (construct
-                                          tuple
-                                          ($Test2.param_25)
-                                          ())
-                                       $Test2.select_42)))
+                                    (cut $Test2.param_25 $Test2.select_42)))
                               $Test2.then_46))))))
-               (cut
-                  (construct
-                     tuple
-                     ($Test2.param_24)
-                     ())
-                  $Test2.select_47)))
+               (cut $Test2.param_24 $Test2.select_47)))
          $Test2.return_28)))

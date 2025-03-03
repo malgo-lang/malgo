@@ -50,17 +50,7 @@
                                                                   (cut $DataDef.outer_25 $DataDef.apply_30)))))
                                                       (invoke malgo_int64_t_to_string $DataDef.apply_29)))))
                                              (invoke malgo_print_string $DataDef.then_31))))))
-                                 (cut
-                                    (construct
-                                       tuple
-                                       ($DataDef.param_19)
-                                       ())
-                                    $DataDef.select_32)))
+                                 (cut $DataDef.param_19 $DataDef.select_32)))
                            $DataDef.then_35))))))
-            (cut
-               (construct
-                  tuple
-                  ($DataDef.param_18)
-                  ())
-               $DataDef.select_36)))
+            (cut $DataDef.param_18 $DataDef.select_36)))
       $DataDef.return_20)))

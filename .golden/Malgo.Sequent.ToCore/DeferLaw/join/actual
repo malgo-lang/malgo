@@ -20,19 +20,9 @@
                                     (select
                                        (#DeferLaw.$__8
                                           (cut #DeferLaw.x_1 $DeferLaw.return_27)))))
-                                 (cut
-                                    (construct
-                                       tuple
-                                       ($DeferLaw.param_23)
-                                       ())
-                                    $DeferLaw.select_38)))
+                                 (cut $DeferLaw.param_23 $DeferLaw.select_38)))
                            $DeferLaw.apply_39))))))
-            (cut
-               (construct
-                  tuple
-                  ($DeferLaw.param_22)
-                  ())
-               $DeferLaw.select_40)))
+            (cut $DeferLaw.param_22 $DeferLaw.select_40)))
       $DeferLaw.return_25))
    (main
       $DeferLaw.return_28
@@ -73,10 +63,5 @@
                                                 (cut $DeferLaw.outer_34 $DeferLaw.apply_44)))))
                                     (invoke f $DeferLaw.then_43)))))
                            (invoke putStrLn $DeferLaw.then_45))))))
-               (cut
-                  (construct
-                     tuple
-                     ($DeferLaw.param_24)
-                     ())
-                  $DeferLaw.select_46)))
+               (cut $DeferLaw.param_24 $DeferLaw.select_46)))
          $DeferLaw.return_28)))

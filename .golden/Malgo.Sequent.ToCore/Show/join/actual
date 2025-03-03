@@ -16,12 +16,7 @@
                                        (#Show.x_3)
                                        ($Show.return_125))))
                                  (invoke toStringInt32 $Show.apply_237))))))
-                     (cut
-                        (construct
-                           tuple
-                           ($Show.param_113)
-                           ())
-                        $Show.select_238)))
+                     (cut $Show.param_113 $Show.select_238)))
                $Show.return_124))))
       $Show.return_123))
    (show
@@ -35,12 +30,7 @@
                      ((expand
                         ((show #Show.show_5)))
                         (cut #Show.show_5 $Show.return_127)))))
-               (cut
-                  (construct
-                     tuple
-                     ($Show.param_114)
-                     ())
-                  $Show.select_239)))
+               (cut $Show.param_114 $Show.select_239)))
          $Show.return_126))
    (print
       $Show.return_128
@@ -266,12 +256,7 @@
                                                                                  (cut $Show.outer_157 $Show.apply_269)))))
                                                                      (invoke String# $Show.apply_248)))))
                                                             (invoke <> $Show.then_270))))))
-                                                (cut
-                                                   (construct
-                                                      tuple
-                                                      ($Show.param_121)
-                                                      ())
-                                                   $Show.select_271)))
+                                                (cut $Show.param_121 $Show.select_271)))
                                           $Show.return_138))))
                                  $Show.return_137)))))
                      (cut
@@ -362,10 +347,5 @@
                                                 (cut $Show.outer_221 $Show.apply_281)))))
                                     (invoke showTuple2 $Show.then_276)))))
                            (invoke print $Show.then_282))))))
-               (cut
-                  (construct
-                     tuple
-                     ($Show.param_122)
-                     ())
-                  $Show.select_283)))
+               (cut $Show.param_122 $Show.select_283)))
          $Show.return_148)))

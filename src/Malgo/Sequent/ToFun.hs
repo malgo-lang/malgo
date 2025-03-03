@@ -71,6 +71,8 @@ instance Convert (S.Literal Unboxed) F.Literal where
   convert (S.String t) = F.String t
 
 instance (State Uniq :> es, Reader ModuleName :> es) => Convert Range ([Name] -> NonEmpty (Clause (Malgo Refine)) -> Eff es F.Expr) where
+  convert range [parameter] clauses = do
+    Select range (F.Var range parameter) <$> traverse convert (toList clauses)
   convert range parameters clauses = do
     Select range (Construct range F.Tuple (F.Var range <$> parameters)) <$> traverse convert (toList clauses)
 

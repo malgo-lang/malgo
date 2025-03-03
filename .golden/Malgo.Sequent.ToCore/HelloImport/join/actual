@@ -72,12 +72,7 @@
                                                                                                 (cut $HelloImport.outer_33 $HelloImport.apply_42)))))
                                                                                     (invoke String# $HelloImport.apply_41)))))
                                                                            (cut #HelloImport.f_0 $HelloImport.then_43))))))
-                                                               (cut
-                                                                  (construct
-                                                                     tuple
-                                                                     ($HelloImport.param_20)
-                                                                     ())
-                                                                  $HelloImport.select_44))))
+                                                               (cut $HelloImport.param_20 $HelloImport.select_44))))
                                                          ($HelloImport.return_25)))
                                                       ($HelloImport.apply_46
                                                          (apply
@@ -87,10 +82,5 @@
                                           (invoke putStrLn $HelloImport.return_28)))))
                                  (invoke |> $HelloImport.then_47)))
                            $HelloImport.then_52))))))
-            (cut
-               (construct
-                  tuple
-                  ($HelloImport.param_18)
-                  ())
-               $HelloImport.select_53)))
+            (cut $HelloImport.param_18 $HelloImport.select_53)))
       $HelloImport.return_21)))

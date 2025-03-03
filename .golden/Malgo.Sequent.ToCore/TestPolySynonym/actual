@@ -4,10 +4,7 @@
       (lambda
          ($TestPolySynonym.param_40 $TestPolySynonym.return_43)
          (cut
-            (construct
-               tuple
-               ($TestPolySynonym.param_40)
-               ())
+            $TestPolySynonym.param_40
             (select
                ((expand
                   ((fst #TestPolySynonym.x_5)
@@ -20,10 +17,7 @@
          (lambda
             ($TestPolySynonym.param_41 $TestPolySynonym.return_45)
             (cut
-               (construct
-                  tuple
-                  ($TestPolySynonym.param_41)
-                  ())
+               $TestPolySynonym.param_41
                (select
                   (#TestPolySynonym.$__39
                      (cut

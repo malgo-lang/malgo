@@ -41,10 +41,5 @@
                                              (cut $Primitive.outer_18 $Primitive.apply_26)))))
                                  (invoke toStringInt64# $Primitive.then_25)))))
                         (invoke printString# $Primitive.then_27))))))
-            (cut
-               (construct
-                  tuple
-                  ($Primitive.param_11)
-                  ())
-               $Primitive.select_28)))
+            (cut $Primitive.param_11 $Primitive.select_28)))
       $Primitive.return_12)))

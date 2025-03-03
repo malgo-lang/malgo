@@ -82,12 +82,7 @@
                                                                                              (cut $TestPatSynRecon.outer_110 $TestPatSynRecon.apply_172)))))
                                                                                  (invoke +# $TestPatSynRecon.apply_171)))))
                                                                         (invoke Int64# $TestPatSynRecon.then_173))))))
-                                                            (cut
-                                                               (construct
-                                                                  tuple
-                                                                  ($TestPatSynRecon.param_86)
-                                                                  ())
-                                                               $TestPatSynRecon.select_174))))
+                                                            (cut $TestPatSynRecon.param_86 $TestPatSynRecon.select_174))))
                                                       ($TestPatSynRecon.return_93)))
                                                    ($TestPatSynRecon.apply_176
                                                       (apply
@@ -103,12 +98,7 @@
                                  (0_i64)
                                  ($TestPatSynRecon.return_93))))
                            (invoke Int64# $TestPatSynRecon.apply_178))))))
-               (cut
-                  (construct
-                     tuple
-                     ($TestPatSynRecon.param_85)
-                     ())
-                  $TestPatSynRecon.select_179)))
+               (cut $TestPatSynRecon.param_85 $TestPatSynRecon.select_179)))
          $TestPatSynRecon.return_92))
    (main
       $TestPatSynRecon.return_97
@@ -208,12 +198,7 @@
                                                                               (#TestPatSynRecon.i_5)
                                                                               ($TestPatSynRecon.return_99))))
                                                                         (invoke printInt64 $TestPatSynRecon.apply_192))))))
-                                                            (cut
-                                                               (construct
-                                                                  tuple
-                                                                  ($TestPatSynRecon.param_88)
-                                                                  ())
-                                                               $TestPatSynRecon.select_193))))
+                                                            (cut $TestPatSynRecon.param_88 $TestPatSynRecon.select_193))))
                                                       ($TestPatSynRecon.return_98)))
                                                    ($TestPatSynRecon.apply_195
                                                       (apply
@@ -222,10 +207,5 @@
                                                 (cut $TestPatSynRecon.outer_138 $TestPatSynRecon.apply_195)))))
                                     (invoke sum $TestPatSynRecon.then_191)))))
                            (invoke |> $TestPatSynRecon.then_196))))))
-               (cut
-                  (construct
-                     tuple
-                     ($TestPatSynRecon.param_87)
-                     ())
-                  $TestPatSynRecon.select_197)))
+               (cut $TestPatSynRecon.param_87 $TestPatSynRecon.select_197)))
          $TestPatSynRecon.return_97)))

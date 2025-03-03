@@ -2,8 +2,7 @@
    (lambda
       ($TestDot.param_30)
       (select
-         (tuple
-            ($TestDot.param_30))
+         $TestDot.param_30
          (((Int64#
             (#TestDot.x_0))
             (apply
@@ -17,8 +16,7 @@
       (lambda
          ($TestDot.param_31)
          (select
-            (tuple
-               ($TestDot.param_31))
+            $TestDot.param_31
             ((#TestDot.$__29
                (apply
                   (invoke printInt64)

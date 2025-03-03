@@ -114,12 +114,7 @@
                                                                               ("WRONG")
                                                                               ($Test3.return_75))))
                                                                         (invoke malgo_print_string $Test3.apply_118))))))
-                                                            (cut
-                                                               (construct
-                                                                  tuple
-                                                                  ($Test3.param_69)
-                                                                  ())
-                                                               $Test3.select_119))))
+                                                            (cut $Test3.param_69 $Test3.select_119))))
                                                       ($Test3.return_74)))
                                                    ($Test3.apply_121
                                                       (apply
@@ -128,10 +123,5 @@
                                                 (cut $Test3.outer_93 $Test3.apply_121)))))
                                     (invoke Cons $Test3.then_116)))))
                            (invoke |> $Test3.then_122))))))
-               (cut
-                  (construct
-                     tuple
-                     ($Test3.param_68)
-                     ())
-                  $Test3.select_123)))
+               (cut $Test3.param_68 $Test3.select_123)))
          $Test3.return_73)))

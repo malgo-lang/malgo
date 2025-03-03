@@ -2,8 +2,7 @@
    (lambda
       ($HelloBoxed.param_21)
       (select
-         (tuple
-            ($HelloBoxed.param_21))
+         $HelloBoxed.param_21
          ((#HelloBoxed.x_1
             (apply
                (invoke String#)
@@ -12,8 +11,7 @@
       (lambda
          ($HelloBoxed.param_22)
          (select
-            (tuple
-               ($HelloBoxed.param_22))
+            $HelloBoxed.param_22
             (((String#
                (#HelloBoxed.str_0))
                (apply
@@ -29,8 +27,7 @@
       (lambda
          ($HelloBoxed.param_24)
          (select
-            (tuple
-               ($HelloBoxed.param_24))
+            $HelloBoxed.param_24
             ((#HelloBoxed.$__20
                (apply
                   (invoke putStrLn)

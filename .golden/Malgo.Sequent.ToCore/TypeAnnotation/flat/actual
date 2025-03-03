@@ -4,10 +4,7 @@
       (lambda
          ($TypeAnnotation.param_12 $TypeAnnotation.return_15)
          (cut
-            (construct
-               tuple
-               ($TypeAnnotation.param_12)
-               ())
+            $TypeAnnotation.param_12
             (select
                (#TypeAnnotation.$__11
                   (invoke printString
@@ -18,10 +15,7 @@
                               (lambda
                                  ($TypeAnnotation.param_13 $TypeAnnotation.return_18)
                                  (cut
-                                    (construct
-                                       tuple
-                                       ($TypeAnnotation.param_13)
-                                       ())
+                                    $TypeAnnotation.param_13
                                     (select
                                        (#TypeAnnotation.x_0
                                           (cut #TypeAnnotation.x_0 $TypeAnnotation.return_18)))))

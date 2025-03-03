@@ -52,12 +52,7 @@
                         ((Just
                            (#ToplevelVariable.x_1))
                            (invoke Nothing $ToplevelVariable.return_91)))))
-                  (cut
-                     (construct
-                        tuple
-                        ($ToplevelVariable.param_82)
-                        ())
-                     $ToplevelVariable.select_142)))
+                  (cut $ToplevelVariable.param_82 $ToplevelVariable.select_142)))
             $ToplevelVariable.then_145)))
    (addOne
       $ToplevelVariable.return_92
@@ -138,12 +133,7 @@
                                                       (cut
                                                          (construct tuple () ())
                                                          $ToplevelVariable.return_98)))))
-                                             (cut
-                                                (construct
-                                                   tuple
-                                                   ($ToplevelVariable.param_85)
-                                                   ())
-                                                $ToplevelVariable.select_159)))
+                                             (cut $ToplevelVariable.param_85 $ToplevelVariable.select_159)))
                                        $ToplevelVariable.then_161)))))
                            (cut
                               (lambda
@@ -199,10 +189,5 @@
                                              (invoke constId $ToplevelVariable.then_153)))))
                                     (invoke printInt32 $ToplevelVariable.then_155)))
                               $ToplevelVariable.then_163))))))
-               (cut
-                  (construct
-                     tuple
-                     ($ToplevelVariable.param_83)
-                     ())
-                  $ToplevelVariable.select_164)))
+               (cut $ToplevelVariable.param_83 $ToplevelVariable.select_164)))
          $ToplevelVariable.return_94)))

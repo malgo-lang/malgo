@@ -129,10 +129,5 @@
                                              (cut $TestList.outer_52 $TestList.apply_106)))))
                                  (invoke Int32# $TestList.apply_86)))))
                         (invoke Cons $TestList.then_107))))))
-            (cut
-               (construct
-                  tuple
-                  ($TestList.param_41)
-                  ())
-               $TestList.select_108)))
+            (cut $TestList.param_41 $TestList.select_108)))
       $TestList.return_42)))

@@ -10,12 +10,7 @@
                      ((fst #TestPolySynonym.x_5)
                         (snd #TestPolySynonym.__6)))
                      (cut #TestPolySynonym.x_5 $TestPolySynonym.return_43)))))
-            (cut
-               (construct
-                  tuple
-                  ($TestPolySynonym.param_40)
-                  ())
-               $TestPolySynonym.select_54)))
+            (cut $TestPolySynonym.param_40 $TestPolySynonym.select_54)))
       $TestPolySynonym.return_42))
    (main
       $TestPolySynonym.return_44
@@ -77,10 +72,5 @@
                                                 ($TestPolySynonym.return_49))))
                                           (invoke String# $TestPolySynonym.apply_56)))))
                               $TestPolySynonym.then_62))))))
-               (cut
-                  (construct
-                     tuple
-                     ($TestPolySynonym.param_41)
-                     ())
-                  $TestPolySynonym.select_63)))
+               (cut $TestPolySynonym.param_41 $TestPolySynonym.select_63)))
          $TestPolySynonym.return_44)))

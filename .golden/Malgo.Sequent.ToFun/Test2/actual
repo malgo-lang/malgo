@@ -2,8 +2,7 @@
    (lambda
       ($Test2.param_23)
       (select
-         (tuple
-            ($Test2.param_23))
+         $Test2.param_23
          (((R ())
             (invoke B))
             (#Test2.a_0 #Test2.a_0)))))
@@ -11,15 +10,13 @@
       (lambda
          ($Test2.param_24)
          (select
-            (tuple
-               ($Test2.param_24))
+            $Test2.param_24
             ((#Test2.$__22
                (apply
                   (lambda
                      ($Test2.param_25)
                      (select
-                        (tuple
-                           ($Test2.param_25))
+                        $Test2.param_25
                         (((B ())
                            (apply
                               (invoke malgo_print_string)

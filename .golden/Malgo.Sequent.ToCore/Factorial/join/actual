@@ -193,12 +193,7 @@
                                                                                                    (cut $Factorial.outer_153 $Factorial.apply_205)))))
                                                                                        (invoke - $Factorial.apply_200)))))
                                                                               (invoke factAcc $Factorial.then_206))))))
-                                                                  (cut
-                                                                     (construct
-                                                                        tuple
-                                                                        ($Factorial.param_107)
-                                                                        ())
-                                                                     $Factorial.select_207))))
+                                                                  (cut $Factorial.param_107 $Factorial.select_207))))
                                                             ($Factorial.return_121)))
                                                          ($Factorial.apply_209
                                                             (apply
@@ -209,12 +204,7 @@
                                                                         (select
                                                                            (#Factorial.$__57
                                                                               (cut #Factorial.acc_8 $Factorial.return_126)))))
-                                                                     (cut
-                                                                        (construct
-                                                                           tuple
-                                                                           ($Factorial.param_106)
-                                                                           ())
-                                                                        $Factorial.select_196))))
+                                                                     (cut $Factorial.param_106 $Factorial.select_196))))
                                                                ($Factorial.apply_208)))
                                                          ($Factorial.apply_210
                                                             (apply
@@ -262,12 +252,7 @@
                                     (#Factorial.n_6)
                                     ($Factorial.then_215))))
                            (invoke factAcc $Factorial.apply_216))))))
-               (cut
-                  (construct
-                     tuple
-                     ($Factorial.param_108)
-                     ())
-                  $Factorial.select_217)))
+               (cut $Factorial.param_108 $Factorial.select_217)))
          $Factorial.return_129))
    (main
       $Factorial.return_132
@@ -344,10 +329,5 @@
                                                 (cut $Factorial.outer_171 $Factorial.apply_227)))))
                                     (invoke |> $Factorial.then_224)))))
                            (invoke |> $Factorial.then_228))))))
-               (cut
-                  (construct
-                     tuple
-                     ($Factorial.param_109)
-                     ())
-                  $Factorial.select_229)))
+               (cut $Factorial.param_109 $Factorial.select_229)))
          $Factorial.return_132)))

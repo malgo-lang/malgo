@@ -18,12 +18,7 @@
                                  (1_i32)
                                  ($ZeroArgs.return_34))))
                            (invoke Int32# $ZeroArgs.apply_58))))))
-               (cut
-                  (construct
-                     tuple
-                     ($ZeroArgs.param_28)
-                     ())
-                  $ZeroArgs.select_59)))
+               (cut $ZeroArgs.param_28 $ZeroArgs.select_59)))
          $ZeroArgs.apply_60)))
    (id
       $ZeroArgs.return_35
@@ -47,19 +42,9 @@
                                        (select
                                           (#ZeroArgs.$__11
                                              (cut #ZeroArgs.x_1 $ZeroArgs.return_37)))))
-                                    (cut
-                                       (construct
-                                          tuple
-                                          ($ZeroArgs.param_30)
-                                          ())
-                                       $ZeroArgs.select_61)))
+                                    (cut $ZeroArgs.param_30 $ZeroArgs.select_61)))
                               $ZeroArgs.apply_62))))))
-               (cut
-                  (construct
-                     tuple
-                     ($ZeroArgs.param_29)
-                     ())
-                  $ZeroArgs.select_63)))
+               (cut $ZeroArgs.param_29 $ZeroArgs.select_63)))
          $ZeroArgs.return_35))
    (main
       $ZeroArgs.return_38
@@ -120,17 +105,7 @@
                                                                      (cut $ZeroArgs.outer_50 $ZeroArgs.apply_68)))))
                                                          (invoke toStringInt32 $ZeroArgs.then_67)))))
                                                 (invoke printString $ZeroArgs.then_69))))))
-                                    (cut
-                                       (construct
-                                          tuple
-                                          ($ZeroArgs.param_32)
-                                          ())
-                                       $ZeroArgs.select_70)))
+                                    (cut $ZeroArgs.param_32 $ZeroArgs.select_70)))
                               $ZeroArgs.return_39)))))
-                  (cut
-                     (construct
-                        tuple
-                        ($ZeroArgs.param_31)
-                        ())
-                     $ZeroArgs.select_71)))
+                  (cut $ZeroArgs.param_31 $ZeroArgs.select_71)))
             $ZeroArgs.apply_72))))

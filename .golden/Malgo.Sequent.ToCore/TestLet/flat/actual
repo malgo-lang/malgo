@@ -27,10 +27,7 @@
          (lambda
             ($TestLet.param_51 $TestLet.return_58)
             (cut
-               (construct
-                  tuple
-                  ($TestLet.param_51)
-                  ())
+               $TestLet.param_51
                (select
                   (#TestLet.$__48
                      (invoke addInt32#
@@ -62,10 +59,7 @@
                                                                (lambda
                                                                   ($TestLet.param_53 $TestLet.return_62)
                                                                   (cut
-                                                                     (construct
-                                                                        tuple
-                                                                        ($TestLet.param_53)
-                                                                        ())
+                                                                     $TestLet.param_53
                                                                      (select
                                                                         ((Int32#
                                                                            (#TestLet.x_6))

@@ -8,12 +8,7 @@
                (select
                   (#TestEither.x_2
                      (cut #TestEither.x_2 $TestEither.return_262)))))
-            (cut
-               (construct
-                  tuple
-                  ($TestEither.param_249)
-                  ())
-               $TestEither.select_723)))
+            (cut $TestEither.param_249 $TestEither.select_723)))
       $TestEither.return_261))
    (andThen
       $TestEither.return_263
@@ -135,12 +130,7 @@
                                                                                                       (cut $TestEither.outer_719 $TestEither.apply_800)))))
                                                                                           (invoke String# $TestEither.apply_799)))))
                                                                                  (invoke putStrLn $TestEither.then_801))))))
-                                                                     (cut
-                                                                        (construct
-                                                                           tuple
-                                                                           ($TestEither.param_254)
-                                                                           ())
-                                                                        $TestEither.select_802))))
+                                                                     (cut $TestEither.param_254 $TestEither.select_802))))
                                                                ($TestEither.return_268)))
                                                             ($TestEither.apply_804
                                                                (apply
@@ -225,12 +215,7 @@
                                                                                                                                           (cut $TestEither.outer_689 $TestEither.apply_764)))))
                                                                                                                               (invoke addInt32 $TestEither.apply_763)))))
                                                                                                                      (invoke Right $TestEither.then_765))))))
-                                                                                                         (cut
-                                                                                                            (construct
-                                                                                                               tuple
-                                                                                                               ($TestEither.param_256)
-                                                                                                               ())
-                                                                                                            $TestEither.select_766))))
+                                                                                                         (cut $TestEither.param_256 $TestEither.select_766))))
                                                                                                    ($TestEither.return_284)))
                                                                                                 ($TestEither.return_284
                                                                                                    (then $TestEither.inner_680
@@ -325,12 +310,7 @@
                                                                                                                                                       (cut $TestEither.outer_655 $TestEither.apply_780)))))
                                                                                                                                           (invoke |> $TestEither.then_777)))))
                                                                                                                                  (invoke |> $TestEither.then_781))))))
-                                                                                                                     (cut
-                                                                                                                        (construct
-                                                                                                                           tuple
-                                                                                                                           ($TestEither.param_257)
-                                                                                                                           ())
-                                                                                                                        $TestEither.select_782))))
+                                                                                                                     (cut $TestEither.param_257 $TestEither.select_782))))
                                                                                                                ($TestEither.return_276)))
                                                                                                             ($TestEither.return_276
                                                                                                                (then $TestEither.inner_626
@@ -395,12 +375,7 @@
                                                                                                                                                    (cut $TestEither.outer_417 $TestEither.apply_729)))))
                                                                                                                                        (invoke String# $TestEither.apply_728)))))
                                                                                                                               (invoke Left $TestEither.then_730))))))
-                                                                                                                  (cut
-                                                                                                                     (construct
-                                                                                                                        tuple
-                                                                                                                        ($TestEither.param_258)
-                                                                                                                        ())
-                                                                                                                     $TestEither.select_731))))
+                                                                                                                  (cut $TestEither.param_258 $TestEither.select_731))))
                                                                                                             ($TestEither.return_299)))
                                                                                                          ($TestEither.return_299
                                                                                                             (then $TestEither.inner_414
@@ -463,12 +438,7 @@
                                                                                                                                                                (cut $TestEither.outer_405 $TestEither.apply_740)))))
                                                                                                                                                    (invoke addInt32 $TestEither.apply_739)))))
                                                                                                                                           (invoke Right $TestEither.then_741))))))
-                                                                                                                              (cut
-                                                                                                                                 (construct
-                                                                                                                                    tuple
-                                                                                                                                    ($TestEither.param_259)
-                                                                                                                                    ())
-                                                                                                                                 $TestEither.select_742))))
+                                                                                                                              (cut $TestEither.param_259 $TestEither.select_742))))
                                                                                                                         ($TestEither.return_294)))
                                                                                                                      ($TestEither.return_294
                                                                                                                         (then $TestEither.inner_396
@@ -547,12 +517,7 @@
                                                                                                                                              (cut $TestEither.outer_365 $TestEither.apply_754)))))
                                                                                                                                  (invoke |> $TestEither.apply_751)))))
                                                                                                                         (invoke |> $TestEither.then_755))))))
-                                                                                                            (cut
-                                                                                                               (construct
-                                                                                                                  tuple
-                                                                                                                  ($TestEither.param_260)
-                                                                                                                  ())
-                                                                                                               $TestEither.select_756))))
+                                                                                                            (cut $TestEither.param_260 $TestEither.select_756))))
                                                                                                       ($TestEither.return_288)))
                                                                                                    ($TestEither.apply_758
                                                                                                       (apply
@@ -570,10 +535,5 @@
                                              (invoke Int32# $TestEither.apply_727)))))
                                     (invoke Right $TestEither.then_792)))
                               $TestEither.then_807))))))
-               (cut
-                  (construct
-                     tuple
-                     ($TestEither.param_252)
-                     ())
-                  $TestEither.select_808)))
+               (cut $TestEither.param_252 $TestEither.select_808)))
          $TestEither.return_266)))

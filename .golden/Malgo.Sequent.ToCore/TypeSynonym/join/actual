@@ -8,12 +8,7 @@
                (select
                   (#TypeSynonym.x_1
                      (cut #TypeSynonym.x_1 $TypeSynonym.return_36)))))
-            (cut
-               (construct
-                  tuple
-                  ($TypeSynonym.param_30)
-                  ())
-               $TypeSynonym.select_71)))
+            (cut $TypeSynonym.param_30 $TypeSynonym.select_71)))
       $TypeSynonym.return_35))
    (hello
       $TypeSynonym.return_37
@@ -126,12 +121,7 @@
                                                                                        (invoke putStrLn $TypeSynonym.apply_74)))
                                                                                  $TypeSynonym.then_79)))
                                                                         $TypeSynonym.then_82))))))
-                                                         (cut
-                                                            (construct
-                                                               tuple
-                                                               ($TypeSynonym.param_32)
-                                                               ())
-                                                            $TypeSynonym.select_83))))
+                                                         (cut $TypeSynonym.param_32 $TypeSynonym.select_83))))
                                                    ($TypeSynonym.return_41)))
                                                 ($TypeSynonym.apply_85
                                                    (apply
@@ -140,10 +130,5 @@
                                              (cut $TypeSynonym.outer_53 $TypeSynonym.apply_85)))))
                                     (invoke hello $TypeSynonym.return_48)))))
                            (invoke |> $TypeSynonym.then_86))))))
-               (cut
-                  (construct
-                     tuple
-                     ($TypeSynonym.param_31)
-                     ())
-                  $TypeSynonym.select_87)))
+               (cut $TypeSynonym.param_31 $TypeSynonym.select_87)))
          $TypeSynonym.return_40)))
