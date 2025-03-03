@@ -349,12 +349,7 @@
                                                                                                                               (cut $InlineFunction.outer_259 $InlineFunction.apply_337)))))
                                                                                                                   (cut #InlineFunction.f_8 $InlineFunction.then_328)))))
                                                                                                          (invoke + $InlineFunction.then_338))))))
-                                                                                             (cut
-                                                                                                (construct
-                                                                                                   tuple
-                                                                                                   ($InlineFunction.param_124)
-                                                                                                   ())
-                                                                                                $InlineFunction.select_339))))
+                                                                                             (cut $InlineFunction.param_124 $InlineFunction.select_339))))
                                                                                        ($InlineFunction.return_146)))
                                                                                     ($InlineFunction.apply_341
                                                                                        (apply
@@ -370,12 +365,7 @@
                                                                                                                   (1_i32)
                                                                                                                   ($InlineFunction.return_154))))
                                                                                                             (invoke Int32# $InlineFunction.apply_321))))))
-                                                                                                (cut
-                                                                                                   (construct
-                                                                                                      tuple
-                                                                                                      ($InlineFunction.param_123)
-                                                                                                      ())
-                                                                                                   $InlineFunction.select_322))))
+                                                                                                (cut $InlineFunction.param_123 $InlineFunction.select_322))))
                                                                                           ($InlineFunction.apply_340)))
                                                                                     ($InlineFunction.apply_342
                                                                                        (apply
@@ -393,10 +383,5 @@
                                           $InlineFunction.return_145)))
                                     ($InlineFunction.then_356))))
                            (invoke fix $InlineFunction.apply_357))))))
-               (cut
-                  (construct
-                     tuple
-                     ($InlineFunction.param_120)
-                     ())
-                  $InlineFunction.select_358)))
+               (cut $InlineFunction.param_120 $InlineFunction.select_358)))
          $InlineFunction.return_138)))

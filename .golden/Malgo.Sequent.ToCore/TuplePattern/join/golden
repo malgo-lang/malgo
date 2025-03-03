@@ -54,12 +54,7 @@
                                                                (cut
                                                                   (construct tuple () ())
                                                                   $TuplePattern.return_30)))))
-                                                      (cut
-                                                         (construct
-                                                            tuple
-                                                            ($TuplePattern.param_27)
-                                                            ())
-                                                         $TuplePattern.select_51))))
+                                                      (cut $TuplePattern.param_27 $TuplePattern.select_51))))
                                                 ($TuplePattern.return_29)))
                                              ($TuplePattern.apply_53
                                                 (apply
@@ -81,10 +76,5 @@
                                              (invoke B $TuplePattern.return_33)))))
                                  (invoke A $TuplePattern.return_32)))))
                         (invoke |> $TuplePattern.then_54))))))
-            (cut
-               (construct
-                  tuple
-                  ($TuplePattern.param_26)
-                  ())
-               $TuplePattern.select_55)))
+            (cut $TuplePattern.param_26 $TuplePattern.select_55)))
       $TuplePattern.return_28)))

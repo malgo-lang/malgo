@@ -13,12 +13,7 @@
                               (#HelloBoxed.x_1)
                               ($HelloBoxed.return_26))))
                         (invoke String# $HelloBoxed.apply_38))))))
-            (cut
-               (construct
-                  tuple
-                  ($HelloBoxed.param_21)
-                  ())
-               $HelloBoxed.select_39)))
+            (cut $HelloBoxed.param_21 $HelloBoxed.select_39)))
       $HelloBoxed.return_25))
    (putStrLn
       $HelloBoxed.return_27
@@ -57,12 +52,7 @@
                                           ($HelloBoxed.return_30))))
                                     (invoke malgo_newline $HelloBoxed.apply_40)))
                               $HelloBoxed.then_43))))))
-               (cut
-                  (construct
-                     tuple
-                     ($HelloBoxed.param_22)
-                     ())
-                  $HelloBoxed.select_44)))
+               (cut $HelloBoxed.param_22 $HelloBoxed.select_44)))
          $HelloBoxed.return_27))
    (main
       $HelloBoxed.return_31
@@ -91,10 +81,5 @@
                                                 (cut $HelloBoxed.outer_36 $HelloBoxed.apply_46)))))
                                     (invoke String# $HelloBoxed.apply_45)))))
                            (invoke putStrLn $HelloBoxed.then_47))))))
-               (cut
-                  (construct
-                     tuple
-                     ($HelloBoxed.param_24)
-                     ())
-                  $HelloBoxed.select_48)))
+               (cut $HelloBoxed.param_24 $HelloBoxed.select_48)))
          $HelloBoxed.return_31)))

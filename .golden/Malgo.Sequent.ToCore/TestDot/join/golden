@@ -30,12 +30,7 @@
                                              (cut $TestDot.outer_41 $TestDot.apply_59)))))
                                  (invoke addInt64# $TestDot.apply_58)))))
                         (invoke Int64# $TestDot.then_60))))))
-            (cut
-               (construct
-                  tuple
-                  ($TestDot.param_30)
-                  ())
-               $TestDot.select_61)))
+            (cut $TestDot.param_30 $TestDot.select_61)))
       $TestDot.return_32))
    (main
       $TestDot.return_35
@@ -100,10 +95,5 @@
                                                 (cut $TestDot.outer_49 $TestDot.apply_69)))))
                                     (invoke . $TestDot.then_68)))))
                            (invoke printInt64 $TestDot.then_70))))))
-               (cut
-                  (construct
-                     tuple
-                     ($TestDot.param_31)
-                     ())
-                  $TestDot.select_71)))
+               (cut $TestDot.param_31 $TestDot.select_71)))
          $TestDot.return_35)))

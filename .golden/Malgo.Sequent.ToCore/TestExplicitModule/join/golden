@@ -25,10 +25,5 @@
                                              (cut $TestExplicitModule.outer_11 $TestExplicitModule.apply_14)))))
                                  (invoke String# $TestExplicitModule.apply_13)))))
                         (invoke putStrLn $TestExplicitModule.then_15))))))
-            (cut
-               (construct
-                  tuple
-                  ($TestExplicitModule.param_7)
-                  ())
-               $TestExplicitModule.select_16)))
+            (cut $TestExplicitModule.param_7 $TestExplicitModule.select_16)))
       $TestExplicitModule.return_8)))

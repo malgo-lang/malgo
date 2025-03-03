@@ -22,12 +22,7 @@
                               ((construct tuple () ()))
                               ($Eventually.return_272))))
                         (cut #Eventually.work_12 $Eventually.apply_497))))))
-            (cut
-               (construct
-                  tuple
-                  ($Eventually.param_258)
-                  ())
-               $Eventually.select_498)))
+            (cut $Eventually.param_258 $Eventually.select_498)))
       $Eventually.return_271))
    (return
       $Eventually.return_273
@@ -41,12 +36,7 @@
                         ((bind #Eventually.__19)
                            (return #Eventually.x_20)))
                         (cut #Eventually.x_20 $Eventually.return_274)))))
-               (cut
-                  (construct
-                     tuple
-                     ($Eventually.param_259)
-                     ())
-                  $Eventually.select_499)))
+               (cut $Eventually.param_259 $Eventually.select_499)))
          $Eventually.return_273))
    (eventuallyBind
       $Eventually.return_275
@@ -104,12 +94,7 @@
                                                                               (cut $Eventually.outer_318 $Eventually.apply_503)))))
                                                                   (cut #Eventually.work_9 $Eventually.apply_501)))))
                                                          (invoke eventuallyBind $Eventually.then_504))))))
-                                             (cut
-                                                (construct
-                                                   tuple
-                                                   ($Eventually.param_262)
-                                                   ())
-                                                $Eventually.select_505))))
+                                             (cut $Eventually.param_262 $Eventually.select_505))))
                                        ($Eventually.return_277))))
                                  (invoke NotYetDone $Eventually.apply_506))))))
                      (cut
@@ -142,12 +127,7 @@
                         ((bind #Eventually.x_15)
                            (return #Eventually.__16)))
                         (cut #Eventually.x_15 $Eventually.return_284)))))
-               (cut
-                  (construct
-                     tuple
-                     ($Eventually.param_263)
-                     ())
-                  $Eventually.select_508)))
+               (cut $Eventually.param_263 $Eventually.select_508)))
          $Eventually.return_283))
    (comp
       $Eventually.return_285
@@ -199,12 +179,7 @@
                                                                                  (cut $Eventually.outer_416 $Eventually.apply_512)))))
                                                                      (invoke printString $Eventually.then_511)))))
                                                             (invoke Done $Eventually.then_513))))))
-                                                (cut
-                                                   (construct
-                                                      tuple
-                                                      ($Eventually.param_264)
-                                                      ())
-                                                   $Eventually.select_514))))
+                                                (cut $Eventually.param_264 $Eventually.select_514))))
                                           ($Eventually.return_295)))
                                        ($Eventually.return_295
                                           (then $Eventually.inner_335
@@ -265,12 +240,7 @@
                                                                                                                                                 (cut $Eventually.outer_404 $Eventually.apply_519)))))
                                                                                                                                     (invoke printString $Eventually.then_518)))))
                                                                                                                            (invoke Done $Eventually.then_520))))))
-                                                                                                               (cut
-                                                                                                                  (construct
-                                                                                                                     tuple
-                                                                                                                     ($Eventually.param_266)
-                                                                                                                     ())
-                                                                                                                  $Eventually.select_521))))
+                                                                                                               (cut $Eventually.param_266 $Eventually.select_521))))
                                                                                                          ($Eventually.return_290)))
                                                                                                       ($Eventually.return_290
                                                                                                          (then $Eventually.inner_387
@@ -313,12 +283,7 @@
                                                                                                                                                          (cut $Eventually.outer_392 $Eventually.apply_526)))))
                                                                                                                                                 (invoke eventually $Eventually.return_289)))))
                                                                                                                                        (invoke return $Eventually.then_527))))))
-                                                                                                                           (cut
-                                                                                                                              (construct
-                                                                                                                                 tuple
-                                                                                                                                 ($Eventually.param_267)
-                                                                                                                                 ())
-                                                                                                                              $Eventually.select_528))))
+                                                                                                                           (cut $Eventually.param_267 $Eventually.select_528))))
                                                                                                                      ($Eventually.return_286)))
                                                                                                                   ($Eventually.apply_530
                                                                                                                      (apply
@@ -333,12 +298,7 @@
                                                                                           (cut $Eventually.outer_372 $Eventually.apply_532)))))
                                                                                  (invoke eventually $Eventually.return_294)))))
                                                                         (invoke bind $Eventually.then_533))))))
-                                                            (cut
-                                                               (construct
-                                                                  tuple
-                                                                  ($Eventually.param_265)
-                                                                  ())
-                                                               $Eventually.select_534))))
+                                                            (cut $Eventually.param_265 $Eventually.select_534))))
                                                       ($Eventually.return_285)))
                                                    ($Eventually.apply_536
                                                       (apply
@@ -528,12 +488,7 @@
                                                                                                       (cut $Eventually.outer_456 $Eventually.apply_556)))))
                                                                                           (invoke String# $Eventually.apply_555)))))
                                                                                  (invoke printString $Eventually.then_557))))))
-                                                                     (cut
-                                                                        (construct
-                                                                           tuple
-                                                                           ($Eventually.param_270)
-                                                                           ())
-                                                                        $Eventually.select_558))))
+                                                                     (cut $Eventually.param_270 $Eventually.select_558))))
                                                                ($Eventually.return_305)))
                                                             ($Eventually.apply_560
                                                                (apply
@@ -543,10 +498,5 @@
                                              (invoke |> $Eventually.then_551)))))
                                     (invoke |> $Eventually.then_561)))
                               $Eventually.then_567))))))
-               (cut
-                  (construct
-                     tuple
-                     ($Eventually.param_268)
-                     ())
-                  $Eventually.select_568)))
+               (cut $Eventually.param_268 $Eventually.select_568)))
          $Eventually.return_300)))

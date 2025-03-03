@@ -44,12 +44,7 @@
                                              (cut $EvenOdd.outer_72 $EvenOdd.apply_96)))))
                                  (invoke subInt32 $EvenOdd.apply_95)))))
                         (invoke odd $EvenOdd.then_97))))))
-            (cut
-               (construct
-                  tuple
-                  ($EvenOdd.param_51)
-                  ())
-               $EvenOdd.select_98)))
+            (cut $EvenOdd.param_51 $EvenOdd.select_98)))
       $EvenOdd.return_55))
    (odd
       $EvenOdd.return_59
@@ -97,12 +92,7 @@
                                                 (cut $EvenOdd.outer_78 $EvenOdd.apply_103)))))
                                     (invoke subInt32 $EvenOdd.apply_102)))))
                            (invoke even $EvenOdd.then_104))))))
-               (cut
-                  (construct
-                     tuple
-                     ($EvenOdd.param_52)
-                     ())
-                  $EvenOdd.select_105)))
+               (cut $EvenOdd.param_52 $EvenOdd.select_105)))
          $EvenOdd.return_59))
    (main
       $EvenOdd.return_63
@@ -186,17 +176,7 @@
                                                                      (cut $EvenOdd.outer_84 $EvenOdd.apply_110)))))
                                                          (invoke String# $EvenOdd.apply_109)))))
                                                 (invoke putStrLn $EvenOdd.then_111))))))
-                                    (cut
-                                       (construct
-                                          tuple
-                                          ($EvenOdd.param_54)
-                                          ())
-                                       $EvenOdd.select_112)))
+                                    (cut $EvenOdd.param_54 $EvenOdd.select_112)))
                               $EvenOdd.then_117))))))
-               (cut
-                  (construct
-                     tuple
-                     ($EvenOdd.param_53)
-                     ())
-                  $EvenOdd.select_118)))
+               (cut $EvenOdd.param_53 $EvenOdd.select_118)))
          $EvenOdd.return_63)))

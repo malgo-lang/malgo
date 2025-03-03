@@ -4,10 +4,7 @@
       (lambda
          ($TestArithDouble.param_91 $TestArithDouble.return_106)
          (cut
-            (construct
-               tuple
-               ($TestArithDouble.param_91)
-               ())
+            $TestArithDouble.param_91
             (select
                (#TestArithDouble.x_9
                   (invoke String#
@@ -25,10 +22,7 @@
          (lambda
             ($TestArithDouble.param_92 $TestArithDouble.return_109)
             (cut
-               (construct
-                  tuple
-                  ($TestArithDouble.param_92)
-                  ())
+               $TestArithDouble.param_92
                (select
                   (#TestArithDouble.x_10
                      (cut
@@ -53,10 +47,7 @@
          (lambda
             ($TestArithDouble.param_94 $TestArithDouble.return_114)
             (cut
-               (construct
-                  tuple
-                  ($TestArithDouble.param_94)
-                  ())
+               $TestArithDouble.param_94
                (select
                   (#TestArithDouble.x_0
                      (invoke subDouble#
@@ -168,10 +159,7 @@
          (lambda
             ($TestArithDouble.param_103 $TestArithDouble.return_128)
             (cut
-               (construct
-                  tuple
-                  ($TestArithDouble.param_103)
-                  ())
+               $TestArithDouble.param_103
                (select
                   (#TestArithDouble.x_11
                      (invoke *
@@ -193,10 +181,7 @@
          (lambda
             ($TestArithDouble.param_104 $TestArithDouble.return_131)
             (cut
-               (construct
-                  tuple
-                  ($TestArithDouble.param_104)
-                  ())
+               $TestArithDouble.param_104
                (select
                   (#TestArithDouble.$__90
                      (invoke putStrLn

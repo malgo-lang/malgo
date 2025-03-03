@@ -121,12 +121,7 @@
                                                                                                                      (cut $TestLet.outer_67 $TestLet.apply_80)))))
                                                                                                          (invoke toStringInt32# $TestLet.apply_79)))))
                                                                                                 (invoke printString# $TestLet.then_81))))))
-                                                                                    (cut
-                                                                                       (construct
-                                                                                          tuple
-                                                                                          ($TestLet.param_53)
-                                                                                          ())
-                                                                                       $TestLet.select_82)))
+                                                                                    (cut $TestLet.param_53 $TestLet.select_82)))
                                                                               $TestLet.then_84))))
                                                                      ($TestLet.apply_86
                                                                         (apply
@@ -145,10 +140,5 @@
                                     (1_i32)
                                     ($TestLet.apply_94))))
                            (invoke addInt32# $TestLet.apply_95))))))
-               (cut
-                  (construct
-                     tuple
-                     ($TestLet.param_51)
-                     ())
-                  $TestLet.select_96)))
+               (cut $TestLet.param_51 $TestLet.select_96)))
          $TestLet.return_57)))

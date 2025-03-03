@@ -27,10 +27,7 @@
          (lambda
             ($Test0.param_52 $Test0.return_60)
             (cut
-               (construct
-                  tuple
-                  ($Test0.param_52)
-                  ())
+               $Test0.param_52
                (select
                   (#Test0.$__41
                      (invoke |>
@@ -44,10 +41,7 @@
                               ((lambda
                                  ($Test0.param_53 $Test0.return_61)
                                  (cut
-                                    (construct
-                                       tuple
-                                       ($Test0.param_53)
-                                       ())
+                                    $Test0.param_53
                                     (select
                                        ((Int64#
                                           (#Test0.i_6))

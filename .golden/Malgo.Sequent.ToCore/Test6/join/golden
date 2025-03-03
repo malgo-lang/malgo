@@ -15,12 +15,7 @@
                               ((construct tuple () ()))
                               ($Test6.return_34))))
                         (invoke malgo_exit_failure $Test6.apply_46))))))
-            (cut
-               (construct
-                  tuple
-                  ($Test6.param_30)
-                  ())
-               $Test6.select_47)))
+            (cut $Test6.param_30 $Test6.select_47)))
       $Test6.return_33))
    (main
       $Test6.return_35
@@ -76,17 +71,7 @@
                                                       ("WRONG")
                                                       ($Test6.return_39))))
                                                 (invoke malgo_print_string $Test6.apply_49))))))
-                                    (cut
-                                       (construct
-                                          tuple
-                                          ($Test6.param_32)
-                                          ())
-                                       $Test6.select_50)))
+                                    (cut $Test6.param_32 $Test6.select_50)))
                               $Test6.then_54))))))
-               (cut
-                  (construct
-                     tuple
-                     ($Test6.param_31)
-                     ())
-                  $Test6.select_55)))
+               (cut $Test6.param_31 $Test6.select_55)))
          $Test6.return_35)))

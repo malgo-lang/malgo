@@ -2,15 +2,13 @@
    (lambda
       ($NestedMatch.param_30)
       (select
-         (tuple
-            ($NestedMatch.param_30))
+         $NestedMatch.param_30
          ((#NestedMatch.$__29
             (apply
                (lambda
                   ($NestedMatch.param_31)
                   (select
-                     (tuple
-                        ($NestedMatch.param_31))
+                     $NestedMatch.param_31
                      (((True ())
                         (apply
                            (invoke malgo_print_string)
@@ -23,8 +21,7 @@
                   (lambda
                      ($NestedMatch.param_32)
                      (select
-                        (tuple
-                           ($NestedMatch.param_32))
+                        $NestedMatch.param_32
                         (((True1 ())
                            (invoke False))
                            ((False1 ())
@@ -33,8 +30,7 @@
                      (lambda
                         ($NestedMatch.param_33)
                         (select
-                           (tuple
-                              ($NestedMatch.param_33))
+                           $NestedMatch.param_33
                            (((True2 ())
                               (invoke False1))
                               ((False2 ())

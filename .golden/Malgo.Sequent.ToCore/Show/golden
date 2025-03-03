@@ -7,10 +7,7 @@
                (lambda
                   ($Show.param_113 $Show.return_125)
                   (cut
-                     (construct
-                        tuple
-                        ($Show.param_113)
-                        ())
+                     $Show.param_113
                      (select
                         (#Show.x_3
                            (invoke toStringInt32
@@ -25,10 +22,7 @@
          (lambda
             ($Show.param_114 $Show.return_127)
             (cut
-               (construct
-                  tuple
-                  ($Show.param_114)
-                  ())
+               $Show.param_114
                (select
                   ((expand
                      ((show #Show.show_5)))
@@ -109,10 +103,7 @@
                                        (lambda
                                           ($Show.param_121 $Show.return_139)
                                           (cut
-                                             (construct
-                                                tuple
-                                                ($Show.param_121)
-                                                ())
+                                             $Show.param_121
                                              (select
                                                 ((tuple
                                                    (#Show.a_10 #Show.b_11))
@@ -174,10 +165,7 @@
          (lambda
             ($Show.param_122 $Show.return_149)
             (cut
-               (construct
-                  tuple
-                  ($Show.param_122)
-                  ())
+               $Show.param_122
                (select
                   (#Show.$__112
                      (invoke print

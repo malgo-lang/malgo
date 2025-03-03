@@ -43,18 +43,8 @@
                                              (select
                                                 (#TypeAnnotation.x_0
                                                    (cut #TypeAnnotation.x_0 $TypeAnnotation.return_18)))))
-                                          (cut
-                                             (construct
-                                                tuple
-                                                ($TypeAnnotation.param_13)
-                                                ())
-                                             $TypeAnnotation.select_25)))
+                                          (cut $TypeAnnotation.param_13 $TypeAnnotation.select_25)))
                                     $TypeAnnotation.then_28)))))
                         (invoke printString $TypeAnnotation.then_30))))))
-            (cut
-               (construct
-                  tuple
-                  ($TypeAnnotation.param_12)
-                  ())
-               $TypeAnnotation.select_31)))
+            (cut $TypeAnnotation.param_12 $TypeAnnotation.select_31)))
       $TypeAnnotation.return_14)))

@@ -71,12 +71,7 @@
                                                                            ("False")
                                                                            ($Test1.return_51))))
                                                                      (invoke malgo_print_string $Test1.apply_61))))))
-                                                         (cut
-                                                            (construct
-                                                               tuple
-                                                               ($Test1.param_44)
-                                                               ())
-                                                            $Test1.select_62))))
+                                                         (cut $Test1.param_44 $Test1.select_62))))
                                                    ($Test1.return_50)))
                                                 ($Test1.apply_64
                                                    (apply
@@ -92,12 +87,7 @@
                                                                               ("True")
                                                                               ($Test1.return_52))))
                                                                         (invoke malgo_print_string $Test1.apply_59))))))
-                                                            (cut
-                                                               (construct
-                                                                  tuple
-                                                                  ($Test1.param_43)
-                                                                  ())
-                                                               $Test1.select_60))))
+                                                            (cut $Test1.param_43 $Test1.select_60))))
                                                       ($Test1.apply_63)))
                                                 ($Test1.apply_65
                                                    (apply
@@ -106,10 +96,5 @@
                                              (cut $Test1.outer_54 $Test1.apply_65)))))
                                     (invoke True $Test1.return_53)))))
                            (invoke if $Test1.then_66))))))
-               (cut
-                  (construct
-                     tuple
-                     ($Test1.param_42)
-                     ())
-                  $Test1.select_67)))
+               (cut $Test1.param_42 $Test1.select_67)))
          $Test1.return_49)))

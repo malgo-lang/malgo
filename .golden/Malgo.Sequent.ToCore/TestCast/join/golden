@@ -81,10 +81,5 @@
                                              (cut $TestCast.outer_65 $TestCast.apply_108)))))
                                  (invoke malgo_unsafe_cast $TestCast.then_107)))))
                         (invoke printInt32 $TestCast.then_109))))))
-            (cut
-               (construct
-                  tuple
-                  ($TestCast.param_27)
-                  ())
-               $TestCast.select_110)))
+            (cut $TestCast.param_27 $TestCast.select_110)))
       $TestCast.return_28)))

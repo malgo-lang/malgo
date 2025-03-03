@@ -4,10 +4,7 @@
       (lambda
          ($Echo.param_9 $Echo.return_11)
          (cut
-            (construct
-               tuple
-               ($Echo.param_9)
-               ())
+            $Echo.param_9
             (select
                (#Echo.$__8
                   (invoke putStr

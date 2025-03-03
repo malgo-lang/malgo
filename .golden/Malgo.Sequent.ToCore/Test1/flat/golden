@@ -42,10 +42,7 @@
          (lambda
             ($Test1.param_42 $Test1.return_50)
             (cut
-               (construct
-                  tuple
-                  ($Test1.param_42)
-                  ())
+               $Test1.param_42
                (select
                   (#Test1.$__38
                      (invoke if
@@ -62,10 +59,7 @@
                                           ((lambda
                                              ($Test1.param_43 $Test1.return_52)
                                              (cut
-                                                (construct
-                                                   tuple
-                                                   ($Test1.param_43)
-                                                   ())
+                                                $Test1.param_43
                                                 (select
                                                    (#Test1.$__30
                                                       (invoke malgo_print_string
@@ -76,10 +70,7 @@
                                              ((lambda
                                                 ($Test1.param_44 $Test1.return_51)
                                                 (cut
-                                                   (construct
-                                                      tuple
-                                                      ($Test1.param_44)
-                                                      ())
+                                                   $Test1.param_44
                                                    (select
                                                       (#Test1.$__35
                                                          (invoke malgo_print_string

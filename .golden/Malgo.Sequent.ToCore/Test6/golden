@@ -4,10 +4,7 @@
       (lambda
          ($Test6.param_30 $Test6.return_34)
          (cut
-            (construct
-               tuple
-               ($Test6.param_30)
-               ())
+            $Test6.param_30
             (select
                ((R ())
                   (invoke B $Test6.return_34))
@@ -23,20 +20,14 @@
          (lambda
             ($Test6.param_31 $Test6.return_36)
             (cut
-               (construct
-                  tuple
-                  ($Test6.param_31)
-                  ())
+               $Test6.param_31
                (select
                   (#Test6.$__29
                      (cut
                         (lambda
                            ($Test6.param_32 $Test6.return_39)
                            (cut
-                              (construct
-                                 tuple
-                                 ($Test6.param_32)
-                                 ())
+                              $Test6.param_32
                               (select
                                  ((B ())
                                     (invoke malgo_print_string

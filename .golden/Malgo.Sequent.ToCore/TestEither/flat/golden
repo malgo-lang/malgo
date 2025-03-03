@@ -4,10 +4,7 @@
       (lambda
          ($TestEither.param_249 $TestEither.return_262)
          (cut
-            (construct
-               tuple
-               ($TestEither.param_249)
-               ())
+            $TestEither.param_249
             (select
                (#TestEither.x_2
                   (cut #TestEither.x_2 $TestEither.return_262)))))
@@ -51,10 +48,7 @@
          (lambda
             ($TestEither.param_252 $TestEither.return_267)
             (cut
-               (construct
-                  tuple
-                  ($TestEither.param_252)
-                  ())
+               $TestEither.param_252
                (select
                   (#TestEither.$__248
                      (cut
@@ -96,10 +90,7 @@
                                                                                           ((lambda
                                                                                              ($TestEither.param_258 $TestEither.return_300)
                                                                                              (cut
-                                                                                                (construct
-                                                                                                   tuple
-                                                                                                   ($TestEither.param_258)
-                                                                                                   ())
+                                                                                                $TestEither.param_258
                                                                                                 (select
                                                                                                    (#TestEither.__12
                                                                                                       (invoke Left
@@ -136,10 +127,7 @@
                                                                                              ((lambda
                                                                                                 ($TestEither.param_259 $TestEither.return_295)
                                                                                                 (cut
-                                                                                                   (construct
-                                                                                                      tuple
-                                                                                                      ($TestEither.param_259)
-                                                                                                      ())
+                                                                                                   $TestEither.param_259
                                                                                                    (select
                                                                                                       (#TestEither.x_13
                                                                                                          (invoke Right
@@ -184,10 +172,7 @@
                                                                            ((lambda
                                                                               ($TestEither.param_260 $TestEither.return_289)
                                                                               (cut
-                                                                                 (construct
-                                                                                    tuple
-                                                                                    ($TestEither.param_260)
-                                                                                    ())
+                                                                                 $TestEither.param_260
                                                                                  (select
                                                                                     ((Left
                                                                                        (#TestEither.err_14))
@@ -248,10 +233,7 @@
                                                                                     ((lambda
                                                                                        ($TestEither.param_256 $TestEither.return_285)
                                                                                        (cut
-                                                                                          (construct
-                                                                                             tuple
-                                                                                             ($TestEither.param_256)
-                                                                                             ())
+                                                                                          $TestEither.param_256
                                                                                           (select
                                                                                              (#TestEither.x_10
                                                                                                 (invoke Right
@@ -300,10 +282,7 @@
                                                                                        ((lambda
                                                                                           ($TestEither.param_257 $TestEither.return_277)
                                                                                           (cut
-                                                                                             (construct
-                                                                                                tuple
-                                                                                                ($TestEither.param_257)
-                                                                                                ())
+                                                                                             $TestEither.param_257
                                                                                              (select
                                                                                                 (#TestEither.y_11
                                                                                                    (invoke |>
@@ -400,10 +379,7 @@
                                                    ((lambda
                                                       ($TestEither.param_254 $TestEither.return_269)
                                                       (cut
-                                                         (construct
-                                                            tuple
-                                                            ($TestEither.param_254)
-                                                            ())
+                                                         $TestEither.param_254
                                                          (select
                                                             ((Right
                                                                (#TestEither.x_7))

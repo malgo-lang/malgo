@@ -4,10 +4,7 @@
       (lambda
          ($Primitive.param_11 $Primitive.return_13)
          (cut
-            (construct
-               tuple
-               ($Primitive.param_11)
-               ())
+            $Primitive.param_11
             (select
                (#Primitive.$__10
                   (invoke printString#

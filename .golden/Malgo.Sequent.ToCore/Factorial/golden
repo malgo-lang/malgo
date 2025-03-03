@@ -103,10 +103,7 @@
                                     ((lambda
                                        ($Factorial.param_106 $Factorial.return_126)
                                        (cut
-                                          (construct
-                                             tuple
-                                             ($Factorial.param_106)
-                                             ())
+                                          $Factorial.param_106
                                           (select
                                              (#Factorial.$__57
                                                 (cut #Factorial.acc_8 $Factorial.return_126))))))
@@ -114,10 +111,7 @@
                                        ((lambda
                                           ($Factorial.param_107 $Factorial.return_122)
                                           (cut
-                                             (construct
-                                                tuple
-                                                ($Factorial.param_107)
-                                                ())
+                                             $Factorial.param_107
                                              (select
                                                 (#Factorial.$__70
                                                    (invoke factAcc
@@ -151,10 +145,7 @@
          (lambda
             ($Factorial.param_108 $Factorial.return_130)
             (cut
-               (construct
-                  tuple
-                  ($Factorial.param_108)
-                  ())
+               $Factorial.param_108
                (select
                   (#Factorial.n_6
                      (invoke factAcc
@@ -174,10 +165,7 @@
          (lambda
             ($Factorial.param_109 $Factorial.return_133)
             (cut
-               (construct
-                  tuple
-                  ($Factorial.param_109)
-                  ())
+               $Factorial.param_109
                (select
                   (#Factorial.$__97
                      (invoke |>

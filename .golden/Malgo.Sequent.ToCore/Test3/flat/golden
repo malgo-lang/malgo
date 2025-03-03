@@ -27,10 +27,7 @@
          (lambda
             ($Test3.param_68 $Test3.return_74)
             (cut
-               (construct
-                  tuple
-                  ($Test3.param_68)
-                  ())
+               $Test3.param_68
                (select
                   (#Test3.$__65
                      (invoke |>
@@ -85,10 +82,7 @@
                                           ((lambda
                                              ($Test3.param_69 $Test3.return_75)
                                              (cut
-                                                (construct
-                                                   tuple
-                                                   ($Test3.param_69)
-                                                   ())
+                                                $Test3.param_69
                                                 (select
                                                    ((Cons
                                                       ((A ())

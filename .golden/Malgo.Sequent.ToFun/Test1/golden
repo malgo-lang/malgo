@@ -26,8 +26,7 @@
       (lambda
          ($Test1.param_42)
          (select
-            (tuple
-               ($Test1.param_42))
+            $Test1.param_42
             ((#Test1.$__38
                (apply
                   (apply
@@ -37,8 +36,7 @@
                      ((lambda
                         ($Test1.param_43)
                         (select
-                           (tuple
-                              ($Test1.param_43))
+                           $Test1.param_43
                            ((#Test1.$__30
                               (apply
                                  (invoke malgo_print_string)
@@ -46,8 +44,7 @@
                   ((lambda
                      ($Test1.param_44)
                      (select
-                        (tuple
-                           ($Test1.param_44))
+                        $Test1.param_44
                         ((#Test1.$__35
                            (apply
                               (invoke malgo_print_string)
