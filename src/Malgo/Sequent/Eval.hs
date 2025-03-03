@@ -15,9 +15,9 @@ import Malgo.Sequent.Fun (Literal, Name, Pattern (..), Tag (..))
 data Value where
   Immediate :: Literal -> Value
   Struct :: Tag -> [Value] -> Value
-  Function :: Env -> [Name] -> Statement Zero -> Value
-  Record :: Env -> Map Text (Name, Statement Zero) -> Value
-  Consumer :: Env -> Consumer Zero -> Value
+  Function :: Env -> [Name] -> Statement Flat -> Value
+  Record :: Env -> Map Text (Name, Statement Flat) -> Value
+  Consumer :: Env -> Consumer Flat -> Value
 
 deriving stock instance Show Value
 
@@ -30,7 +30,7 @@ data EvalError
   | NoMatch Range Value
   deriving stock (Show)
 
-type Toplevels = Map Name (Name, Statement Zero)
+type Toplevels = Map Name (Name, Statement Flat)
 
 data Env = Env
   { parent :: Maybe Env,
@@ -54,7 +54,7 @@ lookupEnv range name = do
     Just value -> pure value
     Nothing -> throwError (UndefinedVariable range name)
 
-lookupToplevel :: (Reader Toplevels :> es, Error EvalError :> es) => Range -> Name -> Eff es (Name, Statement Zero)
+lookupToplevel :: (Reader Toplevels :> es, Error EvalError :> es) => Range -> Name -> Eff es (Name, Statement Flat)
 lookupToplevel range name = do
   toplevels <- ask @Toplevels
   case Map.lookup name toplevels of
@@ -64,7 +64,7 @@ lookupToplevel range name = do
 class Eval t v where
   eval :: t -> v
 
-instance (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es) => Eval (Statement Zero) (Eff es Value) where
+instance (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es) => Eval (Statement Flat) (Eff es Value) where
   eval (Cut producer consumer) = do
     producer <- eval producer
     eval consumer (producer :: Value)
@@ -84,7 +84,7 @@ instance (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es) => Ev
     local (extendEnv return consumer) do
       eval statement
 
-instance (Error EvalError :> es, Reader Env :> es) => Eval (Producer Zero) (Eff es Value) where
+instance (Error EvalError :> es, Reader Env :> es) => Eval (Producer Flat) (Eff es Value) where
   eval (Var range name) = lookupEnv range name
   eval (Literal _ literal) = pure $ Immediate literal
   eval (Construct _ tag producers consumers) = do
@@ -98,7 +98,7 @@ instance (Error EvalError :> es, Reader Env :> es) => Eval (Producer Zero) (Eff 
     env <- ask @Env
     pure $ Record env fields
 
-instance (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es) => Eval (Consumer Zero) (Value -> Eff es Value) where
+instance (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es) => Eval (Consumer Flat) (Value -> Eff es Value) where
   eval (Label range label) given = do
     covalue <- lookupEnv range label
     case covalue of
@@ -154,7 +154,7 @@ match (Expand range patterns) (Record _ fields) = do
   pure $ foldr (liftA2 (<>)) (Just []) pairs
 match _ _ = pure Nothing
 
-instance (Reader Env :> es) => Eval (Consumer Zero) (Eff es Value) where
+instance (Reader Env :> es) => Eval (Consumer Flat) (Eff es Value) where
   eval consumer = do
     env <- ask @Env
     pure $ Consumer env consumer

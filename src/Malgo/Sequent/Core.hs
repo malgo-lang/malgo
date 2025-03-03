@@ -33,7 +33,7 @@ deriving stock instance (Show (Return x)) => Show (Program x)
 instance (ToSExpr (Return x)) => ToSExpr (Program x) where
   toSExpr (Program defs) = S.L $ map (\(_, name, return, body) -> toSExpr (name, return, body)) defs
 
-type data Rank = Zero | One
+type data Rank = Flat | Full
 
 data Producer (x :: Rank) where
   Var :: Range -> Name -> Producer x
@@ -41,13 +41,13 @@ data Producer (x :: Rank) where
   Construct :: Range -> Tag -> [Producer x] -> [Return x] -> Producer x
   Lambda :: Range -> [Name] -> Statement x -> Producer x
   Object :: Range -> Map Text (Name, Statement x) -> Producer x
-  Do :: Range -> Name -> Statement One -> Producer One
+  Do :: Range -> Name -> Statement Full -> Producer Full
 
 deriving stock instance (Show (Return x)) => Show (Producer x)
 
 type family Return (x :: Rank) where
-  Return Zero = Consumer Zero
-  Return One = Consumer One
+  Return Flat = Consumer Flat
+  Return Full = Consumer Full
 
 instance (ToSExpr (Return x)) => ToSExpr (Producer x) where
   toSExpr (Var _ name) = toSExpr name
@@ -78,7 +78,7 @@ instance (ToSExpr (Return x)) => ToSExpr (Consumer x) where
 
 data Statement x where
   Cut :: Producer x -> Consumer x -> Statement x
-  CutDo :: Range -> Name -> Statement Zero -> Consumer Zero -> Statement Zero
+  CutDo :: Range -> Name -> Statement Flat -> Consumer Flat -> Statement Flat
   Primitive :: Range -> Text -> [Producer x] -> Return x -> Statement x
   Invoke :: Range -> Name -> Return x -> Statement x
 
@@ -103,22 +103,22 @@ instance (ToSExpr (Return x)) => ToSExpr (Branch x) where
   toSExpr (Branch _ pattern statement) = S.L [toSExpr pattern, toSExpr statement]
 
 -- | Flattens a program into a program with no nested do expressions.
-flatProgram :: (State Uniq :> es, Reader ModuleName :> es) => Program One -> Eff es (Program Zero)
+flatProgram :: (State Uniq :> es, Reader ModuleName :> es) => Program Full -> Eff es (Program Flat)
 flatProgram Program {definitions} = Program <$> traverse flatDefinition definitions
 
-flatDefinition :: (State Uniq :> es, Reader ModuleName :> es) => (t1, t2, t3, Statement One) -> Eff es (t1, t2, t3, Statement Zero)
+flatDefinition :: (State Uniq :> es, Reader ModuleName :> es) => (t1, t2, t3, Statement Full) -> Eff es (t1, t2, t3, Statement Flat)
 flatDefinition (range, name, return, statement) = (range,name,return,) <$> flatStatement statement
 
 -- | Wip is a temporary data structure to represent the intermediate state of the flattening process.
 data Wip
-  = Do' Range Name (Statement Zero)
-  | Zero (Producer Zero)
+  = Do' Range Name (Statement Flat)
+  | Zero (Producer Flat)
 
-cut :: Wip -> Consumer Zero -> Statement Zero
+cut :: Wip -> Consumer Flat -> Statement Flat
 cut (Do' range name statement) consumer = CutDo range name statement consumer
 cut (Zero producer) consumer = Cut producer consumer
 
-flatStatement :: (State Uniq :> es, Reader ModuleName :> es) => Statement One -> Eff es (Statement Zero)
+flatStatement :: (State Uniq :> es, Reader ModuleName :> es) => Statement Full -> Eff es (Statement Flat)
 flatStatement (Cut producer consumer) = do
   producer <- flatProducer producer
   consumer <- flatConsumer consumer
@@ -148,7 +148,7 @@ flatStatement (Invoke range name consumer) = do
   consumer' <- flatConsumer consumer
   pure $ Invoke range name consumer'
 
-flatProducer :: (State Uniq :> es, Reader ModuleName :> es) => Producer One -> Eff es Wip
+flatProducer :: (State Uniq :> es, Reader ModuleName :> es) => Producer Full -> Eff es Wip
 flatProducer (Var range name) = pure $ Zero (Var range name)
 flatProducer (Literal range literal) = pure $ Zero (Literal range literal)
 flatProducer (Construct range tag producers consumers) = do
@@ -183,7 +183,7 @@ flatProducer (Do range name statement) = do
   statement' <- flatStatement statement
   pure $ Do' range name statement'
 
-flatConsumer :: (State Uniq :> es, Reader ModuleName :> es) => Consumer One -> Eff es (Consumer Zero)
+flatConsumer :: (State Uniq :> es, Reader ModuleName :> es) => Consumer Full -> Eff es (Consumer Flat)
 flatConsumer (Label range name) = pure $ Label range name
 flatConsumer (Apply range producers consumers) = do
   (zeros, mproducer, rest) <- split producers
@@ -218,15 +218,15 @@ flatConsumer (Select range branches) = do
   branches <- traverse flatBranch branches
   pure $ Select range branches
 
-flatBranch :: (State Uniq :> es, Reader ModuleName :> es) => Branch One -> Eff es (Branch Zero)
+flatBranch :: (State Uniq :> es, Reader ModuleName :> es) => Branch Full -> Eff es (Branch Flat)
 flatBranch (Branch range pattern statement) = do
   statement <- flatStatement statement
   pure $ Branch range pattern statement
 
-split :: (State Uniq :> es, Reader ModuleName :> es) => [Producer One] -> Eff es ([Producer One], Maybe (Producer One), [Producer One])
+split :: (State Uniq :> es, Reader ModuleName :> es) => [Producer Full] -> Eff es ([Producer Full], Maybe (Producer Full), [Producer Full])
 split producers = aux [] producers
   where
-    aux :: (State Uniq :> es, Reader ModuleName :> es) => [Producer One] -> [Producer One] -> Eff es ([Producer One], Maybe (Producer One), [Producer One])
+    aux :: (State Uniq :> es, Reader ModuleName :> es) => [Producer Full] -> [Producer Full] -> Eff es ([Producer Full], Maybe (Producer Full), [Producer Full])
     aux acc [] = pure (reverse acc, Nothing, [])
     aux acc (p : ps) = do
       p' <- flatProducer p
