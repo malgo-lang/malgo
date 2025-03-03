@@ -47,10 +47,10 @@ flatStatement (Primitive range name producers consumer) = do
       var <- newTemporalId "var"
       producer' <- flatProducer producer
       primitive <- flatStatement (Primitive range name (zeros <> [Var range var] <> rest) consumer)
-      pure $
-        cut producer' $
-          Then range var $
-            primitive
+      pure
+        $ cut producer'
+        $ Then range var
+        $ primitive
     Nothing -> do
       producers' <- for zeros \zero -> do
         zero' <- flatProducer zero
@@ -74,12 +74,12 @@ flatProducer (Construct range tag producers consumers) = do
       var <- newTemporalId "var"
       constructor <- flatProducer (Construct range tag (zeros <> [Var range var] <> rest) consumers)
       producer' <- flatProducer producer
-      pure $
-        Do' range label $
-          cut producer' $
-            Then range var $
-              cut constructor $
-                Label range label
+      pure
+        $ Do' range label
+        $ cut producer'
+        $ Then range var
+        $ cut constructor
+        $ Label range label
     Nothing -> do
       producers' <- for zeros \zero -> do
         zero' <- flatProducer zero
@@ -108,12 +108,12 @@ flatConsumer (Apply range producers consumers) = do
       inner <- newTemporalId "inner"
       apply <- flatConsumer (Apply range (zeros <> [Var range inner] <> rest) consumers)
       producer' <- flatProducer producer
-      pure $
-        Then range outer $
-          cut producer' $
-            Then range inner $
-              cut (Zero (Var range outer)) $
-                apply
+      pure
+        $ Then range outer
+        $ cut producer'
+        $ Then range inner
+        $ cut (Zero (Var range outer))
+        $ apply
     Nothing -> do
       producers' <- for zeros \zero -> do
         zero' <- flatProducer zero
