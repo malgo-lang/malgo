@@ -4,13 +4,13 @@
       (lambda
          ($Test2.param_23 $Test2.return_27)
          (join
-            (($Test2.select_39
+            (($Test2.select_37
                (select
                   ((R ())
                      (invoke B $Test2.return_27))
                   (#Test2.a_0
                      (cut #Test2.a_0 $Test2.return_27)))))
-            (cut $Test2.param_23 $Test2.select_39)))
+            (cut $Test2.param_23 $Test2.select_37)))
       $Test2.return_26))
    (main
       $Test2.return_28
@@ -18,55 +18,55 @@
          (lambda
             ($Test2.param_24 $Test2.return_29)
             (join
-               (($Test2.select_47
+               (($Test2.select_45
                   (select
                      (#Test2.$__22
                         (join
-                           (($Test2.then_46
-                              (then $Test2.outer_35
+                           (($Test2.then_44
+                              (then $Test2.outer_33
                                  (join
-                                    (($Test2.then_44
-                                       (then $Test2.outer_37
+                                    (($Test2.then_42
+                                       (then $Test2.outer_35
                                           (join
                                              (($Test2.return_31
-                                                (then $Test2.inner_38
+                                                (then $Test2.inner_36
                                                    (join
-                                                      (($Test2.apply_43
+                                                      (($Test2.apply_41
                                                          (apply
-                                                            ($Test2.inner_38)
+                                                            ($Test2.inner_36)
                                                             ($Test2.return_30))))
-                                                      (cut $Test2.outer_37 $Test2.apply_43)))))
+                                                      (cut $Test2.outer_35 $Test2.apply_41)))))
                                              (invoke R $Test2.return_31))))
                                        ($Test2.return_30
-                                          (then $Test2.inner_36
+                                          (then $Test2.inner_34
                                              (join
-                                                (($Test2.apply_45
+                                                (($Test2.apply_43
                                                    (apply
-                                                      ($Test2.inner_36)
+                                                      ($Test2.inner_34)
                                                       ($Test2.return_29))))
-                                                (cut $Test2.outer_35 $Test2.apply_45)))))
-                                    (invoke rtob $Test2.then_44)))))
+                                                (cut $Test2.outer_33 $Test2.apply_43)))))
+                                    (invoke rtob $Test2.then_42)))))
                            (cut
                               (lambda
                                  ($Test2.param_25 $Test2.return_32)
                                  (join
-                                    (($Test2.select_42
+                                    (($Test2.select_40
                                        (select
                                           ((B ())
                                              (join
-                                                (($Test2.apply_40
+                                                (($Test2.apply_38
                                                    (apply
                                                       ("OK")
                                                       ($Test2.return_32))))
-                                                (invoke malgo_print_string $Test2.apply_40)))
+                                                (invoke malgo_print_string $Test2.apply_38)))
                                           (#Test2.__1
                                              (join
-                                                (($Test2.apply_41
+                                                (($Test2.apply_39
                                                    (apply
                                                       ("WRONG")
                                                       ($Test2.return_32))))
-                                                (invoke malgo_print_string $Test2.apply_41))))))
-                                    (cut $Test2.param_25 $Test2.select_42)))
-                              $Test2.then_46))))))
-               (cut $Test2.param_24 $Test2.select_47)))
+                                                (invoke malgo_print_string $Test2.apply_39))))))
+                                    (cut $Test2.param_25 $Test2.select_40)))
+                              $Test2.then_44))))))
+               (cut $Test2.param_24 $Test2.select_45)))
          $Test2.return_28)))

@@ -4,28 +4,28 @@
       (lambda
          ($TestArithDouble.param_91 $TestArithDouble.return_106)
          (join
-            (($TestArithDouble.select_153
+            (($TestArithDouble.select_149
                (select
                   (#TestArithDouble.x_9
                      (join
-                        (($TestArithDouble.then_152
+                        (($TestArithDouble.then_148
                            (then $TestArithDouble.outer_134
                               (join
-                                 (($TestArithDouble.apply_150
+                                 (($TestArithDouble.apply_146
                                     (apply
                                        (#TestArithDouble.x_9)
                                        ($TestArithDouble.return_107)))
                                     ($TestArithDouble.return_107
                                        (then $TestArithDouble.inner_135
                                           (join
-                                             (($TestArithDouble.apply_151
+                                             (($TestArithDouble.apply_147
                                                 (apply
                                                    ($TestArithDouble.inner_135)
                                                    ($TestArithDouble.return_106))))
-                                             (cut $TestArithDouble.outer_134 $TestArithDouble.apply_151)))))
-                                 (invoke toStringDouble# $TestArithDouble.apply_150)))))
-                        (invoke String# $TestArithDouble.then_152))))))
-            (cut $TestArithDouble.param_91 $TestArithDouble.select_153)))
+                                             (cut $TestArithDouble.outer_134 $TestArithDouble.apply_147)))))
+                                 (invoke toStringDouble# $TestArithDouble.apply_146)))))
+                        (invoke String# $TestArithDouble.then_148))))))
+            (cut $TestArithDouble.param_91 $TestArithDouble.select_149)))
       $TestArithDouble.return_105))
    (traceShowId
       $TestArithDouble.return_108
@@ -33,44 +33,44 @@
          (lambda
             ($TestArithDouble.param_92 $TestArithDouble.return_109)
             (join
-               (($TestArithDouble.select_159
+               (($TestArithDouble.select_155
                   (select
                      (#TestArithDouble.x_10
                         (join
-                           (($TestArithDouble.then_158
-                              (then $TestArithDouble.outer_138
+                           (($TestArithDouble.then_154
+                              (then $TestArithDouble.outer_136
                                  (join
-                                    (($TestArithDouble.then_156
-                                       (then $TestArithDouble.outer_140
+                                    (($TestArithDouble.then_152
+                                       (then $TestArithDouble.outer_138
                                           (join
-                                             (($TestArithDouble.apply_154
+                                             (($TestArithDouble.apply_150
                                                 (apply
                                                    (#TestArithDouble.x_10)
                                                    ($TestArithDouble.return_111)))
                                                 ($TestArithDouble.return_111
-                                                   (then $TestArithDouble.inner_141
+                                                   (then $TestArithDouble.inner_139
                                                       (join
-                                                         (($TestArithDouble.apply_155
+                                                         (($TestArithDouble.apply_151
                                                             (apply
-                                                               ($TestArithDouble.inner_141)
+                                                               ($TestArithDouble.inner_139)
                                                                ($TestArithDouble.return_110))))
-                                                         (cut $TestArithDouble.outer_140 $TestArithDouble.apply_155)))))
-                                             (invoke show $TestArithDouble.apply_154))))
+                                                         (cut $TestArithDouble.outer_138 $TestArithDouble.apply_151)))))
+                                             (invoke show $TestArithDouble.apply_150))))
                                        ($TestArithDouble.return_110
-                                          (then $TestArithDouble.inner_139
+                                          (then $TestArithDouble.inner_137
                                              (join
-                                                (($TestArithDouble.apply_157
+                                                (($TestArithDouble.apply_153
                                                    (apply
-                                                      ($TestArithDouble.inner_139)
+                                                      ($TestArithDouble.inner_137)
                                                       ($TestArithDouble.return_109))))
-                                                (cut $TestArithDouble.outer_138 $TestArithDouble.apply_157)))))
-                                    (invoke putStrLn $TestArithDouble.then_156)))))
+                                                (cut $TestArithDouble.outer_136 $TestArithDouble.apply_153)))))
+                                    (invoke putStrLn $TestArithDouble.then_152)))))
                            (cut
                               (lambda
                                  ($TestArithDouble.tmp_93 $TestArithDouble.return_112)
                                  (cut #TestArithDouble.x_10 $TestArithDouble.return_112))
-                              $TestArithDouble.then_158))))))
-               (cut $TestArithDouble.param_92 $TestArithDouble.select_159)))
+                              $TestArithDouble.then_154))))))
+               (cut $TestArithDouble.param_92 $TestArithDouble.select_155)))
          $TestArithDouble.return_108))
    (neg
       $TestArithDouble.return_113
@@ -78,20 +78,20 @@
          (lambda
             ($TestArithDouble.param_94 $TestArithDouble.return_114)
             (join
-               (($TestArithDouble.select_162
+               (($TestArithDouble.select_158
                   (select
                      (#TestArithDouble.x_0
                         (join
-                           (($TestArithDouble.apply_160
+                           (($TestArithDouble.apply_156
                               (apply
                                  (#TestArithDouble.x_0)
                                  ($TestArithDouble.return_114)))
-                              ($TestArithDouble.apply_161
+                              ($TestArithDouble.apply_157
                                  (apply
                                     (0.0_f64)
-                                    ($TestArithDouble.apply_160))))
-                           (invoke subDouble# $TestArithDouble.apply_161))))))
-               (cut $TestArithDouble.param_94 $TestArithDouble.select_162)))
+                                    ($TestArithDouble.apply_156))))
+                           (invoke subDouble# $TestArithDouble.apply_157))))))
+               (cut $TestArithDouble.param_94 $TestArithDouble.select_158)))
          $TestArithDouble.return_113))
    (mul
       $TestArithDouble.return_115
@@ -102,26 +102,26 @@
                (lambda
                   ($TestArithDouble.param_96 $TestArithDouble.return_117)
                   (join
-                     (($TestArithDouble.select_165
+                     (($TestArithDouble.select_161
                         (select
                            ((tuple
                               (#TestArithDouble.x_3 #TestArithDouble.y_4))
                               (join
-                                 (($TestArithDouble.apply_163
+                                 (($TestArithDouble.apply_159
                                     (apply
                                        (#TestArithDouble.y_4)
                                        ($TestArithDouble.return_117)))
-                                    ($TestArithDouble.apply_164
+                                    ($TestArithDouble.apply_160
                                        (apply
                                           (#TestArithDouble.x_3)
-                                          ($TestArithDouble.apply_163))))
-                                 (invoke mulDouble# $TestArithDouble.apply_164))))))
+                                          ($TestArithDouble.apply_159))))
+                                 (invoke mulDouble# $TestArithDouble.apply_160))))))
                      (cut
                         (construct
                            tuple
                            ($TestArithDouble.param_95 $TestArithDouble.param_96)
                            ())
-                        $TestArithDouble.select_165)))
+                        $TestArithDouble.select_161)))
                $TestArithDouble.return_116))
          $TestArithDouble.return_115))
    (add
@@ -133,26 +133,26 @@
                (lambda
                   ($TestArithDouble.param_98 $TestArithDouble.return_120)
                   (join
-                     (($TestArithDouble.select_168
+                     (($TestArithDouble.select_164
                         (select
                            ((tuple
                               (#TestArithDouble.x_7 #TestArithDouble.y_8))
                               (join
-                                 (($TestArithDouble.apply_166
+                                 (($TestArithDouble.apply_162
                                     (apply
                                        (#TestArithDouble.y_8)
                                        ($TestArithDouble.return_120)))
-                                    ($TestArithDouble.apply_167
+                                    ($TestArithDouble.apply_163
                                        (apply
                                           (#TestArithDouble.x_7)
-                                          ($TestArithDouble.apply_166))))
-                                 (invoke addDouble# $TestArithDouble.apply_167))))))
+                                          ($TestArithDouble.apply_162))))
+                                 (invoke addDouble# $TestArithDouble.apply_163))))))
                      (cut
                         (construct
                            tuple
                            ($TestArithDouble.param_97 $TestArithDouble.param_98)
                            ())
-                        $TestArithDouble.select_168)))
+                        $TestArithDouble.select_164)))
                $TestArithDouble.return_119))
          $TestArithDouble.return_118))
    (+
@@ -164,26 +164,26 @@
                (lambda
                   ($TestArithDouble.param_100 $TestArithDouble.return_123)
                   (join
-                     (($TestArithDouble.select_171
+                     (($TestArithDouble.select_167
                         (select
                            ((tuple
                               (#TestArithDouble.x_5 #TestArithDouble.y_6))
                               (join
-                                 (($TestArithDouble.apply_169
+                                 (($TestArithDouble.apply_165
                                     (apply
                                        (#TestArithDouble.y_6)
                                        ($TestArithDouble.return_123)))
-                                    ($TestArithDouble.apply_170
+                                    ($TestArithDouble.apply_166
                                        (apply
                                           (#TestArithDouble.x_5)
-                                          ($TestArithDouble.apply_169))))
-                                 (invoke addDouble# $TestArithDouble.apply_170))))))
+                                          ($TestArithDouble.apply_165))))
+                                 (invoke addDouble# $TestArithDouble.apply_166))))))
                      (cut
                         (construct
                            tuple
                            ($TestArithDouble.param_99 $TestArithDouble.param_100)
                            ())
-                        $TestArithDouble.select_171)))
+                        $TestArithDouble.select_167)))
                $TestArithDouble.return_122))
          $TestArithDouble.return_121))
    (*
@@ -195,26 +195,26 @@
                (lambda
                   ($TestArithDouble.param_102 $TestArithDouble.return_126)
                   (join
-                     (($TestArithDouble.select_174
+                     (($TestArithDouble.select_170
                         (select
                            ((tuple
                               (#TestArithDouble.x_1 #TestArithDouble.y_2))
                               (join
-                                 (($TestArithDouble.apply_172
+                                 (($TestArithDouble.apply_168
                                     (apply
                                        (#TestArithDouble.y_2)
                                        ($TestArithDouble.return_126)))
-                                    ($TestArithDouble.apply_173
+                                    ($TestArithDouble.apply_169
                                        (apply
                                           (#TestArithDouble.x_1)
-                                          ($TestArithDouble.apply_172))))
-                                 (invoke mulDouble# $TestArithDouble.apply_173))))))
+                                          ($TestArithDouble.apply_168))))
+                                 (invoke mulDouble# $TestArithDouble.apply_169))))))
                      (cut
                         (construct
                            tuple
                            ($TestArithDouble.param_101 $TestArithDouble.param_102)
                            ())
-                        $TestArithDouble.select_174)))
+                        $TestArithDouble.select_170)))
                $TestArithDouble.return_125))
          $TestArithDouble.return_124))
    (f
@@ -223,36 +223,36 @@
          (lambda
             ($TestArithDouble.param_103 $TestArithDouble.return_128)
             (join
-               (($TestArithDouble.select_180
+               (($TestArithDouble.select_176
                   (select
                      (#TestArithDouble.x_11
                         (join
-                           (($TestArithDouble.then_179
-                              (then $TestArithDouble.outer_142
+                           (($TestArithDouble.then_175
+                              (then $TestArithDouble.outer_140
                                  (join
-                                    (($TestArithDouble.apply_175
+                                    (($TestArithDouble.apply_171
                                        (apply
                                           (0.0_f64)
                                           ($TestArithDouble.return_129)))
-                                       ($TestArithDouble.apply_176
+                                       ($TestArithDouble.apply_172
                                           (apply
                                              (#TestArithDouble.x_11)
-                                             ($TestArithDouble.apply_175)))
+                                             ($TestArithDouble.apply_171)))
                                        ($TestArithDouble.return_129
-                                          (then $TestArithDouble.inner_143
+                                          (then $TestArithDouble.inner_141
                                              (join
-                                                (($TestArithDouble.apply_177
+                                                (($TestArithDouble.apply_173
                                                    (apply
                                                       (#TestArithDouble.x_11)
                                                       ($TestArithDouble.return_128)))
-                                                   ($TestArithDouble.apply_178
+                                                   ($TestArithDouble.apply_174
                                                       (apply
-                                                         ($TestArithDouble.inner_143)
-                                                         ($TestArithDouble.apply_177))))
-                                                (cut $TestArithDouble.outer_142 $TestArithDouble.apply_178)))))
-                                    (invoke + $TestArithDouble.apply_176)))))
-                           (invoke * $TestArithDouble.then_179))))))
-               (cut $TestArithDouble.param_103 $TestArithDouble.select_180)))
+                                                         ($TestArithDouble.inner_141)
+                                                         ($TestArithDouble.apply_173))))
+                                                (cut $TestArithDouble.outer_140 $TestArithDouble.apply_174)))))
+                                    (invoke + $TestArithDouble.apply_172)))))
+                           (invoke * $TestArithDouble.then_175))))))
+               (cut $TestArithDouble.param_103 $TestArithDouble.select_176)))
          $TestArithDouble.return_127))
    (main
       $TestArithDouble.return_130
@@ -260,38 +260,38 @@
          (lambda
             ($TestArithDouble.param_104 $TestArithDouble.return_131)
             (join
-               (($TestArithDouble.select_186
+               (($TestArithDouble.select_182
                   (select
                      (#TestArithDouble.$__90
                         (join
-                           (($TestArithDouble.then_185
-                              (then $TestArithDouble.outer_146
+                           (($TestArithDouble.then_181
+                              (then $TestArithDouble.outer_142
                                  (join
-                                    (($TestArithDouble.then_183
-                                       (then $TestArithDouble.outer_148
+                                    (($TestArithDouble.then_179
+                                       (then $TestArithDouble.outer_144
                                           (join
-                                             (($TestArithDouble.apply_181
+                                             (($TestArithDouble.apply_177
                                                 (apply
                                                    (0.5_f64)
                                                    ($TestArithDouble.return_133)))
                                                 ($TestArithDouble.return_133
-                                                   (then $TestArithDouble.inner_149
+                                                   (then $TestArithDouble.inner_145
                                                       (join
-                                                         (($TestArithDouble.apply_182
+                                                         (($TestArithDouble.apply_178
                                                             (apply
-                                                               ($TestArithDouble.inner_149)
+                                                               ($TestArithDouble.inner_145)
                                                                ($TestArithDouble.return_132))))
-                                                         (cut $TestArithDouble.outer_148 $TestArithDouble.apply_182)))))
-                                             (invoke f $TestArithDouble.apply_181))))
+                                                         (cut $TestArithDouble.outer_144 $TestArithDouble.apply_178)))))
+                                             (invoke f $TestArithDouble.apply_177))))
                                        ($TestArithDouble.return_132
-                                          (then $TestArithDouble.inner_147
+                                          (then $TestArithDouble.inner_143
                                              (join
-                                                (($TestArithDouble.apply_184
+                                                (($TestArithDouble.apply_180
                                                    (apply
-                                                      ($TestArithDouble.inner_147)
+                                                      ($TestArithDouble.inner_143)
                                                       ($TestArithDouble.return_131))))
-                                                (cut $TestArithDouble.outer_146 $TestArithDouble.apply_184)))))
-                                    (invoke show $TestArithDouble.then_183)))))
-                           (invoke putStrLn $TestArithDouble.then_185))))))
-               (cut $TestArithDouble.param_104 $TestArithDouble.select_186)))
+                                                (cut $TestArithDouble.outer_142 $TestArithDouble.apply_180)))))
+                                    (invoke show $TestArithDouble.then_179)))))
+                           (invoke putStrLn $TestArithDouble.then_181))))))
+               (cut $TestArithDouble.param_104 $TestArithDouble.select_182)))
          $TestArithDouble.return_130)))

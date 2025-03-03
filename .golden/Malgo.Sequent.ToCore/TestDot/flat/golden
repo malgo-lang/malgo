@@ -35,40 +35,40 @@
                (select
                   (#TestDot.$__29
                      (invoke printInt64
-                        (then $TestDot.outer_49
+                        (then $TestDot.outer_43
                            (join
                               (($TestDot.return_37
-                                 (then $TestDot.inner_50
+                                 (then $TestDot.inner_44
                                     (cut
-                                       $TestDot.outer_49
+                                       $TestDot.outer_43
                                        (apply
-                                          ($TestDot.inner_50)
+                                          ($TestDot.inner_44)
                                           ($TestDot.return_36))))))
                               (invoke .
-                                 (then $TestDot.outer_51
+                                 (then $TestDot.outer_45
                                     (join
                                        (($TestDot.return_40
-                                          (then $TestDot.inner_52
+                                          (then $TestDot.inner_46
                                              (cut
-                                                $TestDot.outer_51
+                                                $TestDot.outer_45
                                                 (apply
-                                                   ($TestDot.inner_52)
-                                                   ((then $TestDot.outer_53
+                                                   ($TestDot.inner_46)
+                                                   ((then $TestDot.outer_47
                                                       (join
                                                          (($TestDot.return_39
-                                                            (then $TestDot.inner_54
+                                                            (then $TestDot.inner_48
                                                                (cut
-                                                                  $TestDot.outer_53
+                                                                  $TestDot.outer_47
                                                                   (apply
-                                                                     ($TestDot.inner_54)
-                                                                     ((then $TestDot.outer_55
+                                                                     ($TestDot.inner_48)
+                                                                     ((then $TestDot.outer_49
                                                                         (join
                                                                            (($TestDot.return_38
-                                                                              (then $TestDot.inner_56
+                                                                              (then $TestDot.inner_50
                                                                                  (cut
-                                                                                    $TestDot.outer_55
+                                                                                    $TestDot.outer_49
                                                                                     (apply
-                                                                                       ($TestDot.inner_56)
+                                                                                       ($TestDot.inner_50)
                                                                                        ($TestDot.return_37))))))
                                                                            (invoke Int64#
                                                                               (apply

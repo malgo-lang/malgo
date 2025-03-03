@@ -8,58 +8,58 @@
             (select
                (#TestCast.$__26
                   (invoke printInt32
-                     (then $TestCast.outer_65
+                     (then $TestCast.outer_35
                         (join
                            (($TestCast.return_30
-                              (then $TestCast.inner_66
+                              (then $TestCast.inner_36
                                  (cut
-                                    $TestCast.outer_65
+                                    $TestCast.outer_35
                                     (apply
-                                       ($TestCast.inner_66)
+                                       ($TestCast.inner_36)
                                        ($TestCast.return_29))))))
                            (invoke malgo_unsafe_cast
-                              (then $TestCast.outer_81
+                              (then $TestCast.outer_37
                                  (join
                                     (($TestCast.return_31
-                                       (then $TestCast.inner_82
+                                       (then $TestCast.inner_38
                                           (cut
-                                             $TestCast.outer_81
+                                             $TestCast.outer_37
                                              (apply
-                                                ($TestCast.inner_82)
+                                                ($TestCast.inner_38)
                                                 ($TestCast.return_30))))))
                                     (invoke malgo_read_vector
                                        (apply
                                           (2_i64)
-                                          ((then $TestCast.outer_89
+                                          ((then $TestCast.outer_39
                                              (join
                                                 (($TestCast.return_32
-                                                   (then $TestCast.inner_90
+                                                   (then $TestCast.inner_40
                                                       (cut
-                                                         $TestCast.outer_89
+                                                         $TestCast.outer_39
                                                          (apply
-                                                            ($TestCast.inner_90)
+                                                            ($TestCast.inner_40)
                                                             ($TestCast.return_31))))))
                                                 (invoke malgo_new_vector
                                                    (apply
                                                       (10_i64)
-                                                      ((then $TestCast.outer_93
+                                                      ((then $TestCast.outer_41
                                                          (join
                                                             (($TestCast.return_33
-                                                               (then $TestCast.inner_94
+                                                               (then $TestCast.inner_42
                                                                   (cut
-                                                                     $TestCast.outer_93
+                                                                     $TestCast.outer_41
                                                                      (apply
-                                                                        ($TestCast.inner_94)
+                                                                        ($TestCast.inner_42)
                                                                         ($TestCast.return_32))))))
                                                             (invoke malgo_unsafe_cast
-                                                               (then $TestCast.outer_95
+                                                               (then $TestCast.outer_43
                                                                   (join
                                                                      (($TestCast.return_34
-                                                                        (then $TestCast.inner_96
+                                                                        (then $TestCast.inner_44
                                                                            (cut
-                                                                              $TestCast.outer_95
+                                                                              $TestCast.outer_43
                                                                               (apply
-                                                                                 ($TestCast.inner_96)
+                                                                                 ($TestCast.inner_44)
                                                                                  ($TestCast.return_33))))))
                                                                      (invoke Int32#
                                                                         (apply

@@ -36,24 +36,24 @@
                                        (apply
                                           ("WRONG")
                                           ($Test2.return_32)))))))
-                        (then $Test2.outer_35
+                        (then $Test2.outer_33
                            (join
                               (($Test2.return_30
-                                 (then $Test2.inner_36
+                                 (then $Test2.inner_34
                                     (cut
-                                       $Test2.outer_35
+                                       $Test2.outer_33
                                        (apply
-                                          ($Test2.inner_36)
+                                          ($Test2.inner_34)
                                           ($Test2.return_29))))))
                               (invoke rtob
-                                 (then $Test2.outer_37
+                                 (then $Test2.outer_35
                                     (join
                                        (($Test2.return_31
-                                          (then $Test2.inner_38
+                                          (then $Test2.inner_36
                                              (cut
-                                                $Test2.outer_37
+                                                $Test2.outer_35
                                                 (apply
-                                                   ($Test2.inner_38)
+                                                   ($Test2.inner_36)
                                                    ($Test2.return_30))))))
                                        (invoke R $Test2.return_31)))))))))))
          $Test2.return_28)))
