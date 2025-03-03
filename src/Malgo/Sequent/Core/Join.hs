@@ -30,7 +30,7 @@ joinStatement (Cut producer consumer) = do
   producer <- joinProducer producer
   consumer <- joinConsumer consumer
   pure $ Cut producer consumer
-joinStatement (CutDo range name statement consumer) = do
+joinStatement (Join range name consumer statement) = do
   statement <- joinStatement statement
   consumer <- joinConsumer' consumer
   pure $ Join range name consumer statement

@@ -21,7 +21,7 @@ import Malgo.Sequent.Fun (Literal, Name, Pattern, Tag)
 data Program x = Program
   {definitions :: [(Range, Name, Name, Statement x)]}
 
-deriving stock instance (Show (Return x)) => Show (Program x)
+deriving stock instance (Show (Return x), Show (XJoin x)) => Show (Program x)
 
 instance (ToSExpr (Return x)) => ToSExpr (Program x) where
   toSExpr (Program defs) = S.L $ map (\(_, name, return, body) -> toSExpr (name, return, body)) defs
@@ -36,7 +36,7 @@ data Producer (x :: Rank) where
   Object :: Range -> Map Text (Name, Statement x) -> Producer x
   Do :: Range -> Name -> Statement Full -> Producer Full
 
-deriving stock instance (Show (Return x)) => Show (Producer x)
+deriving stock instance (Show (Return x), Show (XJoin x)) => Show (Producer x)
 
 type family Return (x :: Rank) where
   Return Join = Name
@@ -60,7 +60,7 @@ data Consumer x where
   Finish :: Range -> Consumer x
   Select :: Range -> [Branch x] -> Consumer x
 
-deriving stock instance (Show (Return x)) => Show (Consumer x)
+deriving stock instance (Show (Return x), Show (XJoin x)) => Show (Consumer x)
 
 instance (ToSExpr (Return x)) => ToSExpr (Consumer x) where
   toSExpr (Label _ name) = toSExpr name
@@ -70,22 +70,25 @@ instance (ToSExpr (Return x)) => ToSExpr (Consumer x) where
   toSExpr (Finish _) = S.A "finish"
   toSExpr (Select _ branches) = S.L $ S.A "select" : map toSExpr branches
 
+type family XJoin x where
+  XJoin Join = Range
+  XJoin Flat = Range
+  XJoin Full = Void
+
 data Statement x where
   Cut :: Producer x -> Return x -> Statement x
-  CutDo :: Range -> Name -> Statement Flat -> Consumer Flat -> Statement Flat
-  Join :: Range -> Name -> Consumer Join -> Statement Join -> Statement Join
+  Join :: XJoin x -> Name -> Consumer x -> Statement x -> Statement x
   Primitive :: Range -> Text -> [Producer x] -> Return x -> Statement x
   Invoke :: Range -> Name -> Return x -> Statement x
 
-deriving stock instance (Show (Return x)) => Show (Statement x)
+deriving stock instance (Show (Return x), Show (XJoin x)) => Show (Statement x)
 
 instance (ToSExpr (Return x)) => ToSExpr (Statement x) where
   toSExpr (Cut producer consumer) = S.L ["cut", toSExpr producer, toSExpr consumer]
-  toSExpr (CutDo _ name statement consumer) = S.L ["cut-do", toSExpr name, toSExpr statement, toSExpr consumer]
   toSExpr (Join _ name consumer statement) =
     go [(name, consumer)] statement
     where
-      go :: [(Name, Consumer Join)] -> Statement Join -> SExpr Atom
+      go :: [(Name, Consumer x)] -> Statement x -> SExpr Atom
       go binds (Join _ name consumer statement) = go ((name, consumer) : binds) statement
       go binds statement = S.L ["join", S.L $ map (\(name, consumer) -> S.L [toSExpr name, toSExpr consumer]) $ reverse binds, toSExpr statement]
   toSExpr (Primitive _ name producers consumer) =
@@ -98,7 +101,7 @@ data Branch x = Branch
     statement :: Statement x
   }
 
-deriving stock instance (Show (Return x)) => Show (Branch x)
+deriving stock instance (Show (Return x), Show (XJoin x)) => Show (Branch x)
 
 instance (ToSExpr (Return x)) => ToSExpr (Branch x) where
   toSExpr (Branch _ pattern statement) = S.L [toSExpr pattern, toSExpr statement]

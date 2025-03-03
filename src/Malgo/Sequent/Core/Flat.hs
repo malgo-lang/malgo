@@ -30,7 +30,7 @@ data Wip
   | Zero (Producer Flat)
 
 cut :: Wip -> Consumer Flat -> Statement Flat
-cut (Do' range name statement) consumer = CutDo range name statement consumer
+cut (Do' range name statement) consumer = Join range name consumer statement
 cut (Zero producer) consumer = Cut producer consumer
 
 flatStatement :: (State Uniq :> es, Reader ModuleName :> es) => Statement Full -> Eff es (Statement Flat)
@@ -38,7 +38,7 @@ flatStatement (Cut producer consumer) = do
   producer <- flatProducer producer
   consumer <- flatConsumer consumer
   case producer of
-    Do' range name statement -> pure $ CutDo range name statement consumer
+    Do' range name statement -> pure $ Join range name consumer statement
     Zero producer -> pure $ Cut producer consumer
 flatStatement (Primitive range name producers consumer) = do
   (zeros, mproducer, rest) <- split producers

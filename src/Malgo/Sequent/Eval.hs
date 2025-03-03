@@ -68,7 +68,7 @@ instance (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es) => Ev
   eval (Cut producer consumer) = do
     producer <- eval producer
     eval consumer (producer :: Value)
-  eval (CutDo _ label statement consumer) = do
+  eval (Join _ label consumer statement) = do
     env <- ask @Env
     let value = Consumer env consumer
     local (extendEnv label value) do
