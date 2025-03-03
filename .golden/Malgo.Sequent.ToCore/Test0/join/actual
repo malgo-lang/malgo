@@ -31,69 +31,67 @@
          (lambda
             ($Test0.param_52 $Test0.return_60)
             (join
-               (($Test0.select_85
+               (($Test0.select_83
                   (select
                      (#Test0.$__41
                         (join
-                           (($Test0.then_84
+                           (($Test0.then_82
                               (then $Test0.outer_67
                                  (join
                                     (($Test0.apply_75
                                        (apply
                                           (1_i64)
                                           ($Test0.return_63)))
-                                       ($Test0.then_83
+                                       ($Test0.return_63
                                           (then $Test0.inner_68
                                              (join
-                                                (($Test0.apply_81
+                                                (($Test0.apply_80
                                                    (apply
                                                       ((lambda
                                                          ($Test0.param_53 $Test0.return_61)
                                                          (join
-                                                            (($Test0.select_80
+                                                            (($Test0.select_79
                                                                (select
                                                                   ((Int64#
                                                                      (#Test0.i_6))
                                                                      (join
-                                                                        (($Test0.then_79
+                                                                        (($Test0.then_78
                                                                            (then $Test0.outer_71
                                                                               (join
                                                                                  (($Test0.apply_76
                                                                                     (apply
                                                                                        (#Test0.i_6)
                                                                                        ($Test0.return_62)))
-                                                                                    ($Test0.then_78
+                                                                                    ($Test0.return_62
                                                                                        (then $Test0.inner_72
                                                                                           (join
                                                                                              (($Test0.apply_77
                                                                                                 (apply
                                                                                                    ($Test0.inner_72)
                                                                                                    ($Test0.return_61))))
-                                                                                             (cut $Test0.outer_71 $Test0.apply_77))))
-                                                                                    ($Test0.return_62 $Test0.then_78))
+                                                                                             (cut $Test0.outer_71 $Test0.apply_77)))))
                                                                                  (invoke toStringInt64# $Test0.apply_76)))))
-                                                                        (invoke printString# $Test0.then_79))))))
+                                                                        (invoke printString# $Test0.then_78))))))
                                                             (cut
                                                                (construct
                                                                   tuple
                                                                   ($Test0.param_53)
                                                                   ())
-                                                               $Test0.select_80))))
+                                                               $Test0.select_79))))
                                                       ($Test0.return_60)))
-                                                   ($Test0.apply_82
+                                                   ($Test0.apply_81
                                                       (apply
                                                          ($Test0.inner_68)
-                                                         ($Test0.apply_81))))
-                                                (cut $Test0.outer_67 $Test0.apply_82))))
-                                       ($Test0.return_63 $Test0.then_83))
+                                                         ($Test0.apply_80))))
+                                                (cut $Test0.outer_67 $Test0.apply_81)))))
                                     (invoke Int64# $Test0.apply_75)))))
-                           (invoke |> $Test0.then_84))))))
+                           (invoke |> $Test0.then_82))))))
                (cut
                   (construct
                      tuple
                      ($Test0.param_52)
                      ())
-                  $Test0.select_85)))
+                  $Test0.select_83)))
          $Test0.return_59))
    (+#
       $Test0.return_64
@@ -104,25 +102,25 @@
                (lambda
                   ($Test0.param_55 $Test0.return_66)
                   (join
-                     (($Test0.select_88
+                     (($Test0.select_86
                         (select
                            ((tuple
                               (#Test0.x_4 #Test0.y_5))
                               (join
-                                 (($Test0.apply_86
+                                 (($Test0.apply_84
                                     (apply
                                        (#Test0.y_5)
                                        ($Test0.return_66)))
-                                    ($Test0.apply_87
+                                    ($Test0.apply_85
                                        (apply
                                           (#Test0.x_4)
-                                          ($Test0.apply_86))))
-                                 (invoke addInt64# $Test0.apply_87))))))
+                                          ($Test0.apply_84))))
+                                 (invoke addInt64# $Test0.apply_85))))))
                      (cut
                         (construct
                            tuple
                            ($Test0.param_54 $Test0.param_55)
                            ())
-                        $Test0.select_88)))
+                        $Test0.select_86)))
                $Test0.return_65))
          $Test0.return_64)))

@@ -4,45 +4,43 @@
       (lambda
          ($Double.param_9 $Double.return_11)
          (join
-            (($Double.select_27
+            (($Double.select_25
                (select
                   (#Double.$__8
                      (join
-                        (($Double.then_26
+                        (($Double.then_24
                            (then $Double.outer_16
                               (join
-                                 (($Double.then_23
+                                 (($Double.then_22
                                     (then $Double.outer_18
                                        (join
                                           (($Double.apply_20
                                              (apply
                                                 (3.14_f64)
                                                 ($Double.return_13)))
-                                             ($Double.then_22
+                                             ($Double.return_13
                                                 (then $Double.inner_19
                                                    (join
                                                       (($Double.apply_21
                                                          (apply
                                                             ($Double.inner_19)
                                                             ($Double.return_12))))
-                                                      (cut $Double.outer_18 $Double.apply_21))))
-                                             ($Double.return_13 $Double.then_22))
+                                                      (cut $Double.outer_18 $Double.apply_21)))))
                                           (invoke Double# $Double.apply_20))))
-                                    ($Double.then_25
+                                    ($Double.return_12
                                        (then $Double.inner_17
                                           (join
-                                             (($Double.apply_24
+                                             (($Double.apply_23
                                                 (apply
                                                    ($Double.inner_17)
                                                    ($Double.return_11))))
-                                             (cut $Double.outer_16 $Double.apply_24))))
-                                    ($Double.return_12 $Double.then_25))
-                                 (invoke toStringDouble $Double.then_23)))))
-                        (invoke putStr $Double.then_26))))))
+                                             (cut $Double.outer_16 $Double.apply_23)))))
+                                 (invoke toStringDouble $Double.then_22)))))
+                        (invoke putStr $Double.then_24))))))
             (cut
                (construct
                   tuple
                   ($Double.param_9)
                   ())
-               $Double.select_27)))
+               $Double.select_25)))
       $Double.return_10)))

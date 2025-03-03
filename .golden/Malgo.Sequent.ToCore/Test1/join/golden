@@ -47,14 +47,14 @@
          (lambda
             ($Test1.param_42 $Test1.return_50)
             (join
-               (($Test1.select_68
+               (($Test1.select_67
                   (select
                      (#Test1.$__38
                         (join
-                           (($Test1.then_67
+                           (($Test1.then_66
                               (then $Test1.outer_54
                                  (join
-                                    (($Test1.then_66
+                                    (($Test1.return_53
                                        (then $Test1.inner_55
                                           (join
                                              (($Test1.apply_63
@@ -103,14 +103,13 @@
                                                    (apply
                                                       ($Test1.inner_55)
                                                       ($Test1.apply_64))))
-                                             (cut $Test1.outer_54 $Test1.apply_65))))
-                                       ($Test1.return_53 $Test1.then_66))
+                                             (cut $Test1.outer_54 $Test1.apply_65)))))
                                     (invoke True $Test1.return_53)))))
-                           (invoke if $Test1.then_67))))))
+                           (invoke if $Test1.then_66))))))
                (cut
                   (construct
                      tuple
                      ($Test1.param_42)
                      ())
-                  $Test1.select_68)))
+                  $Test1.select_67)))
          $Test1.return_49)))

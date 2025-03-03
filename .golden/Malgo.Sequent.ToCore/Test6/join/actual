@@ -28,36 +28,34 @@
          (lambda
             ($Test6.param_31 $Test6.return_36)
             (join
-               (($Test6.select_57
+               (($Test6.select_55
                   (select
                      (#Test6.$__29
                         (join
-                           (($Test6.then_56
+                           (($Test6.then_54
                               (then $Test6.outer_42
                                  (join
-                                    (($Test6.then_53
+                                    (($Test6.then_52
                                        (then $Test6.outer_44
                                           (join
-                                             (($Test6.then_52
+                                             (($Test6.return_38
                                                 (then $Test6.inner_45
                                                    (join
                                                       (($Test6.apply_51
                                                          (apply
                                                             ($Test6.inner_45)
                                                             ($Test6.return_37))))
-                                                      (cut $Test6.outer_44 $Test6.apply_51))))
-                                                ($Test6.return_38 $Test6.then_52))
+                                                      (cut $Test6.outer_44 $Test6.apply_51)))))
                                              (invoke R $Test6.return_38))))
-                                       ($Test6.then_55
+                                       ($Test6.return_37
                                           (then $Test6.inner_43
                                              (join
-                                                (($Test6.apply_54
+                                                (($Test6.apply_53
                                                    (apply
                                                       ($Test6.inner_43)
                                                       ($Test6.return_36))))
-                                                (cut $Test6.outer_42 $Test6.apply_54))))
-                                       ($Test6.return_37 $Test6.then_55))
-                                    (invoke rtob $Test6.then_53)))))
+                                                (cut $Test6.outer_42 $Test6.apply_53)))))
+                                    (invoke rtob $Test6.then_52)))))
                            (cut
                               (lambda
                                  ($Test6.param_32 $Test6.return_39)
@@ -84,11 +82,11 @@
                                           ($Test6.param_32)
                                           ())
                                        $Test6.select_50)))
-                              $Test6.then_56))))))
+                              $Test6.then_54))))))
                (cut
                   (construct
                      tuple
                      ($Test6.param_31)
                      ())
-                  $Test6.select_57)))
+                  $Test6.select_55)))
          $Test6.return_35)))
