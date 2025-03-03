@@ -58,13 +58,13 @@ instance (State Uniq :> es, Reader ModuleName :> es) => Convert Expr (Eff es (C.
     C.Do range return <$> convert producer (C.Label @Full range return)
   convert (Lambda range params body) = do
     return <- newTemporalId "return"
-    body' <- convert body
-    pure $ C.Lambda range (params <> [return]) (C.Cut body' (C.Label range return))
+    body' <- convert body (C.Label @Full range return)
+    pure $ C.Lambda range (params <> [return]) body'
   convert (Object range fields) = do
     fields <- for fields \body -> do
-      body <- convert body
       return <- newTemporalId "return"
-      pure (return, Cut body (C.Label range return))
+      body <- convert body (C.Label @Full range return)
+      pure (return, body)
     pure $ C.Object range fields
   convert producer@(Apply range _ _) = do
     return <- newTemporalId "return"
