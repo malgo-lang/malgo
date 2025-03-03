@@ -32,8 +32,8 @@ joinStatement (Cut producer consumer) = do
   pure $ Cut producer consumer
 joinStatement (CutDo range name statement consumer) = do
   statement <- joinStatement statement
-  consumer <- joinConsumer consumer
-  pure $ Join range name (Label range consumer) statement
+  consumer <- joinConsumer' consumer
+  pure $ Join range name consumer statement
 joinStatement (Primitive range name producers return) = do
   producers <- traverse joinProducer producers
   return <- joinConsumer return
@@ -72,6 +72,23 @@ joinConsumer (Finish range) = tellJoin range "finish" $ Finish range
 joinConsumer (Select range branches) = do
   branches <- traverse joinBranch branches
   tellJoin range "select" $ Select range branches
+
+joinConsumer' :: (State Uniq :> es, Reader ModuleName :> es, Writer (Endo (Statement Join)) :> es) => Consumer Flat -> Eff es (Consumer Join)
+joinConsumer' (Label range name) = pure (Label range name)
+joinConsumer' (Apply range producers returns) = do
+  producers <- traverse joinProducer producers
+  returns <- traverse joinConsumer returns
+  pure $ Apply range producers returns
+joinConsumer' (Project range field return) = do
+  return <- joinConsumer return
+  pure $ Project range field return
+joinConsumer' (Then range name statement) = do
+  statement <- runJoin $ joinStatement statement
+  pure $ Then range name statement
+joinConsumer' (Finish range) = pure $ Finish range
+joinConsumer' (Select range branches) = do
+  branches <- traverse joinBranch branches
+  pure $ Select range branches
 
 joinBranch :: (State Uniq :> es, Reader ModuleName :> es) => Branch Flat -> Eff es (Branch Join)
 joinBranch (Branch range pattern statement) = do
