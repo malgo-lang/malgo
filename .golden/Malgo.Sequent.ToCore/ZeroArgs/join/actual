@@ -1,7 +1,7 @@
 ((one
    $ZeroArgs.return_33
    (join
-      (($ZeroArgs.apply_65
+      (($ZeroArgs.apply_60
          (apply
             ((construct tuple () ()))
             ($ZeroArgs.return_33))))
@@ -9,136 +9,131 @@
          (lambda
             ($ZeroArgs.param_28 $ZeroArgs.return_34)
             (join
-               (($ZeroArgs.select_64
+               (($ZeroArgs.select_59
                   (select
                      (#ZeroArgs.$__6
                         (join
-                           (($ZeroArgs.apply_63
+                           (($ZeroArgs.apply_58
                               (apply
                                  (1_i32)
-                                 ($ZeroArgs.return_35))))
-                           (invoke Int32# $ZeroArgs.apply_63)))))
-                  ($ZeroArgs.return_35 $ZeroArgs.return_34))
+                                 ($ZeroArgs.return_34))))
+                           (invoke Int32# $ZeroArgs.apply_58))))))
                (cut
                   (construct
                      tuple
                      ($ZeroArgs.param_28)
                      ())
-                  $ZeroArgs.select_64)))
-         $ZeroArgs.apply_65)))
+                  $ZeroArgs.select_59)))
+         $ZeroArgs.apply_60)))
    (id
-      $ZeroArgs.return_36
+      $ZeroArgs.return_35
       (cut
          (lambda
-            ($ZeroArgs.param_29 $ZeroArgs.return_37)
+            ($ZeroArgs.param_29 $ZeroArgs.return_36)
             (join
-               (($ZeroArgs.select_68
+               (($ZeroArgs.select_63
                   (select
                      (#ZeroArgs.x_1
                         (join
-                           (($ZeroArgs.apply_67
+                           (($ZeroArgs.apply_62
                               (apply
                                  ((construct tuple () ()))
-                                 ($ZeroArgs.return_38))))
+                                 ($ZeroArgs.return_36))))
                            (cut
                               (lambda
-                                 ($ZeroArgs.param_30 $ZeroArgs.return_39)
+                                 ($ZeroArgs.param_30 $ZeroArgs.return_37)
                                  (join
-                                    (($ZeroArgs.select_66
+                                    (($ZeroArgs.select_61
                                        (select
                                           (#ZeroArgs.$__11
-                                             (cut #ZeroArgs.x_1 $ZeroArgs.return_40))))
-                                       ($ZeroArgs.return_40 $ZeroArgs.return_39))
+                                             (cut #ZeroArgs.x_1 $ZeroArgs.return_37)))))
                                     (cut
                                        (construct
                                           tuple
                                           ($ZeroArgs.param_30)
                                           ())
-                                       $ZeroArgs.select_66)))
-                              $ZeroArgs.apply_67)))))
-                  ($ZeroArgs.return_38 $ZeroArgs.return_37))
+                                       $ZeroArgs.select_61)))
+                              $ZeroArgs.apply_62))))))
                (cut
                   (construct
                      tuple
                      ($ZeroArgs.param_29)
                      ())
-                  $ZeroArgs.select_68)))
-         $ZeroArgs.return_36))
+                  $ZeroArgs.select_63)))
+         $ZeroArgs.return_35))
    (main
-      $ZeroArgs.return_41
+      $ZeroArgs.return_38
       (join
-         (($ZeroArgs.apply_80
+         (($ZeroArgs.apply_75
             (apply
                ((construct tuple () ()))
-               ($ZeroArgs.return_41))))
+               ($ZeroArgs.return_38))))
          (cut
             (lambda
-               ($ZeroArgs.param_31 $ZeroArgs.return_42)
+               ($ZeroArgs.param_31 $ZeroArgs.return_39)
                (join
-                  (($ZeroArgs.select_79
+                  (($ZeroArgs.select_74
                      (select
                         (#ZeroArgs.$__25
                            (cut
                               (lambda
-                                 ($ZeroArgs.param_32 $ZeroArgs.return_44)
+                                 ($ZeroArgs.param_32 $ZeroArgs.return_40)
                                  (join
-                                    (($ZeroArgs.select_78
+                                    (($ZeroArgs.select_73
                                        (select
                                           (#ZeroArgs.$__24
                                              (join
-                                                (($ZeroArgs.then_77
-                                                   (then $ZeroArgs.outer_55
+                                                (($ZeroArgs.then_72
+                                                   (then $ZeroArgs.outer_50
                                                       (join
-                                                         (($ZeroArgs.then_74
-                                                            (then $ZeroArgs.outer_59
+                                                         (($ZeroArgs.then_69
+                                                            (then $ZeroArgs.outer_54
                                                                (join
-                                                                  (($ZeroArgs.then_71
-                                                                     (then $ZeroArgs.outer_61
+                                                                  (($ZeroArgs.then_66
+                                                                     (then $ZeroArgs.outer_56
                                                                         (join
-                                                                           (($ZeroArgs.then_70
-                                                                              (then $ZeroArgs.inner_62
+                                                                           (($ZeroArgs.then_65
+                                                                              (then $ZeroArgs.inner_57
                                                                                  (join
-                                                                                    (($ZeroArgs.apply_69
+                                                                                    (($ZeroArgs.apply_64
                                                                                        (apply
-                                                                                          ($ZeroArgs.inner_62)
-                                                                                          ($ZeroArgs.return_47))))
-                                                                                    (cut $ZeroArgs.outer_61 $ZeroArgs.apply_69))))
-                                                                              ($ZeroArgs.return_48 $ZeroArgs.then_70))
-                                                                           (invoke one $ZeroArgs.return_48))))
-                                                                     ($ZeroArgs.then_73
-                                                                        (then $ZeroArgs.inner_60
+                                                                                          ($ZeroArgs.inner_57)
+                                                                                          ($ZeroArgs.return_42))))
+                                                                                    (cut $ZeroArgs.outer_56 $ZeroArgs.apply_64))))
+                                                                              ($ZeroArgs.return_43 $ZeroArgs.then_65))
+                                                                           (invoke one $ZeroArgs.return_43))))
+                                                                     ($ZeroArgs.then_68
+                                                                        (then $ZeroArgs.inner_55
                                                                            (join
-                                                                              (($ZeroArgs.apply_72
+                                                                              (($ZeroArgs.apply_67
                                                                                  (apply
-                                                                                    ($ZeroArgs.inner_60)
-                                                                                    ($ZeroArgs.return_46))))
-                                                                              (cut $ZeroArgs.outer_59 $ZeroArgs.apply_72))))
-                                                                     ($ZeroArgs.return_47 $ZeroArgs.then_73))
-                                                                  (invoke id $ZeroArgs.then_71))))
-                                                            ($ZeroArgs.then_76
-                                                               (then $ZeroArgs.inner_56
+                                                                                    ($ZeroArgs.inner_55)
+                                                                                    ($ZeroArgs.return_41))))
+                                                                              (cut $ZeroArgs.outer_54 $ZeroArgs.apply_67))))
+                                                                     ($ZeroArgs.return_42 $ZeroArgs.then_68))
+                                                                  (invoke id $ZeroArgs.then_66))))
+                                                            ($ZeroArgs.then_71
+                                                               (then $ZeroArgs.inner_51
                                                                   (join
-                                                                     (($ZeroArgs.apply_75
+                                                                     (($ZeroArgs.apply_70
                                                                         (apply
-                                                                           ($ZeroArgs.inner_56)
-                                                                           ($ZeroArgs.return_45))))
-                                                                     (cut $ZeroArgs.outer_55 $ZeroArgs.apply_75))))
-                                                            ($ZeroArgs.return_46 $ZeroArgs.then_76))
-                                                         (invoke toStringInt32 $ZeroArgs.then_74)))))
-                                                (invoke printString $ZeroArgs.then_77)))))
-                                       ($ZeroArgs.return_45 $ZeroArgs.return_44))
+                                                                           ($ZeroArgs.inner_51)
+                                                                           ($ZeroArgs.return_40))))
+                                                                     (cut $ZeroArgs.outer_50 $ZeroArgs.apply_70))))
+                                                            ($ZeroArgs.return_41 $ZeroArgs.then_71))
+                                                         (invoke toStringInt32 $ZeroArgs.then_69)))))
+                                                (invoke printString $ZeroArgs.then_72))))))
                                     (cut
                                        (construct
                                           tuple
                                           ($ZeroArgs.param_32)
                                           ())
-                                       $ZeroArgs.select_78)))
-                              $ZeroArgs.return_43))))
-                     ($ZeroArgs.return_43 $ZeroArgs.return_42))
+                                       $ZeroArgs.select_73)))
+                              $ZeroArgs.return_39)))))
                   (cut
                      (construct
                         tuple
                         ($ZeroArgs.param_31)
                         ())
-                     $ZeroArgs.select_79)))
-            $ZeroArgs.apply_80))))
+                     $ZeroArgs.select_74)))
+            $ZeroArgs.apply_75))))

@@ -2,318 +2,297 @@
    $Show.return_123
    (cut
       ((show
-         ($Show.return_126
+         ($Show.return_124
             (cut
                (lambda
-                  ($Show.param_113 $Show.return_124)
-                  (cut-do
-                     $Show.return_125
-                     (cut
-                        (construct
-                           tuple
-                           ($Show.param_113)
-                           ())
-                        (select
-                           (#Show.x_3
-                              (invoke toStringInt32
-                                 (apply
-                                    (#Show.x_3)
-                                    ($Show.return_125))))))
-                     $Show.return_124))
-               $Show.return_126))))
+                  ($Show.param_113 $Show.return_125)
+                  (cut
+                     (construct
+                        tuple
+                        ($Show.param_113)
+                        ())
+                     (select
+                        (#Show.x_3
+                           (invoke toStringInt32
+                              (apply
+                                 (#Show.x_3)
+                                 ($Show.return_125)))))))
+               $Show.return_124))))
       $Show.return_123))
    (show
-      $Show.return_127
+      $Show.return_126
       (cut
          (lambda
-            ($Show.param_114 $Show.return_128)
-            (cut-do
-               $Show.return_129
-               (cut
-                  (construct
-                     tuple
-                     ($Show.param_114)
-                     ())
-                  (select
-                     ((expand
-                        ((show #Show.show_5)))
-                        (cut #Show.show_5 $Show.return_129))))
-               $Show.return_128))
-         $Show.return_127))
+            ($Show.param_114 $Show.return_127)
+            (cut
+               (construct
+                  tuple
+                  ($Show.param_114)
+                  ())
+               (select
+                  ((expand
+                     ((show #Show.show_5)))
+                     (cut #Show.show_5 $Show.return_127)))))
+         $Show.return_126))
    (print
-      $Show.return_130
+      $Show.return_128
       (cut
          (lambda
-            ($Show.param_115 $Show.return_131)
+            ($Show.param_115 $Show.return_129)
             (cut
                (lambda
-                  ($Show.param_116 $Show.return_132)
-                  (cut-do
-                     $Show.return_133
-                     (cut
-                        (construct
-                           tuple
-                           ($Show.param_115 $Show.param_116)
-                           ())
-                        (select
-                           ((tuple
-                              (#Show.showDict_13 #Show.x_14))
-                              (invoke printString
-                                 (then $Show.outer_162
-                                    (cut-do
-                                       $Show.return_134
-                                       (invoke show
+                  ($Show.param_116 $Show.return_130)
+                  (cut
+                     (construct
+                        tuple
+                        ($Show.param_115 $Show.param_116)
+                        ())
+                     (select
+                        ((tuple
+                           (#Show.showDict_13 #Show.x_14))
+                           (invoke printString
+                              (then $Show.outer_155
+                                 (cut-do
+                                    $Show.return_131
+                                    (invoke show
+                                       (apply
+                                          (#Show.showDict_13)
+                                          ((apply
+                                             (#Show.x_14)
+                                             ($Show.return_131)))))
+                                    (then $Show.inner_156
+                                       (cut
+                                          $Show.outer_155
                                           (apply
-                                             (#Show.showDict_13)
-                                             ((apply
-                                                (#Show.x_14)
-                                                ($Show.return_134)))))
-                                       (then $Show.inner_163
-                                          (cut
-                                             $Show.outer_162
-                                             (apply
-                                                ($Show.inner_163)
-                                                ($Show.return_133))))))))))
-                     $Show.return_132))
-               $Show.return_131))
-         $Show.return_130))
+                                             ($Show.inner_156)
+                                             ($Show.return_130)))))))))))
+               $Show.return_129))
+         $Show.return_128))
    (<>
+      $Show.return_132
+      (cut
+         (lambda
+            ($Show.param_117 $Show.return_133)
+            (cut
+               (lambda
+                  ($Show.param_118 $Show.return_134)
+                  (cut
+                     (construct
+                        tuple
+                        ($Show.param_117 $Show.param_118)
+                        ())
+                     (select
+                        ((tuple
+                           (#Show.x_0 #Show.y_1))
+                           (invoke appendString
+                              (apply
+                                 (#Show.x_0)
+                                 ((apply
+                                    (#Show.y_1)
+                                    ($Show.return_134)))))))))
+               $Show.return_133))
+         $Show.return_132))
+   (showTuple2
       $Show.return_135
       (cut
          (lambda
-            ($Show.param_117 $Show.return_136)
+            ($Show.param_119 $Show.return_136)
             (cut
                (lambda
-                  ($Show.param_118 $Show.return_137)
-                  (cut-do
-                     $Show.return_138
-                     (cut
-                        (construct
-                           tuple
-                           ($Show.param_117 $Show.param_118)
-                           ())
-                        (select
-                           ((tuple
-                              (#Show.x_0 #Show.y_1))
-                              (invoke appendString
-                                 (apply
-                                    (#Show.x_0)
-                                    ((apply
-                                       (#Show.y_1)
-                                       ($Show.return_138))))))))
-                     $Show.return_137))
+                  ($Show.param_120 $Show.return_137)
+                  (cut
+                     (construct
+                        tuple
+                        ($Show.param_119 $Show.param_120)
+                        ())
+                     (select
+                        ((tuple
+                           (#Show.showDictA_8 #Show.showDictB_9))
+                           (cut
+                              ((show
+                                 ($Show.return_138
+                                    (cut
+                                       (lambda
+                                          ($Show.param_121 $Show.return_139)
+                                          (cut
+                                             (construct
+                                                tuple
+                                                ($Show.param_121)
+                                                ())
+                                             (select
+                                                ((tuple
+                                                   (#Show.a_10 #Show.b_11))
+                                                   (invoke <>
+                                                      (then $Show.outer_157
+                                                         (cut-do
+                                                            $Show.return_147
+                                                            (invoke String#
+                                                               (apply
+                                                                  ("(")
+                                                                  ($Show.return_147)))
+                                                            (then $Show.inner_158
+                                                               (cut
+                                                                  $Show.outer_157
+                                                                  (apply
+                                                                     ($Show.inner_158)
+                                                                     ((then $Show.outer_187
+                                                                        (cut-do
+                                                                           $Show.return_140
+                                                                           (invoke <>
+                                                                              (then $Show.outer_189
+                                                                                 (cut-do
+                                                                                    $Show.return_146
+                                                                                    (invoke show
+                                                                                       (apply
+                                                                                          (#Show.showDictA_8)
+                                                                                          ((apply
+                                                                                             (#Show.a_10)
+                                                                                             ($Show.return_146)))))
+                                                                                    (then $Show.inner_190
+                                                                                       (cut
+                                                                                          $Show.outer_189
+                                                                                          (apply
+                                                                                             ($Show.inner_190)
+                                                                                             ((then $Show.outer_203
+                                                                                                (cut-do
+                                                                                                   $Show.return_141
+                                                                                                   (invoke <>
+                                                                                                      (then $Show.outer_205
+                                                                                                         (cut-do
+                                                                                                            $Show.return_145
+                                                                                                            (invoke String#
+                                                                                                               (apply
+                                                                                                                  (", ")
+                                                                                                                  ($Show.return_145)))
+                                                                                                            (then $Show.inner_206
+                                                                                                               (cut
+                                                                                                                  $Show.outer_205
+                                                                                                                  (apply
+                                                                                                                     ($Show.inner_206)
+                                                                                                                     ((then $Show.outer_211
+                                                                                                                        (cut-do
+                                                                                                                           $Show.return_142
+                                                                                                                           (invoke <>
+                                                                                                                              (then $Show.outer_213
+                                                                                                                                 (cut-do
+                                                                                                                                    $Show.return_144
+                                                                                                                                    (invoke show
+                                                                                                                                       (apply
+                                                                                                                                          (#Show.showDictB_9)
+                                                                                                                                          ((apply
+                                                                                                                                             (#Show.b_11)
+                                                                                                                                             ($Show.return_144)))))
+                                                                                                                                    (then $Show.inner_214
+                                                                                                                                       (cut
+                                                                                                                                          $Show.outer_213
+                                                                                                                                          (apply
+                                                                                                                                             ($Show.inner_214)
+                                                                                                                                             ((then $Show.outer_215
+                                                                                                                                                (cut-do
+                                                                                                                                                   $Show.return_143
+                                                                                                                                                   (invoke String#
+                                                                                                                                                      (apply
+                                                                                                                                                         (")")
+                                                                                                                                                         ($Show.return_143)))
+                                                                                                                                                   (then $Show.inner_216
+                                                                                                                                                      (cut
+                                                                                                                                                         $Show.outer_215
+                                                                                                                                                         (apply
+                                                                                                                                                            ($Show.inner_216)
+                                                                                                                                                            ($Show.return_142)))))))))))))
+                                                                                                                           (then $Show.inner_212
+                                                                                                                              (cut
+                                                                                                                                 $Show.outer_211
+                                                                                                                                 (apply
+                                                                                                                                    ($Show.inner_212)
+                                                                                                                                    ($Show.return_141)))))))))))))
+                                                                                                   (then $Show.inner_204
+                                                                                                      (cut
+                                                                                                         $Show.outer_203
+                                                                                                         (apply
+                                                                                                            ($Show.inner_204)
+                                                                                                            ($Show.return_140)))))))))))))
+                                                                           (then $Show.inner_188
+                                                                              (cut
+                                                                                 $Show.outer_187
+                                                                                 (apply
+                                                                                    ($Show.inner_188)
+                                                                                    ($Show.return_139)))))))))))))))))
+                                       $Show.return_138))))
+                              $Show.return_137)))))
                $Show.return_136))
          $Show.return_135))
-   (showTuple2
-      $Show.return_139
-      (cut
-         (lambda
-            ($Show.param_119 $Show.return_140)
-            (cut
-               (lambda
-                  ($Show.param_120 $Show.return_141)
-                  (cut-do
-                     $Show.return_142
-                     (cut
-                        (construct
-                           tuple
-                           ($Show.param_119 $Show.param_120)
-                           ())
-                        (select
-                           ((tuple
-                              (#Show.showDictA_8 #Show.showDictB_9))
-                              (cut
-                                 ((show
-                                    ($Show.return_153
-                                       (cut
-                                          (lambda
-                                             ($Show.param_121 $Show.return_143)
-                                             (cut-do
-                                                $Show.return_144
-                                                (cut
-                                                   (construct
-                                                      tuple
-                                                      ($Show.param_121)
-                                                      ())
-                                                   (select
-                                                      ((tuple
-                                                         (#Show.a_10 #Show.b_11))
-                                                         (invoke <>
-                                                            (then $Show.outer_164
-                                                               (cut-do
-                                                                  $Show.return_152
-                                                                  (invoke String#
-                                                                     (apply
-                                                                        ("(")
-                                                                        ($Show.return_152)))
-                                                                  (then $Show.inner_165
-                                                                     (cut
-                                                                        $Show.outer_164
-                                                                        (apply
-                                                                           ($Show.inner_165)
-                                                                           ((then $Show.outer_194
-                                                                              (cut-do
-                                                                                 $Show.return_145
-                                                                                 (invoke <>
-                                                                                    (then $Show.outer_196
-                                                                                       (cut-do
-                                                                                          $Show.return_151
-                                                                                          (invoke show
-                                                                                             (apply
-                                                                                                (#Show.showDictA_8)
-                                                                                                ((apply
-                                                                                                   (#Show.a_10)
-                                                                                                   ($Show.return_151)))))
-                                                                                          (then $Show.inner_197
-                                                                                             (cut
-                                                                                                $Show.outer_196
-                                                                                                (apply
-                                                                                                   ($Show.inner_197)
-                                                                                                   ((then $Show.outer_210
-                                                                                                      (cut-do
-                                                                                                         $Show.return_146
-                                                                                                         (invoke <>
-                                                                                                            (then $Show.outer_212
-                                                                                                               (cut-do
-                                                                                                                  $Show.return_150
-                                                                                                                  (invoke String#
-                                                                                                                     (apply
-                                                                                                                        (", ")
-                                                                                                                        ($Show.return_150)))
-                                                                                                                  (then $Show.inner_213
-                                                                                                                     (cut
-                                                                                                                        $Show.outer_212
-                                                                                                                        (apply
-                                                                                                                           ($Show.inner_213)
-                                                                                                                           ((then $Show.outer_218
-                                                                                                                              (cut-do
-                                                                                                                                 $Show.return_147
-                                                                                                                                 (invoke <>
-                                                                                                                                    (then $Show.outer_220
-                                                                                                                                       (cut-do
-                                                                                                                                          $Show.return_149
-                                                                                                                                          (invoke show
-                                                                                                                                             (apply
-                                                                                                                                                (#Show.showDictB_9)
-                                                                                                                                                ((apply
-                                                                                                                                                   (#Show.b_11)
-                                                                                                                                                   ($Show.return_149)))))
-                                                                                                                                          (then $Show.inner_221
-                                                                                                                                             (cut
-                                                                                                                                                $Show.outer_220
-                                                                                                                                                (apply
-                                                                                                                                                   ($Show.inner_221)
-                                                                                                                                                   ((then $Show.outer_222
-                                                                                                                                                      (cut-do
-                                                                                                                                                         $Show.return_148
-                                                                                                                                                         (invoke String#
-                                                                                                                                                            (apply
-                                                                                                                                                               (")")
-                                                                                                                                                               ($Show.return_148)))
-                                                                                                                                                         (then $Show.inner_223
-                                                                                                                                                            (cut
-                                                                                                                                                               $Show.outer_222
-                                                                                                                                                               (apply
-                                                                                                                                                                  ($Show.inner_223)
-                                                                                                                                                                  ($Show.return_147)))))))))))))
-                                                                                                                                 (then $Show.inner_219
-                                                                                                                                    (cut
-                                                                                                                                       $Show.outer_218
-                                                                                                                                       (apply
-                                                                                                                                          ($Show.inner_219)
-                                                                                                                                          ($Show.return_146)))))))))))))
-                                                                                                         (then $Show.inner_211
-                                                                                                            (cut
-                                                                                                               $Show.outer_210
-                                                                                                               (apply
-                                                                                                                  ($Show.inner_211)
-                                                                                                                  ($Show.return_145)))))))))))))
-                                                                                 (then $Show.inner_195
-                                                                                    (cut
-                                                                                       $Show.outer_194
-                                                                                       (apply
-                                                                                          ($Show.inner_195)
-                                                                                          ($Show.return_144))))))))))))))))
-                                                $Show.return_143))
-                                          $Show.return_153))))
-                                 $Show.return_142))))
-                     $Show.return_141))
-               $Show.return_140))
-         $Show.return_139))
    (main
-      $Show.return_154
+      $Show.return_148
       (cut
          (lambda
-            ($Show.param_122 $Show.return_155)
-            (cut-do
-               $Show.return_156
-               (cut
-                  (construct
-                     tuple
-                     ($Show.param_122)
-                     ())
-                  (select
-                     (#Show.$__112
-                        (invoke print
-                           (then $Show.outer_228
-                              (cut-do
-                                 $Show.return_159
-                                 (invoke showTuple2
-                                    (then $Show.outer_240
-                                       (cut-do
-                                          $Show.return_161
-                                          (invoke showInt32 $Show.return_161)
-                                          (then $Show.inner_241
-                                             (cut
-                                                $Show.outer_240
-                                                (apply
-                                                   ($Show.inner_241)
-                                                   ((then $Show.outer_242
-                                                      (cut-do
-                                                         $Show.return_160
-                                                         (invoke showInt32 $Show.return_160)
-                                                         (then $Show.inner_243
-                                                            (cut
-                                                               $Show.outer_242
-                                                               (apply
-                                                                  ($Show.inner_243)
-                                                                  ($Show.return_159)))))))))))))
-                                 (then $Show.inner_229
-                                    (cut
-                                       $Show.outer_228
-                                       (apply
-                                          ($Show.inner_229)
-                                          ((then $Show.outer_234
+            ($Show.param_122 $Show.return_149)
+            (cut
+               (construct
+                  tuple
+                  ($Show.param_122)
+                  ())
+               (select
+                  (#Show.$__112
+                     (invoke print
+                        (then $Show.outer_221
+                           (cut-do
+                              $Show.return_152
+                              (invoke showTuple2
+                                 (then $Show.outer_233
+                                    (cut-do
+                                       $Show.return_154
+                                       (invoke showInt32 $Show.return_154)
+                                       (then $Show.inner_234
+                                          (cut
+                                             $Show.outer_233
+                                             (apply
+                                                ($Show.inner_234)
+                                                ((then $Show.outer_235
+                                                   (cut-do
+                                                      $Show.return_153
+                                                      (invoke showInt32 $Show.return_153)
+                                                      (then $Show.inner_236
+                                                         (cut
+                                                            $Show.outer_235
+                                                            (apply
+                                                               ($Show.inner_236)
+                                                               ($Show.return_152)))))))))))))
+                              (then $Show.inner_222
+                                 (cut
+                                    $Show.outer_221
+                                    (apply
+                                       ($Show.inner_222)
+                                       ((then $Show.outer_227
+                                          (cut-do
+                                             $Show.label_229
                                              (cut-do
-                                                $Show.label_236
-                                                (cut-do
-                                                   $Show.return_157
-                                                   (invoke Int32#
-                                                      (apply
-                                                         (1_i32)
-                                                         ($Show.return_157)))
-                                                   (then $Show.var_237
+                                                $Show.return_150
+                                                (invoke Int32#
+                                                   (apply
+                                                      (1_i32)
+                                                      ($Show.return_150)))
+                                                (then $Show.var_230
+                                                   (cut-do
+                                                      $Show.label_231
                                                       (cut-do
-                                                         $Show.label_238
-                                                         (cut-do
-                                                            $Show.return_158
-                                                            (invoke Int32#
-                                                               (apply
-                                                                  (2_i32)
-                                                                  ($Show.return_158)))
-                                                            (then $Show.var_239
-                                                               (cut
-                                                                  (construct
-                                                                     tuple
-                                                                     ($Show.var_237 $Show.var_239)
-                                                                     ())
-                                                                  $Show.label_238)))
-                                                         $Show.label_236)))
-                                                (then $Show.inner_235
-                                                   (cut
-                                                      $Show.outer_234
-                                                      (apply
-                                                         ($Show.inner_235)
-                                                         ($Show.return_156))))))))))))))))
-               $Show.return_155))
-         $Show.return_154)))
+                                                         $Show.return_151
+                                                         (invoke Int32#
+                                                            (apply
+                                                               (2_i32)
+                                                               ($Show.return_151)))
+                                                         (then $Show.var_232
+                                                            (cut
+                                                               (construct
+                                                                  tuple
+                                                                  ($Show.var_230 $Show.var_232)
+                                                                  ())
+                                                               $Show.label_231)))
+                                                      $Show.label_229)))
+                                             (then $Show.inner_228
+                                                (cut
+                                                   $Show.outer_227
+                                                   (apply
+                                                      ($Show.inner_228)
+                                                      ($Show.return_149)))))))))))))))))
+         $Show.return_148)))

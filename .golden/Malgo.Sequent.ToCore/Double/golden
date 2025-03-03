@@ -4,25 +4,22 @@
       (lambda
          ($Double.param_9 $Double.return_11)
          (cut
-            (do $Double.return_12
-               (cut
-                  (construct
-                     tuple
-                     ($Double.param_9)
-                     ())
-                  (select
-                     (#Double.$__8
-                        (invoke putStr
-                           (apply
-                              ((do $Double.return_13
-                                 (invoke toStringDouble
-                                    (apply
-                                       ((do $Double.return_14
-                                          (invoke Double#
-                                             (apply
-                                                (3.14_f64)
-                                                ($Double.return_14)))))
-                                       ($Double.return_13)))))
-                              ($Double.return_12)))))))
-            $Double.return_11))
+            (construct
+               tuple
+               ($Double.param_9)
+               ())
+            (select
+               (#Double.$__8
+                  (invoke putStr
+                     (apply
+                        ((do $Double.return_12
+                           (invoke toStringDouble
+                              (apply
+                                 ((do $Double.return_13
+                                    (invoke Double#
+                                       (apply
+                                          (3.14_f64)
+                                          ($Double.return_13)))))
+                                 ($Double.return_12)))))
+                        ($Double.return_11)))))))
       $Double.return_10)))

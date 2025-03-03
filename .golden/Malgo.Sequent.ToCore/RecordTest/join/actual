@@ -4,157 +4,151 @@
       (lambda
          ($RecordTest.param_50 $RecordTest.return_55)
          (join
-            (($RecordTest.select_95
+            (($RecordTest.select_89
                (select
                   ((B
                      ((expand
                         ((a #RecordTest.a_3)
                            (b #RecordTest.__4)))))
-                     (cut #RecordTest.a_3 $RecordTest.return_56))))
-               ($RecordTest.return_56 $RecordTest.return_55))
+                     (cut #RecordTest.a_3 $RecordTest.return_55)))))
             (cut
                (construct
                   tuple
                   ($RecordTest.param_50)
                   ())
-               $RecordTest.select_95)))
+               $RecordTest.select_89)))
       $RecordTest.return_54))
    (f
-      $RecordTest.return_57
+      $RecordTest.return_56
       (cut
          (lambda
-            ($RecordTest.param_51 $RecordTest.return_58)
+            ($RecordTest.param_51 $RecordTest.return_57)
             (join
-               (($RecordTest.select_96
+               (($RecordTest.select_90
                   (select
                      ((expand
                         ((a #RecordTest.a_1)
                            (b #RecordTest.__2)))
-                        (cut #RecordTest.a_1 $RecordTest.return_59))))
-                  ($RecordTest.return_59 $RecordTest.return_58))
+                        (cut #RecordTest.a_1 $RecordTest.return_57)))))
                (cut
                   (construct
                      tuple
                      ($RecordTest.param_51)
                      ())
-                  $RecordTest.select_96)))
-         $RecordTest.return_57))
+                  $RecordTest.select_90)))
+         $RecordTest.return_56))
    (main
-      $RecordTest.return_60
+      $RecordTest.return_58
       (cut
          (lambda
-            ($RecordTest.param_52 $RecordTest.return_61)
+            ($RecordTest.param_52 $RecordTest.return_59)
             (join
-               (($RecordTest.select_115
+               (($RecordTest.select_109
                   (select
                      (#RecordTest.$__49
                         (join
-                           (($RecordTest.then_114
+                           (($RecordTest.then_108
                               (then #RecordTest.x_5
                                  (join
-                                    (($RecordTest.then_113
-                                       (then $RecordTest.outer_83
+                                    (($RecordTest.then_107
+                                       (then $RecordTest.outer_77
                                           (join
-                                             (($RecordTest.then_110
-                                                (then $RecordTest.outer_89
+                                             (($RecordTest.then_104
+                                                (then $RecordTest.outer_83
                                                    (join
-                                                      (($RecordTest.then_107
-                                                         (then $RecordTest.outer_91
+                                                      (($RecordTest.then_101
+                                                         (then $RecordTest.outer_85
                                                             (join
-                                                               (($RecordTest.apply_99
+                                                               (($RecordTest.apply_93
                                                                   (apply
                                                                      (#RecordTest.x_5)
-                                                                     ($RecordTest.return_68)))
-                                                                  ($RecordTest.then_106
-                                                                     (then $RecordTest.inner_92
+                                                                     ($RecordTest.return_64)))
+                                                                  ($RecordTest.then_100
+                                                                     (then $RecordTest.inner_86
                                                                         (join
-                                                                           (($RecordTest.then_104
-                                                                              (then $RecordTest.outer_93
+                                                                           (($RecordTest.then_98
+                                                                              (then $RecordTest.outer_87
                                                                                  (join
-                                                                                    (($RecordTest.apply_101
+                                                                                    (($RecordTest.apply_95
                                                                                        (apply
                                                                                           (#RecordTest.x_5)
-                                                                                          ($RecordTest.return_65)))
-                                                                                       ($RecordTest.then_103
-                                                                                          (then $RecordTest.inner_94
+                                                                                          ($RecordTest.return_62)))
+                                                                                       ($RecordTest.then_97
+                                                                                          (then $RecordTest.inner_88
                                                                                              (join
-                                                                                                (($RecordTest.apply_102
+                                                                                                (($RecordTest.apply_96
                                                                                                    (apply
-                                                                                                      ($RecordTest.inner_94)
-                                                                                                      ($RecordTest.return_64))))
-                                                                                                (cut $RecordTest.outer_93 $RecordTest.apply_102))))
-                                                                                       ($RecordTest.return_65 $RecordTest.then_103))
+                                                                                                      ($RecordTest.inner_88)
+                                                                                                      ($RecordTest.return_61))))
+                                                                                                (cut $RecordTest.outer_87 $RecordTest.apply_96))))
+                                                                                       ($RecordTest.return_62 $RecordTest.then_97))
                                                                                     (cut
                                                                                        (lambda
-                                                                                          ($RecordTest.param_53 $RecordTest.return_66)
+                                                                                          ($RecordTest.param_53 $RecordTest.return_63)
                                                                                           (join
-                                                                                             (($RecordTest.select_100
+                                                                                             (($RecordTest.select_94
                                                                                                 (select
                                                                                                    ((expand
                                                                                                       ((a #RecordTest.__6)
                                                                                                          (b #RecordTest.b_7)))
-                                                                                                      (cut #RecordTest.b_7 $RecordTest.return_67))))
-                                                                                                ($RecordTest.return_67 $RecordTest.return_66))
+                                                                                                      (cut #RecordTest.b_7 $RecordTest.return_63)))))
                                                                                              (cut
                                                                                                 (construct
                                                                                                    tuple
                                                                                                    ($RecordTest.param_53)
                                                                                                    ())
-                                                                                                $RecordTest.select_100)))
-                                                                                       $RecordTest.apply_101))))
-                                                                              ($RecordTest.apply_105
+                                                                                                $RecordTest.select_94)))
+                                                                                       $RecordTest.apply_95))))
+                                                                              ($RecordTest.apply_99
                                                                                  (apply
-                                                                                    ($RecordTest.inner_92)
-                                                                                    ($RecordTest.then_104))))
-                                                                           (cut $RecordTest.outer_91 $RecordTest.apply_105))))
-                                                                  ($RecordTest.return_68 $RecordTest.then_106))
-                                                               (invoke f $RecordTest.apply_99))))
-                                                         ($RecordTest.then_109
-                                                            (then $RecordTest.inner_90
+                                                                                    ($RecordTest.inner_86)
+                                                                                    ($RecordTest.then_98))))
+                                                                           (cut $RecordTest.outer_85 $RecordTest.apply_99))))
+                                                                  ($RecordTest.return_64 $RecordTest.then_100))
+                                                               (invoke f $RecordTest.apply_93))))
+                                                         ($RecordTest.then_103
+                                                            (then $RecordTest.inner_84
                                                                (join
-                                                                  (($RecordTest.apply_108
+                                                                  (($RecordTest.apply_102
                                                                      (apply
-                                                                        ($RecordTest.inner_90)
-                                                                        ($RecordTest.return_63))))
-                                                                  (cut $RecordTest.outer_89 $RecordTest.apply_108))))
-                                                         ($RecordTest.return_64 $RecordTest.then_109))
-                                                      (invoke addInt32 $RecordTest.then_107))))
-                                                ($RecordTest.then_112
-                                                   (then $RecordTest.inner_84
+                                                                        ($RecordTest.inner_84)
+                                                                        ($RecordTest.return_60))))
+                                                                  (cut $RecordTest.outer_83 $RecordTest.apply_102))))
+                                                         ($RecordTest.return_61 $RecordTest.then_103))
+                                                      (invoke addInt32 $RecordTest.then_101))))
+                                                ($RecordTest.then_106
+                                                   (then $RecordTest.inner_78
                                                       (join
-                                                         (($RecordTest.apply_111
+                                                         (($RecordTest.apply_105
                                                             (apply
-                                                               ($RecordTest.inner_84)
-                                                               ($RecordTest.return_62))))
-                                                         (cut $RecordTest.outer_83 $RecordTest.apply_111))))
-                                                ($RecordTest.return_63 $RecordTest.then_112))
-                                             (invoke toStringInt32 $RecordTest.then_110)))))
-                                    (invoke printString $RecordTest.then_113)))))
+                                                               ($RecordTest.inner_78)
+                                                               ($RecordTest.return_59))))
+                                                         (cut $RecordTest.outer_77 $RecordTest.apply_105))))
+                                                ($RecordTest.return_60 $RecordTest.then_106))
+                                             (invoke toStringInt32 $RecordTest.then_104)))))
+                                    (invoke printString $RecordTest.then_107)))))
                            (cut
                               ((a
-                                 ($RecordTest.return_70
+                                 ($RecordTest.return_65
                                     (join
-                                       (($RecordTest.apply_97
+                                       (($RecordTest.apply_91
                                           (apply
                                              (32_i32)
-                                             ($RecordTest.return_69)))
-                                          ($RecordTest.return_69 $RecordTest.return_70))
-                                       (invoke Int32# $RecordTest.apply_97))))
+                                             ($RecordTest.return_65))))
+                                       (invoke Int32# $RecordTest.apply_91))))
                                  (b
-                                    ($RecordTest.return_72
+                                    ($RecordTest.return_66
                                        (join
-                                          (($RecordTest.apply_98
+                                          (($RecordTest.apply_92
                                              (apply
                                                 (10_i32)
-                                                ($RecordTest.return_71)))
-                                             ($RecordTest.return_71 $RecordTest.return_72))
-                                          (invoke Int32# $RecordTest.apply_98)))))
-                              $RecordTest.then_114)))))
-                  ($RecordTest.return_62 $RecordTest.return_61))
+                                                ($RecordTest.return_66))))
+                                          (invoke Int32# $RecordTest.apply_92)))))
+                              $RecordTest.then_108))))))
                (cut
                   (construct
                      tuple
                      ($RecordTest.param_52)
                      ())
-                  $RecordTest.select_115)))
-         $RecordTest.return_60)))
+                  $RecordTest.select_109)))
+         $RecordTest.return_58)))

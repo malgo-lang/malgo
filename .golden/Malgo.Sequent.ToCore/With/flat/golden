@@ -3,219 +3,189 @@
    (cut
       (lambda
          ($With.param_79 $With.return_92)
-         (cut-do
-            $With.return_93
+         (cut
+            (construct
+               tuple
+               ($With.param_79)
+               ())
+            (select
+               (#With.k_6
+                  (cut
+                     (lambda
+                        ($With.tmp_80 $With.return_94)
+                        (cut
+                           #With.k_6
+                           (apply
+                              ((construct tuple () ()))
+                              ($With.return_94))))
+                     (then $With.outer_111
+                        (cut-do
+                           $With.return_93
+                           (cut
+                              #With.k_6
+                              (apply
+                                 ((construct tuple () ()))
+                                 ($With.return_93)))
+                           (then $With.inner_112
+                              (cut
+                                 $With.outer_111
+                                 (apply
+                                    ($With.inner_112)
+                                    ($With.return_92)))))))))))
+      $With.return_91))
+   (printAndReturn
+      $With.return_95
+      (cut
+         (lambda
+            ($With.param_81 $With.return_96)
+            (cut
+               (lambda
+                  ($With.param_82 $With.return_97)
+                  (cut
+                     (construct
+                        tuple
+                        ($With.param_81 $With.param_82)
+                        ())
+                     (select
+                        ((tuple
+                           (#With.str_7 #With.k_8))
+                           (cut
+                              (lambda
+                                 ($With.tmp_83 $With.return_99)
+                                 (cut
+                                    #With.k_8
+                                    (apply
+                                       (#With.str_7)
+                                       ($With.return_99))))
+                              (then $With.outer_113
+                                 (cut-do
+                                    $With.return_98
+                                    (invoke printString
+                                       (apply
+                                          (#With.str_7)
+                                          ($With.return_98)))
+                                    (then $With.inner_114
+                                       (cut
+                                          $With.outer_113
+                                          (apply
+                                             ($With.inner_114)
+                                             ($With.return_97)))))))))))
+               $With.return_96))
+         $With.return_95))
+   (finally
+      $With.return_100
+      (cut
+         (lambda
+            ($With.param_84 $With.return_101)
+            (cut
+               (lambda
+                  ($With.param_85 $With.return_102)
+                  (cut
+                     (construct
+                        tuple
+                        ($With.param_84 $With.param_85)
+                        ())
+                     (select
+                        ((tuple
+                           (#With.finalizer_2 #With.k_3))
+                           (cut
+                              #With.k_3
+                              (apply
+                                 ((construct tuple () ()))
+                                 ((then #With.x_4
+                                    (cut
+                                       #With.finalizer_2
+                                       (apply
+                                          (#With.x_4)
+                                          ($With.return_102)))))))))))
+               $With.return_101))
+         $With.return_100))
+   (main
+      $With.return_103
+      (cut
+         (lambda
+            ($With.param_86 $With.return_104)
             (cut
                (construct
                   tuple
-                  ($With.param_79)
+                  ($With.param_86)
                   ())
                (select
-                  (#With.k_6
-                     (cut
-                        (lambda
-                           ($With.tmp_80 $With.return_95)
-                           (cut-do
-                              $With.return_96
+                  (#With.$__78
+                     (invoke finally
+                        (apply
+                           ((lambda
+                              ($With.param_87 $With.return_109)
                               (cut
-                                 #With.k_6
-                                 (apply
-                                    ((construct tuple () ()))
-                                    ($With.return_96)))
-                              $With.return_95))
-                        (then $With.outer_121
-                           (cut-do
-                              $With.return_94
-                              (cut
-                                 #With.k_6
-                                 (apply
-                                    ((construct tuple () ()))
-                                    ($With.return_94)))
-                              (then $With.inner_122
-                                 (cut
-                                    $With.outer_121
-                                    (apply
-                                       ($With.inner_122)
-                                       ($With.return_93))))))))))
-            $With.return_92))
-      $With.return_91))
-   (printAndReturn
-      $With.return_97
-      (cut
-         (lambda
-            ($With.param_81 $With.return_98)
-            (cut
-               (lambda
-                  ($With.param_82 $With.return_99)
-                  (cut-do
-                     $With.return_100
-                     (cut
-                        (construct
-                           tuple
-                           ($With.param_81 $With.param_82)
-                           ())
-                        (select
-                           ((tuple
-                              (#With.str_7 #With.k_8))
-                              (cut
-                                 (lambda
-                                    ($With.tmp_83 $With.return_102)
-                                    (cut-do
-                                       $With.return_103
-                                       (cut
-                                          #With.k_8
-                                          (apply
-                                             (#With.str_7)
-                                             ($With.return_103)))
-                                       $With.return_102))
-                                 (then $With.outer_123
-                                    (cut-do
-                                       $With.return_101
+                                 (construct
+                                    tuple
+                                    ($With.param_87)
+                                    ())
+                                 (select
+                                    ((tuple ())
                                        (invoke printString
-                                          (apply
-                                             (#With.str_7)
-                                             ($With.return_101)))
-                                       (then $With.inner_124
-                                          (cut
-                                             $With.outer_123
-                                             (apply
-                                                ($With.inner_124)
-                                                ($With.return_100))))))))))
-                     $With.return_99))
-               $With.return_98))
-         $With.return_97))
-   (finally
-      $With.return_104
-      (cut
-         (lambda
-            ($With.param_84 $With.return_105)
-            (cut
-               (lambda
-                  ($With.param_85 $With.return_106)
-                  (cut-do
-                     $With.return_107
-                     (cut
-                        (construct
-                           tuple
-                           ($With.param_84 $With.param_85)
-                           ())
-                        (select
-                           ((tuple
-                              (#With.finalizer_2 #With.k_3))
-                              (cut
-                                 #With.k_3
-                                 (apply
-                                    ((construct tuple () ()))
-                                    ((then #With.x_4
-                                       (cut
-                                          #With.finalizer_2
-                                          (apply
-                                             (#With.x_4)
-                                             ($With.return_107))))))))))
-                     $With.return_106))
-               $With.return_105))
-         $With.return_104))
-   (main
-      $With.return_108
-      (cut
-         (lambda
-            ($With.param_86 $With.return_109)
-            (cut-do
-               $With.return_110
-               (cut
-                  (construct
-                     tuple
-                     ($With.param_86)
-                     ())
-                  (select
-                     (#With.$__78
-                        (invoke finally
-                           (apply
-                              ((lambda
-                                 ($With.param_87 $With.return_118)
-                                 (cut-do
-                                    $With.return_119
-                                    (cut
-                                       (construct
-                                          tuple
-                                          ($With.param_87)
-                                          ())
-                                       (select
-                                          ((tuple ())
-                                             (invoke printString
-                                                (then $With.outer_127
-                                                   (cut-do
-                                                      $With.return_120
-                                                      (invoke String#
-                                                         (apply
-                                                            ("end")
-                                                            ($With.return_120)))
-                                                      (then $With.inner_128
-                                                         (cut
-                                                            $With.outer_127
-                                                            (apply
-                                                               ($With.inner_128)
-                                                               ($With.return_119))))))))))
-                                    $With.return_118)))
-                              ((apply
-                                 ((lambda
-                                    ($With.param_88 $With.return_111)
-                                    (cut-do
-                                       $With.return_112
-                                       (cut
-                                          (construct
-                                             tuple
-                                             ($With.param_88)
-                                             ())
-                                          (select
-                                             (#With.$__75
-                                                (invoke twice
+                                          (then $With.outer_117
+                                             (cut-do
+                                                $With.return_110
+                                                (invoke String#
                                                    (apply
-                                                      ((lambda
-                                                         ($With.param_89 $With.return_113)
-                                                         (cut-do
-                                                            $With.return_114
-                                                            (cut
-                                                               (construct
-                                                                  tuple
-                                                                  ($With.param_89)
-                                                                  ())
-                                                               (select
-                                                                  (#With.$__72
-                                                                     (invoke printAndReturn
-                                                                        (then $With.outer_135
-                                                                           (cut-do
-                                                                              $With.return_117
-                                                                              (invoke String#
-                                                                                 (apply
-                                                                                    ("foo")
-                                                                                    ($With.return_117)))
-                                                                              (then $With.inner_136
-                                                                                 (cut
-                                                                                    $With.outer_135
-                                                                                    (apply
-                                                                                       ($With.inner_136)
-                                                                                       ((apply
-                                                                                          ((lambda
-                                                                                             ($With.param_90 $With.return_115)
-                                                                                             (cut-do
-                                                                                                $With.return_116
-                                                                                                (cut
-                                                                                                   (construct
-                                                                                                      tuple
-                                                                                                      ($With.param_90)
-                                                                                                      ())
-                                                                                                   (select
-                                                                                                      (#With.x_9
-                                                                                                         (invoke printString
-                                                                                                            (apply
-                                                                                                               (#With.x_9)
-                                                                                                               ($With.return_116))))))
-                                                                                                $With.return_115)))
-                                                                                          ($With.return_114))))))))))))
-                                                            $With.return_113)))
-                                                      ($With.return_112))))))
-                                       $With.return_111)))
-                                 ($With.return_110))))))))
-               $With.return_109))
-         $With.return_108)))
+                                                      ("end")
+                                                      ($With.return_110)))
+                                                (then $With.inner_118
+                                                   (cut
+                                                      $With.outer_117
+                                                      (apply
+                                                         ($With.inner_118)
+                                                         ($With.return_109))))))))))))
+                           ((apply
+                              ((lambda
+                                 ($With.param_88 $With.return_105)
+                                 (cut
+                                    (construct
+                                       tuple
+                                       ($With.param_88)
+                                       ())
+                                    (select
+                                       (#With.$__75
+                                          (invoke twice
+                                             (apply
+                                                ((lambda
+                                                   ($With.param_89 $With.return_106)
+                                                   (cut
+                                                      (construct
+                                                         tuple
+                                                         ($With.param_89)
+                                                         ())
+                                                      (select
+                                                         (#With.$__72
+                                                            (invoke printAndReturn
+                                                               (then $With.outer_125
+                                                                  (cut-do
+                                                                     $With.return_108
+                                                                     (invoke String#
+                                                                        (apply
+                                                                           ("foo")
+                                                                           ($With.return_108)))
+                                                                     (then $With.inner_126
+                                                                        (cut
+                                                                           $With.outer_125
+                                                                           (apply
+                                                                              ($With.inner_126)
+                                                                              ((apply
+                                                                                 ((lambda
+                                                                                    ($With.param_90 $With.return_107)
+                                                                                    (cut
+                                                                                       (construct
+                                                                                          tuple
+                                                                                          ($With.param_90)
+                                                                                          ())
+                                                                                       (select
+                                                                                          (#With.x_9
+                                                                                             (invoke printString
+                                                                                                (apply
+                                                                                                   (#With.x_9)
+                                                                                                   ($With.return_107))))))))
+                                                                                 ($With.return_106))))))))))))))
+                                                ($With.return_105))))))))
+                              ($With.return_104)))))))))
+         $With.return_103)))

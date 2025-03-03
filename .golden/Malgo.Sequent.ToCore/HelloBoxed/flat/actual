@@ -3,88 +3,76 @@
    (cut
       (lambda
          ($HelloBoxed.param_21 $HelloBoxed.return_26)
-         (cut-do
-            $HelloBoxed.return_27
+         (cut
+            (construct
+               tuple
+               ($HelloBoxed.param_21)
+               ())
+            (select
+               (#HelloBoxed.x_1
+                  (invoke String#
+                     (apply
+                        (#HelloBoxed.x_1)
+                        ($HelloBoxed.return_26)))))))
+      $HelloBoxed.return_25))
+   (putStrLn
+      $HelloBoxed.return_27
+      (cut
+         (lambda
+            ($HelloBoxed.param_22 $HelloBoxed.return_28)
             (cut
                (construct
                   tuple
-                  ($HelloBoxed.param_21)
+                  ($HelloBoxed.param_22)
                   ())
                (select
-                  (#HelloBoxed.x_1
-                     (invoke String#
-                        (apply
-                           (#HelloBoxed.x_1)
-                           ($HelloBoxed.return_27))))))
-            $HelloBoxed.return_26))
-      $HelloBoxed.return_25))
-   (putStrLn
-      $HelloBoxed.return_28
-      (cut
-         (lambda
-            ($HelloBoxed.param_22 $HelloBoxed.return_29)
-            (cut-do
-               $HelloBoxed.return_30
-               (cut
-                  (construct
-                     tuple
-                     ($HelloBoxed.param_22)
-                     ())
-                  (select
-                     ((String#
-                        (#HelloBoxed.str_0))
-                        (cut
-                           (lambda
-                              ($HelloBoxed.tmp_23 $HelloBoxed.return_32)
-                              (cut-do
-                                 $HelloBoxed.return_33
-                                 (invoke malgo_newline
+                  ((String#
+                     (#HelloBoxed.str_0))
+                     (cut
+                        (lambda
+                           ($HelloBoxed.tmp_23 $HelloBoxed.return_30)
+                           (invoke malgo_newline
+                              (apply
+                                 ((construct tuple () ()))
+                                 ($HelloBoxed.return_30))))
+                        (then $HelloBoxed.outer_34
+                           (cut-do
+                              $HelloBoxed.return_29
+                              (invoke malgo_print_string
+                                 (apply
+                                    (#HelloBoxed.str_0)
+                                    ($HelloBoxed.return_29)))
+                              (then $HelloBoxed.inner_35
+                                 (cut
+                                    $HelloBoxed.outer_34
                                     (apply
-                                       ((construct tuple () ()))
-                                       ($HelloBoxed.return_33)))
-                                 $HelloBoxed.return_32))
-                           (then $HelloBoxed.outer_38
-                              (cut-do
-                                 $HelloBoxed.return_31
-                                 (invoke malgo_print_string
-                                    (apply
-                                       (#HelloBoxed.str_0)
-                                       ($HelloBoxed.return_31)))
-                                 (then $HelloBoxed.inner_39
-                                    (cut
-                                       $HelloBoxed.outer_38
-                                       (apply
-                                          ($HelloBoxed.inner_39)
-                                          ($HelloBoxed.return_30))))))))))
-               $HelloBoxed.return_29))
-         $HelloBoxed.return_28))
+                                       ($HelloBoxed.inner_35)
+                                       ($HelloBoxed.return_28)))))))))))
+         $HelloBoxed.return_27))
    (main
-      $HelloBoxed.return_34
+      $HelloBoxed.return_31
       (cut
          (lambda
-            ($HelloBoxed.param_24 $HelloBoxed.return_35)
-            (cut-do
-               $HelloBoxed.return_36
-               (cut
-                  (construct
-                     tuple
-                     ($HelloBoxed.param_24)
-                     ())
-                  (select
-                     (#HelloBoxed.$__20
-                        (invoke putStrLn
-                           (then $HelloBoxed.outer_40
-                              (cut-do
-                                 $HelloBoxed.return_37
-                                 (invoke String#
+            ($HelloBoxed.param_24 $HelloBoxed.return_32)
+            (cut
+               (construct
+                  tuple
+                  ($HelloBoxed.param_24)
+                  ())
+               (select
+                  (#HelloBoxed.$__20
+                     (invoke putStrLn
+                        (then $HelloBoxed.outer_36
+                           (cut-do
+                              $HelloBoxed.return_33
+                              (invoke String#
+                                 (apply
+                                    ("Hello, world")
+                                    ($HelloBoxed.return_33)))
+                              (then $HelloBoxed.inner_37
+                                 (cut
+                                    $HelloBoxed.outer_36
                                     (apply
-                                       ("Hello, world")
-                                       ($HelloBoxed.return_37)))
-                                 (then $HelloBoxed.inner_41
-                                    (cut
-                                       $HelloBoxed.outer_40
-                                       (apply
-                                          ($HelloBoxed.inner_41)
-                                          ($HelloBoxed.return_36))))))))))
-               $HelloBoxed.return_35))
-         $HelloBoxed.return_34)))
+                                       ($HelloBoxed.inner_37)
+                                       ($HelloBoxed.return_32)))))))))))
+         $HelloBoxed.return_31)))

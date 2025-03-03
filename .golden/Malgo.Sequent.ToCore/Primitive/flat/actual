@@ -3,40 +3,37 @@
    (cut
       (lambda
          ($Primitive.param_11 $Primitive.return_13)
-         (cut-do
-            $Primitive.return_14
-            (cut
-               (construct
-                  tuple
-                  ($Primitive.param_11)
-                  ())
-               (select
-                  (#Primitive.$__10
-                     (invoke printString#
-                        (then $Primitive.outer_19
-                           (cut-do
-                              $Primitive.return_15
-                              (invoke toStringInt64#
-                                 (then $Primitive.outer_21
-                                    (cut-do
-                                       $Primitive.return_16
-                                       (invoke addInt64#
+         (cut
+            (construct
+               tuple
+               ($Primitive.param_11)
+               ())
+            (select
+               (#Primitive.$__10
+                  (invoke printString#
+                     (then $Primitive.outer_18
+                        (cut-do
+                           $Primitive.return_14
+                           (invoke toStringInt64#
+                              (then $Primitive.outer_20
+                                 (cut-do
+                                    $Primitive.return_15
+                                    (invoke addInt64#
+                                       (apply
+                                          (40_i64)
+                                          ((apply
+                                             (2_i64)
+                                             ($Primitive.return_15)))))
+                                    (then $Primitive.inner_21
+                                       (cut
+                                          $Primitive.outer_20
                                           (apply
-                                             (40_i64)
-                                             ((apply
-                                                (2_i64)
-                                                ($Primitive.return_16)))))
-                                       (then $Primitive.inner_22
-                                          (cut
-                                             $Primitive.outer_21
-                                             (apply
-                                                ($Primitive.inner_22)
-                                                ($Primitive.return_15)))))))
-                              (then $Primitive.inner_20
-                                 (cut
-                                    $Primitive.outer_19
-                                    (apply
-                                       ($Primitive.inner_20)
-                                       ($Primitive.return_14))))))))))
-            $Primitive.return_13))
+                                             ($Primitive.inner_21)
+                                             ($Primitive.return_14)))))))
+                           (then $Primitive.inner_19
+                              (cut
+                                 $Primitive.outer_18
+                                 (apply
+                                    ($Primitive.inner_19)
+                                    ($Primitive.return_13)))))))))))
       $Primitive.return_12)))

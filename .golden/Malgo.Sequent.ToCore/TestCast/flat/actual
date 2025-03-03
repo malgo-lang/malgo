@@ -3,72 +3,69 @@
    (cut
       (lambda
          ($TestCast.param_27 $TestCast.return_29)
-         (cut-do
-            $TestCast.return_30
-            (cut
-               (construct
-                  tuple
-                  ($TestCast.param_27)
-                  ())
-               (select
-                  (#TestCast.$__26
-                     (invoke printInt32
-                        (then $TestCast.outer_66
-                           (cut-do
-                              $TestCast.return_31
-                              (invoke malgo_unsafe_cast
-                                 (then $TestCast.outer_82
-                                    (cut-do
-                                       $TestCast.return_32
-                                       (invoke malgo_read_vector
-                                          (apply
-                                             (2_i64)
-                                             ((then $TestCast.outer_90
-                                                (cut-do
-                                                   $TestCast.return_33
-                                                   (invoke malgo_new_vector
-                                                      (apply
-                                                         (10_i64)
-                                                         ((then $TestCast.outer_94
-                                                            (cut-do
-                                                               $TestCast.return_34
-                                                               (invoke malgo_unsafe_cast
-                                                                  (then $TestCast.outer_96
-                                                                     (cut-do
-                                                                        $TestCast.return_35
-                                                                        (invoke Int32#
+         (cut
+            (construct
+               tuple
+               ($TestCast.param_27)
+               ())
+            (select
+               (#TestCast.$__26
+                  (invoke printInt32
+                     (then $TestCast.outer_65
+                        (cut-do
+                           $TestCast.return_30
+                           (invoke malgo_unsafe_cast
+                              (then $TestCast.outer_81
+                                 (cut-do
+                                    $TestCast.return_31
+                                    (invoke malgo_read_vector
+                                       (apply
+                                          (2_i64)
+                                          ((then $TestCast.outer_89
+                                             (cut-do
+                                                $TestCast.return_32
+                                                (invoke malgo_new_vector
+                                                   (apply
+                                                      (10_i64)
+                                                      ((then $TestCast.outer_93
+                                                         (cut-do
+                                                            $TestCast.return_33
+                                                            (invoke malgo_unsafe_cast
+                                                               (then $TestCast.outer_95
+                                                                  (cut-do
+                                                                     $TestCast.return_34
+                                                                     (invoke Int32#
+                                                                        (apply
+                                                                           (5_i32)
+                                                                           ($TestCast.return_34)))
+                                                                     (then $TestCast.inner_96
+                                                                        (cut
+                                                                           $TestCast.outer_95
                                                                            (apply
-                                                                              (5_i32)
-                                                                              ($TestCast.return_35)))
-                                                                        (then $TestCast.inner_97
-                                                                           (cut
-                                                                              $TestCast.outer_96
-                                                                              (apply
-                                                                                 ($TestCast.inner_97)
-                                                                                 ($TestCast.return_34)))))))
-                                                               (then $TestCast.inner_95
-                                                                  (cut
-                                                                     $TestCast.outer_94
-                                                                     (apply
-                                                                        ($TestCast.inner_95)
-                                                                        ($TestCast.return_33)))))))))
-                                                   (then $TestCast.inner_91
-                                                      (cut
-                                                         $TestCast.outer_90
-                                                         (apply
-                                                            ($TestCast.inner_91)
-                                                            ($TestCast.return_32)))))))))
-                                       (then $TestCast.inner_83
-                                          (cut
-                                             $TestCast.outer_82
-                                             (apply
-                                                ($TestCast.inner_83)
-                                                ($TestCast.return_31)))))))
-                              (then $TestCast.inner_67
-                                 (cut
-                                    $TestCast.outer_66
-                                    (apply
-                                       ($TestCast.inner_67)
-                                       ($TestCast.return_30))))))))))
-            $TestCast.return_29))
+                                                                              ($TestCast.inner_96)
+                                                                              ($TestCast.return_33)))))))
+                                                            (then $TestCast.inner_94
+                                                               (cut
+                                                                  $TestCast.outer_93
+                                                                  (apply
+                                                                     ($TestCast.inner_94)
+                                                                     ($TestCast.return_32)))))))))
+                                                (then $TestCast.inner_90
+                                                   (cut
+                                                      $TestCast.outer_89
+                                                      (apply
+                                                         ($TestCast.inner_90)
+                                                         ($TestCast.return_31)))))))))
+                                    (then $TestCast.inner_82
+                                       (cut
+                                          $TestCast.outer_81
+                                          (apply
+                                             ($TestCast.inner_82)
+                                             ($TestCast.return_30)))))))
+                           (then $TestCast.inner_66
+                              (cut
+                                 $TestCast.outer_65
+                                 (apply
+                                    ($TestCast.inner_66)
+                                    ($TestCast.return_29)))))))))))
       $TestCast.return_28)))

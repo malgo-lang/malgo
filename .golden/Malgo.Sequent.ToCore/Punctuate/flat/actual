@@ -6,345 +6,339 @@
       (cut
          (lambda
             ($Punctuate.param_113 $Punctuate.return_117)
-            (cut-do
-               $Punctuate.return_118
-               (cut
-                  (construct
-                     tuple
-                     ($Punctuate.param_113)
-                     ())
-                  (select
-                     ((Symbol
-                        (#Punctuate.str_0))
-                        (invoke <>
-                           (then $Punctuate.outer_150
-                              (cut-do
-                                 $Punctuate.return_119
-                                 (invoke String#
+            (cut
+               (construct
+                  tuple
+                  ($Punctuate.param_113)
+                  ())
+               (select
+                  ((Symbol
+                     (#Punctuate.str_0))
+                     (invoke <>
+                        (then $Punctuate.outer_148
+                           (cut-do
+                              $Punctuate.return_118
+                              (invoke String#
+                                 (apply
+                                    ("Symbol ")
+                                    ($Punctuate.return_118)))
+                              (then $Punctuate.inner_149
+                                 (cut
+                                    $Punctuate.outer_148
                                     (apply
-                                       ("Symbol ")
-                                       ($Punctuate.return_119)))
-                                 (then $Punctuate.inner_151
-                                    (cut
-                                       $Punctuate.outer_150
-                                       (apply
-                                          ($Punctuate.inner_151)
-                                          ((apply
-                                             (#Punctuate.str_0)
-                                             ($Punctuate.return_118))))))))))
-                     ((SInt
-                        (#Punctuate.int_1))
-                        (invoke <>
-                           (then $Punctuate.outer_152
-                              (cut-do
-                                 $Punctuate.return_121
-                                 (invoke String#
+                                       ($Punctuate.inner_149)
+                                       ((apply
+                                          (#Punctuate.str_0)
+                                          ($Punctuate.return_117))))))))))
+                  ((SInt
+                     (#Punctuate.int_1))
+                     (invoke <>
+                        (then $Punctuate.outer_150
+                           (cut-do
+                              $Punctuate.return_120
+                              (invoke String#
+                                 (apply
+                                    ("SInt ")
+                                    ($Punctuate.return_120)))
+                              (then $Punctuate.inner_151
+                                 (cut
+                                    $Punctuate.outer_150
                                     (apply
-                                       ("SInt ")
-                                       ($Punctuate.return_121)))
-                                 (then $Punctuate.inner_153
-                                    (cut
-                                       $Punctuate.outer_152
-                                       (apply
-                                          ($Punctuate.inner_153)
-                                          ((then $Punctuate.outer_154
-                                             (cut-do
-                                                $Punctuate.return_120
-                                                (invoke toStringInt32
+                                       ($Punctuate.inner_151)
+                                       ((then $Punctuate.outer_152
+                                          (cut-do
+                                             $Punctuate.return_119
+                                             (invoke toStringInt32
+                                                (apply
+                                                   (#Punctuate.int_1)
+                                                   ($Punctuate.return_119)))
+                                             (then $Punctuate.inner_153
+                                                (cut
+                                                   $Punctuate.outer_152
                                                    (apply
-                                                      (#Punctuate.int_1)
-                                                      ($Punctuate.return_120)))
-                                                (then $Punctuate.inner_155
-                                                   (cut
-                                                      $Punctuate.outer_154
-                                                      (apply
-                                                         ($Punctuate.inner_155)
-                                                         ($Punctuate.return_118))))))))))))))
-                     ((SList
-                        (#Punctuate.ss_2))
-                        (invoke <>
-                           (then $Punctuate.outer_156
-                              (cut-do
-                                 $Punctuate.return_129
-                                 (invoke String#
+                                                      ($Punctuate.inner_153)
+                                                      ($Punctuate.return_117))))))))))))))
+                  ((SList
+                     (#Punctuate.ss_2))
+                     (invoke <>
+                        (then $Punctuate.outer_154
+                           (cut-do
+                              $Punctuate.return_128
+                              (invoke String#
+                                 (apply
+                                    ("SList [")
+                                    ($Punctuate.return_128)))
+                              (then $Punctuate.inner_155
+                                 (cut
+                                    $Punctuate.outer_154
                                     (apply
-                                       ("SList [")
-                                       ($Punctuate.return_129)))
-                                 (then $Punctuate.inner_157
-                                    (cut
-                                       $Punctuate.outer_156
-                                       (apply
-                                          ($Punctuate.inner_157)
-                                          ((then $Punctuate.outer_198
-                                             (cut-do
-                                                $Punctuate.return_122
-                                                (invoke <>
-                                                   (then $Punctuate.outer_218
-                                                      (cut-do
-                                                         $Punctuate.return_124
-                                                         (invoke concatString
-                                                            (then $Punctuate.outer_230
-                                                               (cut-do
-                                                                  $Punctuate.return_125
-                                                                  (invoke punctuate
-                                                                     (then $Punctuate.outer_232
-                                                                        (cut-do
-                                                                           $Punctuate.return_128
-                                                                           (invoke String#
-                                                                              (apply
-                                                                                 (", ")
-                                                                                 ($Punctuate.return_128)))
-                                                                           (then $Punctuate.inner_233
-                                                                              (cut
-                                                                                 $Punctuate.outer_232
-                                                                                 (apply
-                                                                                    ($Punctuate.inner_233)
-                                                                                    ((then $Punctuate.outer_236
-                                                                                       (cut-do
-                                                                                          $Punctuate.return_126
-                                                                                          (invoke mapList
-                                                                                             (then $Punctuate.outer_238
-                                                                                                (cut-do
-                                                                                                   $Punctuate.return_127
-                                                                                                   (invoke show $Punctuate.return_127)
-                                                                                                   (then $Punctuate.inner_239
-                                                                                                      (cut
-                                                                                                         $Punctuate.outer_238
-                                                                                                         (apply
-                                                                                                            ($Punctuate.inner_239)
-                                                                                                            ((apply
-                                                                                                               (#Punctuate.ss_2)
-                                                                                                               ($Punctuate.return_126)))))))))
-                                                                                          (then $Punctuate.inner_237
-                                                                                             (cut
-                                                                                                $Punctuate.outer_236
-                                                                                                (apply
-                                                                                                   ($Punctuate.inner_237)
-                                                                                                   ($Punctuate.return_125)))))))))))))
-                                                                  (then $Punctuate.inner_231
-                                                                     (cut
-                                                                        $Punctuate.outer_230
-                                                                        (apply
-                                                                           ($Punctuate.inner_231)
-                                                                           ($Punctuate.return_124)))))))
-                                                         (then $Punctuate.inner_219
-                                                            (cut
-                                                               $Punctuate.outer_218
-                                                               (apply
-                                                                  ($Punctuate.inner_219)
-                                                                  ((then $Punctuate.outer_220
+                                       ($Punctuate.inner_155)
+                                       ((then $Punctuate.outer_196
+                                          (cut-do
+                                             $Punctuate.return_121
+                                             (invoke <>
+                                                (then $Punctuate.outer_216
+                                                   (cut-do
+                                                      $Punctuate.return_123
+                                                      (invoke concatString
+                                                         (then $Punctuate.outer_228
+                                                            (cut-do
+                                                               $Punctuate.return_124
+                                                               (invoke punctuate
+                                                                  (then $Punctuate.outer_230
                                                                      (cut-do
-                                                                        $Punctuate.return_123
+                                                                        $Punctuate.return_127
                                                                         (invoke String#
                                                                            (apply
-                                                                              ("]")
-                                                                              ($Punctuate.return_123)))
-                                                                        (then $Punctuate.inner_221
+                                                                              (", ")
+                                                                              ($Punctuate.return_127)))
+                                                                        (then $Punctuate.inner_231
                                                                            (cut
-                                                                              $Punctuate.outer_220
+                                                                              $Punctuate.outer_230
                                                                               (apply
-                                                                                 ($Punctuate.inner_221)
-                                                                                 ($Punctuate.return_122)))))))))))))
-                                                (then $Punctuate.inner_199
-                                                   (cut
-                                                      $Punctuate.outer_198
-                                                      (apply
-                                                         ($Punctuate.inner_199)
-                                                         ($Punctuate.return_118))))))))))))))))
-               $Punctuate.return_117))
+                                                                                 ($Punctuate.inner_231)
+                                                                                 ((then $Punctuate.outer_234
+                                                                                    (cut-do
+                                                                                       $Punctuate.return_125
+                                                                                       (invoke mapList
+                                                                                          (then $Punctuate.outer_236
+                                                                                             (cut-do
+                                                                                                $Punctuate.return_126
+                                                                                                (invoke show $Punctuate.return_126)
+                                                                                                (then $Punctuate.inner_237
+                                                                                                   (cut
+                                                                                                      $Punctuate.outer_236
+                                                                                                      (apply
+                                                                                                         ($Punctuate.inner_237)
+                                                                                                         ((apply
+                                                                                                            (#Punctuate.ss_2)
+                                                                                                            ($Punctuate.return_125)))))))))
+                                                                                       (then $Punctuate.inner_235
+                                                                                          (cut
+                                                                                             $Punctuate.outer_234
+                                                                                             (apply
+                                                                                                ($Punctuate.inner_235)
+                                                                                                ($Punctuate.return_124)))))))))))))
+                                                               (then $Punctuate.inner_229
+                                                                  (cut
+                                                                     $Punctuate.outer_228
+                                                                     (apply
+                                                                        ($Punctuate.inner_229)
+                                                                        ($Punctuate.return_123)))))))
+                                                      (then $Punctuate.inner_217
+                                                         (cut
+                                                            $Punctuate.outer_216
+                                                            (apply
+                                                               ($Punctuate.inner_217)
+                                                               ((then $Punctuate.outer_218
+                                                                  (cut-do
+                                                                     $Punctuate.return_122
+                                                                     (invoke String#
+                                                                        (apply
+                                                                           ("]")
+                                                                           ($Punctuate.return_122)))
+                                                                     (then $Punctuate.inner_219
+                                                                        (cut
+                                                                           $Punctuate.outer_218
+                                                                           (apply
+                                                                              ($Punctuate.inner_219)
+                                                                              ($Punctuate.return_121)))))))))))))
+                                             (then $Punctuate.inner_197
+                                                (cut
+                                                   $Punctuate.outer_196
+                                                   (apply
+                                                      ($Punctuate.inner_197)
+                                                      ($Punctuate.return_117)))))))))))))))))
          $Punctuate.return_116))
    (main
-      $Punctuate.return_130
+      $Punctuate.return_129
       (cut
          (lambda
-            ($Punctuate.param_114 $Punctuate.return_131)
-            (cut-do
-               $Punctuate.return_132
-               (cut
-                  (construct
-                     tuple
-                     ($Punctuate.param_114)
-                     ())
-                  (select
-                     (#Punctuate.$__112
-                        (invoke SList
-                           (then $Punctuate.outer_968
-                              (cut-do
-                                 $Punctuate.return_134
-                                 (invoke Cons
-                                    (then $Punctuate.outer_974
-                                       (cut-do
-                                          $Punctuate.return_148
-                                          (invoke Symbol
-                                             (then $Punctuate.outer_1698
-                                                (cut-do
-                                                   $Punctuate.return_149
-                                                   (invoke String#
+            ($Punctuate.param_114 $Punctuate.return_130)
+            (cut
+               (construct
+                  tuple
+                  ($Punctuate.param_114)
+                  ())
+               (select
+                  (#Punctuate.$__112
+                     (invoke SList
+                        (then $Punctuate.outer_966
+                           (cut-do
+                              $Punctuate.return_132
+                              (invoke Cons
+                                 (then $Punctuate.outer_972
+                                    (cut-do
+                                       $Punctuate.return_146
+                                       (invoke Symbol
+                                          (then $Punctuate.outer_1696
+                                             (cut-do
+                                                $Punctuate.return_147
+                                                (invoke String#
+                                                   (apply
+                                                      ("x")
+                                                      ($Punctuate.return_147)))
+                                                (then $Punctuate.inner_1697
+                                                   (cut
+                                                      $Punctuate.outer_1696
                                                       (apply
-                                                         ("x")
-                                                         ($Punctuate.return_149)))
-                                                   (then $Punctuate.inner_1699
-                                                      (cut
-                                                         $Punctuate.outer_1698
-                                                         (apply
-                                                            ($Punctuate.inner_1699)
-                                                            ($Punctuate.return_148)))))))
-                                          (then $Punctuate.inner_975
-                                             (cut
-                                                $Punctuate.outer_974
-                                                (apply
-                                                   ($Punctuate.inner_975)
-                                                   ((then $Punctuate.outer_1336
-                                                      (cut-do
-                                                         $Punctuate.return_135
-                                                         (invoke Cons
-                                                            (then $Punctuate.outer_1516
-                                                               (cut-do
-                                                                  $Punctuate.return_137
-                                                                  (invoke SList
-                                                                     (then $Punctuate.outer_1608
-                                                                        (cut-do
-                                                                           $Punctuate.return_138
-                                                                           (invoke Cons
-                                                                              (then $Punctuate.outer_1612
-                                                                                 (cut-do
-                                                                                    $Punctuate.return_146
-                                                                                    (invoke Symbol
-                                                                                       (then $Punctuate.outer_1696
-                                                                                          (cut-do
-                                                                                             $Punctuate.return_147
-                                                                                             (invoke String#
-                                                                                                (apply
-                                                                                                   ("y")
-                                                                                                   ($Punctuate.return_147)))
-                                                                                             (then $Punctuate.inner_1697
-                                                                                                (cut
-                                                                                                   $Punctuate.outer_1696
-                                                                                                   (apply
-                                                                                                      ($Punctuate.inner_1697)
-                                                                                                      ($Punctuate.return_146)))))))
-                                                                                    (then $Punctuate.inner_1613
-                                                                                       (cut
-                                                                                          $Punctuate.outer_1612
-                                                                                          (apply
-                                                                                             ($Punctuate.inner_1613)
-                                                                                             ((then $Punctuate.outer_1654
-                                                                                                (cut-do
-                                                                                                   $Punctuate.return_139
-                                                                                                   (invoke Cons
-                                                                                                      (then $Punctuate.outer_1674
-                                                                                                         (cut-do
-                                                                                                            $Punctuate.return_141
-                                                                                                            (invoke SList
-                                                                                                               (then $Punctuate.outer_1686
-                                                                                                                  (cut-do
-                                                                                                                     $Punctuate.return_142
-                                                                                                                     (invoke Cons
-                                                                                                                        (then $Punctuate.outer_1690
-                                                                                                                           (cut-do
-                                                                                                                              $Punctuate.return_144
-                                                                                                                              (invoke Symbol
-                                                                                                                                 (then $Punctuate.outer_1694
-                                                                                                                                    (cut-do
-                                                                                                                                       $Punctuate.return_145
-                                                                                                                                       (invoke String#
-                                                                                                                                          (apply
-                                                                                                                                             ("z")
-                                                                                                                                             ($Punctuate.return_145)))
-                                                                                                                                       (then $Punctuate.inner_1695
-                                                                                                                                          (cut
-                                                                                                                                             $Punctuate.outer_1694
-                                                                                                                                             (apply
-                                                                                                                                                ($Punctuate.inner_1695)
-                                                                                                                                                ($Punctuate.return_144)))))))
-                                                                                                                              (then $Punctuate.inner_1691
-                                                                                                                                 (cut
-                                                                                                                                    $Punctuate.outer_1690
-                                                                                                                                    (apply
-                                                                                                                                       ($Punctuate.inner_1691)
-                                                                                                                                       ((then $Punctuate.outer_1692
-                                                                                                                                          (cut-do
-                                                                                                                                             $Punctuate.return_143
-                                                                                                                                             (invoke Nil $Punctuate.return_143)
-                                                                                                                                             (then $Punctuate.inner_1693
-                                                                                                                                                (cut
-                                                                                                                                                   $Punctuate.outer_1692
-                                                                                                                                                   (apply
-                                                                                                                                                      ($Punctuate.inner_1693)
-                                                                                                                                                      ($Punctuate.return_142)))))))))))))
-                                                                                                                     (then $Punctuate.inner_1687
-                                                                                                                        (cut
-                                                                                                                           $Punctuate.outer_1686
-                                                                                                                           (apply
-                                                                                                                              ($Punctuate.inner_1687)
-                                                                                                                              ($Punctuate.return_141)))))))
-                                                                                                            (then $Punctuate.inner_1675
-                                                                                                               (cut
-                                                                                                                  $Punctuate.outer_1674
-                                                                                                                  (apply
-                                                                                                                     ($Punctuate.inner_1675)
-                                                                                                                     ((then $Punctuate.outer_1676
-                                                                                                                        (cut-do
-                                                                                                                           $Punctuate.return_140
-                                                                                                                           (invoke Nil $Punctuate.return_140)
-                                                                                                                           (then $Punctuate.inner_1677
-                                                                                                                              (cut
-                                                                                                                                 $Punctuate.outer_1676
-                                                                                                                                 (apply
-                                                                                                                                    ($Punctuate.inner_1677)
-                                                                                                                                    ($Punctuate.return_139)))))))))))))
-                                                                                                   (then $Punctuate.inner_1655
-                                                                                                      (cut
-                                                                                                         $Punctuate.outer_1654
-                                                                                                         (apply
-                                                                                                            ($Punctuate.inner_1655)
-                                                                                                            ($Punctuate.return_138)))))))))))))
-                                                                           (then $Punctuate.inner_1609
-                                                                              (cut
-                                                                                 $Punctuate.outer_1608
-                                                                                 (apply
-                                                                                    ($Punctuate.inner_1609)
-                                                                                    ($Punctuate.return_137)))))))
-                                                                  (then $Punctuate.inner_1517
-                                                                     (cut
-                                                                        $Punctuate.outer_1516
-                                                                        (apply
-                                                                           ($Punctuate.inner_1517)
-                                                                           ((then $Punctuate.outer_1518
-                                                                              (cut-do
-                                                                                 $Punctuate.return_136
-                                                                                 (invoke Nil $Punctuate.return_136)
-                                                                                 (then $Punctuate.inner_1519
-                                                                                    (cut
-                                                                                       $Punctuate.outer_1518
-                                                                                       (apply
-                                                                                          ($Punctuate.inner_1519)
-                                                                                          ($Punctuate.return_135)))))))))))))
-                                                         (then $Punctuate.inner_1337
-                                                            (cut
-                                                               $Punctuate.outer_1336
-                                                               (apply
-                                                                  ($Punctuate.inner_1337)
-                                                                  ($Punctuate.return_134)))))))))))))
-                                 (then $Punctuate.inner_969
-                                    (cut
-                                       $Punctuate.outer_968
-                                       (apply
-                                          ($Punctuate.inner_969)
-                                          ((then #Punctuate.x_3
-                                             (invoke putStrLn
-                                                (then $Punctuate.outer_970
+                                                         ($Punctuate.inner_1697)
+                                                         ($Punctuate.return_146)))))))
+                                       (then $Punctuate.inner_973
+                                          (cut
+                                             $Punctuate.outer_972
+                                             (apply
+                                                ($Punctuate.inner_973)
+                                                ((then $Punctuate.outer_1334
                                                    (cut-do
                                                       $Punctuate.return_133
-                                                      (invoke show
-                                                         (apply
-                                                            (#Punctuate.x_3)
-                                                            ($Punctuate.return_133)))
-                                                      (then $Punctuate.inner_971
+                                                      (invoke Cons
+                                                         (then $Punctuate.outer_1514
+                                                            (cut-do
+                                                               $Punctuate.return_135
+                                                               (invoke SList
+                                                                  (then $Punctuate.outer_1606
+                                                                     (cut-do
+                                                                        $Punctuate.return_136
+                                                                        (invoke Cons
+                                                                           (then $Punctuate.outer_1610
+                                                                              (cut-do
+                                                                                 $Punctuate.return_144
+                                                                                 (invoke Symbol
+                                                                                    (then $Punctuate.outer_1694
+                                                                                       (cut-do
+                                                                                          $Punctuate.return_145
+                                                                                          (invoke String#
+                                                                                             (apply
+                                                                                                ("y")
+                                                                                                ($Punctuate.return_145)))
+                                                                                          (then $Punctuate.inner_1695
+                                                                                             (cut
+                                                                                                $Punctuate.outer_1694
+                                                                                                (apply
+                                                                                                   ($Punctuate.inner_1695)
+                                                                                                   ($Punctuate.return_144)))))))
+                                                                                 (then $Punctuate.inner_1611
+                                                                                    (cut
+                                                                                       $Punctuate.outer_1610
+                                                                                       (apply
+                                                                                          ($Punctuate.inner_1611)
+                                                                                          ((then $Punctuate.outer_1652
+                                                                                             (cut-do
+                                                                                                $Punctuate.return_137
+                                                                                                (invoke Cons
+                                                                                                   (then $Punctuate.outer_1672
+                                                                                                      (cut-do
+                                                                                                         $Punctuate.return_139
+                                                                                                         (invoke SList
+                                                                                                            (then $Punctuate.outer_1684
+                                                                                                               (cut-do
+                                                                                                                  $Punctuate.return_140
+                                                                                                                  (invoke Cons
+                                                                                                                     (then $Punctuate.outer_1688
+                                                                                                                        (cut-do
+                                                                                                                           $Punctuate.return_142
+                                                                                                                           (invoke Symbol
+                                                                                                                              (then $Punctuate.outer_1692
+                                                                                                                                 (cut-do
+                                                                                                                                    $Punctuate.return_143
+                                                                                                                                    (invoke String#
+                                                                                                                                       (apply
+                                                                                                                                          ("z")
+                                                                                                                                          ($Punctuate.return_143)))
+                                                                                                                                    (then $Punctuate.inner_1693
+                                                                                                                                       (cut
+                                                                                                                                          $Punctuate.outer_1692
+                                                                                                                                          (apply
+                                                                                                                                             ($Punctuate.inner_1693)
+                                                                                                                                             ($Punctuate.return_142)))))))
+                                                                                                                           (then $Punctuate.inner_1689
+                                                                                                                              (cut
+                                                                                                                                 $Punctuate.outer_1688
+                                                                                                                                 (apply
+                                                                                                                                    ($Punctuate.inner_1689)
+                                                                                                                                    ((then $Punctuate.outer_1690
+                                                                                                                                       (cut-do
+                                                                                                                                          $Punctuate.return_141
+                                                                                                                                          (invoke Nil $Punctuate.return_141)
+                                                                                                                                          (then $Punctuate.inner_1691
+                                                                                                                                             (cut
+                                                                                                                                                $Punctuate.outer_1690
+                                                                                                                                                (apply
+                                                                                                                                                   ($Punctuate.inner_1691)
+                                                                                                                                                   ($Punctuate.return_140)))))))))))))
+                                                                                                                  (then $Punctuate.inner_1685
+                                                                                                                     (cut
+                                                                                                                        $Punctuate.outer_1684
+                                                                                                                        (apply
+                                                                                                                           ($Punctuate.inner_1685)
+                                                                                                                           ($Punctuate.return_139)))))))
+                                                                                                         (then $Punctuate.inner_1673
+                                                                                                            (cut
+                                                                                                               $Punctuate.outer_1672
+                                                                                                               (apply
+                                                                                                                  ($Punctuate.inner_1673)
+                                                                                                                  ((then $Punctuate.outer_1674
+                                                                                                                     (cut-do
+                                                                                                                        $Punctuate.return_138
+                                                                                                                        (invoke Nil $Punctuate.return_138)
+                                                                                                                        (then $Punctuate.inner_1675
+                                                                                                                           (cut
+                                                                                                                              $Punctuate.outer_1674
+                                                                                                                              (apply
+                                                                                                                                 ($Punctuate.inner_1675)
+                                                                                                                                 ($Punctuate.return_137)))))))))))))
+                                                                                                (then $Punctuate.inner_1653
+                                                                                                   (cut
+                                                                                                      $Punctuate.outer_1652
+                                                                                                      (apply
+                                                                                                         ($Punctuate.inner_1653)
+                                                                                                         ($Punctuate.return_136)))))))))))))
+                                                                        (then $Punctuate.inner_1607
+                                                                           (cut
+                                                                              $Punctuate.outer_1606
+                                                                              (apply
+                                                                                 ($Punctuate.inner_1607)
+                                                                                 ($Punctuate.return_135)))))))
+                                                               (then $Punctuate.inner_1515
+                                                                  (cut
+                                                                     $Punctuate.outer_1514
+                                                                     (apply
+                                                                        ($Punctuate.inner_1515)
+                                                                        ((then $Punctuate.outer_1516
+                                                                           (cut-do
+                                                                              $Punctuate.return_134
+                                                                              (invoke Nil $Punctuate.return_134)
+                                                                              (then $Punctuate.inner_1517
+                                                                                 (cut
+                                                                                    $Punctuate.outer_1516
+                                                                                    (apply
+                                                                                       ($Punctuate.inner_1517)
+                                                                                       ($Punctuate.return_133)))))))))))))
+                                                      (then $Punctuate.inner_1335
                                                          (cut
-                                                            $Punctuate.outer_970
+                                                            $Punctuate.outer_1334
                                                             (apply
-                                                               ($Punctuate.inner_971)
-                                                               ($Punctuate.return_132))))))))))))))))))
-               $Punctuate.return_131))
-         $Punctuate.return_130)))
+                                                               ($Punctuate.inner_1335)
+                                                               ($Punctuate.return_132)))))))))))))
+                              (then $Punctuate.inner_967
+                                 (cut
+                                    $Punctuate.outer_966
+                                    (apply
+                                       ($Punctuate.inner_967)
+                                       ((then #Punctuate.x_3
+                                          (invoke putStrLn
+                                             (then $Punctuate.outer_968
+                                                (cut-do
+                                                   $Punctuate.return_131
+                                                   (invoke show
+                                                      (apply
+                                                         (#Punctuate.x_3)
+                                                         ($Punctuate.return_131)))
+                                                   (then $Punctuate.inner_969
+                                                      (cut
+                                                         $Punctuate.outer_968
+                                                         (apply
+                                                            ($Punctuate.inner_969)
+                                                            ($Punctuate.return_130)))))))))))))))))))
+         $Punctuate.return_129)))

@@ -11,15 +11,12 @@
                      (cut
                         (lambda
                            ($Seq.tmp_27 $Seq.return_33)
-                           (cut
-                              (do $Seq.return_34
-                                 (invoke addInt32
-                                    (apply
-                                       (#Seq.x_0)
-                                       ((apply
-                                          (#Seq.y_1)
-                                          ($Seq.return_34))))))
-                              $Seq.return_33))
+                           (invoke addInt32
+                              (apply
+                                 (#Seq.x_0)
+                                 ((apply
+                                    (#Seq.y_1)
+                                    ($Seq.return_33))))))
                         (apply
                            ((do $Seq.return_30
                               (invoke printString
@@ -38,27 +35,24 @@
                                     ($Seq.return_30)))))
                            ($Seq.return_29))))))))))))
    (main
-      $Seq.return_35
+      $Seq.return_34
       (cut
          (lambda
-            ($Seq.param_28 $Seq.return_36)
+            ($Seq.param_28 $Seq.return_35)
             (cut
-               (do $Seq.return_37
-                  (cut
-                     (construct
-                        tuple
-                        ($Seq.param_28)
-                        ())
-                     (select
-                        (#Seq.$__26
-                           (invoke printString
-                              (apply
-                                 ((do $Seq.return_38
-                                    (invoke toStringInt32
-                                       (apply
-                                          ((do $Seq.return_39
-                                             (invoke executeWhenLoaded $Seq.return_39)))
-                                          ($Seq.return_38)))))
-                                 ($Seq.return_37)))))))
-               $Seq.return_36))
-         $Seq.return_35)))
+               (construct
+                  tuple
+                  ($Seq.param_28)
+                  ())
+               (select
+                  (#Seq.$__26
+                     (invoke printString
+                        (apply
+                           ((do $Seq.return_36
+                              (invoke toStringInt32
+                                 (apply
+                                    ((do $Seq.return_37
+                                       (invoke executeWhenLoaded $Seq.return_37)))
+                                    ($Seq.return_36)))))
+                           ($Seq.return_35)))))))
+         $Seq.return_34)))

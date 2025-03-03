@@ -4,58 +4,52 @@
       (lambda
          ($TestDot.param_30 $TestDot.return_33)
          (cut
-            (do $TestDot.return_34
-               (cut
-                  (construct
-                     tuple
-                     ($TestDot.param_30)
-                     ())
-                  (select
-                     ((Int64#
-                        (#TestDot.x_0))
-                        (invoke Int64#
-                           (apply
-                              ((do $TestDot.return_35
-                                 (invoke addInt64#
-                                    (apply
-                                       (#TestDot.x_0)
-                                       ((apply
-                                          (1_i64)
-                                          ($TestDot.return_35)))))))
-                              ($TestDot.return_34)))))))
-            $TestDot.return_33))
+            (construct
+               tuple
+               ($TestDot.param_30)
+               ())
+            (select
+               ((Int64#
+                  (#TestDot.x_0))
+                  (invoke Int64#
+                     (apply
+                        ((do $TestDot.return_34
+                           (invoke addInt64#
+                              (apply
+                                 (#TestDot.x_0)
+                                 ((apply
+                                    (1_i64)
+                                    ($TestDot.return_34)))))))
+                        ($TestDot.return_33)))))))
       $TestDot.return_32))
    (main
-      $TestDot.return_36
+      $TestDot.return_35
       (cut
          (lambda
-            ($TestDot.param_31 $TestDot.return_37)
+            ($TestDot.param_31 $TestDot.return_36)
             (cut
-               (do $TestDot.return_38
-                  (cut
-                     (construct
-                        tuple
-                        ($TestDot.param_31)
-                        ())
-                     (select
-                        (#TestDot.$__29
-                           (invoke printInt64
-                              (apply
-                                 ((do $TestDot.return_39
-                                    (invoke .
-                                       (apply
-                                          ((do $TestDot.return_42
-                                             (invoke succ $TestDot.return_42)))
-                                          ((apply
-                                             ((do $TestDot.return_41
-                                                (invoke succ $TestDot.return_41)))
-                                             ((apply
-                                                ((do $TestDot.return_40
-                                                   (invoke Int64#
-                                                      (apply
-                                                         (0_i64)
-                                                         ($TestDot.return_40)))))
-                                                ($TestDot.return_39)))))))))
-                                 ($TestDot.return_38)))))))
-               $TestDot.return_37))
-         $TestDot.return_36)))
+               (construct
+                  tuple
+                  ($TestDot.param_31)
+                  ())
+               (select
+                  (#TestDot.$__29
+                     (invoke printInt64
+                        (apply
+                           ((do $TestDot.return_37
+                              (invoke .
+                                 (apply
+                                    ((do $TestDot.return_40
+                                       (invoke succ $TestDot.return_40)))
+                                    ((apply
+                                       ((do $TestDot.return_39
+                                          (invoke succ $TestDot.return_39)))
+                                       ((apply
+                                          ((do $TestDot.return_38
+                                             (invoke Int64#
+                                                (apply
+                                                   (0_i64)
+                                                   ($TestDot.return_38)))))
+                                          ($TestDot.return_37)))))))))
+                           ($TestDot.return_36)))))))
+         $TestDot.return_35)))

@@ -4,77 +4,65 @@
       (lambda
          ($NestedMatch.param_30 $NestedMatch.return_35)
          (cut
-            (do $NestedMatch.return_36
-               (cut
-                  (construct
-                     tuple
-                     ($NestedMatch.param_30)
-                     ())
-                  (select
-                     (#NestedMatch.$__29
+            (construct
+               tuple
+               ($NestedMatch.param_30)
+               ())
+            (select
+               (#NestedMatch.$__29
+                  (cut
+                     (lambda
+                        ($NestedMatch.param_31 $NestedMatch.return_41)
                         (cut
-                           (lambda
-                              ($NestedMatch.param_31 $NestedMatch.return_44)
-                              (cut
-                                 (do $NestedMatch.return_45
-                                    (cut
-                                       (construct
-                                          tuple
-                                          ($NestedMatch.param_31)
-                                          ())
-                                       (select
-                                          ((True ())
-                                             (invoke malgo_print_string
-                                                (apply
-                                                   ("OK")
-                                                   ($NestedMatch.return_45))))
-                                          ((False ())
-                                             (invoke malgo_exit_failure
-                                                (apply
-                                                   ((construct tuple () ()))
-                                                   ($NestedMatch.return_45)))))))
-                                 $NestedMatch.return_44))
-                           (apply
-                              ((do $NestedMatch.return_37
-                                 (cut
-                                    (lambda
-                                       ($NestedMatch.param_32 $NestedMatch.return_42)
-                                       (cut
-                                          (do $NestedMatch.return_43
-                                             (cut
-                                                (construct
-                                                   tuple
-                                                   ($NestedMatch.param_32)
-                                                   ())
-                                                (select
-                                                   ((True1 ())
-                                                      (invoke False $NestedMatch.return_43))
-                                                   ((False1 ())
-                                                      (invoke True $NestedMatch.return_43)))))
-                                          $NestedMatch.return_42))
+                           (construct
+                              tuple
+                              ($NestedMatch.param_31)
+                              ())
+                           (select
+                              ((True ())
+                                 (invoke malgo_print_string
                                     (apply
-                                       ((do $NestedMatch.return_38
+                                       ("OK")
+                                       ($NestedMatch.return_41))))
+                              ((False ())
+                                 (invoke malgo_exit_failure
+                                    (apply
+                                       ((construct tuple () ()))
+                                       ($NestedMatch.return_41)))))))
+                     (apply
+                        ((do $NestedMatch.return_36
+                           (cut
+                              (lambda
+                                 ($NestedMatch.param_32 $NestedMatch.return_40)
+                                 (cut
+                                    (construct
+                                       tuple
+                                       ($NestedMatch.param_32)
+                                       ())
+                                    (select
+                                       ((True1 ())
+                                          (invoke False $NestedMatch.return_40))
+                                       ((False1 ())
+                                          (invoke True $NestedMatch.return_40)))))
+                              (apply
+                                 ((do $NestedMatch.return_37
+                                    (cut
+                                       (lambda
+                                          ($NestedMatch.param_33 $NestedMatch.return_39)
                                           (cut
-                                             (lambda
-                                                ($NestedMatch.param_33 $NestedMatch.return_40)
-                                                (cut
-                                                   (do $NestedMatch.return_41
-                                                      (cut
-                                                         (construct
-                                                            tuple
-                                                            ($NestedMatch.param_33)
-                                                            ())
-                                                         (select
-                                                            ((True2 ())
-                                                               (invoke False1 $NestedMatch.return_41))
-                                                            ((False2 ())
-                                                               (invoke True1 $NestedMatch.return_41)))))
-                                                   $NestedMatch.return_40))
-                                             (apply
-                                                ((do $NestedMatch.return_39
-                                                   (invoke True2 $NestedMatch.return_39)))
-                                                ($NestedMatch.return_38)))))
-                                       ($NestedMatch.return_37)))))
-                              ($NestedMatch.return_36)))))))
-            $NestedMatch.return_35))
+                                             (construct
+                                                tuple
+                                                ($NestedMatch.param_33)
+                                                ())
+                                             (select
+                                                ((True2 ())
+                                                   (invoke False1 $NestedMatch.return_39))
+                                                ((False2 ())
+                                                   (invoke True1 $NestedMatch.return_39)))))
+                                       (apply
+                                          ((do $NestedMatch.return_38
+                                             (invoke True2 $NestedMatch.return_38)))
+                                          ($NestedMatch.return_37)))))
+                                 ($NestedMatch.return_36)))))
+                        ($NestedMatch.return_35)))))))
       $NestedMatch.return_34)))

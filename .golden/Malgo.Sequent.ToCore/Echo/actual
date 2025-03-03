@@ -4,21 +4,18 @@
       (lambda
          ($Echo.param_9 $Echo.return_11)
          (cut
-            (do $Echo.return_12
-               (cut
-                  (construct
-                     tuple
-                     ($Echo.param_9)
-                     ())
-                  (select
-                     (#Echo.$__8
-                        (invoke putStr
-                           (apply
-                              ((do $Echo.return_13
-                                 (invoke getContents
-                                    (apply
-                                       ((construct tuple () ()))
-                                       ($Echo.return_13)))))
-                              ($Echo.return_12)))))))
-            $Echo.return_11))
+            (construct
+               tuple
+               ($Echo.param_9)
+               ())
+            (select
+               (#Echo.$__8
+                  (invoke putStr
+                     (apply
+                        ((do $Echo.return_12
+                           (invoke getContents
+                              (apply
+                                 ((construct tuple () ()))
+                                 ($Echo.return_12)))))
+                        ($Echo.return_11)))))))
       $Echo.return_10)))

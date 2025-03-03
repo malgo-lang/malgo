@@ -7,93 +7,81 @@
             (lambda
                ($Test0.param_51 $Test0.return_58)
                (cut
-                  (do $Test0.return_59
-                     (cut
-                        (construct
-                           tuple
-                           ($Test0.param_50 $Test0.param_51)
-                           ())
-                        (select
-                           ((tuple
-                              (#Test0.x_2 #Test0.f_3))
-                              (cut
-                                 #Test0.f_3
-                                 (apply
-                                    (#Test0.x_2)
-                                    ($Test0.return_59)))))))
-                  $Test0.return_58))
+                  (construct
+                     tuple
+                     ($Test0.param_50 $Test0.param_51)
+                     ())
+                  (select
+                     ((tuple
+                        (#Test0.x_2 #Test0.f_3))
+                        (cut
+                           #Test0.f_3
+                           (apply
+                              (#Test0.x_2)
+                              ($Test0.return_58)))))))
             $Test0.return_57))
       $Test0.return_56))
    (main
-      $Test0.return_60
+      $Test0.return_59
       (cut
          (lambda
-            ($Test0.param_52 $Test0.return_61)
+            ($Test0.param_52 $Test0.return_60)
             (cut
-               (do $Test0.return_62
+               (construct
+                  tuple
+                  ($Test0.param_52)
+                  ())
+               (select
+                  (#Test0.$__41
+                     (invoke |>
+                        (apply
+                           ((do $Test0.return_63
+                              (invoke Int64#
+                                 (apply
+                                    (1_i64)
+                                    ($Test0.return_63)))))
+                           ((apply
+                              ((lambda
+                                 ($Test0.param_53 $Test0.return_61)
+                                 (cut
+                                    (construct
+                                       tuple
+                                       ($Test0.param_53)
+                                       ())
+                                    (select
+                                       ((Int64#
+                                          (#Test0.i_6))
+                                          (invoke printString#
+                                             (apply
+                                                ((do $Test0.return_62
+                                                   (invoke toStringInt64#
+                                                      (apply
+                                                         (#Test0.i_6)
+                                                         ($Test0.return_62)))))
+                                                ($Test0.return_61))))))))
+                              ($Test0.return_60)))))))))
+         $Test0.return_59))
+   (+#
+      $Test0.return_64
+      (cut
+         (lambda
+            ($Test0.param_54 $Test0.return_65)
+            (cut
+               (lambda
+                  ($Test0.param_55 $Test0.return_66)
                   (cut
                      (construct
                         tuple
-                        ($Test0.param_52)
+                        ($Test0.param_54 $Test0.param_55)
                         ())
                      (select
-                        (#Test0.$__41
-                           (invoke |>
+                        ((tuple
+                           (#Test0.x_4 #Test0.y_5))
+                           (invoke addInt64#
                               (apply
-                                 ((do $Test0.return_66
-                                    (invoke Int64#
-                                       (apply
-                                          (1_i64)
-                                          ($Test0.return_66)))))
+                                 (#Test0.x_4)
                                  ((apply
-                                    ((lambda
-                                       ($Test0.param_53 $Test0.return_63)
-                                       (cut
-                                          (do $Test0.return_64
-                                             (cut
-                                                (construct
-                                                   tuple
-                                                   ($Test0.param_53)
-                                                   ())
-                                                (select
-                                                   ((Int64#
-                                                      (#Test0.i_6))
-                                                      (invoke printString#
-                                                         (apply
-                                                            ((do $Test0.return_65
-                                                               (invoke toStringInt64#
-                                                                  (apply
-                                                                     (#Test0.i_6)
-                                                                     ($Test0.return_65)))))
-                                                            ($Test0.return_64)))))))
-                                          $Test0.return_63)))
-                                    ($Test0.return_62)))))))))
-               $Test0.return_61))
-         $Test0.return_60))
-   (+#
-      $Test0.return_67
-      (cut
-         (lambda
-            ($Test0.param_54 $Test0.return_68)
-            (cut
-               (lambda
-                  ($Test0.param_55 $Test0.return_69)
-                  (cut
-                     (do $Test0.return_70
-                        (cut
-                           (construct
-                              tuple
-                              ($Test0.param_54 $Test0.param_55)
-                              ())
-                           (select
-                              ((tuple
-                                 (#Test0.x_4 #Test0.y_5))
-                                 (invoke addInt64#
-                                    (apply
-                                       (#Test0.x_4)
-                                       ((apply
-                                          (#Test0.y_5)
-                                          ($Test0.return_70)))))))))
-                     $Test0.return_69))
-               $Test0.return_68))
-         $Test0.return_67)))
+                                    (#Test0.y_5)
+                                    ($Test0.return_66)))))))))
+               $Test0.return_65))
+         $Test0.return_64)))

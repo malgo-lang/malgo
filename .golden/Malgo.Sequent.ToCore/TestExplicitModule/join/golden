@@ -4,33 +4,32 @@
       (lambda
          ($TestExplicitModule.param_7 $TestExplicitModule.return_9)
          (join
-            (($TestExplicitModule.select_18
+            (($TestExplicitModule.select_17
                (select
                   (#TestExplicitModule.$__6
                      (join
-                        (($TestExplicitModule.then_17
-                           (then $TestExplicitModule.outer_12
+                        (($TestExplicitModule.then_16
+                           (then $TestExplicitModule.outer_11
                               (join
-                                 (($TestExplicitModule.apply_14
+                                 (($TestExplicitModule.apply_13
                                     (apply
                                        ("Hello, world")
-                                       ($TestExplicitModule.return_11)))
-                                    ($TestExplicitModule.then_16
-                                       (then $TestExplicitModule.inner_13
+                                       ($TestExplicitModule.return_10)))
+                                    ($TestExplicitModule.then_15
+                                       (then $TestExplicitModule.inner_12
                                           (join
-                                             (($TestExplicitModule.apply_15
+                                             (($TestExplicitModule.apply_14
                                                 (apply
-                                                   ($TestExplicitModule.inner_13)
-                                                   ($TestExplicitModule.return_10))))
-                                             (cut $TestExplicitModule.outer_12 $TestExplicitModule.apply_15))))
-                                    ($TestExplicitModule.return_11 $TestExplicitModule.then_16))
-                                 (invoke String# $TestExplicitModule.apply_14)))))
-                        (invoke putStrLn $TestExplicitModule.then_17)))))
-               ($TestExplicitModule.return_10 $TestExplicitModule.return_9))
+                                                   ($TestExplicitModule.inner_12)
+                                                   ($TestExplicitModule.return_9))))
+                                             (cut $TestExplicitModule.outer_11 $TestExplicitModule.apply_14))))
+                                    ($TestExplicitModule.return_10 $TestExplicitModule.then_15))
+                                 (invoke String# $TestExplicitModule.apply_13)))))
+                        (invoke putStrLn $TestExplicitModule.then_16))))))
             (cut
                (construct
                   tuple
                   ($TestExplicitModule.param_7)
                   ())
-               $TestExplicitModule.select_18)))
+               $TestExplicitModule.select_17)))
       $TestExplicitModule.return_8)))

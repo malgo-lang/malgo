@@ -4,58 +4,49 @@
       (lambda
          ($DeferLaw.param_22 $DeferLaw.return_26)
          (cut
-            (do $DeferLaw.return_27
-               (cut
-                  (construct
-                     tuple
-                     ($DeferLaw.param_22)
-                     ())
-                  (select
-                     (#DeferLaw.x_1
+            (construct
+               tuple
+               ($DeferLaw.param_22)
+               ())
+            (select
+               (#DeferLaw.x_1
+                  (cut
+                     (lambda
+                        ($DeferLaw.param_23 $DeferLaw.return_27)
                         (cut
-                           (lambda
-                              ($DeferLaw.param_23 $DeferLaw.return_28)
-                              (cut
-                                 (do $DeferLaw.return_29
-                                    (cut
-                                       (construct
-                                          tuple
-                                          ($DeferLaw.param_23)
-                                          ())
-                                       (select
-                                          (#DeferLaw.$__8
-                                             (cut #DeferLaw.x_1 $DeferLaw.return_29)))))
-                                 $DeferLaw.return_28))
-                           (apply
-                              ((construct tuple () ()))
-                              ($DeferLaw.return_27)))))))
-            $DeferLaw.return_26))
+                           (construct
+                              tuple
+                              ($DeferLaw.param_23)
+                              ())
+                           (select
+                              (#DeferLaw.$__8
+                                 (cut #DeferLaw.x_1 $DeferLaw.return_27)))))
+                     (apply
+                        ((construct tuple () ()))
+                        ($DeferLaw.return_26)))))))
       $DeferLaw.return_25))
    (main
-      $DeferLaw.return_30
+      $DeferLaw.return_28
       (cut
          (lambda
-            ($DeferLaw.param_24 $DeferLaw.return_31)
+            ($DeferLaw.param_24 $DeferLaw.return_29)
             (cut
-               (do $DeferLaw.return_32
-                  (cut
-                     (construct
-                        tuple
-                        ($DeferLaw.param_24)
-                        ())
-                     (select
-                        (#DeferLaw.$__21
-                           (invoke putStrLn
-                              (apply
-                                 ((do $DeferLaw.return_33
-                                    (invoke f
-                                       (apply
-                                          ((do $DeferLaw.return_34
-                                             (invoke String#
-                                                (apply
-                                                   ("Hello")
-                                                   ($DeferLaw.return_34)))))
-                                          ($DeferLaw.return_33)))))
-                                 ($DeferLaw.return_32)))))))
-               $DeferLaw.return_31))
-         $DeferLaw.return_30)))
+               (construct
+                  tuple
+                  ($DeferLaw.param_24)
+                  ())
+               (select
+                  (#DeferLaw.$__21
+                     (invoke putStrLn
+                        (apply
+                           ((do $DeferLaw.return_30
+                              (invoke f
+                                 (apply
+                                    ((do $DeferLaw.return_31
+                                       (invoke String#
+                                          (apply
+                                             ("Hello")
+                                             ($DeferLaw.return_31)))))
+                                    ($DeferLaw.return_30)))))
+                           ($DeferLaw.return_29)))))))
+         $DeferLaw.return_28)))

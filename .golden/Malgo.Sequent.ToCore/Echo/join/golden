@@ -4,33 +4,32 @@
       (lambda
          ($Echo.param_9 $Echo.return_11)
          (join
-            (($Echo.select_20
+            (($Echo.select_19
                (select
                   (#Echo.$__8
                      (join
-                        (($Echo.then_19
-                           (then $Echo.outer_14
+                        (($Echo.then_18
+                           (then $Echo.outer_13
                               (join
-                                 (($Echo.apply_16
+                                 (($Echo.apply_15
                                     (apply
                                        ((construct tuple () ()))
-                                       ($Echo.return_13)))
-                                    ($Echo.then_18
-                                       (then $Echo.inner_15
+                                       ($Echo.return_12)))
+                                    ($Echo.then_17
+                                       (then $Echo.inner_14
                                           (join
-                                             (($Echo.apply_17
+                                             (($Echo.apply_16
                                                 (apply
-                                                   ($Echo.inner_15)
-                                                   ($Echo.return_12))))
-                                             (cut $Echo.outer_14 $Echo.apply_17))))
-                                    ($Echo.return_13 $Echo.then_18))
-                                 (invoke getContents $Echo.apply_16)))))
-                        (invoke putStr $Echo.then_19)))))
-               ($Echo.return_12 $Echo.return_11))
+                                                   ($Echo.inner_14)
+                                                   ($Echo.return_11))))
+                                             (cut $Echo.outer_13 $Echo.apply_16))))
+                                    ($Echo.return_12 $Echo.then_17))
+                                 (invoke getContents $Echo.apply_15)))))
+                        (invoke putStr $Echo.then_18))))))
             (cut
                (construct
                   tuple
                   ($Echo.param_9)
                   ())
-               $Echo.select_20)))
+               $Echo.select_19)))
       $Echo.return_10)))

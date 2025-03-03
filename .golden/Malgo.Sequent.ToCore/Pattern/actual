@@ -4,40 +4,34 @@
       (lambda
          ($Pattern.param_16 $Pattern.return_19)
          (cut
-            (do $Pattern.return_20
-               (cut
-                  (construct
-                     tuple
-                     ($Pattern.param_16)
-                     ())
-                  (select
-                     (#Pattern.$__9
-                        (invoke putStrLn
-                           (apply
-                              ((do $Pattern.return_21
-                                 (invoke String#
-                                    (apply
-                                       ("OK")
-                                       ($Pattern.return_21)))))
-                              ($Pattern.return_20)))))))
-            $Pattern.return_19))
+            (construct
+               tuple
+               ($Pattern.param_16)
+               ())
+            (select
+               (#Pattern.$__9
+                  (invoke putStrLn
+                     (apply
+                        ((do $Pattern.return_20
+                           (invoke String#
+                              (apply
+                                 ("OK")
+                                 ($Pattern.return_20)))))
+                        ($Pattern.return_19)))))))
       $Pattern.return_18))
    (isNil
-      $Pattern.return_22
+      $Pattern.return_21
       (cut
          (lambda
-            ($Pattern.param_17 $Pattern.return_23)
+            ($Pattern.param_17 $Pattern.return_22)
             (cut
-               (do $Pattern.return_24
-                  (cut
-                     (construct
-                        tuple
-                        ($Pattern.param_17)
-                        ())
-                     (select
-                        ((Nil ())
-                           (invoke True $Pattern.return_24))
-                        (#Pattern.__0
-                           (invoke False $Pattern.return_24)))))
-               $Pattern.return_23))
-         $Pattern.return_22)))
+               (construct
+                  tuple
+                  ($Pattern.param_17)
+                  ())
+               (select
+                  ((Nil ())
+                     (invoke True $Pattern.return_22))
+                  (#Pattern.__0
+                     (invoke False $Pattern.return_22)))))
+         $Pattern.return_21)))

@@ -3,51 +3,45 @@
    (cut
       (lambda
          ($TypeAnnotation.param_12 $TypeAnnotation.return_15)
-         (cut-do
-            $TypeAnnotation.return_16
-            (cut
-               (construct
-                  tuple
-                  ($TypeAnnotation.param_12)
-                  ())
-               (select
-                  (#TypeAnnotation.$__11
-                     (invoke printString
-                        (then $TypeAnnotation.outer_23
-                           (cut-do
-                              $TypeAnnotation.return_17
-                              (cut
-                                 (lambda
-                                    ($TypeAnnotation.param_13 $TypeAnnotation.return_19)
-                                    (cut-do
-                                       $TypeAnnotation.return_20
-                                       (cut
-                                          (construct
-                                             tuple
-                                             ($TypeAnnotation.param_13)
-                                             ())
-                                          (select
-                                             (#TypeAnnotation.x_0
-                                                (cut #TypeAnnotation.x_0 $TypeAnnotation.return_20))))
-                                       $TypeAnnotation.return_19))
-                                 (then $TypeAnnotation.outer_25
-                                    (cut-do
-                                       $TypeAnnotation.return_18
-                                       (invoke String#
-                                          (apply
-                                             ("hoge")
-                                             ($TypeAnnotation.return_18)))
-                                       (then $TypeAnnotation.inner_26
-                                          (cut
-                                             $TypeAnnotation.outer_25
-                                             (apply
-                                                ($TypeAnnotation.inner_26)
-                                                ($TypeAnnotation.return_17)))))))
-                              (then $TypeAnnotation.inner_24
+         (cut
+            (construct
+               tuple
+               ($TypeAnnotation.param_12)
+               ())
+            (select
+               (#TypeAnnotation.$__11
+                  (invoke printString
+                     (then $TypeAnnotation.outer_21
+                        (cut-do
+                           $TypeAnnotation.return_16
+                           (cut
+                              (lambda
+                                 ($TypeAnnotation.param_13 $TypeAnnotation.return_18)
                                  (cut
-                                    $TypeAnnotation.outer_23
-                                    (apply
-                                       ($TypeAnnotation.inner_24)
-                                       ($TypeAnnotation.return_16))))))))))
-            $TypeAnnotation.return_15))
+                                    (construct
+                                       tuple
+                                       ($TypeAnnotation.param_13)
+                                       ())
+                                    (select
+                                       (#TypeAnnotation.x_0
+                                          (cut #TypeAnnotation.x_0 $TypeAnnotation.return_18)))))
+                              (then $TypeAnnotation.outer_23
+                                 (cut-do
+                                    $TypeAnnotation.return_17
+                                    (invoke String#
+                                       (apply
+                                          ("hoge")
+                                          ($TypeAnnotation.return_17)))
+                                    (then $TypeAnnotation.inner_24
+                                       (cut
+                                          $TypeAnnotation.outer_23
+                                          (apply
+                                             ($TypeAnnotation.inner_24)
+                                             ($TypeAnnotation.return_16)))))))
+                           (then $TypeAnnotation.inner_22
+                              (cut
+                                 $TypeAnnotation.outer_21
+                                 (apply
+                                    ($TypeAnnotation.inner_22)
+                                    ($TypeAnnotation.return_15)))))))))))
       $TypeAnnotation.return_14)))

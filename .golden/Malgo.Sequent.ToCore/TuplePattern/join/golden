@@ -4,93 +4,91 @@
       (lambda
          ($TuplePattern.param_26 $TuplePattern.return_29)
          (join
-            (($TuplePattern.select_61
+            (($TuplePattern.select_59
                (select
                   (#TuplePattern.$__25
                      (join
-                        (($TuplePattern.then_60
-                           (then $TuplePattern.outer_40
+                        (($TuplePattern.then_58
+                           (then $TuplePattern.outer_38
                               (join
-                                 (($TuplePattern.then_51
-                                    (then $TuplePattern.var_47
+                                 (($TuplePattern.then_49
+                                    (then $TuplePattern.var_45
                                        (join
-                                          (($TuplePattern.then_50
-                                             (then $TuplePattern.var_49
+                                          (($TuplePattern.then_48
+                                             (then $TuplePattern.var_47
                                                 (cut
                                                    (construct
                                                       tuple
-                                                      ($TuplePattern.var_47 $TuplePattern.var_49)
+                                                      ($TuplePattern.var_45 $TuplePattern.var_47)
                                                       ())
-                                                   $TuplePattern.label_48)))
-                                             ($TuplePattern.label_48 $TuplePattern.label_46)
-                                             ($TuplePattern.return_35 $TuplePattern.then_50))
-                                          (invoke B $TuplePattern.return_35))))
-                                    ($TuplePattern.then_59
-                                       (then $TuplePattern.inner_41
+                                                   $TuplePattern.label_46)))
+                                             ($TuplePattern.label_46 $TuplePattern.label_44)
+                                             ($TuplePattern.return_33 $TuplePattern.then_48))
+                                          (invoke B $TuplePattern.return_33))))
+                                    ($TuplePattern.then_57
+                                       (then $TuplePattern.inner_39
                                           (join
-                                             (($TuplePattern.apply_57
+                                             (($TuplePattern.apply_55
                                                 (apply
                                                    ((lambda
-                                                      ($TuplePattern.param_27 $TuplePattern.return_31)
+                                                      ($TuplePattern.param_27 $TuplePattern.return_30)
                                                       (join
-                                                         (($TuplePattern.select_56
+                                                         (($TuplePattern.select_54
                                                             (select
                                                                ((tuple
                                                                   ((A ())
                                                                      #TuplePattern.rest_0))
                                                                   (join
-                                                                     (($TuplePattern.then_55
-                                                                        (then $TuplePattern.outer_44
+                                                                     (($TuplePattern.then_53
+                                                                        (then $TuplePattern.outer_42
                                                                            (join
-                                                                              (($TuplePattern.apply_52
+                                                                              (($TuplePattern.apply_50
                                                                                  (apply
                                                                                     ("A")
-                                                                                    ($TuplePattern.return_33)))
-                                                                                 ($TuplePattern.then_54
-                                                                                    (then $TuplePattern.inner_45
+                                                                                    ($TuplePattern.return_31)))
+                                                                                 ($TuplePattern.then_52
+                                                                                    (then $TuplePattern.inner_43
                                                                                        (join
-                                                                                          (($TuplePattern.apply_53
+                                                                                          (($TuplePattern.apply_51
                                                                                              (apply
-                                                                                                ($TuplePattern.inner_45)
-                                                                                                ($TuplePattern.return_32))))
-                                                                                          (cut $TuplePattern.outer_44 $TuplePattern.apply_53))))
-                                                                                 ($TuplePattern.return_33 $TuplePattern.then_54))
-                                                                              (invoke String# $TuplePattern.apply_52)))))
-                                                                     (invoke printString $TuplePattern.then_55)))
+                                                                                                ($TuplePattern.inner_43)
+                                                                                                ($TuplePattern.return_30))))
+                                                                                          (cut $TuplePattern.outer_42 $TuplePattern.apply_51))))
+                                                                                 ($TuplePattern.return_31 $TuplePattern.then_52))
+                                                                              (invoke String# $TuplePattern.apply_50)))))
+                                                                     (invoke printString $TuplePattern.then_53)))
                                                                ((tuple
                                                                   ((B ())
                                                                      #TuplePattern.rest_1))
                                                                   (cut
                                                                      (construct tuple () ())
-                                                                     $TuplePattern.return_32))
+                                                                     $TuplePattern.return_30))
                                                                ((tuple
                                                                   ((C ())
                                                                      #TuplePattern.rest_2))
                                                                   (cut
                                                                      (construct tuple () ())
-                                                                     $TuplePattern.return_32))))
-                                                            ($TuplePattern.return_32 $TuplePattern.return_31))
+                                                                     $TuplePattern.return_30)))))
                                                          (cut
                                                             (construct
                                                                tuple
                                                                ($TuplePattern.param_27)
                                                                ())
-                                                            $TuplePattern.select_56))))
-                                                   ($TuplePattern.return_30)))
-                                                ($TuplePattern.apply_58
+                                                            $TuplePattern.select_54))))
+                                                   ($TuplePattern.return_29)))
+                                                ($TuplePattern.apply_56
                                                    (apply
-                                                      ($TuplePattern.inner_41)
-                                                      ($TuplePattern.apply_57))))
-                                             (cut $TuplePattern.outer_40 $TuplePattern.apply_58))))
-                                    ($TuplePattern.label_46 $TuplePattern.then_59)
-                                    ($TuplePattern.return_34 $TuplePattern.then_51))
-                                 (invoke A $TuplePattern.return_34)))))
-                        (invoke |> $TuplePattern.then_60)))))
-               ($TuplePattern.return_30 $TuplePattern.return_29))
+                                                      ($TuplePattern.inner_39)
+                                                      ($TuplePattern.apply_55))))
+                                             (cut $TuplePattern.outer_38 $TuplePattern.apply_56))))
+                                    ($TuplePattern.label_44 $TuplePattern.then_57)
+                                    ($TuplePattern.return_32 $TuplePattern.then_49))
+                                 (invoke A $TuplePattern.return_32)))))
+                        (invoke |> $TuplePattern.then_58))))))
             (cut
                (construct
                   tuple
                   ($TuplePattern.param_26)
                   ())
-               $TuplePattern.select_61)))
+               $TuplePattern.select_59)))
       $TuplePattern.return_28)))

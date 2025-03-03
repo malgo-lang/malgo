@@ -3,28 +3,25 @@
    (cut
       (lambda
          ($Echo.param_9 $Echo.return_11)
-         (cut-do
-            $Echo.return_12
-            (cut
-               (construct
-                  tuple
-                  ($Echo.param_9)
-                  ())
-               (select
-                  (#Echo.$__8
-                     (invoke putStr
-                        (then $Echo.outer_14
-                           (cut-do
-                              $Echo.return_13
-                              (invoke getContents
+         (cut
+            (construct
+               tuple
+               ($Echo.param_9)
+               ())
+            (select
+               (#Echo.$__8
+                  (invoke putStr
+                     (then $Echo.outer_13
+                        (cut-do
+                           $Echo.return_12
+                           (invoke getContents
+                              (apply
+                                 ((construct tuple () ()))
+                                 ($Echo.return_12)))
+                           (then $Echo.inner_14
+                              (cut
+                                 $Echo.outer_13
                                  (apply
-                                    ((construct tuple () ()))
-                                    ($Echo.return_13)))
-                              (then $Echo.inner_15
-                                 (cut
-                                    $Echo.outer_14
-                                    (apply
-                                       ($Echo.inner_15)
-                                       ($Echo.return_12))))))))))
-            $Echo.return_11))
+                                    ($Echo.inner_14)
+                                    ($Echo.return_11)))))))))))
       $Echo.return_10)))

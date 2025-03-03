@@ -10,111 +10,107 @@
                   (lambda
                      ($Test1.param_41 $Test1.return_48)
                      (join
-                        (($Test1.select_62
+                        (($Test1.select_58
                            (select
                               ((tuple
                                  ((True ())
                                     #Test1.t_0
                                     #Test1.__1))
                                  (join
-                                    (($Test1.apply_60
+                                    (($Test1.apply_56
                                        (apply
                                           ((construct tuple () ()))
-                                          ($Test1.return_49))))
-                                    (cut #Test1.t_0 $Test1.apply_60)))
+                                          ($Test1.return_48))))
+                                    (cut #Test1.t_0 $Test1.apply_56)))
                               ((tuple
                                  ((False ())
                                     #Test1.__2
                                     #Test1.f_3))
                                  (join
-                                    (($Test1.apply_61
+                                    (($Test1.apply_57
                                        (apply
                                           ((construct tuple () ()))
-                                          ($Test1.return_49))))
-                                    (cut #Test1.f_3 $Test1.apply_61)))))
-                           ($Test1.return_49 $Test1.return_48))
+                                          ($Test1.return_48))))
+                                    (cut #Test1.f_3 $Test1.apply_57))))))
                         (cut
                            (construct
                               tuple
                               ($Test1.param_39 $Test1.param_40 $Test1.param_41)
                               ())
-                           $Test1.select_62)))
+                           $Test1.select_58)))
                   $Test1.return_47))
             $Test1.return_46))
       $Test1.return_45))
    (main
-      $Test1.return_50
+      $Test1.return_49
       (cut
          (lambda
-            ($Test1.param_42 $Test1.return_51)
+            ($Test1.param_42 $Test1.return_50)
             (join
-               (($Test1.select_72
+               (($Test1.select_68
                   (select
                      (#Test1.$__38
                         (join
-                           (($Test1.then_71
-                              (then $Test1.outer_58
+                           (($Test1.then_67
+                              (then $Test1.outer_54
                                  (join
-                                    (($Test1.then_70
-                                       (then $Test1.inner_59
+                                    (($Test1.then_66
+                                       (then $Test1.inner_55
                                           (join
-                                             (($Test1.apply_67
+                                             (($Test1.apply_63
                                                 (apply
                                                    ((lambda
-                                                      ($Test1.param_44 $Test1.return_53)
+                                                      ($Test1.param_44 $Test1.return_51)
                                                       (join
-                                                         (($Test1.select_66
+                                                         (($Test1.select_62
                                                             (select
                                                                (#Test1.$__35
                                                                   (join
-                                                                     (($Test1.apply_65
+                                                                     (($Test1.apply_61
                                                                         (apply
                                                                            ("False")
-                                                                           ($Test1.return_54))))
-                                                                     (invoke malgo_print_string $Test1.apply_65)))))
-                                                            ($Test1.return_54 $Test1.return_53))
+                                                                           ($Test1.return_51))))
+                                                                     (invoke malgo_print_string $Test1.apply_61))))))
                                                          (cut
                                                             (construct
                                                                tuple
                                                                ($Test1.param_44)
                                                                ())
-                                                            $Test1.select_66))))
-                                                   ($Test1.return_52)))
-                                                ($Test1.apply_68
+                                                            $Test1.select_62))))
+                                                   ($Test1.return_50)))
+                                                ($Test1.apply_64
                                                    (apply
                                                       ((lambda
-                                                         ($Test1.param_43 $Test1.return_55)
+                                                         ($Test1.param_43 $Test1.return_52)
                                                          (join
-                                                            (($Test1.select_64
+                                                            (($Test1.select_60
                                                                (select
                                                                   (#Test1.$__30
                                                                      (join
-                                                                        (($Test1.apply_63
+                                                                        (($Test1.apply_59
                                                                            (apply
                                                                               ("True")
-                                                                              ($Test1.return_56))))
-                                                                        (invoke malgo_print_string $Test1.apply_63)))))
-                                                               ($Test1.return_56 $Test1.return_55))
+                                                                              ($Test1.return_52))))
+                                                                        (invoke malgo_print_string $Test1.apply_59))))))
                                                             (cut
                                                                (construct
                                                                   tuple
                                                                   ($Test1.param_43)
                                                                   ())
-                                                               $Test1.select_64))))
-                                                      ($Test1.apply_67)))
-                                                ($Test1.apply_69
+                                                               $Test1.select_60))))
+                                                      ($Test1.apply_63)))
+                                                ($Test1.apply_65
                                                    (apply
-                                                      ($Test1.inner_59)
-                                                      ($Test1.apply_68))))
-                                             (cut $Test1.outer_58 $Test1.apply_69))))
-                                       ($Test1.return_57 $Test1.then_70))
-                                    (invoke True $Test1.return_57)))))
-                           (invoke if $Test1.then_71)))))
-                  ($Test1.return_52 $Test1.return_51))
+                                                      ($Test1.inner_55)
+                                                      ($Test1.apply_64))))
+                                             (cut $Test1.outer_54 $Test1.apply_65))))
+                                       ($Test1.return_53 $Test1.then_66))
+                                    (invoke True $Test1.return_53)))))
+                           (invoke if $Test1.then_67))))))
                (cut
                   (construct
                      tuple
                      ($Test1.param_42)
                      ())
-                  $Test1.select_72)))
-         $Test1.return_50)))
+                  $Test1.select_68)))
+         $Test1.return_49)))

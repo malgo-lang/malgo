@@ -3,54 +3,48 @@
    (cut
       (lambda
          ($Undefined.param_20 $Undefined.return_23)
-         (cut-do
-            $Undefined.return_24
+         (cut
+            (construct
+               tuple
+               ($Undefined.param_20)
+               ())
+            (select
+               (#Undefined.x_0
+                  (invoke undefined $Undefined.return_23)))))
+      $Undefined.return_22))
+   (main
+      $Undefined.return_24
+      (cut
+         (lambda
+            ($Undefined.param_21 $Undefined.return_25)
             (cut
                (construct
                   tuple
-                  ($Undefined.param_20)
+                  ($Undefined.param_21)
                   ())
                (select
-                  (#Undefined.x_0
-                     (invoke undefined $Undefined.return_24))))
-            $Undefined.return_23))
-      $Undefined.return_22))
-   (main
-      $Undefined.return_25
-      (cut
-         (lambda
-            ($Undefined.param_21 $Undefined.return_26)
-            (cut-do
-               $Undefined.return_27
-               (cut
-                  (construct
-                     tuple
-                     ($Undefined.param_21)
-                     ())
-                  (select
-                     (#Undefined.$__17
-                        (invoke undefined
-                           (then #Undefined.x_1
-                              (invoke g
-                                 (apply
-                                    (#Undefined.x_1)
-                                    ((then #Undefined.y_2
-                                       (invoke printString
-                                          (then $Undefined.outer_30
-                                             (cut-do
-                                                $Undefined.return_28
-                                                (invoke String#
+                  (#Undefined.$__17
+                     (invoke undefined
+                        (then #Undefined.x_1
+                           (invoke g
+                              (apply
+                                 (#Undefined.x_1)
+                                 ((then #Undefined.y_2
+                                    (invoke printString
+                                       (then $Undefined.outer_28
+                                          (cut-do
+                                             $Undefined.return_26
+                                             (invoke String#
+                                                (apply
+                                                   ("OK")
+                                                   ($Undefined.return_26)))
+                                             (then $Undefined.inner_29
+                                                (cut
+                                                   $Undefined.outer_28
                                                    (apply
-                                                      ("OK")
-                                                      ($Undefined.return_28)))
-                                                (then $Undefined.inner_31
-                                                   (cut
-                                                      $Undefined.outer_30
-                                                      (apply
-                                                         ($Undefined.inner_31)
-                                                         ($Undefined.return_27))))))))))))))))
-               $Undefined.return_26))
-         $Undefined.return_25))
+                                                      ($Undefined.inner_29)
+                                                      ($Undefined.return_25)))))))))))))))))
+         $Undefined.return_24))
    (f
-      $Undefined.return_29
-      (invoke undefined $Undefined.return_29)))
+      $Undefined.return_27
+      (invoke undefined $Undefined.return_27)))

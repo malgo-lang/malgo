@@ -4,38 +4,32 @@
       (lambda
          ($TypeAnnotation.param_12 $TypeAnnotation.return_15)
          (cut
-            (do $TypeAnnotation.return_16
-               (cut
-                  (construct
-                     tuple
-                     ($TypeAnnotation.param_12)
-                     ())
-                  (select
-                     (#TypeAnnotation.$__11
-                        (invoke printString
-                           (apply
-                              ((do $TypeAnnotation.return_17
+            (construct
+               tuple
+               ($TypeAnnotation.param_12)
+               ())
+            (select
+               (#TypeAnnotation.$__11
+                  (invoke printString
+                     (apply
+                        ((do $TypeAnnotation.return_16
+                           (cut
+                              (lambda
+                                 ($TypeAnnotation.param_13 $TypeAnnotation.return_18)
                                  (cut
-                                    (lambda
-                                       ($TypeAnnotation.param_13 $TypeAnnotation.return_19)
-                                       (cut
-                                          (do $TypeAnnotation.return_20
-                                             (cut
-                                                (construct
-                                                   tuple
-                                                   ($TypeAnnotation.param_13)
-                                                   ())
-                                                (select
-                                                   (#TypeAnnotation.x_0
-                                                      (cut #TypeAnnotation.x_0 $TypeAnnotation.return_20)))))
-                                          $TypeAnnotation.return_19))
-                                    (apply
-                                       ((do $TypeAnnotation.return_18
-                                          (invoke String#
-                                             (apply
-                                                ("hoge")
-                                                ($TypeAnnotation.return_18)))))
-                                       ($TypeAnnotation.return_17)))))
-                              ($TypeAnnotation.return_16)))))))
-            $TypeAnnotation.return_15))
+                                    (construct
+                                       tuple
+                                       ($TypeAnnotation.param_13)
+                                       ())
+                                    (select
+                                       (#TypeAnnotation.x_0
+                                          (cut #TypeAnnotation.x_0 $TypeAnnotation.return_18)))))
+                              (apply
+                                 ((do $TypeAnnotation.return_17
+                                    (invoke String#
+                                       (apply
+                                          ("hoge")
+                                          ($TypeAnnotation.return_17)))))
+                                 ($TypeAnnotation.return_16)))))
+                        ($TypeAnnotation.return_15)))))))
       $TypeAnnotation.return_14)))

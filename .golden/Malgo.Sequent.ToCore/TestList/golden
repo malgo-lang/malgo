@@ -4,58 +4,55 @@
       (lambda
          ($TestList.param_41 $TestList.return_43)
          (cut
-            (do $TestList.return_44
-               (cut
-                  (construct
-                     tuple
-                     ($TestList.param_41)
-                     ())
-                  (select
-                     (#TestList.$__40
-                        (invoke Cons
-                           (apply
-                              ((do $TestList.return_52
-                                 (invoke Int32#
-                                    (apply
-                                       (1_i32)
-                                       ($TestList.return_52)))))
-                              ((apply
-                                 ((do $TestList.return_47
-                                    (invoke Cons
-                                       (apply
-                                          ((do $TestList.return_51
-                                             (invoke Int32#
-                                                (apply
-                                                   (2_i32)
-                                                   ($TestList.return_51)))))
-                                          ((apply
-                                             ((do $TestList.return_48
-                                                (invoke Cons
-                                                   (apply
-                                                      ((do $TestList.return_50
-                                                         (invoke Int32#
-                                                            (apply
-                                                               (3_i32)
-                                                               ($TestList.return_50)))))
-                                                      ((apply
-                                                         ((do $TestList.return_49
-                                                            (invoke Nil $TestList.return_49)))
-                                                         ($TestList.return_48)))))))
-                                             ($TestList.return_47)))))))
-                                 ((then #TestList.xs_0
-                                    (invoke Nil
-                                       (then #TestList.nil_1
-                                          (invoke putStrLn
+            (construct
+               tuple
+               ($TestList.param_41)
+               ())
+            (select
+               (#TestList.$__40
+                  (invoke Cons
+                     (apply
+                        ((do $TestList.return_51
+                           (invoke Int32#
+                              (apply
+                                 (1_i32)
+                                 ($TestList.return_51)))))
+                        ((apply
+                           ((do $TestList.return_46
+                              (invoke Cons
+                                 (apply
+                                    ((do $TestList.return_50
+                                       (invoke Int32#
+                                          (apply
+                                             (2_i32)
+                                             ($TestList.return_50)))))
+                                    ((apply
+                                       ((do $TestList.return_47
+                                          (invoke Cons
                                              (apply
-                                                ((do $TestList.return_45
-                                                   (invoke toStringInt32
+                                                ((do $TestList.return_49
+                                                   (invoke Int32#
                                                       (apply
-                                                         ((do $TestList.return_46
-                                                            (invoke head
-                                                               (apply
-                                                                  (#TestList.xs_0)
-                                                                  ($TestList.return_46)))))
-                                                         ($TestList.return_45)))))
-                                                ($TestList.return_44)))))))))))))))
-            $TestList.return_43))
+                                                         (3_i32)
+                                                         ($TestList.return_49)))))
+                                                ((apply
+                                                   ((do $TestList.return_48
+                                                      (invoke Nil $TestList.return_48)))
+                                                   ($TestList.return_47)))))))
+                                       ($TestList.return_46)))))))
+                           ((then #TestList.xs_0
+                              (invoke Nil
+                                 (then #TestList.nil_1
+                                    (invoke putStrLn
+                                       (apply
+                                          ((do $TestList.return_44
+                                             (invoke toStringInt32
+                                                (apply
+                                                   ((do $TestList.return_45
+                                                      (invoke head
+                                                         (apply
+                                                            (#TestList.xs_0)
+                                                            ($TestList.return_45)))))
+                                                   ($TestList.return_44)))))
+                                          ($TestList.return_43)))))))))))))))
       $TestList.return_42)))
