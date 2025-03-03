@@ -1,0 +1,337 @@
+((show
+   $TestArithDouble.return_105
+   (cut
+      (lambda
+         ($TestArithDouble.param_91 $TestArithDouble.return_106)
+         (join
+            (($TestArithDouble.select_163
+               (select
+                  (#TestArithDouble.x_9
+                     (join
+                        (($TestArithDouble.then_162
+                           (then $TestArithDouble.outer_143
+                              (join
+                                 (($TestArithDouble.apply_159
+                                    (apply
+                                       (#TestArithDouble.x_9)
+                                       ($TestArithDouble.return_108)))
+                                    ($TestArithDouble.then_161
+                                       (then $TestArithDouble.inner_144
+                                          (join
+                                             (($TestArithDouble.apply_160
+                                                (apply
+                                                   ($TestArithDouble.inner_144)
+                                                   ($TestArithDouble.return_107))))
+                                             (cut $TestArithDouble.outer_143 $TestArithDouble.apply_160))))
+                                    ($TestArithDouble.return_108 $TestArithDouble.then_161))
+                                 (invoke toStringDouble# $TestArithDouble.apply_159)))))
+                        (invoke String# $TestArithDouble.then_162)))))
+               ($TestArithDouble.return_107 $TestArithDouble.return_106))
+            (cut
+               (construct
+                  tuple
+                  ($TestArithDouble.param_91)
+                  ())
+               $TestArithDouble.select_163)))
+      $TestArithDouble.return_105))
+   (traceShowId
+      $TestArithDouble.return_109
+      (cut
+         (lambda
+            ($TestArithDouble.param_92 $TestArithDouble.return_110)
+            (join
+               (($TestArithDouble.select_171
+                  (select
+                     (#TestArithDouble.x_10
+                        (join
+                           (($TestArithDouble.then_170
+                              (then $TestArithDouble.outer_147
+                                 (join
+                                    (($TestArithDouble.then_167
+                                       (then $TestArithDouble.outer_149
+                                          (join
+                                             (($TestArithDouble.apply_164
+                                                (apply
+                                                   (#TestArithDouble.x_10)
+                                                   ($TestArithDouble.return_113)))
+                                                ($TestArithDouble.then_166
+                                                   (then $TestArithDouble.inner_150
+                                                      (join
+                                                         (($TestArithDouble.apply_165
+                                                            (apply
+                                                               ($TestArithDouble.inner_150)
+                                                               ($TestArithDouble.return_112))))
+                                                         (cut $TestArithDouble.outer_149 $TestArithDouble.apply_165))))
+                                                ($TestArithDouble.return_113 $TestArithDouble.then_166))
+                                             (invoke show $TestArithDouble.apply_164))))
+                                       ($TestArithDouble.then_169
+                                          (then $TestArithDouble.inner_148
+                                             (join
+                                                (($TestArithDouble.apply_168
+                                                   (apply
+                                                      ($TestArithDouble.inner_148)
+                                                      ($TestArithDouble.return_111))))
+                                                (cut $TestArithDouble.outer_147 $TestArithDouble.apply_168))))
+                                       ($TestArithDouble.return_112 $TestArithDouble.then_169))
+                                    (invoke putStrLn $TestArithDouble.then_167)))))
+                           (cut
+                              (lambda
+                                 ($TestArithDouble.tmp_93 $TestArithDouble.return_114)
+                                 (cut #TestArithDouble.x_10 $TestArithDouble.return_114))
+                              $TestArithDouble.then_170)))))
+                  ($TestArithDouble.return_111 $TestArithDouble.return_110))
+               (cut
+                  (construct
+                     tuple
+                     ($TestArithDouble.param_92)
+                     ())
+                  $TestArithDouble.select_171)))
+         $TestArithDouble.return_109))
+   (neg
+      $TestArithDouble.return_115
+      (cut
+         (lambda
+            ($TestArithDouble.param_94 $TestArithDouble.return_116)
+            (join
+               (($TestArithDouble.select_174
+                  (select
+                     (#TestArithDouble.x_0
+                        (join
+                           (($TestArithDouble.apply_172
+                              (apply
+                                 (#TestArithDouble.x_0)
+                                 ($TestArithDouble.return_117)))
+                              ($TestArithDouble.apply_173
+                                 (apply
+                                    (0.0_f64)
+                                    ($TestArithDouble.apply_172))))
+                           (invoke subDouble# $TestArithDouble.apply_173)))))
+                  ($TestArithDouble.return_117 $TestArithDouble.return_116))
+               (cut
+                  (construct
+                     tuple
+                     ($TestArithDouble.param_94)
+                     ())
+                  $TestArithDouble.select_174)))
+         $TestArithDouble.return_115))
+   (mul
+      $TestArithDouble.return_118
+      (cut
+         (lambda
+            ($TestArithDouble.param_95 $TestArithDouble.return_119)
+            (cut
+               (lambda
+                  ($TestArithDouble.param_96 $TestArithDouble.return_120)
+                  (join
+                     (($TestArithDouble.select_177
+                        (select
+                           ((tuple
+                              (#TestArithDouble.x_3 #TestArithDouble.y_4))
+                              (join
+                                 (($TestArithDouble.apply_175
+                                    (apply
+                                       (#TestArithDouble.y_4)
+                                       ($TestArithDouble.return_121)))
+                                    ($TestArithDouble.apply_176
+                                       (apply
+                                          (#TestArithDouble.x_3)
+                                          ($TestArithDouble.apply_175))))
+                                 (invoke mulDouble# $TestArithDouble.apply_176)))))
+                        ($TestArithDouble.return_121 $TestArithDouble.return_120))
+                     (cut
+                        (construct
+                           tuple
+                           ($TestArithDouble.param_95 $TestArithDouble.param_96)
+                           ())
+                        $TestArithDouble.select_177)))
+               $TestArithDouble.return_119))
+         $TestArithDouble.return_118))
+   (add
+      $TestArithDouble.return_122
+      (cut
+         (lambda
+            ($TestArithDouble.param_97 $TestArithDouble.return_123)
+            (cut
+               (lambda
+                  ($TestArithDouble.param_98 $TestArithDouble.return_124)
+                  (join
+                     (($TestArithDouble.select_180
+                        (select
+                           ((tuple
+                              (#TestArithDouble.x_7 #TestArithDouble.y_8))
+                              (join
+                                 (($TestArithDouble.apply_178
+                                    (apply
+                                       (#TestArithDouble.y_8)
+                                       ($TestArithDouble.return_125)))
+                                    ($TestArithDouble.apply_179
+                                       (apply
+                                          (#TestArithDouble.x_7)
+                                          ($TestArithDouble.apply_178))))
+                                 (invoke addDouble# $TestArithDouble.apply_179)))))
+                        ($TestArithDouble.return_125 $TestArithDouble.return_124))
+                     (cut
+                        (construct
+                           tuple
+                           ($TestArithDouble.param_97 $TestArithDouble.param_98)
+                           ())
+                        $TestArithDouble.select_180)))
+               $TestArithDouble.return_123))
+         $TestArithDouble.return_122))
+   (+
+      $TestArithDouble.return_126
+      (cut
+         (lambda
+            ($TestArithDouble.param_99 $TestArithDouble.return_127)
+            (cut
+               (lambda
+                  ($TestArithDouble.param_100 $TestArithDouble.return_128)
+                  (join
+                     (($TestArithDouble.select_183
+                        (select
+                           ((tuple
+                              (#TestArithDouble.x_5 #TestArithDouble.y_6))
+                              (join
+                                 (($TestArithDouble.apply_181
+                                    (apply
+                                       (#TestArithDouble.y_6)
+                                       ($TestArithDouble.return_129)))
+                                    ($TestArithDouble.apply_182
+                                       (apply
+                                          (#TestArithDouble.x_5)
+                                          ($TestArithDouble.apply_181))))
+                                 (invoke addDouble# $TestArithDouble.apply_182)))))
+                        ($TestArithDouble.return_129 $TestArithDouble.return_128))
+                     (cut
+                        (construct
+                           tuple
+                           ($TestArithDouble.param_99 $TestArithDouble.param_100)
+                           ())
+                        $TestArithDouble.select_183)))
+               $TestArithDouble.return_127))
+         $TestArithDouble.return_126))
+   (*
+      $TestArithDouble.return_130
+      (cut
+         (lambda
+            ($TestArithDouble.param_101 $TestArithDouble.return_131)
+            (cut
+               (lambda
+                  ($TestArithDouble.param_102 $TestArithDouble.return_132)
+                  (join
+                     (($TestArithDouble.select_186
+                        (select
+                           ((tuple
+                              (#TestArithDouble.x_1 #TestArithDouble.y_2))
+                              (join
+                                 (($TestArithDouble.apply_184
+                                    (apply
+                                       (#TestArithDouble.y_2)
+                                       ($TestArithDouble.return_133)))
+                                    ($TestArithDouble.apply_185
+                                       (apply
+                                          (#TestArithDouble.x_1)
+                                          ($TestArithDouble.apply_184))))
+                                 (invoke mulDouble# $TestArithDouble.apply_185)))))
+                        ($TestArithDouble.return_133 $TestArithDouble.return_132))
+                     (cut
+                        (construct
+                           tuple
+                           ($TestArithDouble.param_101 $TestArithDouble.param_102)
+                           ())
+                        $TestArithDouble.select_186)))
+               $TestArithDouble.return_131))
+         $TestArithDouble.return_130))
+   (f
+      $TestArithDouble.return_134
+      (cut
+         (lambda
+            ($TestArithDouble.param_103 $TestArithDouble.return_135)
+            (join
+               (($TestArithDouble.select_193
+                  (select
+                     (#TestArithDouble.x_11
+                        (join
+                           (($TestArithDouble.then_192
+                              (then $TestArithDouble.outer_151
+                                 (join
+                                    (($TestArithDouble.apply_187
+                                       (apply
+                                          (0.0_f64)
+                                          ($TestArithDouble.return_137)))
+                                       ($TestArithDouble.apply_188
+                                          (apply
+                                             (#TestArithDouble.x_11)
+                                             ($TestArithDouble.apply_187)))
+                                       ($TestArithDouble.then_191
+                                          (then $TestArithDouble.inner_152
+                                             (join
+                                                (($TestArithDouble.apply_189
+                                                   (apply
+                                                      (#TestArithDouble.x_11)
+                                                      ($TestArithDouble.return_136)))
+                                                   ($TestArithDouble.apply_190
+                                                      (apply
+                                                         ($TestArithDouble.inner_152)
+                                                         ($TestArithDouble.apply_189))))
+                                                (cut $TestArithDouble.outer_151 $TestArithDouble.apply_190))))
+                                       ($TestArithDouble.return_137 $TestArithDouble.then_191))
+                                    (invoke + $TestArithDouble.apply_188)))))
+                           (invoke * $TestArithDouble.then_192)))))
+                  ($TestArithDouble.return_136 $TestArithDouble.return_135))
+               (cut
+                  (construct
+                     tuple
+                     ($TestArithDouble.param_103)
+                     ())
+                  $TestArithDouble.select_193)))
+         $TestArithDouble.return_134))
+   (main
+      $TestArithDouble.return_138
+      (cut
+         (lambda
+            ($TestArithDouble.param_104 $TestArithDouble.return_139)
+            (join
+               (($TestArithDouble.select_201
+                  (select
+                     (#TestArithDouble.$__90
+                        (join
+                           (($TestArithDouble.then_200
+                              (then $TestArithDouble.outer_155
+                                 (join
+                                    (($TestArithDouble.then_197
+                                       (then $TestArithDouble.outer_157
+                                          (join
+                                             (($TestArithDouble.apply_194
+                                                (apply
+                                                   (0.5_f64)
+                                                   ($TestArithDouble.return_142)))
+                                                ($TestArithDouble.then_196
+                                                   (then $TestArithDouble.inner_158
+                                                      (join
+                                                         (($TestArithDouble.apply_195
+                                                            (apply
+                                                               ($TestArithDouble.inner_158)
+                                                               ($TestArithDouble.return_141))))
+                                                         (cut $TestArithDouble.outer_157 $TestArithDouble.apply_195))))
+                                                ($TestArithDouble.return_142 $TestArithDouble.then_196))
+                                             (invoke f $TestArithDouble.apply_194))))
+                                       ($TestArithDouble.then_199
+                                          (then $TestArithDouble.inner_156
+                                             (join
+                                                (($TestArithDouble.apply_198
+                                                   (apply
+                                                      ($TestArithDouble.inner_156)
+                                                      ($TestArithDouble.return_140))))
+                                                (cut $TestArithDouble.outer_155 $TestArithDouble.apply_198))))
+                                       ($TestArithDouble.return_141 $TestArithDouble.then_199))
+                                    (invoke show $TestArithDouble.then_197)))))
+                           (invoke putStrLn $TestArithDouble.then_200)))))
+                  ($TestArithDouble.return_140 $TestArithDouble.return_139))
+               (cut
+                  (construct
+                     tuple
+                     ($TestArithDouble.param_104)
+                     ())
+                  $TestArithDouble.select_201)))
+         $TestArithDouble.return_138)))

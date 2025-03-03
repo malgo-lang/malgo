@@ -1,0 +1,36 @@
+((main
+   $Echo.return_10
+   (cut
+      (lambda
+         ($Echo.param_9 $Echo.return_11)
+         (join
+            (($Echo.select_20
+               (select
+                  (#Echo.$__8
+                     (join
+                        (($Echo.then_19
+                           (then $Echo.outer_14
+                              (join
+                                 (($Echo.apply_16
+                                    (apply
+                                       ((construct tuple () ()))
+                                       ($Echo.return_13)))
+                                    ($Echo.then_18
+                                       (then $Echo.inner_15
+                                          (join
+                                             (($Echo.apply_17
+                                                (apply
+                                                   ($Echo.inner_15)
+                                                   ($Echo.return_12))))
+                                             (cut $Echo.outer_14 $Echo.apply_17))))
+                                    ($Echo.return_13 $Echo.then_18))
+                                 (invoke getContents $Echo.apply_16)))))
+                        (invoke putStr $Echo.then_19)))))
+               ($Echo.return_12 $Echo.return_11))
+            (cut
+               (construct
+                  tuple
+                  ($Echo.param_9)
+                  ())
+               $Echo.select_20)))
+      $Echo.return_10)))

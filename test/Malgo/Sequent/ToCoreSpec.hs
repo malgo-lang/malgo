@@ -11,6 +11,7 @@ import Malgo.Rename.Pass (rename)
 import Malgo.Rename.RnEnv qualified as RnEnv
 import Malgo.SExpr (sShow)
 import Malgo.Sequent.Core.Flat (flatProgram)
+import Malgo.Sequent.Core.Join (joinProgram)
 import Malgo.Sequent.ToCore (toCore)
 import Malgo.Sequent.ToFun (toFun)
 import Malgo.Syntax (Module (..))
@@ -26,12 +27,15 @@ spec = parallel do
     setupPrelude
   testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
   golden "Builtin" (driveToCore builtinPath)
-  golden "Builtin zero" (driveZero builtinPath)
+  golden "Builtin flat" (driveFlat builtinPath)
+  golden "Builtin join" (driveJoin builtinPath)
   golden "Prelude" (driveToCore preludePath)
-  golden "Prelude zero" (driveZero builtinPath)
+  golden "Prelude flat" (driveFlat builtinPath)
+  golden "Prelude join" (driveJoin preludePath)
   for_ testcases \testcase -> do
     golden (takeBaseName testcase) (driveToCore (testcaseDir </> testcase))
-    golden (takeBaseName testcase <> " zero") (driveZero (testcaseDir </> testcase))
+    golden (takeBaseName testcase <> " flat") (driveFlat (testcaseDir </> testcase))
+    golden (takeBaseName testcase <> " join") (driveJoin (testcaseDir </> testcase))
 
 driveToCore :: FilePath -> IO String
 driveToCore srcPath = do
@@ -48,8 +52,8 @@ driveToCore srcPath = do
     program <- runReader refined.moduleName $ toFun refined.moduleDefinition >>= toCore
     pure $ sShow program
 
-driveZero :: FilePath -> IO String
-driveZero srcPath = do
+driveFlat :: FilePath -> IO String
+driveFlat srcPath = do
   src <- convertString <$> BS.readFile srcPath
   runMalgoM flag option do
     parsed <-
@@ -61,4 +65,19 @@ driveZero srcPath = do
     (typed, tcEnv) <- infer rnEnv renamed
     refined <- refine tcEnv typed
     program <- runReader refined.moduleName $ toFun refined.moduleDefinition >>= toCore >>= flatProgram
+    pure $ sShow program
+
+driveJoin :: FilePath -> IO String
+driveJoin srcPath = do
+  src <- convertString <$> BS.readFile srcPath
+  runMalgoM flag option do
+    parsed <-
+      parseMalgo srcPath src >>= \case
+        Left err -> error $ show err
+        Right parsed -> pure parsed
+    rnEnv <- RnEnv.genBuiltinRnEnv
+    (renamed, _) <- rename rnEnv parsed
+    (typed, tcEnv) <- infer rnEnv renamed
+    refined <- refine tcEnv typed
+    program <- runReader refined.moduleName $ toFun refined.moduleDefinition >>= toCore >>= flatProgram >>= joinProgram
     pure $ sShow program

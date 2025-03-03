@@ -1,0 +1,162 @@
+((|>
+   $TestLet.return_54
+   (cut
+      (lambda
+         ($TestLet.param_49 $TestLet.return_55)
+         (cut
+            (lambda
+               ($TestLet.param_50 $TestLet.return_56)
+               (join
+                  (($TestLet.select_80
+                     (select
+                        ((tuple
+                           (#TestLet.x_2 #TestLet.f_3))
+                           (join
+                              (($TestLet.apply_79
+                                 (apply
+                                    (#TestLet.x_2)
+                                    ($TestLet.return_57))))
+                              (cut #TestLet.f_3 $TestLet.apply_79)))))
+                     ($TestLet.return_57 $TestLet.return_56))
+                  (cut
+                     (construct
+                        tuple
+                        ($TestLet.param_49 $TestLet.param_50)
+                        ())
+                     $TestLet.select_80)))
+            $TestLet.return_55))
+      $TestLet.return_54))
+   (main
+      $TestLet.return_58
+      (cut
+         (lambda
+            ($TestLet.param_51 $TestLet.return_59)
+            (join
+               (($TestLet.select_104
+                  (select
+                     (#TestLet.$__48
+                        (join
+                           (($TestLet.then_101
+                              (then #TestLet.x_4
+                                 (join
+                                    (($TestLet.then_100
+                                       (then $TestLet.outer_75
+                                          (join
+                                             (($TestLet.then_97
+                                                (then $TestLet.outer_77
+                                                   (join
+                                                      (($TestLet.apply_94
+                                                         (apply
+                                                            (#TestLet.x_4)
+                                                            ($TestLet.return_62)))
+                                                         ($TestLet.then_96
+                                                            (then $TestLet.inner_78
+                                                               (join
+                                                                  (($TestLet.apply_95
+                                                                     (apply
+                                                                        ($TestLet.inner_78)
+                                                                        ($TestLet.return_61))))
+                                                                  (cut $TestLet.outer_77 $TestLet.apply_95))))
+                                                         ($TestLet.return_62 $TestLet.then_96))
+                                                      (invoke toStringInt32# $TestLet.apply_94))))
+                                                ($TestLet.then_99
+                                                   (then $TestLet.inner_76
+                                                      (join
+                                                         (($TestLet.apply_98
+                                                            (apply
+                                                               ($TestLet.inner_76)
+                                                               ($TestLet.return_60))))
+                                                         (cut $TestLet.outer_75 $TestLet.apply_98))))
+                                                ($TestLet.return_61 $TestLet.then_99))
+                                             (invoke printString# $TestLet.then_97)))))
+                                    (cut
+                                       (lambda
+                                          ($TestLet.tmp_52 $TestLet.return_63)
+                                          (join
+                                             (($TestLet.then_93
+                                                (then $TestLet.outer_69
+                                                   (join
+                                                      (($TestLet.apply_81
+                                                         (apply
+                                                            (2_i32)
+                                                            ($TestLet.return_68)))
+                                                         ($TestLet.apply_82
+                                                            (apply
+                                                               (1_i32)
+                                                               ($TestLet.apply_81)))
+                                                         ($TestLet.then_92
+                                                            (then $TestLet.inner_70
+                                                               (join
+                                                                  (($TestLet.then_90
+                                                                     (then #TestLet.x_5
+                                                                        (join
+                                                                           (($TestLet.then_89
+                                                                              (then #TestLet.printInt32_7
+                                                                                 (join
+                                                                                    (($TestLet.apply_88
+                                                                                       (apply
+                                                                                          (#TestLet.x_5)
+                                                                                          ($TestLet.return_64))))
+                                                                                    (cut #TestLet.printInt32_7 $TestLet.apply_88)))))
+                                                                           (cut
+                                                                              (lambda
+                                                                                 ($TestLet.param_53 $TestLet.return_65)
+                                                                                 (join
+                                                                                    (($TestLet.select_87
+                                                                                       (select
+                                                                                          ((Int32#
+                                                                                             (#TestLet.x_6))
+                                                                                             (join
+                                                                                                (($TestLet.then_86
+                                                                                                   (then $TestLet.outer_71
+                                                                                                      (join
+                                                                                                         (($TestLet.apply_83
+                                                                                                            (apply
+                                                                                                               (#TestLet.x_6)
+                                                                                                               ($TestLet.return_67)))
+                                                                                                            ($TestLet.then_85
+                                                                                                               (then $TestLet.inner_72
+                                                                                                                  (join
+                                                                                                                     (($TestLet.apply_84
+                                                                                                                        (apply
+                                                                                                                           ($TestLet.inner_72)
+                                                                                                                           ($TestLet.return_66))))
+                                                                                                                     (cut $TestLet.outer_71 $TestLet.apply_84))))
+                                                                                                            ($TestLet.return_67 $TestLet.then_85))
+                                                                                                         (invoke toStringInt32# $TestLet.apply_83)))))
+                                                                                                (invoke printString# $TestLet.then_86)))))
+                                                                                       ($TestLet.return_66 $TestLet.return_65))
+                                                                                    (cut
+                                                                                       (construct
+                                                                                          tuple
+                                                                                          ($TestLet.param_53)
+                                                                                          ())
+                                                                                       $TestLet.select_87)))
+                                                                              $TestLet.then_89))))
+                                                                     ($TestLet.apply_91
+                                                                        (apply
+                                                                           ($TestLet.inner_70)
+                                                                           ($TestLet.then_90))))
+                                                                  (cut $TestLet.outer_69 $TestLet.apply_91))))
+                                                         ($TestLet.return_68 $TestLet.then_92))
+                                                      (invoke addInt32# $TestLet.apply_82))))
+                                                ($TestLet.return_64 $TestLet.return_63))
+                                             (invoke Int32# $TestLet.then_93)))
+                                       $TestLet.then_100))))
+                              ($TestLet.apply_102
+                                 (apply
+                                    (2_i32)
+                                    ($TestLet.then_101)))
+                              ($TestLet.apply_103
+                                 (apply
+                                    (1_i32)
+                                    ($TestLet.apply_102))))
+                           (invoke addInt32# $TestLet.apply_103)))))
+                  ($TestLet.return_60 $TestLet.return_59))
+               (cut
+                  (construct
+                     tuple
+                     ($TestLet.param_51)
+                     ())
+                  $TestLet.select_104)))
+         $TestLet.return_58)))

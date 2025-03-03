@@ -1,0 +1,64 @@
+((main
+   $TypeAnnotation.return_14
+   (cut
+      (lambda
+         ($TypeAnnotation.param_12 $TypeAnnotation.return_15)
+         (join
+            (($TypeAnnotation.select_35
+               (select
+                  (#TypeAnnotation.$__11
+                     (join
+                        (($TypeAnnotation.then_34
+                           (then $TypeAnnotation.outer_23
+                              (join
+                                 (($TypeAnnotation.then_31
+                                    (then $TypeAnnotation.outer_25
+                                       (join
+                                          (($TypeAnnotation.apply_28
+                                             (apply
+                                                ("hoge")
+                                                ($TypeAnnotation.return_18)))
+                                             ($TypeAnnotation.then_30
+                                                (then $TypeAnnotation.inner_26
+                                                   (join
+                                                      (($TypeAnnotation.apply_29
+                                                         (apply
+                                                            ($TypeAnnotation.inner_26)
+                                                            ($TypeAnnotation.return_17))))
+                                                      (cut $TypeAnnotation.outer_25 $TypeAnnotation.apply_29))))
+                                             ($TypeAnnotation.return_18 $TypeAnnotation.then_30))
+                                          (invoke String# $TypeAnnotation.apply_28))))
+                                    ($TypeAnnotation.then_33
+                                       (then $TypeAnnotation.inner_24
+                                          (join
+                                             (($TypeAnnotation.apply_32
+                                                (apply
+                                                   ($TypeAnnotation.inner_24)
+                                                   ($TypeAnnotation.return_16))))
+                                             (cut $TypeAnnotation.outer_23 $TypeAnnotation.apply_32))))
+                                    ($TypeAnnotation.return_17 $TypeAnnotation.then_33))
+                                 (cut
+                                    (lambda
+                                       ($TypeAnnotation.param_13 $TypeAnnotation.return_19)
+                                       (join
+                                          (($TypeAnnotation.select_27
+                                             (select
+                                                (#TypeAnnotation.x_0
+                                                   (cut #TypeAnnotation.x_0 $TypeAnnotation.return_20))))
+                                             ($TypeAnnotation.return_20 $TypeAnnotation.return_19))
+                                          (cut
+                                             (construct
+                                                tuple
+                                                ($TypeAnnotation.param_13)
+                                                ())
+                                             $TypeAnnotation.select_27)))
+                                    $TypeAnnotation.then_31)))))
+                        (invoke printString $TypeAnnotation.then_34)))))
+               ($TypeAnnotation.return_16 $TypeAnnotation.return_15))
+            (cut
+               (construct
+                  tuple
+                  ($TypeAnnotation.param_12)
+                  ())
+               $TypeAnnotation.select_35)))
+      $TypeAnnotation.return_14)))

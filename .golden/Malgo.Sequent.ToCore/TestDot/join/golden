@@ -1,0 +1,116 @@
+((succ
+   $TestDot.return_32
+   (cut
+      (lambda
+         ($TestDot.param_30 $TestDot.return_33)
+         (join
+            (($TestDot.select_64
+               (select
+                  ((Int64#
+                     (#TestDot.x_0))
+                     (join
+                        (($TestDot.then_63
+                           (then $TestDot.outer_43
+                              (join
+                                 (($TestDot.apply_59
+                                    (apply
+                                       (1_i64)
+                                       ($TestDot.return_35)))
+                                    ($TestDot.apply_60
+                                       (apply
+                                          (#TestDot.x_0)
+                                          ($TestDot.apply_59)))
+                                    ($TestDot.then_62
+                                       (then $TestDot.inner_44
+                                          (join
+                                             (($TestDot.apply_61
+                                                (apply
+                                                   ($TestDot.inner_44)
+                                                   ($TestDot.return_34))))
+                                             (cut $TestDot.outer_43 $TestDot.apply_61))))
+                                    ($TestDot.return_35 $TestDot.then_62))
+                                 (invoke addInt64# $TestDot.apply_60)))))
+                        (invoke Int64# $TestDot.then_63)))))
+               ($TestDot.return_34 $TestDot.return_33))
+            (cut
+               (construct
+                  tuple
+                  ($TestDot.param_30)
+                  ())
+               $TestDot.select_64)))
+      $TestDot.return_32))
+   (main
+      $TestDot.return_36
+      (cut
+         (lambda
+            ($TestDot.param_31 $TestDot.return_37)
+            (join
+               (($TestDot.select_78
+                  (select
+                     (#TestDot.$__29
+                        (join
+                           (($TestDot.then_77
+                              (then $TestDot.outer_51
+                                 (join
+                                    (($TestDot.then_74
+                                       (then $TestDot.outer_53
+                                          (join
+                                             (($TestDot.then_73
+                                                (then $TestDot.inner_54
+                                                   (join
+                                                      (($TestDot.then_71
+                                                         (then $TestDot.outer_55
+                                                            (join
+                                                               (($TestDot.then_70
+                                                                  (then $TestDot.inner_56
+                                                                     (join
+                                                                        (($TestDot.then_68
+                                                                           (then $TestDot.outer_57
+                                                                              (join
+                                                                                 (($TestDot.apply_65
+                                                                                    (apply
+                                                                                       (0_i64)
+                                                                                       ($TestDot.return_40)))
+                                                                                    ($TestDot.then_67
+                                                                                       (then $TestDot.inner_58
+                                                                                          (join
+                                                                                             (($TestDot.apply_66
+                                                                                                (apply
+                                                                                                   ($TestDot.inner_58)
+                                                                                                   ($TestDot.return_39))))
+                                                                                             (cut $TestDot.outer_57 $TestDot.apply_66))))
+                                                                                    ($TestDot.return_40 $TestDot.then_67))
+                                                                                 (invoke Int64# $TestDot.apply_65))))
+                                                                           ($TestDot.apply_69
+                                                                              (apply
+                                                                                 ($TestDot.inner_56)
+                                                                                 ($TestDot.then_68))))
+                                                                        (cut $TestDot.outer_55 $TestDot.apply_69))))
+                                                                  ($TestDot.return_41 $TestDot.then_70))
+                                                               (invoke succ $TestDot.return_41))))
+                                                         ($TestDot.apply_72
+                                                            (apply
+                                                               ($TestDot.inner_54)
+                                                               ($TestDot.then_71))))
+                                                      (cut $TestDot.outer_53 $TestDot.apply_72))))
+                                                ($TestDot.return_42 $TestDot.then_73))
+                                             (invoke succ $TestDot.return_42))))
+                                       ($TestDot.then_76
+                                          (then $TestDot.inner_52
+                                             (join
+                                                (($TestDot.apply_75
+                                                   (apply
+                                                      ($TestDot.inner_52)
+                                                      ($TestDot.return_38))))
+                                                (cut $TestDot.outer_51 $TestDot.apply_75))))
+                                       ($TestDot.return_39 $TestDot.then_76))
+                                    (invoke . $TestDot.then_74)))))
+                           (invoke printInt64 $TestDot.then_77)))))
+                  ($TestDot.return_38 $TestDot.return_37))
+               (cut
+                  (construct
+                     tuple
+                     ($TestDot.param_31)
+                     ())
+                  $TestDot.select_78)))
+         $TestDot.return_36)))

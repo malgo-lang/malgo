@@ -1,0 +1,92 @@
+((first
+   $TestPolySynonym.return_42
+   (cut
+      (lambda
+         ($TestPolySynonym.param_40 $TestPolySynonym.return_43)
+         (join
+            (($TestPolySynonym.select_58
+               (select
+                  ((expand
+                     ((fst #TestPolySynonym.x_5)
+                        (snd #TestPolySynonym.__6)))
+                     (cut #TestPolySynonym.x_5 $TestPolySynonym.return_44))))
+               ($TestPolySynonym.return_44 $TestPolySynonym.return_43))
+            (cut
+               (construct
+                  tuple
+                  ($TestPolySynonym.param_40)
+                  ())
+               $TestPolySynonym.select_58)))
+      $TestPolySynonym.return_42))
+   (main
+      $TestPolySynonym.return_45
+      (cut
+         (lambda
+            ($TestPolySynonym.param_41 $TestPolySynonym.return_46)
+            (join
+               (($TestPolySynonym.select_69
+                  (select
+                     (#TestPolySynonym.$__39
+                        (join
+                           (($TestPolySynonym.then_68
+                              (then #TestPolySynonym.x_7
+                                 (join
+                                    (($TestPolySynonym.then_67
+                                       (then $TestPolySynonym.outer_54
+                                          (join
+                                             (($TestPolySynonym.apply_61
+                                                (apply
+                                                   (#TestPolySynonym.x_7)
+                                                   ($TestPolySynonym.return_49)))
+                                                ($TestPolySynonym.then_66
+                                                   (then $TestPolySynonym.inner_55
+                                                      (join
+                                                         (($TestPolySynonym.then_64
+                                                            (then $TestPolySynonym.outer_56
+                                                               (join
+                                                                  (($TestPolySynonym.then_63
+                                                                     (then $TestPolySynonym.inner_57
+                                                                        (join
+                                                                           (($TestPolySynonym.apply_62
+                                                                              (apply
+                                                                                 ($TestPolySynonym.inner_57)
+                                                                                 ($TestPolySynonym.return_47))))
+                                                                           (cut $TestPolySynonym.outer_56 $TestPolySynonym.apply_62))))
+                                                                     ($TestPolySynonym.return_48 $TestPolySynonym.then_63))
+                                                                  (invoke printInt32 $TestPolySynonym.return_48))))
+                                                            ($TestPolySynonym.apply_65
+                                                               (apply
+                                                                  ($TestPolySynonym.inner_55)
+                                                                  ($TestPolySynonym.then_64))))
+                                                         (cut $TestPolySynonym.outer_54 $TestPolySynonym.apply_65))))
+                                                ($TestPolySynonym.return_49 $TestPolySynonym.then_66))
+                                             (invoke first $TestPolySynonym.apply_61)))))
+                                    (invoke |> $TestPolySynonym.then_67)))))
+                           (cut
+                              ((fst
+                                 ($TestPolySynonym.return_51
+                                    (join
+                                       (($TestPolySynonym.apply_59
+                                          (apply
+                                             (1_i32)
+                                             ($TestPolySynonym.return_50)))
+                                          ($TestPolySynonym.return_50 $TestPolySynonym.return_51))
+                                       (invoke Int32# $TestPolySynonym.apply_59))))
+                                 (snd
+                                    ($TestPolySynonym.return_53
+                                       (join
+                                          (($TestPolySynonym.apply_60
+                                             (apply
+                                                ("hoge")
+                                                ($TestPolySynonym.return_52)))
+                                             ($TestPolySynonym.return_52 $TestPolySynonym.return_53))
+                                          (invoke String# $TestPolySynonym.apply_60)))))
+                              $TestPolySynonym.then_68)))))
+                  ($TestPolySynonym.return_47 $TestPolySynonym.return_46))
+               (cut
+                  (construct
+                     tuple
+                     ($TestPolySynonym.param_41)
+                     ())
+                  $TestPolySynonym.select_69)))
+         $TestPolySynonym.return_45)))

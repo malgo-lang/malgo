@@ -1,0 +1,147 @@
+((main
+   $TestList.return_42
+   (cut
+      (lambda
+         ($TestList.param_41 $TestList.return_43)
+         (join
+            (($TestList.select_117
+               (select
+                  (#TestList.$__40
+                     (join
+                        (($TestList.then_116
+                           (then $TestList.outer_53
+                              (join
+                                 (($TestList.apply_87
+                                    (apply
+                                       (1_i32)
+                                       ($TestList.return_52)))
+                                    ($TestList.then_115
+                                       (then $TestList.inner_54
+                                          (join
+                                             (($TestList.then_113
+                                                (then $TestList.outer_67
+                                                   (join
+                                                      (($TestList.then_101
+                                                         (then $TestList.outer_75
+                                                            (join
+                                                               (($TestList.apply_88
+                                                                  (apply
+                                                                     (2_i32)
+                                                                     ($TestList.return_51)))
+                                                                  ($TestList.then_100
+                                                                     (then $TestList.inner_76
+                                                                        (join
+                                                                           (($TestList.then_98
+                                                                              (then $TestList.outer_81
+                                                                                 (join
+                                                                                    (($TestList.then_95
+                                                                                       (then $TestList.outer_83
+                                                                                          (join
+                                                                                             (($TestList.apply_89
+                                                                                                (apply
+                                                                                                   (3_i32)
+                                                                                                   ($TestList.return_50)))
+                                                                                                ($TestList.then_94
+                                                                                                   (then $TestList.inner_84
+                                                                                                      (join
+                                                                                                         (($TestList.then_92
+                                                                                                            (then $TestList.outer_85
+                                                                                                               (join
+                                                                                                                  (($TestList.then_91
+                                                                                                                     (then $TestList.inner_86
+                                                                                                                        (join
+                                                                                                                           (($TestList.apply_90
+                                                                                                                              (apply
+                                                                                                                                 ($TestList.inner_86)
+                                                                                                                                 ($TestList.return_48))))
+                                                                                                                           (cut $TestList.outer_85 $TestList.apply_90))))
+                                                                                                                     ($TestList.return_49 $TestList.then_91))
+                                                                                                                  (invoke Nil $TestList.return_49))))
+                                                                                                            ($TestList.apply_93
+                                                                                                               (apply
+                                                                                                                  ($TestList.inner_84)
+                                                                                                                  ($TestList.then_92))))
+                                                                                                         (cut $TestList.outer_83 $TestList.apply_93))))
+                                                                                                ($TestList.return_50 $TestList.then_94))
+                                                                                             (invoke Int32# $TestList.apply_89))))
+                                                                                       ($TestList.then_97
+                                                                                          (then $TestList.inner_82
+                                                                                             (join
+                                                                                                (($TestList.apply_96
+                                                                                                   (apply
+                                                                                                      ($TestList.inner_82)
+                                                                                                      ($TestList.return_47))))
+                                                                                                (cut $TestList.outer_81 $TestList.apply_96))))
+                                                                                       ($TestList.return_48 $TestList.then_97))
+                                                                                    (invoke Cons $TestList.then_95))))
+                                                                              ($TestList.apply_99
+                                                                                 (apply
+                                                                                    ($TestList.inner_76)
+                                                                                    ($TestList.then_98))))
+                                                                           (cut $TestList.outer_75 $TestList.apply_99))))
+                                                                  ($TestList.return_51 $TestList.then_100))
+                                                               (invoke Int32# $TestList.apply_88))))
+                                                         ($TestList.then_112
+                                                            (then $TestList.inner_68
+                                                               (join
+                                                                  (($TestList.then_110
+                                                                     (then #TestList.xs_0
+                                                                        (join
+                                                                           (($TestList.then_109
+                                                                              (then #TestList.nil_1
+                                                                                 (join
+                                                                                    (($TestList.then_108
+                                                                                       (then $TestList.outer_71
+                                                                                          (join
+                                                                                             (($TestList.then_105
+                                                                                                (then $TestList.outer_73
+                                                                                                   (join
+                                                                                                      (($TestList.apply_102
+                                                                                                         (apply
+                                                                                                            (#TestList.xs_0)
+                                                                                                            ($TestList.return_46)))
+                                                                                                         ($TestList.then_104
+                                                                                                            (then $TestList.inner_74
+                                                                                                               (join
+                                                                                                                  (($TestList.apply_103
+                                                                                                                     (apply
+                                                                                                                        ($TestList.inner_74)
+                                                                                                                        ($TestList.return_45))))
+                                                                                                                  (cut $TestList.outer_73 $TestList.apply_103))))
+                                                                                                         ($TestList.return_46 $TestList.then_104))
+                                                                                                      (invoke head $TestList.apply_102))))
+                                                                                                ($TestList.then_107
+                                                                                                   (then $TestList.inner_72
+                                                                                                      (join
+                                                                                                         (($TestList.apply_106
+                                                                                                            (apply
+                                                                                                               ($TestList.inner_72)
+                                                                                                               ($TestList.return_44))))
+                                                                                                         (cut $TestList.outer_71 $TestList.apply_106))))
+                                                                                                ($TestList.return_45 $TestList.then_107))
+                                                                                             (invoke toStringInt32 $TestList.then_105)))))
+                                                                                    (invoke putStrLn $TestList.then_108)))))
+                                                                           (invoke Nil $TestList.then_109))))
+                                                                     ($TestList.apply_111
+                                                                        (apply
+                                                                           ($TestList.inner_68)
+                                                                           ($TestList.then_110))))
+                                                                  (cut $TestList.outer_67 $TestList.apply_111))))
+                                                         ($TestList.return_47 $TestList.then_112))
+                                                      (invoke Cons $TestList.then_101))))
+                                                ($TestList.apply_114
+                                                   (apply
+                                                      ($TestList.inner_54)
+                                                      ($TestList.then_113))))
+                                             (cut $TestList.outer_53 $TestList.apply_114))))
+                                    ($TestList.return_52 $TestList.then_115))
+                                 (invoke Int32# $TestList.apply_87)))))
+                        (invoke Cons $TestList.then_116)))))
+               ($TestList.return_44 $TestList.return_43))
+            (cut
+               (construct
+                  tuple
+                  ($TestList.param_41)
+                  ())
+               $TestList.select_117)))
+      $TestList.return_42)))

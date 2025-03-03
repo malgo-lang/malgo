@@ -1,0 +1,56 @@
+((main
+   $Pattern.return_18
+   (cut
+      (lambda
+         ($Pattern.param_16 $Pattern.return_19)
+         (join
+            (($Pattern.select_31
+               (select
+                  (#Pattern.$__9
+                     (join
+                        (($Pattern.then_30
+                           (then $Pattern.outer_25
+                              (join
+                                 (($Pattern.apply_27
+                                    (apply
+                                       ("OK")
+                                       ($Pattern.return_21)))
+                                    ($Pattern.then_29
+                                       (then $Pattern.inner_26
+                                          (join
+                                             (($Pattern.apply_28
+                                                (apply
+                                                   ($Pattern.inner_26)
+                                                   ($Pattern.return_20))))
+                                             (cut $Pattern.outer_25 $Pattern.apply_28))))
+                                    ($Pattern.return_21 $Pattern.then_29))
+                                 (invoke String# $Pattern.apply_27)))))
+                        (invoke putStrLn $Pattern.then_30)))))
+               ($Pattern.return_20 $Pattern.return_19))
+            (cut
+               (construct
+                  tuple
+                  ($Pattern.param_16)
+                  ())
+               $Pattern.select_31)))
+      $Pattern.return_18))
+   (isNil
+      $Pattern.return_22
+      (cut
+         (lambda
+            ($Pattern.param_17 $Pattern.return_23)
+            (join
+               (($Pattern.select_32
+                  (select
+                     ((Nil ())
+                        (invoke True $Pattern.return_24))
+                     (#Pattern.__0
+                        (invoke False $Pattern.return_24))))
+                  ($Pattern.return_24 $Pattern.return_23))
+               (cut
+                  (construct
+                     tuple
+                     ($Pattern.param_17)
+                     ())
+                  $Pattern.select_32)))
+         $Pattern.return_22)))

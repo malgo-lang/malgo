@@ -12,6 +12,7 @@ module Malgo.Sequent.Core
 where
 
 import Data.Map qualified as Map
+import Data.SCargot.Repr.Basic (SExpr)
 import Data.SCargot.Repr.Basic qualified as S
 import Malgo.Prelude
 import Malgo.SExpr hiding (Char, Double, Float, String)
@@ -25,7 +26,7 @@ deriving stock instance (Show (Return x)) => Show (Program x)
 instance (ToSExpr (Return x)) => ToSExpr (Program x) where
   toSExpr (Program defs) = S.L $ map (\(_, name, return, body) -> toSExpr (name, return, body)) defs
 
-type data Rank = Flat | Full
+type data Rank = Join | Flat | Full
 
 data Producer (x :: Rank) where
   Var :: Range -> Name -> Producer x
@@ -38,6 +39,7 @@ data Producer (x :: Rank) where
 deriving stock instance (Show (Return x)) => Show (Producer x)
 
 type family Return (x :: Rank) where
+  Return Join = Name
   Return Flat = Consumer Flat
   Return Full = Consumer Full
 
@@ -69,8 +71,9 @@ instance (ToSExpr (Return x)) => ToSExpr (Consumer x) where
   toSExpr (Select _ branches) = S.L $ S.A "select" : map toSExpr branches
 
 data Statement x where
-  Cut :: Producer x -> Consumer x -> Statement x
+  Cut :: Producer x -> Return x -> Statement x
   CutDo :: Range -> Name -> Statement Flat -> Consumer Flat -> Statement Flat
+  Join :: Range -> Name -> Consumer Join -> Statement Join -> Statement Join
   Primitive :: Range -> Text -> [Producer x] -> Return x -> Statement x
   Invoke :: Range -> Name -> Return x -> Statement x
 
@@ -79,6 +82,12 @@ deriving stock instance (Show (Return x)) => Show (Statement x)
 instance (ToSExpr (Return x)) => ToSExpr (Statement x) where
   toSExpr (Cut producer consumer) = S.L ["cut", toSExpr producer, toSExpr consumer]
   toSExpr (CutDo _ name statement consumer) = S.L ["cut-do", toSExpr name, toSExpr statement, toSExpr consumer]
+  toSExpr (Join _ name consumer statement) =
+    go [(name, consumer)] statement
+    where
+      go :: [(Name, Consumer Join)] -> Statement Join -> SExpr Atom
+      go binds (Join _ name consumer statement) = go ((name, consumer) : binds) statement
+      go binds statement = S.L ["join", S.L $ map (\(name, consumer) -> S.L [toSExpr name, toSExpr consumer]) $ reverse binds, toSExpr statement]
   toSExpr (Primitive _ name producers consumer) =
     S.L [S.A "prim", toSExpr name, S.L $ map toSExpr producers, toSExpr consumer]
   toSExpr (Invoke _ name consumer) = S.L ["invoke", toSExpr name, toSExpr consumer]
