@@ -144,7 +144,14 @@ split producers = aux [] producers
     aux :: (State Uniq :> es, Reader ModuleName :> es) => [Producer Full] -> [Producer Full] -> Eff es ([Producer Full], Maybe (Producer Full), [Producer Full])
     aux acc [] = pure (reverse acc, Nothing, [])
     aux acc (p : ps) = do
-      p' <- flatProducer p
-      case p' of
-        Do' {} -> pure (reverse acc, Just p, ps)
-        Zero {} -> aux (p : acc) ps
+      if isValue p
+        then aux (p : acc) ps
+        else pure (reverse acc, Just p, ps)
+
+isValue :: Producer Full -> Bool
+isValue (Var _ _) = True
+isValue (Literal _ _) = True
+isValue (Construct _ _ ps _) = all isValue ps
+isValue (Lambda _ _ _) = True
+isValue (Object _ _) = True
+isValue (Do _ _ _) = False
