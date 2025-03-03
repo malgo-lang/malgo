@@ -46,6 +46,7 @@
             cabal-install
             haskellPackages.hpack
             nixfmt-rfc-style
+            entr
           ];
           inputsFrom = map (__getAttr "env") (__attrValues self.packages.${system});
         };
