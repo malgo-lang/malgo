@@ -1,3 +1,5 @@
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE DuplicateRecordFields #-}
 {-# OPTIONS_GHC -Wno-partial-fields #-}
 
@@ -15,7 +17,9 @@ where
 
 import Data.Map qualified as Map
 import Data.SCargot.Repr.Basic qualified as S
+import Data.Store (Store)
 import Malgo.Id
+import Malgo.Module (Resource, ViaStore (..))
 import Malgo.Prelude
 import Malgo.SExpr (ToSExpr (..))
 import Malgo.SExpr qualified as S
@@ -24,7 +28,9 @@ type Name = Id
 
 -- | Tag is used to distinguish different structures.
 data Tag = Tuple | Tag Text
-  deriving stock (Show, Eq)
+  deriving stock (Show, Eq, Generic)
+  deriving anyclass (Store)
+  deriving (Resource) via (ViaStore Tag)
 
 instance ToSExpr Tag where
   toSExpr Tuple = S.A "tuple"
@@ -37,7 +43,9 @@ data Literal
   | Double Double
   | Char Char
   | String Text
-  deriving stock (Show, Eq)
+  deriving stock (Show, Eq, Generic)
+  deriving anyclass (Store)
+  deriving (Resource) via (ViaStore Literal)
 
 instance ToSExpr Literal where
   toSExpr (Int32 n) = S.A $ S.Int (fromIntegral n) (Just "i32")
@@ -68,6 +76,12 @@ data Expr
 
 class HasRange a where
   range :: a -> Range
+
+instance HasRange Range where
+  range = identity
+
+instance HasRange Void where
+  range = absurd
 
 instance HasRange Expr where
   range (Var r _) = r
@@ -109,7 +123,9 @@ data Pattern
   | PLiteral Range Literal
   | Destruct Range Tag [Pattern]
   | Expand Range (Map Text Pattern)
-  deriving stock (Show)
+  deriving stock (Show, Generic)
+  deriving anyclass (Store)
+  deriving (Resource) via (ViaStore Pattern)
 
 instance HasRange Pattern where
   range (PVar r _) = r

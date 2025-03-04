@@ -1,23 +1,25 @@
 {-# LANGUAGE UndecidableInstances #-}
 
-module Malgo.Sequent.Eval (Value (..), EvalError (..), Env (..), emptyEnv, evalStatement, evalProducer, evalConsumer) where
+module Malgo.Sequent.Eval (Value (..), EvalError (..), Env (..), emptyEnv, evalProgram) where
 
 import Data.Map qualified as Map
+import Data.Maybe (fromJust)
 import Data.Traversable (for)
 import Debug.Trace (traceShowM)
 import Effectful
 import Effectful.Error.Static
 import Effectful.Reader.Static
+import Malgo.Id
 import Malgo.Prelude hiding (throwError)
 import Malgo.Sequent.Core
-import Malgo.Sequent.Fun (Literal, Name, Pattern (..), Tag (..))
+import Malgo.Sequent.Fun (HasRange (..), Literal, Name, Pattern (..), Tag (..))
 
 data Value where
   Immediate :: Literal -> Value
   Struct :: Tag -> [Value] -> Value
-  Function :: Env -> [Name] -> Statement Flat -> Value
-  Record :: Env -> Map Text (Name, Statement Flat) -> Value
-  Consumer :: Env -> Consumer Flat -> Value
+  Function :: Env -> [Name] -> Statement Join -> Value
+  Record :: Env -> Map Text (Name, Statement Join) -> Value
+  Consumer :: Env -> Consumer Join -> Value
 
 deriving stock instance Show Value
 
@@ -30,7 +32,7 @@ data EvalError
   | NoMatch Range Value
   deriving stock (Show)
 
-type Toplevels = Map Name (Name, Statement Flat)
+type Toplevels = Map Name (Name, Statement Join)
 
 data Env = Env
   { parent :: Maybe Env,
@@ -54,39 +56,58 @@ lookupEnv range name = do
     Just value -> pure value
     Nothing -> throwError (UndefinedVariable range name)
 
-lookupToplevel :: (Reader Toplevels :> es, Error EvalError :> es) => Range -> Name -> Eff es (Name, Statement Flat)
+jump :: (Error EvalError :> es, Reader Toplevels :> es, Reader Env :> es) => Range -> Name -> Value -> Eff es Value
+jump range name value = do
+  covalue <- lookupEnv range name
+  case covalue of
+    Consumer env consumer -> local (const env) $ evalConsumer consumer value
+    _ -> throwError $ ExpectConsumer range value
+
+lookupToplevel :: (Reader Toplevels :> es, Error EvalError :> es) => Range -> Name -> Eff es (Name, Statement Join)
 lookupToplevel range name = do
   toplevels <- ask @Toplevels
   case Map.lookup name toplevels of
     Just value -> pure value
     Nothing -> throwError (UndefinedVariable range name)
 
-evalStatement :: (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es) => Statement Flat -> Eff es Value
+evalProgram :: (Error EvalError :> es) => Program Join -> Eff es Value
+evalProgram (Program definitions) = do
+  let toplevels = Map.fromList [(name, (return, statement)) | (_, name, return, statement) <- definitions]
+  let (return, statement) =
+        Map.keys toplevels & find (\name -> name.name == "main") & \case
+          Just name -> fromJust $ Map.lookup name toplevels -- It is safe to use fromJust here because the main function is guaranteed to exist.
+          Nothing -> error "main function not found" -- TODO: Error handling
+  runReader toplevels
+    $ runReader emptyEnv
+    $ local (extendEnv return (Consumer emptyEnv (Finish (range statement))))
+    $ evalStatement statement
+
+evalStatement :: (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es) => Statement Join -> Eff es Value
 evalStatement (Cut producer consumer) = do
-  producer <- evalProducer producer
-  evalConsumer consumer producer
+  value <- evalProducer producer
+  jump (range producer) consumer value
 evalStatement (Join _ label consumer statement) = do
   env <- ask @Env
   let value = Consumer env consumer
   local (extendEnv label value) do
     evalStatement statement
-evalStatement (Primitive _ name producers consumer) = do
+evalStatement (Primitive range name producers consumer) = do
   producers <- traverse evalProducer producers
-  covalue <- Consumer <$> ask <*> pure consumer
+  covalue <- lookupEnv range consumer
   traceShowM (name, producers, covalue)
   pure $ Struct Tuple []
 evalStatement (Invoke range name consumer) = do
   (return, statement) <- lookupToplevel range name
-  covalue <- Consumer <$> ask <*> pure consumer
+  covalue <- lookupEnv range consumer
   local (extendEnv return covalue) do
     evalStatement statement
 
-evalProducer :: (Error EvalError :> es, Reader Env :> es) => Producer Flat -> Eff es Value
+evalProducer :: (Error EvalError :> es, Reader Env :> es) => Producer Join -> Eff es Value
 evalProducer (Var range name) = lookupEnv range name
 evalProducer (Literal _ literal) = pure $ Immediate literal
-evalProducer (Construct _ tag producers consumers) = do
+evalProducer (Construct range tag producers consumers) = do
   producers <- traverse evalProducer producers
-  consumers <- traverse (\consumer -> Consumer <$> ask <*> pure consumer) consumers
+  consumers <- traverse (lookupEnv range) consumers
   pure $ Struct tag (producers <> consumers)
 evalProducer (Lambda _ parameters statement) = do
   env <- ask @Env
@@ -95,7 +116,7 @@ evalProducer (Object _ fields) = do
   env <- ask @Env
   pure $ Record env fields
 
-evalConsumer :: (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es) => Consumer Flat -> Value -> Eff es Value
+evalConsumer :: (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es) => Consumer Join -> Value -> Eff es Value
 evalConsumer (Label range label) given = do
   covalue <- lookupEnv range label
   case covalue of
@@ -103,14 +124,14 @@ evalConsumer (Label range label) given = do
     _ -> throwError $ ExpectConsumer range covalue
 evalConsumer (Apply range producers consumers) given = do
   producers <- traverse evalProducer producers
-  consumers <- traverse (\consumer -> Consumer <$> ask <*> pure consumer) consumers
+  consumers <- traverse (lookupEnv range) consumers
   case given of
     Function env parameters statement ->
       local (const $ extendEnv' (zip parameters $ producers <> consumers) env) do
         evalStatement statement
     _ -> throwError $ ExpectFunction range given
 evalConsumer (Project range field consumer) given = do
-  covalue <- Consumer <$> ask <*> pure consumer
+  covalue <- lookupEnv range consumer
   case given of
     Record env fields -> do
       (name, statement) <- case Map.lookup field fields of
