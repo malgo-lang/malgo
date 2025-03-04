@@ -1,6 +1,6 @@
 {-# LANGUAGE UndecidableInstances #-}
 
-module Malgo.Sequent.Eval (Value (..), EvalError (..), Env (..), emptyEnv) where
+module Malgo.Sequent.Eval (Value (..), EvalError (..), Env (..), emptyEnv, evalStatement, evalProducer, evalConsumer) where
 
 import Data.Map qualified as Map
 import Data.Traversable (for)
@@ -61,80 +61,77 @@ lookupToplevel range name = do
     Just value -> pure value
     Nothing -> throwError (UndefinedVariable range name)
 
-class Eval t v where
-  eval :: t -> v
+evalStatement :: (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es) => Statement Flat -> Eff es Value
+evalStatement (Cut producer consumer) = do
+  producer <- evalProducer producer
+  evalConsumer consumer producer
+evalStatement (Join _ label consumer statement) = do
+  env <- ask @Env
+  let value = Consumer env consumer
+  local (extendEnv label value) do
+    evalStatement statement
+evalStatement (Primitive _ name producers consumer) = do
+  producers <- traverse evalProducer producers
+  covalue <- Consumer <$> ask <*> pure consumer
+  traceShowM (name, producers, covalue)
+  pure $ Struct Tuple []
+evalStatement (Invoke range name consumer) = do
+  (return, statement) <- lookupToplevel range name
+  covalue <- Consumer <$> ask <*> pure consumer
+  local (extendEnv return covalue) do
+    evalStatement statement
 
-instance (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es) => Eval (Statement Flat) (Eff es Value) where
-  eval (Cut producer consumer) = do
-    producer <- eval producer
-    eval consumer (producer :: Value)
-  eval (Join _ label consumer statement) = do
-    env <- ask @Env
-    let value = Consumer env consumer
-    local (extendEnv label value) do
-      eval statement
-  eval (Primitive _ name producers consumer) = do
-    producers <- traverse eval producers
-    consumer <- eval consumer
-    traceShowM (name, producers :: [Value], consumer :: Value)
-    pure $ Struct Tuple []
-  eval (Invoke range name consumer) = do
-    (return, statement) <- lookupToplevel range name
-    consumer <- eval consumer
-    local (extendEnv return consumer) do
-      eval statement
+evalProducer :: (Error EvalError :> es, Reader Env :> es) => Producer Flat -> Eff es Value
+evalProducer (Var range name) = lookupEnv range name
+evalProducer (Literal _ literal) = pure $ Immediate literal
+evalProducer (Construct _ tag producers consumers) = do
+  producers <- traverse evalProducer producers
+  consumers <- traverse (\consumer -> Consumer <$> ask <*> pure consumer) consumers
+  pure $ Struct tag (producers <> consumers)
+evalProducer (Lambda _ parameters statement) = do
+  env <- ask @Env
+  pure $ Function env parameters statement
+evalProducer (Object _ fields) = do
+  env <- ask @Env
+  pure $ Record env fields
 
-instance (Error EvalError :> es, Reader Env :> es) => Eval (Producer Flat) (Eff es Value) where
-  eval (Var range name) = lookupEnv range name
-  eval (Literal _ literal) = pure $ Immediate literal
-  eval (Construct _ tag producers consumers) = do
-    producers <- traverse eval producers
-    consumers <- traverse eval consumers
-    pure $ Struct tag (producers <> consumers)
-  eval (Lambda _ parameters statement) = do
-    env <- ask @Env
-    pure $ Function env parameters statement
-  eval (Object _ fields) = do
-    env <- ask @Env
-    pure $ Record env fields
-
-instance (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es) => Eval (Consumer Flat) (Value -> Eff es Value) where
-  eval (Label range label) given = do
-    covalue <- lookupEnv range label
-    case covalue of
-      Consumer env consumer -> local (const env) $ eval consumer given
-      _ -> throwError $ ExpectConsumer range covalue
-  eval (Apply range producers consumers) given = do
-    producers <- traverse eval producers
-    consumers <- traverse eval consumers
-    case given of
-      Function env parameters statement ->
-        local (const $ extendEnv' (zip parameters $ producers <> consumers) env) do
-          eval statement
-      _ -> throwError $ ExpectFunction range given
-  eval (Project range field consumer) given = do
-    consumer <- eval consumer
-    case given of
-      Record env fields -> do
-        (name, statement) <- case Map.lookup field fields of
-          Just value -> pure value
-          Nothing -> throwError $ NoSuchField range field given
-        local (const $ extendEnv name consumer env) do
-          eval statement
-      _ -> throwError $ ExpectRecord range given
-  eval (Then _ name statement) given = do
-    local (extendEnv name given) do
-      eval statement
-  eval (Finish _) given = pure given
-  eval (Select range branches) given = go branches
-    where
-      go [] = throwError $ NoMatch range given
-      go (Branch {pattern, statement} : rest) = do
-        bindings <- match pattern given
-        case bindings of
-          Just bindings -> do
-            local (extendEnv' bindings) $ eval statement
-          Nothing -> go rest
+evalConsumer :: (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es) => Consumer Flat -> Value -> Eff es Value
+evalConsumer (Label range label) given = do
+  covalue <- lookupEnv range label
+  case covalue of
+    Consumer env consumer -> local (const env) $ evalConsumer consumer given
+    _ -> throwError $ ExpectConsumer range covalue
+evalConsumer (Apply range producers consumers) given = do
+  producers <- traverse evalProducer producers
+  consumers <- traverse (\consumer -> Consumer <$> ask <*> pure consumer) consumers
+  case given of
+    Function env parameters statement ->
+      local (const $ extendEnv' (zip parameters $ producers <> consumers) env) do
+        evalStatement statement
+    _ -> throwError $ ExpectFunction range given
+evalConsumer (Project range field consumer) given = do
+  covalue <- Consumer <$> ask <*> pure consumer
+  case given of
+    Record env fields -> do
+      (name, statement) <- case Map.lookup field fields of
+        Just value -> pure value
+        Nothing -> throwError $ NoSuchField range field given
+      local (const $ extendEnv name covalue env) do
+        evalStatement statement
+    _ -> throwError $ ExpectRecord range given
+evalConsumer (Then _ name statement) given = do
+  local (extendEnv name given) do
+    evalStatement statement
+evalConsumer (Finish _) given = pure given
+evalConsumer (Select range branches) given = go branches
+  where
+    go [] = throwError $ NoMatch range given
+    go (Branch {pattern, statement} : rest) = do
+      bindings <- match pattern given
+      case bindings of
+        Just bindings -> do
+          local (extendEnv' bindings) $ evalStatement statement
+        Nothing -> go rest
 
 match :: (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es) => Pattern -> Value -> Eff es (Maybe [(Name, Value)])
 match (PVar _ name) value = pure $ Just [(name, value)]
@@ -149,12 +146,7 @@ match (Expand range patterns) (Record _ fields) = do
     -- If the evaluation of `statement` finishes normally, the last consumer will be `Label range return`.
     -- By setting `return` to `Finish`, `eval statement` will return the value of the last producer.
     local (extendEnv return (Consumer env (Finish range))) do
-      value <- eval statement
+      value <- evalStatement statement
       match pattern value
   pure $ foldr (liftA2 (<>)) (Just []) pairs
 match _ _ = pure Nothing
-
-instance (Reader Env :> es) => Eval (Consumer Flat) (Eff es Value) where
-  eval consumer = do
-    env <- ask @Env
-    pure $ Consumer env consumer
