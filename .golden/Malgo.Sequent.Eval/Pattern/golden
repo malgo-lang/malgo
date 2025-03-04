@@ -1,37 +1,457 @@
-Left
-    (
-        [
-            ( "throwError"
-            , SrcLoc
-                { srcLocPackage = "malgo-1.0.0-inplace"
-                , srcLocModule = "Malgo.Sequent.Eval"
-                , srcLocFile = "src/Malgo/Sequent/Eval.hs"
-                , srcLocStartLine = 74
-                , srcLocStartCol = 16
-                , srcLocEndLine = 74
-                , srcLocEndCol = 26
-                }
-            )
-        ]
-    , UndefinedVariable
-        ( Range
-            { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/Pattern.mlg"
-                , sourceLine = Pos 9
-                , sourceColumn = Pos 14
-                }
-            , _end = SourcePos
-                { sourceName = "./test/testcases/malgo/Pattern.mlg"
-                , sourceLine = Pos 9
-                , sourceColumn = Pos 23
-                }
+Right
+    ( Function
+        ( Env
+            { parent = Nothing
+            , bindings = fromList
+                [
+                    ( Id
+                        { name = "return"
+                        , moduleName = Artifact
+                            ( ArtifactPath "test/testcases/malgo/Pattern.mlg" )
+                        , sort = Temporal 18
+                        }
+                    , Consumer
+                        ( Env
+                            { parent = Nothing
+                            , bindings = fromList []
+                            }
+                        )
+                        ( Finish
+                            ( Range
+                                { _start = SourcePos
+                                    { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                    , sourceLine = Pos 9
+                                    , sourceColumn = Pos 14
+                                    }
+                                , _end = SourcePos
+                                    { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                    , sourceLine = Pos 9
+                                    , sourceColumn = Pos 28
+                                    }
+                                }
+                            )
+                        )
+                    )
+                ]
             }
         )
-        ( Id
-            { name = "putStrLn"
+        [ Id
+            { name = "param"
             , moduleName = Artifact
-                ( ArtifactPath "runtime/malgo/Prelude.mlg" )
-            , sort = External
+                ( ArtifactPath "test/testcases/malgo/Pattern.mlg" )
+            , sort = Temporal 16
             }
+        , Id
+            { name = "return"
+            , moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/Pattern.mlg" )
+            , sort = Temporal 19
+            }
+        ]
+        ( Join
+            ( Range
+                { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                    , sourceLine = Pos 9
+                    , sourceColumn = Pos 14
+                    }
+                , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                    , sourceLine = Pos 9
+                    , sourceColumn = Pos 28
+                    }
+                }
+            )
+            ( Id
+                { name = "select"
+                , moduleName = Artifact
+                    ( ArtifactPath "test/testcases/malgo/Pattern.mlg" )
+                , sort = Temporal 28
+                }
+            )
+            ( Select
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                        , sourceLine = Pos 9
+                        , sourceColumn = Pos 14
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                        , sourceLine = Pos 9
+                        , sourceColumn = Pos 28
+                        }
+                    }
+                )
+                [ Branch
+                    { range = Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                            , sourceLine = Pos 9
+                            , sourceColumn = Pos 14
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                            , sourceLine = Pos 9
+                            , sourceColumn = Pos 28
+                            }
+                        }
+                    , pattern = PVar
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                , sourceLine = Pos 9
+                                , sourceColumn = Pos 14
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                , sourceLine = Pos 9
+                                , sourceColumn = Pos 28
+                                }
+                            }
+                        )
+                        ( Id
+                            { name = "$_"
+                            , moduleName = Artifact
+                                ( ArtifactPath "test/testcases/malgo/Pattern.mlg" )
+                            , sort = Internal 9
+                            }
+                        )
+                    , statement = Join
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                , sourceLine = Pos 9
+                                , sourceColumn = Pos 14
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                , sourceLine = Pos 9
+                                , sourceColumn = Pos 28
+                                }
+                            }
+                        )
+                        ( Id
+                            { name = "then"
+                            , moduleName = Artifact
+                                ( ArtifactPath "test/testcases/malgo/Pattern.mlg" )
+                            , sort = Temporal 27
+                            }
+                        )
+                        ( Then
+                            ( Range
+                                { _start = SourcePos
+                                    { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                    , sourceLine = Pos 9
+                                    , sourceColumn = Pos 14
+                                    }
+                                , _end = SourcePos
+                                    { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                    , sourceLine = Pos 9
+                                    , sourceColumn = Pos 28
+                                    }
+                                }
+                            )
+                            ( Id
+                                { name = "outer"
+                                , moduleName = Artifact
+                                    ( ArtifactPath "test/testcases/malgo/Pattern.mlg" )
+                                , sort = Temporal 23
+                                }
+                            )
+                            ( Join
+                                ( Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                        , sourceLine = Pos 9
+                                        , sourceColumn = Pos 23
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                        , sourceLine = Pos 9
+                                        , sourceColumn = Pos 28
+                                        }
+                                    }
+                                )
+                                ( Id
+                                    { name = "apply"
+                                    , moduleName = Artifact
+                                        ( ArtifactPath "test/testcases/malgo/Pattern.mlg" )
+                                    , sort = Temporal 25
+                                    }
+                                )
+                                ( Apply
+                                    ( Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                            , sourceLine = Pos 9
+                                            , sourceColumn = Pos 23
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                            , sourceLine = Pos 9
+                                            , sourceColumn = Pos 28
+                                            }
+                                        }
+                                    )
+                                    [ Literal
+                                        ( Range
+                                            { _start = SourcePos
+                                                { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                                , sourceLine = Pos 9
+                                                , sourceColumn = Pos 23
+                                                }
+                                            , _end = SourcePos
+                                                { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                                , sourceLine = Pos 9
+                                                , sourceColumn = Pos 28
+                                                }
+                                            }
+                                        )
+                                        ( String "OK" )
+                                    ]
+                                    [ Id
+                                        { name = "return"
+                                        , moduleName = Artifact
+                                            ( ArtifactPath "test/testcases/malgo/Pattern.mlg" )
+                                        , sort = Temporal 20
+                                        }
+                                    ]
+                                )
+                                ( Join
+                                    ( Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                            , sourceLine = Pos 9
+                                            , sourceColumn = Pos 23
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                            , sourceLine = Pos 9
+                                            , sourceColumn = Pos 28
+                                            }
+                                        }
+                                    )
+                                    ( Id
+                                        { name = "return"
+                                        , moduleName = Artifact
+                                            ( ArtifactPath "test/testcases/malgo/Pattern.mlg" )
+                                        , sort = Temporal 20
+                                        }
+                                    )
+                                    ( Then
+                                        ( Range
+                                            { _start = SourcePos
+                                                { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                                , sourceLine = Pos 9
+                                                , sourceColumn = Pos 14
+                                                }
+                                            , _end = SourcePos
+                                                { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                                , sourceLine = Pos 9
+                                                , sourceColumn = Pos 28
+                                                }
+                                            }
+                                        )
+                                        ( Id
+                                            { name = "inner"
+                                            , moduleName = Artifact
+                                                ( ArtifactPath "test/testcases/malgo/Pattern.mlg" )
+                                            , sort = Temporal 24
+                                            }
+                                        )
+                                        ( Join
+                                            ( Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                                    , sourceLine = Pos 9
+                                                    , sourceColumn = Pos 14
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                                    , sourceLine = Pos 9
+                                                    , sourceColumn = Pos 28
+                                                    }
+                                                }
+                                            )
+                                            ( Id
+                                                { name = "apply"
+                                                , moduleName = Artifact
+                                                    ( ArtifactPath "test/testcases/malgo/Pattern.mlg" )
+                                                , sort = Temporal 26
+                                                }
+                                            )
+                                            ( Apply
+                                                ( Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                                        , sourceLine = Pos 9
+                                                        , sourceColumn = Pos 14
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                                        , sourceLine = Pos 9
+                                                        , sourceColumn = Pos 28
+                                                        }
+                                                    }
+                                                )
+                                                [ Var
+                                                    ( Range
+                                                        { _start = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                                            , sourceLine = Pos 9
+                                                            , sourceColumn = Pos 14
+                                                            }
+                                                        , _end = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                                            , sourceLine = Pos 9
+                                                            , sourceColumn = Pos 28
+                                                            }
+                                                        }
+                                                    )
+                                                    ( Id
+                                                        { name = "inner"
+                                                        , moduleName = Artifact
+                                                            ( ArtifactPath "test/testcases/malgo/Pattern.mlg" )
+                                                        , sort = Temporal 24
+                                                        }
+                                                    )
+                                                ]
+                                                [ Id
+                                                    { name = "return"
+                                                    , moduleName = Artifact
+                                                        ( ArtifactPath "test/testcases/malgo/Pattern.mlg" )
+                                                    , sort = Temporal 19
+                                                    }
+                                                ]
+                                            )
+                                            ( Cut
+                                                ( Var
+                                                    ( Range
+                                                        { _start = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                                            , sourceLine = Pos 9
+                                                            , sourceColumn = Pos 14
+                                                            }
+                                                        , _end = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                                            , sourceLine = Pos 9
+                                                            , sourceColumn = Pos 28
+                                                            }
+                                                        }
+                                                    )
+                                                    ( Id
+                                                        { name = "outer"
+                                                        , moduleName = Artifact
+                                                            ( ArtifactPath "test/testcases/malgo/Pattern.mlg" )
+                                                        , sort = Temporal 23
+                                                        }
+                                                    )
+                                                )
+                                                ( Id
+                                                    { name = "apply"
+                                                    , moduleName = Artifact
+                                                        ( ArtifactPath "test/testcases/malgo/Pattern.mlg" )
+                                                    , sort = Temporal 26
+                                                    }
+                                                )
+                                            )
+                                        )
+                                    )
+                                    ( Invoke
+                                        ( Range
+                                            { _start = SourcePos
+                                                { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                                , sourceLine = Pos 9
+                                                , sourceColumn = Pos 23
+                                                }
+                                            , _end = SourcePos
+                                                { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                                , sourceLine = Pos 9
+                                                , sourceColumn = Pos 28
+                                                }
+                                            }
+                                        )
+                                        ( Id
+                                            { name = "String#"
+                                            , moduleName = Artifact
+                                                ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+                                            , sort = External
+                                            }
+                                        )
+                                        ( Id
+                                            { name = "apply"
+                                            , moduleName = Artifact
+                                                ( ArtifactPath "test/testcases/malgo/Pattern.mlg" )
+                                            , sort = Temporal 25
+                                            }
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                        ( Invoke
+                            ( Range
+                                { _start = SourcePos
+                                    { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                    , sourceLine = Pos 9
+                                    , sourceColumn = Pos 14
+                                    }
+                                , _end = SourcePos
+                                    { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                                    , sourceLine = Pos 9
+                                    , sourceColumn = Pos 23
+                                    }
+                                }
+                            )
+                            ( Id
+                                { name = "putStrLn"
+                                , moduleName = Artifact
+                                    ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+                                , sort = External
+                                }
+                            )
+                            ( Id
+                                { name = "then"
+                                , moduleName = Artifact
+                                    ( ArtifactPath "test/testcases/malgo/Pattern.mlg" )
+                                , sort = Temporal 27
+                                }
+                            )
+                        )
+                    }
+                ]
+            )
+            ( Cut
+                ( Var
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                            , sourceLine = Pos 9
+                            , sourceColumn = Pos 14
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/Pattern.mlg"
+                            , sourceLine = Pos 9
+                            , sourceColumn = Pos 28
+                            }
+                        }
+                    )
+                    ( Id
+                        { name = "param"
+                        , moduleName = Artifact
+                            ( ArtifactPath "test/testcases/malgo/Pattern.mlg" )
+                        , sort = Temporal 16
+                        }
+                    )
+                )
+                ( Id
+                    { name = "select"
+                    , moduleName = Artifact
+                        ( ArtifactPath "test/testcases/malgo/Pattern.mlg" )
+                    , sort = Temporal 28
+                    }
+                )
+            )
         )
     )

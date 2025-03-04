@@ -54,4 +54,4 @@ driveEval srcPath = do
 saveCore :: (Workspace :> es, IOE :> es) => ModuleName -> Program Join -> Eff es ()
 saveCore moduleName program = do
   modulePath <- getModulePath moduleName
-  save modulePath "sqt" program
+  save modulePath ".sqt" program

@@ -1,37 +1,243 @@
-Left
-    (
-        [
-            ( "throwError"
-            , SrcLoc
-                { srcLocPackage = "malgo-1.0.0-inplace"
-                , srcLocModule = "Malgo.Sequent.Eval"
-                , srcLocFile = "src/Malgo/Sequent/Eval.hs"
-                , srcLocStartLine = 74
-                , srcLocStartCol = 16
-                , srcLocEndLine = 74
-                , srcLocEndCol = 26
-                }
-            )
-        ]
-    , UndefinedVariable
-        ( Range
-            { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
-                , sourceLine = Pos 4
-                , sourceColumn = Pos 12
-                }
-            , _end = SourcePos
-                { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
-                , sourceLine = Pos 4
-                , sourceColumn = Pos 25
-                }
+Right
+    ( Function
+        ( Env
+            { parent = Nothing
+            , bindings = fromList
+                [
+                    ( Id
+                        { name = "return"
+                        , moduleName = Artifact
+                            ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" )
+                        , sort = Temporal 29
+                        }
+                    , Consumer
+                        ( Env
+                            { parent = Nothing
+                            , bindings = fromList []
+                            }
+                        )
+                        ( Finish
+                            ( Range
+                                { _start = SourcePos
+                                    { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                    , sourceLine = Pos 10
+                                    , sourceColumn = Pos 3
+                                    }
+                                , _end = SourcePos
+                                    { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                    , sourceLine = Pos 11
+                                    , sourceColumn = Pos 1
+                                    }
+                                }
+                            )
+                        )
+                    )
+                ]
             }
         )
-        ( Id
-            { name = "printString#"
+        [ Id
+            { name = "param"
             , moduleName = Artifact
-                ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-            , sort = External
+                ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" )
+            , sort = Temporal 23
             }
+        , Id
+            { name = "return"
+            , moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" )
+            , sort = Temporal 30
+            }
+        ]
+        ( Join
+            ( Range
+                { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                    , sourceLine = Pos 10
+                    , sourceColumn = Pos 3
+                    }
+                , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                    , sourceLine = Pos 11
+                    , sourceColumn = Pos 1
+                    }
+                }
+            )
+            ( Id
+                { name = "select"
+                , moduleName = Artifact
+                    ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" )
+                , sort = Temporal 48
+                }
+            )
+            ( Select
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                        , sourceLine = Pos 10
+                        , sourceColumn = Pos 3
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                        , sourceLine = Pos 11
+                        , sourceColumn = Pos 1
+                        }
+                    }
+                )
+                [ Branch
+                    { range = Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                            , sourceLine = Pos 10
+                            , sourceColumn = Pos 3
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                            , sourceLine = Pos 11
+                            , sourceColumn = Pos 1
+                            }
+                        }
+                    , pattern = PVar
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                , sourceLine = Pos 10
+                                , sourceColumn = Pos 3
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                , sourceLine = Pos 11
+                                , sourceColumn = Pos 1
+                                }
+                            }
+                        )
+                        ( Id
+                            { name = "$_"
+                            , moduleName = Artifact
+                                ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" )
+                            , sort = Internal 21
+                            }
+                        )
+                    , statement = Join
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                , sourceLine = Pos 10
+                                , sourceColumn = Pos 3
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                , sourceLine = Pos 11
+                                , sourceColumn = Pos 1
+                                }
+                            }
+                        )
+                        ( Id
+                            { name = "apply"
+                            , moduleName = Artifact
+                                ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" )
+                            , sort = Temporal 47
+                            }
+                        )
+                        ( Apply
+                            ( Range
+                                { _start = SourcePos
+                                    { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                    , sourceLine = Pos 10
+                                    , sourceColumn = Pos 3
+                                    }
+                                , _end = SourcePos
+                                    { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                    , sourceLine = Pos 11
+                                    , sourceColumn = Pos 1
+                                    }
+                                }
+                            )
+                            [ Literal
+                                ( Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                        , sourceLine = Pos 10
+                                        , sourceColumn = Pos 5
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                        , sourceLine = Pos 11
+                                        , sourceColumn = Pos 1
+                                        }
+                                    }
+                                )
+                                ( Int64 0 )
+                            ]
+                            [ Id
+                                { name = "return"
+                                , moduleName = Artifact
+                                    ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" )
+                                , sort = Temporal 30
+                                }
+                            ]
+                        )
+                        ( Invoke
+                            ( Range
+                                { _start = SourcePos
+                                    { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                    , sourceLine = Pos 10
+                                    , sourceColumn = Pos 3
+                                    }
+                                , _end = SourcePos
+                                    { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                                    , sourceLine = Pos 10
+                                    , sourceColumn = Pos 5
+                                    }
+                                }
+                            )
+                            ( Id
+                                { name = "f"
+                                , moduleName = Artifact
+                                    ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" )
+                                , sort = External
+                                }
+                            )
+                            ( Id
+                                { name = "apply"
+                                , moduleName = Artifact
+                                    ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" )
+                                , sort = Temporal 47
+                                }
+                            )
+                        )
+                    }
+                ]
+            )
+            ( Cut
+                ( Var
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                            , sourceLine = Pos 10
+                            , sourceColumn = Pos 3
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+                            , sourceLine = Pos 11
+                            , sourceColumn = Pos 1
+                            }
+                        }
+                    )
+                    ( Id
+                        { name = "param"
+                        , moduleName = Artifact
+                            ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" )
+                        , sort = Temporal 23
+                        }
+                    )
+                )
+                ( Id
+                    { name = "select"
+                    , moduleName = Artifact
+                        ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" )
+                    , sort = Temporal 48
+                    }
+                )
+            )
         )
     )

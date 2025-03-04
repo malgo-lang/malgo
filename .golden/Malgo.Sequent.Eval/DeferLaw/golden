@@ -1,37 +1,671 @@
-Left
-    (
-        [
-            ( "throwError"
-            , SrcLoc
-                { srcLocPackage = "malgo-1.0.0-inplace"
-                , srcLocModule = "Malgo.Sequent.Eval"
-                , srcLocFile = "src/Malgo/Sequent/Eval.hs"
-                , srcLocStartLine = 74
-                , srcLocStartCol = 16
-                , srcLocEndLine = 74
-                , srcLocEndCol = 26
-                }
-            )
-        ]
-    , UndefinedVariable
-        ( Range
-            { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
-                , sourceLine = Pos 8
-                , sourceColumn = Pos 3
-                }
-            , _end = SourcePos
-                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
-                , sourceLine = Pos 8
-                , sourceColumn = Pos 12
-                }
+Right
+    ( Function
+        ( Env
+            { parent = Nothing
+            , bindings = fromList
+                [
+                    ( Id
+                        { name = "return"
+                        , moduleName = Artifact
+                            ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
+                        , sort = Temporal 28
+                        }
+                    , Consumer
+                        ( Env
+                            { parent = Nothing
+                            , bindings = fromList []
+                            }
+                        )
+                        ( Finish
+                            ( Range
+                                { _start = SourcePos
+                                    { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                    , sourceLine = Pos 8
+                                    , sourceColumn = Pos 3
+                                    }
+                                , _end = SourcePos
+                                    { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                    , sourceLine = Pos 9
+                                    , sourceColumn = Pos 1
+                                    }
+                                }
+                            )
+                        )
+                    )
+                ]
             }
         )
-        ( Id
-            { name = "putStrLn"
+        [ Id
+            { name = "param"
             , moduleName = Artifact
-                ( ArtifactPath "runtime/malgo/Prelude.mlg" )
-            , sort = External
+                ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
+            , sort = Temporal 24
             }
+        , Id
+            { name = "return"
+            , moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
+            , sort = Temporal 29
+            }
+        ]
+        ( Join
+            ( Range
+                { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                    , sourceLine = Pos 8
+                    , sourceColumn = Pos 3
+                    }
+                , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                    , sourceLine = Pos 9
+                    , sourceColumn = Pos 1
+                    }
+                }
+            )
+            ( Id
+                { name = "select"
+                , moduleName = Artifact
+                    ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
+                , sort = Temporal 44
+                }
+            )
+            ( Select
+                ( Range
+                    { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                        , sourceLine = Pos 8
+                        , sourceColumn = Pos 3
+                        }
+                    , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                        , sourceLine = Pos 9
+                        , sourceColumn = Pos 1
+                        }
+                    }
+                )
+                [ Branch
+                    { range = Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                            , sourceLine = Pos 8
+                            , sourceColumn = Pos 3
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                            , sourceLine = Pos 9
+                            , sourceColumn = Pos 1
+                            }
+                        }
+                    , pattern = PVar
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                , sourceLine = Pos 8
+                                , sourceColumn = Pos 3
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                , sourceLine = Pos 9
+                                , sourceColumn = Pos 1
+                                }
+                            }
+                        )
+                        ( Id
+                            { name = "$_"
+                            , moduleName = Artifact
+                                ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
+                            , sort = Internal 21
+                            }
+                        )
+                    , statement = Join
+                        ( Range
+                            { _start = SourcePos
+                                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                , sourceLine = Pos 8
+                                , sourceColumn = Pos 3
+                                }
+                            , _end = SourcePos
+                                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                , sourceLine = Pos 9
+                                , sourceColumn = Pos 1
+                                }
+                            }
+                        )
+                        ( Id
+                            { name = "then"
+                            , moduleName = Artifact
+                                ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
+                            , sort = Temporal 43
+                            }
+                        )
+                        ( Then
+                            ( Range
+                                { _start = SourcePos
+                                    { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                    , sourceLine = Pos 8
+                                    , sourceColumn = Pos 3
+                                    }
+                                , _end = SourcePos
+                                    { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                    , sourceLine = Pos 9
+                                    , sourceColumn = Pos 1
+                                    }
+                                }
+                            )
+                            ( Id
+                                { name = "outer"
+                                , moduleName = Artifact
+                                    ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
+                                , sort = Temporal 32
+                                }
+                            )
+                            ( Join
+                                ( Range
+                                    { _start = SourcePos
+                                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                        , sourceLine = Pos 8
+                                        , sourceColumn = Pos 13
+                                        }
+                                    , _end = SourcePos
+                                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                        , sourceLine = Pos 8
+                                        , sourceColumn = Pos 22
+                                        }
+                                    }
+                                )
+                                ( Id
+                                    { name = "then"
+                                    , moduleName = Artifact
+                                        ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
+                                    , sort = Temporal 41
+                                    }
+                                )
+                                ( Then
+                                    ( Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                            , sourceLine = Pos 8
+                                            , sourceColumn = Pos 13
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                            , sourceLine = Pos 8
+                                            , sourceColumn = Pos 22
+                                            }
+                                        }
+                                    )
+                                    ( Id
+                                        { name = "outer"
+                                        , moduleName = Artifact
+                                            ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
+                                        , sort = Temporal 34
+                                        }
+                                    )
+                                    ( Join
+                                        ( Range
+                                            { _start = SourcePos
+                                                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                , sourceLine = Pos 8
+                                                , sourceColumn = Pos 15
+                                                }
+                                            , _end = SourcePos
+                                                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                , sourceLine = Pos 8
+                                                , sourceColumn = Pos 22
+                                                }
+                                            }
+                                        )
+                                        ( Id
+                                            { name = "apply"
+                                            , moduleName = Artifact
+                                                ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
+                                            , sort = Temporal 39
+                                            }
+                                        )
+                                        ( Apply
+                                            ( Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                    , sourceLine = Pos 8
+                                                    , sourceColumn = Pos 15
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                    , sourceLine = Pos 8
+                                                    , sourceColumn = Pos 22
+                                                    }
+                                                }
+                                            )
+                                            [ Literal
+                                                ( Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                        , sourceLine = Pos 8
+                                                        , sourceColumn = Pos 15
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                        , sourceLine = Pos 8
+                                                        , sourceColumn = Pos 22
+                                                        }
+                                                    }
+                                                )
+                                                ( String "Hello" )
+                                            ]
+                                            [ Id
+                                                { name = "return"
+                                                , moduleName = Artifact
+                                                    ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
+                                                , sort = Temporal 31
+                                                }
+                                            ]
+                                        )
+                                        ( Join
+                                            ( Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                    , sourceLine = Pos 8
+                                                    , sourceColumn = Pos 15
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                    , sourceLine = Pos 8
+                                                    , sourceColumn = Pos 22
+                                                    }
+                                                }
+                                            )
+                                            ( Id
+                                                { name = "return"
+                                                , moduleName = Artifact
+                                                    ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
+                                                , sort = Temporal 31
+                                                }
+                                            )
+                                            ( Then
+                                                ( Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                        , sourceLine = Pos 8
+                                                        , sourceColumn = Pos 13
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                        , sourceLine = Pos 8
+                                                        , sourceColumn = Pos 22
+                                                        }
+                                                    }
+                                                )
+                                                ( Id
+                                                    { name = "inner"
+                                                    , moduleName = Artifact
+                                                        ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
+                                                    , sort = Temporal 35
+                                                    }
+                                                )
+                                                ( Join
+                                                    ( Range
+                                                        { _start = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                            , sourceLine = Pos 8
+                                                            , sourceColumn = Pos 13
+                                                            }
+                                                        , _end = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                            , sourceLine = Pos 8
+                                                            , sourceColumn = Pos 22
+                                                            }
+                                                        }
+                                                    )
+                                                    ( Id
+                                                        { name = "apply"
+                                                        , moduleName = Artifact
+                                                            ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
+                                                        , sort = Temporal 40
+                                                        }
+                                                    )
+                                                    ( Apply
+                                                        ( Range
+                                                            { _start = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                                , sourceLine = Pos 8
+                                                                , sourceColumn = Pos 13
+                                                                }
+                                                            , _end = SourcePos
+                                                                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                                , sourceLine = Pos 8
+                                                                , sourceColumn = Pos 22
+                                                                }
+                                                            }
+                                                        )
+                                                        [ Var
+                                                            ( Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                                    , sourceLine = Pos 8
+                                                                    , sourceColumn = Pos 13
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                                    , sourceLine = Pos 8
+                                                                    , sourceColumn = Pos 22
+                                                                    }
+                                                                }
+                                                            )
+                                                            ( Id
+                                                                { name = "inner"
+                                                                , moduleName = Artifact
+                                                                    ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
+                                                                , sort = Temporal 35
+                                                                }
+                                                            )
+                                                        ]
+                                                        [ Id
+                                                            { name = "return"
+                                                            , moduleName = Artifact
+                                                                ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
+                                                            , sort = Temporal 30
+                                                            }
+                                                        ]
+                                                    )
+                                                    ( Cut
+                                                        ( Var
+                                                            ( Range
+                                                                { _start = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                                    , sourceLine = Pos 8
+                                                                    , sourceColumn = Pos 13
+                                                                    }
+                                                                , _end = SourcePos
+                                                                    { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                                    , sourceLine = Pos 8
+                                                                    , sourceColumn = Pos 22
+                                                                    }
+                                                                }
+                                                            )
+                                                            ( Id
+                                                                { name = "outer"
+                                                                , moduleName = Artifact
+                                                                    ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
+                                                                , sort = Temporal 34
+                                                                }
+                                                            )
+                                                        )
+                                                        ( Id
+                                                            { name = "apply"
+                                                            , moduleName = Artifact
+                                                                ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
+                                                            , sort = Temporal 40
+                                                            }
+                                                        )
+                                                    )
+                                                )
+                                            )
+                                            ( Invoke
+                                                ( Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                        , sourceLine = Pos 8
+                                                        , sourceColumn = Pos 15
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                        , sourceLine = Pos 8
+                                                        , sourceColumn = Pos 22
+                                                        }
+                                                    }
+                                                )
+                                                ( Id
+                                                    { name = "String#"
+                                                    , moduleName = Artifact
+                                                        ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+                                                    , sort = External
+                                                    }
+                                                )
+                                                ( Id
+                                                    { name = "apply"
+                                                    , moduleName = Artifact
+                                                        ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
+                                                    , sort = Temporal 39
+                                                    }
+                                                )
+                                            )
+                                        )
+                                    )
+                                )
+                                ( Join
+                                    ( Range
+                                        { _start = SourcePos
+                                            { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                            , sourceLine = Pos 8
+                                            , sourceColumn = Pos 13
+                                            }
+                                        , _end = SourcePos
+                                            { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                            , sourceLine = Pos 8
+                                            , sourceColumn = Pos 22
+                                            }
+                                        }
+                                    )
+                                    ( Id
+                                        { name = "return"
+                                        , moduleName = Artifact
+                                            ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
+                                        , sort = Temporal 30
+                                        }
+                                    )
+                                    ( Then
+                                        ( Range
+                                            { _start = SourcePos
+                                                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                , sourceLine = Pos 8
+                                                , sourceColumn = Pos 3
+                                                }
+                                            , _end = SourcePos
+                                                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                , sourceLine = Pos 9
+                                                , sourceColumn = Pos 1
+                                                }
+                                            }
+                                        )
+                                        ( Id
+                                            { name = "inner"
+                                            , moduleName = Artifact
+                                                ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
+                                            , sort = Temporal 33
+                                            }
+                                        )
+                                        ( Join
+                                            ( Range
+                                                { _start = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                    , sourceLine = Pos 8
+                                                    , sourceColumn = Pos 3
+                                                    }
+                                                , _end = SourcePos
+                                                    { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                    , sourceLine = Pos 9
+                                                    , sourceColumn = Pos 1
+                                                    }
+                                                }
+                                            )
+                                            ( Id
+                                                { name = "apply"
+                                                , moduleName = Artifact
+                                                    ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
+                                                , sort = Temporal 42
+                                                }
+                                            )
+                                            ( Apply
+                                                ( Range
+                                                    { _start = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                        , sourceLine = Pos 8
+                                                        , sourceColumn = Pos 3
+                                                        }
+                                                    , _end = SourcePos
+                                                        { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                        , sourceLine = Pos 9
+                                                        , sourceColumn = Pos 1
+                                                        }
+                                                    }
+                                                )
+                                                [ Var
+                                                    ( Range
+                                                        { _start = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                            , sourceLine = Pos 8
+                                                            , sourceColumn = Pos 3
+                                                            }
+                                                        , _end = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                            , sourceLine = Pos 9
+                                                            , sourceColumn = Pos 1
+                                                            }
+                                                        }
+                                                    )
+                                                    ( Id
+                                                        { name = "inner"
+                                                        , moduleName = Artifact
+                                                            ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
+                                                        , sort = Temporal 33
+                                                        }
+                                                    )
+                                                ]
+                                                [ Id
+                                                    { name = "return"
+                                                    , moduleName = Artifact
+                                                        ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
+                                                    , sort = Temporal 29
+                                                    }
+                                                ]
+                                            )
+                                            ( Cut
+                                                ( Var
+                                                    ( Range
+                                                        { _start = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                            , sourceLine = Pos 8
+                                                            , sourceColumn = Pos 3
+                                                            }
+                                                        , _end = SourcePos
+                                                            { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                            , sourceLine = Pos 9
+                                                            , sourceColumn = Pos 1
+                                                            }
+                                                        }
+                                                    )
+                                                    ( Id
+                                                        { name = "outer"
+                                                        , moduleName = Artifact
+                                                            ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
+                                                        , sort = Temporal 32
+                                                        }
+                                                    )
+                                                )
+                                                ( Id
+                                                    { name = "apply"
+                                                    , moduleName = Artifact
+                                                        ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
+                                                    , sort = Temporal 42
+                                                    }
+                                                )
+                                            )
+                                        )
+                                    )
+                                    ( Invoke
+                                        ( Range
+                                            { _start = SourcePos
+                                                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                , sourceLine = Pos 8
+                                                , sourceColumn = Pos 13
+                                                }
+                                            , _end = SourcePos
+                                                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                                , sourceLine = Pos 8
+                                                , sourceColumn = Pos 15
+                                                }
+                                            }
+                                        )
+                                        ( Id
+                                            { name = "f"
+                                            , moduleName = Artifact
+                                                ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
+                                            , sort = External
+                                            }
+                                        )
+                                        ( Id
+                                            { name = "then"
+                                            , moduleName = Artifact
+                                                ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
+                                            , sort = Temporal 41
+                                            }
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                        ( Invoke
+                            ( Range
+                                { _start = SourcePos
+                                    { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                    , sourceLine = Pos 8
+                                    , sourceColumn = Pos 3
+                                    }
+                                , _end = SourcePos
+                                    { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                                    , sourceLine = Pos 8
+                                    , sourceColumn = Pos 12
+                                    }
+                                }
+                            )
+                            ( Id
+                                { name = "putStrLn"
+                                , moduleName = Artifact
+                                    ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+                                , sort = External
+                                }
+                            )
+                            ( Id
+                                { name = "then"
+                                , moduleName = Artifact
+                                    ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
+                                , sort = Temporal 43
+                                }
+                            )
+                        )
+                    }
+                ]
+            )
+            ( Cut
+                ( Var
+                    ( Range
+                        { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                            , sourceLine = Pos 8
+                            , sourceColumn = Pos 3
+                            }
+                        , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+                            , sourceLine = Pos 9
+                            , sourceColumn = Pos 1
+                            }
+                        }
+                    )
+                    ( Id
+                        { name = "param"
+                        , moduleName = Artifact
+                            ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
+                        , sort = Temporal 24
+                        }
+                    )
+                )
+                ( Id
+                    { name = "select"
+                    , moduleName = Artifact
+                        ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
+                    , sort = Temporal 44
+                    }
+                )
+            )
         )
     )
