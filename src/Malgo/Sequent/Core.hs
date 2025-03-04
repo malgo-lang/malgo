@@ -131,12 +131,7 @@ instance (HasRange (XJoin x), HasRange (XDo x)) => HasRange (Statement x) where
 
 instance (ToSExpr (Return x)) => ToSExpr (Statement x) where
   toSExpr (Cut producer consumer) = S.L ["cut", toSExpr producer, toSExpr consumer]
-  toSExpr (Join _ name consumer statement) =
-    go [(name, consumer)] statement
-    where
-      go :: [(Name, Consumer x)] -> Statement x -> SExpr Atom
-      go binds (Join _ name consumer statement) = go ((name, consumer) : binds) statement
-      go binds statement = S.L ["join", S.L $ map (\(name, consumer) -> S.L [toSExpr name, toSExpr consumer]) $ reverse binds, toSExpr statement]
+  toSExpr (Join _ name consumer statement) = S.L ["join", toSExpr name, toSExpr consumer, toSExpr statement]
   toSExpr (Primitive _ name producers consumer) =
     S.L [S.A "prim", toSExpr name, S.L $ map toSExpr producers, toSExpr consumer]
   toSExpr (Invoke _ name consumer) = S.L ["invoke", toSExpr name, toSExpr consumer]
