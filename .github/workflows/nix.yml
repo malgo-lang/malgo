@@ -3,7 +3,19 @@ on:
   pull_request:
   push:
 jobs:
-  tests:
+  tests-macos:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: cachix/install-nix-action@v27
+    - uses: cachix/cachix-action@v14
+      with:
+        name: takoeight0821
+        # If you chose API tokens for write access OR if you have a private cache
+        authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+    - run: NIX_DEBUG=7 nix build -L 
+    - run: nix flake check
+  tests-ubuntu:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
