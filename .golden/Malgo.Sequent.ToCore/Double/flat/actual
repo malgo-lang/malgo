@@ -10,23 +10,23 @@
                   (invoke putStr
                      (then $Double.outer_14
                         (join
-                           (($Double.return_12
-                              (then $Double.inner_15
-                                 (cut
-                                    $Double.outer_14
-                                    (apply
-                                       ($Double.inner_15)
-                                       ($Double.return_11))))))
+                           $Double.return_12
+                           (then $Double.inner_15
+                              (cut
+                                 $Double.outer_14
+                                 (apply
+                                    ($Double.inner_15)
+                                    ($Double.return_11))))
                            (invoke toStringDouble
                               (then $Double.outer_16
                                  (join
-                                    (($Double.return_13
-                                       (then $Double.inner_17
-                                          (cut
-                                             $Double.outer_16
-                                             (apply
-                                                ($Double.inner_17)
-                                                ($Double.return_12))))))
+                                    $Double.return_13
+                                    (then $Double.inner_17
+                                       (cut
+                                          $Double.outer_16
+                                          (apply
+                                             ($Double.inner_17)
+                                             ($Double.return_12))))
                                     (invoke Double#
                                        (apply
                                           (3.14_f64)

@@ -31,23 +31,23 @@
                      (invoke putStrLn
                         (then $DeferLaw.outer_32
                            (join
-                              (($DeferLaw.return_30
-                                 (then $DeferLaw.inner_33
-                                    (cut
-                                       $DeferLaw.outer_32
-                                       (apply
-                                          ($DeferLaw.inner_33)
-                                          ($DeferLaw.return_29))))))
+                              $DeferLaw.return_30
+                              (then $DeferLaw.inner_33
+                                 (cut
+                                    $DeferLaw.outer_32
+                                    (apply
+                                       ($DeferLaw.inner_33)
+                                       ($DeferLaw.return_29))))
                               (invoke f
                                  (then $DeferLaw.outer_34
                                     (join
-                                       (($DeferLaw.return_31
-                                          (then $DeferLaw.inner_35
-                                             (cut
-                                                $DeferLaw.outer_34
-                                                (apply
-                                                   ($DeferLaw.inner_35)
-                                                   ($DeferLaw.return_30))))))
+                                       $DeferLaw.return_31
+                                       (then $DeferLaw.inner_35
+                                          (cut
+                                             $DeferLaw.outer_34
+                                             (apply
+                                                ($DeferLaw.inner_35)
+                                                ($DeferLaw.return_30))))
                                        (invoke String#
                                           (apply
                                              ("Hello")

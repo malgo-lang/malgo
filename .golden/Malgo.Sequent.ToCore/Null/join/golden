@@ -7,16 +7,16 @@
             (lambda
                ($Null.param_120 $Null.return_131)
                (join
-                  (($Null.select_172
-                     (select
-                        ((tuple
-                           (#Null.x_11 #Null.f_12))
-                           (join
-                              (($Null.apply_171
-                                 (apply
-                                    (#Null.x_11)
-                                    ($Null.return_131))))
-                              (cut #Null.f_12 $Null.apply_171))))))
+                  $Null.select_172
+                  (select
+                     ((tuple
+                        (#Null.x_11 #Null.f_12))
+                        (join
+                           $Null.apply_171
+                           (apply
+                              (#Null.x_11)
+                              ($Null.return_131))
+                           (cut #Null.f_12 $Null.apply_171))))
                   (cut
                      (construct
                         tuple
@@ -31,18 +31,18 @@
          (lambda
             ($Null.param_121 $Null.return_133)
             (join
-               (($Null.select_174
-                  (select
-                     ((Nil ())
-                        (invoke Nothing $Null.return_133))
-                     ((Cons
-                        (#Null.p_5 #Null.__6))
-                        (join
-                           (($Null.apply_173
-                              (apply
-                                 (#Null.p_5)
-                                 ($Null.return_133))))
-                           (invoke Just $Null.apply_173))))))
+               $Null.select_174
+               (select
+                  ((Nil ())
+                     (invoke Nothing $Null.return_133))
+                  ((Cons
+                     (#Null.p_5 #Null.__6))
+                     (join
+                        $Null.apply_173
+                        (apply
+                           (#Null.p_5)
+                           ($Null.return_133))
+                        (invoke Just $Null.apply_173))))
                (cut $Null.param_121 $Null.select_174)))
          $Null.return_132))
    (isNothing
@@ -51,13 +51,13 @@
          (lambda
             ($Null.param_122 $Null.return_135)
             (join
-               (($Null.select_175
-                  (select
-                     ((Nothing ())
-                        (invoke True $Null.return_135))
-                     ((Just
-                        (#Null.__3))
-                        (invoke False $Null.return_135)))))
+               $Null.select_175
+               (select
+                  ((Nothing ())
+                     (invoke True $Null.return_135))
+                  ((Just
+                     (#Null.__3))
+                     (invoke False $Null.return_135)))
                (cut $Null.param_122 $Null.select_175)))
          $Null.return_134))
    (null
@@ -66,27 +66,28 @@
          (lambda
             ($Null.param_123 $Null.return_137)
             (join
-               (($Null.select_179
-                  (select
-                     (#Null.as_8
-                        (join
-                           (($Null.then_178
-                              (then $Null.outer_157
-                                 (join
-                                    (($Null.apply_176
+               $Null.select_179
+               (select
+                  (#Null.as_8
+                     (join
+                        $Null.then_178
+                        (then $Null.outer_157
+                           (join
+                              $Null.apply_176
+                              (apply
+                                 (#Null.as_8)
+                                 ($Null.return_138))
+                              (join
+                                 $Null.return_138
+                                 (then $Null.inner_158
+                                    (join
+                                       $Null.apply_177
                                        (apply
-                                          (#Null.as_8)
-                                          ($Null.return_138)))
-                                       ($Null.return_138
-                                          (then $Null.inner_158
-                                             (join
-                                                (($Null.apply_177
-                                                   (apply
-                                                      ($Null.inner_158)
-                                                      ($Null.return_137))))
-                                                (cut $Null.outer_157 $Null.apply_177)))))
-                                    (invoke mHead $Null.apply_176)))))
-                           (invoke isNothing $Null.then_178))))))
+                                          ($Null.inner_158)
+                                          ($Null.return_137))
+                                       (cut $Null.outer_157 $Null.apply_177)))
+                                 (invoke mHead $Null.apply_176))))
+                        (invoke isNothing $Null.then_178))))
                (cut $Null.param_123 $Null.select_179)))
          $Null.return_136))
    (main
@@ -95,106 +96,112 @@
          (lambda
             ($Null.param_124 $Null.return_140)
             (join
-               (($Null.select_196
-                  (select
-                     (#Null.$__118
-                        (join
-                           (($Null.then_195
-                              (then $Null.outer_159
+               $Null.select_196
+               (select
+                  (#Null.$__118
+                     (join
+                        $Null.then_195
+                        (then $Null.outer_159
+                           (join
+                              $Null.then_189
+                              (then $Null.outer_161
                                  (join
-                                    (($Null.then_189
-                                       (then $Null.outer_161
-                                          (join
-                                             (($Null.then_187
-                                                (then $Null.outer_163
-                                                   (join
-                                                      (($Null.return_147
-                                                         (then $Null.inner_164
-                                                            (join
-                                                               (($Null.then_185
-                                                                  (then $Null.outer_165
-                                                                     (join
-                                                                        (($Null.then_183
-                                                                           (then $Null.outer_167
-                                                                              (join
-                                                                                 (($Null.return_146
-                                                                                    (then $Null.inner_168
-                                                                                       (join
-                                                                                          (($Null.then_181
-                                                                                             (then $Null.outer_169
-                                                                                                (join
-                                                                                                   (($Null.return_145
-                                                                                                      (then $Null.inner_170
-                                                                                                         (join
-                                                                                                            (($Null.apply_180
-                                                                                                               (apply
-                                                                                                                  ($Null.inner_170)
-                                                                                                                  ($Null.return_144))))
-                                                                                                            (cut $Null.outer_169 $Null.apply_180)))))
-                                                                                                   (invoke Nil $Null.return_145))))
-                                                                                             ($Null.apply_182
-                                                                                                (apply
-                                                                                                   ($Null.inner_168)
-                                                                                                   ($Null.then_181))))
-                                                                                          (cut $Null.outer_167 $Null.apply_182)))))
-                                                                                 (invoke True $Null.return_146))))
-                                                                           ($Null.return_144
-                                                                              (then $Null.inner_166
-                                                                                 (join
-                                                                                    (($Null.apply_184
-                                                                                       (apply
-                                                                                          ($Null.inner_166)
-                                                                                          ($Null.return_143))))
-                                                                                    (cut $Null.outer_165 $Null.apply_184)))))
-                                                                        (invoke Cons $Null.then_183))))
-                                                                  ($Null.apply_186
-                                                                     (apply
-                                                                        ($Null.inner_164)
-                                                                        ($Null.then_185))))
-                                                               (cut $Null.outer_163 $Null.apply_186)))))
-                                                      (invoke True $Null.return_147))))
-                                                ($Null.return_143
-                                                   (then $Null.inner_162
-                                                      (join
-                                                         (($Null.apply_188
-                                                            (apply
-                                                               ($Null.inner_162)
-                                                               ($Null.return_142))))
-                                                         (cut $Null.outer_161 $Null.apply_188)))))
-                                             (invoke Cons $Null.then_187))))
-                                       ($Null.return_142
-                                          (then $Null.inner_160
+                                    $Null.then_187
+                                    (then $Null.outer_163
+                                       (join
+                                          $Null.return_147
+                                          (then $Null.inner_164
                                              (join
-                                                (($Null.apply_193
-                                                   (apply
-                                                      ((lambda
-                                                         ($Null.param_125 $Null.return_141)
+                                                $Null.then_185
+                                                (then $Null.outer_165
+                                                   (join
+                                                      $Null.then_183
+                                                      (then $Null.outer_167
                                                          (join
-                                                            (($Null.select_192
-                                                               (select
-                                                                  ((False ())
+                                                            $Null.return_146
+                                                            (then $Null.inner_168
+                                                               (join
+                                                                  $Null.then_181
+                                                                  (then $Null.outer_169
                                                                      (join
-                                                                        (($Null.apply_190
-                                                                           (apply
-                                                                              ("OK")
-                                                                              ($Null.return_141))))
-                                                                        (invoke malgo_print_string $Null.apply_190)))
-                                                                  ((True ())
-                                                                     (join
-                                                                        (($Null.apply_191
-                                                                           (apply
-                                                                              ((construct tuple () ()))
-                                                                              ($Null.return_141))))
-                                                                        (invoke malgo_exit_failure $Null.apply_191))))))
-                                                            (cut $Null.param_125 $Null.select_192))))
-                                                      ($Null.return_140)))
-                                                   ($Null.apply_194
-                                                      (apply
-                                                         ($Null.inner_160)
-                                                         ($Null.apply_193))))
-                                                (cut $Null.outer_159 $Null.apply_194)))))
-                                    (invoke null $Null.then_189)))))
-                           (invoke |> $Null.then_195))))))
+                                                                        $Null.return_145
+                                                                        (then $Null.inner_170
+                                                                           (join
+                                                                              $Null.apply_180
+                                                                              (apply
+                                                                                 ($Null.inner_170)
+                                                                                 ($Null.return_144))
+                                                                              (cut $Null.outer_169 $Null.apply_180)))
+                                                                        (invoke Nil $Null.return_145)))
+                                                                  (join
+                                                                     $Null.apply_182
+                                                                     (apply
+                                                                        ($Null.inner_168)
+                                                                        ($Null.then_181))
+                                                                     (cut $Null.outer_167 $Null.apply_182))))
+                                                            (invoke True $Null.return_146)))
+                                                      (join
+                                                         $Null.return_144
+                                                         (then $Null.inner_166
+                                                            (join
+                                                               $Null.apply_184
+                                                               (apply
+                                                                  ($Null.inner_166)
+                                                                  ($Null.return_143))
+                                                               (cut $Null.outer_165 $Null.apply_184)))
+                                                         (invoke Cons $Null.then_183))))
+                                                (join
+                                                   $Null.apply_186
+                                                   (apply
+                                                      ($Null.inner_164)
+                                                      ($Null.then_185))
+                                                   (cut $Null.outer_163 $Null.apply_186))))
+                                          (invoke True $Null.return_147)))
+                                    (join
+                                       $Null.return_143
+                                       (then $Null.inner_162
+                                          (join
+                                             $Null.apply_188
+                                             (apply
+                                                ($Null.inner_162)
+                                                ($Null.return_142))
+                                             (cut $Null.outer_161 $Null.apply_188)))
+                                       (invoke Cons $Null.then_187))))
+                              (join
+                                 $Null.return_142
+                                 (then $Null.inner_160
+                                    (join
+                                       $Null.apply_193
+                                       (apply
+                                          ((lambda
+                                             ($Null.param_125 $Null.return_141)
+                                             (join
+                                                $Null.select_192
+                                                (select
+                                                   ((False ())
+                                                      (join
+                                                         $Null.apply_190
+                                                         (apply
+                                                            ("OK")
+                                                            ($Null.return_141))
+                                                         (invoke malgo_print_string $Null.apply_190)))
+                                                   ((True ())
+                                                      (join
+                                                         $Null.apply_191
+                                                         (apply
+                                                            ((construct tuple () ()))
+                                                            ($Null.return_141))
+                                                         (invoke malgo_exit_failure $Null.apply_191))))
+                                                (cut $Null.param_125 $Null.select_192))))
+                                          ($Null.return_140))
+                                       (join
+                                          $Null.apply_194
+                                          (apply
+                                             ($Null.inner_160)
+                                             ($Null.apply_193))
+                                          (cut $Null.outer_159 $Null.apply_194))))
+                                 (invoke null $Null.then_189))))
+                        (invoke |> $Null.then_195))))
                (cut $Null.param_124 $Null.select_196)))
          $Null.return_139))
    (Nothing

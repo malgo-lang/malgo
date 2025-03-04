@@ -10,13 +10,13 @@
                   (invoke printString
                      (then $TypeAnnotation.outer_19
                         (join
-                           (($TypeAnnotation.return_16
-                              (then $TypeAnnotation.inner_20
-                                 (cut
-                                    $TypeAnnotation.outer_19
-                                    (apply
-                                       ($TypeAnnotation.inner_20)
-                                       ($TypeAnnotation.return_15))))))
+                           $TypeAnnotation.return_16
+                           (then $TypeAnnotation.inner_20
+                              (cut
+                                 $TypeAnnotation.outer_19
+                                 (apply
+                                    ($TypeAnnotation.inner_20)
+                                    ($TypeAnnotation.return_15))))
                            (cut
                               (lambda
                                  ($TypeAnnotation.param_13 $TypeAnnotation.return_18)
@@ -27,13 +27,13 @@
                                           (cut #TypeAnnotation.x_0 $TypeAnnotation.return_18)))))
                               (then $TypeAnnotation.outer_21
                                  (join
-                                    (($TypeAnnotation.return_17
-                                       (then $TypeAnnotation.inner_22
-                                          (cut
-                                             $TypeAnnotation.outer_21
-                                             (apply
-                                                ($TypeAnnotation.inner_22)
-                                                ($TypeAnnotation.return_16))))))
+                                    $TypeAnnotation.return_17
+                                    (then $TypeAnnotation.inner_22
+                                       (cut
+                                          $TypeAnnotation.outer_21
+                                          (apply
+                                             ($TypeAnnotation.inner_22)
+                                             ($TypeAnnotation.return_16))))
                                     (invoke String#
                                        (apply
                                           ("hoge")

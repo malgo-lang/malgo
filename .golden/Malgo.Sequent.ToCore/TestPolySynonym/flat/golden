@@ -37,22 +37,22 @@
                            (invoke |>
                               (then $TestPolySynonym.outer_50
                                  (join
-                                    (($TestPolySynonym.return_47
-                                       (then $TestPolySynonym.inner_51
-                                          (cut
-                                             $TestPolySynonym.outer_50
-                                             (apply
-                                                ($TestPolySynonym.inner_51)
-                                                ((then $TestPolySynonym.outer_52
-                                                   (join
-                                                      (($TestPolySynonym.return_46
-                                                         (then $TestPolySynonym.inner_53
-                                                            (cut
-                                                               $TestPolySynonym.outer_52
-                                                               (apply
-                                                                  ($TestPolySynonym.inner_53)
-                                                                  ($TestPolySynonym.return_45))))))
-                                                      (invoke printInt32 $TestPolySynonym.return_46)))))))))
+                                    $TestPolySynonym.return_47
+                                    (then $TestPolySynonym.inner_51
+                                       (cut
+                                          $TestPolySynonym.outer_50
+                                          (apply
+                                             ($TestPolySynonym.inner_51)
+                                             ((then $TestPolySynonym.outer_52
+                                                (join
+                                                   $TestPolySynonym.return_46
+                                                   (then $TestPolySynonym.inner_53
+                                                      (cut
+                                                         $TestPolySynonym.outer_52
+                                                         (apply
+                                                            ($TestPolySynonym.inner_53)
+                                                            ($TestPolySynonym.return_45))))
+                                                   (invoke printInt32 $TestPolySynonym.return_46)))))))
                                     (invoke first
                                        (apply
                                           (#TestPolySynonym.x_7)

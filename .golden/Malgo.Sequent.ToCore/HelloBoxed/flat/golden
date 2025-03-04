@@ -31,13 +31,13 @@
                                  ($HelloBoxed.return_31))))
                         (then $HelloBoxed.outer_37
                            (join
-                              (($HelloBoxed.return_30
-                                 (then $HelloBoxed.inner_38
-                                    (cut
-                                       $HelloBoxed.outer_37
-                                       (apply
-                                          ($HelloBoxed.inner_38)
-                                          ($HelloBoxed.return_29))))))
+                              $HelloBoxed.return_30
+                              (then $HelloBoxed.inner_38
+                                 (cut
+                                    $HelloBoxed.outer_37
+                                    (apply
+                                       ($HelloBoxed.inner_38)
+                                       ($HelloBoxed.return_29))))
                               (invoke malgo_print_string
                                  (apply
                                     (#HelloBoxed.str_0)
@@ -55,13 +55,13 @@
                      (invoke putStrLn
                         (then $HelloBoxed.outer_39
                            (join
-                              (($HelloBoxed.return_34
-                                 (then $HelloBoxed.inner_40
-                                    (cut
-                                       $HelloBoxed.outer_39
-                                       (apply
-                                          ($HelloBoxed.inner_40)
-                                          ($HelloBoxed.return_33))))))
+                              $HelloBoxed.return_34
+                              (then $HelloBoxed.inner_40
+                                 (cut
+                                    $HelloBoxed.outer_39
+                                    (apply
+                                       ($HelloBoxed.inner_40)
+                                       ($HelloBoxed.return_33))))
                               (invoke String#
                                  (apply
                                     ("Hello, world")

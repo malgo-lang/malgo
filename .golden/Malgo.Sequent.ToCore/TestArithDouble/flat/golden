@@ -10,13 +10,13 @@
                   (invoke String#
                      (then $TestArithDouble.outer_134
                         (join
-                           (($TestArithDouble.return_107
-                              (then $TestArithDouble.inner_135
-                                 (cut
-                                    $TestArithDouble.outer_134
-                                    (apply
-                                       ($TestArithDouble.inner_135)
-                                       ($TestArithDouble.return_106))))))
+                           $TestArithDouble.return_107
+                           (then $TestArithDouble.inner_135
+                              (cut
+                                 $TestArithDouble.outer_134
+                                 (apply
+                                    ($TestArithDouble.inner_135)
+                                    ($TestArithDouble.return_106))))
                            (invoke toStringDouble#
                               (apply
                                  (#TestArithDouble.x_9)
@@ -37,23 +37,23 @@
                            (cut #TestArithDouble.x_10 $TestArithDouble.return_112))
                         (then $TestArithDouble.outer_136
                            (join
-                              (($TestArithDouble.return_110
-                                 (then $TestArithDouble.inner_137
-                                    (cut
-                                       $TestArithDouble.outer_136
-                                       (apply
-                                          ($TestArithDouble.inner_137)
-                                          ($TestArithDouble.return_109))))))
+                              $TestArithDouble.return_110
+                              (then $TestArithDouble.inner_137
+                                 (cut
+                                    $TestArithDouble.outer_136
+                                    (apply
+                                       ($TestArithDouble.inner_137)
+                                       ($TestArithDouble.return_109))))
                               (invoke putStrLn
                                  (then $TestArithDouble.outer_138
                                     (join
-                                       (($TestArithDouble.return_111
-                                          (then $TestArithDouble.inner_139
-                                             (cut
-                                                $TestArithDouble.outer_138
-                                                (apply
-                                                   ($TestArithDouble.inner_139)
-                                                   ($TestArithDouble.return_110))))))
+                                       $TestArithDouble.return_111
+                                       (then $TestArithDouble.inner_139
+                                          (cut
+                                             $TestArithDouble.outer_138
+                                             (apply
+                                                ($TestArithDouble.inner_139)
+                                                ($TestArithDouble.return_110))))
                                        (invoke show
                                           (apply
                                              (#TestArithDouble.x_10)
@@ -183,15 +183,15 @@
                      (invoke *
                         (then $TestArithDouble.outer_140
                            (join
-                              (($TestArithDouble.return_129
-                                 (then $TestArithDouble.inner_141
-                                    (cut
-                                       $TestArithDouble.outer_140
-                                       (apply
-                                          ($TestArithDouble.inner_141)
-                                          ((apply
-                                             (#TestArithDouble.x_11)
-                                             ($TestArithDouble.return_128))))))))
+                              $TestArithDouble.return_129
+                              (then $TestArithDouble.inner_141
+                                 (cut
+                                    $TestArithDouble.outer_140
+                                    (apply
+                                       ($TestArithDouble.inner_141)
+                                       ((apply
+                                          (#TestArithDouble.x_11)
+                                          ($TestArithDouble.return_128))))))
                               (invoke +
                                  (apply
                                     (#TestArithDouble.x_11)
@@ -211,23 +211,23 @@
                      (invoke putStrLn
                         (then $TestArithDouble.outer_142
                            (join
-                              (($TestArithDouble.return_132
-                                 (then $TestArithDouble.inner_143
-                                    (cut
-                                       $TestArithDouble.outer_142
-                                       (apply
-                                          ($TestArithDouble.inner_143)
-                                          ($TestArithDouble.return_131))))))
+                              $TestArithDouble.return_132
+                              (then $TestArithDouble.inner_143
+                                 (cut
+                                    $TestArithDouble.outer_142
+                                    (apply
+                                       ($TestArithDouble.inner_143)
+                                       ($TestArithDouble.return_131))))
                               (invoke show
                                  (then $TestArithDouble.outer_144
                                     (join
-                                       (($TestArithDouble.return_133
-                                          (then $TestArithDouble.inner_145
-                                             (cut
-                                                $TestArithDouble.outer_144
-                                                (apply
-                                                   ($TestArithDouble.inner_145)
-                                                   ($TestArithDouble.return_132))))))
+                                       $TestArithDouble.return_133
+                                       (then $TestArithDouble.inner_145
+                                          (cut
+                                             $TestArithDouble.outer_144
+                                             (apply
+                                                ($TestArithDouble.inner_145)
+                                                ($TestArithDouble.return_132))))
                                        (invoke f
                                           (apply
                                              (0.5_f64)

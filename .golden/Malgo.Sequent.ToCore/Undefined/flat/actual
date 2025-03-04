@@ -27,13 +27,13 @@
                                     (invoke printString
                                        (then $Undefined.outer_28
                                           (join
-                                             (($Undefined.return_26
-                                                (then $Undefined.inner_29
-                                                   (cut
-                                                      $Undefined.outer_28
-                                                      (apply
-                                                         ($Undefined.inner_29)
-                                                         ($Undefined.return_25))))))
+                                             $Undefined.return_26
+                                             (then $Undefined.inner_29
+                                                (cut
+                                                   $Undefined.outer_28
+                                                   (apply
+                                                      ($Undefined.inner_29)
+                                                      ($Undefined.return_25))))
                                              (invoke String#
                                                 (apply
                                                    ("OK")

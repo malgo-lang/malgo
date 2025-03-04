@@ -38,23 +38,23 @@
                                           ($Test2.return_32)))))))
                         (then $Test2.outer_36
                            (join
-                              (($Test2.return_30
-                                 (then $Test2.inner_37
-                                    (cut
-                                       $Test2.outer_36
-                                       (apply
-                                          ($Test2.inner_37)
-                                          ($Test2.return_29))))))
+                              $Test2.return_30
+                              (then $Test2.inner_37
+                                 (cut
+                                    $Test2.outer_36
+                                    (apply
+                                       ($Test2.inner_37)
+                                       ($Test2.return_29))))
                               (invoke rtob
                                  (then $Test2.outer_38
                                     (join
-                                       (($Test2.return_31
-                                          (then $Test2.inner_39
-                                             (cut
-                                                $Test2.outer_38
-                                                (apply
-                                                   ($Test2.inner_39)
-                                                   ($Test2.return_30))))))
+                                       $Test2.return_31
+                                       (then $Test2.inner_39
+                                          (cut
+                                             $Test2.outer_38
+                                             (apply
+                                                ($Test2.inner_39)
+                                                ($Test2.return_30))))
                                        (invoke R $Test2.return_31)))))))))))
          $Test2.return_28))
    (R

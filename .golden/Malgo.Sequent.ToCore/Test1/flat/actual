@@ -48,35 +48,35 @@
                      (invoke if
                         (then $Test1.outer_56
                            (join
-                              (($Test1.return_53
-                                 (then $Test1.inner_57
-                                    (cut
-                                       $Test1.outer_56
-                                       (apply
-                                          ($Test1.inner_57)
+                              $Test1.return_53
+                              (then $Test1.inner_57
+                                 (cut
+                                    $Test1.outer_56
+                                    (apply
+                                       ($Test1.inner_57)
+                                       ((apply
+                                          ((lambda
+                                             ($Test1.param_43 $Test1.return_52)
+                                             (cut
+                                                $Test1.param_43
+                                                (select
+                                                   (#Test1.$__30
+                                                      (invoke malgo_print_string
+                                                         (apply
+                                                            ("True")
+                                                            ($Test1.return_52))))))))
                                           ((apply
                                              ((lambda
-                                                ($Test1.param_43 $Test1.return_52)
+                                                ($Test1.param_44 $Test1.return_51)
                                                 (cut
-                                                   $Test1.param_43
+                                                   $Test1.param_44
                                                    (select
-                                                      (#Test1.$__30
+                                                      (#Test1.$__35
                                                          (invoke malgo_print_string
                                                             (apply
-                                                               ("True")
-                                                               ($Test1.return_52))))))))
-                                             ((apply
-                                                ((lambda
-                                                   ($Test1.param_44 $Test1.return_51)
-                                                   (cut
-                                                      $Test1.param_44
-                                                      (select
-                                                         (#Test1.$__35
-                                                            (invoke malgo_print_string
-                                                               (apply
-                                                                  ("False")
-                                                                  ($Test1.return_51))))))))
-                                                ($Test1.return_50))))))))))
+                                                               ("False")
+                                                               ($Test1.return_51))))))))
+                                             ($Test1.return_50))))))))
                               (invoke True $Test1.return_53))))))))
          $Test1.return_49))
    (True

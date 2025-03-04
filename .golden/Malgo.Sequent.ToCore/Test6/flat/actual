@@ -41,23 +41,23 @@
                                           ($Test6.return_39)))))))
                         (then $Test6.outer_43
                            (join
-                              (($Test6.return_37
-                                 (then $Test6.inner_44
-                                    (cut
-                                       $Test6.outer_43
-                                       (apply
-                                          ($Test6.inner_44)
-                                          ($Test6.return_36))))))
+                              $Test6.return_37
+                              (then $Test6.inner_44
+                                 (cut
+                                    $Test6.outer_43
+                                    (apply
+                                       ($Test6.inner_44)
+                                       ($Test6.return_36))))
                               (invoke rtob
                                  (then $Test6.outer_45
                                     (join
-                                       (($Test6.return_38
-                                          (then $Test6.inner_46
-                                             (cut
-                                                $Test6.outer_45
-                                                (apply
-                                                   ($Test6.inner_46)
-                                                   ($Test6.return_37))))))
+                                       $Test6.return_38
+                                       (then $Test6.inner_46
+                                          (cut
+                                             $Test6.outer_45
+                                             (apply
+                                                ($Test6.inner_46)
+                                                ($Test6.return_37))))
                                        (invoke R $Test6.return_38)))))))))))
          $Test6.return_35))
    (R

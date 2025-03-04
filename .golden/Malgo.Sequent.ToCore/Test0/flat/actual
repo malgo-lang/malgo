@@ -33,35 +33,35 @@
                      (invoke |>
                         (then $Test0.outer_67
                            (join
-                              (($Test0.return_63
-                                 (then $Test0.inner_68
-                                    (cut
-                                       $Test0.outer_67
-                                       (apply
-                                          ($Test0.inner_68)
-                                          ((apply
-                                             ((lambda
-                                                ($Test0.param_53 $Test0.return_61)
-                                                (cut
-                                                   $Test0.param_53
-                                                   (select
-                                                      ((Int64#
-                                                         (#Test0.i_6))
-                                                         (invoke printString#
-                                                            (then $Test0.outer_69
-                                                               (join
-                                                                  (($Test0.return_62
-                                                                     (then $Test0.inner_70
-                                                                        (cut
-                                                                           $Test0.outer_69
-                                                                           (apply
-                                                                              ($Test0.inner_70)
-                                                                              ($Test0.return_61))))))
-                                                                  (invoke toStringInt64#
+                              $Test0.return_63
+                              (then $Test0.inner_68
+                                 (cut
+                                    $Test0.outer_67
+                                    (apply
+                                       ($Test0.inner_68)
+                                       ((apply
+                                          ((lambda
+                                             ($Test0.param_53 $Test0.return_61)
+                                             (cut
+                                                $Test0.param_53
+                                                (select
+                                                   ((Int64#
+                                                      (#Test0.i_6))
+                                                      (invoke printString#
+                                                         (then $Test0.outer_69
+                                                            (join
+                                                               $Test0.return_62
+                                                               (then $Test0.inner_70
+                                                                  (cut
+                                                                     $Test0.outer_69
                                                                      (apply
-                                                                        (#Test0.i_6)
-                                                                        ($Test0.return_62)))))))))))
-                                             ($Test0.return_60))))))))
+                                                                        ($Test0.inner_70)
+                                                                        ($Test0.return_61))))
+                                                               (invoke toStringInt64#
+                                                                  (apply
+                                                                     (#Test0.i_6)
+                                                                     ($Test0.return_62)))))))))))
+                                          ($Test0.return_60))))))
                               (invoke Int64#
                                  (apply
                                     (1_i64)
