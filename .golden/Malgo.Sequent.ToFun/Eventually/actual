@@ -173,4 +173,14 @@
                      (apply
                         (invoke |>)
                         ((invoke comp)))
-                     ((invoke step)))))))))))
+                     ((invoke step))))))))))
+   (Done
+      (lambda
+         ($Eventually.constructor_271)
+         (Done
+            ($Eventually.constructor_271))))
+   (NotYetDone
+      (lambda
+         ($Eventually.constructor_272)
+         (NotYetDone
+            ($Eventually.constructor_272)))))

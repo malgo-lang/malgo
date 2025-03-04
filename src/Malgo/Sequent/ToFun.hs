@@ -15,7 +15,9 @@ import Malgo.Syntax.Extension as S
 
 toFun :: (State Uniq :> es, Reader ModuleName :> es) => XModule (Malgo 'Refine) -> Eff es Program
 toFun BindGroup {..} = do
-  Program <$> foldMap (traverse convert) _scDefs
+  scDefs <- foldMap (traverse convert) _scDefs
+  dataDefs <- concat <$> traverse convert _dataDefs
+  pure $ Program $ scDefs <> dataDefs
 
 class Convert a b where
   convert :: a -> b
@@ -24,6 +26,17 @@ instance (State Uniq :> es, Reader ModuleName :> es) => Convert (Typed Range, Id
   convert (Typed {value = range}, name, expr) = do
     expr <- convert expr
     pure (range, name, expr)
+
+instance (State Uniq :> es, Reader ModuleName :> es) => Convert (Range, Id, [(Range, Id)], [(Range, Id, [Type (Malgo 'Refine)])]) (Eff es [(Range, Name, F.Expr)]) where
+  convert (_, _, _, constructors) = do
+    traverse convert constructors
+
+instance (State Uniq :> es, Reader ModuleName :> es) => Convert (Range, Id, [Type (Malgo Refine)]) (Eff es (Range, Name, F.Expr)) where
+  convert (range, name, parameters) = do
+    let arity = length parameters
+    parameters <- replicateM arity $ newTemporalId "constructor"
+    let lambda = foldr (\parameter -> F.Lambda range [parameter]) (F.Construct range (F.Tag $ name.name) (F.Var range <$> parameters)) parameters
+    pure (range, name, lambda)
 
 instance (State Uniq :> es, Reader ModuleName :> es) => Convert (S.Expr (Malgo 'Refine)) (Eff es F.Expr) where
   convert (S.Var Typed {value = range} name) | idIsExternal name = pure $ F.Invoke range name

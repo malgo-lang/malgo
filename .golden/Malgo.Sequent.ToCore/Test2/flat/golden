@@ -36,24 +36,39 @@
                                        (apply
                                           ("WRONG")
                                           ($Test2.return_32)))))))
-                        (then $Test2.outer_33
+                        (then $Test2.outer_36
                            (join
                               (($Test2.return_30
-                                 (then $Test2.inner_34
+                                 (then $Test2.inner_37
                                     (cut
-                                       $Test2.outer_33
+                                       $Test2.outer_36
                                        (apply
-                                          ($Test2.inner_34)
+                                          ($Test2.inner_37)
                                           ($Test2.return_29))))))
                               (invoke rtob
-                                 (then $Test2.outer_35
+                                 (then $Test2.outer_38
                                     (join
                                        (($Test2.return_31
-                                          (then $Test2.inner_36
+                                          (then $Test2.inner_39
                                              (cut
-                                                $Test2.outer_35
+                                                $Test2.outer_38
                                                 (apply
-                                                   ($Test2.inner_36)
+                                                   ($Test2.inner_39)
                                                    ($Test2.return_30))))))
                                        (invoke R $Test2.return_31)))))))))))
-         $Test2.return_28)))
+         $Test2.return_28))
+   (R
+      $Test2.return_33
+      (cut
+         (construct R () ())
+         $Test2.return_33))
+   (G
+      $Test2.return_34
+      (cut
+         (construct G () ())
+         $Test2.return_34))
+   (B
+      $Test2.return_35
+      (cut
+         (construct B () ())
+         $Test2.return_35)))

@@ -33,4 +33,9 @@
                   (invoke putStrLn)
                   ((apply
                      (invoke String#)
-                     ("Hello, world"))))))))))
+                     ("Hello, world")))))))))
+   (String#
+      (lambda
+         ($HelloBoxed.constructor_25)
+         (String#
+            ($HelloBoxed.constructor_25)))))

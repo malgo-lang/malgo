@@ -6,9 +6,9 @@ Left
                 { srcLocPackage = "malgo-1.0.0-inplace"
                 , srcLocModule = "Malgo.Sequent.Eval"
                 , srcLocFile = "src/Malgo/Sequent/Eval.hs"
-                , srcLocStartLine = 74
+                , srcLocStartLine = 60
                 , srcLocStartCol = 16
-                , srcLocEndLine = 74
+                , srcLocEndLine = 60
                 , srcLocEndCol = 26
                 }
             )
@@ -18,20 +18,20 @@ Left
             { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/Punctuate.mlg"
                 , sourceLine = Pos 21
-                , sourceColumn = Pos 11
+                , sourceColumn = Pos 25
                 }
             , _end = SourcePos
                 { sourceName = "./test/testcases/malgo/Punctuate.mlg"
                 , sourceLine = Pos 21
-                , sourceColumn = Pos 17
+                , sourceColumn = Pos 28
                 }
             }
         )
         ( Id
-            { name = "SList"
+            { name = "return"
             , moduleName = Artifact
                 ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" )
-            , sort = External
+            , sort = Temporal 150
             }
         )
     )

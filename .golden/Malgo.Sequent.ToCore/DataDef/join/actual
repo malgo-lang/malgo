@@ -1,56 +1,89 @@
 ((main
-   $DataDef.return_20
+   $DataDef.return_23
    (cut
       (lambda
-         ($DataDef.param_18 $DataDef.return_21)
+         ($DataDef.param_18 $DataDef.return_24)
          (join
-            (($DataDef.select_36
+            (($DataDef.select_45
                (select
                   (#DataDef.$__17
                      (join
-                        (($DataDef.then_35
-                           (then $DataDef.outer_27
+                        (($DataDef.then_44
+                           (then $DataDef.outer_36
                               (join
-                                 (($DataDef.apply_33
+                                 (($DataDef.apply_42
                                     (apply
                                        (1_i64)
-                                       ($DataDef.return_22)))
-                                    ($DataDef.return_22
-                                       (then $DataDef.inner_28
+                                       ($DataDef.return_25)))
+                                    ($DataDef.return_25
+                                       (then $DataDef.inner_37
                                           (join
-                                             (($DataDef.apply_34
+                                             (($DataDef.apply_43
                                                 (apply
-                                                   ($DataDef.inner_28)
-                                                   ($DataDef.return_21))))
-                                             (cut $DataDef.outer_27 $DataDef.apply_34)))))
-                                 (invoke Int# $DataDef.apply_33)))))
+                                                   ($DataDef.inner_37)
+                                                   ($DataDef.return_24))))
+                                             (cut $DataDef.outer_36 $DataDef.apply_43)))))
+                                 (invoke Int# $DataDef.apply_42)))))
                         (cut
                            (lambda
-                              ($DataDef.param_19 $DataDef.return_23)
+                              ($DataDef.param_19 $DataDef.return_26)
                               (join
-                                 (($DataDef.select_32
+                                 (($DataDef.select_41
                                     (select
                                        ((Int#
                                           (#DataDef.x_1))
                                           (join
-                                             (($DataDef.then_31
-                                                (then $DataDef.outer_25
+                                             (($DataDef.then_40
+                                                (then $DataDef.outer_34
                                                    (join
-                                                      (($DataDef.apply_29
+                                                      (($DataDef.apply_38
                                                          (apply
                                                             (#DataDef.x_1)
-                                                            ($DataDef.return_24)))
-                                                         ($DataDef.return_24
-                                                            (then $DataDef.inner_26
+                                                            ($DataDef.return_27)))
+                                                         ($DataDef.return_27
+                                                            (then $DataDef.inner_35
                                                                (join
-                                                                  (($DataDef.apply_30
+                                                                  (($DataDef.apply_39
                                                                      (apply
-                                                                        ($DataDef.inner_26)
-                                                                        ($DataDef.return_23))))
-                                                                  (cut $DataDef.outer_25 $DataDef.apply_30)))))
-                                                      (invoke malgo_int64_t_to_string $DataDef.apply_29)))))
-                                             (invoke malgo_print_string $DataDef.then_31))))))
-                                 (cut $DataDef.param_19 $DataDef.select_32)))
-                           $DataDef.then_35))))))
-            (cut $DataDef.param_18 $DataDef.select_36)))
-      $DataDef.return_20)))
+                                                                        ($DataDef.inner_35)
+                                                                        ($DataDef.return_26))))
+                                                                  (cut $DataDef.outer_34 $DataDef.apply_39)))))
+                                                      (invoke malgo_int64_t_to_string $DataDef.apply_38)))))
+                                             (invoke malgo_print_string $DataDef.then_40))))))
+                                 (cut $DataDef.param_19 $DataDef.select_41)))
+                           $DataDef.then_44))))))
+            (cut $DataDef.param_18 $DataDef.select_45)))
+      $DataDef.return_23))
+   (Int#
+      $DataDef.return_28
+      (cut
+         (lambda
+            ($DataDef.constructor_20 $DataDef.return_29)
+            (cut
+               (construct
+                  Int#
+                  ($DataDef.constructor_20)
+                  ())
+               $DataDef.return_29))
+         $DataDef.return_28))
+   (Nil
+      $DataDef.return_30
+      (cut
+         (construct Nil () ())
+         $DataDef.return_30))
+   (Cons
+      $DataDef.return_31
+      (cut
+         (lambda
+            ($DataDef.constructor_21 $DataDef.return_32)
+            (cut
+               (lambda
+                  ($DataDef.constructor_22 $DataDef.return_33)
+                  (cut
+                     (construct
+                        Cons
+                        ($DataDef.constructor_21 $DataDef.constructor_22)
+                        ())
+                     $DataDef.return_33))
+               $DataDef.return_32))
+         $DataDef.return_31)))

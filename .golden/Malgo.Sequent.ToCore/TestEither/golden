@@ -1,22 +1,22 @@
 ((id
-   $TestEither.return_261
+   $TestEither.return_263
    (cut
       (lambda
-         ($TestEither.param_249 $TestEither.return_262)
+         ($TestEither.param_249 $TestEither.return_264)
          (cut
             $TestEither.param_249
             (select
                (#TestEither.x_2
-                  (cut #TestEither.x_2 $TestEither.return_262)))))
-      $TestEither.return_261))
+                  (cut #TestEither.x_2 $TestEither.return_264)))))
+      $TestEither.return_263))
    (andThen
-      $TestEither.return_263
+      $TestEither.return_265
       (cut
          (lambda
-            ($TestEither.param_250 $TestEither.return_264)
+            ($TestEither.param_250 $TestEither.return_266)
             (cut
                (lambda
-                  ($TestEither.param_251 $TestEither.return_265)
+                  ($TestEither.param_251 $TestEither.return_267)
                   (cut
                      (construct
                         tuple
@@ -30,7 +30,7 @@
                            (invoke Left
                               (apply
                                  (#TestEither.x_4)
-                                 ($TestEither.return_265))))
+                                 ($TestEither.return_267))))
                         ((tuple
                            (#TestEither.f_5
                               (Right
@@ -39,90 +39,90 @@
                               #TestEither.f_5
                               (apply
                                  (#TestEither.x_6)
-                                 ($TestEither.return_265)))))))
-               $TestEither.return_264))
-         $TestEither.return_263))
+                                 ($TestEither.return_267)))))))
+               $TestEither.return_266))
+         $TestEither.return_265))
    (main
-      $TestEither.return_266
+      $TestEither.return_268
       (cut
          (lambda
-            ($TestEither.param_252 $TestEither.return_267)
+            ($TestEither.param_252 $TestEither.return_269)
             (cut
                $TestEither.param_252
                (select
                   (#TestEither.$__248
                      (cut
                         (lambda
-                           ($TestEither.tmp_253 $TestEither.return_274)
+                           ($TestEither.tmp_253 $TestEither.return_276)
                            (invoke Right
                               (apply
-                                 ((do $TestEither.return_302
+                                 ((do $TestEither.return_304
                                     (invoke Int32#
                                        (apply
                                           (1_i32)
-                                          ($TestEither.return_302)))))
+                                          ($TestEither.return_304)))))
                                  ((then #TestEither.x_9
                                     (cut
                                        (lambda
-                                          ($TestEither.tmp_255 $TestEither.return_288)
+                                          ($TestEither.tmp_255 $TestEither.return_290)
                                           (invoke |>
                                              (apply
-                                                ((do $TestEither.return_293
+                                                ((do $TestEither.return_295
                                                    (invoke |>
                                                       (apply
-                                                         ((do $TestEither.return_298
+                                                         ((do $TestEither.return_300
                                                             (invoke |>
                                                                (apply
                                                                   (#TestEither.x_9)
                                                                   ((apply
-                                                                     ((do $TestEither.return_299
+                                                                     ((do $TestEither.return_301
                                                                         (invoke andThen
                                                                            (apply
                                                                               ((lambda
-                                                                                 ($TestEither.param_258 $TestEither.return_300)
+                                                                                 ($TestEither.param_258 $TestEither.return_302)
                                                                                  (cut
                                                                                     $TestEither.param_258
                                                                                     (select
                                                                                        (#TestEither.__12
                                                                                           (invoke Left
                                                                                              (apply
-                                                                                                ((do $TestEither.return_301
+                                                                                                ((do $TestEither.return_303
                                                                                                    (invoke String#
                                                                                                       (apply
                                                                                                          ("error")
-                                                                                                         ($TestEither.return_301)))))
-                                                                                                ($TestEither.return_300))))))))
-                                                                              ($TestEither.return_299)))))
-                                                                     ($TestEither.return_298)))))))
+                                                                                                         ($TestEither.return_303)))))
+                                                                                                ($TestEither.return_302))))))))
+                                                                              ($TestEither.return_301)))))
+                                                                     ($TestEither.return_300)))))))
                                                          ((apply
-                                                            ((do $TestEither.return_294
+                                                            ((do $TestEither.return_296
                                                                (invoke andThen
                                                                   (apply
                                                                      ((lambda
-                                                                        ($TestEither.param_259 $TestEither.return_295)
+                                                                        ($TestEither.param_259 $TestEither.return_297)
                                                                         (cut
                                                                            $TestEither.param_259
                                                                            (select
                                                                               (#TestEither.x_13
                                                                                  (invoke Right
                                                                                     (apply
-                                                                                       ((do $TestEither.return_296
+                                                                                       ((do $TestEither.return_298
                                                                                           (invoke addInt32
                                                                                              (apply
                                                                                                 (#TestEither.x_13)
                                                                                                 ((apply
-                                                                                                   ((do $TestEither.return_297
+                                                                                                   ((do $TestEither.return_299
                                                                                                       (invoke Int32#
                                                                                                          (apply
                                                                                                             (1_i32)
-                                                                                                            ($TestEither.return_297)))))
-                                                                                                   ($TestEither.return_296)))))))
-                                                                                       ($TestEither.return_295))))))))
-                                                                     ($TestEither.return_294)))))
-                                                            ($TestEither.return_293)))))))
+                                                                                                            ($TestEither.return_299)))))
+                                                                                                   ($TestEither.return_298)))))))
+                                                                                       ($TestEither.return_297))))))))
+                                                                     ($TestEither.return_296)))))
+                                                            ($TestEither.return_295)))))))
                                                 ((apply
                                                    ((lambda
-                                                      ($TestEither.param_260 $TestEither.return_289)
+                                                      ($TestEither.param_260 $TestEither.return_291)
                                                       (cut
                                                          $TestEither.param_260
                                                          (select
@@ -131,108 +131,108 @@
                                                                (invoke putStrLn
                                                                   (apply
                                                                      (#TestEither.err_14)
-                                                                     ($TestEither.return_289))))
+                                                                     ($TestEither.return_291))))
                                                             ((Right
                                                                (#TestEither.x_15))
                                                                (invoke |>
                                                                   (apply
-                                                                     ((do $TestEither.return_291
+                                                                     ((do $TestEither.return_293
                                                                         (invoke |>
                                                                            (apply
                                                                               (#TestEither.x_15)
                                                                               ((apply
-                                                                                 ((do $TestEither.return_292
-                                                                                    (invoke toStringInt32 $TestEither.return_292)))
-                                                                                 ($TestEither.return_291)))))))
+                                                                                 ((do $TestEither.return_294
+                                                                                    (invoke toStringInt32 $TestEither.return_294)))
+                                                                                 ($TestEither.return_293)))))))
                                                                      ((apply
-                                                                        ((do $TestEither.return_290
-                                                                           (invoke putStrLn $TestEither.return_290)))
-                                                                        ($TestEither.return_289))))))))))
-                                                   ($TestEither.return_288))))))
+                                                                        ((do $TestEither.return_292
+                                                                           (invoke putStrLn $TestEither.return_292)))
+                                                                        ($TestEither.return_291))))))))))
+                                                   ($TestEither.return_290))))))
                                        (apply
-                                          ((do $TestEither.return_275
+                                          ((do $TestEither.return_277
                                              (invoke |>
                                                 (apply
-                                                   ((do $TestEither.return_283
+                                                   ((do $TestEither.return_285
                                                       (invoke |>
                                                          (apply
                                                             (#TestEither.x_9)
                                                             ((apply
-                                                               ((do $TestEither.return_284
+                                                               ((do $TestEither.return_286
                                                                   (invoke andThen
                                                                      (apply
                                                                         ((lambda
-                                                                           ($TestEither.param_256 $TestEither.return_285)
+                                                                           ($TestEither.param_256 $TestEither.return_287)
                                                                            (cut
                                                                               $TestEither.param_256
                                                                               (select
                                                                                  (#TestEither.x_10
                                                                                     (invoke Right
                                                                                        (apply
-                                                                                          ((do $TestEither.return_286
+                                                                                          ((do $TestEither.return_288
                                                                                              (invoke addInt32
                                                                                                 (apply
                                                                                                    (#TestEither.x_10)
                                                                                                    ((apply
-                                                                                                      ((do $TestEither.return_287
+                                                                                                      ((do $TestEither.return_289
                                                                                                          (invoke Int32#
                                                                                                             (apply
                                                                                                                (1_i32)
-                                                                                                               ($TestEither.return_287)))))
-                                                                                                      ($TestEither.return_286)))))))
-                                                                                          ($TestEither.return_285))))))))
-                                                                        ($TestEither.return_284)))))
-                                                               ($TestEither.return_283)))))))
+                                                                                                               ($TestEither.return_289)))))
+                                                                                                      ($TestEither.return_288)))))))
+                                                                                          ($TestEither.return_287))))))))
+                                                                        ($TestEither.return_286)))))
+                                                               ($TestEither.return_285)))))))
                                                    ((apply
-                                                      ((do $TestEither.return_276
+                                                      ((do $TestEither.return_278
                                                          (invoke andThen
                                                             (apply
                                                                ((lambda
-                                                                  ($TestEither.param_257 $TestEither.return_277)
+                                                                  ($TestEither.param_257 $TestEither.return_279)
                                                                   (cut
                                                                      $TestEither.param_257
                                                                      (select
                                                                         (#TestEither.y_11
                                                                            (invoke |>
                                                                               (apply
-                                                                                 ((do $TestEither.return_279
+                                                                                 ((do $TestEither.return_281
                                                                                     (invoke |>
                                                                                        (apply
-                                                                                          ((do $TestEither.return_281
+                                                                                          ((do $TestEither.return_283
                                                                                              (invoke |>
                                                                                                 (apply
                                                                                                    (#TestEither.y_11)
                                                                                                    ((apply
-                                                                                                      ((do $TestEither.return_282
-                                                                                                         (invoke toStringInt32 $TestEither.return_282)))
-                                                                                                      ($TestEither.return_281)))))))
+                                                                                                      ((do $TestEither.return_284
+                                                                                                         (invoke toStringInt32 $TestEither.return_284)))
+                                                                                                      ($TestEither.return_283)))))))
                                                                                           ((apply
-                                                                                             ((do $TestEither.return_280
-                                                                                                (invoke putStr $TestEither.return_280)))
-                                                                                             ($TestEither.return_279)))))))
+                                                                                             ((do $TestEither.return_282
+                                                                                                (invoke putStr $TestEither.return_282)))
+                                                                                             ($TestEither.return_281)))))))
                                                                                  ((apply
-                                                                                    ((do $TestEither.return_278
-                                                                                       (invoke Right $TestEither.return_278)))
-                                                                                    ($TestEither.return_277))))))))))
-                                                               ($TestEither.return_276)))))
-                                                      ($TestEither.return_275)))))))
-                                          ($TestEither.return_274))))))))
+                                                                                    ((do $TestEither.return_280
+                                                                                       (invoke Right $TestEither.return_280)))
+                                                                                    ($TestEither.return_279))))))))))
+                                                               ($TestEither.return_278)))))
+                                                      ($TestEither.return_277)))))))
+                                          ($TestEither.return_276))))))))
                         (apply
-                           ((do $TestEither.return_268
+                           ((do $TestEither.return_270
                               (invoke |>
                                  (apply
-                                    ((do $TestEither.return_272
+                                    ((do $TestEither.return_274
                                        (invoke Right
                                           (apply
-                                             ((do $TestEither.return_273
+                                             ((do $TestEither.return_275
                                                 (invoke Int32#
                                                    (apply
                                                       (1_i32)
-                                                      ($TestEither.return_273)))))
-                                             ($TestEither.return_272)))))
+                                                      ($TestEither.return_275)))))
+                                             ($TestEither.return_274)))))
                                     ((apply
                                        ((lambda
-                                          ($TestEither.param_254 $TestEither.return_269)
+                                          ($TestEither.param_254 $TestEither.return_271)
                                           (cut
                                              $TestEither.param_254
                                              (select
@@ -240,21 +240,45 @@
                                                    (#TestEither.x_7))
                                                    (invoke putStr
                                                       (apply
-                                                         ((do $TestEither.return_270
+                                                         ((do $TestEither.return_272
                                                             (invoke toStringInt32
                                                                (apply
                                                                   (#TestEither.x_7)
-                                                                  ($TestEither.return_270)))))
-                                                         ($TestEither.return_269))))
+                                                                  ($TestEither.return_272)))))
+                                                         ($TestEither.return_271))))
                                                 (#TestEither.__8
                                                    (invoke putStrLn
                                                       (apply
-                                                         ((do $TestEither.return_271
+                                                         ((do $TestEither.return_273
                                                             (invoke String#
                                                                (apply
                                                                   ("unreachable")
-                                                                  ($TestEither.return_271)))))
-                                                         ($TestEither.return_269))))))))
-                                       ($TestEither.return_268)))))))
-                           ($TestEither.return_267)))))))
-         $TestEither.return_266)))
+                                                                  ($TestEither.return_273)))))
+                                                         ($TestEither.return_271))))))))
+                                       ($TestEither.return_270)))))))
+                           ($TestEither.return_269)))))))
+         $TestEither.return_268))
+   (Left
+      $TestEither.return_305
+      (cut
+         (lambda
+            ($TestEither.constructor_261 $TestEither.return_306)
+            (cut
+               (construct
+                  Left
+                  ($TestEither.constructor_261)
+                  ())
+               $TestEither.return_306))
+         $TestEither.return_305))
+   (Right
+      $TestEither.return_307
+      (cut
+         (lambda
+            ($TestEither.constructor_262 $TestEither.return_308)
+            (cut
+               (construct
+                  Right
+                  ($TestEither.constructor_262)
+                  ())
+               $TestEither.return_308))
+         $TestEither.return_307)))

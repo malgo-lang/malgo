@@ -6,9 +6,9 @@ Left
                 { srcLocPackage = "malgo-1.0.0-inplace"
                 , srcLocModule = "Malgo.Sequent.Eval"
                 , srcLocFile = "src/Malgo/Sequent/Eval.hs"
-                , srcLocStartLine = 74
+                , srcLocStartLine = 60
                 , srcLocStartCol = 16
-                , srcLocEndLine = 74
+                , srcLocEndLine = 60
                 , srcLocEndCol = 26
                 }
             )
@@ -17,8 +17,8 @@ Left
         ( Range
             { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
-                , sourceLine = Pos 20
-                , sourceColumn = Pos 26
+                , sourceLine = Pos 19
+                , sourceColumn = Pos 6
                 }
             , _end = SourcePos
                 { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
@@ -28,10 +28,10 @@ Left
             }
         )
         ( Id
-            { name = "True2"
+            { name = "return"
             , moduleName = Artifact
                 ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
-            , sort = External
+            , sort = Temporal 37
             }
         )
     )

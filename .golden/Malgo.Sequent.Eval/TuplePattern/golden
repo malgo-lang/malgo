@@ -6,9 +6,9 @@ Left
                 { srcLocPackage = "malgo-1.0.0-inplace"
                 , srcLocModule = "Malgo.Sequent.Eval"
                 , srcLocFile = "src/Malgo/Sequent/Eval.hs"
-                , srcLocStartLine = 74
+                , srcLocStartLine = 60
                 , srcLocStartCol = 16
-                , srcLocEndLine = 74
+                , srcLocEndLine = 60
                 , srcLocEndCol = 26
                 }
             )
@@ -17,21 +17,21 @@ Left
         ( Range
             { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                , sourceLine = Pos 8
-                , sourceColumn = Pos 4
+                , sourceLine = Pos 9
+                , sourceColumn = Pos 35
                 }
             , _end = SourcePos
                 { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                , sourceLine = Pos 8
-                , sourceColumn = Pos 5
+                , sourceLine = Pos 9
+                , sourceColumn = Pos 38
                 }
             }
         )
         ( Id
-            { name = "A"
+            { name = "return"
             , moduleName = Artifact
                 ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
-            , sort = External
+            , sort = Temporal 31
             }
         )
     )

@@ -6,9 +6,9 @@ Left
                 { srcLocPackage = "malgo-1.0.0-inplace"
                 , srcLocModule = "Malgo.Sequent.Eval"
                 , srcLocFile = "src/Malgo/Sequent/Eval.hs"
-                , srcLocStartLine = 74
+                , srcLocStartLine = 60
                 , srcLocStartCol = 16
-                , srcLocEndLine = 74
+                , srcLocEndLine = 60
                 , srcLocEndCol = 26
                 }
             )
@@ -28,10 +28,10 @@ Left
             }
         )
         ( Id
-            { name = "Double#"
+            { name = "return"
             , moduleName = Artifact
-                ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-            , sort = External
+                ( ArtifactPath "test/testcases/malgo/Double.mlg" )
+            , sort = Temporal 13
             }
         )
     )

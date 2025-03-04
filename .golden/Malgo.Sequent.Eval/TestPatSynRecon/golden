@@ -6,9 +6,9 @@ Left
                 { srcLocPackage = "malgo-1.0.0-inplace"
                 , srcLocModule = "Malgo.Sequent.Eval"
                 , srcLocFile = "src/Malgo/Sequent/Eval.hs"
-                , srcLocStartLine = 74
+                , srcLocStartLine = 60
                 , srcLocStartCol = 16
-                , srcLocEndLine = 74
+                , srcLocEndLine = 60
                 , srcLocEndCol = 26
                 }
             )
@@ -18,20 +18,20 @@ Left
             { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
                 , sourceLine = Pos 14
-                , sourceColumn = Pos 8
+                , sourceColumn = Pos 14
                 }
             , _end = SourcePos
                 { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
                 , sourceLine = Pos 14
-                , sourceColumn = Pos 13
+                , sourceColumn = Pos 24
                 }
             }
         )
         ( Id
-            { name = "Cons"
+            { name = "return"
             , moduleName = Artifact
-                ( ArtifactPath "runtime/malgo/Prelude.mlg" )
-            , sort = External
+                ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" )
+            , sort = Temporal 105
             }
         )
     )
