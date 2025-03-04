@@ -9,7 +9,10 @@ import Debug.Trace (traceShowM)
 import Effectful
 import Effectful.Error.Static
 import Effectful.Reader.Static
+import Effectful.State.Static.Local (State)
 import Malgo.Id
+import Malgo.Module (ModuleName)
+import Malgo.MonadUniq (Uniq)
 import Malgo.Prelude hiding (throwError)
 import Malgo.Sequent.Core
 import Malgo.Sequent.Fun (HasRange (..), Literal, Name, Pattern (..), Tag (..))
@@ -70,7 +73,7 @@ lookupToplevel range name = do
     Just value -> pure value
     Nothing -> throwError (UndefinedVariable range name)
 
-evalProgram :: (Error EvalError :> es) => Program Join -> Eff es Value
+evalProgram :: (Error EvalError :> es, State Uniq :> es, Reader ModuleName :> es) => Program Join -> Eff es Value
 evalProgram (Program definitions) = do
   let toplevels = Map.fromList [(name, (return, statement)) | (_, name, return, statement) <- definitions]
   let (return, statement) =
@@ -79,8 +82,12 @@ evalProgram (Program definitions) = do
           Nothing -> error "main function not found" -- TODO: Error handling
   runReader toplevels
     $ runReader emptyEnv
-    $ local (extendEnv return (Consumer emptyEnv (Finish (range statement))))
-    $ evalStatement statement
+    $ local (extendEnv return (Consumer emptyEnv (Finish (range statement)))) do
+      value <- evalStatement statement
+      finish <- newTemporalId "finish"
+      env <- ask @Env
+      local (extendEnv finish (Consumer env (Finish (range statement)))) do
+        evalConsumer (Apply (range statement) [Construct (range statement) Tuple [] []] [finish]) value
 
 evalStatement :: (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es) => Statement Join -> Eff es Value
 evalStatement (Cut producer consumer) = do
