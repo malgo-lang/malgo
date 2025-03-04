@@ -1,0 +1,37 @@
+Left
+    (
+        [
+            ( "throwError"
+            , SrcLoc
+                { srcLocPackage = "malgo-1.0.0-inplace"
+                , srcLocModule = "Malgo.Sequent.Eval"
+                , srcLocFile = "src/Malgo/Sequent/Eval.hs"
+                , srcLocStartLine = 74
+                , srcLocStartCol = 16
+                , srcLocEndLine = 74
+                , srcLocEndCol = 26
+                }
+            )
+        ]
+    , UndefinedVariable
+        ( Range
+            { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
+                , sourceLine = Pos 36
+                , sourceColumn = Pos 6
+                }
+            , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
+                , sourceLine = Pos 36
+                , sourceColumn = Pos 11
+                }
+            }
+        )
+        ( Id
+            { name = "Just"
+            , moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/ToplevelVariableNoImport.mlg" )
+            , sort = External
+            }
+        )
+    )
