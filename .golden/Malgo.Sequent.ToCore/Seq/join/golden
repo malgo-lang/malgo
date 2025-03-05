@@ -10,31 +10,17 @@
                   $Seq.then_57
                   (then $Seq.outer_38
                      (join
-                        $Seq.then_55
-                        (then $Seq.outer_40
+                        $Seq.return_30
+                        (then $Seq.inner_39
                            (join
-                              $Seq.then_53
-                              (then $Seq.outer_42
-                                 (join
-                                    $Seq.apply_50
-                                    (apply
-                                       (#Seq.y_1)
-                                       ($Seq.return_32))
-                                    (join
-                                       $Seq.apply_51
-                                       (apply
-                                          (#Seq.x_0)
-                                          ($Seq.apply_50))
-                                       (join
-                                          $Seq.return_32
-                                          (then $Seq.inner_43
-                                             (join
-                                                $Seq.apply_52
-                                                (apply
-                                                   ($Seq.inner_43)
-                                                   ($Seq.return_31))
-                                                (cut $Seq.outer_42 $Seq.apply_52)))
-                                          (invoke addInt32 $Seq.apply_51)))))
+                              $Seq.apply_56
+                              (apply
+                                 ($Seq.inner_39)
+                                 ($Seq.return_29))
+                              (cut $Seq.outer_38 $Seq.apply_56)))
+                        (join
+                           $Seq.then_55
+                           (then $Seq.outer_40
                               (join
                                  $Seq.return_31
                                  (then $Seq.inner_41
@@ -44,16 +30,30 @@
                                           ($Seq.inner_41)
                                           ($Seq.return_30))
                                        (cut $Seq.outer_40 $Seq.apply_54)))
-                                 (invoke toStringInt32 $Seq.then_53))))
-                        (join
-                           $Seq.return_30
-                           (then $Seq.inner_39
-                              (join
-                                 $Seq.apply_56
-                                 (apply
-                                    ($Seq.inner_39)
-                                    ($Seq.return_29))
-                                 (cut $Seq.outer_38 $Seq.apply_56)))
+                                 (join
+                                    $Seq.then_53
+                                    (then $Seq.outer_42
+                                       (join
+                                          $Seq.return_32
+                                          (then $Seq.inner_43
+                                             (join
+                                                $Seq.apply_52
+                                                (apply
+                                                   ($Seq.inner_43)
+                                                   ($Seq.return_31))
+                                                (cut $Seq.outer_42 $Seq.apply_52)))
+                                          (join
+                                             $Seq.apply_50
+                                             (apply
+                                                (#Seq.y_1)
+                                                ($Seq.return_32))
+                                             (join
+                                                $Seq.apply_51
+                                                (apply
+                                                   (#Seq.x_0)
+                                                   ($Seq.apply_50))
+                                                (invoke addInt32 $Seq.apply_51)))))
+                                    (invoke toStringInt32 $Seq.then_53))))
                            (invoke printString $Seq.then_55))))
                   (cut
                      (lambda
@@ -95,27 +95,27 @@
                         $Seq.then_65
                         (then $Seq.outer_44
                            (join
-                              $Seq.then_63
-                              (then $Seq.outer_46
+                              $Seq.return_36
+                              (then $Seq.inner_45
                                  (join
-                                    $Seq.return_37
-                                    (then $Seq.inner_47
-                                       (join
-                                          $Seq.apply_62
-                                          (apply
-                                             ($Seq.inner_47)
-                                             ($Seq.return_36))
-                                          (cut $Seq.outer_46 $Seq.apply_62)))
-                                    (invoke executeWhenLoaded $Seq.return_37)))
+                                    $Seq.apply_64
+                                    (apply
+                                       ($Seq.inner_45)
+                                       ($Seq.return_35))
+                                    (cut $Seq.outer_44 $Seq.apply_64)))
                               (join
-                                 $Seq.return_36
-                                 (then $Seq.inner_45
+                                 $Seq.then_63
+                                 (then $Seq.outer_46
                                     (join
-                                       $Seq.apply_64
-                                       (apply
-                                          ($Seq.inner_45)
-                                          ($Seq.return_35))
-                                       (cut $Seq.outer_44 $Seq.apply_64)))
+                                       $Seq.return_37
+                                       (then $Seq.inner_47
+                                          (join
+                                             $Seq.apply_62
+                                             (apply
+                                                ($Seq.inner_47)
+                                                ($Seq.return_36))
+                                             (cut $Seq.outer_46 $Seq.apply_62)))
+                                       (invoke executeWhenLoaded $Seq.return_37)))
                                  (invoke toStringInt32 $Seq.then_63))))
                         (invoke printString $Seq.then_65))))
                (cut $Seq.param_28 $Seq.select_66)))

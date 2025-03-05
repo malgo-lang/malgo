@@ -11,21 +11,17 @@
                      $NestedMatch.then_64
                      (then $NestedMatch.outer_48
                         (join
-                           $NestedMatch.then_62
-                           (then $NestedMatch.outer_50
+                           $NestedMatch.return_36
+                           (then $NestedMatch.inner_49
                               (join
-                                 $NestedMatch.then_60
-                                 (then $NestedMatch.outer_52
-                                    (join
-                                       $NestedMatch.return_38
-                                       (then $NestedMatch.inner_53
-                                          (join
-                                             $NestedMatch.apply_59
-                                             (apply
-                                                ($NestedMatch.inner_53)
-                                                ($NestedMatch.return_37))
-                                             (cut $NestedMatch.outer_52 $NestedMatch.apply_59)))
-                                       (invoke True2 $NestedMatch.return_38)))
+                                 $NestedMatch.apply_63
+                                 (apply
+                                    ($NestedMatch.inner_49)
+                                    ($NestedMatch.return_35))
+                                 (cut $NestedMatch.outer_48 $NestedMatch.apply_63)))
+                           (join
+                              $NestedMatch.then_62
+                              (then $NestedMatch.outer_50
                                  (join
                                     $NestedMatch.return_37
                                     (then $NestedMatch.inner_51
@@ -35,27 +31,31 @@
                                              ($NestedMatch.inner_51)
                                              ($NestedMatch.return_36))
                                           (cut $NestedMatch.outer_50 $NestedMatch.apply_61)))
-                                    (cut
-                                       (lambda
-                                          ($NestedMatch.param_33 $NestedMatch.return_39)
+                                    (join
+                                       $NestedMatch.then_60
+                                       (then $NestedMatch.outer_52
                                           (join
-                                             $NestedMatch.select_58
-                                             (select
-                                                ((True2 ())
-                                                   (invoke False1 $NestedMatch.return_39))
-                                                ((False2 ())
-                                                   (invoke True1 $NestedMatch.return_39)))
-                                             (cut $NestedMatch.param_33 $NestedMatch.select_58)))
-                                       $NestedMatch.then_60))))
-                           (join
-                              $NestedMatch.return_36
-                              (then $NestedMatch.inner_49
-                                 (join
-                                    $NestedMatch.apply_63
-                                    (apply
-                                       ($NestedMatch.inner_49)
-                                       ($NestedMatch.return_35))
-                                    (cut $NestedMatch.outer_48 $NestedMatch.apply_63)))
+                                             $NestedMatch.return_38
+                                             (then $NestedMatch.inner_53
+                                                (join
+                                                   $NestedMatch.apply_59
+                                                   (apply
+                                                      ($NestedMatch.inner_53)
+                                                      ($NestedMatch.return_37))
+                                                   (cut $NestedMatch.outer_52 $NestedMatch.apply_59)))
+                                             (invoke True2 $NestedMatch.return_38)))
+                                       (cut
+                                          (lambda
+                                             ($NestedMatch.param_33 $NestedMatch.return_39)
+                                             (join
+                                                $NestedMatch.select_58
+                                                (select
+                                                   ((True2 ())
+                                                      (invoke False1 $NestedMatch.return_39))
+                                                   ((False2 ())
+                                                      (invoke True1 $NestedMatch.return_39)))
+                                                (cut $NestedMatch.param_33 $NestedMatch.select_58)))
+                                          $NestedMatch.then_60))))
                               (cut
                                  (lambda
                                     ($NestedMatch.param_32 $NestedMatch.return_40)

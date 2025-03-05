@@ -38,40 +38,51 @@
                         $Test3.then_114
                         (then $Test3.outer_89
                            (join
-                              $Test3.then_108
-                              (then $Test3.outer_91
+                              $Test3.return_78
+                              (then $Test3.inner_90
                                  (join
-                                    $Test3.return_82
-                                    (then $Test3.inner_92
-                                       (join
-                                          $Test3.then_106
-                                          (then $Test3.outer_93
-                                             (join
-                                                $Test3.then_104
-                                                (then $Test3.outer_95
+                                    $Test3.apply_112
+                                    (apply
+                                       ((lambda
+                                          ($Test3.param_69 $Test3.return_77)
+                                          (join
+                                             $Test3.select_111
+                                             (select
+                                                ((Cons
+                                                   ((A ())
+                                                      (Cons
+                                                         ((B ())
+                                                            (Nil ())))))
                                                    (join
-                                                      $Test3.return_81
-                                                      (then $Test3.inner_96
-                                                         (join
-                                                            $Test3.then_102
-                                                            (then $Test3.outer_97
-                                                               (join
-                                                                  $Test3.return_80
-                                                                  (then $Test3.inner_98
-                                                                     (join
-                                                                        $Test3.apply_101
-                                                                        (apply
-                                                                           ($Test3.inner_98)
-                                                                           ($Test3.return_79))
-                                                                        (cut $Test3.outer_97 $Test3.apply_101)))
-                                                                  (invoke Nil $Test3.return_80)))
-                                                            (join
-                                                               $Test3.apply_103
-                                                               (apply
-                                                                  ($Test3.inner_96)
-                                                                  ($Test3.then_102))
-                                                               (cut $Test3.outer_95 $Test3.apply_103))))
-                                                      (invoke B $Test3.return_81)))
+                                                      $Test3.apply_109
+                                                      (apply
+                                                         ("OK")
+                                                         ($Test3.return_77))
+                                                      (invoke malgo_print_string $Test3.apply_109)))
+                                                (#Test3.__5
+                                                   (join
+                                                      $Test3.apply_110
+                                                      (apply
+                                                         ("WRONG")
+                                                         ($Test3.return_77))
+                                                      (invoke malgo_print_string $Test3.apply_110))))
+                                             (cut $Test3.param_69 $Test3.select_111))))
+                                       ($Test3.return_76))
+                                    (join
+                                       $Test3.apply_113
+                                       (apply
+                                          ($Test3.inner_90)
+                                          ($Test3.apply_112))
+                                       (cut $Test3.outer_89 $Test3.apply_113))))
+                              (join
+                                 $Test3.then_108
+                                 (then $Test3.outer_91
+                                    (join
+                                       $Test3.return_82
+                                       (then $Test3.inner_92
+                                          (join
+                                             $Test3.then_106
+                                             (then $Test3.outer_93
                                                 (join
                                                    $Test3.return_79
                                                    (then $Test3.inner_94
@@ -81,51 +92,40 @@
                                                             ($Test3.inner_94)
                                                             ($Test3.return_78))
                                                          (cut $Test3.outer_93 $Test3.apply_105)))
-                                                   (invoke Cons $Test3.then_104))))
-                                          (join
-                                             $Test3.apply_107
-                                             (apply
-                                                ($Test3.inner_92)
-                                                ($Test3.then_106))
-                                             (cut $Test3.outer_91 $Test3.apply_107))))
-                                    (invoke A $Test3.return_82)))
-                              (join
-                                 $Test3.return_78
-                                 (then $Test3.inner_90
-                                    (join
-                                       $Test3.apply_112
-                                       (apply
-                                          ((lambda
-                                             ($Test3.param_69 $Test3.return_77)
+                                                   (join
+                                                      $Test3.then_104
+                                                      (then $Test3.outer_95
+                                                         (join
+                                                            $Test3.return_81
+                                                            (then $Test3.inner_96
+                                                               (join
+                                                                  $Test3.then_102
+                                                                  (then $Test3.outer_97
+                                                                     (join
+                                                                        $Test3.return_80
+                                                                        (then $Test3.inner_98
+                                                                           (join
+                                                                              $Test3.apply_101
+                                                                              (apply
+                                                                                 ($Test3.inner_98)
+                                                                                 ($Test3.return_79))
+                                                                              (cut $Test3.outer_97 $Test3.apply_101)))
+                                                                        (invoke Nil $Test3.return_80)))
+                                                                  (join
+                                                                     $Test3.apply_103
+                                                                     (apply
+                                                                        ($Test3.inner_96)
+                                                                        ($Test3.then_102))
+                                                                     (cut $Test3.outer_95 $Test3.apply_103))))
+                                                            (invoke B $Test3.return_81)))
+                                                      (invoke Cons $Test3.then_104))))
                                              (join
-                                                $Test3.select_111
-                                                (select
-                                                   ((Cons
-                                                      ((A ())
-                                                         (Cons
-                                                            ((B ())
-                                                               (Nil ())))))
-                                                      (join
-                                                         $Test3.apply_109
-                                                         (apply
-                                                            ("OK")
-                                                            ($Test3.return_77))
-                                                         (invoke malgo_print_string $Test3.apply_109)))
-                                                   (#Test3.__5
-                                                      (join
-                                                         $Test3.apply_110
-                                                         (apply
-                                                            ("WRONG")
-                                                            ($Test3.return_77))
-                                                         (invoke malgo_print_string $Test3.apply_110))))
-                                                (cut $Test3.param_69 $Test3.select_111))))
-                                          ($Test3.return_76))
-                                       (join
-                                          $Test3.apply_113
-                                          (apply
-                                             ($Test3.inner_90)
-                                             ($Test3.apply_112))
-                                          (cut $Test3.outer_89 $Test3.apply_113))))
+                                                $Test3.apply_107
+                                                (apply
+                                                   ($Test3.inner_92)
+                                                   ($Test3.then_106))
+                                                (cut $Test3.outer_91 $Test3.apply_107))))
+                                       (invoke A $Test3.return_82)))
                                  (invoke Cons $Test3.then_108))))
                         (invoke |> $Test3.then_114))))
                (cut $Test3.param_68 $Test3.select_115)))

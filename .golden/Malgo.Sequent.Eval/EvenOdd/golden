@@ -6,9 +6,9 @@ Left
                 { srcLocPackage = "malgo-1.0.0-inplace"
                 , srcLocModule = "Malgo.Sequent.Eval"
                 , srcLocFile = "src/Malgo/Sequent/Eval.hs"
-                , srcLocStartLine = 60
+                , srcLocStartLine = 74
                 , srcLocStartCol = 16
-                , srcLocEndLine = 60
+                , srcLocEndLine = 74
                 , srcLocEndCol = 26
                 }
             )
@@ -16,22 +16,22 @@ Left
     , UndefinedVariable
         ( Range
             { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-                , sourceLine = Pos 16
-                , sourceColumn = Pos 39
+                { sourceName = "./runtime/malgo/Builtin.mlg"
+                , sourceLine = Pos 48
+                , sourceColumn = Pos 26
                 }
             , _end = SourcePos
-                { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-                , sourceLine = Pos 16
-                , sourceColumn = Pos 41
+                { sourceName = "./runtime/malgo/Builtin.mlg"
+                , sourceLine = Pos 48
+                , sourceColumn = Pos 44
                 }
             }
         )
         ( Id
-            { name = "return"
+            { name = "malgo_sub_int32_t"
             , moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/EvenOdd.mlg" )
-            , sort = Temporal 66
+                ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+            , sort = External
             }
         )
     )

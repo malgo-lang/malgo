@@ -29,19 +29,19 @@
                                     $Undefined.then_33
                                     (then $Undefined.outer_28
                                        (join
-                                          $Undefined.apply_31
-                                          (apply
-                                             ("OK")
-                                             ($Undefined.return_26))
+                                          $Undefined.return_26
+                                          (then $Undefined.inner_29
+                                             (join
+                                                $Undefined.apply_32
+                                                (apply
+                                                   ($Undefined.inner_29)
+                                                   ($Undefined.return_25))
+                                                (cut $Undefined.outer_28 $Undefined.apply_32)))
                                           (join
-                                             $Undefined.return_26
-                                             (then $Undefined.inner_29
-                                                (join
-                                                   $Undefined.apply_32
-                                                   (apply
-                                                      ($Undefined.inner_29)
-                                                      ($Undefined.return_25))
-                                                   (cut $Undefined.outer_28 $Undefined.apply_32)))
+                                             $Undefined.apply_31
+                                             (apply
+                                                ("OK")
+                                                ($Undefined.return_26))
                                              (invoke String# $Undefined.apply_31))))
                                     (invoke printString $Undefined.then_33)))
                               (join

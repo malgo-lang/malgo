@@ -11,47 +11,29 @@
                      $TestCast.then_57
                      (then $TestCast.outer_35
                         (join
-                           $TestCast.then_55
-                           (then $TestCast.outer_37
+                           $TestCast.return_30
+                           (then $TestCast.inner_36
                               (join
-                                 $TestCast.then_52
-                                 (then $TestCast.outer_39
-                                    (join
-                                       $TestCast.then_49
-                                       (then $TestCast.outer_41
-                                          (join
-                                             $TestCast.then_47
-                                             (then $TestCast.outer_43
-                                                (join
-                                                   $TestCast.apply_45
-                                                   (apply
-                                                      (5_i32)
-                                                      ($TestCast.return_34))
-                                                   (join
-                                                      $TestCast.return_34
-                                                      (then $TestCast.inner_44
-                                                         (join
-                                                            $TestCast.apply_46
-                                                            (apply
-                                                               ($TestCast.inner_44)
-                                                               ($TestCast.return_33))
-                                                            (cut $TestCast.outer_43 $TestCast.apply_46)))
-                                                      (invoke Int32# $TestCast.apply_45))))
-                                             (join
-                                                $TestCast.return_33
-                                                (then $TestCast.inner_42
-                                                   (join
-                                                      $TestCast.apply_48
-                                                      (apply
-                                                         ($TestCast.inner_42)
-                                                         ($TestCast.return_32))
-                                                      (cut $TestCast.outer_41 $TestCast.apply_48)))
-                                                (invoke malgo_unsafe_cast $TestCast.then_47))))
+                                 $TestCast.apply_56
+                                 (apply
+                                    ($TestCast.inner_36)
+                                    ($TestCast.return_29))
+                                 (cut $TestCast.outer_35 $TestCast.apply_56)))
+                           (join
+                              $TestCast.then_55
+                              (then $TestCast.outer_37
+                                 (join
+                                    $TestCast.return_31
+                                    (then $TestCast.inner_38
                                        (join
-                                          $TestCast.apply_50
+                                          $TestCast.apply_54
                                           (apply
-                                             (10_i64)
-                                             ($TestCast.then_49))
+                                             ($TestCast.inner_38)
+                                             ($TestCast.return_30))
+                                          (cut $TestCast.outer_37 $TestCast.apply_54)))
+                                    (join
+                                       $TestCast.then_52
+                                       (then $TestCast.outer_39
                                           (join
                                              $TestCast.return_32
                                              (then $TestCast.inner_40
@@ -61,31 +43,49 @@
                                                       ($TestCast.inner_40)
                                                       ($TestCast.return_31))
                                                    (cut $TestCast.outer_39 $TestCast.apply_51)))
-                                             (invoke malgo_new_vector $TestCast.apply_50)))))
-                                 (join
-                                    $TestCast.apply_53
-                                    (apply
-                                       (2_i64)
-                                       ($TestCast.then_52))
-                                    (join
-                                       $TestCast.return_31
-                                       (then $TestCast.inner_38
-                                          (join
-                                             $TestCast.apply_54
-                                             (apply
-                                                ($TestCast.inner_38)
-                                                ($TestCast.return_30))
-                                             (cut $TestCast.outer_37 $TestCast.apply_54)))
-                                       (invoke malgo_read_vector $TestCast.apply_53)))))
-                           (join
-                              $TestCast.return_30
-                              (then $TestCast.inner_36
-                                 (join
-                                    $TestCast.apply_56
-                                    (apply
-                                       ($TestCast.inner_36)
-                                       ($TestCast.return_29))
-                                    (cut $TestCast.outer_35 $TestCast.apply_56)))
+                                             (join
+                                                $TestCast.then_49
+                                                (then $TestCast.outer_41
+                                                   (join
+                                                      $TestCast.return_33
+                                                      (then $TestCast.inner_42
+                                                         (join
+                                                            $TestCast.apply_48
+                                                            (apply
+                                                               ($TestCast.inner_42)
+                                                               ($TestCast.return_32))
+                                                            (cut $TestCast.outer_41 $TestCast.apply_48)))
+                                                      (join
+                                                         $TestCast.then_47
+                                                         (then $TestCast.outer_43
+                                                            (join
+                                                               $TestCast.return_34
+                                                               (then $TestCast.inner_44
+                                                                  (join
+                                                                     $TestCast.apply_46
+                                                                     (apply
+                                                                        ($TestCast.inner_44)
+                                                                        ($TestCast.return_33))
+                                                                     (cut $TestCast.outer_43 $TestCast.apply_46)))
+                                                               (join
+                                                                  $TestCast.apply_45
+                                                                  (apply
+                                                                     (5_i32)
+                                                                     ($TestCast.return_34))
+                                                                  (invoke Int32# $TestCast.apply_45))))
+                                                         (invoke malgo_unsafe_cast $TestCast.then_47))))
+                                                (join
+                                                   $TestCast.apply_50
+                                                   (apply
+                                                      (10_i64)
+                                                      ($TestCast.then_49))
+                                                   (invoke malgo_new_vector $TestCast.apply_50)))))
+                                       (join
+                                          $TestCast.apply_53
+                                          (apply
+                                             (2_i64)
+                                             ($TestCast.then_52))
+                                          (invoke malgo_read_vector $TestCast.apply_53)))))
                               (invoke malgo_unsafe_cast $TestCast.then_55))))
                      (invoke printInt32 $TestCast.then_57))))
             (cut $TestCast.param_27 $TestCast.select_58)))

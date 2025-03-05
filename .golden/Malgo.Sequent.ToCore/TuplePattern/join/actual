@@ -28,19 +28,19 @@
                                                    $TuplePattern.then_47
                                                    (then $TuplePattern.outer_39
                                                       (join
-                                                         $TuplePattern.apply_45
-                                                         (apply
-                                                            ("A")
-                                                            ($TuplePattern.return_31))
+                                                         $TuplePattern.return_31
+                                                         (then $TuplePattern.inner_40
+                                                            (join
+                                                               $TuplePattern.apply_46
+                                                               (apply
+                                                                  ($TuplePattern.inner_40)
+                                                                  ($TuplePattern.return_30))
+                                                               (cut $TuplePattern.outer_39 $TuplePattern.apply_46)))
                                                          (join
-                                                            $TuplePattern.return_31
-                                                            (then $TuplePattern.inner_40
-                                                               (join
-                                                                  $TuplePattern.apply_46
-                                                                  (apply
-                                                                     ($TuplePattern.inner_40)
-                                                                     ($TuplePattern.return_30))
-                                                                  (cut $TuplePattern.outer_39 $TuplePattern.apply_46)))
+                                                            $TuplePattern.apply_45
+                                                            (apply
+                                                               ("A")
+                                                               ($TuplePattern.return_31))
                                                             (invoke String# $TuplePattern.apply_45))))
                                                    (invoke printString $TuplePattern.then_47)))
                                              ((tuple

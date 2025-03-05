@@ -28,32 +28,32 @@
                               $TestPolySynonym.then_61
                               (then $TestPolySynonym.outer_50
                                  (join
-                                    $TestPolySynonym.apply_57
-                                    (apply
-                                       (#TestPolySynonym.x_7)
-                                       ($TestPolySynonym.return_47))
-                                    (join
-                                       $TestPolySynonym.return_47
-                                       (then $TestPolySynonym.inner_51
-                                          (join
-                                             $TestPolySynonym.then_59
-                                             (then $TestPolySynonym.outer_52
-                                                (join
-                                                   $TestPolySynonym.return_46
-                                                   (then $TestPolySynonym.inner_53
-                                                      (join
-                                                         $TestPolySynonym.apply_58
-                                                         (apply
-                                                            ($TestPolySynonym.inner_53)
-                                                            ($TestPolySynonym.return_45))
-                                                         (cut $TestPolySynonym.outer_52 $TestPolySynonym.apply_58)))
-                                                   (invoke printInt32 $TestPolySynonym.return_46)))
+                                    $TestPolySynonym.return_47
+                                    (then $TestPolySynonym.inner_51
+                                       (join
+                                          $TestPolySynonym.then_59
+                                          (then $TestPolySynonym.outer_52
                                              (join
-                                                $TestPolySynonym.apply_60
-                                                (apply
-                                                   ($TestPolySynonym.inner_51)
-                                                   ($TestPolySynonym.then_59))
-                                                (cut $TestPolySynonym.outer_50 $TestPolySynonym.apply_60))))
+                                                $TestPolySynonym.return_46
+                                                (then $TestPolySynonym.inner_53
+                                                   (join
+                                                      $TestPolySynonym.apply_58
+                                                      (apply
+                                                         ($TestPolySynonym.inner_53)
+                                                         ($TestPolySynonym.return_45))
+                                                      (cut $TestPolySynonym.outer_52 $TestPolySynonym.apply_58)))
+                                                (invoke printInt32 $TestPolySynonym.return_46)))
+                                          (join
+                                             $TestPolySynonym.apply_60
+                                             (apply
+                                                ($TestPolySynonym.inner_51)
+                                                ($TestPolySynonym.then_59))
+                                             (cut $TestPolySynonym.outer_50 $TestPolySynonym.apply_60))))
+                                    (join
+                                       $TestPolySynonym.apply_57
+                                       (apply
+                                          (#TestPolySynonym.x_7)
+                                          ($TestPolySynonym.return_47))
                                        (invoke first $TestPolySynonym.apply_57))))
                               (invoke |> $TestPolySynonym.then_61)))
                         (cut

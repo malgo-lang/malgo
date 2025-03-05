@@ -11,13 +11,17 @@
                      $Double.then_22
                      (then $Double.outer_14
                         (join
-                           $Double.then_20
-                           (then $Double.outer_16
+                           $Double.return_12
+                           (then $Double.inner_15
                               (join
-                                 $Double.apply_18
+                                 $Double.apply_21
                                  (apply
-                                    (3.14_f64)
-                                    ($Double.return_13))
+                                    ($Double.inner_15)
+                                    ($Double.return_11))
+                                 (cut $Double.outer_14 $Double.apply_21)))
+                           (join
+                              $Double.then_20
+                              (then $Double.outer_16
                                  (join
                                     $Double.return_13
                                     (then $Double.inner_17
@@ -27,16 +31,12 @@
                                              ($Double.inner_17)
                                              ($Double.return_12))
                                           (cut $Double.outer_16 $Double.apply_19)))
-                                    (invoke Double# $Double.apply_18))))
-                           (join
-                              $Double.return_12
-                              (then $Double.inner_15
-                                 (join
-                                    $Double.apply_21
-                                    (apply
-                                       ($Double.inner_15)
-                                       ($Double.return_11))
-                                    (cut $Double.outer_14 $Double.apply_21)))
+                                    (join
+                                       $Double.apply_18
+                                       (apply
+                                          (3.14_f64)
+                                          ($Double.return_13))
+                                       (invoke Double# $Double.apply_18))))
                               (invoke toStringDouble $Double.then_20))))
                      (invoke putStr $Double.then_22))))
             (cut $Double.param_9 $Double.select_23)))

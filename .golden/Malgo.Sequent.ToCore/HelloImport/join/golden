@@ -11,13 +11,17 @@
                      $HelloImport.then_48
                      (then $HelloImport.outer_33
                         (join
-                           $HelloImport.then_46
-                           (then $HelloImport.outer_35
+                           $HelloImport.return_23
+                           (then $HelloImport.inner_34
                               (join
-                                 $HelloImport.apply_44
+                                 $HelloImport.apply_47
                                  (apply
-                                    ("hello")
-                                    ($HelloImport.return_24))
+                                    ($HelloImport.inner_34)
+                                    ($HelloImport.return_22))
+                                 (cut $HelloImport.outer_33 $HelloImport.apply_47)))
+                           (join
+                              $HelloImport.then_46
+                              (then $HelloImport.outer_35
                                  (join
                                     $HelloImport.return_24
                                     (then $HelloImport.inner_36
@@ -27,16 +31,12 @@
                                              ($HelloImport.inner_36)
                                              ($HelloImport.return_23))
                                           (cut $HelloImport.outer_35 $HelloImport.apply_45)))
-                                    (invoke String# $HelloImport.apply_44))))
-                           (join
-                              $HelloImport.return_23
-                              (then $HelloImport.inner_34
-                                 (join
-                                    $HelloImport.apply_47
-                                    (apply
-                                       ($HelloImport.inner_34)
-                                       ($HelloImport.return_22))
-                                    (cut $HelloImport.outer_33 $HelloImport.apply_47)))
+                                    (join
+                                       $HelloImport.apply_44
+                                       (apply
+                                          ("hello")
+                                          ($HelloImport.return_24))
+                                       (invoke String# $HelloImport.apply_44))))
                               (invoke putStr $HelloImport.then_46))))
                      (cut
                         (lambda
@@ -60,19 +60,19 @@
                                                             $HelloImport.then_39
                                                             (then $HelloImport.outer_31
                                                                (join
-                                                                  $HelloImport.apply_37
-                                                                  (apply
-                                                                     (" world")
-                                                                     ($HelloImport.return_27))
+                                                                  $HelloImport.return_27
+                                                                  (then $HelloImport.inner_32
+                                                                     (join
+                                                                        $HelloImport.apply_38
+                                                                        (apply
+                                                                           ($HelloImport.inner_32)
+                                                                           ($HelloImport.return_26))
+                                                                        (cut $HelloImport.outer_31 $HelloImport.apply_38)))
                                                                   (join
-                                                                     $HelloImport.return_27
-                                                                     (then $HelloImport.inner_32
-                                                                        (join
-                                                                           $HelloImport.apply_38
-                                                                           (apply
-                                                                              ($HelloImport.inner_32)
-                                                                              ($HelloImport.return_26))
-                                                                           (cut $HelloImport.outer_31 $HelloImport.apply_38)))
+                                                                     $HelloImport.apply_37
+                                                                     (apply
+                                                                        (" world")
+                                                                        ($HelloImport.return_27))
                                                                      (invoke String# $HelloImport.apply_37))))
                                                             (cut #HelloImport.f_0 $HelloImport.then_39))))
                                                    (cut $HelloImport.param_20 $HelloImport.select_40))))

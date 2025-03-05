@@ -25,27 +25,27 @@
                         $Test2.then_47
                         (then $Test2.outer_36
                            (join
-                              $Test2.then_45
-                              (then $Test2.outer_38
+                              $Test2.return_30
+                              (then $Test2.inner_37
                                  (join
-                                    $Test2.return_31
-                                    (then $Test2.inner_39
-                                       (join
-                                          $Test2.apply_44
-                                          (apply
-                                             ($Test2.inner_39)
-                                             ($Test2.return_30))
-                                          (cut $Test2.outer_38 $Test2.apply_44)))
-                                    (invoke R $Test2.return_31)))
+                                    $Test2.apply_46
+                                    (apply
+                                       ($Test2.inner_37)
+                                       ($Test2.return_29))
+                                    (cut $Test2.outer_36 $Test2.apply_46)))
                               (join
-                                 $Test2.return_30
-                                 (then $Test2.inner_37
+                                 $Test2.then_45
+                                 (then $Test2.outer_38
                                     (join
-                                       $Test2.apply_46
-                                       (apply
-                                          ($Test2.inner_37)
-                                          ($Test2.return_29))
-                                       (cut $Test2.outer_36 $Test2.apply_46)))
+                                       $Test2.return_31
+                                       (then $Test2.inner_39
+                                          (join
+                                             $Test2.apply_44
+                                             (apply
+                                                ($Test2.inner_39)
+                                                ($Test2.return_30))
+                                             (cut $Test2.outer_38 $Test2.apply_44)))
+                                       (invoke R $Test2.return_31)))
                                  (invoke rtob $Test2.then_45))))
                         (cut
                            (lambda

@@ -11,13 +11,17 @@
                      $TypeAnnotation.then_28
                      (then $TypeAnnotation.outer_19
                         (join
-                           $TypeAnnotation.then_26
-                           (then $TypeAnnotation.outer_21
+                           $TypeAnnotation.return_16
+                           (then $TypeAnnotation.inner_20
                               (join
-                                 $TypeAnnotation.apply_24
+                                 $TypeAnnotation.apply_27
                                  (apply
-                                    ("hoge")
-                                    ($TypeAnnotation.return_17))
+                                    ($TypeAnnotation.inner_20)
+                                    ($TypeAnnotation.return_15))
+                                 (cut $TypeAnnotation.outer_19 $TypeAnnotation.apply_27)))
+                           (join
+                              $TypeAnnotation.then_26
+                              (then $TypeAnnotation.outer_21
                                  (join
                                     $TypeAnnotation.return_17
                                     (then $TypeAnnotation.inner_22
@@ -27,16 +31,12 @@
                                              ($TypeAnnotation.inner_22)
                                              ($TypeAnnotation.return_16))
                                           (cut $TypeAnnotation.outer_21 $TypeAnnotation.apply_25)))
-                                    (invoke String# $TypeAnnotation.apply_24))))
-                           (join
-                              $TypeAnnotation.return_16
-                              (then $TypeAnnotation.inner_20
-                                 (join
-                                    $TypeAnnotation.apply_27
-                                    (apply
-                                       ($TypeAnnotation.inner_20)
-                                       ($TypeAnnotation.return_15))
-                                    (cut $TypeAnnotation.outer_19 $TypeAnnotation.apply_27)))
+                                    (join
+                                       $TypeAnnotation.apply_24
+                                       (apply
+                                          ("hoge")
+                                          ($TypeAnnotation.return_17))
+                                       (invoke String# $TypeAnnotation.apply_24))))
                               (cut
                                  (lambda
                                     ($TypeAnnotation.param_13 $TypeAnnotation.return_18)

@@ -29,19 +29,19 @@
                         $HelloBoxed.then_46
                         (then $HelloBoxed.outer_37
                            (join
-                              $HelloBoxed.apply_44
-                              (apply
-                                 (#HelloBoxed.str_0)
-                                 ($HelloBoxed.return_30))
+                              $HelloBoxed.return_30
+                              (then $HelloBoxed.inner_38
+                                 (join
+                                    $HelloBoxed.apply_45
+                                    (apply
+                                       ($HelloBoxed.inner_38)
+                                       ($HelloBoxed.return_29))
+                                    (cut $HelloBoxed.outer_37 $HelloBoxed.apply_45)))
                               (join
-                                 $HelloBoxed.return_30
-                                 (then $HelloBoxed.inner_38
-                                    (join
-                                       $HelloBoxed.apply_45
-                                       (apply
-                                          ($HelloBoxed.inner_38)
-                                          ($HelloBoxed.return_29))
-                                       (cut $HelloBoxed.outer_37 $HelloBoxed.apply_45)))
+                                 $HelloBoxed.apply_44
+                                 (apply
+                                    (#HelloBoxed.str_0)
+                                    ($HelloBoxed.return_30))
                                  (invoke malgo_print_string $HelloBoxed.apply_44))))
                         (cut
                            (lambda
@@ -68,19 +68,19 @@
                         $HelloBoxed.then_50
                         (then $HelloBoxed.outer_39
                            (join
-                              $HelloBoxed.apply_48
-                              (apply
-                                 ("Hello, world")
-                                 ($HelloBoxed.return_34))
+                              $HelloBoxed.return_34
+                              (then $HelloBoxed.inner_40
+                                 (join
+                                    $HelloBoxed.apply_49
+                                    (apply
+                                       ($HelloBoxed.inner_40)
+                                       ($HelloBoxed.return_33))
+                                    (cut $HelloBoxed.outer_39 $HelloBoxed.apply_49)))
                               (join
-                                 $HelloBoxed.return_34
-                                 (then $HelloBoxed.inner_40
-                                    (join
-                                       $HelloBoxed.apply_49
-                                       (apply
-                                          ($HelloBoxed.inner_40)
-                                          ($HelloBoxed.return_33))
-                                       (cut $HelloBoxed.outer_39 $HelloBoxed.apply_49)))
+                                 $HelloBoxed.apply_48
+                                 (apply
+                                    ("Hello, world")
+                                    ($HelloBoxed.return_34))
                                  (invoke String# $HelloBoxed.apply_48))))
                         (invoke putStrLn $HelloBoxed.then_50))))
                (cut $HelloBoxed.param_24 $HelloBoxed.select_51)))

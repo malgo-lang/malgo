@@ -11,19 +11,19 @@
                      $Echo.then_17
                      (then $Echo.outer_13
                         (join
-                           $Echo.apply_15
-                           (apply
-                              ((construct tuple () ()))
-                              ($Echo.return_12))
+                           $Echo.return_12
+                           (then $Echo.inner_14
+                              (join
+                                 $Echo.apply_16
+                                 (apply
+                                    ($Echo.inner_14)
+                                    ($Echo.return_11))
+                                 (cut $Echo.outer_13 $Echo.apply_16)))
                            (join
-                              $Echo.return_12
-                              (then $Echo.inner_14
-                                 (join
-                                    $Echo.apply_16
-                                    (apply
-                                       ($Echo.inner_14)
-                                       ($Echo.return_11))
-                                    (cut $Echo.outer_13 $Echo.apply_16)))
+                              $Echo.apply_15
+                              (apply
+                                 ((construct tuple () ()))
+                                 ($Echo.return_12))
                               (invoke getContents $Echo.apply_15))))
                      (invoke putStr $Echo.then_17))))
             (cut $Echo.param_9 $Echo.select_18)))
