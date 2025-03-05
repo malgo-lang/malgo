@@ -67,7 +67,6 @@ setupPrelude = do
     saveCore refined.moduleName program
     getModulePath refined.moduleName
 
-
 driveEval :: ArtifactPath -> ArtifactPath -> FilePath -> IO String
 driveEval builtinName preludeName srcPath = do
   src <- convertString <$> BS.readFile srcPath
@@ -86,7 +85,9 @@ driveEval builtinName preludeName srcPath = do
     Program prelude <- load preludeName ".sqt"
 
     result <- runError @EvalError $ runReader refined.moduleName $ evalProgram $ Program (builtin <> prelude <> program)
-    pure $ convertString $ pShowNoColor result
+    case result of
+      Left (_, err) -> pure $ convertString $ pShowNoColor err -- TODO: throw error instead of returning string
+      Right result -> pure $ convertString $ pShowNoColor result
 
 saveCore :: (Workspace :> es, IOE :> es) => ModuleName -> Program Join -> Eff es ()
 saveCore moduleName program = do

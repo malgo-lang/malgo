@@ -1,37 +1,21 @@
-Left
-    (
-        [
-            ( "throwError"
-            , SrcLoc
-                { srcLocPackage = "malgo-1.0.0-inplace"
-                , srcLocModule = "Malgo.Sequent.Eval"
-                , srcLocFile = "src/Malgo/Sequent/Eval.hs"
-                , srcLocStartLine = 74
-                , srcLocStartCol = 16
-                , srcLocEndLine = 74
-                , srcLocEndCol = 26
-                }
-            )
-        ]
-    , UndefinedVariable
-        ( Range
-            { _start = SourcePos
-                { sourceName = "./runtime/malgo/Builtin.mlg"
-                , sourceLine = Pos 199
-                , sourceColumn = Pos 25
-                }
-            , _end = SourcePos
-                { sourceName = "./runtime/malgo/Builtin.mlg"
-                , sourceLine = Pos 199
-                , sourceColumn = Pos 42
-                }
+UndefinedVariable
+    ( Range
+        { _start = SourcePos
+            { sourceName = "./runtime/malgo/Builtin.mlg"
+            , sourceLine = Pos 199
+            , sourceColumn = Pos 25
             }
-        )
-        ( Id
-            { name = "malgo_eq_int64_t"
-            , moduleName = Artifact
-                ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-            , sort = External
+        , _end = SourcePos
+            { sourceName = "./runtime/malgo/Builtin.mlg"
+            , sourceLine = Pos 199
+            , sourceColumn = Pos 42
             }
-        )
+        }
+    )
+    ( Id
+        { name = "malgo_eq_int64_t"
+        , moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+        , sort = External
+        }
     )

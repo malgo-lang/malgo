@@ -1,37 +1,21 @@
-Left
-    (
-        [
-            ( "throwError"
-            , SrcLoc
-                { srcLocPackage = "malgo-1.0.0-inplace"
-                , srcLocModule = "Malgo.Sequent.Eval"
-                , srcLocFile = "src/Malgo/Sequent/Eval.hs"
-                , srcLocStartLine = 74
-                , srcLocStartCol = 16
-                , srcLocEndLine = 74
-                , srcLocEndCol = 26
-                }
-            )
-        ]
-    , UndefinedVariable
-        ( Range
-            { _start = SourcePos
-                { sourceName = "./runtime/malgo/Builtin.mlg"
-                , sourceLine = Pos 114
-                , sourceColumn = Pos 27
-                }
-            , _end = SourcePos
-                { sourceName = "./runtime/malgo/Builtin.mlg"
-                , sourceLine = Pos 114
-                , sourceColumn = Pos 44
-                }
+UndefinedVariable
+    ( Range
+        { _start = SourcePos
+            { sourceName = "./runtime/malgo/Builtin.mlg"
+            , sourceLine = Pos 114
+            , sourceColumn = Pos 27
             }
-        )
-        ( Id
-            { name = "malgo_add_double"
-            , moduleName = Artifact
-                ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-            , sort = External
+        , _end = SourcePos
+            { sourceName = "./runtime/malgo/Builtin.mlg"
+            , sourceLine = Pos 114
+            , sourceColumn = Pos 44
             }
-        )
+        }
+    )
+    ( Id
+        { name = "malgo_add_double"
+        , moduleName = Artifact
+            ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+        , sort = External
+        }
     )
