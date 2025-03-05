@@ -20,4 +20,20 @@
                            (invoke malgo_unsafe_cast)
                            ((apply
                               (invoke Int32#)
-                              (5_i32))))))))))))))))))
+                              (5_i32)))))))))))))))))
+   (malgo_new_vector
+      (lambda
+         ($TestCast.primitive_28)
+         (lambda
+            ($TestCast.primitive_29)
+            (primitive
+               malgo_new_vector
+               ($TestCast.primitive_28 $TestCast.primitive_29)))))
+   (malgo_read_vector
+      (lambda
+         ($TestCast.primitive_30)
+         (lambda
+            ($TestCast.primitive_31)
+            (primitive
+               malgo_read_vector
+               ($TestCast.primitive_30 $TestCast.primitive_31))))))

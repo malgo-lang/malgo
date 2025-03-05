@@ -6,6 +6,7 @@ import Effectful
 import Effectful.Reader.Static (Reader)
 import Effectful.State.Static.Local (State)
 import Malgo.Id
+import Malgo.Infer.TypeRep qualified as R
 import Malgo.Module
 import Malgo.MonadUniq
 import Malgo.Prelude
@@ -17,7 +18,8 @@ toFun :: (State Uniq :> es, Reader ModuleName :> es) => XModule (Malgo 'Refine) 
 toFun BindGroup {..} = do
   scDefs <- foldMap (traverse convert) _scDefs
   dataDefs <- concat <$> traverse convert _dataDefs
-  pure $ Program $ scDefs <> dataDefs
+  foreigns <- traverse convert _foreigns
+  pure $ Program $ scDefs <> dataDefs <> foreigns
 
 class Convert a b where
   convert :: a -> b
@@ -37,6 +39,19 @@ instance (State Uniq :> es, Reader ModuleName :> es) => Convert (Range, Id, [Typ
     parameters <- replicateM arity $ newTemporalId "constructor"
     let lambda = foldr (\parameter -> F.Lambda range [parameter]) (F.Construct range (F.Tag $ name.name) (F.Var range <$> parameters)) parameters
     pure (range, name, lambda)
+
+instance (State Uniq :> es, Reader ModuleName :> es) => Convert (Typed (Range, Text), Id, Type (Malgo Refine)) (Eff es (Range, Name, F.Expr)) where
+  convert (Typed {annotated = typ, value = (range, _)}, name, _) = do
+    case typ of
+      R.TyArr {} -> do
+        let arity = aux typ
+        parameters <- replicateM arity $ newTemporalId "primitive"
+        let primitive = foldr (\parameter -> F.Lambda range [parameter]) (F.Primitive range name.name $ map (F.Var range) parameters) parameters
+        pure (range, name, primitive)
+      _ -> error "invalid type"
+    where
+      aux (R.TyArr _ t) = 1 + aux t
+      aux _ = 0
 
 instance (State Uniq :> es, Reader ModuleName :> es) => Convert (S.Expr (Malgo 'Refine)) (Eff es F.Expr) where
   convert (S.Var Typed {value = range} name) | idIsExternal name = pure $ F.Invoke range name

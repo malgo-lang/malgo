@@ -32,4 +32,16 @@
          (lambda
             ($DataDef.constructor_22)
             (Cons
-               ($DataDef.constructor_21 $DataDef.constructor_22))))))
+               ($DataDef.constructor_21 $DataDef.constructor_22)))))
+   (malgo_int64_t_to_string
+      (lambda
+         ($DataDef.primitive_23)
+         (primitive
+            malgo_int64_t_to_string
+            ($DataDef.primitive_23))))
+   (malgo_print_string
+      (lambda
+         ($DataDef.primitive_24)
+         (primitive
+            malgo_print_string
+            ($DataDef.primitive_24)))))

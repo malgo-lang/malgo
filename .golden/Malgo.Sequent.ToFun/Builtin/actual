@@ -2447,4 +2447,586 @@
    (False
       (False ()))
    (True
-      (True ())))
+      (True ()))
+   (malgo_panic
+      (lambda
+         ($Builtin.primitive_2068)
+         (primitive
+            malgo_panic
+            ($Builtin.primitive_2068))))
+   (malgo_unsafe_cast
+      (lambda
+         ($Builtin.primitive_2069)
+         (primitive
+            malgo_unsafe_cast
+            ($Builtin.primitive_2069))))
+   (malgo_add_int32_t
+      (lambda
+         ($Builtin.primitive_2070)
+         (lambda
+            ($Builtin.primitive_2071)
+            (primitive
+               malgo_add_int32_t
+               ($Builtin.primitive_2070 $Builtin.primitive_2071)))))
+   (malgo_sub_int32_t
+      (lambda
+         ($Builtin.primitive_2072)
+         (lambda
+            ($Builtin.primitive_2073)
+            (primitive
+               malgo_sub_int32_t
+               ($Builtin.primitive_2072 $Builtin.primitive_2073)))))
+   (malgo_mul_int32_t
+      (lambda
+         ($Builtin.primitive_2074)
+         (lambda
+            ($Builtin.primitive_2075)
+            (primitive
+               malgo_mul_int32_t
+               ($Builtin.primitive_2074 $Builtin.primitive_2075)))))
+   (malgo_div_int32_t
+      (lambda
+         ($Builtin.primitive_2076)
+         (lambda
+            ($Builtin.primitive_2077)
+            (primitive
+               malgo_div_int32_t
+               ($Builtin.primitive_2076 $Builtin.primitive_2077)))))
+   (malgo_add_int64_t
+      (lambda
+         ($Builtin.primitive_2078)
+         (lambda
+            ($Builtin.primitive_2079)
+            (primitive
+               malgo_add_int64_t
+               ($Builtin.primitive_2078 $Builtin.primitive_2079)))))
+   (malgo_sub_int64_t
+      (lambda
+         ($Builtin.primitive_2080)
+         (lambda
+            ($Builtin.primitive_2081)
+            (primitive
+               malgo_sub_int64_t
+               ($Builtin.primitive_2080 $Builtin.primitive_2081)))))
+   (malgo_mul_int64_t
+      (lambda
+         ($Builtin.primitive_2082)
+         (lambda
+            ($Builtin.primitive_2083)
+            (primitive
+               malgo_mul_int64_t
+               ($Builtin.primitive_2082 $Builtin.primitive_2083)))))
+   (malgo_div_int64_t
+      (lambda
+         ($Builtin.primitive_2084)
+         (lambda
+            ($Builtin.primitive_2085)
+            (primitive
+               malgo_div_int64_t
+               ($Builtin.primitive_2084 $Builtin.primitive_2085)))))
+   (malgo_add_float
+      (lambda
+         ($Builtin.primitive_2086)
+         (lambda
+            ($Builtin.primitive_2087)
+            (primitive
+               malgo_add_float
+               ($Builtin.primitive_2086 $Builtin.primitive_2087)))))
+   (malgo_sub_float
+      (lambda
+         ($Builtin.primitive_2088)
+         (lambda
+            ($Builtin.primitive_2089)
+            (primitive
+               malgo_sub_float
+               ($Builtin.primitive_2088 $Builtin.primitive_2089)))))
+   (malgo_mul_float
+      (lambda
+         ($Builtin.primitive_2090)
+         (lambda
+            ($Builtin.primitive_2091)
+            (primitive
+               malgo_mul_float
+               ($Builtin.primitive_2090 $Builtin.primitive_2091)))))
+   (malgo_div_float
+      (lambda
+         ($Builtin.primitive_2092)
+         (lambda
+            ($Builtin.primitive_2093)
+            (primitive
+               malgo_div_float
+               ($Builtin.primitive_2092 $Builtin.primitive_2093)))))
+   (malgo_add_double
+      (lambda
+         ($Builtin.primitive_2094)
+         (lambda
+            ($Builtin.primitive_2095)
+            (primitive
+               malgo_add_double
+               ($Builtin.primitive_2094 $Builtin.primitive_2095)))))
+   (malgo_sub_double
+      (lambda
+         ($Builtin.primitive_2096)
+         (lambda
+            ($Builtin.primitive_2097)
+            (primitive
+               malgo_sub_double
+               ($Builtin.primitive_2096 $Builtin.primitive_2097)))))
+   (malgo_mul_double
+      (lambda
+         ($Builtin.primitive_2098)
+         (lambda
+            ($Builtin.primitive_2099)
+            (primitive
+               malgo_mul_double
+               ($Builtin.primitive_2098 $Builtin.primitive_2099)))))
+   (malgo_div_double
+      (lambda
+         ($Builtin.primitive_2100)
+         (lambda
+            ($Builtin.primitive_2101)
+            (primitive
+               malgo_div_double
+               ($Builtin.primitive_2100 $Builtin.primitive_2101)))))
+   (sqrtf
+      (lambda
+         ($Builtin.primitive_2102)
+         (primitive
+            sqrtf
+            ($Builtin.primitive_2102))))
+   (sqrt
+      (lambda
+         ($Builtin.primitive_2103)
+         (primitive
+            sqrt
+            ($Builtin.primitive_2103))))
+   (malgo_eq_int32_t
+      (lambda
+         ($Builtin.primitive_2104)
+         (lambda
+            ($Builtin.primitive_2105)
+            (primitive
+               malgo_eq_int32_t
+               ($Builtin.primitive_2104 $Builtin.primitive_2105)))))
+   (malgo_ne_int32_t
+      (lambda
+         ($Builtin.primitive_2106)
+         (lambda
+            ($Builtin.primitive_2107)
+            (primitive
+               malgo_ne_int32_t
+               ($Builtin.primitive_2106 $Builtin.primitive_2107)))))
+   (malgo_lt_int32_t
+      (lambda
+         ($Builtin.primitive_2108)
+         (lambda
+            ($Builtin.primitive_2109)
+            (primitive
+               malgo_lt_int32_t
+               ($Builtin.primitive_2108 $Builtin.primitive_2109)))))
+   (malgo_gt_int32_t
+      (lambda
+         ($Builtin.primitive_2110)
+         (lambda
+            ($Builtin.primitive_2111)
+            (primitive
+               malgo_gt_int32_t
+               ($Builtin.primitive_2110 $Builtin.primitive_2111)))))
+   (malgo_le_int32_t
+      (lambda
+         ($Builtin.primitive_2112)
+         (lambda
+            ($Builtin.primitive_2113)
+            (primitive
+               malgo_le_int32_t
+               ($Builtin.primitive_2112 $Builtin.primitive_2113)))))
+   (malgo_ge_int32_t
+      (lambda
+         ($Builtin.primitive_2114)
+         (lambda
+            ($Builtin.primitive_2115)
+            (primitive
+               malgo_ge_int32_t
+               ($Builtin.primitive_2114 $Builtin.primitive_2115)))))
+   (malgo_eq_int64_t
+      (lambda
+         ($Builtin.primitive_2116)
+         (lambda
+            ($Builtin.primitive_2117)
+            (primitive
+               malgo_eq_int64_t
+               ($Builtin.primitive_2116 $Builtin.primitive_2117)))))
+   (malgo_ne_int64_t
+      (lambda
+         ($Builtin.primitive_2118)
+         (lambda
+            ($Builtin.primitive_2119)
+            (primitive
+               malgo_ne_int64_t
+               ($Builtin.primitive_2118 $Builtin.primitive_2119)))))
+   (malgo_lt_int64_t
+      (lambda
+         ($Builtin.primitive_2120)
+         (lambda
+            ($Builtin.primitive_2121)
+            (primitive
+               malgo_lt_int64_t
+               ($Builtin.primitive_2120 $Builtin.primitive_2121)))))
+   (malgo_gt_int64_t
+      (lambda
+         ($Builtin.primitive_2122)
+         (lambda
+            ($Builtin.primitive_2123)
+            (primitive
+               malgo_gt_int64_t
+               ($Builtin.primitive_2122 $Builtin.primitive_2123)))))
+   (malgo_le_int64_t
+      (lambda
+         ($Builtin.primitive_2124)
+         (lambda
+            ($Builtin.primitive_2125)
+            (primitive
+               malgo_le_int64_t
+               ($Builtin.primitive_2124 $Builtin.primitive_2125)))))
+   (malgo_ge_int64_t
+      (lambda
+         ($Builtin.primitive_2126)
+         (lambda
+            ($Builtin.primitive_2127)
+            (primitive
+               malgo_ge_int64_t
+               ($Builtin.primitive_2126 $Builtin.primitive_2127)))))
+   (malgo_eq_float
+      (lambda
+         ($Builtin.primitive_2128)
+         (lambda
+            ($Builtin.primitive_2129)
+            (primitive
+               malgo_eq_float
+               ($Builtin.primitive_2128 $Builtin.primitive_2129)))))
+   (malgo_ne_float
+      (lambda
+         ($Builtin.primitive_2130)
+         (lambda
+            ($Builtin.primitive_2131)
+            (primitive
+               malgo_ne_float
+               ($Builtin.primitive_2130 $Builtin.primitive_2131)))))
+   (malgo_lt_float
+      (lambda
+         ($Builtin.primitive_2132)
+         (lambda
+            ($Builtin.primitive_2133)
+            (primitive
+               malgo_lt_float
+               ($Builtin.primitive_2132 $Builtin.primitive_2133)))))
+   (malgo_gt_float
+      (lambda
+         ($Builtin.primitive_2134)
+         (lambda
+            ($Builtin.primitive_2135)
+            (primitive
+               malgo_gt_float
+               ($Builtin.primitive_2134 $Builtin.primitive_2135)))))
+   (malgo_le_float
+      (lambda
+         ($Builtin.primitive_2136)
+         (lambda
+            ($Builtin.primitive_2137)
+            (primitive
+               malgo_le_float
+               ($Builtin.primitive_2136 $Builtin.primitive_2137)))))
+   (malgo_ge_float
+      (lambda
+         ($Builtin.primitive_2138)
+         (lambda
+            ($Builtin.primitive_2139)
+            (primitive
+               malgo_ge_float
+               ($Builtin.primitive_2138 $Builtin.primitive_2139)))))
+   (malgo_eq_double
+      (lambda
+         ($Builtin.primitive_2140)
+         (lambda
+            ($Builtin.primitive_2141)
+            (primitive
+               malgo_eq_double
+               ($Builtin.primitive_2140 $Builtin.primitive_2141)))))
+   (malgo_ne_double
+      (lambda
+         ($Builtin.primitive_2142)
+         (lambda
+            ($Builtin.primitive_2143)
+            (primitive
+               malgo_ne_double
+               ($Builtin.primitive_2142 $Builtin.primitive_2143)))))
+   (malgo_lt_double
+      (lambda
+         ($Builtin.primitive_2144)
+         (lambda
+            ($Builtin.primitive_2145)
+            (primitive
+               malgo_lt_double
+               ($Builtin.primitive_2144 $Builtin.primitive_2145)))))
+   (malgo_gt_double
+      (lambda
+         ($Builtin.primitive_2146)
+         (lambda
+            ($Builtin.primitive_2147)
+            (primitive
+               malgo_gt_double
+               ($Builtin.primitive_2146 $Builtin.primitive_2147)))))
+   (malgo_le_double
+      (lambda
+         ($Builtin.primitive_2148)
+         (lambda
+            ($Builtin.primitive_2149)
+            (primitive
+               malgo_le_double
+               ($Builtin.primitive_2148 $Builtin.primitive_2149)))))
+   (malgo_ge_double
+      (lambda
+         ($Builtin.primitive_2150)
+         (lambda
+            ($Builtin.primitive_2151)
+            (primitive
+               malgo_ge_double
+               ($Builtin.primitive_2150 $Builtin.primitive_2151)))))
+   (malgo_eq_char
+      (lambda
+         ($Builtin.primitive_2152)
+         (lambda
+            ($Builtin.primitive_2153)
+            (primitive
+               malgo_eq_char
+               ($Builtin.primitive_2152 $Builtin.primitive_2153)))))
+   (malgo_ne_char
+      (lambda
+         ($Builtin.primitive_2154)
+         (lambda
+            ($Builtin.primitive_2155)
+            (primitive
+               malgo_ne_char
+               ($Builtin.primitive_2154 $Builtin.primitive_2155)))))
+   (malgo_lt_char
+      (lambda
+         ($Builtin.primitive_2156)
+         (lambda
+            ($Builtin.primitive_2157)
+            (primitive
+               malgo_lt_char
+               ($Builtin.primitive_2156 $Builtin.primitive_2157)))))
+   (malgo_gt_char
+      (lambda
+         ($Builtin.primitive_2158)
+         (lambda
+            ($Builtin.primitive_2159)
+            (primitive
+               malgo_gt_char
+               ($Builtin.primitive_2158 $Builtin.primitive_2159)))))
+   (malgo_le_char
+      (lambda
+         ($Builtin.primitive_2160)
+         (lambda
+            ($Builtin.primitive_2161)
+            (primitive
+               malgo_le_char
+               ($Builtin.primitive_2160 $Builtin.primitive_2161)))))
+   (malgo_ge_char
+      (lambda
+         ($Builtin.primitive_2162)
+         (lambda
+            ($Builtin.primitive_2163)
+            (primitive
+               malgo_ge_char
+               ($Builtin.primitive_2162 $Builtin.primitive_2163)))))
+   (malgo_eq_string
+      (lambda
+         ($Builtin.primitive_2164)
+         (lambda
+            ($Builtin.primitive_2165)
+            (primitive
+               malgo_eq_string
+               ($Builtin.primitive_2164 $Builtin.primitive_2165)))))
+   (malgo_ne_string
+      (lambda
+         ($Builtin.primitive_2166)
+         (lambda
+            ($Builtin.primitive_2167)
+            (primitive
+               malgo_ne_string
+               ($Builtin.primitive_2166 $Builtin.primitive_2167)))))
+   (malgo_lt_string
+      (lambda
+         ($Builtin.primitive_2168)
+         (lambda
+            ($Builtin.primitive_2169)
+            (primitive
+               malgo_lt_string
+               ($Builtin.primitive_2168 $Builtin.primitive_2169)))))
+   (malgo_gt_string
+      (lambda
+         ($Builtin.primitive_2170)
+         (lambda
+            ($Builtin.primitive_2171)
+            (primitive
+               malgo_gt_string
+               ($Builtin.primitive_2170 $Builtin.primitive_2171)))))
+   (malgo_le_string
+      (lambda
+         ($Builtin.primitive_2172)
+         (lambda
+            ($Builtin.primitive_2173)
+            (primitive
+               malgo_le_string
+               ($Builtin.primitive_2172 $Builtin.primitive_2173)))))
+   (malgo_ge_string
+      (lambda
+         ($Builtin.primitive_2174)
+         (lambda
+            ($Builtin.primitive_2175)
+            (primitive
+               malgo_ge_string
+               ($Builtin.primitive_2174 $Builtin.primitive_2175)))))
+   (malgo_char_ord
+      (lambda
+         ($Builtin.primitive_2176)
+         (primitive
+            malgo_char_ord
+            ($Builtin.primitive_2176))))
+   (malgo_is_digit
+      (lambda
+         ($Builtin.primitive_2177)
+         (primitive
+            malgo_is_digit
+            ($Builtin.primitive_2177))))
+   (malgo_is_lower
+      (lambda
+         ($Builtin.primitive_2178)
+         (primitive
+            malgo_is_lower
+            ($Builtin.primitive_2178))))
+   (malgo_is_upper
+      (lambda
+         ($Builtin.primitive_2179)
+         (primitive
+            malgo_is_upper
+            ($Builtin.primitive_2179))))
+   (malgo_is_alphanum
+      (lambda
+         ($Builtin.primitive_2180)
+         (primitive
+            malgo_is_alphanum
+            ($Builtin.primitive_2180))))
+   (malgo_string_length
+      (lambda
+         ($Builtin.primitive_2181)
+         (primitive
+            malgo_string_length
+            ($Builtin.primitive_2181))))
+   (malgo_string_at
+      (lambda
+         ($Builtin.primitive_2182)
+         (lambda
+            ($Builtin.primitive_2183)
+            (primitive
+               malgo_string_at
+               ($Builtin.primitive_2182 $Builtin.primitive_2183)))))
+   (malgo_string_cons
+      (lambda
+         ($Builtin.primitive_2184)
+         (lambda
+            ($Builtin.primitive_2185)
+            (primitive
+               malgo_string_cons
+               ($Builtin.primitive_2184 $Builtin.primitive_2185)))))
+   (malgo_string_append
+      (lambda
+         ($Builtin.primitive_2186)
+         (lambda
+            ($Builtin.primitive_2187)
+            (primitive
+               malgo_string_append
+               ($Builtin.primitive_2186 $Builtin.primitive_2187)))))
+   (malgo_substring
+      (lambda
+         ($Builtin.primitive_2188)
+         (lambda
+            ($Builtin.primitive_2189)
+            (lambda
+               ($Builtin.primitive_2190)
+               (primitive
+                  malgo_substring
+                  ($Builtin.primitive_2188 $Builtin.primitive_2189 $Builtin.primitive_2190))))))
+   (malgo_int32_t_to_string
+      (lambda
+         ($Builtin.primitive_2191)
+         (primitive
+            malgo_int32_t_to_string
+            ($Builtin.primitive_2191))))
+   (malgo_int64_t_to_string
+      (lambda
+         ($Builtin.primitive_2192)
+         (primitive
+            malgo_int64_t_to_string
+            ($Builtin.primitive_2192))))
+   (malgo_float_to_string
+      (lambda
+         ($Builtin.primitive_2193)
+         (primitive
+            malgo_float_to_string
+            ($Builtin.primitive_2193))))
+   (malgo_double_to_string
+      (lambda
+         ($Builtin.primitive_2194)
+         (primitive
+            malgo_double_to_string
+            ($Builtin.primitive_2194))))
+   (malgo_char_to_string
+      (lambda
+         ($Builtin.primitive_2195)
+         (primitive
+            malgo_char_to_string
+            ($Builtin.primitive_2195))))
+   (malgo_exit_failure
+      (lambda
+         ($Builtin.primitive_2196)
+         (primitive
+            malgo_exit_failure
+            ($Builtin.primitive_2196))))
+   (malgo_newline
+      (lambda
+         ($Builtin.primitive_2197)
+         (primitive
+            malgo_newline
+            ($Builtin.primitive_2197))))
+   (malgo_print_char
+      (lambda
+         ($Builtin.primitive_2198)
+         (primitive
+            malgo_print_char
+            ($Builtin.primitive_2198))))
+   (malgo_print_string
+      (lambda
+         ($Builtin.primitive_2199)
+         (primitive
+            malgo_print_string
+            ($Builtin.primitive_2199))))
+   (malgo_flush
+      (lambda
+         ($Builtin.primitive_2200)
+         (primitive
+            malgo_flush
+            ($Builtin.primitive_2200))))
+   (malgo_get_char
+      (lambda
+         ($Builtin.primitive_2201)
+         (primitive
+            malgo_get_char
+            ($Builtin.primitive_2201))))
+   (malgo_get_contents
+      (lambda
+         ($Builtin.primitive_2202)
+         (primitive
+            malgo_get_contents
+            ($Builtin.primitive_2202)))))
