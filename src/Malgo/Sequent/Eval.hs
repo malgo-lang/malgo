@@ -5,7 +5,6 @@ module Malgo.Sequent.Eval (Value (..), EvalError (..), Env (..), emptyEnv, evalP
 import Data.Map qualified as Map
 import Data.Maybe (fromJust)
 import Data.Traversable (for)
-import Debug.Trace (traceShowM)
 import Effectful
 import Effectful.Error.Static
 import Effectful.Reader.Static
@@ -14,6 +13,7 @@ import Malgo.Id
 import Malgo.Module (ModuleName)
 import Malgo.MonadUniq (Uniq)
 import Malgo.Prelude hiding (throwError)
+import Malgo.SExpr (sShow)
 import Malgo.Sequent.Core
 import Malgo.Sequent.Fun (HasRange (..), Literal, Name, Pattern (..), Tag (..))
 
@@ -24,7 +24,14 @@ data Value where
   Record :: Env -> Map Text (Name, Statement Join) -> Value
   Consumer :: Env -> Consumer Join -> Value
 
-deriving stock instance Show Value
+instance Show Value where
+  showsPrec d (Immediate literal) = showParen (d > 10) $ showString "Immediate " . showsPrec 11 literal
+  showsPrec d (Struct tag values) = showParen (d > 10) $ showString "Struct " . showsPrec 11 tag . showString " " . showsPrec 11 values
+  showsPrec d (Function _env params stmt) = showParen (d > 10) $ showString "Function <env> " . showsPrec 11 params . showString " " . shows (sShow @_ @String stmt)
+  showsPrec d (Record _env fields) =
+    let fields' = fmap (\(name, statement) -> (name, sShow @_ @String statement)) fields
+     in showParen (d > 10) $ showString "Record <env> " . showsPrec 11 fields'
+  showsPrec d (Consumer _env consumer) = showParen (d > 10) $ showString "Consumer <env> " . shows (sShow @_ @String consumer)
 
 data EvalError
   = UndefinedVariable Range Name
@@ -33,6 +40,7 @@ data EvalError
   | ExpectRecord Range Value
   | NoSuchField Range Text Value
   | NoMatch Range Value
+  | PrimitiveNotImplemented Range Text [Value] Value
   deriving stock (Show)
 
 type Toplevels = Map Name (Name, Statement Join)
@@ -101,8 +109,7 @@ evalStatement (Join _ label consumer statement) = do
 evalStatement (Primitive range name producers consumer) = do
   producers <- traverse evalProducer producers
   covalue <- lookupEnv range consumer
-  traceShowM (name, producers, covalue)
-  pure $ Struct Tuple []
+  throwError $ PrimitiveNotImplemented range name producers covalue
 evalStatement (Invoke range name consumer) = do
   (return, statement) <- lookupToplevel range name
   covalue <- lookupEnv range consumer
