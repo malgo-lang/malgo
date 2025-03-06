@@ -1,21 +1,24 @@
-UndefinedVariable
+PrimitiveNotImplemented
     ( Range
         { _start = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
-            , sourceLine = Pos 459
-            , sourceColumn = Pos 30
+            , sourceLine = Pos 457
+            , sourceColumn = Pos 1
             }
         , _end = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
-            , sourceLine = Pos 459
-            , sourceColumn = Pos 53
+            , sourceLine = Pos 458
+            , sourceColumn = Pos 1
             }
         }
-    )
-    ( Id
-        { name = "malgo_double_to_string"
-        , moduleName = Artifact
-            ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-        , sort = External
-        }
-    )
+    ) "malgo_double_to_string"
+    [ Immediate
+        ( Double 3.14 )
+    ]
+    ( Consumer <env> "(then $Builtin.inner_2935
+       (join
+          $Builtin.apply_3092
+          (apply
+             ($Builtin.inner_2935)
+             ($Builtin.return_2222))
+          (cut $Builtin.outer_2934 $Builtin.apply_3092)))" )

@@ -1,21 +1,26 @@
-UndefinedVariable
+PrimitiveNotImplemented
     ( Range
         { _start = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
-            , sourceLine = Pos 48
-            , sourceColumn = Pos 26
+            , sourceLine = Pos 46
+            , sourceColumn = Pos 1
             }
         , _end = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
-            , sourceLine = Pos 48
-            , sourceColumn = Pos 44
+            , sourceLine = Pos 47
+            , sourceColumn = Pos 1
             }
         }
-    )
-    ( Id
-        { name = "malgo_sub_int32_t"
-        , moduleName = Artifact
-            ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-        , sort = External
-        }
-    )
+    ) "malgo_sub_int32_t"
+    [ Immediate
+        ( Int32 10 )
+    , Immediate
+        ( Int32 1 )
+    ]
+    ( Consumer <env> "(then $Builtin.inner_2943
+       (join
+          $Builtin.apply_3124
+          (apply
+             ($Builtin.inner_2943)
+             ($Builtin.return_2250))
+          (cut $Builtin.outer_2942 $Builtin.apply_3124)))" )

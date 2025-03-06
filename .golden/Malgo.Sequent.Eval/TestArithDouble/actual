@@ -1,21 +1,31 @@
-UndefinedVariable
+PrimitiveNotImplemented
     ( Range
         { _start = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
-            , sourceLine = Pos 114
-            , sourceColumn = Pos 27
+            , sourceLine = Pos 112
+            , sourceColumn = Pos 1
             }
         , _end = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
-            , sourceLine = Pos 114
-            , sourceColumn = Pos 44
+            , sourceLine = Pos 113
+            , sourceColumn = Pos 1
             }
         }
-    )
-    ( Id
-        { name = "malgo_add_double"
-        , moduleName = Artifact
-            ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-        , sort = External
-        }
-    )
+    ) "malgo_add_double"
+    [ Immediate
+        ( Double 0.5 )
+    , Immediate
+        ( Double 0.0 )
+    ]
+    ( Consumer <env> "(then $TestArithDouble.inner_141
+       (join
+          $TestArithDouble.apply_173
+          (apply
+             (#TestArithDouble.x_11)
+             ($TestArithDouble.return_128))
+          (join
+             $TestArithDouble.apply_174
+             (apply
+                ($TestArithDouble.inner_141)
+                ($TestArithDouble.apply_173))
+             (cut $TestArithDouble.outer_140 $TestArithDouble.apply_174))))" )

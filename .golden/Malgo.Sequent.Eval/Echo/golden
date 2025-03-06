@@ -1,21 +1,22 @@
-UndefinedVariable
+PrimitiveNotImplemented
     ( Range
         { _start = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
-            , sourceLine = Pos 497
-            , sourceColumn = Pos 35
+            , sourceLine = Pos 496
+            , sourceColumn = Pos 1
             }
         , _end = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
             , sourceLine = Pos 497
-            , sourceColumn = Pos 54
+            , sourceColumn = Pos 1
             }
         }
-    )
-    ( Id
-        { name = "malgo_get_contents"
-        , moduleName = Artifact
-            ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-        , sort = External
-        }
-    )
+    ) "malgo_get_contents"
+    [ Struct Tuple [] ]
+    ( Consumer <env> "(then $Builtin.inner_3021
+       (join
+          $Builtin.apply_3436
+          (apply
+             ($Builtin.inner_3021)
+             ($Builtin.return_2525))
+          (cut $Builtin.outer_3020 $Builtin.apply_3436)))" )

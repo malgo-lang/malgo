@@ -1,21 +1,24 @@
-UndefinedVariable
+PrimitiveNotImplemented
     ( Range
         { _start = SourcePos
             { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
-            , sourceLine = Pos 8
-            , sourceColumn = Pos 3
+            , sourceLine = Pos 1
+            , sourceColumn = Pos 1
             }
         , _end = SourcePos
             { sourceName = "./test/testcases/malgo/HelloBoxed.mlg"
-            , sourceLine = Pos 8
-            , sourceColumn = Pos 22
+            , sourceLine = Pos 2
+            , sourceColumn = Pos 1
             }
         }
-    )
-    ( Id
-        { name = "malgo_print_string"
-        , moduleName = Artifact
-            ( ArtifactPath "test/testcases/malgo/HelloBoxed.mlg" )
-        , sort = External
-        }
-    )
+    ) "malgo_print_string"
+    [ Immediate
+        ( String "Hello, world" )
+    ]
+    ( Consumer <env> "(then $HelloBoxed.inner_44
+       (join
+          $HelloBoxed.apply_51
+          (apply
+             ($HelloBoxed.inner_44)
+             ($HelloBoxed.return_31))
+          (cut $HelloBoxed.outer_43 $HelloBoxed.apply_51)))" )

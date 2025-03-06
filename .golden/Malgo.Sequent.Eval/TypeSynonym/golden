@@ -1,21 +1,24 @@
-UndefinedVariable
+PrimitiveNotImplemented
     ( Range
         { _start = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
-            , sourceLine = Pos 486
-            , sourceColumn = Pos 27
+            , sourceLine = Pos 484
+            , sourceColumn = Pos 1
             }
         , _end = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
-            , sourceLine = Pos 486
-            , sourceColumn = Pos 46
+            , sourceLine = Pos 485
+            , sourceColumn = Pos 1
             }
         }
-    )
-    ( Id
-        { name = "malgo_print_string"
-        , moduleName = Artifact
-            ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-        , sort = External
-        }
-    )
+    ) "malgo_print_string"
+    [ Immediate
+        ( String "hello" )
+    ]
+    ( Consumer <env> "(then $TypeSynonym.inner_61
+       (join
+          $TypeSynonym.apply_72
+          (apply
+             ($TypeSynonym.inner_61)
+             ($TypeSynonym.return_42))
+          (cut $TypeSynonym.outer_60 $TypeSynonym.apply_72)))" )
