@@ -14,7 +14,6 @@ module Malgo.Sequent.Core
 where
 
 import Data.Map qualified as Map
-import Data.SCargot.Repr.Basic (SExpr)
 import Data.SCargot.Repr.Basic qualified as S
 import Data.Store
 import Malgo.Module

@@ -15,13 +15,15 @@ import Malgo.Rename.RnEnv qualified as RnEnv
 import Malgo.Sequent.Core
 import Malgo.Sequent.Core.Flat (flatProgram)
 import Malgo.Sequent.Core.Join (joinProgram)
-import Malgo.Sequent.Eval (EvalError, evalProgram)
+import Malgo.Sequent.Eval (EvalError, Handlers (..), evalProgram)
 import Malgo.Sequent.ToCore (toCore)
 import Malgo.Sequent.ToFun (toFun)
 import Malgo.Syntax (Module (..))
 import Malgo.TestUtils hiding (setupBuiltin, setupPrelude)
 import System.Directory
 import System.FilePath
+import System.IO.Streams (InputStream, OutputStream)
+import System.IO.Streams qualified as Streams
 import Test.Hspec
 import Text.Pretty.Simple (pShowNoColor)
 
@@ -84,12 +86,59 @@ driveEval builtinName preludeName srcPath = do
     Program builtin <- load builtinName ".sqt"
     Program prelude <- load preludeName ".sqt"
 
-    result <- runError @EvalError $ runReader refined.moduleName $ evalProgram $ Program (builtin <> prelude <> program)
+    (stdout, stdoutBuilder) <- setupTestStdout
+    (stderr, stderrBuilder) <- setupTestStderr
+
+    result <-
+      runError @EvalError
+        $ runReader refined.moduleName
+        $ runReader
+          Handlers
+            { stdin = testStdin,
+              stdout,
+              stderr
+            }
+        $ evalProgram
+        $ Program (builtin <> prelude <> program)
     case result of
-      Left (_, err) -> pure $ convertString $ pShowNoColor err -- TODO: throw error instead of returning string
-      Right result -> pure $ convertString $ pShowNoColor result
+      Left (_, err) -> error $ show err
+      Right result -> do
+        stdout <- readIORef stdoutBuilder
+        stderr <- readIORef stderrBuilder
+        pure
+          $ (convertString $ pShowNoColor result)
+          <> "\n"
+          <> "stdout: "
+          <> stdout
+          <> "\n"
+          <> "stderr: "
+          <> stderr
+          <> "\n"
 
 saveCore :: (Workspace :> es, IOE :> es) => ModuleName -> Program Join -> Eff es ()
 saveCore moduleName program = do
   modulePath <- getModulePath moduleName
   save modulePath ".sqt" program
+
+testStdin :: (MonadIO m) => m (InputStream Char)
+testStdin = liftIO $ Streams.fromList "Hello\n"
+
+setupTestStdout :: (MonadIO m) => m (IO (OutputStream Char), IORef String)
+setupTestStdout = do
+  builder <- newIORef ""
+  pure
+    ( Streams.makeOutputStream \case
+        Just c -> modifyIORef builder (<> [c])
+        Nothing -> pure (),
+      builder
+    )
+
+setupTestStderr :: (MonadIO m) => m (IO (OutputStream Char), IORef String)
+setupTestStderr = do
+  builder <- newIORef ""
+  pure
+    ( Streams.makeOutputStream \case
+        Just c -> modifyIORef builder (<> [c])
+        Nothing -> pure (),
+      builder
+    )

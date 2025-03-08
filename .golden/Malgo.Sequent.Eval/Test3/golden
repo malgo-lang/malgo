@@ -1,18 +1,4 @@
-PrimitiveNotImplemented
-    ( Range
-        { _start = SourcePos
-            { sourceName = "./test/testcases/malgo/Test3.mlg"
-            , sourceLine = Pos 8
-            , sourceColumn = Pos 1
-            }
-        , _end = SourcePos
-            { sourceName = "./test/testcases/malgo/Test3.mlg"
-            , sourceLine = Pos 10
-            , sourceColumn = Pos 1
-            }
-        }
-    ) "malgo_print_string"
-    [ Immediate
-        ( String "OK" )
-    ]
-    ( Consumer <env> "finish" )
+Immediate
+    ( Int32 0 )
+stdout: OK
+stderr: 

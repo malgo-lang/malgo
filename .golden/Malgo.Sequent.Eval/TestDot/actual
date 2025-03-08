@@ -1,26 +1,4 @@
-PrimitiveNotImplemented
-    ( Range
-        { _start = SourcePos
-            { sourceName = "./runtime/malgo/Builtin.mlg"
-            , sourceLine = Pos 64
-            , sourceColumn = Pos 1
-            }
-        , _end = SourcePos
-            { sourceName = "./runtime/malgo/Builtin.mlg"
-            , sourceLine = Pos 65
-            , sourceColumn = Pos 1
-            }
-        }
-    ) "malgo_add_int64_t"
-    [ Immediate
-        ( Int64 0 )
-    , Immediate
-        ( Int64 1 )
-    ]
-    ( Consumer <env> "(then $TestDot.inner_42
-       (join
-          $TestDot.apply_53
-          (apply
-             ($TestDot.inner_42)
-             ($TestDot.return_33))
-          (cut $TestDot.outer_41 $TestDot.apply_53)))" )
+Immediate
+    ( String "2" )
+stdout: 
+stderr: 

@@ -1,24 +1,4 @@
-PrimitiveNotImplemented
-    ( Range
-        { _start = SourcePos
-            { sourceName = "./runtime/malgo/Builtin.mlg"
-            , sourceLine = Pos 484
-            , sourceColumn = Pos 1
-            }
-        , _end = SourcePos
-            { sourceName = "./runtime/malgo/Builtin.mlg"
-            , sourceLine = Pos 485
-            , sourceColumn = Pos 1
-            }
-        }
-    ) "malgo_print_string"
-    [ Immediate
-        ( String "OK" )
-    ]
-    ( Consumer <env> "(then $ToplevelVariable.inner_120
-       (join
-          $ToplevelVariable.apply_148
-          (apply
-             ($ToplevelVariable.inner_120)
-             ($ToplevelVariable.return_95))
-          (cut $ToplevelVariable.outer_119 $ToplevelVariable.apply_148)))" )
+Immediate
+    ( Int32 0 )
+stdout: OK
+stderr: 

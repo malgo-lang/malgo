@@ -1,18 +1,4 @@
-PrimitiveNotImplemented
-    ( Range
-        { _start = SourcePos
-            { sourceName = "./runtime/malgo/Builtin.mlg"
-            , sourceLine = Pos 484
-            , sourceColumn = Pos 1
-            }
-        , _end = SourcePos
-            { sourceName = "./runtime/malgo/Builtin.mlg"
-            , sourceLine = Pos 485
-            , sourceColumn = Pos 1
-            }
-        }
-    ) "malgo_print_string"
-    [ Immediate
-        ( String "A" )
-    ]
-    ( Consumer <env> "finish" )
+Immediate
+    ( Int32 0 )
+stdout: A
+stderr: 

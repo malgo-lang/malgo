@@ -1,31 +1,4 @@
-PrimitiveNotImplemented
-    ( Range
-        { _start = SourcePos
-            { sourceName = "./runtime/malgo/Builtin.mlg"
-            , sourceLine = Pos 112
-            , sourceColumn = Pos 1
-            }
-        , _end = SourcePos
-            { sourceName = "./runtime/malgo/Builtin.mlg"
-            , sourceLine = Pos 113
-            , sourceColumn = Pos 1
-            }
-        }
-    ) "malgo_add_double"
-    [ Immediate
-        ( Double 0.5 )
-    , Immediate
-        ( Double 0.0 )
-    ]
-    ( Consumer <env> "(then $TestArithDouble.inner_141
-       (join
-          $TestArithDouble.apply_173
-          (apply
-             (#TestArithDouble.x_11)
-             ($TestArithDouble.return_128))
-          (join
-             $TestArithDouble.apply_174
-             (apply
-                ($TestArithDouble.inner_141)
-                ($TestArithDouble.apply_173))
-             (cut $TestArithDouble.outer_140 $TestArithDouble.apply_174))))" )
+Immediate
+    ( String "0.25" )
+stdout: 
+stderr: 

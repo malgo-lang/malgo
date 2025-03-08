@@ -1,24 +1,4 @@
-PrimitiveNotImplemented
-    ( Range
-        { _start = SourcePos
-            { sourceName = "./runtime/malgo/Builtin.mlg"
-            , sourceLine = Pos 484
-            , sourceColumn = Pos 1
-            }
-        , _end = SourcePos
-            { sourceName = "./runtime/malgo/Builtin.mlg"
-            , sourceLine = Pos 485
-            , sourceColumn = Pos 1
-            }
-        }
-    ) "malgo_print_string"
-    [ Immediate
-        ( String "hello" )
-    ]
-    ( Consumer <env> "(then $HelloImport.inner_34
-       (join
-          $HelloImport.apply_47
-          (apply
-             ($HelloImport.inner_34)
-             ($HelloImport.return_22))
-          (cut $HelloImport.outer_33 $HelloImport.apply_47)))" )
+Immediate
+    ( Int32 0 )
+stdout: hello
+stderr: 

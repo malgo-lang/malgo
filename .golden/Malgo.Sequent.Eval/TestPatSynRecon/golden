@@ -1,26 +1,4 @@
-PrimitiveNotImplemented
-    ( Range
-        { _start = SourcePos
-            { sourceName = "./runtime/malgo/Builtin.mlg"
-            , sourceLine = Pos 64
-            , sourceColumn = Pos 1
-            }
-        , _end = SourcePos
-            { sourceName = "./runtime/malgo/Builtin.mlg"
-            , sourceLine = Pos 65
-            , sourceColumn = Pos 1
-            }
-        }
-    ) "malgo_add_int64_t"
-    [ Immediate
-        ( Int64 2 )
-    , Immediate
-        ( Int64 0 )
-    ]
-    ( Consumer <env> "(then $TestPatSynRecon.inner_109
-       (join
-          $TestPatSynRecon.apply_128
-          (apply
-             ($TestPatSynRecon.inner_109)
-             ($TestPatSynRecon.return_94))
-          (cut $TestPatSynRecon.outer_108 $TestPatSynRecon.apply_128)))" )
+Immediate
+    ( String "3" )
+stdout: 
+stderr: 

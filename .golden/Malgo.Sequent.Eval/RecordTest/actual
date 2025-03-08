@@ -1,26 +1,4 @@
-PrimitiveNotImplemented
-    ( Range
-        { _start = SourcePos
-            { sourceName = "./runtime/malgo/Builtin.mlg"
-            , sourceLine = Pos 40
-            , sourceColumn = Pos 1
-            }
-        , _end = SourcePos
-            { sourceName = "./runtime/malgo/Builtin.mlg"
-            , sourceLine = Pos 41
-            , sourceColumn = Pos 1
-            }
-        }
-    ) "malgo_add_int32_t"
-    [ Immediate
-        ( Int32 32 )
-    , Immediate
-        ( Int32 10 )
-    ]
-    ( Consumer <env> "(then $Builtin.inner_3065
-       (join
-          $Builtin.apply_3618
-          (apply
-             ($Builtin.inner_3065)
-             ($Builtin.return_2685))
-          (cut $Builtin.outer_3064 $Builtin.apply_3618)))" )
+Immediate
+    ( String "42" )
+stdout: 
+stderr: 
