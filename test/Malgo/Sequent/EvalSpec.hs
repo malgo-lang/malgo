@@ -25,7 +25,6 @@ import System.FilePath
 import System.IO.Streams (InputStream, OutputStream)
 import System.IO.Streams qualified as Streams
 import Test.Hspec
-import Text.Pretty.Simple (pShowNoColor)
 
 spec :: Spec
 spec = parallel do
@@ -87,7 +86,7 @@ driveEval builtinName preludeName srcPath = do
     Program prelude <- load preludeName ".sqt"
 
     (stdout, stdoutBuilder) <- setupTestStdout
-    (stderr, stderrBuilder) <- setupTestStderr
+    (stderr, _) <- setupTestStderr
 
     result <-
       runError @EvalError
@@ -102,18 +101,9 @@ driveEval builtinName preludeName srcPath = do
         $ Program (builtin <> prelude <> program)
     case result of
       Left (_, err) -> error $ show err
-      Right result -> do
+      Right _ -> do
         stdout <- readIORef stdoutBuilder
-        stderr <- readIORef stderrBuilder
-        pure
-          $ (convertString $ pShowNoColor result)
-          <> "\n"
-          <> "stdout: "
-          <> stdout
-          <> "\n"
-          <> "stderr: "
-          <> stderr
-          <> "\n"
+        pure stdout
 
 saveCore :: (Workspace :> es, IOE :> es) => ModuleName -> Program Join -> Eff es ()
 saveCore moduleName program = do
