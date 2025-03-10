@@ -8,5 +8,12 @@ dirs=$(ls .golden/Malgo.Sequent.Eval)
 
 # Compare each directory
 for dir in $dirs; do
-    diff -r .golden/Malgo.Sequent.Eval/$dir .golden/Malgo.Core.Eval/$dir
+    echo "Comparing $dir"
+    diff .golden/Malgo.Sequent.Eval/$dir/actual .golden/Malgo.Core.Eval/$dir/actual
+done
+
+# Copy golden files
+for dir in $dirs; do
+    echo "Coping $dir"
+    cp .golden/Malgo.Core.Eval/$dir/golden .golden/Malgo.Sequent.Eval/$dir/golden
 done

@@ -50,7 +50,7 @@ data EvalError
   | ExpectNumber Range Value
   | NoSuchField Range Text Value
   | NoMatch Range Value
-  | PrimitiveNotImplemented Range Text [Value] Name
+  | PrimitiveNotImplemented Range Text [Value]
   | InvalidArguments Range Text [Value]
   deriving stock (Show)
 
@@ -126,7 +126,8 @@ evalStatement (Join _ label consumer statement) = do
 evalStatement (Primitive range name producers consumer) = do
   producers <- traverse evalProducer producers
   let primitive = fetchPrimitive name
-  primitive range producers consumer
+  result <- primitive range producers
+  jump range consumer result
 evalStatement (Invoke range name consumer) = do
   (return, statement) <- lookupToplevel range name
   covalue <- lookupEnv range consumer
@@ -207,10 +208,10 @@ match (Expand range patterns) (Record _ fields) = do
     else pure Nothing
 match _ _ = pure Nothing
 
-fetchPrimitive :: (Error EvalError :> es, Reader Toplevels :> es, Reader Env :> es, Reader Handlers :> es, IOE :> es) => Text -> Range -> [Value] -> Name -> Eff es Value
+fetchPrimitive :: (Error EvalError :> es, Reader Handlers :> es, IOE :> es) => Text -> Range -> [Value] -> Eff es Value
 fetchPrimitive "malgo_unsafe_cast" = \cases
-  range [value] consumer -> jump range consumer value
-  range values _ -> throwError $ InvalidArguments range "malgo_unsafe_cast" values
+  _ [value] -> pure value
+  range values -> throwError $ InvalidArguments range "malgo_unsafe_cast" values
 fetchPrimitive name | "malgo_add_" `Text.isPrefixOf` name = binary name addValue
 fetchPrimitive name | "malgo_sub_" `Text.isPrefixOf` name = binary name subValue
 fetchPrimitive name | "malgo_mul_" `Text.isPrefixOf` name = binary name mulValue
@@ -222,14 +223,23 @@ fetchPrimitive name | "malgo_le_" `Text.isPrefixOf` name = binary name leValue
 fetchPrimitive name | "malgo_gt_" `Text.isPrefixOf` name = binary name gtValue
 fetchPrimitive name | "malgo_ge_" `Text.isPrefixOf` name = binary name geValue
 fetchPrimitive name | "malgo_" `Text.isPrefixOf` name && "to_string" `Text.isSuffixOf` name = toString name
-fetchPrimitive "malgo_print_string" = printString
-fetchPrimitive "malgo_get_contents" = \_ _ _ -> do
+fetchPrimitive "malgo_print_string" = \cases
+  _ [Immediate (String text)] -> do
+    Handlers {stdout} <- ask @Handlers
+    putTextTo stdout text
+    pure $ Struct Tuple []
+  range values -> throwError $ InvalidArguments range "malgo_print_string" values
+fetchPrimitive "malgo_newline" = \_ _ -> do
+  Handlers {stdout} <- ask @Handlers
+  liftIO $ Streams.write (Just '\n') stdout
+  pure $ Struct Tuple []
+fetchPrimitive "malgo_get_contents" = \_ _ -> do
   text <- getContents
   pure $ Immediate $ String text
 fetchPrimitive "malgo_string_append" = \cases
-  _ [Immediate (String a), Immediate (String b)] _ -> pure $ Immediate $ String $ a <> b
-  range values _ -> throwError $ InvalidArguments range "malgo_string_append" values
-fetchPrimitive name = \range values return -> throwError $ PrimitiveNotImplemented range name values return
+  _ [Immediate (String a), Immediate (String b)] -> pure $ Immediate $ String $ a <> b
+  range values -> throwError $ InvalidArguments range "malgo_string_append" values
+fetchPrimitive name = \range values -> throwError $ PrimitiveNotImplemented range name values
 
 getContents :: (IOE :> es, Reader Handlers :> es) => Eff es Text
 getContents = do
@@ -241,29 +251,22 @@ getContents = do
       pure $ T.cons char rest
     Nothing -> pure ""
 
-printString :: (Error EvalError :> es, Reader Handlers :> es, IOE :> es) => Range -> [Value] -> Name -> Eff es Value
-printString _ [Immediate (String text)] _ = do
-  Handlers {stdout} <- ask @Handlers
-  putTextTo stdout text
-  pure $ Struct Tuple []
-printString range values _ = throwError $ InvalidArguments range "malgo_print_string" values
-
 putTextTo :: (IOE :> es) => OutputStream Char -> Text -> Eff es ()
 putTextTo stream text = do
   let string = convertString @_ @String text
   liftIO $ traverse_ (\char -> Streams.write (Just char) stream) string
 
-toString :: (Error EvalError :> es) => Text -> Range -> [Value] -> Name -> Eff es Value
-toString _ _ [Immediate (Int32 n)] _ = pure $ Immediate $ String $ Text.pack $ show n
-toString _ _ [Immediate (Int64 n)] _ = pure $ Immediate $ String $ Text.pack $ show n
-toString _ _ [Immediate (Float n)] _ = pure $ Immediate $ String $ Text.pack $ show n
-toString _ _ [Immediate (Double n)] _ = pure $ Immediate $ String $ Text.pack $ show n
-toString _ _ [Immediate (String s)] _ = pure $ Immediate $ String s
-toString name range values _ = throwError $ InvalidArguments range name values
+toString :: (Error EvalError :> es) => Text -> Range -> [Value] -> Eff es Value
+toString _ _ [Immediate (Int32 n)] = pure $ Immediate $ String $ Text.pack $ show n
+toString _ _ [Immediate (Int64 n)] = pure $ Immediate $ String $ Text.pack $ show n
+toString _ _ [Immediate (Float n)] = pure $ Immediate $ String $ Text.pack $ show n
+toString _ _ [Immediate (Double n)] = pure $ Immediate $ String $ Text.pack $ show n
+toString _ _ [Immediate (String s)] = pure $ Immediate $ String s
+toString name range values = throwError $ InvalidArguments range name values
 
-binary :: (Error EvalError :> es, Reader Toplevels :> es, Reader Env :> es, Reader Handlers :> es, IOE :> es) => Text -> (Range -> Value -> Value -> Eff es Value) -> Range -> [Value] -> Name -> Eff es Value
-binary _ f range [a, b] consumer = f range a b >>= jump range consumer
-binary name _ range values _ = throwError $ InvalidArguments range name values
+binary :: (Error EvalError :> es) => Text -> (Range -> Value -> Value -> Eff es Value) -> Range -> [Value] -> Eff es Value
+binary _ f range [a, b] = f range a b
+binary name _ range values = throwError $ InvalidArguments range name values
 
 addValue :: (Error EvalError :> es) => Range -> Value -> Value -> Eff es Value
 addValue _ (Immediate (Int32 a)) (Immediate (Int32 b)) = pure $ Immediate $ Int32 $ a + b
