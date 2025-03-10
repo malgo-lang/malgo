@@ -4,9 +4,9 @@
 # Usage: ./check.sh
 
 # List of directories to compare
-dirs=$(ls .golden/Malgo.Core.Eval)
+dirs=$(ls .golden/Malgo.Sequent.Eval)
 
 # Compare each directory
 for dir in $dirs; do
-    diff -r .golden/Malgo.Core.Eval/$dir .golden/Malgo.Driver/driver/normalCase/$dir
+    diff -r .golden/Malgo.Sequent.Eval/$dir .golden/Malgo.Core.Eval/$dir
 done

@@ -85,6 +85,7 @@ driveEval builtinName preludeName srcPath = do
     Program builtin <- load builtinName ".sqt"
     Program prelude <- load preludeName ".sqt"
 
+    stdin <- setupTestStdin
     (stdout, stdoutBuilder) <- setupTestStdout
     (stderr, _) <- setupTestStderr
 
@@ -93,7 +94,7 @@ driveEval builtinName preludeName srcPath = do
         $ runReader refined.moduleName
         $ runReader
           Handlers
-            { stdin = testStdin,
+            { stdin,
               stdout,
               stderr
             }
@@ -102,33 +103,34 @@ driveEval builtinName preludeName srcPath = do
     case result of
       Left (_, err) -> error $ show err
       Right _ -> do
-        stdout <- readIORef stdoutBuilder
-        pure stdout
+        readIORef stdoutBuilder
 
 saveCore :: (Workspace :> es, IOE :> es) => ModuleName -> Program Join -> Eff es ()
 saveCore moduleName program = do
   modulePath <- getModulePath moduleName
   save modulePath ".sqt" program
 
-testStdin :: (MonadIO m) => m (InputStream Char)
-testStdin = liftIO $ Streams.fromList "Hello\n"
+setupTestStdin :: (MonadIO m) => m (InputStream Char)
+setupTestStdin = liftIO $ Streams.fromList "Hello\n"
 
-setupTestStdout :: (MonadIO m) => m (IO (OutputStream Char), IORef String)
+setupTestStdout :: (MonadIO m) => m (OutputStream Char, IORef String)
 setupTestStdout = do
   builder <- newIORef ""
+  stdout <- liftIO $ Streams.makeOutputStream \case
+    Just c -> modifyIORef builder (<> [c])
+    Nothing -> pure ()
   pure
-    ( Streams.makeOutputStream \case
-        Just c -> modifyIORef builder (<> [c])
-        Nothing -> pure (),
+    ( stdout,
       builder
     )
 
-setupTestStderr :: (MonadIO m) => m (IO (OutputStream Char), IORef String)
+setupTestStderr :: (MonadIO m) => m (OutputStream Char, IORef String)
 setupTestStderr = do
   builder <- newIORef ""
+  stderr <- liftIO $ Streams.makeOutputStream \case
+    Just c -> modifyIORef builder (<> [c])
+    Nothing -> pure ()
   pure
-    ( Streams.makeOutputStream \case
-        Just c -> modifyIORef builder (<> [c])
-        Nothing -> pure (),
+    ( stderr,
       builder
     )

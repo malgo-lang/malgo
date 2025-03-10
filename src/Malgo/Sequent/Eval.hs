@@ -3,7 +3,7 @@
 module Malgo.Sequent.Eval (Value (..), EvalError (..), Env (..), emptyEnv, Handlers (..), evalProgram) where
 
 import Data.Map qualified as Map
-import Data.Maybe (fromJust)
+import Data.Maybe (fromJust, isJust)
 import Data.Text qualified as T
 import Data.Text qualified as Text
 import Data.Traversable (for)
@@ -57,9 +57,9 @@ data EvalError
 type Toplevels = Map Name (Name, Statement Join)
 
 data Handlers = Handlers
-  { stdin :: IO (InputStream Char),
-    stdout :: IO (OutputStream Char),
-    stderr :: IO (OutputStream Char)
+  { stdin :: InputStream Char,
+    stdout :: OutputStream Char,
+    stderr :: OutputStream Char
   }
 
 data Env = Env
@@ -190,7 +190,9 @@ match (PVar _ name) value = pure $ Just [(name, value)]
 match (PLiteral _ literal) (Immediate literal') | literal == literal' = pure $ Just []
 match (Destruct _ tag patterns) (Struct tag' values) | tag == tag' = do
   bindings <- zipWithM match patterns values
-  pure $ foldr (liftA2 (<>)) (Just []) bindings
+  if all isJust bindings
+    then pure $ Just $ concat $ fromJust <$> bindings
+    else pure Nothing
 match (Expand range patterns) (Record _ fields) = do
   let pairs = Map.intersectionWith (,) patterns fields
   pairs <- for pairs \(pattern, (return, statement)) -> do
@@ -200,34 +202,38 @@ match (Expand range patterns) (Record _ fields) = do
     local (extendEnv return (Consumer env (Finish range))) do
       value <- evalStatement statement
       match pattern value
-  pure $ foldr (liftA2 (<>)) (Just []) pairs
+  if all isJust pairs
+    then pure $ Just $ concat $ fromJust <$> pairs
+    else pure Nothing
 match _ _ = pure Nothing
 
 fetchPrimitive :: (Error EvalError :> es, Reader Toplevels :> es, Reader Env :> es, Reader Handlers :> es, IOE :> es) => Text -> Range -> [Value] -> Name -> Eff es Value
 fetchPrimitive "malgo_unsafe_cast" = \cases
   range [value] consumer -> jump range consumer value
   range values _ -> throwError $ InvalidArguments range "malgo_unsafe_cast" values
-fetchPrimitive name | "malgo_add" `Text.isPrefixOf` name = binary name addValue
-fetchPrimitive name | "malgo_sub" `Text.isPrefixOf` name = binary name subValue
-fetchPrimitive name | "malgo_mul" `Text.isPrefixOf` name = binary name mulValue
--- TODO: add "malgo_div" and "malgo_mod"
-fetchPrimitive name | "malgo_eq" `Text.isPrefixOf` name = binary name eqValue
-fetchPrimitive name | "malgo_ne" `Text.isPrefixOf` name = binary name neValue
-fetchPrimitive name | "malgo_lt" `Text.isPrefixOf` name = binary name ltValue
-fetchPrimitive name | "malgo_le" `Text.isPrefixOf` name = binary name leValue
-fetchPrimitive name | "malgo_gt" `Text.isPrefixOf` name = binary name gtValue
-fetchPrimitive name | "malgo_ge" `Text.isPrefixOf` name = binary name geValue
+fetchPrimitive name | "malgo_add_" `Text.isPrefixOf` name = binary name addValue
+fetchPrimitive name | "malgo_sub_" `Text.isPrefixOf` name = binary name subValue
+fetchPrimitive name | "malgo_mul_" `Text.isPrefixOf` name = binary name mulValue
+-- TODO: add "malgo_div_" and "malgo_mod_"
+fetchPrimitive name | "malgo_eq_" `Text.isPrefixOf` name = binary name eqValue
+fetchPrimitive name | "malgo_ne_" `Text.isPrefixOf` name = binary name neValue
+fetchPrimitive name | "malgo_lt_" `Text.isPrefixOf` name = binary name ltValue
+fetchPrimitive name | "malgo_le_" `Text.isPrefixOf` name = binary name leValue
+fetchPrimitive name | "malgo_gt_" `Text.isPrefixOf` name = binary name gtValue
+fetchPrimitive name | "malgo_ge_" `Text.isPrefixOf` name = binary name geValue
 fetchPrimitive name | "malgo_" `Text.isPrefixOf` name && "to_string" `Text.isSuffixOf` name = toString name
 fetchPrimitive "malgo_print_string" = printString
 fetchPrimitive "malgo_get_contents" = \_ _ _ -> do
   text <- getContents
   pure $ Immediate $ String text
+fetchPrimitive "malgo_string_append" = \cases
+  _ [Immediate (String a), Immediate (String b)] _ -> pure $ Immediate $ String $ a <> b
+  range values _ -> throwError $ InvalidArguments range "malgo_string_append" values
 fetchPrimitive name = \range values return -> throwError $ PrimitiveNotImplemented range name values return
 
 getContents :: (IOE :> es, Reader Handlers :> es) => Eff es Text
 getContents = do
   Handlers {stdin} <- ask @Handlers
-  stdin <- liftIO $ stdin
   char <- liftIO $ Streams.read stdin
   case char of
     Just char -> do
@@ -238,9 +244,8 @@ getContents = do
 printString :: (Error EvalError :> es, Reader Handlers :> es, IOE :> es) => Range -> [Value] -> Name -> Eff es Value
 printString _ [Immediate (String text)] _ = do
   Handlers {stdout} <- ask @Handlers
-  stdout <- liftIO $ stdout
   putTextTo stdout text
-  pure $ Immediate $ Int32 0
+  pure $ Struct Tuple []
 printString range values _ = throwError $ InvalidArguments range "malgo_print_string" values
 
 putTextTo :: (IOE :> es) => OutputStream Char -> Text -> Eff es ()
