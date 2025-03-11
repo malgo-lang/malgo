@@ -21,9 +21,17 @@ import Malgo.Sequent.Fun (HasRange (..), Literal (..), Name, Pattern (..), Tag (
 import System.IO.Streams (InputStream, OutputStream)
 import System.IO.Streams qualified as Streams
 
-newtype ConsumerRepr = ConsumerRepr
-  { repr ::
-      forall es.
+fromConsumer :: Env -> Consumer Join -> Value
+fromConsumer env consumer = Consumer $ \value -> do
+  local (const env) $ evalConsumer consumer value
+
+data Value where
+  Immediate :: Literal -> Value
+  Struct :: Tag -> [Value] -> Value
+  Function :: Env -> [Name] -> Statement Join -> Value
+  Record :: Env -> Map Text (Name, Statement Join) -> Value
+  Consumer ::
+    ( forall es.
       ( Error EvalError :> es,
         Reader Env :> es,
         Reader Toplevels :> es,
@@ -31,24 +39,8 @@ newtype ConsumerRepr = ConsumerRepr
         IOE :> es
       ) =>
       Value -> Eff es ()
-  }
-
-fromConsumer :: Env -> Consumer Join -> ConsumerRepr
-fromConsumer env consumer = ConsumerRepr $ \value -> do
-  local (const env) $ evalConsumer consumer value
-
-runConsumer :: (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es, Reader Handlers :> es, IOE :> es) => ConsumerRepr -> Value -> Eff es ()
-runConsumer (ConsumerRepr {repr}) value = repr value
-
-instance Show ConsumerRepr where
-  show _ = "<consumer>"
-
-data Value where
-  Immediate :: Literal -> Value
-  Struct :: Tag -> [Value] -> Value
-  Function :: Env -> [Name] -> Statement Join -> Value
-  Record :: Env -> Map Text (Name, Statement Join) -> Value
-  Consumer :: ConsumerRepr -> Value
+    ) ->
+    Value
 
 instance Show Value where
   showsPrec d (Immediate literal) = showParen (d > 10) $ showString "Immediate " . showsPrec 11 literal
@@ -110,7 +102,7 @@ jump :: (Error EvalError :> es, Reader Toplevels :> es, Reader Env :> es, Reader
 jump range name value = do
   covalue <- lookupEnv range name
   case covalue of
-    Consumer repr -> runConsumer repr value
+    Consumer repr -> repr value
     _ -> throwError $ ExpectConsumer range value
 
 lookupToplevel :: (Reader Toplevels :> es, Error EvalError :> es) => Range -> Name -> Eff es (Name, Statement Join)
@@ -144,7 +136,7 @@ evalStatement (Cut producer consumer) = do
   jump (range producer) consumer value
 evalStatement (Join _ label consumer statement) = do
   env <- ask @Env
-  let value = Consumer $ fromConsumer env consumer
+  let value = fromConsumer env consumer
   local (extendEnv label value) do
     evalStatement statement
 evalStatement (Primitive range name producers consumer) = do
@@ -175,7 +167,7 @@ evalConsumer :: (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es
 evalConsumer (Label range label) given = do
   covalue <- lookupEnv range label
   case covalue of
-    Consumer repr -> runConsumer repr given
+    Consumer repr -> repr given
     _ -> throwError $ ExpectConsumer range covalue
 evalConsumer (Apply range producers consumers) given = do
   producers <- traverse evalProducer producers
@@ -223,7 +215,7 @@ match (Expand _ patterns) (Record _ fields) = do
     -- If the evaluation of `statement` finishes normally, the last consumer will be `Label range return`.
     -- By setting `return` to `Finish`, `eval statement` will return the value of the last producer.
     ref <- newIORef Nothing
-    local (extendEnv return (Consumer $ ConsumerRepr $ writeIORef ref . Just)) do
+    local (extendEnv return (Consumer $ writeIORef ref . Just)) do
       _ <- evalStatement statement
       value <- readIORef ref
       match pattern $ fromJust value
