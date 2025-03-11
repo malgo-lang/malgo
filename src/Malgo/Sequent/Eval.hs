@@ -22,14 +22,22 @@ import System.IO.Streams (InputStream, OutputStream)
 import System.IO.Streams qualified as Streams
 
 newtype ConsumerRepr = ConsumerRepr
-  { repr :: forall es. (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es, Reader Handlers :> es, IOE :> es) => Value -> Eff es Value
+  { repr ::
+      forall es.
+      ( Error EvalError :> es,
+        Reader Env :> es,
+        Reader Toplevels :> es,
+        Reader Handlers :> es,
+        IOE :> es
+      ) =>
+      Value -> Eff es ()
   }
 
 fromConsumer :: Env -> Consumer Join -> ConsumerRepr
 fromConsumer env consumer = ConsumerRepr $ \value -> do
   local (const env) $ evalConsumer consumer value
 
-runConsumer :: (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es, Reader Handlers :> es, IOE :> es) => ConsumerRepr -> Value -> Eff es Value
+runConsumer :: (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es, Reader Handlers :> es, IOE :> es) => ConsumerRepr -> Value -> Eff es ()
 runConsumer (ConsumerRepr {repr}) value = repr value
 
 instance Show ConsumerRepr where
@@ -98,7 +106,7 @@ lookupEnv range name = do
     Just value -> pure value
     Nothing -> throwError (UndefinedVariable range name)
 
-jump :: (Error EvalError :> es, Reader Toplevels :> es, Reader Env :> es, Reader Handlers :> es, IOE :> es) => Range -> Name -> Value -> Eff es Value
+jump :: (Error EvalError :> es, Reader Toplevels :> es, Reader Env :> es, Reader Handlers :> es, IOE :> es) => Range -> Name -> Value -> Eff es ()
 jump range name value = do
   covalue <- lookupEnv range name
   case covalue of
@@ -112,7 +120,7 @@ lookupToplevel range name = do
     Just value -> pure value
     Nothing -> throwError (UndefinedVariable range name)
 
-evalProgram :: (Error EvalError :> es, State Uniq :> es, Reader ModuleName :> es, Reader Handlers :> es, IOE :> es) => Program Join -> Eff es Value
+evalProgram :: (Error EvalError :> es, State Uniq :> es, Reader ModuleName :> es, Reader Handlers :> es, IOE :> es) => Program Join -> Eff es ()
 evalProgram (Program definitions) = do
   let toplevels = Map.fromList [(name, (return, statement)) | (_, name, return, statement) <- definitions]
   let (return, statement) =
@@ -120,15 +128,17 @@ evalProgram (Program definitions) = do
           Just name -> fromJust $ Map.lookup name toplevels -- It is safe to use fromJust here because the main function is guaranteed to exist.
           Nothing -> error "main function not found" -- TODO: Error handling
   runReader toplevels
-    $ runReader emptyEnv
-    $ local (extendEnv return (Consumer $ fromConsumer emptyEnv (Finish (range statement)))) do
-      value <- evalStatement statement
+    $ runReader emptyEnv do
       finish <- newTemporalId "finish"
-      env <- ask @Env
-      local (extendEnv finish (Consumer $ fromConsumer env (Finish (range statement)))) do
-        evalConsumer (Apply (range statement) [Construct (range statement) Tuple [] []] [finish]) value
+      evalStatement
+        $ Join (range statement) finish (Finish (range statement))
+        $ Join
+          (range statement)
+          return
+          (Apply (range statement) [Construct (range statement) Tuple [] []] [finish])
+          statement
 
-evalStatement :: (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es, Reader Handlers :> es, IOE :> es) => Statement Join -> Eff es Value
+evalStatement :: (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es, Reader Handlers :> es, IOE :> es) => Statement Join -> Eff es ()
 evalStatement (Cut producer consumer) = do
   value <- evalProducer producer
   jump (range producer) consumer value
@@ -139,8 +149,7 @@ evalStatement (Join _ label consumer statement) = do
     evalStatement statement
 evalStatement (Primitive range name producers consumer) = do
   producers <- traverse evalProducer producers
-  let primitive = fetchPrimitive name
-  result <- primitive range producers
+  result <- fetchPrimitive name range producers
   jump range consumer result
 evalStatement (Invoke range name consumer) = do
   (return, statement) <- lookupToplevel range name
@@ -162,7 +171,7 @@ evalProducer (Object _ fields) = do
   env <- ask @Env
   pure $ Record env fields
 
-evalConsumer :: (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es, Reader Handlers :> es, IOE :> es) => Consumer Join -> Value -> Eff es Value
+evalConsumer :: (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es, Reader Handlers :> es, IOE :> es) => Consumer Join -> Value -> Eff es ()
 evalConsumer (Label range label) given = do
   covalue <- lookupEnv range label
   case covalue of
@@ -189,7 +198,7 @@ evalConsumer (Project range field consumer) given = do
 evalConsumer (Then _ name statement) given = do
   local (extendEnv name given) do
     evalStatement statement
-evalConsumer (Finish _) given = pure given
+evalConsumer (Finish _) _ = pure ()
 evalConsumer (Select range branches) given = go branches
   where
     go [] = throwError $ NoMatch range given
@@ -214,10 +223,7 @@ match (Expand _ patterns) (Record _ fields) = do
     -- If the evaluation of `statement` finishes normally, the last consumer will be `Label range return`.
     -- By setting `return` to `Finish`, `eval statement` will return the value of the last producer.
     ref <- newIORef Nothing
-    let repr = ConsumerRepr $ \value -> do
-          writeIORef ref $ Just value
-          pure value
-    local (extendEnv return (Consumer repr)) do
+    local (extendEnv return (Consumer $ ConsumerRepr $ writeIORef ref . Just)) do
       _ <- evalStatement statement
       value <- readIORef ref
       match pattern $ fromJust value
