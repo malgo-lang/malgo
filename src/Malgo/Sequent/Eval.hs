@@ -1,4 +1,5 @@
 {-# LANGUAGE UndecidableInstances #-}
+-- FIXME: Envが適切に更新されていない。Grokking the Sequent Calculusの評価規則を読んで、正しく実装する。
 
 module Malgo.Sequent.Eval (Value (..), EvalError (..), Env (..), emptyEnv, Handlers (..), evalProgram) where
 
@@ -20,6 +21,7 @@ import Malgo.Sequent.Core
 import Malgo.Sequent.Fun (HasRange (..), Literal (..), Name, Pattern (..), Tag (..))
 import System.IO.Streams (InputStream, OutputStream)
 import System.IO.Streams qualified as Streams
+import Debug.Trace (traceShowM)
 
 fromConsumer :: Env -> Consumer Join -> Value
 fromConsumer env consumer = Consumer $ \value -> do
@@ -81,6 +83,10 @@ data Env = Env
     bindings :: Map Name Value
   }
   deriving stock (Show)
+
+keys :: Maybe Env -> [Name]
+keys Nothing = []
+keys (Just env) = Map.keys env.bindings <> keys env.parent
 
 emptyEnv :: Env
 emptyEnv = Env Nothing mempty
@@ -156,11 +162,17 @@ evalProducer (Construct range tag producers consumers) = do
   producers <- traverse evalProducer producers
   consumers <- traverse (lookupEnv range) consumers
   pure $ Struct tag (producers <> consumers)
-evalProducer (Lambda _ parameters statement) = do
+evalProducer (Lambda range parameters statement) = do
   env <- ask @Env
+  traceShowM "Lambda"
+  traceShowM range
+  traverse_ traceShowM $ keys $ Just env
   pure $ Function env parameters statement
-evalProducer (Object _ fields) = do
+evalProducer (Object range fields) = do
   env <- ask @Env
+  traceShowM "Object"
+  traceShowM range
+  traverse_ traceShowM $ keys $ Just env
   pure $ Record env fields
 
 evalConsumer :: (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es, Reader Handlers :> es, IOE :> es) => Consumer Join -> Value -> Eff es ()
@@ -181,6 +193,9 @@ evalConsumer (Project range field consumer) given = do
   covalue <- lookupEnv range consumer
   case given of
     Record env fields -> do
+      traceShowM "Project"
+      traceShowM range
+      traverse_ traceShowM $ keys $ Just env
       (name, statement) <- case Map.lookup field fields of
         Just value -> pure value
         Nothing -> throwError $ NoSuchField range field given
