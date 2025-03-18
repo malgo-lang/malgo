@@ -30,7 +30,7 @@ import Malgo.Syntax.Extension
 -------------------------------
 
 lookupVar ::
-  (State TcEnv :> es, IOE :> es, Reader Flag :> es) =>
+  (State TcEnv :> es, IOE :> es) =>
   Range ->
   Id ->
   Eff es (Scheme Type)
@@ -39,7 +39,7 @@ lookupVar pos name =
     Nothing -> errorOn pos $ "Not in scope:" <+> squotes (pretty name)
     Just scheme -> pure scheme
 
-lookupType :: (State TcEnv :> es, IOE :> es, Reader Flag :> es) => Range -> Id -> Eff es Type
+lookupType :: (State TcEnv :> es, IOE :> es) => Range -> Id -> Eff es Type
 lookupType pos name =
   gets @TcEnv (view typeDefMap >>> Map.lookup name) >>= \case
     Nothing -> errorOn pos $ "Not in scope:" <+> squotes (pretty name)
@@ -214,7 +214,7 @@ tcScDef (pos, name, expr) = do
 
 -- | Validate user-declared type signature and add type schemes to environment
 validateSignatures ::
-  (State TcEnv :> es, IOE :> es, Reader Flag :> es) =>
+  (State TcEnv :> es, IOE :> es) =>
   -- | definitions of mutualy recursive functions
   [ScDef (Malgo 'Infer)] ->
   -- | signatures of mutualy recursive functions

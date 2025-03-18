@@ -1,0 +1,28 @@
+((main
+   (lambda
+      ($HelloImport.param_18)
+      (select
+         $HelloImport.param_18
+         ((#HelloImport.$__17
+            (apply
+               (lambda
+                  ($HelloImport.tmp_19)
+                  (apply
+                     (apply
+                        (invoke |>)
+                        ((invoke putStrLn)))
+                     ((lambda
+                        ($HelloImport.param_20)
+                        (select
+                           $HelloImport.param_20
+                           ((#HelloImport.f_0
+                              (apply
+                                 #HelloImport.f_0
+                                 ((apply
+                                    (invoke String#)
+                                    (" world")))))))))))
+               ((apply
+                  (invoke putStr)
+                  ((apply
+                     (invoke String#)
+                     ("hello"))))))))))))

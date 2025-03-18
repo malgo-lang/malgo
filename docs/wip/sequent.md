@@ -1,9 +1,6 @@
 # DoThen VM
 
 
-<!--
-    Draft
-
 ## SECD Machine
 
 ```
@@ -511,5 +508,3 @@ variable in consumer -> Resume(variable)
 "finish" -> Finish
 (value : S, E, Finish : C) -> exit with value
 ```
-
-End of Draft -->

@@ -1,0 +1,39 @@
+((executeWhenLoaded
+   (let
+      #Seq.x_0
+      (apply
+         (invoke Int32#)
+         (1_i32))
+      (let
+         #Seq.y_1
+         (apply
+            (invoke Int32#)
+            (2_i32))
+         (apply
+            (lambda
+               ($Seq.tmp_27)
+               (apply
+                  (apply
+                     (invoke addInt32)
+                     (#Seq.x_0))
+                  (#Seq.y_1)))
+            ((apply
+               (invoke printString)
+               ((apply
+                  (invoke toStringInt32)
+                  ((apply
+                     (apply
+                        (invoke addInt32)
+                        (#Seq.x_0))
+                     (#Seq.y_1)))))))))))
+   (main
+      (lambda
+         ($Seq.param_28)
+         (select
+            $Seq.param_28
+            ((#Seq.$__26
+               (apply
+                  (invoke printString)
+                  ((apply
+                     (invoke toStringInt32)
+                     ((invoke executeWhenLoaded)))))))))))

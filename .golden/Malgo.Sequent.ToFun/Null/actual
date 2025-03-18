@@ -1,0 +1,110 @@
+((|>
+   (lambda
+      ($Null.param_119)
+      (lambda
+         ($Null.param_120)
+         (select
+            (tuple
+               ($Null.param_119 $Null.param_120))
+            (((tuple
+               (#Null.x_11 #Null.f_12))
+               (apply
+                  #Null.f_12
+                  (#Null.x_11))))))))
+   (mHead
+      (lambda
+         ($Null.param_121)
+         (select
+            $Null.param_121
+            (((Nil ())
+               (invoke Nothing))
+               ((Cons
+                  (#Null.p_5 #Null.__6))
+                  (apply
+                     (invoke Just)
+                     (#Null.p_5)))))))
+   (isNothing
+      (lambda
+         ($Null.param_122)
+         (select
+            $Null.param_122
+            (((Nothing ())
+               (invoke True))
+               ((Just
+                  (#Null.__3))
+                  (invoke False))))))
+   (null
+      (lambda
+         ($Null.param_123)
+         (select
+            $Null.param_123
+            ((#Null.as_8
+               (apply
+                  (invoke isNothing)
+                  ((apply
+                     (invoke mHead)
+                     (#Null.as_8)))))))))
+   (main
+      (lambda
+         ($Null.param_124)
+         (select
+            $Null.param_124
+            ((#Null.$__118
+               (apply
+                  (apply
+                     (invoke |>)
+                     ((apply
+                        (invoke null)
+                        ((apply
+                           (apply
+                              (invoke Cons)
+                              ((invoke True)))
+                           ((apply
+                              (apply
+                                 (invoke Cons)
+                                 ((invoke True)))
+                              ((invoke Nil)))))))))
+                  ((lambda
+                     ($Null.param_125)
+                     (select
+                        $Null.param_125
+                        (((False ())
+                           (apply
+                              (invoke malgo_print_string)
+                              ("OK")))
+                           ((True ())
+                              (apply
+                                 (invoke malgo_exit_failure)
+                                 ((tuple ()))))))))))))))
+   (Nothing
+      (Nothing ()))
+   (Just
+      (lambda
+         ($Null.constructor_126)
+         (Just
+            ($Null.constructor_126))))
+   (False
+      (False ()))
+   (True
+      (True ()))
+   (Nil
+      (Nil ()))
+   (Cons
+      (lambda
+         ($Null.constructor_127)
+         (lambda
+            ($Null.constructor_128)
+            (Cons
+               ($Null.constructor_127 $Null.constructor_128)))))
+   (malgo_print_string
+      (lambda
+         ($Null.primitive_129)
+         (primitive
+            malgo_print_string
+            ($Null.primitive_129))))
+   (malgo_exit_failure
+      (lambda
+         ($Null.primitive_130)
+         (primitive
+            malgo_exit_failure
+            ($Null.primitive_130)))))

@@ -1,0 +1,18 @@
+((main
+   $TestExplicitModule.return_8
+   (cut
+      (lambda
+         ($TestExplicitModule.param_7 $TestExplicitModule.return_9)
+         (cut
+            $TestExplicitModule.param_7
+            (select
+               (#TestExplicitModule.$__6
+                  (invoke putStrLn
+                     (apply
+                        ((do $TestExplicitModule.return_10
+                           (invoke String#
+                              (apply
+                                 ("Hello, world")
+                                 ($TestExplicitModule.return_10)))))
+                        ($TestExplicitModule.return_9)))))))
+      $TestExplicitModule.return_8)))

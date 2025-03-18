@@ -1,0 +1,70 @@
+((one
+   $ZeroArgs.return_33
+   (cut
+      (lambda
+         ($ZeroArgs.param_28 $ZeroArgs.return_34)
+         (cut
+            $ZeroArgs.param_28
+            (select
+               (#ZeroArgs.$__6
+                  (invoke Int32#
+                     (apply
+                        (1_i32)
+                        ($ZeroArgs.return_34)))))))
+      (apply
+         ((construct tuple () ()))
+         ($ZeroArgs.return_33))))
+   (id
+      $ZeroArgs.return_35
+      (cut
+         (lambda
+            ($ZeroArgs.param_29 $ZeroArgs.return_36)
+            (cut
+               $ZeroArgs.param_29
+               (select
+                  (#ZeroArgs.x_1
+                     (cut
+                        (lambda
+                           ($ZeroArgs.param_30 $ZeroArgs.return_37)
+                           (cut
+                              $ZeroArgs.param_30
+                              (select
+                                 (#ZeroArgs.$__11
+                                    (cut #ZeroArgs.x_1 $ZeroArgs.return_37)))))
+                        (apply
+                           ((construct tuple () ()))
+                           ($ZeroArgs.return_36)))))))
+         $ZeroArgs.return_35))
+   (main
+      $ZeroArgs.return_38
+      (cut
+         (lambda
+            ($ZeroArgs.param_31 $ZeroArgs.return_39)
+            (cut
+               $ZeroArgs.param_31
+               (select
+                  (#ZeroArgs.$__25
+                     (cut
+                        (lambda
+                           ($ZeroArgs.param_32 $ZeroArgs.return_40)
+                           (cut
+                              $ZeroArgs.param_32
+                              (select
+                                 (#ZeroArgs.$__24
+                                    (invoke printString
+                                       (apply
+                                          ((do $ZeroArgs.return_41
+                                             (invoke toStringInt32
+                                                (apply
+                                                   ((do $ZeroArgs.return_42
+                                                      (invoke id
+                                                         (apply
+                                                            ((do $ZeroArgs.return_43
+                                                               (invoke one $ZeroArgs.return_43)))
+                                                            ($ZeroArgs.return_42)))))
+                                                   ($ZeroArgs.return_41)))))
+                                          ($ZeroArgs.return_40)))))))
+                        $ZeroArgs.return_39)))))
+         (apply
+            ((construct tuple () ()))
+            ($ZeroArgs.return_38)))))

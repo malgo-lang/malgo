@@ -1,0 +1,99 @@
+((wrap
+   (lambda
+      ($ShowSimple.param_54)
+      (select
+         $ShowSimple.param_54
+         ((#ShowSimple.fn_6
+            (object
+               ((show #ShowSimple.fn_6))))))))
+   (string#
+      (lambda
+         ($ShowSimple.param_55)
+         (select
+            $ShowSimple.param_55
+            ((#ShowSimple.x_1
+               (apply
+                  (invoke String#)
+                  (#ShowSimple.x_1)))))))
+   (show
+      (lambda
+         ($ShowSimple.param_56)
+         (select
+            $ShowSimple.param_56
+            (((expand
+               ((show #ShowSimple.show_5)))
+               #ShowSimple.show_5)))))
+   (putStr
+      (lambda
+         ($ShowSimple.param_57)
+         (select
+            $ShowSimple.param_57
+            (((String#
+               (#ShowSimple.x_2))
+               (apply
+                  (invoke malgo_print_string)
+                  (#ShowSimple.x_2)))))))
+   (main
+      (lambda
+         ($ShowSimple.param_58)
+         (select
+            $ShowSimple.param_58
+            ((#ShowSimple.$__49
+               (apply
+                  (invoke putStr)
+                  ((apply
+                     (apply
+                        (invoke show)
+                        ((apply
+                           (invoke wrap)
+                           ((lambda
+                              ($ShowSimple.param_59)
+                              (select
+                                 $ShowSimple.param_59
+                                 (((Int32#
+                                    (#ShowSimple.x_7))
+                                    (apply
+                                       (invoke String#)
+                                       ((apply
+                                          (invoke malgo_int32_t_to_string)
+                                          (#ShowSimple.x_7))))))))))))
+                     ((apply
+                        (invoke Int32#)
+                        (1_i32)))))))))))
+   (int32#
+      (lambda
+         ($ShowSimple.param_60)
+         (select
+            $ShowSimple.param_60
+            ((#ShowSimple.x_0
+               (apply
+                  (invoke Int32#)
+                  (#ShowSimple.x_0)))))))
+   (Int32#
+      (lambda
+         ($ShowSimple.constructor_61)
+         (Int32#
+            ($ShowSimple.constructor_61))))
+   (String#
+      (lambda
+         ($ShowSimple.constructor_62)
+         (String#
+            ($ShowSimple.constructor_62))))
+   (malgo_print_string
+      (lambda
+         ($ShowSimple.primitive_63)
+         (primitive
+            malgo_print_string
+            ($ShowSimple.primitive_63))))
+   (malgo_newline
+      (lambda
+         ($ShowSimple.primitive_64)
+         (primitive
+            malgo_newline
+            ($ShowSimple.primitive_64))))
+   (malgo_int32_t_to_string
+      (lambda
+         ($ShowSimple.primitive_65)
+         (primitive
+            malgo_int32_t_to_string
+            ($ShowSimple.primitive_65)))))

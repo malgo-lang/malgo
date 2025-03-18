@@ -1,0 +1,20 @@
+((main
+   (lambda
+      ($Pattern.param_16)
+      (select
+         $Pattern.param_16
+         ((#Pattern.$__9
+            (apply
+               (invoke putStrLn)
+               ((apply
+                  (invoke String#)
+                  ("OK")))))))))
+   (isNil
+      (lambda
+         ($Pattern.param_17)
+         (select
+            $Pattern.param_17
+            (((Nil ())
+               (invoke True))
+               (#Pattern.__0
+                  (invoke False)))))))

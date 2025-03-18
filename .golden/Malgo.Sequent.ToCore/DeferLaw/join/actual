@@ -1,0 +1,69 @@
+((f
+   $DeferLaw.return_25
+   (cut
+      (lambda
+         ($DeferLaw.param_22 $DeferLaw.return_26)
+         (join
+            $DeferLaw.select_38
+            (select
+               (#DeferLaw.x_1
+                  (join
+                     $DeferLaw.apply_37
+                     (apply
+                        ((construct tuple () ()))
+                        ($DeferLaw.return_26))
+                     (cut
+                        (lambda
+                           ($DeferLaw.param_23 $DeferLaw.return_27)
+                           (join
+                              $DeferLaw.select_36
+                              (select
+                                 (#DeferLaw.$__8
+                                    (cut #DeferLaw.x_1 $DeferLaw.return_27)))
+                              (cut $DeferLaw.param_23 $DeferLaw.select_36)))
+                        $DeferLaw.apply_37))))
+            (cut $DeferLaw.param_22 $DeferLaw.select_38)))
+      $DeferLaw.return_25))
+   (main
+      $DeferLaw.return_28
+      (cut
+         (lambda
+            ($DeferLaw.param_24 $DeferLaw.return_29)
+            (join
+               $DeferLaw.select_44
+               (select
+                  (#DeferLaw.$__21
+                     (join
+                        $DeferLaw.then_43
+                        (then $DeferLaw.outer_32
+                           (join
+                              $DeferLaw.return_30
+                              (then $DeferLaw.inner_33
+                                 (join
+                                    $DeferLaw.apply_42
+                                    (apply
+                                       ($DeferLaw.inner_33)
+                                       ($DeferLaw.return_29))
+                                    (cut $DeferLaw.outer_32 $DeferLaw.apply_42)))
+                              (join
+                                 $DeferLaw.then_41
+                                 (then $DeferLaw.outer_34
+                                    (join
+                                       $DeferLaw.return_31
+                                       (then $DeferLaw.inner_35
+                                          (join
+                                             $DeferLaw.apply_40
+                                             (apply
+                                                ($DeferLaw.inner_35)
+                                                ($DeferLaw.return_30))
+                                             (cut $DeferLaw.outer_34 $DeferLaw.apply_40)))
+                                       (join
+                                          $DeferLaw.apply_39
+                                          (apply
+                                             ("Hello")
+                                             ($DeferLaw.return_31))
+                                          (invoke String# $DeferLaw.apply_39))))
+                                 (invoke f $DeferLaw.then_41))))
+                        (invoke putStrLn $DeferLaw.then_43))))
+               (cut $DeferLaw.param_24 $DeferLaw.select_44)))
+         $DeferLaw.return_28)))

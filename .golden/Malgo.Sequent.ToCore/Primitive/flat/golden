@@ -1,0 +1,36 @@
+((main
+   $Primitive.return_12
+   (cut
+      (lambda
+         ($Primitive.param_11 $Primitive.return_13)
+         (cut
+            $Primitive.param_11
+            (select
+               (#Primitive.$__10
+                  (invoke printString#
+                     (then $Primitive.outer_16
+                        (join
+                           $Primitive.return_14
+                           (then $Primitive.inner_17
+                              (cut
+                                 $Primitive.outer_16
+                                 (apply
+                                    ($Primitive.inner_17)
+                                    ($Primitive.return_13))))
+                           (invoke toStringInt64#
+                              (then $Primitive.outer_18
+                                 (join
+                                    $Primitive.return_15
+                                    (then $Primitive.inner_19
+                                       (cut
+                                          $Primitive.outer_18
+                                          (apply
+                                             ($Primitive.inner_19)
+                                             ($Primitive.return_14))))
+                                    (invoke addInt64#
+                                       (apply
+                                          (40_i64)
+                                          ((apply
+                                             (2_i64)
+                                             ($Primitive.return_15)))))))))))))))
+      $Primitive.return_12)))

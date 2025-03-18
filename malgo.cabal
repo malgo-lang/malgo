@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.38.0.
+-- This file has been generated from package.yaml by hpack version 0.36.1.
 --
 -- see: https://github.com/sol/hpack
 
@@ -56,9 +56,13 @@ library
       Malgo.Rename.Pass
       Malgo.Rename.RnEnv
       Malgo.Rename.RnState
-      Malgo.Sequent.Command
-      Malgo.Sequent.Compile
-      Malgo.Sequent.Value
+      Malgo.Sequent.Core
+      Malgo.Sequent.Core.Flat
+      Malgo.Sequent.Core.Join
+      Malgo.Sequent.Eval
+      Malgo.Sequent.Fun
+      Malgo.Sequent.ToCore
+      Malgo.Sequent.ToFun
       Malgo.SExpr
       Malgo.Syntax
       Malgo.Syntax.Extension
@@ -89,11 +93,8 @@ library
       Glob
     , aeson
     , base
-    , binary
-    , binary-instances
     , bytestring
     , containers
-    , diagnose ==2.5.1
     , directory
     , effectful
     , effectful-core
@@ -150,11 +151,8 @@ executable malgo
       Glob
     , aeson
     , base
-    , binary
-    , binary-instances
     , bytestring
     , containers
-    , diagnose ==2.5.1
     , directory
     , effectful
     , effectful-core
@@ -194,6 +192,9 @@ test-suite malgo-test
       Malgo.ParserSpec
       Malgo.RefineSpec
       Malgo.RenameSpec
+      Malgo.Sequent.EvalSpec
+      Malgo.Sequent.ToCoreSpec
+      Malgo.Sequent.ToFunSpec
       Malgo.TestUtils
       Paths_malgo
   hs-source-dirs:
@@ -221,11 +222,8 @@ test-suite malgo-test
       Glob
     , aeson
     , base
-    , binary
-    , binary-instances
     , bytestring
     , containers
-    , diagnose ==2.5.1
     , directory
     , effectful
     , effectful-core

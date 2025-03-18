@@ -1,0 +1,97 @@
+((twice
+   (lambda
+      ($With.param_79)
+      (select
+         $With.param_79
+         ((#With.k_6
+            (apply
+               (lambda
+                  ($With.tmp_80)
+                  (apply
+                     #With.k_6
+                     ((tuple ()))))
+               ((apply
+                  #With.k_6
+                  ((tuple ()))))))))))
+   (printAndReturn
+      (lambda
+         ($With.param_81)
+         (lambda
+            ($With.param_82)
+            (select
+               (tuple
+                  ($With.param_81 $With.param_82))
+               (((tuple
+                  (#With.str_7 #With.k_8))
+                  (apply
+                     (lambda
+                        ($With.tmp_83)
+                        (apply
+                           #With.k_8
+                           (#With.str_7)))
+                     ((apply
+                        (invoke printString)
+                        (#With.str_7))))))))))
+   (finally
+      (lambda
+         ($With.param_84)
+         (lambda
+            ($With.param_85)
+            (select
+               (tuple
+                  ($With.param_84 $With.param_85))
+               (((tuple
+                  (#With.finalizer_2 #With.k_3))
+                  (let
+                     #With.x_4
+                     (apply
+                        #With.k_3
+                        ((tuple ())))
+                     (apply
+                        #With.finalizer_2
+                        (#With.x_4)))))))))
+   (main
+      (lambda
+         ($With.param_86)
+         (select
+            $With.param_86
+            ((#With.$__78
+               (apply
+                  (apply
+                     (invoke finally)
+                     ((lambda
+                        ($With.param_87)
+                        (select
+                           $With.param_87
+                           (((tuple ())
+                              (apply
+                                 (invoke printString)
+                                 ((apply
+                                    (invoke String#)
+                                    ("end"))))))))))
+                  ((lambda
+                     ($With.param_88)
+                     (select
+                        $With.param_88
+                        ((#With.$__75
+                           (apply
+                              (invoke twice)
+                              ((lambda
+                                 ($With.param_89)
+                                 (select
+                                    $With.param_89
+                                    ((#With.$__72
+                                       (apply
+                                          (apply
+                                             (invoke printAndReturn)
+                                             ((apply
+                                                (invoke String#)
+                                                ("foo"))))
+                                          ((lambda
+                                             ($With.param_90)
+                                             (select
+                                                $With.param_90
+                                                ((#With.x_9
+                                                   (apply
+                                                      (invoke printString)
+                                                      (#With.x_9))))))))))))))))))))))))))

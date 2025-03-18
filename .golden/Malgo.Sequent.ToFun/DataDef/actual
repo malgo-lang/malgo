@@ -1,0 +1,47 @@
+((main
+   (lambda
+      ($DataDef.param_18)
+      (select
+         $DataDef.param_18
+         ((#DataDef.$__17
+            (apply
+               (lambda
+                  ($DataDef.param_19)
+                  (select
+                     $DataDef.param_19
+                     (((Int#
+                        (#DataDef.x_1))
+                        (apply
+                           (invoke malgo_print_string)
+                           ((apply
+                              (invoke malgo_int64_t_to_string)
+                              (#DataDef.x_1))))))))
+               ((apply
+                  (invoke Int#)
+                  (1_i64)))))))))
+   (Int#
+      (lambda
+         ($DataDef.constructor_20)
+         (Int#
+            ($DataDef.constructor_20))))
+   (Nil
+      (Nil ()))
+   (Cons
+      (lambda
+         ($DataDef.constructor_21)
+         (lambda
+            ($DataDef.constructor_22)
+            (Cons
+               ($DataDef.constructor_21 $DataDef.constructor_22)))))
+   (malgo_int64_t_to_string
+      (lambda
+         ($DataDef.primitive_23)
+         (primitive
+            malgo_int64_t_to_string
+            ($DataDef.primitive_23))))
+   (malgo_print_string
+      (lambda
+         ($DataDef.primitive_24)
+         (primitive
+            malgo_print_string
+            ($DataDef.primitive_24)))))

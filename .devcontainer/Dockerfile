@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/devcontainers/base:debian
 
-RUN apt-get update && apt-get install -y build-essential curl libffi-dev libffi8ubuntu1 libgmp-dev libgmp10 libncurses-dev libncurses5 libtinfo5 libgc-dev lsb-release wget software-properties-common gnupg pkg-config && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y build-essential curl libffi-dev libffi8ubuntu1 libgmp-dev libgmp10 libncurses-dev libncurses5 libtinfo5 libgc-dev lsb-release wget software-properties-common gnupg pkg-config ripgrep && rm -rf /var/lib/apt/lists/*
 
 RUN rm -rf /var/lib/apt/lists/*
 

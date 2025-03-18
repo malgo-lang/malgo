@@ -1,0 +1,152 @@
+((succ
+   $UseModule.return_39
+   (cut
+      (lambda
+         ($UseModule.param_36 $UseModule.return_40)
+         (join
+            $UseModule.select_72
+            (select
+               (#UseModule.x_0
+                  (join
+                     $UseModule.then_70
+                     (then $UseModule.outer_52
+                        (join
+                           $UseModule.return_41
+                           (then $UseModule.inner_53
+                              (join
+                                 $UseModule.apply_69
+                                 (apply
+                                    ($UseModule.inner_53)
+                                    ($UseModule.return_40))
+                                 (cut $UseModule.outer_52 $UseModule.apply_69)))
+                           (join
+                              $UseModule.apply_68
+                              (apply
+                                 (1_i32)
+                                 ($UseModule.return_41))
+                              (invoke Int32# $UseModule.apply_68))))
+                     (join
+                        $UseModule.apply_71
+                        (apply
+                           (#UseModule.x_0)
+                           ($UseModule.then_70))
+                        (invoke addInt32 $UseModule.apply_71)))))
+            (cut $UseModule.param_36 $UseModule.select_72)))
+      $UseModule.return_39))
+   (main
+      $UseModule.return_42
+      (cut
+         (lambda
+            ($UseModule.param_37 $UseModule.return_43)
+            (join
+               $UseModule.select_89
+               (select
+                  (#UseModule.$__35
+                     (join
+                        $UseModule.then_88
+                        (then $UseModule.outer_64
+                           (join
+                              $UseModule.return_44
+                              (then $UseModule.inner_65
+                                 (join
+                                    $UseModule.apply_87
+                                    (apply
+                                       ($UseModule.inner_65)
+                                       ($UseModule.return_43))
+                                    (cut $UseModule.outer_64 $UseModule.apply_87)))
+                              (join
+                                 $UseModule.then_86
+                                 (then $UseModule.outer_66
+                                    (join
+                                       $UseModule.return_45
+                                       (then $UseModule.inner_67
+                                          (join
+                                             $UseModule.apply_85
+                                             (apply
+                                                ($UseModule.inner_67)
+                                                ($UseModule.return_44))
+                                             (cut $UseModule.outer_66 $UseModule.apply_85)))
+                                       (join
+                                          $UseModule.apply_84
+                                          (apply
+                                             ("Hello, world!")
+                                             ($UseModule.return_45))
+                                          (invoke String# $UseModule.apply_84))))
+                                 (invoke putStrLn $UseModule.then_86))))
+                        (cut
+                           (lambda
+                              ($UseModule.tmp_38 $UseModule.return_46)
+                              (join
+                                 $UseModule.then_83
+                                 (then $UseModule.outer_54
+                                    (join
+                                       $UseModule.return_51
+                                       (then $UseModule.inner_55
+                                          (join
+                                             $UseModule.then_81
+                                             (then $UseModule.outer_56
+                                                (join
+                                                   $UseModule.return_47
+                                                   (then $UseModule.inner_57
+                                                      (join
+                                                         $UseModule.apply_80
+                                                         (apply
+                                                            ($UseModule.inner_57)
+                                                            ($UseModule.return_46))
+                                                         (cut $UseModule.outer_56 $UseModule.apply_80)))
+                                                   (join
+                                                      $UseModule.then_79
+                                                      (then $UseModule.outer_58
+                                                         (join
+                                                            $UseModule.return_50
+                                                            (then $UseModule.inner_59
+                                                               (join
+                                                                  $UseModule.then_77
+                                                                  (then $UseModule.outer_60
+                                                                     (join
+                                                                        $UseModule.return_49
+                                                                        (then $UseModule.inner_61
+                                                                           (join
+                                                                              $UseModule.then_75
+                                                                              (then $UseModule.outer_62
+                                                                                 (join
+                                                                                    $UseModule.return_48
+                                                                                    (then $UseModule.inner_63
+                                                                                       (join
+                                                                                          $UseModule.apply_74
+                                                                                          (apply
+                                                                                             ($UseModule.inner_63)
+                                                                                             ($UseModule.return_47))
+                                                                                          (cut $UseModule.outer_62 $UseModule.apply_74)))
+                                                                                    (join
+                                                                                       $UseModule.apply_73
+                                                                                       (apply
+                                                                                          (1_i32)
+                                                                                          ($UseModule.return_48))
+                                                                                       (invoke Int32# $UseModule.apply_73))))
+                                                                              (join
+                                                                                 $UseModule.apply_76
+                                                                                 (apply
+                                                                                    ($UseModule.inner_61)
+                                                                                    ($UseModule.then_75))
+                                                                                 (cut $UseModule.outer_60 $UseModule.apply_76))))
+                                                                        (invoke succ $UseModule.return_49)))
+                                                                  (join
+                                                                     $UseModule.apply_78
+                                                                     (apply
+                                                                        ($UseModule.inner_59)
+                                                                        ($UseModule.then_77))
+                                                                     (cut $UseModule.outer_58 $UseModule.apply_78))))
+                                                            (invoke succ $UseModule.return_50)))
+                                                      (invoke . $UseModule.then_79))))
+                                             (join
+                                                $UseModule.apply_82
+                                                (apply
+                                                   ($UseModule.inner_55)
+                                                   ($UseModule.then_81))
+                                                (cut $UseModule.outer_54 $UseModule.apply_82))))
+                                       (invoke printInt32 $UseModule.return_51)))
+                                 (invoke <| $UseModule.then_83)))
+                           $UseModule.then_88))))
+               (cut $UseModule.param_37 $UseModule.select_89)))
+         $UseModule.return_42)))

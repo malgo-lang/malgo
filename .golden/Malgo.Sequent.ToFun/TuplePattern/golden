@@ -1,0 +1,38 @@
+((main
+   (lambda
+      ($TuplePattern.param_26)
+      (select
+         $TuplePattern.param_26
+         ((#TuplePattern.$__25
+            (apply
+               (apply
+                  (invoke |>)
+                  ((tuple
+                     ((invoke A)
+                        (invoke B)))))
+               ((lambda
+                  ($TuplePattern.param_27)
+                  (select
+                     $TuplePattern.param_27
+                     (((tuple
+                        ((A ())
+                           #TuplePattern.rest_0))
+                        (apply
+                           (invoke printString)
+                           ((apply
+                              (invoke String#)
+                              ("A")))))
+                        ((tuple
+                           ((B ())
+                              #TuplePattern.rest_1))
+                           (tuple ()))
+                        ((tuple
+                           ((C ())
+                              #TuplePattern.rest_2))
+                           (tuple ()))))))))))))
+   (A
+      (A ()))
+   (B
+      (B ()))
+   (C
+      (C ())))

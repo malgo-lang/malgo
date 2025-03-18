@@ -1,0 +1,147 @@
+((even
+   $EvenOdd.return_55
+   (cut
+      (lambda
+         ($EvenOdd.param_51 $EvenOdd.return_56)
+         (cut
+            $EvenOdd.param_51
+            (select
+               ((Int32#
+                  (0_i32))
+                  (invoke True $EvenOdd.return_56))
+               (#EvenOdd.n_0
+                  (invoke odd
+                     (then $EvenOdd.outer_70
+                        (join
+                           $EvenOdd.return_57
+                           (then $EvenOdd.inner_71
+                              (cut
+                                 $EvenOdd.outer_70
+                                 (apply
+                                    ($EvenOdd.inner_71)
+                                    ($EvenOdd.return_56))))
+                           (invoke subInt32
+                              (apply
+                                 (#EvenOdd.n_0)
+                                 ((then $EvenOdd.outer_72
+                                    (join
+                                       $EvenOdd.return_58
+                                       (then $EvenOdd.inner_73
+                                          (cut
+                                             $EvenOdd.outer_72
+                                             (apply
+                                                ($EvenOdd.inner_73)
+                                                ($EvenOdd.return_57))))
+                                       (invoke Int32#
+                                          (apply
+                                             (1_i32)
+                                             ($EvenOdd.return_58)))))))))))))))
+      $EvenOdd.return_55))
+   (odd
+      $EvenOdd.return_59
+      (cut
+         (lambda
+            ($EvenOdd.param_52 $EvenOdd.return_60)
+            (cut
+               $EvenOdd.param_52
+               (select
+                  ((Int32#
+                     (0_i32))
+                     (invoke False $EvenOdd.return_60))
+                  (#EvenOdd.n_1
+                     (invoke even
+                        (then $EvenOdd.outer_74
+                           (join
+                              $EvenOdd.return_61
+                              (then $EvenOdd.inner_75
+                                 (cut
+                                    $EvenOdd.outer_74
+                                    (apply
+                                       ($EvenOdd.inner_75)
+                                       ($EvenOdd.return_60))))
+                              (invoke subInt32
+                                 (apply
+                                    (#EvenOdd.n_1)
+                                    ((then $EvenOdd.outer_76
+                                       (join
+                                          $EvenOdd.return_62
+                                          (then $EvenOdd.inner_77
+                                             (cut
+                                                $EvenOdd.outer_76
+                                                (apply
+                                                   ($EvenOdd.inner_77)
+                                                   ($EvenOdd.return_61))))
+                                          (invoke Int32#
+                                             (apply
+                                                (1_i32)
+                                                ($EvenOdd.return_62)))))))))))))))
+         $EvenOdd.return_59))
+   (main
+      $EvenOdd.return_63
+      (cut
+         (lambda
+            ($EvenOdd.param_53 $EvenOdd.return_64)
+            (cut
+               $EvenOdd.param_53
+               (select
+                  (#EvenOdd.$__50
+                     (cut
+                        (lambda
+                           ($EvenOdd.param_54 $EvenOdd.return_67)
+                           (cut
+                              $EvenOdd.param_54
+                              (select
+                                 ((False ())
+                                    (invoke putStrLn
+                                       (then $EvenOdd.outer_78
+                                          (join
+                                             $EvenOdd.return_68
+                                             (then $EvenOdd.inner_79
+                                                (cut
+                                                   $EvenOdd.outer_78
+                                                   (apply
+                                                      ($EvenOdd.inner_79)
+                                                      ($EvenOdd.return_67))))
+                                             (invoke String#
+                                                (apply
+                                                   ("False")
+                                                   ($EvenOdd.return_68)))))))
+                                 ((True ())
+                                    (invoke putStrLn
+                                       (then $EvenOdd.outer_80
+                                          (join
+                                             $EvenOdd.return_69
+                                             (then $EvenOdd.inner_81
+                                                (cut
+                                                   $EvenOdd.outer_80
+                                                   (apply
+                                                      ($EvenOdd.inner_81)
+                                                      ($EvenOdd.return_67))))
+                                             (invoke String#
+                                                (apply
+                                                   ("True")
+                                                   ($EvenOdd.return_69))))))))))
+                        (then $EvenOdd.outer_82
+                           (join
+                              $EvenOdd.return_65
+                              (then $EvenOdd.inner_83
+                                 (cut
+                                    $EvenOdd.outer_82
+                                    (apply
+                                       ($EvenOdd.inner_83)
+                                       ($EvenOdd.return_64))))
+                              (invoke even
+                                 (then $EvenOdd.outer_84
+                                    (join
+                                       $EvenOdd.return_66
+                                       (then $EvenOdd.inner_85
+                                          (cut
+                                             $EvenOdd.outer_84
+                                             (apply
+                                                ($EvenOdd.inner_85)
+                                                ($EvenOdd.return_65))))
+                                       (invoke Int32#
+                                          (apply
+                                             (10_i32)
+                                             ($EvenOdd.return_66)))))))))))))
+         $EvenOdd.return_63)))

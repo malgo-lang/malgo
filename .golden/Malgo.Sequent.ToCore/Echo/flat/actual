@@ -1,0 +1,24 @@
+((main
+   $Echo.return_10
+   (cut
+      (lambda
+         ($Echo.param_9 $Echo.return_11)
+         (cut
+            $Echo.param_9
+            (select
+               (#Echo.$__8
+                  (invoke putStr
+                     (then $Echo.outer_13
+                        (join
+                           $Echo.return_12
+                           (then $Echo.inner_14
+                              (cut
+                                 $Echo.outer_13
+                                 (apply
+                                    ($Echo.inner_14)
+                                    ($Echo.return_11))))
+                           (invoke getContents
+                              (apply
+                                 ((construct tuple () ()))
+                                 ($Echo.return_12))))))))))
+      $Echo.return_10)))

@@ -6,8 +6,6 @@ module Main (main) where
 
 import Control.Lens (makeFieldsNoPrefix)
 import Data.ByteString qualified as BS
-import Error.Diagnose (TabSize (..), WithUnicode (..), addFile, defaultStyle, printDiagnostic)
-import Error.Diagnose.Compat.Megaparsec (errorDiagnosticFromBundle)
 import Malgo.Core.Optimize (OptimizeOption (..))
 import Malgo.Core.Parser qualified as Core
 import Malgo.Driver qualified as Driver
@@ -17,6 +15,7 @@ import Malgo.Prelude
 import Options.Applicative
 import System.Directory (makeAbsolute)
 import System.Exit (exitFailure)
+import Text.Megaparsec (errorBundlePretty)
 
 data EvalOpt = ToLLOpt
   { srcPath :: FilePath,
@@ -45,10 +44,9 @@ main = do
     Core (CoreOpt srcPath) -> do
       srcContents <- BS.readFile srcPath
       case Core.parse srcPath (convertString srcContents) of
-        Left err ->
-          let diag = errorDiagnosticFromBundle @Text Nothing "Parse error on input" Nothing err
-              diag' = addFile diag srcPath (convertString srcContents)
-           in printDiagnostic stderr WithUnicode (TabSize 4) defaultStyle diag' >> exitFailure
+        Left err -> do
+          hPutStrLn stderr $ errorBundlePretty err
+          exitFailure
         Right prog -> do
           putText $ render $ pretty prog
 

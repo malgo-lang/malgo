@@ -1,0 +1,69 @@
+((main
+   $HelloImport.return_21
+   (cut
+      (lambda
+         ($HelloImport.param_18 $HelloImport.return_22)
+         (cut
+            $HelloImport.param_18
+            (select
+               (#HelloImport.$__17
+                  (cut
+                     (lambda
+                        ($HelloImport.tmp_19 $HelloImport.return_25)
+                        (invoke |>
+                           (then $HelloImport.outer_29
+                              (join
+                                 $HelloImport.return_28
+                                 (then $HelloImport.inner_30
+                                    (cut
+                                       $HelloImport.outer_29
+                                       (apply
+                                          ($HelloImport.inner_30)
+                                          ((apply
+                                             ((lambda
+                                                ($HelloImport.param_20 $HelloImport.return_26)
+                                                (cut
+                                                   $HelloImport.param_20
+                                                   (select
+                                                      (#HelloImport.f_0
+                                                         (cut
+                                                            #HelloImport.f_0
+                                                            (then $HelloImport.outer_31
+                                                               (join
+                                                                  $HelloImport.return_27
+                                                                  (then $HelloImport.inner_32
+                                                                     (cut
+                                                                        $HelloImport.outer_31
+                                                                        (apply
+                                                                           ($HelloImport.inner_32)
+                                                                           ($HelloImport.return_26))))
+                                                                  (invoke String#
+                                                                     (apply
+                                                                        (" world")
+                                                                        ($HelloImport.return_27)))))))))))
+                                             ($HelloImport.return_25))))))
+                                 (invoke putStrLn $HelloImport.return_28)))))
+                     (then $HelloImport.outer_33
+                        (join
+                           $HelloImport.return_23
+                           (then $HelloImport.inner_34
+                              (cut
+                                 $HelloImport.outer_33
+                                 (apply
+                                    ($HelloImport.inner_34)
+                                    ($HelloImport.return_22))))
+                           (invoke putStr
+                              (then $HelloImport.outer_35
+                                 (join
+                                    $HelloImport.return_24
+                                    (then $HelloImport.inner_36
+                                       (cut
+                                          $HelloImport.outer_35
+                                          (apply
+                                             ($HelloImport.inner_36)
+                                             ($HelloImport.return_23))))
+                                    (invoke String#
+                                       (apply
+                                          ("hello")
+                                          ($HelloImport.return_24)))))))))))))
+      $HelloImport.return_21)))

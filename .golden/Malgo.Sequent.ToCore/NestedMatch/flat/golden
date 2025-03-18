@@ -1,0 +1,122 @@
+((main
+   $NestedMatch.return_36
+   (cut
+      (lambda
+         ($NestedMatch.param_30 $NestedMatch.return_37)
+         (cut
+            $NestedMatch.param_30
+            (select
+               (#NestedMatch.$__29
+                  (cut
+                     (lambda
+                        ($NestedMatch.param_31 $NestedMatch.return_43)
+                        (cut
+                           $NestedMatch.param_31
+                           (select
+                              ((True ())
+                                 (invoke malgo_print_string
+                                    (apply
+                                       ("OK")
+                                       ($NestedMatch.return_43))))
+                              ((False ())
+                                 (invoke malgo_exit_failure
+                                    (apply
+                                       ((construct tuple () ()))
+                                       ($NestedMatch.return_43)))))))
+                     (then $NestedMatch.outer_54
+                        (join
+                           $NestedMatch.return_38
+                           (then $NestedMatch.inner_55
+                              (cut
+                                 $NestedMatch.outer_54
+                                 (apply
+                                    ($NestedMatch.inner_55)
+                                    ($NestedMatch.return_37))))
+                           (cut
+                              (lambda
+                                 ($NestedMatch.param_32 $NestedMatch.return_42)
+                                 (cut
+                                    $NestedMatch.param_32
+                                    (select
+                                       ((True1 ())
+                                          (invoke False $NestedMatch.return_42))
+                                       ((False1 ())
+                                          (invoke True $NestedMatch.return_42)))))
+                              (then $NestedMatch.outer_56
+                                 (join
+                                    $NestedMatch.return_39
+                                    (then $NestedMatch.inner_57
+                                       (cut
+                                          $NestedMatch.outer_56
+                                          (apply
+                                             ($NestedMatch.inner_57)
+                                             ($NestedMatch.return_38))))
+                                    (cut
+                                       (lambda
+                                          ($NestedMatch.param_33 $NestedMatch.return_41)
+                                          (cut
+                                             $NestedMatch.param_33
+                                             (select
+                                                ((True2 ())
+                                                   (invoke False1 $NestedMatch.return_41))
+                                                ((False2 ())
+                                                   (invoke True1 $NestedMatch.return_41)))))
+                                       (then $NestedMatch.outer_58
+                                          (join
+                                             $NestedMatch.return_40
+                                             (then $NestedMatch.inner_59
+                                                (cut
+                                                   $NestedMatch.outer_58
+                                                   (apply
+                                                      ($NestedMatch.inner_59)
+                                                      ($NestedMatch.return_39))))
+                                             (invoke True2 $NestedMatch.return_40))))))))))))))
+      $NestedMatch.return_36))
+   (False
+      $NestedMatch.return_44
+      (cut
+         (construct False () ())
+         $NestedMatch.return_44))
+   (True
+      $NestedMatch.return_45
+      (cut
+         (construct True () ())
+         $NestedMatch.return_45))
+   (False1
+      $NestedMatch.return_46
+      (cut
+         (construct False1 () ())
+         $NestedMatch.return_46))
+   (True1
+      $NestedMatch.return_47
+      (cut
+         (construct True1 () ())
+         $NestedMatch.return_47))
+   (False2
+      $NestedMatch.return_48
+      (cut
+         (construct False2 () ())
+         $NestedMatch.return_48))
+   (True2
+      $NestedMatch.return_49
+      (cut
+         (construct True2 () ())
+         $NestedMatch.return_49))
+   (malgo_print_string
+      $NestedMatch.return_50
+      (cut
+         (lambda
+            ($NestedMatch.primitive_34 $NestedMatch.return_51)
+            (prim malgo_print_string
+               ($NestedMatch.primitive_34)
+               $NestedMatch.return_51))
+         $NestedMatch.return_50))
+   (malgo_exit_failure
+      $NestedMatch.return_52
+      (cut
+         (lambda
+            ($NestedMatch.primitive_35 $NestedMatch.return_53)
+            (prim malgo_exit_failure
+               ($NestedMatch.primitive_35)
+               $NestedMatch.return_53))
+         $NestedMatch.return_52)))

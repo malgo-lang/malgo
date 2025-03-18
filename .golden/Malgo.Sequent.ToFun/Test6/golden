@@ -1,0 +1,51 @@
+((rtob
+   (lambda
+      ($Test6.param_30)
+      (select
+         $Test6.param_30
+         (((R ())
+            (invoke B))
+            (#Test6.__1
+               (apply
+                  (invoke malgo_exit_failure)
+                  ((tuple ()))))))))
+   (main
+      (lambda
+         ($Test6.param_31)
+         (select
+            $Test6.param_31
+            ((#Test6.$__29
+               (apply
+                  (lambda
+                     ($Test6.param_32)
+                     (select
+                        $Test6.param_32
+                        (((B ())
+                           (apply
+                              (invoke malgo_print_string)
+                              ("OK")))
+                           (#Test6.__2
+                              (apply
+                                 (invoke malgo_print_string)
+                                 ("WRONG"))))))
+                  ((apply
+                     (invoke rtob)
+                     ((invoke R))))))))))
+   (R
+      (R ()))
+   (G
+      (G ()))
+   (B
+      (B ()))
+   (malgo_exit_failure
+      (lambda
+         ($Test6.primitive_33)
+         (primitive
+            malgo_exit_failure
+            ($Test6.primitive_33))))
+   (malgo_print_string
+      (lambda
+         ($Test6.primitive_34)
+         (primitive
+            malgo_print_string
+            ($Test6.primitive_34)))))

@@ -1,0 +1,219 @@
+((fix
+   $InlineFunction.return_125
+   (cut
+      (lambda
+         ($InlineFunction.param_112 $InlineFunction.return_126)
+         (cut
+            (lambda
+               ($InlineFunction.param_113 $InlineFunction.return_127)
+               (cut
+                  (construct
+                     tuple
+                     ($InlineFunction.param_112 $InlineFunction.param_113)
+                     ())
+                  (select
+                     ((tuple
+                        (#InlineFunction.f_6 #InlineFunction.x_7))
+                        (cut
+                           #InlineFunction.f_6
+                           (apply
+                              ((do $InlineFunction.return_128
+                                 (invoke fix
+                                    (apply
+                                       (#InlineFunction.f_6)
+                                       ($InlineFunction.return_128)))))
+                              ((apply
+                                 (#InlineFunction.x_7)
+                                 ($InlineFunction.return_127)))))))))
+            $InlineFunction.return_126))
+      $InlineFunction.return_125))
+   (<=
+      $InlineFunction.return_129
+      (cut
+         (lambda
+            ($InlineFunction.param_114 $InlineFunction.return_130)
+            (cut
+               (lambda
+                  ($InlineFunction.param_115 $InlineFunction.return_131)
+                  (cut
+                     (construct
+                        tuple
+                        ($InlineFunction.param_114 $InlineFunction.param_115)
+                        ())
+                     (select
+                        ((tuple
+                           (#InlineFunction.x_0 #InlineFunction.y_1))
+                           (invoke leInt32
+                              (apply
+                                 (#InlineFunction.x_0)
+                                 ((apply
+                                    (#InlineFunction.y_1)
+                                    ($InlineFunction.return_131)))))))))
+               $InlineFunction.return_130))
+         $InlineFunction.return_129))
+   (-
+      $InlineFunction.return_132
+      (cut
+         (lambda
+            ($InlineFunction.param_116 $InlineFunction.return_133)
+            (cut
+               (lambda
+                  ($InlineFunction.param_117 $InlineFunction.return_134)
+                  (cut
+                     (construct
+                        tuple
+                        ($InlineFunction.param_116 $InlineFunction.param_117)
+                        ())
+                     (select
+                        ((tuple
+                           (#InlineFunction.x_4 #InlineFunction.y_5))
+                           (invoke subInt32
+                              (apply
+                                 (#InlineFunction.x_4)
+                                 ((apply
+                                    (#InlineFunction.y_5)
+                                    ($InlineFunction.return_134)))))))))
+               $InlineFunction.return_133))
+         $InlineFunction.return_132))
+   (+
+      $InlineFunction.return_135
+      (cut
+         (lambda
+            ($InlineFunction.param_118 $InlineFunction.return_136)
+            (cut
+               (lambda
+                  ($InlineFunction.param_119 $InlineFunction.return_137)
+                  (cut
+                     (construct
+                        tuple
+                        ($InlineFunction.param_118 $InlineFunction.param_119)
+                        ())
+                     (select
+                        ((tuple
+                           (#InlineFunction.x_2 #InlineFunction.y_3))
+                           (invoke addInt32
+                              (apply
+                                 (#InlineFunction.x_2)
+                                 ((apply
+                                    (#InlineFunction.y_3)
+                                    ($InlineFunction.return_137)))))))))
+               $InlineFunction.return_136))
+         $InlineFunction.return_135))
+   (main
+      $InlineFunction.return_138
+      (cut
+         (lambda
+            ($InlineFunction.param_120 $InlineFunction.return_139)
+            (cut
+               $InlineFunction.param_120
+               (select
+                  (#InlineFunction.$__111
+                     (invoke fix
+                        (apply
+                           ((lambda
+                              ($InlineFunction.param_121 $InlineFunction.return_145)
+                              (cut
+                                 (lambda
+                                    ($InlineFunction.param_122 $InlineFunction.return_146)
+                                    (cut
+                                       (construct
+                                          tuple
+                                          ($InlineFunction.param_121 $InlineFunction.param_122)
+                                          ())
+                                       (select
+                                          ((tuple
+                                             (#InlineFunction.f_8 #InlineFunction.n_9))
+                                             (invoke if
+                                                (apply
+                                                   ((do $InlineFunction.return_155
+                                                      (invoke <=
+                                                         (apply
+                                                            (#InlineFunction.n_9)
+                                                            ((apply
+                                                               ((do $InlineFunction.return_156
+                                                                  (invoke Int32#
+                                                                     (apply
+                                                                        (1_i32)
+                                                                        ($InlineFunction.return_156)))))
+                                                               ($InlineFunction.return_155)))))))
+                                                   ((apply
+                                                      ((lambda
+                                                         ($InlineFunction.param_123 $InlineFunction.return_154)
+                                                         (cut
+                                                            $InlineFunction.param_123
+                                                            (select
+                                                               (#InlineFunction.$__73
+                                                                  (invoke Int32#
+                                                                     (apply
+                                                                        (1_i32)
+                                                                        ($InlineFunction.return_154))))))))
+                                                      ((apply
+                                                         ((lambda
+                                                            ($InlineFunction.param_124 $InlineFunction.return_147)
+                                                            (cut
+                                                               $InlineFunction.param_124
+                                                               (select
+                                                                  (#InlineFunction.$__90
+                                                                     (invoke +
+                                                                        (apply
+                                                                           ((do $InlineFunction.return_151
+                                                                              (cut
+                                                                                 #InlineFunction.f_8
+                                                                                 (apply
+                                                                                    ((do $InlineFunction.return_152
+                                                                                       (invoke -
+                                                                                          (apply
+                                                                                             (#InlineFunction.n_9)
+                                                                                             ((apply
+                                                                                                ((do $InlineFunction.return_153
+                                                                                                   (invoke Int32#
+                                                                                                      (apply
+                                                                                                         (1_i32)
+                                                                                                         ($InlineFunction.return_153)))))
+                                                                                                ($InlineFunction.return_152)))))))
+                                                                                    ($InlineFunction.return_151)))))
+                                                                           ((apply
+                                                                              ((do $InlineFunction.return_148
+                                                                                 (cut
+                                                                                    #InlineFunction.f_8
+                                                                                    (apply
+                                                                                       ((do $InlineFunction.return_149
+                                                                                          (invoke -
+                                                                                             (apply
+                                                                                                (#InlineFunction.n_9)
+                                                                                                ((apply
+                                                                                                   ((do $InlineFunction.return_150
+                                                                                                      (invoke Int32#
+                                                                                                         (apply
+                                                                                                            (2_i32)
+                                                                                                            ($InlineFunction.return_150)))))
+                                                                                                   ($InlineFunction.return_149)))))))
+                                                                                       ($InlineFunction.return_148)))))
+                                                                              ($InlineFunction.return_147))))))))))
+                                                         ($InlineFunction.return_146)))))))))))
+                                 $InlineFunction.return_145)))
+                           ((then #InlineFunction.fib_10
+                              (invoke |>
+                                 (apply
+                                    ((do $InlineFunction.return_141
+                                       (invoke |>
+                                          (apply
+                                             ((do $InlineFunction.return_143
+                                                (cut
+                                                   #InlineFunction.fib_10
+                                                   (apply
+                                                      ((do $InlineFunction.return_144
+                                                         (invoke Int32#
+                                                            (apply
+                                                               (5_i32)
+                                                               ($InlineFunction.return_144)))))
+                                                      ($InlineFunction.return_143)))))
+                                             ((apply
+                                                ((do $InlineFunction.return_142
+                                                   (invoke toStringInt32 $InlineFunction.return_142)))
+                                                ($InlineFunction.return_141)))))))
+                                    ((apply
+                                       ((do $InlineFunction.return_140
+                                          (invoke putStrLn $InlineFunction.return_140)))
+                                       ($InlineFunction.return_139)))))))))))))
+         $InlineFunction.return_138)))

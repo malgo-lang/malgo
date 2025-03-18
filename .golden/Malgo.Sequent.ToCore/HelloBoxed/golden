@@ -1,0 +1,87 @@
+((string#
+   $HelloBoxed.return_28
+   (cut
+      (lambda
+         ($HelloBoxed.param_21 $HelloBoxed.return_29)
+         (cut
+            $HelloBoxed.param_21
+            (select
+               (#HelloBoxed.x_1
+                  (invoke String#
+                     (apply
+                        (#HelloBoxed.x_1)
+                        ($HelloBoxed.return_29)))))))
+      $HelloBoxed.return_28))
+   (putStrLn
+      $HelloBoxed.return_30
+      (cut
+         (lambda
+            ($HelloBoxed.param_22 $HelloBoxed.return_31)
+            (cut
+               $HelloBoxed.param_22
+               (select
+                  ((String#
+                     (#HelloBoxed.str_0))
+                     (cut
+                        (lambda
+                           ($HelloBoxed.tmp_23 $HelloBoxed.return_33)
+                           (invoke malgo_newline
+                              (apply
+                                 ((construct tuple () ()))
+                                 ($HelloBoxed.return_33))))
+                        (apply
+                           ((do $HelloBoxed.return_32
+                              (invoke malgo_print_string
+                                 (apply
+                                    (#HelloBoxed.str_0)
+                                    ($HelloBoxed.return_32)))))
+                           ($HelloBoxed.return_31)))))))
+         $HelloBoxed.return_30))
+   (main
+      $HelloBoxed.return_34
+      (cut
+         (lambda
+            ($HelloBoxed.param_24 $HelloBoxed.return_35)
+            (cut
+               $HelloBoxed.param_24
+               (select
+                  (#HelloBoxed.$__20
+                     (invoke putStrLn
+                        (apply
+                           ((do $HelloBoxed.return_36
+                              (invoke String#
+                                 (apply
+                                    ("Hello, world")
+                                    ($HelloBoxed.return_36)))))
+                           ($HelloBoxed.return_35)))))))
+         $HelloBoxed.return_34))
+   (String#
+      $HelloBoxed.return_37
+      (cut
+         (lambda
+            ($HelloBoxed.constructor_25 $HelloBoxed.return_38)
+            (cut
+               (construct
+                  String#
+                  ($HelloBoxed.constructor_25)
+                  ())
+               $HelloBoxed.return_38))
+         $HelloBoxed.return_37))
+   (malgo_print_string
+      $HelloBoxed.return_39
+      (cut
+         (lambda
+            ($HelloBoxed.primitive_26 $HelloBoxed.return_40)
+            (prim malgo_print_string
+               ($HelloBoxed.primitive_26)
+               $HelloBoxed.return_40))
+         $HelloBoxed.return_39))
+   (malgo_newline
+      $HelloBoxed.return_41
+      (cut
+         (lambda
+            ($HelloBoxed.primitive_27 $HelloBoxed.return_42)
+            (prim malgo_newline
+               ($HelloBoxed.primitive_27)
+               $HelloBoxed.return_42))
+         $HelloBoxed.return_41)))

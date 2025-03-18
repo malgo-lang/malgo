@@ -1,0 +1,11 @@
+((main
+   (lambda
+      ($TestExplicitModule.param_7)
+      (select
+         $TestExplicitModule.param_7
+         ((#TestExplicitModule.$__6
+            (apply
+               (invoke putStrLn)
+               ((apply
+                  (invoke String#)
+                  ("Hello, world"))))))))))

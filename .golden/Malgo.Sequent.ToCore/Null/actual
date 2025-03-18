@@ -1,0 +1,187 @@
+((|>
+   $Null.return_131
+   (cut
+      (lambda
+         ($Null.param_119 $Null.return_132)
+         (cut
+            (lambda
+               ($Null.param_120 $Null.return_133)
+               (cut
+                  (construct
+                     tuple
+                     ($Null.param_119 $Null.param_120)
+                     ())
+                  (select
+                     ((tuple
+                        (#Null.x_11 #Null.f_12))
+                        (cut
+                           #Null.f_12
+                           (apply
+                              (#Null.x_11)
+                              ($Null.return_133)))))))
+            $Null.return_132))
+      $Null.return_131))
+   (mHead
+      $Null.return_134
+      (cut
+         (lambda
+            ($Null.param_121 $Null.return_135)
+            (cut
+               $Null.param_121
+               (select
+                  ((Nil ())
+                     (invoke Nothing $Null.return_135))
+                  ((Cons
+                     (#Null.p_5 #Null.__6))
+                     (invoke Just
+                        (apply
+                           (#Null.p_5)
+                           ($Null.return_135)))))))
+         $Null.return_134))
+   (isNothing
+      $Null.return_136
+      (cut
+         (lambda
+            ($Null.param_122 $Null.return_137)
+            (cut
+               $Null.param_122
+               (select
+                  ((Nothing ())
+                     (invoke True $Null.return_137))
+                  ((Just
+                     (#Null.__3))
+                     (invoke False $Null.return_137)))))
+         $Null.return_136))
+   (null
+      $Null.return_138
+      (cut
+         (lambda
+            ($Null.param_123 $Null.return_139)
+            (cut
+               $Null.param_123
+               (select
+                  (#Null.as_8
+                     (invoke isNothing
+                        (apply
+                           ((do $Null.return_140
+                              (invoke mHead
+                                 (apply
+                                    (#Null.as_8)
+                                    ($Null.return_140)))))
+                           ($Null.return_139)))))))
+         $Null.return_138))
+   (main
+      $Null.return_141
+      (cut
+         (lambda
+            ($Null.param_124 $Null.return_142)
+            (cut
+               $Null.param_124
+               (select
+                  (#Null.$__118
+                     (invoke |>
+                        (apply
+                           ((do $Null.return_144
+                              (invoke null
+                                 (apply
+                                    ((do $Null.return_145
+                                       (invoke Cons
+                                          (apply
+                                             ((do $Null.return_149
+                                                (invoke True $Null.return_149)))
+                                             ((apply
+                                                ((do $Null.return_146
+                                                   (invoke Cons
+                                                      (apply
+                                                         ((do $Null.return_148
+                                                            (invoke True $Null.return_148)))
+                                                         ((apply
+                                                            ((do $Null.return_147
+                                                               (invoke Nil $Null.return_147)))
+                                                            ($Null.return_146)))))))
+                                                ($Null.return_145)))))))
+                                    ($Null.return_144)))))
+                           ((apply
+                              ((lambda
+                                 ($Null.param_125 $Null.return_143)
+                                 (cut
+                                    $Null.param_125
+                                    (select
+                                       ((False ())
+                                          (invoke malgo_print_string
+                                             (apply
+                                                ("OK")
+                                                ($Null.return_143))))
+                                       ((True ())
+                                          (invoke malgo_exit_failure
+                                             (apply
+                                                ((construct tuple () ()))
+                                                ($Null.return_143))))))))
+                              ($Null.return_142)))))))))
+         $Null.return_141))
+   (Nothing
+      $Null.return_150
+      (cut
+         (construct Nothing () ())
+         $Null.return_150))
+   (Just
+      $Null.return_151
+      (cut
+         (lambda
+            ($Null.constructor_126 $Null.return_152)
+            (cut
+               (construct
+                  Just
+                  ($Null.constructor_126)
+                  ())
+               $Null.return_152))
+         $Null.return_151))
+   (False
+      $Null.return_153
+      (cut
+         (construct False () ())
+         $Null.return_153))
+   (True
+      $Null.return_154
+      (cut
+         (construct True () ())
+         $Null.return_154))
+   (Nil
+      $Null.return_155
+      (cut
+         (construct Nil () ())
+         $Null.return_155))
+   (Cons
+      $Null.return_156
+      (cut
+         (lambda
+            ($Null.constructor_127 $Null.return_157)
+            (cut
+               (lambda
+                  ($Null.constructor_128 $Null.return_158)
+                  (cut
+                     (construct
+                        Cons
+                        ($Null.constructor_127 $Null.constructor_128)
+                        ())
+                     $Null.return_158))
+               $Null.return_157))
+         $Null.return_156))
+   (malgo_print_string
+      $Null.return_159
+      (cut
+         (lambda
+            ($Null.primitive_129 $Null.return_160)
+            (prim malgo_print_string
+               ($Null.primitive_129)
+               $Null.return_160))
+         $Null.return_159))
+   (malgo_exit_failure
+      $Null.return_161
+      (cut
+         (lambda
+            ($Null.primitive_130 $Null.return_162)
+            (prim malgo_exit_failure
+               ($Null.primitive_130)
+               $Null.return_162))
+         $Null.return_161)))
