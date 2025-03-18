@@ -1,0 +1,31 @@
+foreign import malgo_print_string : String# -> ()
+foreign import malgo_newline : () -> ()
+
+data Int32 = Int32# Int32#
+def int32# : Int32# -> Int32
+def int32# = { x -> Int32# x }
+
+data String = String# String#
+def string# : String# -> String
+def string# = { x -> String# x }
+
+def putStr : String -> ()
+def putStr = { String# x -> malgo_print_string x }
+
+foreign import malgo_int32_t_to_string : Int32# -> String#
+
+type Show a = {
+  show : a -> String,
+}
+
+def show : Show a -> a -> String
+def show = { { show = show } -> show }
+
+def wrap : (Int32 -> String) -> Show Int32
+def wrap = {
+  fn -> {
+    show = fn
+  }
+}
+
+def main = { putStr (show (wrap { Int32# x -> String# (malgo_int32_t_to_string x) }) 1) }

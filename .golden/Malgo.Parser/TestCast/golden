@@ -6,24 +6,7 @@ Module
    ( Range
     { _start = SourcePos
      { sourceName = "./test/testcases/malgo/TestCast.mlg"
-     , sourceLine = Pos 1
-     , sourceColumn = Pos 1
-     }
-    , _end = SourcePos
-     { sourceName = "./test/testcases/malgo/TestCast.mlg"
-     , sourceLine = Pos 2
-     , sourceColumn = Pos 1
-     }
-    }
-   )
-   ( Artifact
-    ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-   ) All
-  , Import
-   ( Range
-    { _start = SourcePos
-     { sourceName = "./test/testcases/malgo/TestCast.mlg"
-     , sourceLine = Pos 2
+     , sourceLine = Pos 3
      , sourceColumn = Pos 1
      }
     , _end = SourcePos
@@ -34,9 +17,9 @@ Module
     }
    )
    ( Artifact
-    ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+    ( ArtifactPath "runtime/malgo/Builtin.mlg" )
    ) All
-  , Foreign
+  , Import
    ( Range
     { _start = SourcePos
      { sourceName = "./test/testcases/malgo/TestCast.mlg"
@@ -49,172 +32,10 @@ Module
      , sourceColumn = Pos 1
      }
     }
-   ) "malgo_new_vector"
-   ( TyArr
-    ( Range
-     { _start = SourcePos
-      { sourceName = "./test/testcases/malgo/TestCast.mlg"
-      , sourceLine = Pos 4
-      , sourceColumn = Pos 42
-      }
-     , _end = SourcePos
-      { sourceName = "./test/testcases/malgo/TestCast.mlg"
-      , sourceLine = Pos 4
-      , sourceColumn = Pos 45
-      }
-     }
-    )
-    ( TyCon
-     ( Range
-      { _start = SourcePos
-       { sourceName = "./test/testcases/malgo/TestCast.mlg"
-       , sourceLine = Pos 4
-       , sourceColumn = Pos 35
-       }
-      , _end = SourcePos
-       { sourceName = "./test/testcases/malgo/TestCast.mlg"
-       , sourceLine = Pos 4
-       , sourceColumn = Pos 42
-       }
-      }
-     ) "Int64#"
-    )
-    ( TyArr
-     ( Range
-      { _start = SourcePos
-       { sourceName = "./test/testcases/malgo/TestCast.mlg"
-       , sourceLine = Pos 4
-       , sourceColumn = Pos 56
-       }
-      , _end = SourcePos
-       { sourceName = "./test/testcases/malgo/TestCast.mlg"
-       , sourceLine = Pos 4
-       , sourceColumn = Pos 59
-       }
-      }
-     )
-     ( TyApp
-      ( Range
-       { _start = SourcePos
-        { sourceName = "./test/testcases/malgo/TestCast.mlg"
-        , sourceLine = Pos 4
-        , sourceColumn = Pos 45
-        }
-       , _end = SourcePos
-        { sourceName = "./test/testcases/malgo/TestCast.mlg"
-        , sourceLine = Pos 4
-        , sourceColumn = Pos 56
-        }
-       }
-      )
-      ( TyCon
-       ( Range
-        { _start = SourcePos
-         { sourceName = "./test/testcases/malgo/TestCast.mlg"
-         , sourceLine = Pos 4
-         , sourceColumn = Pos 45
-         }
-        , _end = SourcePos
-         { sourceName = "./test/testcases/malgo/TestCast.mlg"
-         , sourceLine = Pos 4
-         , sourceColumn = Pos 50
-         }
-        }
-       ) "Ptr#"
-      )
-      [ TyCon
-       ( Range
-        { _start = SourcePos
-         { sourceName = "./test/testcases/malgo/TestCast.mlg"
-         , sourceLine = Pos 4
-         , sourceColumn = Pos 50
-         }
-        , _end = SourcePos
-         { sourceName = "./test/testcases/malgo/TestCast.mlg"
-         , sourceLine = Pos 4
-         , sourceColumn = Pos 56
-         }
-        }
-       ) "Char#"
-      ]
-     )
-     ( TyApp
-      ( Range
-       { _start = SourcePos
-        { sourceName = "./test/testcases/malgo/TestCast.mlg"
-        , sourceLine = Pos 4
-        , sourceColumn = Pos 59
-        }
-       , _end = SourcePos
-        { sourceName = "./test/testcases/malgo/TestCast.mlg"
-        , sourceLine = Pos 6
-        , sourceColumn = Pos 1
-        }
-       }
-      )
-      ( TyCon
-       ( Range
-        { _start = SourcePos
-         { sourceName = "./test/testcases/malgo/TestCast.mlg"
-         , sourceLine = Pos 4
-         , sourceColumn = Pos 59
-         }
-        , _end = SourcePos
-         { sourceName = "./test/testcases/malgo/TestCast.mlg"
-         , sourceLine = Pos 4
-         , sourceColumn = Pos 64
-         }
-        }
-       ) "Ptr#"
-      )
-      [ TyApp
-       ( Range
-        { _start = SourcePos
-         { sourceName = "./test/testcases/malgo/TestCast.mlg"
-         , sourceLine = Pos 4
-         , sourceColumn = Pos 65
-         }
-        , _end = SourcePos
-         { sourceName = "./test/testcases/malgo/TestCast.mlg"
-         , sourceLine = Pos 4
-         , sourceColumn = Pos 75
-         }
-        }
-       )
-       ( TyCon
-        ( Range
-         { _start = SourcePos
-          { sourceName = "./test/testcases/malgo/TestCast.mlg"
-          , sourceLine = Pos 4
-          , sourceColumn = Pos 65
-          }
-         , _end = SourcePos
-          { sourceName = "./test/testcases/malgo/TestCast.mlg"
-          , sourceLine = Pos 4
-          , sourceColumn = Pos 70
-          }
-         }
-        ) "Ptr#"
-       )
-       [ TyCon
-        ( Range
-         { _start = SourcePos
-          { sourceName = "./test/testcases/malgo/TestCast.mlg"
-          , sourceLine = Pos 4
-          , sourceColumn = Pos 70
-          }
-         , _end = SourcePos
-          { sourceName = "./test/testcases/malgo/TestCast.mlg"
-          , sourceLine = Pos 4
-          , sourceColumn = Pos 75
-          }
-         }
-        ) "Char#"
-       ]
-      ]
-     )
-    )
    )
+   ( Artifact
+    ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+   ) All
   , Foreign
    ( Range
     { _start = SourcePos
@@ -228,18 +49,18 @@ Module
      , sourceColumn = Pos 1
      }
     }
-   ) "malgo_read_vector"
+   ) "malgo_new_vector"
    ( TyArr
     ( Range
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/TestCast.mlg"
       , sourceLine = Pos 6
-      , sourceColumn = Pos 43
+      , sourceColumn = Pos 42
       }
      , _end = SourcePos
       { sourceName = "./test/testcases/malgo/TestCast.mlg"
       , sourceLine = Pos 6
-      , sourceColumn = Pos 46
+      , sourceColumn = Pos 45
       }
      }
     )
@@ -248,12 +69,12 @@ Module
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/TestCast.mlg"
        , sourceLine = Pos 6
-       , sourceColumn = Pos 36
+       , sourceColumn = Pos 35
        }
       , _end = SourcePos
        { sourceName = "./test/testcases/malgo/TestCast.mlg"
        , sourceLine = Pos 6
-       , sourceColumn = Pos 43
+       , sourceColumn = Pos 42
        }
       }
      ) "Int64#"
@@ -263,12 +84,12 @@ Module
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/TestCast.mlg"
        , sourceLine = Pos 6
-       , sourceColumn = Pos 64
+       , sourceColumn = Pos 56
        }
       , _end = SourcePos
        { sourceName = "./test/testcases/malgo/TestCast.mlg"
        , sourceLine = Pos 6
-       , sourceColumn = Pos 67
+       , sourceColumn = Pos 59
        }
       }
      )
@@ -277,12 +98,12 @@ Module
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/TestCast.mlg"
         , sourceLine = Pos 6
-        , sourceColumn = Pos 46
+        , sourceColumn = Pos 45
         }
        , _end = SourcePos
         { sourceName = "./test/testcases/malgo/TestCast.mlg"
         , sourceLine = Pos 6
-        , sourceColumn = Pos 64
+        , sourceColumn = Pos 56
         }
        }
       )
@@ -291,60 +112,30 @@ Module
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/TestCast.mlg"
          , sourceLine = Pos 6
-         , sourceColumn = Pos 46
+         , sourceColumn = Pos 45
          }
         , _end = SourcePos
          { sourceName = "./test/testcases/malgo/TestCast.mlg"
          , sourceLine = Pos 6
-         , sourceColumn = Pos 51
+         , sourceColumn = Pos 50
          }
         }
        ) "Ptr#"
       )
-      [ TyApp
+      [ TyCon
        ( Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/TestCast.mlg"
          , sourceLine = Pos 6
-         , sourceColumn = Pos 52
+         , sourceColumn = Pos 50
          }
         , _end = SourcePos
          { sourceName = "./test/testcases/malgo/TestCast.mlg"
          , sourceLine = Pos 6
-         , sourceColumn = Pos 62
+         , sourceColumn = Pos 56
          }
         }
-       )
-       ( TyCon
-        ( Range
-         { _start = SourcePos
-          { sourceName = "./test/testcases/malgo/TestCast.mlg"
-          , sourceLine = Pos 6
-          , sourceColumn = Pos 52
-          }
-         , _end = SourcePos
-          { sourceName = "./test/testcases/malgo/TestCast.mlg"
-          , sourceLine = Pos 6
-          , sourceColumn = Pos 57
-          }
-         }
-        ) "Ptr#"
-       )
-       [ TyCon
-        ( Range
-         { _start = SourcePos
-          { sourceName = "./test/testcases/malgo/TestCast.mlg"
-          , sourceLine = Pos 6
-          , sourceColumn = Pos 57
-          }
-         , _end = SourcePos
-          { sourceName = "./test/testcases/malgo/TestCast.mlg"
-          , sourceLine = Pos 6
-          , sourceColumn = Pos 62
-          }
-         }
-        ) "Char#"
-       ]
+       ) "Char#"
       ]
      )
      ( TyApp
@@ -352,7 +143,7 @@ Module
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/TestCast.mlg"
         , sourceLine = Pos 6
-        , sourceColumn = Pos 67
+        , sourceColumn = Pos 59
         }
        , _end = SourcePos
         { sourceName = "./test/testcases/malgo/TestCast.mlg"
@@ -366,11 +157,220 @@ Module
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/TestCast.mlg"
          , sourceLine = Pos 6
-         , sourceColumn = Pos 67
+         , sourceColumn = Pos 59
          }
         , _end = SourcePos
          { sourceName = "./test/testcases/malgo/TestCast.mlg"
          , sourceLine = Pos 6
+         , sourceColumn = Pos 64
+         }
+        }
+       ) "Ptr#"
+      )
+      [ TyApp
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/TestCast.mlg"
+         , sourceLine = Pos 6
+         , sourceColumn = Pos 65
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/TestCast.mlg"
+         , sourceLine = Pos 6
+         , sourceColumn = Pos 75
+         }
+        }
+       )
+       ( TyCon
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/TestCast.mlg"
+          , sourceLine = Pos 6
+          , sourceColumn = Pos 65
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/TestCast.mlg"
+          , sourceLine = Pos 6
+          , sourceColumn = Pos 70
+          }
+         }
+        ) "Ptr#"
+       )
+       [ TyCon
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/TestCast.mlg"
+          , sourceLine = Pos 6
+          , sourceColumn = Pos 70
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/TestCast.mlg"
+          , sourceLine = Pos 6
+          , sourceColumn = Pos 75
+          }
+         }
+        ) "Char#"
+       ]
+      ]
+     )
+    )
+   )
+  , Foreign
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/TestCast.mlg"
+     , sourceLine = Pos 8
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/TestCast.mlg"
+     , sourceLine = Pos 10
+     , sourceColumn = Pos 1
+     }
+    }
+   ) "malgo_read_vector"
+   ( TyArr
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/TestCast.mlg"
+      , sourceLine = Pos 8
+      , sourceColumn = Pos 43
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/TestCast.mlg"
+      , sourceLine = Pos 8
+      , sourceColumn = Pos 46
+      }
+     }
+    )
+    ( TyCon
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/TestCast.mlg"
+       , sourceLine = Pos 8
+       , sourceColumn = Pos 36
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/TestCast.mlg"
+       , sourceLine = Pos 8
+       , sourceColumn = Pos 43
+       }
+      }
+     ) "Int64#"
+    )
+    ( TyArr
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/TestCast.mlg"
+       , sourceLine = Pos 8
+       , sourceColumn = Pos 64
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/TestCast.mlg"
+       , sourceLine = Pos 8
+       , sourceColumn = Pos 67
+       }
+      }
+     )
+     ( TyApp
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestCast.mlg"
+        , sourceLine = Pos 8
+        , sourceColumn = Pos 46
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestCast.mlg"
+        , sourceLine = Pos 8
+        , sourceColumn = Pos 64
+        }
+       }
+      )
+      ( TyCon
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/TestCast.mlg"
+         , sourceLine = Pos 8
+         , sourceColumn = Pos 46
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/TestCast.mlg"
+         , sourceLine = Pos 8
+         , sourceColumn = Pos 51
+         }
+        }
+       ) "Ptr#"
+      )
+      [ TyApp
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/TestCast.mlg"
+         , sourceLine = Pos 8
+         , sourceColumn = Pos 52
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/TestCast.mlg"
+         , sourceLine = Pos 8
+         , sourceColumn = Pos 62
+         }
+        }
+       )
+       ( TyCon
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/TestCast.mlg"
+          , sourceLine = Pos 8
+          , sourceColumn = Pos 52
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/TestCast.mlg"
+          , sourceLine = Pos 8
+          , sourceColumn = Pos 57
+          }
+         }
+        ) "Ptr#"
+       )
+       [ TyCon
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/TestCast.mlg"
+          , sourceLine = Pos 8
+          , sourceColumn = Pos 57
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/TestCast.mlg"
+          , sourceLine = Pos 8
+          , sourceColumn = Pos 62
+          }
+         }
+        ) "Char#"
+       ]
+      ]
+     )
+     ( TyApp
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestCast.mlg"
+        , sourceLine = Pos 8
+        , sourceColumn = Pos 67
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestCast.mlg"
+        , sourceLine = Pos 10
+        , sourceColumn = Pos 1
+        }
+       }
+      )
+      ( TyCon
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/TestCast.mlg"
+         , sourceLine = Pos 8
+         , sourceColumn = Pos 67
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/TestCast.mlg"
+         , sourceLine = Pos 8
          , sourceColumn = Pos 72
          }
         }
@@ -380,12 +380,12 @@ Module
        ( Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/TestCast.mlg"
-         , sourceLine = Pos 6
+         , sourceLine = Pos 8
          , sourceColumn = Pos 72
          }
         , _end = SourcePos
          { sourceName = "./test/testcases/malgo/TestCast.mlg"
-         , sourceLine = Pos 8
+         , sourceLine = Pos 10
          , sourceColumn = Pos 1
          }
         }
@@ -398,12 +398,12 @@ Module
    ( Range
     { _start = SourcePos
      { sourceName = "./test/testcases/malgo/TestCast.mlg"
-     , sourceLine = Pos 8
+     , sourceLine = Pos 10
      , sourceColumn = Pos 1
      }
     , _end = SourcePos
      { sourceName = "./test/testcases/malgo/TestCast.mlg"
-     , sourceLine = Pos 10
+     , sourceLine = Pos 12
      , sourceColumn = Pos 2
      }
     }
@@ -412,12 +412,12 @@ Module
     ( Range
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/TestCast.mlg"
-      , sourceLine = Pos 9
+      , sourceLine = Pos 11
       , sourceColumn = Pos 3
       }
      , _end = SourcePos
       { sourceName = "./test/testcases/malgo/TestCast.mlg"
-      , sourceLine = Pos 10
+      , sourceLine = Pos 12
       , sourceColumn = Pos 1
       }
      }
@@ -426,12 +426,12 @@ Module
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/TestCast.mlg"
-       , sourceLine = Pos 9
+       , sourceLine = Pos 11
        , sourceColumn = Pos 3
        }
       , _end = SourcePos
        { sourceName = "./test/testcases/malgo/TestCast.mlg"
-       , sourceLine = Pos 10
+       , sourceLine = Pos 12
        , sourceColumn = Pos 1
        }
       }
@@ -440,12 +440,12 @@ Module
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/TestCast.mlg"
-        , sourceLine = Pos 9
+        , sourceLine = Pos 11
         , sourceColumn = Pos 3
         }
        , _end = SourcePos
         { sourceName = "./test/testcases/malgo/TestCast.mlg"
-        , sourceLine = Pos 10
+        , sourceLine = Pos 12
         , sourceColumn = Pos 1
         }
        }
@@ -454,12 +454,12 @@ Module
        ( Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/TestCast.mlg"
-         , sourceLine = Pos 9
+         , sourceLine = Pos 11
          , sourceColumn = Pos 3
          }
         , _end = SourcePos
          { sourceName = "./test/testcases/malgo/TestCast.mlg"
-         , sourceLine = Pos 10
+         , sourceLine = Pos 12
          , sourceColumn = Pos 1
          }
         }
@@ -468,12 +468,12 @@ Module
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/TestCast.mlg"
-          , sourceLine = Pos 9
+          , sourceLine = Pos 11
           , sourceColumn = Pos 3
           }
          , _end = SourcePos
           { sourceName = "./test/testcases/malgo/TestCast.mlg"
-          , sourceLine = Pos 10
+          , sourceLine = Pos 12
           , sourceColumn = Pos 1
           }
          }
@@ -484,12 +484,12 @@ Module
           , value = Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/TestCast.mlg"
-            , sourceLine = Pos 9
+            , sourceLine = Pos 11
             , sourceColumn = Pos 3
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/TestCast.mlg"
-            , sourceLine = Pos 9
+            , sourceLine = Pos 11
             , sourceColumn = Pos 14
             }
            }
@@ -500,12 +500,12 @@ Module
          ( Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/TestCast.mlg"
-           , sourceLine = Pos 9
+           , sourceLine = Pos 11
            , sourceColumn = Pos 14
            }
           , _end = SourcePos
            { sourceName = "./test/testcases/malgo/TestCast.mlg"
-           , sourceLine = Pos 10
+           , sourceLine = Pos 12
            , sourceColumn = Pos 1
            }
           }
@@ -514,12 +514,12 @@ Module
           ( Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/TestCast.mlg"
-            , sourceLine = Pos 9
+            , sourceLine = Pos 11
             , sourceColumn = Pos 15
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/TestCast.mlg"
-            , sourceLine = Pos 9
+            , sourceLine = Pos 11
             , sourceColumn = Pos 102
             }
            }
@@ -528,12 +528,12 @@ Module
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/TestCast.mlg"
-             , sourceLine = Pos 9
+             , sourceLine = Pos 11
              , sourceColumn = Pos 15
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/TestCast.mlg"
-             , sourceLine = Pos 9
+             , sourceLine = Pos 11
              , sourceColumn = Pos 102
              }
             }
@@ -544,12 +544,12 @@ Module
              , value = Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/TestCast.mlg"
-               , sourceLine = Pos 9
+               , sourceLine = Pos 11
                , sourceColumn = Pos 15
                }
               , _end = SourcePos
                { sourceName = "./test/testcases/malgo/TestCast.mlg"
-               , sourceLine = Pos 9
+               , sourceLine = Pos 11
                , sourceColumn = Pos 33
                }
               }
@@ -560,12 +560,12 @@ Module
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/TestCast.mlg"
-              , sourceLine = Pos 9
+              , sourceLine = Pos 11
               , sourceColumn = Pos 33
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/TestCast.mlg"
-              , sourceLine = Pos 9
+              , sourceLine = Pos 11
               , sourceColumn = Pos 102
               }
              }
@@ -574,12 +574,12 @@ Module
              ( Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/TestCast.mlg"
-               , sourceLine = Pos 9
+               , sourceLine = Pos 11
                , sourceColumn = Pos 34
                }
               , _end = SourcePos
                { sourceName = "./test/testcases/malgo/TestCast.mlg"
-               , sourceLine = Pos 9
+               , sourceLine = Pos 11
                , sourceColumn = Pos 101
                }
               }
@@ -588,12 +588,12 @@ Module
               ( Range
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/TestCast.mlg"
-                , sourceLine = Pos 9
+                , sourceLine = Pos 11
                 , sourceColumn = Pos 34
                 }
                , _end = SourcePos
                 { sourceName = "./test/testcases/malgo/TestCast.mlg"
-                , sourceLine = Pos 9
+                , sourceLine = Pos 11
                 , sourceColumn = Pos 101
                 }
                }
@@ -602,12 +602,12 @@ Module
                ( Range
                 { _start = SourcePos
                  { sourceName = "./test/testcases/malgo/TestCast.mlg"
-                 , sourceLine = Pos 9
+                 , sourceLine = Pos 11
                  , sourceColumn = Pos 34
                  }
                 , _end = SourcePos
                  { sourceName = "./test/testcases/malgo/TestCast.mlg"
-                 , sourceLine = Pos 9
+                 , sourceLine = Pos 11
                  , sourceColumn = Pos 101
                  }
                 }
@@ -618,12 +618,12 @@ Module
                  , value = Range
                   { _start = SourcePos
                    { sourceName = "./test/testcases/malgo/TestCast.mlg"
-                   , sourceLine = Pos 9
+                   , sourceLine = Pos 11
                    , sourceColumn = Pos 34
                    }
                   , _end = SourcePos
                    { sourceName = "./test/testcases/malgo/TestCast.mlg"
-                   , sourceLine = Pos 9
+                   , sourceLine = Pos 11
                    , sourceColumn = Pos 52
                    }
                   }
@@ -634,12 +634,12 @@ Module
                 ( Range
                  { _start = SourcePos
                   { sourceName = "./test/testcases/malgo/TestCast.mlg"
-                  , sourceLine = Pos 9
+                  , sourceLine = Pos 11
                   , sourceColumn = Pos 52
                   }
                  , _end = SourcePos
                   { sourceName = "./test/testcases/malgo/TestCast.mlg"
-                  , sourceLine = Pos 9
+                  , sourceLine = Pos 11
                   , sourceColumn = Pos 56
                   }
                  }
@@ -651,12 +651,12 @@ Module
                ( Range
                 { _start = SourcePos
                  { sourceName = "./test/testcases/malgo/TestCast.mlg"
-                 , sourceLine = Pos 9
+                 , sourceLine = Pos 11
                  , sourceColumn = Pos 56
                  }
                 , _end = SourcePos
                  { sourceName = "./test/testcases/malgo/TestCast.mlg"
-                 , sourceLine = Pos 9
+                 , sourceLine = Pos 11
                  , sourceColumn = Pos 101
                  }
                 }
@@ -665,12 +665,12 @@ Module
                 ( Range
                  { _start = SourcePos
                   { sourceName = "./test/testcases/malgo/TestCast.mlg"
-                  , sourceLine = Pos 9
+                  , sourceLine = Pos 11
                   , sourceColumn = Pos 57
                   }
                  , _end = SourcePos
                   { sourceName = "./test/testcases/malgo/TestCast.mlg"
-                  , sourceLine = Pos 9
+                  , sourceLine = Pos 11
                   , sourceColumn = Pos 100
                   }
                  }
@@ -679,12 +679,12 @@ Module
                  ( Range
                   { _start = SourcePos
                    { sourceName = "./test/testcases/malgo/TestCast.mlg"
-                   , sourceLine = Pos 9
+                   , sourceLine = Pos 11
                    , sourceColumn = Pos 57
                    }
                   , _end = SourcePos
                    { sourceName = "./test/testcases/malgo/TestCast.mlg"
-                   , sourceLine = Pos 9
+                   , sourceLine = Pos 11
                    , sourceColumn = Pos 100
                    }
                   }
@@ -693,12 +693,12 @@ Module
                   ( Range
                    { _start = SourcePos
                     { sourceName = "./test/testcases/malgo/TestCast.mlg"
-                    , sourceLine = Pos 9
+                    , sourceLine = Pos 11
                     , sourceColumn = Pos 57
                     }
                    , _end = SourcePos
                     { sourceName = "./test/testcases/malgo/TestCast.mlg"
-                    , sourceLine = Pos 9
+                    , sourceLine = Pos 11
                     , sourceColumn = Pos 100
                     }
                    }
@@ -709,12 +709,12 @@ Module
                     , value = Range
                      { _start = SourcePos
                       { sourceName = "./test/testcases/malgo/TestCast.mlg"
-                      , sourceLine = Pos 9
+                      , sourceLine = Pos 11
                       , sourceColumn = Pos 57
                       }
                      , _end = SourcePos
                       { sourceName = "./test/testcases/malgo/TestCast.mlg"
-                      , sourceLine = Pos 9
+                      , sourceLine = Pos 11
                       , sourceColumn = Pos 74
                       }
                      }
@@ -725,12 +725,12 @@ Module
                    ( Range
                     { _start = SourcePos
                      { sourceName = "./test/testcases/malgo/TestCast.mlg"
-                     , sourceLine = Pos 9
+                     , sourceLine = Pos 11
                      , sourceColumn = Pos 74
                      }
                     , _end = SourcePos
                      { sourceName = "./test/testcases/malgo/TestCast.mlg"
-                     , sourceLine = Pos 9
+                     , sourceLine = Pos 11
                      , sourceColumn = Pos 79
                      }
                     }
@@ -742,12 +742,12 @@ Module
                   ( Range
                    { _start = SourcePos
                     { sourceName = "./test/testcases/malgo/TestCast.mlg"
-                    , sourceLine = Pos 9
+                    , sourceLine = Pos 11
                     , sourceColumn = Pos 79
                     }
                    , _end = SourcePos
                     { sourceName = "./test/testcases/malgo/TestCast.mlg"
-                    , sourceLine = Pos 9
+                    , sourceLine = Pos 11
                     , sourceColumn = Pos 100
                     }
                    }
@@ -756,12 +756,12 @@ Module
                    ( Range
                     { _start = SourcePos
                      { sourceName = "./test/testcases/malgo/TestCast.mlg"
-                     , sourceLine = Pos 9
+                     , sourceLine = Pos 11
                      , sourceColumn = Pos 80
                      }
                     , _end = SourcePos
                      { sourceName = "./test/testcases/malgo/TestCast.mlg"
-                     , sourceLine = Pos 9
+                     , sourceLine = Pos 11
                      , sourceColumn = Pos 99
                      }
                     }
@@ -770,12 +770,12 @@ Module
                     ( Range
                      { _start = SourcePos
                       { sourceName = "./test/testcases/malgo/TestCast.mlg"
-                      , sourceLine = Pos 9
+                      , sourceLine = Pos 11
                       , sourceColumn = Pos 80
                       }
                      , _end = SourcePos
                       { sourceName = "./test/testcases/malgo/TestCast.mlg"
-                      , sourceLine = Pos 9
+                      , sourceLine = Pos 11
                       , sourceColumn = Pos 99
                       }
                      }
@@ -786,12 +786,12 @@ Module
                       , value = Range
                        { _start = SourcePos
                         { sourceName = "./test/testcases/malgo/TestCast.mlg"
-                        , sourceLine = Pos 9
+                        , sourceLine = Pos 11
                         , sourceColumn = Pos 80
                         }
                        , _end = SourcePos
                         { sourceName = "./test/testcases/malgo/TestCast.mlg"
-                        , sourceLine = Pos 9
+                        , sourceLine = Pos 11
                         , sourceColumn = Pos 98
                         }
                        }
@@ -802,12 +802,12 @@ Module
                      ( Range
                       { _start = SourcePos
                        { sourceName = "./test/testcases/malgo/TestCast.mlg"
-                       , sourceLine = Pos 9
+                       , sourceLine = Pos 11
                        , sourceColumn = Pos 98
                        }
                       , _end = SourcePos
                        { sourceName = "./test/testcases/malgo/TestCast.mlg"
-                       , sourceLine = Pos 9
+                       , sourceLine = Pos 11
                        , sourceColumn = Pos 99
                        }
                       }

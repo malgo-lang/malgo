@@ -25,7 +25,18 @@ spec = parallel do
   runIO do
     setupBuiltin
     setupPrelude
-  testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
+  testcases <- runIO do
+    files <- listDirectory testcaseDir
+    let mlgFiles = filter (isExtensionOf "mlg") files
+    -- Filter out files that start with "-- backend: core"
+    -- These files are for the core backend and are not supported by the sequent backend
+    filterM
+      ( \file -> do
+          contents <- BS.readFile (testcaseDir </> file)
+          pure $ not $ "-- backend: core" `BS.isPrefixOf` contents
+      )
+      mlgFiles
+
   golden "Builtin" (driveToCore builtinPath)
   golden "Builtin flat" (driveFlat builtinPath)
   golden "Builtin join" (driveJoin builtinPath)
