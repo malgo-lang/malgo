@@ -1,5 +1,5 @@
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE UndecidableInstances #-}
--- FIXME: Envが適切に更新されていない。Grokking the Sequent Calculusの評価規則を読んで、正しく実装する。
 
 module Malgo.Sequent.Eval (Value (..), EvalError (..), Env (..), emptyEnv, Handlers (..), evalProgram) where
 
@@ -21,7 +21,6 @@ import Malgo.Sequent.Core
 import Malgo.Sequent.Fun (HasRange (..), Literal (..), Name, Pattern (..), Tag (..))
 import System.IO.Streams (InputStream, OutputStream)
 import System.IO.Streams qualified as Streams
-import Debug.Trace (traceShowM)
 
 fromConsumer :: Env -> Consumer Join -> Value
 fromConsumer env consumer = Consumer $ \value -> do
@@ -43,6 +42,8 @@ data Value where
       Value -> Eff es ()
     ) ->
     Value
+
+deriving via (PrettyShow Value) instance Pretty Value
 
 instance Show Value where
   showsPrec d (Immediate literal) = showParen (d > 10) $ showString "Immediate " . showsPrec 11 literal
@@ -68,7 +69,17 @@ data EvalError
   | NoMatch Range Value
   | PrimitiveNotImplemented Range Text [Value]
   | InvalidArguments Range Text [Value]
-  deriving stock (Show)
+
+instance Show EvalError where
+  show (UndefinedVariable range name) = show $ pretty range <> ": Undefined variable: " <> pretty name
+  show (ExpectConsumer range value) = show $ pretty range <> ": Expecting a consumer, but got: " <> pretty value
+  show (ExpectFunction range value) = show $ pretty range <> ": Expecting a function, but got: " <> pretty value
+  show (ExpectRecord range value) = show $ pretty range <> ": Expecting a record, but got: " <> pretty value
+  show (ExpectNumber range value) = show $ pretty range <> ": Expecting a number, but got: " <> pretty value
+  show (NoSuchField range field value) = show $ pretty range <> ": No such field: " <> pretty field <> " in " <> pretty value
+  show (NoMatch range value) = show $ pretty range <> ": No match for " <> pretty value
+  show (PrimitiveNotImplemented range name values) = show $ pretty range <> ": Primitive " <> pretty name <> " is not implemented for " <> pretty values
+  show (InvalidArguments range name values) = show $ pretty range <> ": Invalid arguments for " <> pretty name <> ": " <> pretty values
 
 type Toplevels = Map Name (Name, Statement Join)
 
@@ -84,10 +95,6 @@ data Env = Env
   }
   deriving stock (Show)
 
-keys :: Maybe Env -> [Name]
-keys Nothing = []
-keys (Just env) = Map.keys env.bindings <> keys env.parent
-
 emptyEnv :: Env
 emptyEnv = Env Nothing mempty
 
@@ -102,7 +109,9 @@ lookupEnv range name = do
   env <- ask @Env
   case Map.lookup name env.bindings of
     Just value -> pure value
-    Nothing -> throwError (UndefinedVariable range name)
+    Nothing -> case env.parent of
+      Just env' -> local (const env') $ lookupEnv range name
+      Nothing -> throwError (UndefinedVariable range name)
 
 jump :: (Error EvalError :> es, Reader Toplevels :> es, Reader Env :> es, Reader Handlers :> es, IOE :> es) => Range -> Name -> Value -> Eff es ()
 jump range name value = do
@@ -162,17 +171,11 @@ evalProducer (Construct range tag producers consumers) = do
   producers <- traverse evalProducer producers
   consumers <- traverse (lookupEnv range) consumers
   pure $ Struct tag (producers <> consumers)
-evalProducer (Lambda range parameters statement) = do
+evalProducer (Lambda _ parameters statement) = do
   env <- ask @Env
-  traceShowM "Lambda"
-  traceShowM range
-  traverse_ traceShowM $ keys $ Just env
   pure $ Function env parameters statement
-evalProducer (Object range fields) = do
+evalProducer (Object _ fields) = do
   env <- ask @Env
-  traceShowM "Object"
-  traceShowM range
-  traverse_ traceShowM $ keys $ Just env
   pure $ Record env fields
 
 evalConsumer :: (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es, Reader Handlers :> es, IOE :> es) => Consumer Join -> Value -> Eff es ()
@@ -193,9 +196,6 @@ evalConsumer (Project range field consumer) given = do
   covalue <- lookupEnv range consumer
   case given of
     Record env fields -> do
-      traceShowM "Project"
-      traceShowM range
-      traverse_ traceShowM $ keys $ Just env
       (name, statement) <- case Map.lookup field fields of
         Just value -> pure value
         Nothing -> throwError $ NoSuchField range field given
@@ -224,7 +224,7 @@ match (Destruct _ tag patterns) (Struct tag' values) | tag == tag' = do
   if all isJust bindings
     then pure $ Just $ concat $ fromJust <$> bindings
     else pure Nothing
-match (Expand _ patterns) (Record _ fields) = do
+match (Expand _ patterns) (Record env fields) = local (const env) do
   let pairs = Map.intersectionWith (,) patterns fields
   pairs <- for pairs \(pattern, (return, statement)) -> do
     -- If the evaluation of `statement` finishes normally, the last consumer will be `Label range return`.
