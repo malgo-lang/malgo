@@ -23,6 +23,8 @@ In order to produce highly readable output, data should be converted to strings 
 
 DO NOT EDIT or REMOVE this section. Just ADD your comments to top of the list below.
 
+- Fixed a type error in `evalProgram` by ensuring `throwError MainNotFound` is properly handled in the `Malgo.Sequent.Eval` module.
+- Added `MainNotFound` error to handle cases where the main function is not found in `Malgo.Sequent.Eval` module.
 - Renamed functions from `toFunFoo` to `fromFoo` in `Malgo.Sequent.ToFun` module for consistency and clarity.
 - Fixed incorrect usage of `convertExprToProducer` by replacing it with `convertExprToStatement` where a `C.Consumer Full` is expected in `Malgo.Sequent.ToCore` module.
 - Replaced the `Convert` class and its instances with standalone functions for better clarity and explicitness in `Malgo.Sequent.ToCore` module.
