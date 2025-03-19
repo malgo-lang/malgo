@@ -6,9 +6,9 @@ jobs:
   tests-macos:
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: cachix/install-nix-action@v27
-    - uses: cachix/cachix-action@v14
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+    - uses: cachix/install-nix-action@ba0dd844c9180cbf77aa72a116d6fbc515d0e87b # V27
+    - uses: cachix/cachix-action@18cf96c7c98e048e10a83abd92116114cd8504be # v14
       with:
         name: takoeight0821
         # If you chose API tokens for write access OR if you have a private cache
@@ -18,9 +18,9 @@ jobs:
   tests-ubuntu:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: cachix/install-nix-action@v27
-    - uses: cachix/cachix-action@v14
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+    - uses: cachix/install-nix-action@ba0dd844c9180cbf77aa72a116d6fbc515d0e87b # V27
+    - uses: cachix/cachix-action@18cf96c7c98e048e10a83abd92116114cd8504be # v14
       with:
         name: takoeight0821
         # If you chose API tokens for write access OR if you have a private cache
