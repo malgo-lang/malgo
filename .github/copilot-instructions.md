@@ -17,7 +17,7 @@ In order to produce highly readable output, data should be converted to strings 
 
 - If you notice anything while using Copilot Edits, add it to the ‘GitHub Copilot comments’ section of this file (`.github/copilot-instructions.md`).
 - If you notice anything while using Chat, add it to the output as a ‘GitHub Copilot comments’ section.
-- Do not remove any comments in 'GitHub Copilot comments' section.
+- Do NOT REMOVE any comments in 'GitHub Copilot comments' section.
 
 ## GitHub Copilot comments
 
