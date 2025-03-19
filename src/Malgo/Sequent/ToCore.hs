@@ -13,76 +13,73 @@ import Malgo.Sequent.Core qualified as C
 import Malgo.Sequent.Fun
 
 toCore :: (State Uniq :> es, Reader ModuleName :> es) => Program -> Eff es (C.Program Full)
-toCore (Program definitions) = C.Program <$> traverse convert definitions
+toCore (Program definitions) = C.Program <$> traverse convertDefinition definitions
 
-class Convert a b where
-  convert :: a -> b
+convertDefinition :: (State Uniq :> es, Reader ModuleName :> es) => (Range, Name, Expr) -> Eff es (Range, Name, Name, C.Statement Full)
+convertDefinition (range, name, body) = do
+  return <- newTemporalId "return"
+  body' <- toStatement body (C.Label @Full range return)
+  pure
+    ( range,
+      name,
+      return,
+      body'
+    )
 
-instance (State Uniq :> es, Reader ModuleName :> es) => Convert (Range, Name, Expr) (Eff es (Range, Name, Name, C.Statement Full)) where
-  convert (range, name, body) = do
-    return <- newTemporalId "return"
-    body' <- convert body (C.Label @Full range return)
-    pure
-      ( range,
-        name,
-        return,
-        body'
-      )
+toStatement :: (State Uniq :> es, Reader ModuleName :> es) => Expr -> (C.Consumer Full -> Eff es (C.Statement Full))
+toStatement (Let range name value body) consumer = do
+  body <- toStatement body consumer
+  toStatement value (C.Then @Full range name body)
+toStatement (Apply range f args) consumer = do
+  args <- traverse toProducer args
+  toStatement f (C.Apply @Full range args [consumer])
+toStatement (Project range expr field) consumer = do
+  toStatement expr (C.Project @Full range field consumer)
+toStatement (Primitive range operator args) consumer = do
+  args <- traverse toProducer args
+  pure $ C.Primitive range operator args consumer
+toStatement (Select range scrutinee branches) consumer = do
+  branches <- traverse (convertBranch consumer) branches
+  toStatement scrutinee (C.Select @Full range branches)
+toStatement (Invoke range name) consumer = pure $ C.Invoke range name consumer
+toStatement expr consumer = do
+  expr' <- toProducer expr
+  pure $ Cut expr' consumer
 
-instance (State Uniq :> es, Reader ModuleName :> es) => Convert Expr (C.Consumer Full -> Eff es (C.Statement Full)) where
-  convert (Let range name value body) consumer = do
-    body <- convert body consumer
-    convert value (C.Then @Full range name body)
-  convert (Apply range f args) consumer = do
-    args <- traverse convert args
-    convert f (C.Apply @Full range args [consumer])
-  convert (Project range expr field) consumer = do
-    convert expr (C.Project @Full range field consumer)
-  convert (Primitive range operator args) consumer = do
-    args <- traverse convert args
-    pure $ C.Primitive range operator args consumer
-  convert (Select range scrutinee branches) consumer = do
-    branches <- traverse (convert consumer) branches
-    convert scrutinee (C.Select @Full range branches)
-  convert (Invoke range name) consumer = pure $ C.Invoke range name consumer
-  convert expr consumer = do
-    expr' <- convert expr
-    pure $ Cut expr' consumer
+toProducer :: (State Uniq :> es, Reader ModuleName :> es) => Expr -> Eff es (C.Producer Full)
+toProducer (Var range name) = pure $ C.Var range name
+toProducer (Literal range literal) = pure $ C.Literal range literal
+toProducer (Construct range tag arguments) = C.Construct range tag <$> traverse toProducer arguments <*> pure []
+toProducer producer@(Let range _ _ _) = do
+  return <- newTemporalId "return"
+  C.Do range return <$> toStatement producer (C.Label @Full range return)
+toProducer (Lambda range params body) = do
+  return <- newTemporalId "return"
+  body' <- toStatement body (C.Label @Full range return)
+  pure $ C.Lambda range (params <> [return]) body'
+toProducer (Object range fields) = do
+  fields <- for fields \body -> do
+    return <- newTemporalId "return"
+    body <- toStatement body (C.Label @Full range return)
+    pure (return, body)
+  pure $ C.Object range fields
+toProducer producer@(Apply range _ _) = do
+  return <- newTemporalId "return"
+  Do range return <$> toStatement producer (C.Label @Full range return)
+toProducer producer@(Project range _ _) = do
+  return <- newTemporalId "return"
+  Do range return <$> toStatement producer (C.Label @Full range return)
+toProducer producer@(Primitive range _ _) = do
+  return <- newTemporalId "return"
+  Do range return <$> toStatement producer (C.Label @Full range return)
+toProducer producer@(Select range _ _) = do
+  return <- newTemporalId "return"
+  Do range return <$> toStatement producer (C.Label @Full range return)
+toProducer producer@(Invoke range _) = do
+  return <- newTemporalId "return"
+  Do range return <$> toStatement producer (C.Label @Full range return)
 
-instance (State Uniq :> es, Reader ModuleName :> es) => Convert Expr (Eff es (C.Producer Full)) where
-  convert (Var range name) = pure $ C.Var range name
-  convert (Literal range literal) = pure $ C.Literal range literal
-  convert (Construct range tag arguments) = C.Construct range tag <$> traverse convert arguments <*> pure []
-  convert producer@(Let range _ _ _) = do
-    return <- newTemporalId "return"
-    C.Do range return <$> convert producer (C.Label @Full range return)
-  convert (Lambda range params body) = do
-    return <- newTemporalId "return"
-    body' <- convert body (C.Label @Full range return)
-    pure $ C.Lambda range (params <> [return]) body'
-  convert (Object range fields) = do
-    fields <- for fields \body -> do
-      return <- newTemporalId "return"
-      body <- convert body (C.Label @Full range return)
-      pure (return, body)
-    pure $ C.Object range fields
-  convert producer@(Apply range _ _) = do
-    return <- newTemporalId "return"
-    Do range return <$> convert producer (C.Label @Full range return)
-  convert producer@(Project range _ _) = do
-    return <- newTemporalId "return"
-    Do range return <$> convert producer (C.Label @Full range return)
-  convert producer@(Primitive range _ _) = do
-    return <- newTemporalId "return"
-    Do range return <$> convert producer (C.Label @Full range return)
-  convert producer@(Select range _ _) = do
-    return <- newTemporalId "return"
-    Do range return <$> convert producer (C.Label @Full range return)
-  convert producer@(Invoke range _) = do
-    return <- newTemporalId "return"
-    Do range return <$> convert producer (C.Label @Full range return)
-
-instance (State Uniq :> es, Reader ModuleName :> es) => Convert (C.Consumer Full) (Branch -> Eff es (C.Branch Full)) where
-  convert consumer (Branch range pattern body) = do
-    body' <- convert body consumer
-    pure $ C.Branch range pattern body'
+convertBranch :: (State Uniq :> es, Reader ModuleName :> es) => C.Consumer Full -> Branch -> Eff es (C.Branch Full)
+convertBranch consumer (Branch range pattern body) = do
+  body' <- toStatement body consumer
+  pure $ C.Branch range pattern body'

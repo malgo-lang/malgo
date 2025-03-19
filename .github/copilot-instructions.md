@@ -15,7 +15,7 @@ In order to produce highly readable output, data should be converted to strings 
 
 ## Instructions for GitHub Copilot
 
-- If you notice anything while using Copilot Edits, add it to the last of ‘GitHub Copilot comments’ section of this file (`.github/copilot-instructions.md`).
+- If you notice anything while using Copilot Edits, add it to the head of ‘GitHub Copilot comments’ section of this file (`.github/copilot-instructions.md`).
 - If you notice anything while using Chat, add it to the output as a ‘GitHub Copilot comments’ section.
 - DO NOT EDIT or REMOVE any comments in 'GitHub Copilot comments' section.
 
@@ -23,4 +23,6 @@ In order to produce highly readable output, data should be converted to strings 
 
 DO NOT EDIT or REMOVE this section. Just ADD your comments here.
 
+- Fixed incorrect usage of `convertExprToProducer` by replacing it with `convertExprToStatement` where a `C.Consumer Full` is expected in `Malgo.Sequent.ToCore` module.
+- Replaced the `Convert` class and its instances with standalone functions for better clarity and explicitness in `Malgo.Sequent.ToCore` module.
 - Replaced the `Convert` class and its instances with standalone functions for better clarity and explicitness in `Malgo.Sequent.ToFun` module.
