@@ -1,14 +1,24 @@
-# Malgo プロジェクトのコーディング規約
+## Malgo project coding conventions
 
-## データの文字列への変換
+### Converting data to strings
 
-可読性の高い出力を行うため、以下の３つの方法を適切に使い分け、データを文字列に変換する。
+In order to produce highly readable output, data should be converted to strings using the following three methods as appropriate.
 
-1. `Text.Pretty.Simple` モジュールの `pShow` 関数
-  - `Show` インスタンスが存在する任意の型の出力に用いる。
-  - 原則として、デバッグ目的の出力か、ログ出力のみに用いる。
-2. `Prettyprinter` モジュールの `pretty` 関数
-  - `Pretty` インスタンスが存在する任意の型の出力に用いる。
-  - ユーザーに対して出力する場合に用いる。
-3. `Malgo.SExpr` モジュールの `sShow` 関数
-  - ASTや中間表現の出力に用いる。
+1. `pShow` function of the `Text.Pretty.Simple` module
+  - Use for output of any type that has a `Show` instance.
+  - In principle, use only for debugging output or log output.
+2. `pretty` function of the `Prettyprinter` module
+  - Use for output of any type where a `Pretty` instance exists.
+  - Use when outputting to the user.
+3. `sShow` function of the `Malgo.SExpr` module
+  - Use for output of ASTs and intermediate representations.
+
+## Instructions for GitHub Copilot
+
+- If you notice anything while using Copilot Edits, add it to the ‘GitHub Copilot comments’ section of this file (`.github/copilot-instructions.md`).
+- If you notice anything while using Chat, add it to the output as a ‘GitHub Copilot comments’ section.
+- Do not remove any comments in 'GitHub Copilot comments' section.
+
+## GitHub Copilot comments
+
+- Replaced the `Convert` class and its instances with standalone functions (`toFunScDef`, `toFunClause`, etc.) for better clarity and explicitness.
