@@ -25,5 +25,5 @@ jobs:
         name: takoeight0821
         # If you chose API tokens for write access OR if you have a private cache
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    - run: NIX_DEBUG=7 nix build -L 
+    - run: NIX_DEBUG=7 nix build -L
     - run: nix flake check
