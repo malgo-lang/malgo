@@ -15,10 +15,12 @@ In order to produce highly readable output, data should be converted to strings 
 
 ## Instructions for GitHub Copilot
 
-- If you notice anything while using Copilot Edits, add it to the ‘GitHub Copilot comments’ section of this file (`.github/copilot-instructions.md`).
+- If you notice anything while using Copilot Edits, add it to the last of ‘GitHub Copilot comments’ section of this file (`.github/copilot-instructions.md`).
 - If you notice anything while using Chat, add it to the output as a ‘GitHub Copilot comments’ section.
-- Do NOT REMOVE any comments in 'GitHub Copilot comments' section.
+- DO NOT EDIT or REMOVE any comments in 'GitHub Copilot comments' section.
 
 ## GitHub Copilot comments
 
-- Replaced the `Convert` class and its instances with standalone functions (`toFunScDef`, `toFunClause`, etc.) for better clarity and explicitness.
+DO NOT EDIT or REMOVE this section. Just ADD your comments here.
+
+- Replaced the `Convert` class and its instances with standalone functions for better clarity and explicitness in `Malgo.Sequent.ToFun` module.
