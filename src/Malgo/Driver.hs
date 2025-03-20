@@ -2,7 +2,6 @@
 module Malgo.Driver (compile, compileFromAST, withDump) where
 
 import Data.ByteString qualified as BS
-import Debug.Trace (traceShowM)
 import Effectful
 import Effectful.Error.Static (prettyCallStack, runError)
 import Effectful.Reader.Static
@@ -155,6 +154,7 @@ compile ::
     IOE :> es,
     State (Map ModuleName Interface) :> es,
     State Uniq :> es,
+    State Pragma :> es,
     Workspace :> es
   ) =>
   FilePath ->
@@ -164,8 +164,7 @@ compile srcPath = do
   pwd <- pwdPath
   srcModulePath <- parseArtifactPath pwd srcPath
   src <- load srcModulePath ".mlg"
-  (parseResult, pragma) <- parseMalgo srcPath (convertString @BS.ByteString src)
-  traceShowM pragma
+  parseResult <- parseMalgo srcPath (convertString @BS.ByteString src)
   parsedAst <- case parseResult of
     Right x -> pure x
     Left err -> liftIO do

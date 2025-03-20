@@ -17,6 +17,7 @@ runMalgoM ::
        Reader Flag,
        State Uniq,
        State (Map ModuleName Interface),
+       State Pragma,
        Workspace,
        IOE
      ]
@@ -27,3 +28,4 @@ runMalgoM flag opt e = runEff $ runWorkspaceOnPwd do
     & runReader flag
     & evalState (Uniq 0)
     & evalState @(Map ModuleName Interface) mempty
+    & evalState @Pragma mempty

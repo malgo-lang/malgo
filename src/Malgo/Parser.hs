@@ -11,7 +11,7 @@ import Data.Text.Lazy qualified as TL
 import Data.Void
 import Effectful
 import Effectful.FileSystem (runFileSystem)
-import Effectful.State.Static.Local (State, modify, runState)
+import Effectful.State.Static.Local (State, modify)
 import Malgo.Module (ArtifactPath, ModuleName (..), Pragma, Workspace, insertPragma, parseArtifactPath, pwdPath)
 import Malgo.Prelude hiding (All)
 import Malgo.Syntax
@@ -24,13 +24,13 @@ type Parser es = ParsecT Void TL.Text (Eff es)
 
 -- | Parse a module from a file.
 parseMalgo ::
-  (IOE :> es, Workspace :> es) =>
+  (IOE :> es, Workspace :> es, State Pragma :> es) =>
   String ->
   TL.Text ->
   Eff
     es
-    (Either (ParseErrorBundle TL.Text Void) (Module (Malgo Parse)), Pragma)
-parseMalgo srcPath text = runFileSystem $ runState mempty $ runParserT parser srcPath text
+    (Either (ParseErrorBundle TL.Text Void) (Module (Malgo Parse)))
+parseMalgo srcPath text = runFileSystem $ runParserT parser srcPath text
   where
     parser = do
       sc
