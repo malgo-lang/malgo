@@ -6,15 +6,17 @@ module Malgo.Parser (parseMalgo) where
 import Control.Monad.Combinators.Expr
 import Control.Monad.Trans (lift)
 import Data.List.NonEmpty qualified as NonEmpty
+import Data.Maybe (catMaybes)
 import Data.Text.Lazy qualified as TL
 import Data.Void
 import Effectful
 import Effectful.FileSystem (runFileSystem)
-import Malgo.Module (ModuleName (..), Workspace, parseArtifactPath, pwdPath)
+import Effectful.State.Static.Local (State, modify, runState)
+import Malgo.Module (ArtifactPath, ModuleName (..), Pragma, Workspace, insertPragma, parseArtifactPath, pwdPath)
 import Malgo.Prelude hiding (All)
 import Malgo.Syntax
 import Malgo.Syntax.Extension
-import Text.Megaparsec
+import Text.Megaparsec hiding (State)
 import Text.Megaparsec.Char
 import Text.Megaparsec.Char.Lexer qualified as L
 
@@ -27,8 +29,8 @@ parseMalgo ::
   TL.Text ->
   Eff
     es
-    (Either (ParseErrorBundle TL.Text Void) (Module (Malgo Parse)))
-parseMalgo srcPath text = runFileSystem $ runParserT parser srcPath text
+    (Either (ParseErrorBundle TL.Text Void) (Module (Malgo Parse)), Pragma)
+parseMalgo srcPath text = runFileSystem $ runState mempty $ runParserT parser srcPath text
   where
     parser = do
       sc
@@ -37,16 +39,16 @@ parseMalgo srcPath text = runFileSystem $ runParserT parser srcPath text
       pure mod
 
 -- entry point
-pModule :: (Workspace :> es, IOE :> es) => Parser es (Module (Malgo 'Parse))
+pModule :: (Workspace :> es, IOE :> es, State Pragma :> es) => Parser es (Module (Malgo 'Parse))
 pModule = do
   sourcePath <- (.sourceName) <$> getSourcePos
   pwd <- lift pwdPath
   sourcePath' <- lift $ parseArtifactPath pwd sourcePath
-  ds <- many pDecl
+  ds <- many (pDecl sourcePath')
   pure
     Module
       { moduleName = Artifact sourcePath',
-        moduleDefinition = ParsedDefinitions ds
+        moduleDefinition = ParsedDefinitions $ catMaybes ds
       }
 
 -- module name
@@ -63,15 +65,23 @@ pModuleName = label "module path" $ asIdent <|> asPath
       pure $ Artifact path'
 
 -- toplevel declaration
-pDecl :: (Workspace :> es, IOE :> es) => Parser es (Decl (Malgo 'Parse))
-pDecl =
-  pDataDef
-    <|> pTypeSynonym
-    <|> pInfix
-    <|> pForeign
-    <|> pImport
-    <|> try pScSig -- try before 'pScDef'
-    <|> pScDef
+pDecl :: (Workspace :> es, IOE :> es, State Pragma :> es) => ArtifactPath -> Parser es (Maybe (Decl (Malgo 'Parse)))
+pDecl sourcePath =
+  pPragma sourcePath
+    <|> fmap Just pDataDef
+    <|> fmap Just pTypeSynonym
+    <|> fmap Just pInfix
+    <|> fmap Just pForeign
+    <|> fmap Just pImport
+    <|> try (fmap Just pScSig) -- try before 'pScDef'
+    <|> fmap Just pScDef
+
+pPragma :: (State Pragma :> es) => ArtifactPath -> Parser es (Maybe (Decl (Malgo 'Parse)))
+pPragma sourcePath = label "pragma" do
+  void $ char '#'
+  line <- lexeme $ takeWhileP Nothing (/= '\n')
+  lift $ modify $ insertPragma sourcePath $ convertString line
+  pure Nothing
 
 pDataDef :: Parser es (Decl (Malgo 'Parse))
 pDataDef = label "toplevel type definition" do

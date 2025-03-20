@@ -18,6 +18,8 @@ module Malgo.Module
     ViaShow (..),
     moduleNameToString,
     moduleNameDigest,
+    Pragma (..),
+    insertPragma,
   )
 where
 
@@ -27,6 +29,7 @@ import Data.Aeson hiding (encode)
 import Data.ByteString (ByteString)
 import Data.ByteString qualified as BS
 import Data.Data
+import Data.Map qualified as Map
 import Data.Store
 import Effectful
 import Effectful.Dispatch.Static
@@ -150,7 +153,7 @@ data ArtifactPath = ArtifactPath
     targetPath :: Path Abs File
   }
   deriving stock (Eq, Ord, Generic, Data, Typeable)
-  deriving anyclass (Hashable, ToJSON, FromJSON, Store)
+  deriving anyclass (Hashable, ToJSON, ToJSONKey, FromJSON, FromJSONKey, Store)
 
 instance Show ArtifactPath where
   -- Do not show rawPath, originPath, targetPath.
@@ -232,3 +235,11 @@ newtype ViaShow a = ViaShow a
 instance (Show a) => Resource (ViaShow a) where
   toByteString (ViaShow a) = convertString $ pShowNoColor a
   fromByteString = error "fromByteString: ViaShow cannot be deserialized"
+
+newtype Pragma = Pragma (Map ArtifactPath Text)
+  deriving stock (Eq, Show, Generic, Data, Typeable)
+  deriving newtype (Semigroup, Monoid)
+  deriving anyclass (Hashable, ToJSON, FromJSON, Store)
+
+insertPragma :: ArtifactPath -> Text -> Pragma -> Pragma
+insertPragma path value (Pragma map) = Pragma $ Map.insert path value map

@@ -49,8 +49,8 @@ driveEval srcPath = do
   runMalgoM flag option do
     parsed <-
       parseMalgo srcPath src >>= \case
-        Left err -> error $ show err
-        Right parsed -> pure parsed
+        (Left err, _) -> error $ show err
+        (Right parsed, _) -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
     (renamed, rnState) <- rename rnEnv parsed
     (typed, tcEnv) <- infer rnEnv renamed
