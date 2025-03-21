@@ -33,7 +33,7 @@ spec = parallel do
     filterM
       ( \file -> do
           contents <- BS.readFile (testcaseDir </> file)
-          pure $ not $ "-- backend: core" `BS.isPrefixOf` contents
+          pure $ not $ "#backend core" `BS.isPrefixOf` contents
       )
       mlgFiles
 
