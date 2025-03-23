@@ -2,6 +2,7 @@ module Malgo.Sequent.ToCoreSpec (spec) where
 
 import Data.ByteString qualified as BS
 import Effectful.Reader.Static (runReader)
+import Malgo.Driver (failIfError)
 import Malgo.Infer.Pass (infer)
 import Malgo.Monad (runMalgoM)
 import Malgo.Parser (parseMalgo)
@@ -19,7 +20,6 @@ import Malgo.TestUtils
 import System.Directory
 import System.FilePath
 import Test.Hspec
-import Malgo.Driver (exitIfError)
 
 spec :: Spec
 spec = parallel do
@@ -58,7 +58,7 @@ driveToCore srcPath = do
         Left err -> error $ show err
         Right parsed -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
-    (renamed, _) <- rename rnEnv parsed >>= exitIfError
+    (renamed, _) <- failIfError <$> rename rnEnv parsed
     (typed, tcEnv) <- infer rnEnv renamed
     refined <- refine tcEnv typed
     program <- runReader refined.moduleName $ toFun refined.moduleDefinition >>= toCore
@@ -73,7 +73,7 @@ driveFlat srcPath = do
         Left err -> error $ show err
         Right parsed -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
-    (renamed, _) <- rename rnEnv parsed >>= exitIfError
+    (renamed, _) <- failIfError <$> rename rnEnv parsed
     (typed, tcEnv) <- infer rnEnv renamed
     refined <- refine tcEnv typed
     program <- runReader refined.moduleName $ toFun refined.moduleDefinition >>= toCore >>= flatProgram
@@ -88,7 +88,7 @@ driveJoin srcPath = do
         Left err -> error $ show err
         Right parsed -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
-    (renamed, _) <- rename rnEnv parsed >>= exitIfError
+    (renamed, _) <- failIfError <$> rename rnEnv parsed
     (typed, tcEnv) <- infer rnEnv renamed
     refined <- refine tcEnv typed
     program <- runReader refined.moduleName $ toFun refined.moduleDefinition >>= toCore >>= flatProgram >>= joinProgram

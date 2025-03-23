@@ -7,7 +7,7 @@ import GHC.Exception (CallStack, prettyCallStack)
 import Malgo.Core.Eval
 import Malgo.Core.Flat qualified as Flat
 import Malgo.Desugar.Pass (desugar)
-import Malgo.Driver (exitIfError)
+import Malgo.Driver (failIfError)
 import Malgo.Infer.Pass (infer)
 import Malgo.Interface (buildInterface)
 import Malgo.Link qualified as Link
@@ -53,7 +53,7 @@ driveEval srcPath = do
         Left err -> error $ show err
         Right parsed -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
-    (renamed, rnState) <- rename rnEnv parsed >>= exitIfError
+    (renamed, rnState) <- failIfError <$> rename rnEnv parsed
     (typed, tcEnv) <- infer rnEnv renamed
     refined <- refine tcEnv typed
     (dsState, core) <- desugar tcEnv refined

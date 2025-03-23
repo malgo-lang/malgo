@@ -2,7 +2,7 @@ module Malgo.DesugarSpec (spec) where
 
 import Data.ByteString qualified as BS
 import Malgo.Desugar.Pass (desugar)
-import Malgo.Driver (exitIfError)
+import Malgo.Driver (failIfError)
 import Malgo.Infer.Pass (infer)
 import Malgo.Monad (runMalgoM)
 import Malgo.Parser (parseMalgo)
@@ -36,7 +36,7 @@ driveDesugar srcPath = do
         Left err -> error $ show err
         Right parsed -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
-    (renamed, _) <- rename rnEnv parsed >>= exitIfError
+    (renamed, _) <- failIfError <$> rename rnEnv parsed
     (typed, tcEnv) <- infer rnEnv renamed
     refined <- refine tcEnv typed
     (_, core) <- desugar tcEnv refined
