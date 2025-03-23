@@ -32,7 +32,7 @@ parseMalgo ::
 parseMalgo srcPath text = runFileSystem do
   runParserT parser srcPath text
   where
-    pragmas = stripPragmas text
+    pragmas = extractPragmas text
     parser = do
       sc
       mod <- pModule
@@ -40,10 +40,10 @@ parseMalgo srcPath text = runFileSystem do
       lift $ modify $ insertPragmas mod.moduleName pragmas
       pure mod
 
--- | Strip pragmas from a module.
+-- | Extract pragmas from a module.
 -- Returns the list of pragmas.
-stripPragmas :: TL.Text -> [Text]
-stripPragmas = go [] . TL.lines
+extractPragmas :: TL.Text -> [Text]
+extractPragmas = go [] . TL.lines
   where
     go pragmas [] = map convertString $ reverse pragmas
     go pragmas (l : ls)
@@ -89,6 +89,7 @@ pDecl = do
     <|> try (pScSig) -- try before 'pScDef'
     <|> pScDef
 
+-- | pPragma just skips the pragma.
 pPragma :: Parser es ()
 pPragma = lexeme $ do
   void $ char '#'
