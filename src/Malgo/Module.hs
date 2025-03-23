@@ -19,7 +19,7 @@ module Malgo.Module
     moduleNameToString,
     moduleNameDigest,
     Pragma (..),
-    insertPragma,
+    insertPragmas,
   )
 where
 
@@ -48,7 +48,7 @@ data ModuleName
   = ModuleName Text
   | Artifact ArtifactPath
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
-  deriving anyclass (Hashable, ToJSON, FromJSON, Store)
+  deriving anyclass (Hashable, ToJSON, ToJSONKey, FromJSON, FromJSONKey, Store)
 
 instance Pretty ModuleName where
   pretty (ModuleName raw) = pretty raw
@@ -236,10 +236,10 @@ instance (Show a) => Resource (ViaShow a) where
   toByteString (ViaShow a) = convertString $ pShowNoColor a
   fromByteString = error "fromByteString: ViaShow cannot be deserialized"
 
-newtype Pragma = Pragma (Map ArtifactPath [Text])
+newtype Pragma = Pragma (Map ModuleName [Text])
   deriving stock (Eq, Show, Generic, Data, Typeable)
   deriving newtype (Semigroup, Monoid)
   deriving anyclass (Hashable, ToJSON, FromJSON, Store)
 
-insertPragma :: ArtifactPath -> Text -> Pragma -> Pragma
-insertPragma path value (Pragma map) = Pragma $ Map.insertWith (<>) path [value] map
+insertPragmas :: ModuleName -> [Text] -> Pragma -> Pragma
+insertPragmas path value (Pragma map) = Pragma $ Map.insertWith (<>) path value map

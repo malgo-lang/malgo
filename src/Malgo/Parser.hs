@@ -6,13 +6,12 @@ module Malgo.Parser (parseMalgo) where
 import Control.Monad.Combinators.Expr
 import Control.Monad.Trans (lift)
 import Data.List.NonEmpty qualified as NonEmpty
-import Data.Maybe (catMaybes)
 import Data.Text.Lazy qualified as TL
 import Data.Void
 import Effectful
 import Effectful.FileSystem (runFileSystem)
 import Effectful.State.Static.Local (State, modify)
-import Malgo.Module (ArtifactPath, ModuleName (..), Pragma, Workspace, insertPragma, parseArtifactPath, pwdPath)
+import Malgo.Module (ModuleName (..), Pragma, Workspace, insertPragmas, parseArtifactPath, pwdPath)
 import Malgo.Prelude hiding (All)
 import Malgo.Syntax
 import Malgo.Syntax.Extension
@@ -30,25 +29,38 @@ parseMalgo ::
   Eff
     es
     (Either (ParseErrorBundle TL.Text Void) (Module (Malgo Parse)))
-parseMalgo srcPath text = runFileSystem $ runParserT parser srcPath text
+parseMalgo srcPath text = runFileSystem do
+  runParserT parser srcPath text
   where
+    pragmas = stripPragmas text
     parser = do
       sc
       mod <- pModule
       eof
+      lift $ modify $ insertPragmas mod.moduleName pragmas
       pure mod
 
+-- | Strip pragmas from a module.
+-- Returns the list of pragmas.
+stripPragmas :: TL.Text -> [Text]
+stripPragmas = go [] . TL.lines
+  where
+    go pragmas [] = map convertString $ reverse pragmas
+    go pragmas (l : ls)
+      | "#" `TL.isPrefixOf` l = go (l : pragmas) ls
+      | otherwise = go pragmas ls
+
 -- entry point
-pModule :: (Workspace :> es, IOE :> es, State Pragma :> es) => Parser es (Module (Malgo 'Parse))
+pModule :: (Workspace :> es, IOE :> es) => Parser es (Module (Malgo 'Parse))
 pModule = do
   sourcePath <- (.sourceName) <$> getSourcePos
   pwd <- lift pwdPath
   sourcePath' <- lift $ parseArtifactPath pwd sourcePath
-  ds <- many (pDecl sourcePath')
+  ds <- many pDecl
   pure
     Module
       { moduleName = Artifact sourcePath',
-        moduleDefinition = ParsedDefinitions $ catMaybes ds
+        moduleDefinition = ParsedDefinitions ds
       }
 
 -- module name
@@ -65,23 +77,22 @@ pModuleName = label "module path" $ asIdent <|> asPath
       pure $ Artifact path'
 
 -- toplevel declaration
-pDecl :: (Workspace :> es, IOE :> es, State Pragma :> es) => ArtifactPath -> Parser es (Maybe (Decl (Malgo 'Parse)))
-pDecl sourcePath =
-  pPragma sourcePath
-    <|> fmap Just pDataDef
-    <|> fmap Just pTypeSynonym
-    <|> fmap Just pInfix
-    <|> fmap Just pForeign
-    <|> fmap Just pImport
-    <|> try (fmap Just pScSig) -- try before 'pScDef'
-    <|> fmap Just pScDef
+pDecl :: (Workspace :> es, IOE :> es) => Parser es (Decl (Malgo 'Parse))
+pDecl = do
+  -- skip pragma
+  _ <- optional $ pPragma
+  pDataDef
+    <|> pTypeSynonym
+    <|> pInfix
+    <|> pForeign
+    <|> pImport
+    <|> try (pScSig) -- try before 'pScDef'
+    <|> pScDef
 
-pPragma :: (State Pragma :> es) => ArtifactPath -> Parser es (Maybe (Decl (Malgo 'Parse)))
-pPragma sourcePath = label "pragma" do
+pPragma :: Parser es ()
+pPragma = lexeme $ do
   void $ char '#'
-  line <- lexeme $ takeWhileP Nothing (/= '\n')
-  lift $ modify $ insertPragma sourcePath $ convertString line
-  pure Nothing
+  void $ takeWhileP (Just "pragma") (/= '\n')
 
 pDataDef :: Parser es (Decl (Malgo 'Parse))
 pDataDef = label "toplevel type definition" do

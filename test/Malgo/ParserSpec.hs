@@ -1,6 +1,8 @@
 module Malgo.ParserSpec (spec) where
 
 import Data.ByteString.Lazy qualified as BL
+import Effectful.State.Static.Local (get)
+import Malgo.Module (Pragma)
 import Malgo.Monad (runMalgoM)
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
@@ -17,6 +19,7 @@ spec = parallel do
   golden "Prelude" (driveParse preludePath)
   for_ testcases \testcase -> do
     golden (takeBaseName testcase) (driveParse (testcaseDir </> testcase))
+    golden (takeBaseName testcase <> " pragma") (drivePragma (testcaseDir </> testcase))
 
 driveParse :: FilePath -> IO String
 driveParse srcPath = do
@@ -27,3 +30,11 @@ driveParse srcPath = do
       Left err -> pure $ errorBundlePretty err
       Right parsed ->
         pure $ pShowCompact parsed
+
+drivePragma :: FilePath -> IO String
+drivePragma srcPath = do
+  src <- convertString <$> BL.readFile srcPath
+  runMalgoM flag option do
+    _ <- parseMalgo srcPath src
+    pragmas <- get @Pragma
+    pure $ pShowCompact pragmas
