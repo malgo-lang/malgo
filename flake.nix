@@ -47,6 +47,7 @@
             haskellPackages.hpack
             nixfmt-rfc-style
             entr
+            icu
           ];
           inputsFrom = map (__getAttr "env") (__attrValues self.packages.${system});
         };
