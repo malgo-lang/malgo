@@ -1,6 +1,7 @@
 module Malgo.InferSpec (spec) where
 
 import Data.ByteString qualified as BS
+import Malgo.Driver (exitIfError)
 import Malgo.Infer.Pass (infer)
 import Malgo.Monad (runMalgoM)
 import Malgo.Parser (parseMalgo)
@@ -32,6 +33,6 @@ driveInfer srcPath = do
         Left err -> error $ show err
         Right parsed -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
-    (renamed, _) <- rename rnEnv parsed
+    (renamed, _) <- rename rnEnv parsed >>= exitIfError
     (typedAst, _) <- infer rnEnv renamed
     pure $ pShowCompact typedAst

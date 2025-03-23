@@ -19,6 +19,7 @@ import Malgo.TestUtils
 import System.Directory
 import System.FilePath
 import Test.Hspec
+import Malgo.Driver (exitIfError)
 
 spec :: Spec
 spec = parallel do
@@ -57,7 +58,7 @@ driveToCore srcPath = do
         Left err -> error $ show err
         Right parsed -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
-    (renamed, _) <- rename rnEnv parsed
+    (renamed, _) <- rename rnEnv parsed >>= exitIfError
     (typed, tcEnv) <- infer rnEnv renamed
     refined <- refine tcEnv typed
     program <- runReader refined.moduleName $ toFun refined.moduleDefinition >>= toCore
@@ -72,7 +73,7 @@ driveFlat srcPath = do
         Left err -> error $ show err
         Right parsed -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
-    (renamed, _) <- rename rnEnv parsed
+    (renamed, _) <- rename rnEnv parsed >>= exitIfError
     (typed, tcEnv) <- infer rnEnv renamed
     refined <- refine tcEnv typed
     program <- runReader refined.moduleName $ toFun refined.moduleDefinition >>= toCore >>= flatProgram
@@ -87,7 +88,7 @@ driveJoin srcPath = do
         Left err -> error $ show err
         Right parsed -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
-    (renamed, _) <- rename rnEnv parsed
+    (renamed, _) <- rename rnEnv parsed >>= exitIfError
     (typed, tcEnv) <- infer rnEnv renamed
     refined <- refine tcEnv typed
     program <- runReader refined.moduleName $ toFun refined.moduleDefinition >>= toCore >>= flatProgram >>= joinProgram

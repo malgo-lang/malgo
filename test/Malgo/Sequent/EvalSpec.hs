@@ -4,6 +4,7 @@ import Data.ByteString qualified as BS
 import Effectful
 import Effectful.Error.Static (runError)
 import Effectful.Reader.Static (runReader)
+import Malgo.Driver (exitIfError)
 import Malgo.Infer.Pass (infer)
 import Malgo.Module
 import Malgo.Monad (runMalgoM)
@@ -56,7 +57,7 @@ setupBuiltin = do
         Left err -> error $ show err
         Right parsed -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
-    (renamed, _) <- rename rnEnv parsed
+    (renamed, _) <- rename rnEnv parsed >>= exitIfError
     (typed, tcEnv) <- infer rnEnv renamed
     refined <- refine tcEnv typed
     program <- runReader refined.moduleName $ toFun refined.moduleDefinition >>= toCore >>= flatProgram >>= joinProgram
@@ -72,7 +73,7 @@ setupPrelude = do
         Left err -> error $ show err
         Right parsed -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
-    (renamed, _) <- rename rnEnv parsed
+    (renamed, _) <- rename rnEnv parsed >>= exitIfError
     (typed, tcEnv) <- infer rnEnv renamed
     refined <- refine tcEnv typed
     program <- runReader refined.moduleName $ toFun refined.moduleDefinition >>= toCore >>= flatProgram >>= joinProgram
@@ -88,7 +89,7 @@ driveEval builtinName preludeName srcPath = do
         Left err -> error $ show err
         Right parsed -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
-    (renamed, _) <- rename rnEnv parsed
+    (renamed, _) <- rename rnEnv parsed >>= exitIfError
     (typed, tcEnv) <- infer rnEnv renamed
     refined <- refine tcEnv typed
     Program program <- runReader refined.moduleName $ toFun refined.moduleDefinition >>= toCore >>= flatProgram >>= joinProgram

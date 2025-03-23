@@ -114,6 +114,7 @@ data Expr x
   | Boxed (XBoxed x) (Literal Boxed)
   | Apply (XApply x) (Expr x) (Expr x)
   | OpApp (XOpApp x) (XId x) (Expr x) (Expr x)
+  | Project (XProject x) (Expr x) Text
   | Fn (XFn x) (NonEmpty (Clause x))
   | Tuple (XTuple x) [Expr x]
   | Record (XRecord x) [(Text, Expr x)]
@@ -132,6 +133,7 @@ instance (Pretty (XId x)) => Pretty (Expr x) where
   pretty (Boxed _ l) = sexpr ["boxed", pretty l]
   pretty (Apply _ e1 e2) = sexpr ["apply", pretty e1, pretty e2]
   pretty (OpApp _ op e1 e2) = sexpr ["opapp", pretty op, pretty e1, pretty e2]
+  pretty (Project _ e k) = sexpr ["project", pretty e, pretty k]
   pretty (Fn _ cs) = sexpr ["fn", sexpr $ map pretty (toList cs)]
   pretty (Tuple _ es) = sexpr $ "tuple" : map pretty es
   pretty (Record _ kvs) = sexpr $ "record" : map (\(k, v) -> sexpr [pretty k, pretty v]) kvs
@@ -149,6 +151,7 @@ instance
   typeOf (Boxed x _) = typeOf x
   typeOf (Apply x _ _) = typeOf x
   typeOf (OpApp x _ _ _) = typeOf x
+  typeOf (Project x _ _) = typeOf x
   typeOf (Fn x _) = typeOf x
   typeOf (Tuple x _) = typeOf x
   typeOf (Record x _) = typeOf x
@@ -163,6 +166,7 @@ instance
     Boxed x b -> Boxed <$> types f x <*> types f b
     Apply x e1 e2 -> Apply <$> types f x <*> types f e1 <*> types f e2
     OpApp x op e1 e2 -> OpApp <$> types f x <*> pure op <*> types f e1 <*> types f e2
+    Project x e k -> Project <$> types f x <*> types f e <*> pure k
     Fn x cs -> Fn <$> types f x <*> traverse (types f) cs
     Tuple x es -> Tuple <$> types f x <*> traverse (types f) es
     Record x kvs -> Record <$> types f x <*> traverse (\(k, v) -> (k,) <$> types f v) kvs
@@ -177,6 +181,7 @@ freevars (Unboxed _ _) = mempty
 freevars (Boxed _ _) = mempty
 freevars (Apply _ e1 e2) = freevars e1 <> freevars e2
 freevars (OpApp _ op e1 e2) = Set.insert op $ freevars e1 <> freevars e2
+freevars (Project _ e _) = freevars e
 freevars (Fn _ cs) = foldMap freevarsClause cs
   where
     freevarsClause :: (Ord (XId x)) => Clause x -> Set (XId x)

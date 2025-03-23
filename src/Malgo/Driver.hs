@@ -1,9 +1,9 @@
 -- | Malgo.Driver is the entry point of `malgo to-ll`.
-module Malgo.Driver (compile, compileFromAST, withDump) where
+module Malgo.Driver (compile, compileFromAST, withDump, exitIfError) where
 
 import Data.ByteString qualified as BS
 import Effectful
-import Effectful.Error.Static (prettyCallStack, runError)
+import Effectful.Error.Static (prettyCallStack, runError, CallStack)
 import Effectful.Reader.Static
 import Effectful.State.Static.Local
 import Malgo.Core.Eval (EvalError, defaultStderr, defaultStdin, defaultStdout, eval)
@@ -48,6 +48,14 @@ withDump isDump label m = do
     hPrint stderr $ pretty result
   pure result
 
+exitIfError :: (Show e, MonadIO m) => Either (CallStack, e) a -> m a
+exitIfError = \case
+  Left (callStack, err) -> liftIO do
+    hPutStrLn stderr $ prettyCallStack callStack
+    hPutStrLn stderr $ show err
+    exitFailure
+  Right x -> pure x
+
 -- | Compile the parsed AST to Core representation.
 compileToCore ::
   ( Reader OptimizeOption :> es,
@@ -69,7 +77,8 @@ compileToCore srcPath parsedAst = do
     hPutStrLn stderr "=== PARSED ==="
     hPrint stderr $ pretty parsedAst
   rnEnv <- RnEnv.genBuiltinRnEnv
-  (renamedAst, rnState) <- withDump flags.debugMode "=== RENAME ===" $ rename rnEnv parsedAst
+  (renamedAst, rnState) <-
+    withDump flags.debugMode "=== RENAME ===" $ rename rnEnv parsedAst >>= exitIfError
   (typedAst, tcEnv) <- Infer.infer rnEnv renamedAst
   _ <- withDump flags.debugMode "=== TYPE CHECK ===" $ pure typedAst
   refinedAst <- withDump flags.debugMode "=== REFINE ===" $ refine tcEnv typedAst

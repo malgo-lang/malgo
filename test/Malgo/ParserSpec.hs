@@ -27,7 +27,7 @@ driveParse srcPath = do
   runMalgoM flag option do
     parsed <- parseMalgo srcPath src
     case parsed of
-      Left err -> pure $ errorBundlePretty err
+      Left err -> error $ errorBundlePretty err
       Right parsed ->
         pure $ pShowCompact parsed
 

@@ -7,6 +7,7 @@ import Data.List.Extra (anySame, disjoint)
 import Data.Map.Strict qualified as Map
 import Data.Set qualified as Set
 import Effectful (Eff, IOE, (:>))
+import Effectful.Error.Static
 import Effectful.Reader.Static (Reader, ask, local, runReader)
 import Effectful.State.Static.Local (State, execState, get, gets, modify, put, runState)
 import Malgo.Id
@@ -21,8 +22,12 @@ import Malgo.Syntax
 import Malgo.Syntax.Extension
 
 -- | Entry point of this 'Malgo.Rename.Pass'
-rename :: (State (Map ModuleName Interface) :> es, State Uniq :> es, IOE :> es, Reader Flag :> es, Workspace :> es) => RnEnv -> Module (Malgo Parse) -> Eff es (Module (Malgo Rename), RnState)
-rename builtinEnv (Module modName (ParsedDefinitions ds)) = do
+rename ::
+  (State (Map ModuleName Interface) :> es, State Uniq :> es, IOE :> es, Reader Flag :> es, Workspace :> es) =>
+  RnEnv ->
+  Module (Malgo Parse) ->
+  Eff es (Either (CallStack, RenameError) (Module (Malgo Rename), RnState))
+rename builtinEnv (Module modName (ParsedDefinitions ds)) = runError do
   (ds', rnState) <- runState (RnState mempty Set.empty) $ runReader builtinEnv $ runReader modName $ rnDecls ds
   pure (Module modName $ makeBindGroup ds', rnState)
 
@@ -37,7 +42,8 @@ rnDecls ::
     State Uniq :> es,
     IOE :> es,
     Reader Flag :> es,
-    Workspace :> es
+    Workspace :> es,
+    Error RenameError :> es
   ) =>
   [Decl (Malgo Parse)] ->
   Eff es [Decl (Malgo Rename)]
@@ -61,7 +67,8 @@ rnDecl ::
     Reader ModuleName :> es,
     IOE :> es,
     Reader Flag :> es,
-    Workspace :> es
+    Workspace :> es,
+    Error RenameError :> es
   ) =>
   Decl (Malgo Parse) ->
   Eff es (Decl (Malgo Rename))
@@ -112,7 +119,8 @@ rnExpr ::
     Reader RnEnv :> es,
     Reader ModuleName :> es,
     IOE :> es,
-    Reader Flag :> es
+    Reader Flag :> es,
+    Error RenameError :> es
   ) =>
   Expr (Malgo Parse) ->
   Eff es (Expr (Malgo Rename))
@@ -153,7 +161,7 @@ rnExpr (Seq pos ss) = Seq pos <$> rnStmts ss
 rnExpr (Parens _ e) = rnExpr e
 
 -- | Renamed identifier corresponding Boxed literals.
-lookupBox :: (Reader RnEnv :> es, IOE :> es) => Range -> Literal x -> Eff es Id
+lookupBox :: (Reader RnEnv :> es, Error RenameError :> es) => Range -> Literal x -> Eff es Id
 lookupBox pos Int32 {} = lookupVarName pos "Int32#"
 lookupBox pos Int64 {} = lookupVarName pos "Int64#"
 lookupBox pos Float {} = lookupVarName pos "Float#"
@@ -162,7 +170,7 @@ lookupBox pos Char {} = lookupVarName pos "Char#"
 lookupBox pos String {} = lookupVarName pos "String#"
 
 -- | Rename a type.
-rnType :: (Reader RnEnv :> es, IOE :> es, Reader Flag :> es) => Type (Malgo Parse) -> Eff es (Type (Malgo Rename))
+rnType :: (Reader RnEnv :> es, IOE :> es, Reader Flag :> es, Error RenameError :> es) => Type (Malgo Parse) -> Eff es (Type (Malgo Rename))
 rnType (TyApp pos t ts) = TyApp pos <$> rnType t <*> traverse rnType ts
 rnType (TyVar pos x) = TyVar pos <$> lookupTypeName pos x
 rnType (TyCon pos x) = TyCon pos <$> lookupTypeName pos x
@@ -178,7 +186,8 @@ rnClause ::
     Reader RnEnv :> es,
     Reader ModuleName :> es,
     IOE :> es,
-    Reader Flag :> es
+    Reader Flag :> es,
+    Error RenameError :> es
   ) =>
   Clause (Malgo Parse) ->
   Eff es (Clause (Malgo Rename))
@@ -198,7 +207,7 @@ rnClause (Clause pos ps e) = do
     patVars BoxedP {} = []
 
 -- | Rename a pattern.
-rnPat :: (Reader RnEnv :> es, IOE :> es, Reader Flag :> es) => Pat (Malgo Parse) -> Eff es (Pat (Malgo Rename))
+rnPat :: (Reader RnEnv :> es, IOE :> es, Reader Flag :> es, Error RenameError :> es) => Pat (Malgo Parse) -> Eff es (Pat (Malgo Rename))
 rnPat (VarP pos x) = VarP pos <$> lookupVarName pos x
 rnPat (ConP pos x xs) = ConP pos <$> lookupVarName pos x <*> traverse rnPat xs
 rnPat (TupleP pos xs) = TupleP pos <$> traverse rnPat xs
@@ -219,7 +228,8 @@ rnStmts ::
     Reader RnEnv :> es,
     Reader ModuleName :> es,
     IOE :> es,
-    Reader Flag :> es
+    Reader Flag :> es,
+    Error RenameError :> es
   ) =>
   NonEmpty (Stmt (Malgo Parse)) ->
   Eff es (NonEmpty (Stmt (Malgo Rename)))
@@ -251,7 +261,7 @@ rnStmts (With x Nothing e :| s : ss) = do
 rnStmts (With x _ _ :| []) = errorOn x "`with` statement cannnot appear in the last line of the sequence expression."
 
 -- | Convert infix declarations to a Map. Infix for an undefined identifier is an error.
-infixDecls :: (Reader RnEnv :> es, IOE :> es) => [Decl (Malgo 'Parse)] -> Eff es (Map RnId (Assoc, Int))
+infixDecls :: (Reader RnEnv :> es, Error RenameError :> es) => [Decl (Malgo 'Parse)] -> Eff es (Map RnId (Assoc, Int))
 infixDecls ds =
   foldMapM ?? ds $ \case
     (Infix pos assoc order name) -> do

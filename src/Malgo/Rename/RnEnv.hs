@@ -3,7 +3,8 @@
 
 -- | 'Malgo.Rename.RnEnv' contains functions which convert 'PsId' to 'RnId'.
 module Malgo.Rename.RnEnv
-  ( Resolved,
+  ( RenameError (..),
+    Resolved,
     RnEnv (..),
     appendRnEnv,
     genBuiltinRnEnv,
@@ -17,15 +18,43 @@ where
 
 import Control.Lens (ASetter', makeFieldsNoPrefix)
 import Data.Map.Strict qualified as Map
-import Effectful (Eff, IOE, (:>))
+import Effectful (Eff, (:>))
+import Effectful.Error.Static
 import Effectful.Reader.Static (Reader, asks, runReader)
 import Effectful.State.Static.Local (State)
 import Malgo.Id
 import Malgo.Lens
 import Malgo.Module
 import Malgo.MonadUniq
-import Malgo.Prelude
+import Malgo.Prelude hiding (throwError)
 import Malgo.Syntax.Extension
+
+data RenameError
+  = NotInScope Range PsId [Resolved]
+  | NotInModule Range PsId ModuleName [Resolved]
+
+instance Pretty RenameError where
+  pretty (NotInScope range name names) =
+    vsep
+      [ pretty range <> ":",
+        "Not in scope:"
+          <+> squotes (pretty name),
+        "Did you mean"
+          <+> pretty names
+      ]
+  pretty (NotInModule range name modName names) =
+    vsep
+      [ pretty range <> ":",
+        "Not in scope:"
+          <+> squotes (pretty name)
+          <+> "in"
+          <+> pretty modName,
+        "Did you mean"
+          <+> pretty names
+      ]
+
+instance Show RenameError where
+  show = show . pretty
 
 -- | Resolved identifier
 type Resolved = Qualified RnId
@@ -83,40 +112,26 @@ resolveGlobalName :: (Reader ModuleName :> es) => Text -> Eff es Id
 resolveGlobalName = newExternalId
 
 -- | Resolving a variable name that is already resolved
-lookupVarName :: (Reader RnEnv :> es, IOE :> es) => Range -> Text -> Eff es Id
+lookupVarName :: (Reader RnEnv :> es, Error RenameError :> es) => Range -> Text -> Eff es Id
 lookupVarName pos name =
   asks @RnEnv ((._resolvedVarIdentMap) >>> Map.lookup name) >>= \case
     Just names -> case find (\(Qualified visi _) -> visi == Implicit) names of
       Just (Qualified _ name) -> pure name
-      Nothing ->
-        errorOn pos
-          $ vsep
-            [ "Not in scope:"
-                <+> squotes (pretty name),
-              "Did you mean"
-                <+> pretty names
-            ]
-    _ -> errorOn pos $ "Not in scope:" <+> squotes (pretty name)
+      Nothing -> throwError $ NotInScope pos name names
+    _ -> throwError $ NotInScope pos name []
 
 -- | Resolving a type name that is already resolved
-lookupTypeName :: (Reader RnEnv :> es, IOE :> es) => Range -> Text -> Eff es Id
+lookupTypeName :: (Reader RnEnv :> es, Error RenameError :> es) => Range -> Text -> Eff es Id
 lookupTypeName pos name =
   asks @RnEnv ((._resolvedTypeIdentMap) >>> Map.lookup name) >>= \case
     Just names -> case find (\(Qualified visi _) -> visi == Implicit) names of
       Just (Qualified _ name) -> pure name
-      Nothing ->
-        errorOn pos
-          $ vsep
-            [ "Not in scope:"
-                <+> squotes (pretty name),
-              "Did you mean"
-                <+> pretty names
-            ]
-    _ -> errorOn pos $ "Not in scope:" <+> squotes (pretty name)
+      Nothing -> throwError $ NotInScope pos name names
+    _ -> throwError $ NotInScope pos name []
 
 -- | Resolving a qualified variable name like Foo.x
 lookupQualifiedVarName ::
-  (Reader RnEnv :> es, IOE :> es) =>
+  (Reader RnEnv :> es, Error RenameError :> es) =>
   Range ->
   ModuleName ->
   Text ->
@@ -126,14 +141,5 @@ lookupQualifiedVarName pos modName name =
     Just names ->
       case find (\(Qualified visi _) -> visi == Explicit modName) names of
         Just (Qualified _ name) -> pure name
-        Nothing ->
-          errorOn pos
-            $ vsep
-              [ "Not in scope:"
-                  <+> squotes (pretty name)
-                  <+> "in"
-                  <+> pretty modName,
-                "Did you mean"
-                  <+> pretty names
-              ]
-    _ -> errorOn pos $ "Not in scope:" <+> squotes (pretty name)
+        Nothing -> throwError $ NotInModule pos name modName names
+    _ -> throwError $ NotInModule pos name modName []

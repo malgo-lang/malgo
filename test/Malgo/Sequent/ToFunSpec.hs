@@ -2,6 +2,7 @@ module Malgo.Sequent.ToFunSpec (spec) where
 
 import Data.ByteString qualified as BS
 import Effectful.Reader.Static (runReader)
+import Malgo.Driver (exitIfError)
 import Malgo.Infer.Pass (infer)
 import Malgo.Monad (runMalgoM)
 import Malgo.Parser (parseMalgo)
@@ -48,7 +49,7 @@ driveToFun srcPath = do
         Left err -> error $ show err
         Right parsed -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
-    (renamed, _) <- rename rnEnv parsed
+    (renamed, _) <- rename rnEnv parsed >>= exitIfError
     (typed, tcEnv) <- infer rnEnv renamed
     refined <- refine tcEnv typed
     program <- runReader refined.moduleName $ toFun refined.moduleDefinition

@@ -4,6 +4,7 @@ import Data.ByteString qualified as BS
 import Effectful.Reader.Static (runReader)
 import Malgo.Core.Flat qualified as Flag
 import Malgo.Desugar.Pass (desugar)
+import Malgo.Driver (exitIfError)
 import Malgo.Infer.Pass (infer)
 import Malgo.Interface (buildInterface)
 import Malgo.Link qualified as Link
@@ -40,7 +41,7 @@ driveLink srcPath = do
         Left err -> error $ show err
         Right parsed -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
-    (renamed, rnState) <- rename rnEnv parsed
+    (renamed, rnState) <- rename rnEnv parsed >>= exitIfError
     (typed, tcEnv) <- infer rnEnv renamed
     refined <- refine tcEnv typed
     (dsState, core) <- desugar tcEnv refined

@@ -1,6 +1,7 @@
 module Malgo.RenameSpec (spec) where
 
 import Data.ByteString qualified as BS
+import Malgo.Driver (exitIfError)
 import Malgo.Monad (runMalgoM)
 import Malgo.Parser (parseMalgo)
 import Malgo.Prelude
@@ -31,5 +32,5 @@ driveRename srcPath = do
         Left err -> error $ show err
         Right parsed -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
-    (renamed, _) <- rename rnEnv parsed
+    (renamed, _) <- rename rnEnv parsed >>= exitIfError
     pure $ pShowCompact renamed

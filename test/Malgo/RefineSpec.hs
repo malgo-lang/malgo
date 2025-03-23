@@ -1,6 +1,7 @@
 module Malgo.RefineSpec (spec) where
 
 import Data.ByteString qualified as BS
+import Malgo.Driver (exitIfError)
 import Malgo.Infer.Pass (infer)
 import Malgo.Monad (runMalgoM)
 import Malgo.Parser (parseMalgo)
@@ -33,7 +34,7 @@ driveRefine srcPath = do
         Left err -> error $ show err
         Right parsed -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
-    (renamed, _) <- rename rnEnv parsed
+    (renamed, _) <- rename rnEnv parsed >>= exitIfError
     (typed, tcEnv) <- infer rnEnv renamed
     refined <- refine tcEnv typed
     pure $ pShowCompact refined

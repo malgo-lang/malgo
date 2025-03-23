@@ -23,6 +23,7 @@ module Malgo.Syntax.Extension
     XBoxed,
     XApply,
     XOpApp,
+    XProject,
     XFn,
     XTuple,
     XRecord,
@@ -171,6 +172,9 @@ type family XOpApp x where
   XOpApp (Malgo 'Infer) = Typed (XOpApp (Malgo 'Rename))
   XOpApp (Malgo 'Refine) = Void
 
+type family XProject x where
+  XProject (Malgo x) = SimpleX x
+
 type family XFn x where
   XFn (Malgo x) = SimpleX x
 
@@ -206,6 +210,7 @@ type ForallExpX (c :: K.Type -> Constraint) x =
     c (XBoxed x),
     c (XApply x),
     c (XOpApp x),
+    c (XProject x),
     c (XFn x),
     c (XTuple x),
     c (XRecord x),

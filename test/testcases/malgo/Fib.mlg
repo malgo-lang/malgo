@@ -1,0 +1,19 @@
+#backend sequent
+
+module {..} = import "../../../runtime/malgo/Builtin.mlg"
+module {..} = import "../../../runtime/malgo/Prelude.mlg"
+
+def zipWith = { f xs ys ->
+  { head = f xs.head ys.head,
+    tail = zipWith f xs.tail ys.tail
+  }
+}
+
+def fib = {
+  head = 1L,
+  tail = { head = 1L, tail = zipWith addInt64 fib fib.tail }
+}
+
+def main = {
+  printString (toStringInt64 (fib.tail.tail.tail.head))
+}
