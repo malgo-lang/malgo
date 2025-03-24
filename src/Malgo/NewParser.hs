@@ -12,7 +12,7 @@ import Malgo.Module (ModuleName (..), Workspace, parseArtifactPath, pwdPath)
 import Malgo.Prelude hiding (All)
 import Malgo.Syntax
 import Malgo.Syntax.Extension
-import Text.Megaparsec hiding (parse)
+import Text.Megaparsec hiding (optional, parse)
 import Text.Megaparsec.Char hiding (space)
 import Text.Megaparsec.Char.Lexer qualified as L
 
@@ -130,19 +130,19 @@ pInfix = do
     [ do
         reserved "infixl"
         precedence <- decimal
-        operator <- ident
+        operator <- between (symbol "(") (symbol ")") operator
         end <- getSourcePos
         pure $ Infix (Range start end) LeftA precedence operator,
       do
         reserved "infixr"
         precedence <- decimal
-        operator <- ident
+        operator <- between (symbol "(") (symbol ")") operator
         end <- getSourcePos
         pure $ Infix (Range start end) RightA precedence operator,
       do
         reserved "infix"
         precedence <- decimal
-        operator <- ident
+        operator <- between (symbol "(") (symbol ")") operator
         end <- getSourcePos
         pure $ Infix (Range start end) NeutralA precedence operator
     ]
@@ -200,12 +200,12 @@ pImport = do
 
 -- | pScSig parses a value signature.
 --
--- > scSig = "def" ident ":" type ;
+-- > scSig = "def" (ident | "(" operator")")":" type ;
 pScSig :: Parser es (Decl (Malgo Parse))
 pScSig = do
   start <- getSourcePos
   reserved "def"
-  name <- ident
+  name <- choice [ident, between (symbol "(") (symbol ")") operator]
   reservedOperator ":"
   ty <- pType
   end <- getSourcePos
@@ -213,12 +213,12 @@ pScSig = do
 
 -- | pScDef parses a value definition.
 --
--- > scDef = "def" ident "=" expr ;
+-- > scDef = "def" (ident | "(" operator")") "=" expr ;
 pScDef :: Parser es (Decl (Malgo Parse))
 pScDef = do
   start <- getSourcePos
   reserved "def"
-  name <- ident
+  name <- choice [ident, between (symbol "(") (symbol ")") operator]
   reservedOperator "="
   body <- pExpr
   end <- getSourcePos
@@ -261,7 +261,7 @@ pApply :: Parser es (Expr (Malgo Parse))
 pApply =
   makeExprParser
     pProject
-    [ [ Postfix do
+    [ [ Postfix $ manyUnaryOp do
           start <- getSourcePos
           argument <- pProject
           end <- getSourcePos
@@ -276,7 +276,7 @@ pProject :: Parser es (Expr (Malgo Parse))
 pProject =
   makeExprParser
     pAtom
-    [ [ Postfix do
+    [ [ Postfix $ manyUnaryOp do
           start <- getSourcePos
           reservedOperator "."
           field <- ident
@@ -299,7 +299,8 @@ pAtom =
     [ pLiteral,
       pVariable,
       try pTuple,
-      pBrace,
+      try pRecord,
+      pFn,
       pList,
       pSeq
     ]
@@ -312,14 +313,14 @@ pLiteral :: Parser es (Expr (Malgo Parse))
 pLiteral = do
   start <- getSourcePos
   boxed <- pBoxed
-  sharp <- optional (char '#')
+  sharp <- optional (symbol "#")
   end <- getSourcePos
   case sharp of
     Just _ -> pure $ Unboxed (Range start end) $ coerce boxed
     Nothing -> pure $ Boxed (Range start end) boxed
 
 pBoxed :: Parser es (Literal Boxed)
-pBoxed = choice [pReal, pInt, pChar, pString]
+pBoxed = choice [try pReal, pInt, pChar, pString]
 
 -- | pReal parses a real number.
 --
@@ -393,22 +394,15 @@ pTuple = do
     [expr] -> pure $ Parens (Range start end) expr
     _ -> pure $ Tuple (Range start end) exprs
 
--- | pBrace parses a brace-enclosed expression.
---
--- > brace = "{" inner "}" ;
--- > inner = record | function ;
-pBrace :: Parser es (Expr (Malgo Parse))
-pBrace = between (symbol "{") (symbol "}") $ try pRecord <|> pFn
-
 -- > record = ident "=" expr ("," ident "=" expr)* ;
 pRecord :: Parser es (Expr (Malgo Parse))
 pRecord = do
   start <- getSourcePos
-  fields <- sepEndBy1 pField (symbol ",")
+  fields <- between (symbol "{") (symbol "}") $ sepEndBy1 pField (symbol ",")
   end <- getSourcePos
   pure $ Record (Range start end) fields
   where
-    pField = do
+    pField = label "record field" do
       field <- ident
       reservedOperator "="
       value <- pExpr
@@ -418,7 +412,7 @@ pRecord = do
 pFn :: Parser es (Expr (Malgo Parse))
 pFn = do
   start <- getSourcePos
-  clauses <- sepEndBy1 pClause (symbol ",")
+  clauses <- between (symbol "{") (symbol "}") $ sepEndBy1 pClause (symbol ",")
   end <- getSourcePos
   pure $ Fn (Range start end) $ NonEmpty.fromList clauses
 
@@ -426,8 +420,7 @@ pFn = do
 pClause :: Parser es (Clause (Malgo Parse))
 pClause = do
   start <- getSourcePos
-  patterns <- some pPat
-  reservedOperator "->"
+  patterns <- try (some pPat <* reservedOperator "->") <|> pure []
   body <- pStmts
   end <- getSourcePos
   pure $ Clause (Range start end) patterns body
@@ -533,7 +526,7 @@ pLiteralP :: Parser es (Pat (Malgo Parse))
 pLiteralP = do
   start <- getSourcePos
   boxed <- pBoxed
-  sharp <- optional (char '#')
+  sharp <- optional (symbol "#")
   end <- getSourcePos
   case sharp of
     Just _ -> pure $ UnboxedP (Range start end) $ coerce boxed
@@ -653,7 +646,7 @@ pTyRecord = do
   where
     pField = do
       field <- ident
-      reservedOperator "="
+      reservedOperator ":"
       value <- pType
       pure (field, value)
 
@@ -668,6 +661,14 @@ pTyBlock = do
   pure $ TyBlock (Range start end) ty
 
 -- * combinators
+
+-- | optional tries to parse the given parser and returns `Nothing` if it fails.
+optional :: Parser es a -> Parser es (Maybe a)
+optional p = try (fmap Just p) <|> pure Nothing
+
+-- | manyUnaryOp parses zero or more unary operators and returns a function that applies them in order.
+manyUnaryOp :: (MonadPlus f) => f (c -> c) -> f (c -> c)
+manyUnaryOp singleUnaryOp = foldr1 (.) <$> some singleUnaryOp
 
 -- | space skips zero or more white space characters and comments.
 space :: Parser es ()
@@ -687,9 +688,9 @@ symbol = void . L.symbol space
 
 -- | ident consumes an identifier.
 ident :: Parser es Text
-ident = do
+ident = lexeme do
   notFollowedBy anyReserved
-  TL.toStrict <$> lexeme (TL.pack <$> ((:) <$> identStart <*> many identContinue))
+  TL.toStrict . TL.pack <$> ((:) <$> identStart <*> many identContinue)
 
 -- TODO: use XID_Start
 identStart :: Parser es Char
@@ -736,7 +737,7 @@ operatorChar = oneOf ("+-*/\\%=><:;|&!#." :: String)
 
 reservedOperator :: TL.Text -> Parser es ()
 reservedOperator w
-  | w `elem` reservedOperators = void $ lexeme (string w)
+  | w `elem` reservedOperators = void $ lexeme (string w <* notFollowedBy operatorChar)
   | otherwise = fail $ "reserved symbol: " <> show w
 
 anyReservedOperator :: Parser es ()
