@@ -9,6 +9,7 @@ import Malgo.Core.Syntax
 import Malgo.Core.Type
 import Malgo.Id
 import Malgo.Prelude
+import Prettyprinter (nest, vsep, (<+>))
 
 -- | Lint a program.
 -- The reason `lint` is a monadic action is to control when errors are reported.

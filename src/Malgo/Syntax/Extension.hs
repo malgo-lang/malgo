@@ -76,6 +76,7 @@ import Malgo.Id
 import Malgo.Infer.TypeRep as TypeRep
 import Malgo.Module
 import Malgo.Prelude
+import Prettyprinter ((<+>))
 
 -- | Phase and type instance
 data MalgoPhase = Parse | Rename | Infer | Refine

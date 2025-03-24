@@ -20,6 +20,7 @@ import Malgo.Rename.RnEnv
 import Malgo.Rename.RnState as RnState
 import Malgo.Syntax
 import Malgo.Syntax.Extension
+import Prettyprinter (brackets, nest, punctuate, sep, squotes, vsep, (<+>))
 
 -- | Entry point of this 'Malgo.Rename.Pass'
 rename ::

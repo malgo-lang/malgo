@@ -30,6 +30,7 @@ import Malgo.Lens (kindCtx, typeSynonymMap)
 import Malgo.Module
 import Malgo.MonadUniq
 import Malgo.Prelude hiding (Constraint)
+import Prettyprinter (nest, squotes, vsep, (<+>))
 
 -- * Constraint
 

@@ -28,6 +28,7 @@ import Malgo.Module
 import Malgo.MonadUniq
 import Malgo.Prelude hiding (throwError)
 import Malgo.Syntax.Extension
+import Prettyprinter (squotes, vsep, (<+>))
 
 data RenameError
   = NotInScope Range PsId [Resolved]

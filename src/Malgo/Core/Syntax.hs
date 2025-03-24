@@ -53,6 +53,7 @@ import Malgo.MonadUniq
 import Malgo.Prelude
 import Malgo.SExpr qualified as S
 import Numeric (showHex)
+import Prettyprinter (dquotes, parens, sep, squotes, vcat, vsep, (<+>))
 
 -- | toplevel function definitions
 data Program a = Program

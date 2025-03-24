@@ -16,6 +16,7 @@ import Malgo.Refine.Space qualified as Space
 import Malgo.Syntax hiding (TyArr, Type)
 import Malgo.Syntax qualified as Syn
 import Malgo.Syntax.Extension
+import Prettyprinter ((<+>))
 
 refine :: (IOE :> es, Reader Flag :> es) => TcEnv -> Module (Malgo Infer) -> Eff es (Module (Malgo Refine))
 refine tcEnv Module {..} = do

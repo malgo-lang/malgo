@@ -28,6 +28,7 @@ import Malgo.Module
 import Malgo.MonadUniq
 import Malgo.Prelude hiding (toList)
 import Malgo.SExpr qualified as S
+import Prettyprinter (brackets, (<+>))
 
 -- | Identifier sort.
 data IdSort

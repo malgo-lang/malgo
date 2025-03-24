@@ -30,6 +30,7 @@ import Malgo.Prelude
 import Malgo.Rename.RnState (RnState)
 import Malgo.Rename.RnState qualified as RnState
 import Malgo.Syntax.Extension
+import Prettyprinter (viaShow)
 
 data Interface = Interface
   { moduleName :: ModuleName,

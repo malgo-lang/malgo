@@ -24,6 +24,7 @@ import Malgo.Rename.RnEnv (RnEnv (..))
 import Malgo.Syntax hiding (Type (..))
 import Malgo.Syntax qualified as S
 import Malgo.Syntax.Extension
+import Prettyprinter (nest, squotes, vsep, (<+>))
 
 -------------------------------
 -- Lookup the value of TcEnv --

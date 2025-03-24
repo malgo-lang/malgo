@@ -45,6 +45,7 @@ import Malgo.Infer.TypeRep hiding (TyApp, TyArr, TyCon, TyRecord, TyTuple, TyVar
 import Malgo.Module
 import Malgo.Prelude hiding (All)
 import Malgo.Syntax.Extension
+import Prettyprinter (dquotes, parens, sep, squotes)
 
 sexpr :: [Doc ann] -> Doc ann
 sexpr = parens . sep
