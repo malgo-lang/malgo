@@ -3,6 +3,8 @@
 module {..} = import "../../../runtime/malgo/Builtin.mlg"
 module {..} = import "../../../runtime/malgo/Prelude.mlg"
 
+type Stream a = { head: a, tail: Stream a }
+
 def zipWith = { f xs ys ->
   { head = f xs.head ys.head,
     tail = zipWith f xs.tail ys.tail

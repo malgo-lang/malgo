@@ -36,21 +36,21 @@ Module
    ( Artifact
     ( ArtifactPath "runtime/malgo/Prelude.mlg" )
    ) All
-  , ScDef
+  , TypeSynonym
    ( Range
     { _start = SourcePos
      { sourceName = "./test/testcases/malgo/Fib.mlg"
      , sourceLine = Pos 6
-     , sourceColumn = Pos 1
+     , sourceColumn = Pos 6
      }
     , _end = SourcePos
      { sourceName = "./test/testcases/malgo/Fib.mlg"
-     , sourceLine = Pos 12
+     , sourceLine = Pos 8
      , sourceColumn = Pos 1
      }
     }
-   ) "zipWith"
-   ( Fn
+   ) "Stream" [ "a" ]
+   ( TyRecord
     ( Range
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/Fib.mlg"
@@ -59,7 +59,101 @@ Module
       }
      , _end = SourcePos
       { sourceName = "./test/testcases/malgo/Fib.mlg"
-      , sourceLine = Pos 10
+      , sourceLine = Pos 8
+      , sourceColumn = Pos 1
+      }
+     }
+    )
+    [
+     ( "head"
+     , TyVar
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/Fib.mlg"
+        , sourceLine = Pos 6
+        , sourceColumn = Pos 25
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/Fib.mlg"
+        , sourceLine = Pos 6
+        , sourceColumn = Pos 26
+        }
+       }
+      ) "a"
+     )
+    ,
+     ( "tail"
+     , TyApp
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/Fib.mlg"
+        , sourceLine = Pos 6
+        , sourceColumn = Pos 34
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/Fib.mlg"
+        , sourceLine = Pos 6
+        , sourceColumn = Pos 43
+        }
+       }
+      )
+      ( TyCon
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/Fib.mlg"
+         , sourceLine = Pos 6
+         , sourceColumn = Pos 34
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/Fib.mlg"
+         , sourceLine = Pos 6
+         , sourceColumn = Pos 41
+         }
+        }
+       ) "Stream"
+      )
+      [ TyVar
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/Fib.mlg"
+         , sourceLine = Pos 6
+         , sourceColumn = Pos 41
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/Fib.mlg"
+         , sourceLine = Pos 6
+         , sourceColumn = Pos 43
+         }
+        }
+       ) "a"
+      ]
+     )
+    ]
+   )
+  , ScDef
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/Fib.mlg"
+     , sourceLine = Pos 8
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/Fib.mlg"
+     , sourceLine = Pos 14
+     , sourceColumn = Pos 1
+     }
+    }
+   ) "zipWith"
+   ( Fn
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/Fib.mlg"
+      , sourceLine = Pos 8
+      , sourceColumn = Pos 17
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/Fib.mlg"
+      , sourceLine = Pos 12
       , sourceColumn = Pos 1
       }
      }
@@ -68,12 +162,12 @@ Module
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/Fib.mlg"
-       , sourceLine = Pos 6
+       , sourceLine = Pos 8
        , sourceColumn = Pos 17
        }
       , _end = SourcePos
        { sourceName = "./test/testcases/malgo/Fib.mlg"
-       , sourceLine = Pos 10
+       , sourceLine = Pos 12
        , sourceColumn = Pos 1
        }
       }
@@ -82,12 +176,12 @@ Module
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Fib.mlg"
-        , sourceLine = Pos 6
+        , sourceLine = Pos 8
         , sourceColumn = Pos 17
         }
        , _end = SourcePos
         { sourceName = "./test/testcases/malgo/Fib.mlg"
-        , sourceLine = Pos 6
+        , sourceLine = Pos 8
         , sourceColumn = Pos 19
         }
        }
@@ -96,12 +190,12 @@ Module
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Fib.mlg"
-        , sourceLine = Pos 6
+        , sourceLine = Pos 8
         , sourceColumn = Pos 19
         }
        , _end = SourcePos
         { sourceName = "./test/testcases/malgo/Fib.mlg"
-        , sourceLine = Pos 6
+        , sourceLine = Pos 8
         , sourceColumn = Pos 22
         }
        }
@@ -110,12 +204,12 @@ Module
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Fib.mlg"
-        , sourceLine = Pos 6
+        , sourceLine = Pos 8
         , sourceColumn = Pos 22
         }
        , _end = SourcePos
         { sourceName = "./test/testcases/malgo/Fib.mlg"
-        , sourceLine = Pos 6
+        , sourceLine = Pos 8
         , sourceColumn = Pos 25
         }
        }
@@ -125,12 +219,12 @@ Module
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Fib.mlg"
-        , sourceLine = Pos 7
+        , sourceLine = Pos 9
         , sourceColumn = Pos 3
         }
        , _end = SourcePos
         { sourceName = "./test/testcases/malgo/Fib.mlg"
-        , sourceLine = Pos 10
+        , sourceLine = Pos 12
         , sourceColumn = Pos 1
         }
        }
@@ -139,12 +233,12 @@ Module
        ( Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/Fib.mlg"
-         , sourceLine = Pos 7
+         , sourceLine = Pos 9
          , sourceColumn = Pos 3
          }
         , _end = SourcePos
          { sourceName = "./test/testcases/malgo/Fib.mlg"
-         , sourceLine = Pos 10
+         , sourceLine = Pos 12
          , sourceColumn = Pos 1
          }
         }
@@ -153,12 +247,12 @@ Module
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/Fib.mlg"
-          , sourceLine = Pos 7
+          , sourceLine = Pos 9
           , sourceColumn = Pos 3
           }
          , _end = SourcePos
           { sourceName = "./test/testcases/malgo/Fib.mlg"
-          , sourceLine = Pos 10
+          , sourceLine = Pos 12
           , sourceColumn = Pos 1
           }
          }
@@ -169,12 +263,12 @@ Module
           ( Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/Fib.mlg"
-            , sourceLine = Pos 7
+            , sourceLine = Pos 9
             , sourceColumn = Pos 12
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/Fib.mlg"
-            , sourceLine = Pos 7
+            , sourceLine = Pos 9
             , sourceColumn = Pos 29
             }
            }
@@ -183,12 +277,12 @@ Module
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/Fib.mlg"
-             , sourceLine = Pos 7
+             , sourceLine = Pos 9
              , sourceColumn = Pos 12
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/Fib.mlg"
-             , sourceLine = Pos 7
+             , sourceLine = Pos 9
              , sourceColumn = Pos 29
              }
             }
@@ -199,12 +293,12 @@ Module
              , value = Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/Fib.mlg"
-               , sourceLine = Pos 7
+               , sourceLine = Pos 9
                , sourceColumn = Pos 12
                }
               , _end = SourcePos
                { sourceName = "./test/testcases/malgo/Fib.mlg"
-               , sourceLine = Pos 7
+               , sourceLine = Pos 9
                , sourceColumn = Pos 14
                }
               }
@@ -218,12 +312,12 @@ Module
              , value = Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/Fib.mlg"
-               , sourceLine = Pos 7
+               , sourceLine = Pos 9
                , sourceColumn = Pos 14
                }
               , _end = SourcePos
                { sourceName = "./test/testcases/malgo/Fib.mlg"
-               , sourceLine = Pos 7
+               , sourceLine = Pos 9
                , sourceColumn = Pos 22
                }
               }
@@ -238,12 +332,12 @@ Module
             , value = Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/Fib.mlg"
-              , sourceLine = Pos 7
+              , sourceLine = Pos 9
               , sourceColumn = Pos 22
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/Fib.mlg"
-              , sourceLine = Pos 7
+              , sourceLine = Pos 9
               , sourceColumn = Pos 29
               }
              }
@@ -257,12 +351,12 @@ Module
           ( Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/Fib.mlg"
-            , sourceLine = Pos 8
+            , sourceLine = Pos 10
             , sourceColumn = Pos 12
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/Fib.mlg"
-            , sourceLine = Pos 9
+            , sourceLine = Pos 11
             , sourceColumn = Pos 3
             }
            }
@@ -271,12 +365,12 @@ Module
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/Fib.mlg"
-             , sourceLine = Pos 8
+             , sourceLine = Pos 10
              , sourceColumn = Pos 12
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/Fib.mlg"
-             , sourceLine = Pos 9
+             , sourceLine = Pos 11
              , sourceColumn = Pos 3
              }
             }
@@ -285,12 +379,12 @@ Module
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/Fib.mlg"
-              , sourceLine = Pos 8
+              , sourceLine = Pos 10
               , sourceColumn = Pos 12
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/Fib.mlg"
-              , sourceLine = Pos 9
+              , sourceLine = Pos 11
               , sourceColumn = Pos 3
               }
              }
@@ -301,12 +395,12 @@ Module
               , value = Range
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/Fib.mlg"
-                , sourceLine = Pos 8
+                , sourceLine = Pos 10
                 , sourceColumn = Pos 12
                 }
                , _end = SourcePos
                 { sourceName = "./test/testcases/malgo/Fib.mlg"
-                , sourceLine = Pos 8
+                , sourceLine = Pos 10
                 , sourceColumn = Pos 20
                 }
                }
@@ -319,12 +413,12 @@ Module
               , value = Range
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/Fib.mlg"
-                , sourceLine = Pos 8
+                , sourceLine = Pos 10
                 , sourceColumn = Pos 20
                 }
                , _end = SourcePos
                 { sourceName = "./test/testcases/malgo/Fib.mlg"
-                , sourceLine = Pos 8
+                , sourceLine = Pos 10
                 , sourceColumn = Pos 22
                 }
                }
@@ -339,12 +433,12 @@ Module
              , value = Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/Fib.mlg"
-               , sourceLine = Pos 8
+               , sourceLine = Pos 10
                , sourceColumn = Pos 22
                }
               , _end = SourcePos
                { sourceName = "./test/testcases/malgo/Fib.mlg"
-               , sourceLine = Pos 8
+               , sourceLine = Pos 10
                , sourceColumn = Pos 30
                }
               }
@@ -359,12 +453,12 @@ Module
             , value = Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/Fib.mlg"
-              , sourceLine = Pos 8
+              , sourceLine = Pos 10
               , sourceColumn = Pos 30
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/Fib.mlg"
-              , sourceLine = Pos 9
+              , sourceLine = Pos 11
               , sourceColumn = Pos 3
               }
              }
@@ -382,12 +476,12 @@ Module
    ( Range
     { _start = SourcePos
      { sourceName = "./test/testcases/malgo/Fib.mlg"
-     , sourceLine = Pos 12
+     , sourceLine = Pos 14
      , sourceColumn = Pos 1
      }
     , _end = SourcePos
      { sourceName = "./test/testcases/malgo/Fib.mlg"
-     , sourceLine = Pos 17
+     , sourceLine = Pos 19
      , sourceColumn = Pos 1
      }
     }
@@ -396,12 +490,12 @@ Module
     ( Range
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/Fib.mlg"
-      , sourceLine = Pos 12
+      , sourceLine = Pos 14
       , sourceColumn = Pos 11
       }
      , _end = SourcePos
       { sourceName = "./test/testcases/malgo/Fib.mlg"
-      , sourceLine = Pos 17
+      , sourceLine = Pos 19
       , sourceColumn = Pos 1
       }
      }
@@ -412,12 +506,12 @@ Module
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Fib.mlg"
-        , sourceLine = Pos 13
+        , sourceLine = Pos 15
         , sourceColumn = Pos 10
         }
        , _end = SourcePos
         { sourceName = "./test/testcases/malgo/Fib.mlg"
-        , sourceLine = Pos 13
+        , sourceLine = Pos 15
         , sourceColumn = Pos 12
         }
        }
@@ -430,12 +524,12 @@ Module
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Fib.mlg"
-        , sourceLine = Pos 14
+        , sourceLine = Pos 16
         , sourceColumn = Pos 10
         }
        , _end = SourcePos
         { sourceName = "./test/testcases/malgo/Fib.mlg"
-        , sourceLine = Pos 15
+        , sourceLine = Pos 17
         , sourceColumn = Pos 1
         }
        }
@@ -446,12 +540,12 @@ Module
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/Fib.mlg"
-          , sourceLine = Pos 14
+          , sourceLine = Pos 16
           , sourceColumn = Pos 19
           }
          , _end = SourcePos
           { sourceName = "./test/testcases/malgo/Fib.mlg"
-          , sourceLine = Pos 14
+          , sourceLine = Pos 16
           , sourceColumn = Pos 21
           }
          }
@@ -464,12 +558,12 @@ Module
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/Fib.mlg"
-          , sourceLine = Pos 14
+          , sourceLine = Pos 16
           , sourceColumn = Pos 30
           }
          , _end = SourcePos
           { sourceName = "./test/testcases/malgo/Fib.mlg"
-          , sourceLine = Pos 14
+          , sourceLine = Pos 16
           , sourceColumn = Pos 60
           }
          }
@@ -478,12 +572,12 @@ Module
          ( Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/Fib.mlg"
-           , sourceLine = Pos 14
+           , sourceLine = Pos 16
            , sourceColumn = Pos 30
            }
           , _end = SourcePos
            { sourceName = "./test/testcases/malgo/Fib.mlg"
-           , sourceLine = Pos 14
+           , sourceLine = Pos 16
            , sourceColumn = Pos 60
            }
           }
@@ -492,12 +586,12 @@ Module
           ( Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/Fib.mlg"
-            , sourceLine = Pos 14
+            , sourceLine = Pos 16
             , sourceColumn = Pos 30
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/Fib.mlg"
-            , sourceLine = Pos 14
+            , sourceLine = Pos 16
             , sourceColumn = Pos 60
             }
            }
@@ -508,12 +602,12 @@ Module
             , value = Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/Fib.mlg"
-              , sourceLine = Pos 14
+              , sourceLine = Pos 16
               , sourceColumn = Pos 30
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/Fib.mlg"
-              , sourceLine = Pos 14
+              , sourceLine = Pos 16
               , sourceColumn = Pos 38
               }
              }
@@ -526,12 +620,12 @@ Module
             , value = Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/Fib.mlg"
-              , sourceLine = Pos 14
+              , sourceLine = Pos 16
               , sourceColumn = Pos 38
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/Fib.mlg"
-              , sourceLine = Pos 14
+              , sourceLine = Pos 16
               , sourceColumn = Pos 47
               }
              }
@@ -545,12 +639,12 @@ Module
            , value = Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/Fib.mlg"
-             , sourceLine = Pos 14
+             , sourceLine = Pos 16
              , sourceColumn = Pos 47
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/Fib.mlg"
-             , sourceLine = Pos 14
+             , sourceLine = Pos 16
              , sourceColumn = Pos 51
              }
             }
@@ -565,12 +659,12 @@ Module
           , value = Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/Fib.mlg"
-            , sourceLine = Pos 14
+            , sourceLine = Pos 16
             , sourceColumn = Pos 51
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/Fib.mlg"
-            , sourceLine = Pos 14
+            , sourceLine = Pos 16
             , sourceColumn = Pos 60
             }
            }
@@ -586,12 +680,12 @@ Module
    ( Range
     { _start = SourcePos
      { sourceName = "./test/testcases/malgo/Fib.mlg"
-     , sourceLine = Pos 17
+     , sourceLine = Pos 19
      , sourceColumn = Pos 1
      }
     , _end = SourcePos
      { sourceName = "./test/testcases/malgo/Fib.mlg"
-     , sourceLine = Pos 19
+     , sourceLine = Pos 21
      , sourceColumn = Pos 2
      }
     }
@@ -600,12 +694,12 @@ Module
     ( Range
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/Fib.mlg"
-      , sourceLine = Pos 18
+      , sourceLine = Pos 20
       , sourceColumn = Pos 3
       }
      , _end = SourcePos
       { sourceName = "./test/testcases/malgo/Fib.mlg"
-      , sourceLine = Pos 19
+      , sourceLine = Pos 21
       , sourceColumn = Pos 1
       }
      }
@@ -614,12 +708,12 @@ Module
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/Fib.mlg"
-       , sourceLine = Pos 18
+       , sourceLine = Pos 20
        , sourceColumn = Pos 3
        }
       , _end = SourcePos
        { sourceName = "./test/testcases/malgo/Fib.mlg"
-       , sourceLine = Pos 19
+       , sourceLine = Pos 21
        , sourceColumn = Pos 1
        }
       }
@@ -628,12 +722,12 @@ Module
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Fib.mlg"
-        , sourceLine = Pos 18
+        , sourceLine = Pos 20
         , sourceColumn = Pos 3
         }
        , _end = SourcePos
         { sourceName = "./test/testcases/malgo/Fib.mlg"
-        , sourceLine = Pos 19
+        , sourceLine = Pos 21
         , sourceColumn = Pos 1
         }
        }
@@ -642,12 +736,12 @@ Module
        ( Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/Fib.mlg"
-         , sourceLine = Pos 18
+         , sourceLine = Pos 20
          , sourceColumn = Pos 3
          }
         , _end = SourcePos
          { sourceName = "./test/testcases/malgo/Fib.mlg"
-         , sourceLine = Pos 19
+         , sourceLine = Pos 21
          , sourceColumn = Pos 1
          }
         }
@@ -656,12 +750,12 @@ Module
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/Fib.mlg"
-          , sourceLine = Pos 18
+          , sourceLine = Pos 20
           , sourceColumn = Pos 3
           }
          , _end = SourcePos
           { sourceName = "./test/testcases/malgo/Fib.mlg"
-          , sourceLine = Pos 19
+          , sourceLine = Pos 21
           , sourceColumn = Pos 1
           }
          }
@@ -672,12 +766,12 @@ Module
           , value = Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/Fib.mlg"
-            , sourceLine = Pos 18
+            , sourceLine = Pos 20
             , sourceColumn = Pos 3
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/Fib.mlg"
-            , sourceLine = Pos 18
+            , sourceLine = Pos 20
             , sourceColumn = Pos 15
             }
            }
@@ -688,12 +782,12 @@ Module
          ( Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/Fib.mlg"
-           , sourceLine = Pos 18
+           , sourceLine = Pos 20
            , sourceColumn = Pos 15
            }
           , _end = SourcePos
            { sourceName = "./test/testcases/malgo/Fib.mlg"
-           , sourceLine = Pos 19
+           , sourceLine = Pos 21
            , sourceColumn = Pos 1
            }
           }
@@ -702,12 +796,12 @@ Module
           ( Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/Fib.mlg"
-            , sourceLine = Pos 18
+            , sourceLine = Pos 20
             , sourceColumn = Pos 16
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/Fib.mlg"
-            , sourceLine = Pos 18
+            , sourceLine = Pos 20
             , sourceColumn = Pos 55
             }
            }
@@ -716,12 +810,12 @@ Module
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/Fib.mlg"
-             , sourceLine = Pos 18
+             , sourceLine = Pos 20
              , sourceColumn = Pos 16
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/Fib.mlg"
-             , sourceLine = Pos 18
+             , sourceLine = Pos 20
              , sourceColumn = Pos 55
              }
             }
@@ -732,12 +826,12 @@ Module
              , value = Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/Fib.mlg"
-               , sourceLine = Pos 18
+               , sourceLine = Pos 20
                , sourceColumn = Pos 16
                }
               , _end = SourcePos
                { sourceName = "./test/testcases/malgo/Fib.mlg"
-               , sourceLine = Pos 18
+               , sourceLine = Pos 20
                , sourceColumn = Pos 30
                }
               }
@@ -748,12 +842,12 @@ Module
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/Fib.mlg"
-              , sourceLine = Pos 18
+              , sourceLine = Pos 20
               , sourceColumn = Pos 30
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/Fib.mlg"
-              , sourceLine = Pos 18
+              , sourceLine = Pos 20
               , sourceColumn = Pos 55
               }
              }
@@ -762,12 +856,12 @@ Module
              ( Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/Fib.mlg"
-               , sourceLine = Pos 18
+               , sourceLine = Pos 20
                , sourceColumn = Pos 31
                }
               , _end = SourcePos
                { sourceName = "./test/testcases/malgo/Fib.mlg"
-               , sourceLine = Pos 18
+               , sourceLine = Pos 20
                , sourceColumn = Pos 54
                }
               }
@@ -776,12 +870,12 @@ Module
               ( Range
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/Fib.mlg"
-                , sourceLine = Pos 18
+                , sourceLine = Pos 20
                 , sourceColumn = Pos 49
                 }
                , _end = SourcePos
                 { sourceName = "./test/testcases/malgo/Fib.mlg"
-                , sourceLine = Pos 18
+                , sourceLine = Pos 20
                 , sourceColumn = Pos 50
                 }
                }
@@ -790,12 +884,12 @@ Module
                ( Range
                 { _start = SourcePos
                  { sourceName = "./test/testcases/malgo/Fib.mlg"
-                 , sourceLine = Pos 18
+                 , sourceLine = Pos 20
                  , sourceColumn = Pos 39
                  }
                 , _end = SourcePos
                  { sourceName = "./test/testcases/malgo/Fib.mlg"
-                 , sourceLine = Pos 18
+                 , sourceLine = Pos 20
                  , sourceColumn = Pos 40
                  }
                 }
@@ -807,12 +901,12 @@ Module
                  , value = Range
                   { _start = SourcePos
                    { sourceName = "./test/testcases/malgo/Fib.mlg"
-                   , sourceLine = Pos 18
+                   , sourceLine = Pos 20
                    , sourceColumn = Pos 31
                    }
                   , _end = SourcePos
                    { sourceName = "./test/testcases/malgo/Fib.mlg"
-                   , sourceLine = Pos 18
+                   , sourceLine = Pos 20
                    , sourceColumn = Pos 39
                    }
                   }
@@ -826,12 +920,12 @@ Module
                  , value = Range
                   { _start = SourcePos
                    { sourceName = "./test/testcases/malgo/Fib.mlg"
-                   , sourceLine = Pos 18
+                   , sourceLine = Pos 20
                    , sourceColumn = Pos 40
                    }
                   , _end = SourcePos
                    { sourceName = "./test/testcases/malgo/Fib.mlg"
-                   , sourceLine = Pos 18
+                   , sourceLine = Pos 20
                    , sourceColumn = Pos 49
                    }
                   }
@@ -845,12 +939,12 @@ Module
                 , value = Range
                  { _start = SourcePos
                   { sourceName = "./test/testcases/malgo/Fib.mlg"
-                  , sourceLine = Pos 18
+                  , sourceLine = Pos 20
                   , sourceColumn = Pos 50
                   }
                  , _end = SourcePos
                   { sourceName = "./test/testcases/malgo/Fib.mlg"
-                  , sourceLine = Pos 18
+                  , sourceLine = Pos 20
                   , sourceColumn = Pos 54
                   }
                  }
