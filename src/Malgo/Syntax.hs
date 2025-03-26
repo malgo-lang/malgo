@@ -377,14 +377,19 @@ instance (Pretty (XId x), Pretty (XModule x)) => Pretty (Module x) where
   pretty (Module name defs) =
     sexpr ["module", pretty name, pretty defs]
 
-newtype ParsedDefinitions = ParsedDefinitions [Decl (Malgo 'Parse)]
-  deriving stock (Eq, Show)
+newtype ParsedDefinitions x = ParsedDefinitions [Decl x]
 
-instance Pretty ParsedDefinitions where
+deriving stock instance (ForallDeclX Eq x, Eq (XId x)) => Eq (ParsedDefinitions x)
+
+deriving stock instance (ForallDeclX Show x, Show (XId x)) => Show (ParsedDefinitions x)
+
+instance (ForallDeclX Pretty x, Pretty (XId x)) => Pretty (ParsedDefinitions x) where
   pretty (ParsedDefinitions ds) = sep $ map pretty ds
 
 -- モジュールの循環参照を防ぐため、このモジュールでtype instanceを定義する
-type instance XModule (Malgo 'Parse) = ParsedDefinitions
+type instance XModule (Malgo 'Parse) = ParsedDefinitions (Malgo Parse)
+
+type instance XModule (Malgo 'NewParse) = ParsedDefinitions (Malgo NewParse)
 
 type instance XModule (Malgo 'Rename) = BindGroup (Malgo 'Rename)
 

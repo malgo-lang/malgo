@@ -79,7 +79,7 @@ import Malgo.Prelude
 import Prettyprinter ((<+>))
 
 -- | Phase and type instance
-data MalgoPhase = Parse | Rename | Infer | Refine
+data MalgoPhase = Parse | Rename | Infer | Refine | NewParse
 
 data Malgo (p :: MalgoPhase)
 
@@ -89,6 +89,7 @@ type family MalgoId (p :: MalgoPhase) where
   MalgoId 'Rename = Id
   MalgoId 'Infer = Id
   MalgoId 'Refine = Id
+  MalgoId 'NewParse = Text
 
 data Visibility
   = Explicit ModuleName -- variable that must be qualified
@@ -149,6 +150,7 @@ type family SimpleX (x :: MalgoPhase) where
   SimpleX 'Rename = SimpleX 'Parse
   SimpleX 'Infer = Typed (SimpleX 'Rename)
   SimpleX 'Refine = SimpleX 'Infer
+  SimpleX 'NewParse = Range
 
 type family XVar x where
   XVar (Malgo 'Parse) = Qualified (SimpleX 'Parse)
@@ -162,6 +164,7 @@ type family XUnboxed x where
 
 type family XBoxed x where
   XBoxed (Malgo 'Parse) = SimpleX 'Parse
+  XBoxed (Malgo 'NewParse) = SimpleX 'NewParse
   XBoxed (Malgo _) = Void
 
 type family XApply x where
@@ -169,6 +172,7 @@ type family XApply x where
 
 type family XOpApp x where
   XOpApp (Malgo 'Parse) = SimpleX 'Parse
+  XOpApp (Malgo NewParse) = SimpleX NewParse
   XOpApp (Malgo 'Rename) = (XOpApp (Malgo 'Parse), (Assoc, Int))
   XOpApp (Malgo 'Infer) = Typed (XOpApp (Malgo 'Rename))
   XOpApp (Malgo 'Refine) = Void
@@ -187,6 +191,7 @@ type family XRecord x where
 
 type family XList x where
   XList (Malgo 'Parse) = SimpleX 'Parse
+  XList (Malgo 'NewParse) = SimpleX 'NewParse
   XList (Malgo _) = Void
 
 type family XRecordAccess x where
@@ -195,6 +200,7 @@ type family XRecordAccess x where
 type family XAnn x where
   XAnn (Malgo 'Parse) = SimpleX 'Parse
   XAnn (Malgo 'Rename) = SimpleX 'Rename
+  XAnn (Malgo 'NewParse) = SimpleX 'NewParse
   XAnn (Malgo _) = Void
 
 type family XSeq x where
@@ -202,6 +208,7 @@ type family XSeq x where
 
 type family XParens x where
   XParens (Malgo 'Parse) = SimpleX 'Parse
+  XParens (Malgo NewParse) = SimpleX NewParse
   XParens (Malgo x) = Void
 
 type ForallExpX (c :: K.Type -> Constraint) x =
@@ -236,6 +243,7 @@ type family XLet x where
 
 type family XWith x where
   XWith (Malgo 'Parse) = SimpleX 'Parse
+  XWith (Malgo NewParse) = SimpleX NewParse
   XWith (Malgo _) = Void
 
 type family XNoBind x where
@@ -259,6 +267,7 @@ type family XRecordP x where
 
 type family XListP x where
   XListP (Malgo 'Parse) = SimpleX 'Parse
+  XListP (Malgo 'NewParse) = SimpleX 'NewParse
   XListP (Malgo _) = Void
 
 type family XUnboxedP x where
@@ -266,6 +275,7 @@ type family XUnboxedP x where
 
 type family XBoxedP x where
   XBoxedP (Malgo 'Parse) = SimpleX 'Parse
+  XBoxedP (Malgo NewParse) = SimpleX NewParse
   XBoxedP (Malgo _) = Void
 
 type ForallPatX (c :: K.Type -> Constraint) x = (c (XVarP x), c (XConP x), c (XTupleP x), c (XRecordP x), c (XListP x), c (XUnboxedP x), c (XBoxedP x))
@@ -292,6 +302,7 @@ type family XTyRecord x where
 
 type family XTyBlock x where
   XTyBlock (Malgo 'Parse) = SimpleX 'Parse
+  XTyBlock (Malgo 'NewParse) = SimpleX 'NewParse
   XTyBlock (Malgo _) = Void
 
 type ForallTypeX (c :: K.Type -> Constraint) x =
@@ -316,6 +327,7 @@ type family XInfix x where
 
 type family XForeign x where
   XForeign (Malgo 'Parse) = SimpleX 'Parse
+  XForeign (Malgo NewParse) = SimpleX NewParse
   XForeign (Malgo 'Rename) = (XForeign (Malgo 'Parse), Text)
   XForeign (Malgo 'Infer) = Typed (XForeign (Malgo 'Rename))
   XForeign (Malgo 'Refine) = XForeign (Malgo 'Infer)
