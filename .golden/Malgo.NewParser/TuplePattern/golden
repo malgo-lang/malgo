@@ -243,36 +243,30 @@
           }
          )
          [ Var
-          ( Qualified
-           { visibility = Implicit
-           , value = Range
-            { _start = SourcePos
-             { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-             , sourceLine = Pos 8
-             , sourceColumn = Pos 4
-             }
-            , _end = SourcePos
-             { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-             , sourceLine = Pos 8
-             , sourceColumn = Pos 5
-             }
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+            , sourceLine = Pos 8
+            , sourceColumn = Pos 4
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+            , sourceLine = Pos 8
+            , sourceColumn = Pos 5
             }
            }
           ) "A"
          , Var
-          ( Qualified
-           { visibility = Implicit
-           , value = Range
-            { _start = SourcePos
-             { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-             , sourceLine = Pos 8
-             , sourceColumn = Pos 7
-             }
-            , _end = SourcePos
-             { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-             , sourceLine = Pos 8
-             , sourceColumn = Pos 8
-             }
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+            , sourceLine = Pos 8
+            , sourceColumn = Pos 7
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+            , sourceLine = Pos 8
+            , sourceColumn = Pos 8
             }
            }
           ) "B"
@@ -393,19 +387,16 @@
               }
              )
              ( Var
-              ( Qualified
-               { visibility = Implicit
-               , value = Range
-                { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                 , sourceLine = Pos 9
-                 , sourceColumn = Pos 23
-                 }
-                , _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
-                 , sourceLine = Pos 9
-                 , sourceColumn = Pos 35
-                 }
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                , sourceLine = Pos 9
+                , sourceColumn = Pos 23
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+                , sourceLine = Pos 9
+                , sourceColumn = Pos 35
                 }
                }
               ) "printString"
