@@ -7,6 +7,8 @@ module Malgo.NewRename.RnEnv
     Resolved,
     RnEnv (..),
     appendRnEnv,
+    addConstructors,
+    isConstructor,
     genBuiltinRnEnv,
     resolveName,
     resolveGlobalName,
@@ -18,6 +20,7 @@ where
 
 import Control.Lens (ASetter', makeFieldsNoPrefix)
 import Data.Map.Strict qualified as Map
+import Data.Set qualified as Set
 import Effectful (Eff, (:>))
 import Effectful.Error.Static
 import Effectful.Reader.Static (Reader, asks, runReader)
@@ -31,11 +34,13 @@ import Malgo.Syntax.Extension
 import Prettyprinter (squotes, vsep, (<+>))
 
 data RenameError
-  = NotInScope Range PsId [Resolved]
-  | NotInModule Range PsId ModuleName [Resolved]
+  = NoSuchNameInScope Range PsId [Resolved]
+  | NotInScope Range PsId
+  | NoSuchNameInModule Range PsId ModuleName [Resolved]
+  | NotInModule Range PsId ModuleName
 
 instance Pretty RenameError where
-  pretty (NotInScope range name names) =
+  pretty (NoSuchNameInScope range name names) =
     vsep
       [ pretty range <> ":",
         "Not in scope:"
@@ -43,7 +48,13 @@ instance Pretty RenameError where
         "Did you mean"
           <+> pretty names
       ]
-  pretty (NotInModule range name modName names) =
+  pretty (NotInScope range name) =
+    vsep
+      [ pretty range <> ":",
+        "Not in scope:"
+          <+> squotes (pretty name)
+      ]
+  pretty (NoSuchNameInModule range name modName names) =
     vsep
       [ pretty range <> ":",
         "Not in scope:"
@@ -52,6 +63,14 @@ instance Pretty RenameError where
           <+> pretty modName,
         "Did you mean"
           <+> pretty names
+      ]
+  pretty (NotInModule range name modName) =
+    vsep
+      [ pretty range <> ":",
+        "Not in scope:"
+          <+> squotes (pretty name)
+          <+> "in"
+          <+> pretty modName
       ]
 
 instance Show RenameError where
@@ -65,7 +84,8 @@ data RnEnv = RnEnv
     -- The key is the raw identifier (e.g. `foo`, `bar`).
     -- The value is the list of resolved identifiers (e.g. `foo`, `Foo.foo`, `B.bar`).
     _resolvedVarIdentMap :: Map PsId [Resolved],
-    _resolvedTypeIdentMap :: Map PsId [Resolved]
+    _resolvedTypeIdentMap :: Map PsId [Resolved],
+    constructors :: Set Id
   }
 
 makeFieldsNoPrefix ''RnEnv
@@ -74,6 +94,12 @@ makeFieldsNoPrefix ''RnEnv
 appendRnEnv :: ASetter' RnEnv (Map PsId [Resolved]) -> [(PsId, Resolved)] -> RnEnv -> RnEnv
 appendRnEnv lens newEnv = over lens
   $ \e -> foldr (\(k, v) -> Map.insertWith (<>) k [v]) e newEnv
+
+addConstructors :: [Id] -> RnEnv -> RnEnv
+addConstructors cons env = env {constructors = Set.union (Set.fromList cons) env.constructors}
+
+isConstructor :: Id -> RnEnv -> Bool
+isConstructor con env = Set.member con env.constructors
 
 -- | Generate RnId of primitive types
 genBuiltinRnEnv :: Eff es RnEnv
@@ -98,7 +124,8 @@ genBuiltinRnEnv = runReader (ModuleName "Builtin") do
               ("Char#", [Qualified Implicit char_t]),
               ("String#", [Qualified Implicit string_t]),
               ("Ptr#", [Qualified Implicit ptr_t])
-            ]
+            ],
+        constructors = mempty
       }
 
 -- | Resolving a new (local) name
@@ -118,8 +145,8 @@ lookupVarName pos name =
   asks @RnEnv ((._resolvedVarIdentMap) >>> Map.lookup name) >>= \case
     Just names -> case find (\(Qualified visi _) -> visi == Implicit) names of
       Just (Qualified _ name) -> pure name
-      Nothing -> throwError $ NotInScope pos name names
-    _ -> throwError $ NotInScope pos name []
+      Nothing -> throwError $ NoSuchNameInScope pos name names
+    _ -> throwError $ NotInScope pos name
 
 -- | Resolving a type name that is already resolved
 lookupTypeName :: (Reader RnEnv :> es, Error RenameError :> es) => Range -> Text -> Eff es Id
@@ -127,8 +154,8 @@ lookupTypeName pos name =
   asks @RnEnv ((._resolvedTypeIdentMap) >>> Map.lookup name) >>= \case
     Just names -> case find (\(Qualified visi _) -> visi == Implicit) names of
       Just (Qualified _ name) -> pure name
-      Nothing -> throwError $ NotInScope pos name names
-    _ -> throwError $ NotInScope pos name []
+      Nothing -> throwError $ NoSuchNameInScope pos name names
+    _ -> throwError $ NotInScope pos name
 
 -- | Resolving a qualified variable name like Foo.x
 lookupQualifiedVarName ::
@@ -142,5 +169,5 @@ lookupQualifiedVarName pos modName name =
     Just names ->
       case find (\(Qualified visi _) -> visi == Explicit modName) names of
         Just (Qualified _ name) -> pure name
-        Nothing -> throwError $ NotInModule pos name modName names
-    _ -> throwError $ NotInModule pos name modName []
+        Nothing -> throwError $ NoSuchNameInModule pos name modName names
+    _ -> throwError $ NotInModule pos name modName

@@ -6,18 +6,19 @@ import Data.List (intersect)
 import Data.List.Extra (anySame, disjoint)
 import Data.Map.Strict qualified as Map
 import Data.Set qualified as Set
+import Data.Text qualified as T
 import Effectful (Eff, IOE, (:>))
 import Effectful.Error.Static
-import Effectful.Reader.Static (Reader, ask, local, runReader)
+import Effectful.Reader.Static (Reader, ask, asks, local, runReader)
 import Effectful.State.Static.Local (State, execState, get, gets, modify, put, runState)
 import Malgo.Id
 import Malgo.Interface
 import Malgo.Lens
 import Malgo.Module
 import Malgo.MonadUniq (Uniq)
-import Malgo.Prelude hiding (All)
 import Malgo.NewRename.RnEnv
 import Malgo.NewRename.RnState as RnState
+import Malgo.Prelude hiding (All, catchError)
 import Malgo.Syntax
 import Malgo.Syntax.Extension
 import Prettyprinter (brackets, nest, punctuate, sep, squotes, vsep, (<+>))
@@ -192,8 +193,29 @@ rnClause ::
   Clause (Malgo NewParse) ->
   Eff es (Clause (Malgo Rename))
 rnClause (Clause pos ps e) = do
+  -- 変数を集める前に、ConPが本当にコンストラクタパターンを表しているか確認する。
+  -- ConP x y z の x がコンストラクタであるなら、このまま進める。
+  -- そうでないなら、 [x, y, z] のようなパターン列に置き換えて進める。
+  -- ps <- case ps of
+  --   [ConP pos name parameters] -> do
+  --     name' <- (Just <$> lookupVarName pos name) `catchError` \_ (_ :: RenameError) -> pure Nothing
+  --     case name' of
+  --       Just name' -> do
+  --         isConstructor <- asks (isConstructor name')
+  --         if isConstructor
+  --           then pure ps
+  --           else pure $ VarP pos name : parameters
+  --       Nothing -> pure $ VarP pos name : parameters
+  --   _ -> pure ps
+  ps <- case ps of
+    -- If name starts with a capital letter, it is a constructor.
+    [ConP pos name parameters]
+      | isUpper (T.head name) -> pure ps
+      | otherwise -> pure $ VarP pos name : parameters
+    _ -> pure ps
   let vars = concatMap patVars ps
-  -- varsに重複がないことを確認
+  -- パターンが束縛する変数に重複がないことを確認する
+  -- TODO: throwError に置き換える
   when (anySame $ filter (/= "_") vars) $ errorOn pos "Same variables occurs in a pattern"
   vm <- zip vars . map (Qualified Implicit) <$> traverse resolveName vars
   local (appendRnEnv resolvedVarIdentMap vm) $ Clause pos <$> traverse rnPat ps <*> rnExpr e
@@ -343,6 +365,7 @@ genToplevelEnv (ds :: [Decl (Malgo NewParse)]) env = do
       x' <- resolveGlobalName x
       xs' <- traverse (resolveGlobalName . view _2) cs
       modify $ appendRnEnv resolvedVarIdentMap (zip (map (view _2) cs) $ map (Qualified Implicit) xs')
+      modify $ addConstructors xs'
       modify $ appendRnEnv resolvedTypeIdentMap [(x, Qualified Implicit x')]
     aux (TypeSynonym pos x _ _) = do
       env <- get @RnEnv
