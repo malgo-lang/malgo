@@ -1,6 +1,12 @@
-## Malgo project coding conventions
+# Malgo project coding conventions
 
-### Converting data to strings
+## Naming conventions
+
+- Use descriptive names for all identifiers. Do not use single-letter names except:
+  - Well-known names like `f`, `g` for function parameters in higher-order functions.
+  - If the variable does not have a meaningful name, use the type name replaced with lowercase.
+
+## Converting data to strings
 
 In order to produce highly readable output, data should be converted to strings using the following three methods as appropriate.
 
