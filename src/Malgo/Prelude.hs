@@ -259,13 +259,13 @@ instance Semigroup Range where
 instance Pretty Range where
   pretty (Range start end) =
     pretty (convertString @_ @Text $ sourceName start)
-      <> ":"
+      <> ": line "
       <> pretty (unPos (sourceLine start))
-      <> ":"
+      <> ", column "
       <> pretty (unPos (sourceColumn start))
-      <> "-"
+      <> " - line "
       <> pretty (unPos (sourceLine end))
-      <> ":"
+      <> ", column "
       <> pretty (unPos (sourceColumn end))
 
 makeFieldsNoPrefix ''Range
