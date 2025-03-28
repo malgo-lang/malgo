@@ -178,6 +178,7 @@ type family XOpApp x where
   XOpApp (Malgo 'Refine) = Void
 
 type family XProject x where
+  XProject (Malgo Parse) = Void
   XProject (Malgo x) = SimpleX x
 
 type family XFn x where
