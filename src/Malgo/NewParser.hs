@@ -743,4 +743,4 @@ anyReservedOperator :: Parser es ()
 anyReservedOperator = choice $ map (try . reservedOperator) reservedOperators
 
 reservedOperators :: [TL.Text]
-reservedOperators = ["=>", "=", ":", "|", "->", ";", ",", "!", "#|", "|#"]
+reservedOperators = ["=>", "=", ":", "|", "->", ";", ".", ",", "!", "#|", "|#"]

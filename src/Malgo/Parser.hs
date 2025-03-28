@@ -647,7 +647,7 @@ reserved :: Parser es ()
 reserved = choice $ map (try . pKeyword) reservedKeywords -- #| and |# are for block comments in Core
 
 reservedOperators :: [TL.Text]
-reservedOperators = ["=>", "=", ":", "|", "->", ";", ",", "!", "#|", "|#"]
+reservedOperators = ["=>", "=", ":", "|", "->", ";", ".", ",", "!", "#|", "|#"]
 
 reservedOp :: Parser es ()
 reservedOp = choice $ map (try . pOperator) reservedOperators

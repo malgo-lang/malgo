@@ -298,36 +298,51 @@
          }
         }
        )
-       ( OpApp
+       ( Apply
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/UseModule.mlg"
           , sourceLine = Pos 8
-          , sourceColumn = Pos 10
+          , sourceColumn = Pos 20
           }
          , _end = SourcePos
           { sourceName = "./test/testcases/malgo/UseModule.mlg"
           , sourceLine = Pos 8
-          , sourceColumn = Pos 11
+          , sourceColumn = Pos 35
           }
          }
-        ) "."
-        ( Var
+        )
+        ( Project
          ( Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/UseModule.mlg"
            , sourceLine = Pos 8
-           , sourceColumn = Pos 3
+           , sourceColumn = Pos 10
            }
           , _end = SourcePos
            { sourceName = "./test/testcases/malgo/UseModule.mlg"
            , sourceLine = Pos 8
-           , sourceColumn = Pos 10
+           , sourceColumn = Pos 20
            }
           }
-         ) "Prelude"
+         )
+         ( Var
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/UseModule.mlg"
+            , sourceLine = Pos 8
+            , sourceColumn = Pos 3
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/UseModule.mlg"
+            , sourceLine = Pos 8
+            , sourceColumn = Pos 10
+            }
+           }
+          ) "Prelude"
+         ) "putStrLn"
         )
-        ( Apply
+        ( Boxed
          ( Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/UseModule.mlg"
@@ -341,37 +356,7 @@
            }
           }
          )
-         ( Var
-          ( Range
-           { _start = SourcePos
-            { sourceName = "./test/testcases/malgo/UseModule.mlg"
-            , sourceLine = Pos 8
-            , sourceColumn = Pos 11
-            }
-           , _end = SourcePos
-            { sourceName = "./test/testcases/malgo/UseModule.mlg"
-            , sourceLine = Pos 8
-            , sourceColumn = Pos 20
-            }
-           }
-          ) "putStrLn"
-         )
-         ( Boxed
-          ( Range
-           { _start = SourcePos
-            { sourceName = "./test/testcases/malgo/UseModule.mlg"
-            , sourceLine = Pos 8
-            , sourceColumn = Pos 20
-            }
-           , _end = SourcePos
-            { sourceName = "./test/testcases/malgo/UseModule.mlg"
-            , sourceLine = Pos 8
-            , sourceColumn = Pos 35
-            }
-           }
-          )
-          ( String "Hello, world!" )
-         )
+         ( String "Hello, world!" )
         )
        ) :|
        [ NoBind
@@ -402,7 +387,7 @@
            }
           }
          ) "<|"
-         ( OpApp
+         ( Project
           ( Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/UseModule.mlg"
@@ -412,10 +397,10 @@
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/UseModule.mlg"
             , sourceLine = Pos 9
-            , sourceColumn = Pos 11
+            , sourceColumn = Pos 22
             }
            }
-          ) "."
+          )
           ( Var
            ( Range
             { _start = SourcePos
@@ -430,22 +415,7 @@
              }
             }
            ) "Prelude"
-          )
-          ( Var
-           ( Range
-            { _start = SourcePos
-             { sourceName = "./test/testcases/malgo/UseModule.mlg"
-             , sourceLine = Pos 9
-             , sourceColumn = Pos 11
-             }
-            , _end = SourcePos
-             { sourceName = "./test/testcases/malgo/UseModule.mlg"
-             , sourceLine = Pos 9
-             , sourceColumn = Pos 22
-             }
-            }
-           ) "printInt32"
-          )
+          ) "printInt32"
          )
          ( Apply
           ( Range
