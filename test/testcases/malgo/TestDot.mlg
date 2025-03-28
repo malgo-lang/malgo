@@ -3,4 +3,4 @@ module {..} = import "../../../runtime/malgo/Prelude.mlg"
 
 def succ = {(Int64# x) -> (Int64# (addInt64# x 1L#))}
 
-def main = { printInt64 ((succ . succ) (Int64# 0L#)) }
+def main = { printInt64 ((succ << succ) (Int64# 0L#)) }
