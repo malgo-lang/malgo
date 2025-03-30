@@ -102,6 +102,9 @@ instance Pretty Visibility where pretty = pretty . convertString @_ @Text . show
 data Qualified x = Qualified {visibility :: Visibility, value :: x}
   deriving stock (Eq, Ord, Show)
 
+instance (HasRange x) => HasRange (Qualified x) where
+  range (Qualified _ v) = range v
+
 instance (Pretty x) => Pretty (Qualified x) where
   pretty (Qualified Implicit v) = pretty v
   pretty (Qualified (Explicit x) v) = pretty x <> "." <> pretty v

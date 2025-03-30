@@ -83,6 +83,7 @@ module Malgo.Prelude
 
     -- ** Range
     Range (..),
+    HasRange (..),
     HasStart (..),
     HasEnd (..),
     errorOn,
@@ -252,6 +253,15 @@ data Range = Range
   deriving anyclass (Hashable)
 
 makeStore ''Range
+
+class HasRange a where
+  range :: a -> Range
+
+instance HasRange Range where
+  range = identity
+
+instance HasRange Void where
+  range = absurd
 
 instance Semigroup Range where
   Range s1 e1 <> Range s2 e2 = Range (min s1 s2) (max e1 e2)

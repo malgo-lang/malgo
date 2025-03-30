@@ -143,6 +143,21 @@ instance (Pretty (XId x)) => Pretty (Expr x) where
   pretty (Seq _ ss) = sexpr $ "seq" : map pretty (toList ss)
   pretty (Parens _ e) = sexpr ["parens", pretty e]
 
+instance (ForallExpX HasRange x) => HasRange (Expr x) where
+  range (Var x _) = range x
+  range (Unboxed x _) = range x
+  range (Boxed x _) = range x
+  range (Apply x _ _) = range x
+  range (OpApp x _ _ _) = range x
+  range (Project x _ _) = range x
+  range (Fn x _) = range x
+  range (Tuple x _) = range x
+  range (Record x _) = range x
+  range (List x _) = range x
+  range (Ann x _ _) = range x
+  range (Seq x _) = range x
+  range (Parens x _) = range x
+
 instance
   (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) =>
   HasType (Expr x)

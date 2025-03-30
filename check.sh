@@ -5,4 +5,7 @@
 # Usage: ./check.sh
 
 # List of directories to compare
-delta <(cat .golden/Malgo.NewRename/**/actual) <(cat .golden/Malgo.Rename/**/actual)
+for dir in .golden/Malgo.NewRename/*; do
+  old_dir=.golden/Malgo.Rename/${dir##*/}
+  delta $dir $old_dir
+done
