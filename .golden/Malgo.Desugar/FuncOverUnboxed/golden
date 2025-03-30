@@ -1,53 +1,51 @@
 (()
    ((define
-      (f $FuncOverUnboxed.unboxed_22)
-      (->
-         (Int64#)
-         (sum (con Tuple#)))
-      (match
-         $FuncOverUnboxed.unboxed_22
-         (exact
-            0_i64
-            (= $FuncOverUnboxed.d_27
-               (= $FuncOverUnboxed.d_26
-                  (call toStringInt64# 1_i64)
-                  (cast String# $FuncOverUnboxed.d_26))
-               (= $FuncOverUnboxed.d_28
-                  (call printString# $FuncOverUnboxed.d_27)
-                  (cast
-                     (sum (con Tuple#))
-                     $FuncOverUnboxed.d_28))))
-         (exact
-            1_i64
-            (= $FuncOverUnboxed.d_30
-               (= $FuncOverUnboxed.d_29
-                  (call toStringInt64# 1_i64)
-                  (cast String# $FuncOverUnboxed.d_29))
-               (= $FuncOverUnboxed.d_31
-                  (call printString# $FuncOverUnboxed.d_30)
-                  (cast
-                     (sum (con Tuple#))
-                     $FuncOverUnboxed.d_31))))
-         (bind
-            $FuncOverUnboxed.__32
-            Int64#
-            (= $FuncOverUnboxed.d_24
-               (= $FuncOverUnboxed.d_23
-                  (call toStringInt64# 0_i64)
-                  (cast String# $FuncOverUnboxed.d_23))
-               (= $FuncOverUnboxed.d_25
-                  (call printString# $FuncOverUnboxed.d_24)
-                  (cast
-                     (sum (con Tuple#))
-                     $FuncOverUnboxed.d_25))))))
+       (f $FuncOverUnboxed.unboxed_22)
+       (-> (Int64#) (sum (con Tuple#)))
+       (match
+          $FuncOverUnboxed.unboxed_22
+          (exact
+             0_i64
+             (=
+                $FuncOverUnboxed.d_27
+                (=
+                   $FuncOverUnboxed.d_26
+                   (call toStringInt64# 1_i64)
+                   (cast String# $FuncOverUnboxed.d_26))
+                (=
+                   $FuncOverUnboxed.d_28
+                   (call printString# $FuncOverUnboxed.d_27)
+                   (cast (sum (con Tuple#)) $FuncOverUnboxed.d_28))))
+          (exact
+             1_i64
+             (=
+                $FuncOverUnboxed.d_30
+                (=
+                   $FuncOverUnboxed.d_29
+                   (call toStringInt64# 1_i64)
+                   (cast String# $FuncOverUnboxed.d_29))
+                (=
+                   $FuncOverUnboxed.d_31
+                   (call printString# $FuncOverUnboxed.d_30)
+                   (cast (sum (con Tuple#)) $FuncOverUnboxed.d_31))))
+          (bind
+             $FuncOverUnboxed.__32
+             Int64#
+             (=
+                $FuncOverUnboxed.d_24
+                (=
+                   $FuncOverUnboxed.d_23
+                   (call toStringInt64# 0_i64)
+                   (cast String# $FuncOverUnboxed.d_23))
+                (=
+                   $FuncOverUnboxed.d_25
+                   (call printString# $FuncOverUnboxed.d_24)
+                   (cast (sum (con Tuple#)) $FuncOverUnboxed.d_25))))))
       (define
          (main $FuncOverUnboxed.$__33)
-         (->
-            ((sum (con Tuple#)))
-            (sum (con Tuple#)))
-         (= $FuncOverUnboxed.d_34
+         (-> ((sum (con Tuple#))) (sum (con Tuple#)))
+         (=
+            $FuncOverUnboxed.d_34
             (call f 0_i64)
-            (cast
-               (sum (con Tuple#))
-               $FuncOverUnboxed.d_34))))
+            (cast (sum (con Tuple#)) $FuncOverUnboxed.d_34))))
    ())

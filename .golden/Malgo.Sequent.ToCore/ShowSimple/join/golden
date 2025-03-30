@@ -1,19 +1,19 @@
 ((wrap
-   $ShowSimple.return_66
-   (cut
-      (lambda
-         ($ShowSimple.param_54 $ShowSimple.return_67)
-         (join
-            $ShowSimple.select_102
-            (select
-               (#ShowSimple.fn_6
-                  (cut
-                     ((show
-                        ($ShowSimple.return_68
-                           (cut #ShowSimple.fn_6 $ShowSimple.return_68))))
-                     $ShowSimple.return_67)))
-            (cut $ShowSimple.param_54 $ShowSimple.select_102)))
-      $ShowSimple.return_66))
+    $ShowSimple.return_66
+    (cut
+       (lambda
+          ($ShowSimple.param_54 $ShowSimple.return_67)
+          (join
+             $ShowSimple.select_102
+             (select
+                (#ShowSimple.fn_6
+                   (cut
+                      ((show
+                          ($ShowSimple.return_68
+                             (cut #ShowSimple.fn_6 $ShowSimple.return_68))))
+                      $ShowSimple.return_67)))
+             (cut $ShowSimple.param_54 $ShowSimple.select_102)))
+       $ShowSimple.return_66))
    (string#
       $ShowSimple.return_69
       (cut
@@ -25,9 +25,7 @@
                   (#ShowSimple.x_1
                      (join
                         $ShowSimple.apply_103
-                        (apply
-                           (#ShowSimple.x_1)
-                           ($ShowSimple.return_70))
+                        (apply (#ShowSimple.x_1) ($ShowSimple.return_70))
                         (invoke String# $ShowSimple.apply_103))))
                (cut $ShowSimple.param_55 $ShowSimple.select_104)))
          $ShowSimple.return_69))
@@ -39,8 +37,7 @@
             (join
                $ShowSimple.select_105
                (select
-                  ((expand
-                     ((show #ShowSimple.show_5)))
+                  ((expand ((show #ShowSimple.show_5)))
                      (cut #ShowSimple.show_5 $ShowSimple.return_72)))
                (cut $ShowSimple.param_56 $ShowSimple.select_105)))
          $ShowSimple.return_71))
@@ -52,13 +49,10 @@
             (join
                $ShowSimple.select_107
                (select
-                  ((String#
-                     (#ShowSimple.x_2))
+                  ((String# (#ShowSimple.x_2))
                      (join
                         $ShowSimple.apply_106
-                        (apply
-                           (#ShowSimple.x_2)
-                           ($ShowSimple.return_74))
+                        (apply (#ShowSimple.x_2) ($ShowSimple.return_74))
                         (invoke malgo_print_string $ShowSimple.apply_106))))
                (cut $ShowSimple.param_57 $ShowSimple.select_107)))
          $ShowSimple.return_73))
@@ -73,76 +67,100 @@
                   (#ShowSimple.$__49
                      (join
                         $ShowSimple.then_119
-                        (then $ShowSimple.outer_94
+                        (then
+                           $ShowSimple.outer_94
                            (join
                               $ShowSimple.return_77
-                              (then $ShowSimple.inner_95
+                              (then
+                                 $ShowSimple.inner_95
                                  (join
                                     $ShowSimple.apply_118
                                     (apply
                                        ($ShowSimple.inner_95)
                                        ($ShowSimple.return_76))
-                                    (cut $ShowSimple.outer_94 $ShowSimple.apply_118)))
+                                    (cut
+                                       $ShowSimple.outer_94
+                                       $ShowSimple.apply_118)))
                               (join
                                  $ShowSimple.then_117
-                                 (then $ShowSimple.outer_96
+                                 (then
+                                    $ShowSimple.outer_96
                                     (join
                                        $ShowSimple.return_79
-                                       (then $ShowSimple.inner_97
+                                       (then
+                                          $ShowSimple.inner_97
                                           (join
                                              $ShowSimple.then_115
-                                             (then $ShowSimple.outer_98
+                                             (then
+                                                $ShowSimple.outer_98
                                                 (join
                                                    $ShowSimple.return_78
-                                                   (then $ShowSimple.inner_99
+                                                   (then
+                                                      $ShowSimple.inner_99
                                                       (join
                                                          $ShowSimple.apply_114
                                                          (apply
                                                             ($ShowSimple.inner_99)
                                                             ($ShowSimple.return_77))
-                                                         (cut $ShowSimple.outer_98 $ShowSimple.apply_114)))
+                                                         (cut
+                                                            $ShowSimple.outer_98
+                                                            $ShowSimple.apply_114)))
                                                    (join
                                                       $ShowSimple.apply_113
                                                       (apply
                                                          (1_i32)
                                                          ($ShowSimple.return_78))
-                                                      (invoke Int32# $ShowSimple.apply_113))))
+                                                      (invoke
+                                                         Int32#
+                                                         $ShowSimple.apply_113))))
                                              (join
                                                 $ShowSimple.apply_116
                                                 (apply
                                                    ($ShowSimple.inner_97)
                                                    ($ShowSimple.then_115))
-                                                (cut $ShowSimple.outer_96 $ShowSimple.apply_116))))
+                                                (cut
+                                                   $ShowSimple.outer_96
+                                                   $ShowSimple.apply_116))))
                                        (join
                                           $ShowSimple.apply_112
                                           (apply
                                              ((lambda
-                                                ($ShowSimple.param_59 $ShowSimple.return_80)
-                                                (join
-                                                   $ShowSimple.select_111
-                                                   (select
-                                                      ((Int32#
-                                                         (#ShowSimple.x_7))
-                                                         (join
-                                                            $ShowSimple.then_110
-                                                            (then $ShowSimple.outer_100
-                                                               (join
-                                                                  $ShowSimple.return_81
-                                                                  (then $ShowSimple.inner_101
-                                                                     (join
-                                                                        $ShowSimple.apply_109
-                                                                        (apply
-                                                                           ($ShowSimple.inner_101)
-                                                                           ($ShowSimple.return_80))
-                                                                        (cut $ShowSimple.outer_100 $ShowSimple.apply_109)))
-                                                                  (join
-                                                                     $ShowSimple.apply_108
-                                                                     (apply
-                                                                        (#ShowSimple.x_7)
-                                                                        ($ShowSimple.return_81))
-                                                                     (invoke malgo_int32_t_to_string $ShowSimple.apply_108))))
-                                                            (invoke String# $ShowSimple.then_110))))
-                                                   (cut $ShowSimple.param_59 $ShowSimple.select_111))))
+                                                 ($ShowSimple.param_59
+                                                    $ShowSimple.return_80)
+                                                 (join
+                                                    $ShowSimple.select_111
+                                                    (select
+                                                       ((Int32# (#ShowSimple.x_7))
+                                                          (join
+                                                             $ShowSimple.then_110
+                                                             (then
+                                                                $ShowSimple.outer_100
+                                                                (join
+                                                                   $ShowSimple.return_81
+                                                                   (then
+                                                                      $ShowSimple.inner_101
+                                                                      (join
+                                                                         $ShowSimple.apply_109
+                                                                         (apply
+                                                                            ($ShowSimple.inner_101)
+                                                                            ($ShowSimple.return_80))
+                                                                         (cut
+                                                                            $ShowSimple.outer_100
+                                                                            $ShowSimple.apply_109)))
+                                                                   (join
+                                                                      $ShowSimple.apply_108
+                                                                      (apply
+                                                                         (#ShowSimple.x_7)
+                                                                         ($ShowSimple.return_81))
+                                                                      (invoke
+                                                                         malgo_int32_t_to_string
+                                                                         $ShowSimple.apply_108))))
+                                                             (invoke
+                                                                String#
+                                                                $ShowSimple.then_110))))
+                                                    (cut
+                                                       $ShowSimple.param_59
+                                                       $ShowSimple.select_111))))
                                              ($ShowSimple.return_79))
                                           (invoke wrap $ShowSimple.apply_112))))
                                  (invoke show $ShowSimple.then_117))))
@@ -160,9 +178,7 @@
                   (#ShowSimple.x_0
                      (join
                         $ShowSimple.apply_121
-                        (apply
-                           (#ShowSimple.x_0)
-                           ($ShowSimple.return_83))
+                        (apply (#ShowSimple.x_0) ($ShowSimple.return_83))
                         (invoke Int32# $ShowSimple.apply_121))))
                (cut $ShowSimple.param_60 $ShowSimple.select_122)))
          $ShowSimple.return_82))
@@ -172,10 +188,7 @@
          (lambda
             ($ShowSimple.constructor_61 $ShowSimple.return_85)
             (cut
-               (construct
-                  Int32#
-                  ($ShowSimple.constructor_61)
-                  ())
+               (construct Int32# ($ShowSimple.constructor_61) ())
                $ShowSimple.return_85))
          $ShowSimple.return_84))
    (String#
@@ -184,10 +197,7 @@
          (lambda
             ($ShowSimple.constructor_62 $ShowSimple.return_87)
             (cut
-               (construct
-                  String#
-                  ($ShowSimple.constructor_62)
-                  ())
+               (construct String# ($ShowSimple.constructor_62) ())
                $ShowSimple.return_87))
          $ShowSimple.return_86))
    (malgo_print_string
@@ -195,7 +205,8 @@
       (cut
          (lambda
             ($ShowSimple.primitive_63 $ShowSimple.return_89)
-            (prim malgo_print_string
+            (prim
+               malgo_print_string
                ($ShowSimple.primitive_63)
                $ShowSimple.return_89))
          $ShowSimple.return_88))
@@ -204,16 +215,15 @@
       (cut
          (lambda
             ($ShowSimple.primitive_64 $ShowSimple.return_91)
-            (prim malgo_newline
-               ($ShowSimple.primitive_64)
-               $ShowSimple.return_91))
+            (prim malgo_newline ($ShowSimple.primitive_64) $ShowSimple.return_91))
          $ShowSimple.return_90))
    (malgo_int32_t_to_string
       $ShowSimple.return_92
       (cut
          (lambda
             ($ShowSimple.primitive_65 $ShowSimple.return_93)
-            (prim malgo_int32_t_to_string
+            (prim
+               malgo_int32_t_to_string
                ($ShowSimple.primitive_65)
                $ShowSimple.return_93))
          $ShowSimple.return_92)))

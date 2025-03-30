@@ -1,0 +1,59 @@
+(module
+   "test/testcases/malgo/DataDef.mlg"
+   ((((((./test/testcases/malgo/DataDef.mlg 7 1)
+          (./test/testcases/malgo/DataDef.mlg 8 1))
+         main
+         (fn
+            ((clause
+                ()
+                (seq
+                   (do
+                      (apply
+                         (fn
+                            ((clause
+                                ((con Int# (#DataDef.x_1)))
+                                (seq
+                                   (do
+                                      (apply
+                                         malgo_print_string
+                                         (seq
+                                            (do
+                                               (apply
+                                                  malgo_int64_t_to_string
+                                                  #DataDef.x_1)))))))))
+                         (seq (do (apply Int# (int64 1)))))))))))))
+      ()
+      ((((./test/testcases/malgo/DataDef.mlg 1 6)
+           (./test/testcases/malgo/DataDef.mlg 2 1))
+          Int
+          ()
+          ((((./test/testcases/malgo/DataDef.mlg 1 12)
+               (./test/testcases/malgo/DataDef.mlg 2 1))
+              Int#
+              (Int64#))))
+         (((./test/testcases/malgo/DataDef.mlg 2 6)
+             (./test/testcases/malgo/DataDef.mlg 4 1))
+            List
+            ((((./test/testcases/malgo/DataDef.mlg 2 11)
+                 (./test/testcases/malgo/DataDef.mlg 2 13))
+                #DataDef.a_0))
+            ((((./test/testcases/malgo/DataDef.mlg 2 15)
+                 (./test/testcases/malgo/DataDef.mlg 2 19))
+                Nil
+                ())
+               (((./test/testcases/malgo/DataDef.mlg 2 21)
+                   (./test/testcases/malgo/DataDef.mlg 4 1))
+                  Cons
+                  (#DataDef.a_0 (app List (#DataDef.a_0)))))))
+      ()
+      (((((./test/testcases/malgo/DataDef.mlg 4 1)
+            (./test/testcases/malgo/DataDef.mlg 5 1))
+           malgo_int64_t_to_string)
+          malgo_int64_t_to_string
+          (-> Int64# String#))
+         ((((./test/testcases/malgo/DataDef.mlg 5 1)
+              (./test/testcases/malgo/DataDef.mlg 7 1))
+             malgo_print_string)
+            malgo_print_string
+            (-> String# (tuple))))
+      ()))

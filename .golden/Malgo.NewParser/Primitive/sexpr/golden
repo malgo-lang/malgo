@@ -1,0 +1,17 @@
+(module
+   "test/testcases/malgo/Primitive.mlg"
+   ((import "runtime/malgo/Builtin.mlg" all)
+      (def
+         main
+         (fn
+            ((clause
+                ()
+                (seq
+                   (do
+                      (apply
+                         printString#
+                         (parens
+                            (apply
+                               toStringInt64#
+                               (parens
+                                  (apply (apply addInt64# (int64 2)) (int64 40))))))))))))))

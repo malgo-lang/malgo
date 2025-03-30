@@ -1,22 +1,25 @@
 ((main
-   $Double.return_10
-   (cut
-      (lambda
-         ($Double.param_9 $Double.return_11)
-         (cut
-            $Double.param_9
-            (select
-               (#Double.$__8
-                  (invoke putStr
-                     (apply
-                        ((do $Double.return_12
-                           (invoke toStringDouble
-                              (apply
-                                 ((do $Double.return_13
-                                    (invoke Double#
-                                       (apply
-                                          (3.14_f64)
-                                          ($Double.return_13)))))
-                                 ($Double.return_12)))))
-                        ($Double.return_11)))))))
-      $Double.return_10)))
+    $Double.return_10
+    (cut
+       (lambda
+          ($Double.param_9 $Double.return_11)
+          (cut
+             $Double.param_9
+             (select
+                (#Double.$__8
+                   (invoke
+                      putStr
+                      (apply
+                         ((do
+                             $Double.return_12
+                             (invoke
+                                toStringDouble
+                                (apply
+                                   ((do
+                                       $Double.return_13
+                                       (invoke
+                                          Double#
+                                          (apply (3.14_f64) ($Double.return_13)))))
+                                   ($Double.return_12)))))
+                         ($Double.return_11)))))))
+       $Double.return_10)))

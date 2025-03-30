@@ -1,220 +1,200 @@
 (()
    ((define
-      ($TestArithDouble.*_curry_145 $TestArithDouble.x_146 $TestArithDouble.y_147)
-      (->
-         (Double# Double#)
-         Double#)
-      (= $TestArithDouble.d_149
-         (= $TestArithDouble.d_148
-            (call mulDouble# $TestArithDouble.x_146)
-            (cast
-               (->
-                  (Double#)
-                  Double#)
-               $TestArithDouble.d_148))
-         (= $TestArithDouble.d_150
-            (call $TestArithDouble.d_149 $TestArithDouble.y_147)
-            (cast Double# $TestArithDouble.d_150))))
+       ($TestArithDouble.*_curry_145
+          $TestArithDouble.x_146
+          $TestArithDouble.y_147)
+       (-> (Double# Double#) Double#)
+       (=
+          $TestArithDouble.d_149
+          (=
+             $TestArithDouble.d_148
+             (call mulDouble# $TestArithDouble.x_146)
+             (cast (-> (Double#) Double#) $TestArithDouble.d_148))
+          (=
+             $TestArithDouble.d_150
+             (call $TestArithDouble.d_149 $TestArithDouble.y_147)
+             (cast Double# $TestArithDouble.d_150))))
       (define
-         ($TestArithDouble.+_curry_133 $TestArithDouble.x_134 $TestArithDouble.y_135)
-         (->
-            (Double# Double#)
-            Double#)
-         (= $TestArithDouble.d_137
-            (= $TestArithDouble.d_136
+         ($TestArithDouble.+_curry_133
+            $TestArithDouble.x_134
+            $TestArithDouble.y_135)
+         (-> (Double# Double#) Double#)
+         (=
+            $TestArithDouble.d_137
+            (=
+               $TestArithDouble.d_136
                (call addDouble# $TestArithDouble.x_134)
-               (cast
-                  (->
-                     (Double#)
-                     Double#)
-                  $TestArithDouble.d_136))
-            (= $TestArithDouble.d_138
+               (cast (-> (Double#) Double#) $TestArithDouble.d_136))
+            (=
+               $TestArithDouble.d_138
                (call $TestArithDouble.d_137 $TestArithDouble.y_135)
                (cast Double# $TestArithDouble.d_138))))
       (define
-         ($TestArithDouble.add_curry_121 $TestArithDouble.x_122 $TestArithDouble.y_123)
-         (->
-            (Double# Double#)
-            Double#)
-         (= $TestArithDouble.d_125
-            (= $TestArithDouble.d_124
+         ($TestArithDouble.add_curry_121
+            $TestArithDouble.x_122
+            $TestArithDouble.y_123)
+         (-> (Double# Double#) Double#)
+         (=
+            $TestArithDouble.d_125
+            (=
+               $TestArithDouble.d_124
                (call addDouble# $TestArithDouble.x_122)
-               (cast
-                  (->
-                     (Double#)
-                     Double#)
-                  $TestArithDouble.d_124))
-            (= $TestArithDouble.d_126
+               (cast (-> (Double#) Double#) $TestArithDouble.d_124))
+            (=
+               $TestArithDouble.d_126
                (call $TestArithDouble.d_125 $TestArithDouble.y_123)
                (cast Double# $TestArithDouble.d_126))))
       (define
-         ($TestArithDouble.mul_curry_109 $TestArithDouble.x_110 $TestArithDouble.y_111)
-         (->
-            (Double# Double#)
-            Double#)
-         (= $TestArithDouble.d_113
-            (= $TestArithDouble.d_112
+         ($TestArithDouble.mul_curry_109
+            $TestArithDouble.x_110
+            $TestArithDouble.y_111)
+         (-> (Double# Double#) Double#)
+         (=
+            $TestArithDouble.d_113
+            (=
+               $TestArithDouble.d_112
                (call mulDouble# $TestArithDouble.x_110)
-               (cast
-                  (->
-                     (Double#)
-                     Double#)
-                  $TestArithDouble.d_112))
-            (= $TestArithDouble.d_114
+               (cast (-> (Double#) Double#) $TestArithDouble.d_112))
+            (=
+               $TestArithDouble.d_114
                (call $TestArithDouble.d_113 $TestArithDouble.y_111)
                (cast Double# $TestArithDouble.d_114))))
       (define
          (show $TestArithDouble.x_91)
-         (->
-            (Double#)
-            Any#)
-         (= $TestArithDouble.d_93
-            (= $TestArithDouble.d_92
+         (-> (Double#) Any#)
+         (=
+            $TestArithDouble.d_93
+            (=
+               $TestArithDouble.d_92
                (call toStringDouble# $TestArithDouble.x_91)
                (cast String# $TestArithDouble.d_92))
-            (= $TestArithDouble.d_94
+            (=
+               $TestArithDouble.d_94
                (call String# $TestArithDouble.d_93)
                (cast Any# $TestArithDouble.d_94))))
       (define
          (traceShowId $TestArithDouble.x_95)
-         (->
-            (Double#)
-            Double#)
-         (= $TestArithDouble.d_99
-            (= $TestArithDouble.d_97
-               (= $TestArithDouble.d_96
+         (-> (Double#) Double#)
+         (=
+            $TestArithDouble.d_99
+            (=
+               $TestArithDouble.d_97
+               (=
+                  $TestArithDouble.d_96
                   (call show $TestArithDouble.x_95)
                   (cast Any# $TestArithDouble.d_96))
-               (= $TestArithDouble.d_98
+               (=
+                  $TestArithDouble.d_98
                   (call putStrLn $TestArithDouble.d_97)
-                  (cast
-                     (sum (con Tuple#))
-                     $TestArithDouble.d_98)))
+                  (cast (sum (con Tuple#)) $TestArithDouble.d_98)))
             $TestArithDouble.x_95))
       (define
          (neg $TestArithDouble.x_100)
-         (->
-            (Double#)
-            Double#)
-         (= $TestArithDouble.d_102
-            (= $TestArithDouble.d_101
+         (-> (Double#) Double#)
+         (=
+            $TestArithDouble.d_102
+            (=
+               $TestArithDouble.d_101
                (call subDouble# 0.0_f64)
-               (cast
-                  (->
-                     (Double#)
-                     Double#)
-                  $TestArithDouble.d_101))
-            (= $TestArithDouble.d_103
+               (cast (-> (Double#) Double#) $TestArithDouble.d_101))
+            (=
+               $TestArithDouble.d_103
                (call $TestArithDouble.d_102 $TestArithDouble.x_100)
                (cast Double# $TestArithDouble.d_103))))
       (define
          (mul $TestArithDouble.x_104)
-         (->
-            (Double#)
-            (->
-               (Double#)
-               Double#))
+         (-> (Double#) (-> (Double#) Double#))
          (let
             (($TestArithDouble.let_115
-               (->
-                  (Double#)
-                  Double#)
-               (fun
-                  ($TestArithDouble.y_105)
-                  (direct $TestArithDouble.mul_curry_109 $TestArithDouble.x_104 $TestArithDouble.y_105))))
+                (-> (Double#) Double#)
+                (fun
+                   ($TestArithDouble.y_105)
+                   (direct
+                      $TestArithDouble.mul_curry_109
+                      $TestArithDouble.x_104
+                      $TestArithDouble.y_105))))
             $TestArithDouble.let_115))
       (define
          (add $TestArithDouble.x_116)
-         (->
-            (Double#)
-            (->
-               (Double#)
-               Double#))
+         (-> (Double#) (-> (Double#) Double#))
          (let
             (($TestArithDouble.let_127
-               (->
-                  (Double#)
-                  Double#)
-               (fun
-                  ($TestArithDouble.y_117)
-                  (direct $TestArithDouble.add_curry_121 $TestArithDouble.x_116 $TestArithDouble.y_117))))
+                (-> (Double#) Double#)
+                (fun
+                   ($TestArithDouble.y_117)
+                   (direct
+                      $TestArithDouble.add_curry_121
+                      $TestArithDouble.x_116
+                      $TestArithDouble.y_117))))
             $TestArithDouble.let_127))
       (define
          (+ $TestArithDouble.x_128)
-         (->
-            (Double#)
-            (->
-               (Double#)
-               Double#))
+         (-> (Double#) (-> (Double#) Double#))
          (let
             (($TestArithDouble.let_139
-               (->
-                  (Double#)
-                  Double#)
-               (fun
-                  ($TestArithDouble.y_129)
-                  (direct $TestArithDouble.+_curry_133 $TestArithDouble.x_128 $TestArithDouble.y_129))))
+                (-> (Double#) Double#)
+                (fun
+                   ($TestArithDouble.y_129)
+                   (direct
+                      $TestArithDouble.+_curry_133
+                      $TestArithDouble.x_128
+                      $TestArithDouble.y_129))))
             $TestArithDouble.let_139))
       (define
          (* $TestArithDouble.x_140)
-         (->
-            (Double#)
-            (->
-               (Double#)
-               Double#))
+         (-> (Double#) (-> (Double#) Double#))
          (let
             (($TestArithDouble.let_151
-               (->
-                  (Double#)
-                  Double#)
-               (fun
-                  ($TestArithDouble.y_141)
-                  (direct $TestArithDouble.*_curry_145 $TestArithDouble.x_140 $TestArithDouble.y_141))))
+                (-> (Double#) Double#)
+                (fun
+                   ($TestArithDouble.y_141)
+                   (direct
+                      $TestArithDouble.*_curry_145
+                      $TestArithDouble.x_140
+                      $TestArithDouble.y_141))))
             $TestArithDouble.let_151))
       (define
          (f $TestArithDouble.x_152)
-         (->
-            (Double#)
-            Double#)
-         (= $TestArithDouble.d_158
-            (= $TestArithDouble.d_156
-               (= $TestArithDouble.d_154
-                  (= $TestArithDouble.d_153
+         (-> (Double#) Double#)
+         (=
+            $TestArithDouble.d_158
+            (=
+               $TestArithDouble.d_156
+               (=
+                  $TestArithDouble.d_154
+                  (=
+                     $TestArithDouble.d_153
                      (call + $TestArithDouble.x_152)
-                     (cast
-                        (->
-                           (Double#)
-                           Double#)
-                        $TestArithDouble.d_153))
-                  (= $TestArithDouble.d_155
+                     (cast (-> (Double#) Double#) $TestArithDouble.d_153))
+                  (=
+                     $TestArithDouble.d_155
                      (call $TestArithDouble.d_154 0.0_f64)
                      (cast Double# $TestArithDouble.d_155)))
-               (= $TestArithDouble.d_157
+               (=
+                  $TestArithDouble.d_157
                   (call * $TestArithDouble.d_156)
-                  (cast
-                     (->
-                        (Double#)
-                        Double#)
-                     $TestArithDouble.d_157)))
-            (= $TestArithDouble.d_159
+                  (cast (-> (Double#) Double#) $TestArithDouble.d_157)))
+            (=
+               $TestArithDouble.d_159
                (call $TestArithDouble.d_158 $TestArithDouble.x_152)
                (cast Double# $TestArithDouble.d_159))))
       (define
          (main $TestArithDouble.$__160)
-         (->
-            ((sum (con Tuple#)))
-            (sum (con Tuple#)))
-         (= $TestArithDouble.d_164
-            (= $TestArithDouble.d_162
-               (= $TestArithDouble.d_161
+         (-> ((sum (con Tuple#))) (sum (con Tuple#)))
+         (=
+            $TestArithDouble.d_164
+            (=
+               $TestArithDouble.d_162
+               (=
+                  $TestArithDouble.d_161
                   (call f 0.5_f64)
                   (cast Double# $TestArithDouble.d_161))
-               (= $TestArithDouble.d_163
+               (=
+                  $TestArithDouble.d_163
                   (call show $TestArithDouble.d_162)
                   (cast Any# $TestArithDouble.d_163)))
-            (= $TestArithDouble.d_165
+            (=
+               $TestArithDouble.d_165
                (call putStrLn $TestArithDouble.d_164)
-               (cast
-                  (sum (con Tuple#))
-                  $TestArithDouble.d_165)))))
+               (cast (sum (con Tuple#)) $TestArithDouble.d_165)))))
    ())

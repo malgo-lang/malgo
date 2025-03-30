@@ -1,21 +1,20 @@
 ((main
-   $Pattern.return_18
-   (cut
-      (lambda
-         ($Pattern.param_16 $Pattern.return_19)
-         (cut
-            $Pattern.param_16
-            (select
-               (#Pattern.$__9
-                  (invoke putStrLn
-                     (apply
-                        ((do $Pattern.return_20
-                           (invoke String#
-                              (apply
-                                 ("OK")
-                                 ($Pattern.return_20)))))
-                        ($Pattern.return_19)))))))
-      $Pattern.return_18))
+    $Pattern.return_18
+    (cut
+       (lambda
+          ($Pattern.param_16 $Pattern.return_19)
+          (cut
+             $Pattern.param_16
+             (select
+                (#Pattern.$__9
+                   (invoke
+                      putStrLn
+                      (apply
+                         ((do
+                             $Pattern.return_20
+                             (invoke String# (apply ("OK") ($Pattern.return_20)))))
+                         ($Pattern.return_19)))))))
+       $Pattern.return_18))
    (isNil
       $Pattern.return_21
       (cut
@@ -24,8 +23,6 @@
             (cut
                $Pattern.param_17
                (select
-                  ((Nil ())
-                     (invoke True $Pattern.return_22))
-                  (#Pattern.__0
-                     (invoke False $Pattern.return_22)))))
+                  ((Nil ()) (invoke True $Pattern.return_22))
+                  (#Pattern.__0 (invoke False $Pattern.return_22)))))
          $Pattern.return_21)))

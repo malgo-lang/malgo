@@ -1,17 +1,14 @@
 ((string#
-   $Pragma.return_28
-   (cut
-      (lambda
-         ($Pragma.param_21 $Pragma.return_29)
-         (cut
-            $Pragma.param_21
-            (select
-               (#Pragma.x_1
-                  (invoke String#
-                     (apply
-                        (#Pragma.x_1)
-                        ($Pragma.return_29)))))))
-      $Pragma.return_28))
+    $Pragma.return_28
+    (cut
+       (lambda
+          ($Pragma.param_21 $Pragma.return_29)
+          (cut
+             $Pragma.param_21
+             (select
+                (#Pragma.x_1
+                   (invoke String# (apply (#Pragma.x_1) ($Pragma.return_29)))))))
+       $Pragma.return_28))
    (putStrLn
       $Pragma.return_30
       (cut
@@ -20,28 +17,27 @@
             (cut
                $Pragma.param_22
                (select
-                  ((String#
-                     (#Pragma.str_0))
+                  ((String# (#Pragma.str_0))
                      (cut
                         (lambda
                            ($Pragma.tmp_23 $Pragma.return_33)
-                           (invoke malgo_newline
+                           (invoke
+                              malgo_newline
                               (apply
                                  ((construct tuple () ()))
                                  ($Pragma.return_33))))
-                        (then $Pragma.outer_43
+                        (then
+                           $Pragma.outer_43
                            (join
                               $Pragma.return_32
-                              (then $Pragma.inner_44
+                              (then
+                                 $Pragma.inner_44
                                  (cut
                                     $Pragma.outer_43
-                                    (apply
-                                       ($Pragma.inner_44)
-                                       ($Pragma.return_31))))
-                              (invoke malgo_print_string
-                                 (apply
-                                    (#Pragma.str_0)
-                                    ($Pragma.return_32))))))))))
+                                    (apply ($Pragma.inner_44) ($Pragma.return_31))))
+                              (invoke
+                                 malgo_print_string
+                                 (apply (#Pragma.str_0) ($Pragma.return_32))))))))))
          $Pragma.return_30))
    (main
       $Pragma.return_34
@@ -52,20 +48,20 @@
                $Pragma.param_24
                (select
                   (#Pragma.$__20
-                     (invoke putStrLn
-                        (then $Pragma.outer_45
+                     (invoke
+                        putStrLn
+                        (then
+                           $Pragma.outer_45
                            (join
                               $Pragma.return_36
-                              (then $Pragma.inner_46
+                              (then
+                                 $Pragma.inner_46
                                  (cut
                                     $Pragma.outer_45
-                                    (apply
-                                       ($Pragma.inner_46)
-                                       ($Pragma.return_35))))
-                              (invoke String#
-                                 (apply
-                                    ("Hello, world")
-                                    ($Pragma.return_36))))))))))
+                                    (apply ($Pragma.inner_46) ($Pragma.return_35))))
+                              (invoke
+                                 String#
+                                 (apply ("Hello, world") ($Pragma.return_36))))))))))
          $Pragma.return_34))
    (String#
       $Pragma.return_37
@@ -73,10 +69,7 @@
          (lambda
             ($Pragma.constructor_25 $Pragma.return_38)
             (cut
-               (construct
-                  String#
-                  ($Pragma.constructor_25)
-                  ())
+               (construct String# ($Pragma.constructor_25) ())
                $Pragma.return_38))
          $Pragma.return_37))
    (malgo_print_string
@@ -84,16 +77,12 @@
       (cut
          (lambda
             ($Pragma.primitive_26 $Pragma.return_40)
-            (prim malgo_print_string
-               ($Pragma.primitive_26)
-               $Pragma.return_40))
+            (prim malgo_print_string ($Pragma.primitive_26) $Pragma.return_40))
          $Pragma.return_39))
    (malgo_newline
       $Pragma.return_41
       (cut
          (lambda
             ($Pragma.primitive_27 $Pragma.return_42)
-            (prim malgo_newline
-               ($Pragma.primitive_27)
-               $Pragma.return_42))
+            (prim malgo_newline ($Pragma.primitive_27) $Pragma.return_42))
          $Pragma.return_41)))

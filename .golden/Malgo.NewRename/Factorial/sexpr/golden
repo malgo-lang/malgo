@@ -1,0 +1,93 @@
+(module
+   "test/testcases/malgo/Factorial.mlg"
+   ((((((./test/testcases/malgo/Factorial.mlg 5 1)
+          (./test/testcases/malgo/Factorial.mlg 7 1))
+         ==
+         (fn
+            ((clause
+                (#Factorial.x_0 #Factorial.y_1)
+                (seq (do (apply (apply eqInt64 #Factorial.y_1) #Factorial.x_0))))))))
+       ((((./test/testcases/malgo/Factorial.mlg 8 1)
+            (./test/testcases/malgo/Factorial.mlg 10 1))
+           -
+           (fn
+              ((clause
+                  (#Factorial.x_2 #Factorial.y_3)
+                  (seq
+                     (do (apply (apply subInt64 #Factorial.y_3) #Factorial.x_2))))))))
+       ((((./test/testcases/malgo/Factorial.mlg 11 1)
+            (./test/testcases/malgo/Factorial.mlg 13 1))
+           *
+           (fn
+              ((clause
+                  (#Factorial.x_4 #Factorial.y_5)
+                  (seq
+                     (do (apply (apply mulInt64 #Factorial.y_5) #Factorial.x_4))))))))
+       ((((./test/testcases/malgo/Factorial.mlg 15 1)
+            (./test/testcases/malgo/Factorial.mlg 17 1))
+           factAcc
+           (fn
+              ((clause
+                  (#Factorial.n_7 #Factorial.acc_8)
+                  (seq
+                     (do
+                        (apply
+                           (apply
+                              (apply
+                                 if
+                                 (fn
+                                    ((clause
+                                        ()
+                                        (seq
+                                           (do
+                                              (apply
+                                                 (apply
+                                                    factAcc
+                                                    (opapp
+                                                       *
+                                                       #Factorial.n_7
+                                                       #Factorial.acc_8))
+                                                 (opapp
+                                                    -
+                                                    #Factorial.n_7
+                                                    (apply Int64# (int64 1))))))))))
+                              (fn ((clause () (seq (do #Factorial.acc_8))))))
+                           (opapp == #Factorial.n_7 (apply Int64# (int64 0)))))))))))
+       ((((./test/testcases/malgo/Factorial.mlg 13 1)
+            (./test/testcases/malgo/Factorial.mlg 15 1))
+           fact
+           (fn
+              ((clause
+                  (#Factorial.n_6)
+                  (seq
+                     (do
+                        (apply
+                           (apply factAcc (apply Int64# (int64 1)))
+                           #Factorial.n_6))))))))
+       ((((./test/testcases/malgo/Factorial.mlg 17 1)
+            (./test/testcases/malgo/Factorial.mlg 20 1))
+           main
+           (fn
+              ((clause
+                  ()
+                  (seq
+                     (do
+                        (opapp
+                           |>
+                           (opapp
+                              |>
+                              (apply fact (apply Int64# (int64 5)))
+                              toStringInt64)
+                           putStrLn)))))))))
+      ()
+      ()
+      ()
+      ()
+      ((((./test/testcases/malgo/Factorial.mlg 1 1)
+           (./test/testcases/malgo/Factorial.mlg 2 1))
+          "runtime/malgo/Builtin.mlg"
+          all)
+         (((./test/testcases/malgo/Factorial.mlg 2 1)
+             (./test/testcases/malgo/Factorial.mlg 4 1))
+            "runtime/malgo/Prelude.mlg"
+            all))))

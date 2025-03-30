@@ -1,40 +1,28 @@
 ((succ
-   (lambda
-      ($UseModule.param_36)
-      (select
-         $UseModule.param_36
-         ((#UseModule.x_0
-            (apply
-               (apply
-                  (invoke addInt32)
-                  (#UseModule.x_0))
-               ((apply
-                  (invoke Int32#)
-                  (1_i32)))))))))
+    (lambda
+       ($UseModule.param_36)
+       (select
+          $UseModule.param_36
+          ((#UseModule.x_0
+              (apply
+                 (apply (invoke addInt32) (#UseModule.x_0))
+                 ((apply (invoke Int32#) (1_i32)))))))))
    (main
       (lambda
          ($UseModule.param_37)
          (select
             $UseModule.param_37
             ((#UseModule.$__35
-               (apply
-                  (lambda
-                     ($UseModule.tmp_38)
-                     (apply
-                        (apply
-                           (invoke <|)
-                           ((invoke printInt32)))
-                        ((apply
-                           (apply
-                              (apply
-                                 (invoke <<)
-                                 ((invoke succ)))
-                              ((invoke succ)))
-                           ((apply
-                              (invoke Int32#)
-                              (1_i32)))))))
-                  ((apply
-                     (invoke putStrLn)
-                     ((apply
-                        (invoke String#)
-                        ("Hello, world!"))))))))))))
+                (apply
+                   (lambda
+                      ($UseModule.tmp_38)
+                      (apply
+                         (apply (invoke <|) ((invoke printInt32)))
+                         ((apply
+                             (apply
+                                (apply (invoke <<) ((invoke succ)))
+                                ((invoke succ)))
+                             ((apply (invoke Int32#) (1_i32)))))))
+                   ((apply
+                       (invoke putStrLn)
+                       ((apply (invoke String#) ("Hello, world!"))))))))))))

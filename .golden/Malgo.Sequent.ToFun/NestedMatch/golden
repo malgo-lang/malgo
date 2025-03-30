@@ -1,62 +1,43 @@
 ((main
-   (lambda
-      ($NestedMatch.param_30)
-      (select
-         $NestedMatch.param_30
-         ((#NestedMatch.$__29
-            (apply
-               (lambda
-                  ($NestedMatch.param_31)
-                  (select
-                     $NestedMatch.param_31
-                     (((True ())
-                        (apply
-                           (invoke malgo_print_string)
-                           ("OK")))
-                        ((False ())
-                           (apply
-                              (invoke malgo_exit_failure)
-                              ((tuple ())))))))
-               ((apply
-                  (lambda
-                     ($NestedMatch.param_32)
-                     (select
-                        $NestedMatch.param_32
-                        (((True1 ())
-                           (invoke False))
-                           ((False1 ())
-                              (invoke True)))))
-                  ((apply
+    (lambda
+       ($NestedMatch.param_30)
+       (select
+          $NestedMatch.param_30
+          ((#NestedMatch.$__29
+              (apply
+                 (lambda
+                    ($NestedMatch.param_31)
+                    (select
+                       $NestedMatch.param_31
+                       (((True ()) (apply (invoke malgo_print_string) ("OK")))
+                          ((False ())
+                             (apply (invoke malgo_exit_failure) ((tuple ())))))))
+                 ((apply
                      (lambda
-                        ($NestedMatch.param_33)
+                        ($NestedMatch.param_32)
                         (select
-                           $NestedMatch.param_33
-                           (((True2 ())
-                              (invoke False1))
-                              ((False2 ())
-                                 (invoke True1)))))
-                     ((invoke True2))))))))))))
-   (False
-      (False ()))
-   (True
-      (True ()))
-   (False1
-      (False1 ()))
-   (True1
-      (True1 ()))
-   (False2
-      (False2 ()))
-   (True2
-      (True2 ()))
+                           $NestedMatch.param_32
+                           (((True1 ()) (invoke False))
+                              ((False1 ()) (invoke True)))))
+                     ((apply
+                         (lambda
+                            ($NestedMatch.param_33)
+                            (select
+                               $NestedMatch.param_33
+                               (((True2 ()) (invoke False1))
+                                  ((False2 ()) (invoke True1)))))
+                         ((invoke True2))))))))))))
+   (False (False ()))
+   (True (True ()))
+   (False1 (False1 ()))
+   (True1 (True1 ()))
+   (False2 (False2 ()))
+   (True2 (True2 ()))
    (malgo_print_string
       (lambda
          ($NestedMatch.primitive_34)
-         (primitive
-            malgo_print_string
-            ($NestedMatch.primitive_34))))
+         (primitive malgo_print_string ($NestedMatch.primitive_34))))
    (malgo_exit_failure
       (lambda
          ($NestedMatch.primitive_35)
-         (primitive
-            malgo_exit_failure
-            ($NestedMatch.primitive_35)))))
+         (primitive malgo_exit_failure ($NestedMatch.primitive_35)))))

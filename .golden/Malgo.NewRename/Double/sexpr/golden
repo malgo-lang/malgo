@@ -1,0 +1,25 @@
+(module
+   "test/testcases/malgo/Double.mlg"
+   ((((((./test/testcases/malgo/Double.mlg 4 1)
+          (./test/testcases/malgo/Double.mlg 7 1))
+         main
+         (fn
+            ((clause
+                ()
+                (seq
+                   (do
+                      (apply
+                         putStr
+                         (apply toStringDouble (apply Double# (double 3.14_f64))))))))))))
+      ()
+      ()
+      ()
+      ()
+      ((((./test/testcases/malgo/Double.mlg 1 1)
+           (./test/testcases/malgo/Double.mlg 2 1))
+          "runtime/malgo/Builtin.mlg"
+          all)
+         (((./test/testcases/malgo/Double.mlg 2 1)
+             (./test/testcases/malgo/Double.mlg 4 1))
+            "runtime/malgo/Prelude.mlg"
+            all))))

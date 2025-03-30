@@ -1,16 +1,16 @@
 ((one
-   $ToplevelVariable.return_86
-   (invoke Int32#
-      (apply
-         (1_i32)
-         ($ToplevelVariable.return_86))))
+    $ToplevelVariable.return_86
+    (invoke Int32# (apply (1_i32) ($ToplevelVariable.return_86))))
    (constId
       $ToplevelVariable.return_87
-      (invoke const
-         (then $ToplevelVariable.outer_105
+      (invoke
+         const
+         (then
+            $ToplevelVariable.outer_105
             (join
                $ToplevelVariable.return_88
-               (then $ToplevelVariable.inner_106
+               (then
+                  $ToplevelVariable.inner_106
                   (cut
                      $ToplevelVariable.outer_105
                      (apply
@@ -25,31 +25,33 @@
             (cut
                $ToplevelVariable.param_82
                (select
-                  ((Nothing ())
-                     (invoke Nothing $ToplevelVariable.return_91))
-                  ((Just
-                     (#ToplevelVariable.x_1))
+                  ((Nothing ()) (invoke Nothing $ToplevelVariable.return_91))
+                  ((Just (#ToplevelVariable.x_1))
                      (invoke Nothing $ToplevelVariable.return_91)))))
-         (then $ToplevelVariable.outer_107
+         (then
+            $ToplevelVariable.outer_107
             (join
                $ToplevelVariable.return_90
-               (then $ToplevelVariable.inner_108
+               (then
+                  $ToplevelVariable.inner_108
                   (cut
                      $ToplevelVariable.outer_107
                      (apply
                         ($ToplevelVariable.inner_108)
                         ($ToplevelVariable.return_89))))
-               (invoke Just
-                  (apply
-                     ((construct tuple () ()))
-                     ($ToplevelVariable.return_90)))))))
+               (invoke
+                  Just
+                  (apply ((construct tuple () ())) ($ToplevelVariable.return_90)))))))
    (addOne
       $ToplevelVariable.return_92
-      (invoke addInt32
-         (then $ToplevelVariable.outer_109
+      (invoke
+         addInt32
+         (then
+            $ToplevelVariable.outer_109
             (join
                $ToplevelVariable.return_93
-               (then $ToplevelVariable.inner_110
+               (then
+                  $ToplevelVariable.inner_110
                   (cut
                      $ToplevelVariable.outer_109
                      (apply
@@ -68,50 +70,67 @@
                      (cut
                         (lambda
                            ($ToplevelVariable.tmp_84 $ToplevelVariable.return_100)
-                           (invoke printInt32
-                              (then $ToplevelVariable.outer_111
+                           (invoke
+                              printInt32
+                              (then
+                                 $ToplevelVariable.outer_111
                                  (join
                                     $ToplevelVariable.return_101
-                                    (then $ToplevelVariable.inner_112
+                                    (then
+                                       $ToplevelVariable.inner_112
                                        (cut
                                           $ToplevelVariable.outer_111
                                           (apply
                                              ($ToplevelVariable.inner_112)
                                              ($ToplevelVariable.return_100))))
-                                    (invoke constId
-                                       (then $ToplevelVariable.outer_113
+                                    (invoke
+                                       constId
+                                       (then
+                                          $ToplevelVariable.outer_113
                                           (join
                                              $ToplevelVariable.return_104
-                                             (then $ToplevelVariable.inner_114
+                                             (then
+                                                $ToplevelVariable.inner_114
                                                 (cut
                                                    $ToplevelVariable.outer_113
                                                    (apply
                                                       ($ToplevelVariable.inner_114)
-                                                      ((then $ToplevelVariable.outer_115
-                                                         (join
-                                                            $ToplevelVariable.return_102
-                                                            (then $ToplevelVariable.inner_116
-                                                               (cut
-                                                                  $ToplevelVariable.outer_115
-                                                                  (apply
-                                                                     ($ToplevelVariable.inner_116)
-                                                                     ($ToplevelVariable.return_101))))
-                                                            (invoke addOne
-                                                               (then $ToplevelVariable.outer_117
-                                                                  (join
-                                                                     $ToplevelVariable.return_103
-                                                                     (then $ToplevelVariable.inner_118
-                                                                        (cut
-                                                                           $ToplevelVariable.outer_117
-                                                                           (apply
-                                                                              ($ToplevelVariable.inner_118)
-                                                                              ($ToplevelVariable.return_102))))
-                                                                     (invoke one $ToplevelVariable.return_103))))))))))
-                                             (invoke const $ToplevelVariable.return_104))))))))
-                        (then $ToplevelVariable.outer_119
+                                                      ((then
+                                                          $ToplevelVariable.outer_115
+                                                          (join
+                                                             $ToplevelVariable.return_102
+                                                             (then
+                                                                $ToplevelVariable.inner_116
+                                                                (cut
+                                                                   $ToplevelVariable.outer_115
+                                                                   (apply
+                                                                      ($ToplevelVariable.inner_116)
+                                                                      ($ToplevelVariable.return_101))))
+                                                             (invoke
+                                                                addOne
+                                                                (then
+                                                                   $ToplevelVariable.outer_117
+                                                                   (join
+                                                                      $ToplevelVariable.return_103
+                                                                      (then
+                                                                         $ToplevelVariable.inner_118
+                                                                         (cut
+                                                                            $ToplevelVariable.outer_117
+                                                                            (apply
+                                                                               ($ToplevelVariable.inner_118)
+                                                                               ($ToplevelVariable.return_102))))
+                                                                      (invoke
+                                                                         one
+                                                                         $ToplevelVariable.return_103))))))))))
+                                             (invoke
+                                                const
+                                                $ToplevelVariable.return_104))))))))
+                        (then
+                           $ToplevelVariable.outer_119
                            (join
                               $ToplevelVariable.return_96
-                              (then $ToplevelVariable.inner_120
+                              (then
+                                 $ToplevelVariable.inner_120
                                  (cut
                                     $ToplevelVariable.outer_119
                                     (apply
@@ -119,34 +138,40 @@
                                        ($ToplevelVariable.return_95))))
                               (cut
                                  (lambda
-                                    ($ToplevelVariable.param_85 $ToplevelVariable.return_98)
+                                    ($ToplevelVariable.param_85
+                                       $ToplevelVariable.return_98)
                                     (cut
                                        $ToplevelVariable.param_85
                                        (select
                                           ((Nothing ())
-                                             (invoke printString
-                                                (then $ToplevelVariable.outer_121
+                                             (invoke
+                                                printString
+                                                (then
+                                                   $ToplevelVariable.outer_121
                                                    (join
                                                       $ToplevelVariable.return_99
-                                                      (then $ToplevelVariable.inner_122
+                                                      (then
+                                                         $ToplevelVariable.inner_122
                                                          (cut
                                                             $ToplevelVariable.outer_121
                                                             (apply
                                                                ($ToplevelVariable.inner_122)
                                                                ($ToplevelVariable.return_98))))
-                                                      (invoke String#
+                                                      (invoke
+                                                         String#
                                                          (apply
                                                             ("OK")
                                                             ($ToplevelVariable.return_99)))))))
-                                          ((Just
-                                             (#ToplevelVariable.__2))
+                                          ((Just (#ToplevelVariable.__2))
                                              (cut
                                                 (construct tuple () ())
                                                 $ToplevelVariable.return_98)))))
-                                 (then $ToplevelVariable.outer_123
+                                 (then
+                                    $ToplevelVariable.outer_123
                                     (join
                                        $ToplevelVariable.return_97
-                                       (then $ToplevelVariable.inner_124
+                                       (then
+                                          $ToplevelVariable.inner_124
                                           (cut
                                              $ToplevelVariable.outer_123
                                              (apply

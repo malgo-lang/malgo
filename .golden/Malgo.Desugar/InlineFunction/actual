@@ -1,353 +1,400 @@
 (()
    ((define
-      ($InlineFunction.+_curry_157 $InlineFunction.x_158 $InlineFunction.y_159)
-      (->
-         (Any# Any#)
-         Any#)
-      (= $InlineFunction.d_161
-         (= $InlineFunction.d_160
-            (call addInt32 $InlineFunction.x_158)
-            (cast
-               (->
-                  (Any#)
-                  Any#)
-               $InlineFunction.d_160))
-         (= $InlineFunction.d_162
-            (call $InlineFunction.d_161 $InlineFunction.y_159)
-            (cast Any# $InlineFunction.d_162))))
+       ($InlineFunction.+_curry_157 $InlineFunction.x_158 $InlineFunction.y_159)
+       (-> (Any# Any#) Any#)
+       (=
+          $InlineFunction.d_161
+          (=
+             $InlineFunction.d_160
+             (call addInt32 $InlineFunction.x_158)
+             (cast (-> (Any#) Any#) $InlineFunction.d_160))
+          (=
+             $InlineFunction.d_162
+             (call $InlineFunction.d_161 $InlineFunction.y_159)
+             (cast Any# $InlineFunction.d_162))))
       (define
          ($InlineFunction.-_curry_145 $InlineFunction.x_146 $InlineFunction.y_147)
-         (->
-            (Any# Any#)
-            Any#)
-         (= $InlineFunction.d_149
-            (= $InlineFunction.d_148
+         (-> (Any# Any#) Any#)
+         (=
+            $InlineFunction.d_149
+            (=
+               $InlineFunction.d_148
                (call subInt32 $InlineFunction.x_146)
-               (cast
-                  (->
-                     (Any#)
-                     Any#)
-                  $InlineFunction.d_148))
-            (= $InlineFunction.d_150
+               (cast (-> (Any#) Any#) $InlineFunction.d_148))
+            (=
+               $InlineFunction.d_150
                (call $InlineFunction.d_149 $InlineFunction.y_147)
                (cast Any# $InlineFunction.d_150))))
       (define
-         ($InlineFunction.<=_curry_133 $InlineFunction.x_134 $InlineFunction.y_135)
-         (->
-            (Any# Any#)
-            Any#)
-         (= $InlineFunction.d_137
-            (= $InlineFunction.d_136
+         ($InlineFunction.<=_curry_133
+            $InlineFunction.x_134
+            $InlineFunction.y_135)
+         (-> (Any# Any#) Any#)
+         (=
+            $InlineFunction.d_137
+            (=
+               $InlineFunction.d_136
                (call leInt32 $InlineFunction.x_134)
-               (cast
-                  (->
-                     (Any#)
-                     Any#)
-                  $InlineFunction.d_136))
-            (= $InlineFunction.d_138
+               (cast (-> (Any#) Any#) $InlineFunction.d_136))
+            (=
+               $InlineFunction.d_138
                (call $InlineFunction.d_137 $InlineFunction.y_135)
                (cast Any# $InlineFunction.d_138))))
       (define
-         ($InlineFunction.fix_curry_119 $InlineFunction.f_120 $InlineFunction.x_121)
-         (->
-            ((->
-               ((->
-                  (Any#)
-                  Any#))
-               (->
-                  (Any#)
-                  Any#))
-               Any#)
-            Any#)
-         (= $InlineFunction.d_125
-            (= $InlineFunction.d_123
-               (= $InlineFunction.d_122
+         ($InlineFunction.fix_curry_119
+            $InlineFunction.f_120
+            $InlineFunction.x_121)
+         (-> ((-> ((-> (Any#) Any#)) (-> (Any#) Any#)) Any#) Any#)
+         (=
+            $InlineFunction.d_125
+            (=
+               $InlineFunction.d_123
+               (=
+                  $InlineFunction.d_122
                   (call fix $InlineFunction.f_120)
-                  (cast
-                     (->
-                        (Any#)
-                        Any#)
-                     $InlineFunction.d_122))
-               (= $InlineFunction.d_124
+                  (cast (-> (Any#) Any#) $InlineFunction.d_122))
+               (=
+                  $InlineFunction.d_124
                   (call $InlineFunction.f_120 $InlineFunction.d_123)
-                  (cast
-                     (->
-                        (Any#)
-                        Any#)
-                     $InlineFunction.d_124)))
-            (= $InlineFunction.d_126
+                  (cast (-> (Any#) Any#) $InlineFunction.d_124)))
+            (=
+               $InlineFunction.d_126
                (call $InlineFunction.d_125 $InlineFunction.x_121)
                (cast Any# $InlineFunction.d_126))))
       (define
          (fix $InlineFunction.f_112)
-         (->
-            ((->
-               ((->
-                  (Any#)
-                  Any#))
-               (->
-                  (Any#)
-                  Any#)))
-            (->
-               (Any#)
-               Any#))
+         (-> ((-> ((-> (Any#) Any#)) (-> (Any#) Any#))) (-> (Any#) Any#))
          (let
             (($InlineFunction.let_127
-               (->
-                  (Any#)
-                  Any#)
-               (fun
-                  ($InlineFunction.x_113)
-                  (direct $InlineFunction.fix_curry_119 $InlineFunction.f_112 $InlineFunction.x_113))))
+                (-> (Any#) Any#)
+                (fun
+                   ($InlineFunction.x_113)
+                   (direct
+                      $InlineFunction.fix_curry_119
+                      $InlineFunction.f_112
+                      $InlineFunction.x_113))))
             $InlineFunction.let_127))
       (define
          (<= $InlineFunction.x_128)
-         (->
-            (Any#)
-            (->
-               (Any#)
-               Any#))
+         (-> (Any#) (-> (Any#) Any#))
          (let
             (($InlineFunction.let_139
-               (->
-                  (Any#)
-                  Any#)
-               (fun
-                  ($InlineFunction.y_129)
-                  (direct $InlineFunction.<=_curry_133 $InlineFunction.x_128 $InlineFunction.y_129))))
+                (-> (Any#) Any#)
+                (fun
+                   ($InlineFunction.y_129)
+                   (direct
+                      $InlineFunction.<=_curry_133
+                      $InlineFunction.x_128
+                      $InlineFunction.y_129))))
             $InlineFunction.let_139))
       (define
          (- $InlineFunction.x_140)
-         (->
-            (Any#)
-            (->
-               (Any#)
-               Any#))
+         (-> (Any#) (-> (Any#) Any#))
          (let
             (($InlineFunction.let_151
-               (->
-                  (Any#)
-                  Any#)
-               (fun
-                  ($InlineFunction.y_141)
-                  (direct $InlineFunction.-_curry_145 $InlineFunction.x_140 $InlineFunction.y_141))))
+                (-> (Any#) Any#)
+                (fun
+                   ($InlineFunction.y_141)
+                   (direct
+                      $InlineFunction.-_curry_145
+                      $InlineFunction.x_140
+                      $InlineFunction.y_141))))
             $InlineFunction.let_151))
       (define
          (+ $InlineFunction.x_152)
-         (->
-            (Any#)
-            (->
-               (Any#)
-               Any#))
+         (-> (Any#) (-> (Any#) Any#))
          (let
             (($InlineFunction.let_163
-               (->
-                  (Any#)
-                  Any#)
-               (fun
-                  ($InlineFunction.y_153)
-                  (direct $InlineFunction.+_curry_157 $InlineFunction.x_152 $InlineFunction.y_153))))
+                (-> (Any#) Any#)
+                (fun
+                   ($InlineFunction.y_153)
+                   (direct
+                      $InlineFunction.+_curry_157
+                      $InlineFunction.x_152
+                      $InlineFunction.y_153))))
             $InlineFunction.let_163))
       (define
          (main $InlineFunction.$__164)
-         (->
-            ((sum (con Tuple#)))
-            (sum (con Tuple#)))
+         (-> ((sum (con Tuple#))) (sum (con Tuple#)))
          (match
-            (= $InlineFunction.d_246
+            (=
+               $InlineFunction.d_246
                (let
                   (($InlineFunction.fun_245
-                     (->
-                        ((->
-                           (Any#)
-                           Any#))
-                        (->
-                           (Any#)
-                           Any#))
-                     (fun
-                        ($InlineFunction.f_165)
-                        (let
-                           (($InlineFunction.let_244
-                              (->
-                                 (Any#)
-                                 Any#)
-                              (fun
-                                 ($InlineFunction.n_166)
-                                 (let
-                                    (($InlineFunction.inner_curry_204
-                                       (->
-                                          ((->
-                                             (Any#)
-                                             Any#)
-                                             Any#)
-                                          Any#)
-                                       (fun
-                                          ($InlineFunction.f_205 $InlineFunction.n_206)
-                                          (= $InlineFunction.d_220
-                                             (= $InlineFunction.d_214
-                                                (= $InlineFunction.d_212
-                                                   (= $InlineFunction.d_208
-                                                      (= $InlineFunction.d_207
-                                                         (call <= $InlineFunction.n_206)
+                      (-> ((-> (Any#) Any#)) (-> (Any#) Any#))
+                      (fun
+                         ($InlineFunction.f_165)
+                         (let
+                            (($InlineFunction.let_244
+                                (-> (Any#) Any#)
+                                (fun
+                                   ($InlineFunction.n_166)
+                                   (let
+                                      (($InlineFunction.inner_curry_204
+                                          (-> ((-> (Any#) Any#) Any#) Any#)
+                                          (fun
+                                             ($InlineFunction.f_205
+                                                $InlineFunction.n_206)
+                                             (=
+                                                $InlineFunction.d_220
+                                                (=
+                                                   $InlineFunction.d_214
+                                                   (=
+                                                      $InlineFunction.d_212
+                                                      (=
+                                                         $InlineFunction.d_208
+                                                         (=
+                                                            $InlineFunction.d_207
+                                                            (call
+                                                               <=
+                                                               $InlineFunction.n_206)
+                                                            (cast
+                                                               (-> (Any#) Any#)
+                                                               $InlineFunction.d_207))
+                                                         (=
+                                                            $InlineFunction.d_210
+                                                            (=
+                                                               $InlineFunction.d_209
+                                                               (call Int32# 1_i32)
+                                                               (cast
+                                                                  Any#
+                                                                  $InlineFunction.d_209))
+                                                            (=
+                                                               $InlineFunction.d_211
+                                                               (call
+                                                                  $InlineFunction.d_208
+                                                                  $InlineFunction.d_210)
+                                                               (cast
+                                                                  Any#
+                                                                  $InlineFunction.d_211))))
+                                                      (=
+                                                         $InlineFunction.d_213
+                                                         (call
+                                                            if
+                                                            $InlineFunction.d_212)
                                                          (cast
                                                             (->
-                                                               (Any#)
-                                                               Any#)
-                                                            $InlineFunction.d_207))
-                                                      (= $InlineFunction.d_210
-                                                         (= $InlineFunction.d_209
-                                                            (call Int32# 1_i32)
-                                                            (cast Any# $InlineFunction.d_209))
-                                                         (= $InlineFunction.d_211
-                                                            (call $InlineFunction.d_208 $InlineFunction.d_210)
-                                                            (cast Any# $InlineFunction.d_211))))
-                                                   (= $InlineFunction.d_213
-                                                      (call if $InlineFunction.d_212)
-                                                      (cast
-                                                         (->
-                                                            ((->
-                                                               ((sum (con Tuple#)))
-                                                               Any#))
+                                                               ((->
+                                                                   ((sum
+                                                                       (con
+                                                                          Tuple#)))
+                                                                   Any#))
+                                                               (->
+                                                                  ((->
+                                                                      ((sum
+                                                                          (con
+                                                                             Tuple#)))
+                                                                      Any#))
+                                                                  Any#))
+                                                            $InlineFunction.d_213)))
+                                                   (=
+                                                      $InlineFunction.d_218
+                                                      (let
+                                                         (($InlineFunction.fun_215
+                                                             (->
+                                                                ((sum
+                                                                    (con Tuple#)))
+                                                                Any#)
+                                                             (fun
+                                                                ($InlineFunction.$__216)
+                                                                (=
+                                                                   $InlineFunction.d_217
+                                                                   (call
+                                                                      Int32#
+                                                                      1_i32)
+                                                                   (cast
+                                                                      Any#
+                                                                      $InlineFunction.d_217)))))
+                                                         $InlineFunction.fun_215)
+                                                      (=
+                                                         $InlineFunction.d_219
+                                                         (call
+                                                            $InlineFunction.d_214
+                                                            $InlineFunction.d_218)
+                                                         (cast
                                                             (->
                                                                ((->
-                                                                  ((sum (con Tuple#)))
-                                                                  Any#))
-                                                               Any#))
-                                                         $InlineFunction.d_213)))
-                                                (= $InlineFunction.d_218
+                                                                   ((sum
+                                                                       (con
+                                                                          Tuple#)))
+                                                                   Any#))
+                                                               Any#)
+                                                            $InlineFunction.d_219))))
+                                                (=
+                                                   $InlineFunction.d_242
                                                    (let
-                                                      (($InlineFunction.fun_215
-                                                         (->
-                                                            ((sum (con Tuple#)))
-                                                            Any#)
-                                                         (fun
-                                                            ($InlineFunction.$__216)
-                                                            (= $InlineFunction.d_217
-                                                               (call Int32# 1_i32)
-                                                               (cast Any# $InlineFunction.d_217)))))
-                                                      $InlineFunction.fun_215)
-                                                   (= $InlineFunction.d_219
-                                                      (call $InlineFunction.d_214 $InlineFunction.d_218)
+                                                      (($InlineFunction.fun_221
+                                                          (->
+                                                             ((sum (con Tuple#)))
+                                                             Any#)
+                                                          (fun
+                                                             ($InlineFunction.$__222)
+                                                             (=
+                                                                $InlineFunction.d_232
+                                                                (=
+                                                                   $InlineFunction.d_230
+                                                                   (=
+                                                                      $InlineFunction.d_228
+                                                                      (=
+                                                                         $InlineFunction.d_224
+                                                                         (=
+                                                                            $InlineFunction.d_223
+                                                                            (call
+                                                                               -
+                                                                               $InlineFunction.n_206)
+                                                                            (cast
+                                                                               (->
+                                                                                  (Any#)
+                                                                                  Any#)
+                                                                               $InlineFunction.d_223))
+                                                                         (=
+                                                                            $InlineFunction.d_226
+                                                                            (=
+                                                                               $InlineFunction.d_225
+                                                                               (call
+                                                                                  Int32#
+                                                                                  1_i32)
+                                                                               (cast
+                                                                                  Any#
+                                                                                  $InlineFunction.d_225))
+                                                                            (=
+                                                                               $InlineFunction.d_227
+                                                                               (call
+                                                                                  $InlineFunction.d_224
+                                                                                  $InlineFunction.d_226)
+                                                                               (cast
+                                                                                  Any#
+                                                                                  $InlineFunction.d_227))))
+                                                                      (=
+                                                                         $InlineFunction.d_229
+                                                                         (call
+                                                                            $InlineFunction.f_205
+                                                                            $InlineFunction.d_228)
+                                                                         (cast
+                                                                            Any#
+                                                                            $InlineFunction.d_229)))
+                                                                   (=
+                                                                      $InlineFunction.d_231
+                                                                      (call
+                                                                         +
+                                                                         $InlineFunction.d_230)
+                                                                      (cast
+                                                                         (->
+                                                                            (Any#)
+                                                                            Any#)
+                                                                         $InlineFunction.d_231)))
+                                                                (=
+                                                                   $InlineFunction.d_240
+                                                                   (=
+                                                                      $InlineFunction.d_238
+                                                                      (=
+                                                                         $InlineFunction.d_234
+                                                                         (=
+                                                                            $InlineFunction.d_233
+                                                                            (call
+                                                                               -
+                                                                               $InlineFunction.n_206)
+                                                                            (cast
+                                                                               (->
+                                                                                  (Any#)
+                                                                                  Any#)
+                                                                               $InlineFunction.d_233))
+                                                                         (=
+                                                                            $InlineFunction.d_236
+                                                                            (=
+                                                                               $InlineFunction.d_235
+                                                                               (call
+                                                                                  Int32#
+                                                                                  2_i32)
+                                                                               (cast
+                                                                                  Any#
+                                                                                  $InlineFunction.d_235))
+                                                                            (=
+                                                                               $InlineFunction.d_237
+                                                                               (call
+                                                                                  $InlineFunction.d_234
+                                                                                  $InlineFunction.d_236)
+                                                                               (cast
+                                                                                  Any#
+                                                                                  $InlineFunction.d_237))))
+                                                                      (=
+                                                                         $InlineFunction.d_239
+                                                                         (call
+                                                                            $InlineFunction.f_205
+                                                                            $InlineFunction.d_238)
+                                                                         (cast
+                                                                            Any#
+                                                                            $InlineFunction.d_239)))
+                                                                   (=
+                                                                      $InlineFunction.d_241
+                                                                      (call
+                                                                         $InlineFunction.d_232
+                                                                         $InlineFunction.d_240)
+                                                                      (cast
+                                                                         Any#
+                                                                         $InlineFunction.d_241)))))))
+                                                      $InlineFunction.fun_221)
+                                                   (=
+                                                      $InlineFunction.d_243
+                                                      (call
+                                                         $InlineFunction.d_220
+                                                         $InlineFunction.d_242)
                                                       (cast
-                                                         (->
-                                                            ((->
-                                                               ((sum (con Tuple#)))
-                                                               Any#))
-                                                            Any#)
-                                                         $InlineFunction.d_219))))
-                                             (= $InlineFunction.d_242
-                                                (let
-                                                   (($InlineFunction.fun_221
-                                                      (->
-                                                         ((sum (con Tuple#)))
-                                                         Any#)
-                                                      (fun
-                                                         ($InlineFunction.$__222)
-                                                         (= $InlineFunction.d_232
-                                                            (= $InlineFunction.d_230
-                                                               (= $InlineFunction.d_228
-                                                                  (= $InlineFunction.d_224
-                                                                     (= $InlineFunction.d_223
-                                                                        (call - $InlineFunction.n_206)
-                                                                        (cast
-                                                                           (->
-                                                                              (Any#)
-                                                                              Any#)
-                                                                           $InlineFunction.d_223))
-                                                                     (= $InlineFunction.d_226
-                                                                        (= $InlineFunction.d_225
-                                                                           (call Int32# 1_i32)
-                                                                           (cast Any# $InlineFunction.d_225))
-                                                                        (= $InlineFunction.d_227
-                                                                           (call $InlineFunction.d_224 $InlineFunction.d_226)
-                                                                           (cast Any# $InlineFunction.d_227))))
-                                                                  (= $InlineFunction.d_229
-                                                                     (call $InlineFunction.f_205 $InlineFunction.d_228)
-                                                                     (cast Any# $InlineFunction.d_229)))
-                                                               (= $InlineFunction.d_231
-                                                                  (call + $InlineFunction.d_230)
-                                                                  (cast
-                                                                     (->
-                                                                        (Any#)
-                                                                        Any#)
-                                                                     $InlineFunction.d_231)))
-                                                            (= $InlineFunction.d_240
-                                                               (= $InlineFunction.d_238
-                                                                  (= $InlineFunction.d_234
-                                                                     (= $InlineFunction.d_233
-                                                                        (call - $InlineFunction.n_206)
-                                                                        (cast
-                                                                           (->
-                                                                              (Any#)
-                                                                              Any#)
-                                                                           $InlineFunction.d_233))
-                                                                     (= $InlineFunction.d_236
-                                                                        (= $InlineFunction.d_235
-                                                                           (call Int32# 2_i32)
-                                                                           (cast Any# $InlineFunction.d_235))
-                                                                        (= $InlineFunction.d_237
-                                                                           (call $InlineFunction.d_234 $InlineFunction.d_236)
-                                                                           (cast Any# $InlineFunction.d_237))))
-                                                                  (= $InlineFunction.d_239
-                                                                     (call $InlineFunction.f_205 $InlineFunction.d_238)
-                                                                     (cast Any# $InlineFunction.d_239)))
-                                                               (= $InlineFunction.d_241
-                                                                  (call $InlineFunction.d_232 $InlineFunction.d_240)
-                                                                  (cast Any# $InlineFunction.d_241)))))))
-                                                   $InlineFunction.fun_221)
-                                                (= $InlineFunction.d_243
-                                                   (call $InlineFunction.d_220 $InlineFunction.d_242)
-                                                   (cast Any# $InlineFunction.d_243)))))))
-                                    (call $InlineFunction.inner_curry_204 $InlineFunction.f_165 $InlineFunction.n_166)))))
-                           $InlineFunction.let_244))))
+                                                         Any#
+                                                         $InlineFunction.d_243)))))))
+                                      (call
+                                         $InlineFunction.inner_curry_204
+                                         $InlineFunction.f_165
+                                         $InlineFunction.n_166)))))
+                            $InlineFunction.let_244))))
                   $InlineFunction.fun_245)
-               (= $InlineFunction.d_247
+               (=
+                  $InlineFunction.d_247
                   (call fix $InlineFunction.d_246)
-                  (cast
-                     (->
-                        (Any#)
-                        Any#)
-                     $InlineFunction.d_247)))
+                  (cast (-> (Any#) Any#) $InlineFunction.d_247)))
             (bind
                $InlineFunction.let_test/testcases/malgo/InlineFunction.mlg.#fib_10_248
-               (->
-                  (Any#)
-                  Any#)
-               (= $InlineFunction.d_258
-                  (= $InlineFunction.d_256
-                     (= $InlineFunction.d_254
-                        (= $InlineFunction.d_252
-                           (= $InlineFunction.d_250
-                              (= $InlineFunction.d_249
+               (-> (Any#) Any#)
+               (=
+                  $InlineFunction.d_258
+                  (=
+                     $InlineFunction.d_256
+                     (=
+                        $InlineFunction.d_254
+                        (=
+                           $InlineFunction.d_252
+                           (=
+                              $InlineFunction.d_250
+                              (=
+                                 $InlineFunction.d_249
                                  (call Int32# 5_i32)
                                  (cast Any# $InlineFunction.d_249))
-                              (= $InlineFunction.d_251
-                                 (call $InlineFunction.let_test/testcases/malgo/InlineFunction.mlg.#fib_10_248 $InlineFunction.d_250)
+                              (=
+                                 $InlineFunction.d_251
+                                 (call
+                                    $InlineFunction.let_test/testcases/malgo/InlineFunction.mlg.#fib_10_248
+                                    $InlineFunction.d_250)
                                  (cast Any# $InlineFunction.d_251)))
-                           (= $InlineFunction.d_253
+                           (=
+                              $InlineFunction.d_253
                               (call |> $InlineFunction.d_252)
                               (cast
-                                 (->
-                                    ((->
-                                       (Any#)
-                                       Any#))
-                                    Any#)
+                                 (-> ((-> (Any#) Any#)) Any#)
                                  $InlineFunction.d_253)))
-                        (= $InlineFunction.d_255
+                        (=
+                           $InlineFunction.d_255
                            (call $InlineFunction.d_254 toStringInt32)
                            (cast Any# $InlineFunction.d_255)))
-                     (= $InlineFunction.d_257
+                     (=
+                        $InlineFunction.d_257
                         (call |> $InlineFunction.d_256)
                         (cast
                            (->
-                              ((->
-                                 (Any#)
-                                 (sum (con Tuple#))))
+                              ((-> (Any#) (sum (con Tuple#))))
                               (sum (con Tuple#)))
                            $InlineFunction.d_257)))
-                  (= $InlineFunction.d_259
+                  (=
+                     $InlineFunction.d_259
                      (call $InlineFunction.d_258 putStrLn)
-                     (cast
-                        (sum (con Tuple#))
-                        $InlineFunction.d_259)))))))
+                     (cast (sum (con Tuple#)) $InlineFunction.d_259)))))))
    ())

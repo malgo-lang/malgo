@@ -1,26 +1,20 @@
 ((f
-   (lambda
-      ($DeferLaw.param_22)
-      (select
-         $DeferLaw.param_22
-         ((#DeferLaw.x_1
-            (apply
-               (lambda
-                  ($DeferLaw.param_23)
-                  (select
-                     $DeferLaw.param_23
-                     ((#DeferLaw.$__8 #DeferLaw.x_1))))
-               ((tuple ()))))))))
+    (lambda
+       ($DeferLaw.param_22)
+       (select
+          $DeferLaw.param_22
+          ((#DeferLaw.x_1
+              (apply
+                 (lambda
+                    ($DeferLaw.param_23)
+                    (select $DeferLaw.param_23 ((#DeferLaw.$__8 #DeferLaw.x_1))))
+                 ((tuple ()))))))))
    (main
       (lambda
          ($DeferLaw.param_24)
          (select
             $DeferLaw.param_24
             ((#DeferLaw.$__21
-               (apply
-                  (invoke putStrLn)
-                  ((apply
-                     (invoke f)
-                     ((apply
-                        (invoke String#)
-                        ("Hello"))))))))))))
+                (apply
+                   (invoke putStrLn)
+                   ((apply (invoke f) ((apply (invoke String#) ("Hello"))))))))))))

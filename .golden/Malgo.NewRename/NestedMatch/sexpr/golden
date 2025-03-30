@@ -1,0 +1,81 @@
+(module
+   "test/testcases/malgo/NestedMatch.mlg"
+   ((((((./test/testcases/malgo/NestedMatch.mlg 14 1)
+          (./test/testcases/malgo/NestedMatch.mlg 22 1))
+         main
+         (fn
+            ((clause
+                ()
+                (seq
+                   (do
+                      (apply
+                         (fn
+                            ((clause
+                                (#NestedMatch.True_2)
+                                (seq
+                                   (do (apply malgo_print_string (string "OK")))))
+                               (clause
+                                  (#NestedMatch.False_3)
+                                  (seq (do (apply malgo_exit_failure (tuple)))))))
+                         (apply
+                            (fn
+                               ((clause (#NestedMatch.True1_4) (seq (do False)))
+                                  (clause (#NestedMatch.False1_5) (seq (do True)))))
+                            (apply
+                               (fn
+                                  ((clause
+                                      (#NestedMatch.True2_6)
+                                      (seq (do False1)))
+                                     (clause
+                                        (#NestedMatch.False2_7)
+                                        (seq (do True1)))))
+                               True2)))))))))))
+      ()
+      ((((./test/testcases/malgo/NestedMatch.mlg 5 1)
+           (./test/testcases/malgo/NestedMatch.mlg 6 1))
+          Bool
+          ()
+          ((((./test/testcases/malgo/NestedMatch.mlg 5 13)
+               (./test/testcases/malgo/NestedMatch.mlg 5 19))
+              False
+              ())
+             (((./test/testcases/malgo/NestedMatch.mlg 5 21)
+                 (./test/testcases/malgo/NestedMatch.mlg 6 1))
+                True
+                ())))
+         (((./test/testcases/malgo/NestedMatch.mlg 6 1)
+             (./test/testcases/malgo/NestedMatch.mlg 7 1))
+            Bool1
+            ()
+            ((((./test/testcases/malgo/NestedMatch.mlg 6 14)
+                 (./test/testcases/malgo/NestedMatch.mlg 6 21))
+                False1
+                ())
+               (((./test/testcases/malgo/NestedMatch.mlg 6 23)
+                   (./test/testcases/malgo/NestedMatch.mlg 7 1))
+                  True1
+                  ())))
+         (((./test/testcases/malgo/NestedMatch.mlg 7 1)
+             (./test/testcases/malgo/NestedMatch.mlg 10 1))
+            Bool2
+            ()
+            ((((./test/testcases/malgo/NestedMatch.mlg 7 14)
+                 (./test/testcases/malgo/NestedMatch.mlg 7 21))
+                False2
+                ())
+               (((./test/testcases/malgo/NestedMatch.mlg 7 23)
+                   (./test/testcases/malgo/NestedMatch.mlg 10 1))
+                  True2
+                  ()))))
+      ()
+      (((((./test/testcases/malgo/NestedMatch.mlg 10 1)
+            (./test/testcases/malgo/NestedMatch.mlg 12 1))
+           malgo_print_string)
+          malgo_print_string
+          (-> #NestedMatch.String#_0 (tuple)))
+         ((((./test/testcases/malgo/NestedMatch.mlg 12 1)
+              (./test/testcases/malgo/NestedMatch.mlg 14 1))
+             malgo_exit_failure)
+            malgo_exit_failure
+            (-> (tuple) #NestedMatch.a_1)))
+      ()))

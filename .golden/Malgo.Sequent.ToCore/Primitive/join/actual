@@ -1,48 +1,50 @@
 ((main
-   $Primitive.return_12
-   (cut
-      (lambda
-         ($Primitive.param_11 $Primitive.return_13)
-         (join
-            $Primitive.select_26
-            (select
-               (#Primitive.$__10
-                  (join
-                     $Primitive.then_25
-                     (then $Primitive.outer_16
-                        (join
-                           $Primitive.return_14
-                           (then $Primitive.inner_17
-                              (join
-                                 $Primitive.apply_24
-                                 (apply
-                                    ($Primitive.inner_17)
-                                    ($Primitive.return_13))
-                                 (cut $Primitive.outer_16 $Primitive.apply_24)))
-                           (join
-                              $Primitive.then_23
-                              (then $Primitive.outer_18
-                                 (join
-                                    $Primitive.return_15
-                                    (then $Primitive.inner_19
-                                       (join
-                                          $Primitive.apply_22
-                                          (apply
-                                             ($Primitive.inner_19)
-                                             ($Primitive.return_14))
-                                          (cut $Primitive.outer_18 $Primitive.apply_22)))
-                                    (join
-                                       $Primitive.apply_20
-                                       (apply
-                                          (2_i64)
-                                          ($Primitive.return_15))
-                                       (join
-                                          $Primitive.apply_21
-                                          (apply
-                                             (40_i64)
-                                             ($Primitive.apply_20))
-                                          (invoke addInt64# $Primitive.apply_21)))))
-                              (invoke toStringInt64# $Primitive.then_23))))
-                     (invoke printString# $Primitive.then_25))))
-            (cut $Primitive.param_11 $Primitive.select_26)))
-      $Primitive.return_12)))
+    $Primitive.return_12
+    (cut
+       (lambda
+          ($Primitive.param_11 $Primitive.return_13)
+          (join
+             $Primitive.select_26
+             (select
+                (#Primitive.$__10
+                   (join
+                      $Primitive.then_25
+                      (then
+                         $Primitive.outer_16
+                         (join
+                            $Primitive.return_14
+                            (then
+                               $Primitive.inner_17
+                               (join
+                                  $Primitive.apply_24
+                                  (apply
+                                     ($Primitive.inner_17)
+                                     ($Primitive.return_13))
+                                  (cut $Primitive.outer_16 $Primitive.apply_24)))
+                            (join
+                               $Primitive.then_23
+                               (then
+                                  $Primitive.outer_18
+                                  (join
+                                     $Primitive.return_15
+                                     (then
+                                        $Primitive.inner_19
+                                        (join
+                                           $Primitive.apply_22
+                                           (apply
+                                              ($Primitive.inner_19)
+                                              ($Primitive.return_14))
+                                           (cut
+                                              $Primitive.outer_18
+                                              $Primitive.apply_22)))
+                                     (join
+                                        $Primitive.apply_20
+                                        (apply (2_i64) ($Primitive.return_15))
+                                        (join
+                                           $Primitive.apply_21
+                                           (apply (40_i64) ($Primitive.apply_20))
+                                           (invoke addInt64# $Primitive.apply_21)))))
+                               (invoke toStringInt64# $Primitive.then_23))))
+                      (invoke printString# $Primitive.then_25))))
+             (cut $Primitive.param_11 $Primitive.select_26)))
+       $Primitive.return_12)))

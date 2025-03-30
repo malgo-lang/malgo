@@ -1,0 +1,7 @@
+(module
+   "test/testcases/malgo/TestExplicitModule.mlg"
+   ((import "runtime/malgo/Builtin.mlg" all)
+      (import "runtime/malgo/Prelude.mlg" (as Prelude))
+      (def
+         main
+         (fn ((clause () (seq (do (apply putStrLn (string "Hello, world"))))))))))

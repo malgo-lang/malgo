@@ -5,7 +5,8 @@
 # Usage: ./check.sh
 
 # List of directories to compare
-for dir in .golden/Malgo.NewRename/*; do
-  old_dir=.golden/Malgo.Rename/${dir##*/}
-  delta $dir $old_dir
+for dir in .golden/Malgo.NewRename/**/sexpr/actual; do
+  echo $dir
+  dir2=${dir/NewRename/Rename}
+  delta $dir $dir2
 done

@@ -1,0 +1,58 @@
+(module
+   "test/testcases/malgo/TestCast.mlg"
+   ((((((./test/testcases/malgo/TestCast.mlg 10 1)
+          (./test/testcases/malgo/TestCast.mlg 13 1))
+         main
+         (fn
+            ((clause
+                ()
+                (seq
+                   (do
+                      (apply
+                         printInt32
+                         (apply
+                            malgo_unsafe_cast
+                            (apply
+                               (apply
+                                  malgo_read_vector
+                                  (apply
+                                     (apply
+                                        malgo_new_vector
+                                        (apply
+                                           malgo_unsafe_cast
+                                           (apply Int32# (int32 5))))
+                                     (int64 10)))
+                               (int64 2))))))))))))
+      ()
+      ()
+      ()
+      (((((./test/testcases/malgo/TestCast.mlg 6 1)
+            (./test/testcases/malgo/TestCast.mlg 8 1))
+           malgo_new_vector)
+          malgo_new_vector
+          (->
+             #TestCast.Int64#_1
+             (->
+                (app #TestCast.Ptr#_2 (#TestCast.Char#_0))
+                (app
+                   #TestCast.Ptr#_2
+                   ((app #TestCast.Ptr#_2 (#TestCast.Char#_0)))))))
+         ((((./test/testcases/malgo/TestCast.mlg 8 1)
+              (./test/testcases/malgo/TestCast.mlg 10 1))
+             malgo_read_vector)
+            malgo_read_vector
+            (->
+               #TestCast.Int64#_4
+               (->
+                  (app
+                     #TestCast.Ptr#_5
+                     ((app #TestCast.Ptr#_5 (#TestCast.Char#_3))))
+                  (app #TestCast.Ptr#_5 (#TestCast.Char#_3))))))
+      ((((./test/testcases/malgo/TestCast.mlg 3 1)
+           (./test/testcases/malgo/TestCast.mlg 4 1))
+          "runtime/malgo/Builtin.mlg"
+          all)
+         (((./test/testcases/malgo/TestCast.mlg 4 1)
+             (./test/testcases/malgo/TestCast.mlg 6 1))
+            "runtime/malgo/Prelude.mlg"
+            all))))

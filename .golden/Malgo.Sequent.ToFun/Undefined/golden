@@ -1,28 +1,20 @@
 ((g
-   (lambda
-      ($Undefined.param_20)
-      (select
-         $Undefined.param_20
-         ((#Undefined.x_0
-            (invoke undefined))))))
+    (lambda
+       ($Undefined.param_20)
+       (select $Undefined.param_20 ((#Undefined.x_0 (invoke undefined))))))
    (main
       (lambda
          ($Undefined.param_21)
          (select
             $Undefined.param_21
             ((#Undefined.$__17
-               (let
-                  #Undefined.x_1
-                  (invoke undefined)
-                  (let
-                     #Undefined.y_2
-                     (apply
-                        (invoke g)
-                        (#Undefined.x_1))
-                     (apply
-                        (invoke printString)
-                        ((apply
-                           (invoke String#)
-                           ("OK")))))))))))
-   (f
-      (invoke undefined)))
+                (let
+                   #Undefined.x_1
+                   (invoke undefined)
+                   (let
+                      #Undefined.y_2
+                      (apply (invoke g) (#Undefined.x_1))
+                      (apply
+                         (invoke printString)
+                         ((apply (invoke String#) ("OK")))))))))))
+   (f (invoke undefined)))

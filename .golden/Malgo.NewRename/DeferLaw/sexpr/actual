@@ -1,0 +1,37 @@
+(module
+   "test/testcases/malgo/DeferLaw.mlg"
+   ((((((./test/testcases/malgo/DeferLaw.mlg 5 1)
+          (./test/testcases/malgo/DeferLaw.mlg 7 1))
+         f
+         (fn
+            ((clause
+                (#DeferLaw.x_1)
+                (seq
+                   (do
+                      (apply (fn ((clause () (seq (do #DeferLaw.x_1))))) (tuple)))))))))
+       ((((./test/testcases/malgo/DeferLaw.mlg 7 1)
+            (./test/testcases/malgo/DeferLaw.mlg 10 1))
+           main
+           (fn
+              ((clause
+                  ()
+                  (seq
+                     (do
+                        (apply
+                           putStrLn
+                           (apply f (apply String# (string "Hello"))))))))))))
+      ((((./test/testcases/malgo/DeferLaw.mlg 4 1)
+           (./test/testcases/malgo/DeferLaw.mlg 5 1))
+          f
+          (-> #DeferLaw.a_0 #DeferLaw.a_0)))
+      ()
+      ()
+      ()
+      ((((./test/testcases/malgo/DeferLaw.mlg 1 1)
+           (./test/testcases/malgo/DeferLaw.mlg 2 1))
+          "runtime/malgo/Builtin.mlg"
+          all)
+         (((./test/testcases/malgo/DeferLaw.mlg 2 1)
+             (./test/testcases/malgo/DeferLaw.mlg 4 1))
+            "runtime/malgo/Prelude.mlg"
+            all))))

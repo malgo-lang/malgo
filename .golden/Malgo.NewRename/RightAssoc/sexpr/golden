@@ -1,0 +1,112 @@
+(module
+   "test/testcases/malgo/RightAssoc.mlg"
+   ((((((./test/testcases/malgo/RightAssoc.mlg 6 1)
+          (./test/testcases/malgo/RightAssoc.mlg 8 1))
+         <|>
+         Cons))
+       ((((./test/testcases/malgo/RightAssoc.mlg 8 1)
+            (./test/testcases/malgo/RightAssoc.mlg 34 1))
+           f
+           (fn
+              ((clause
+                  (#RightAssoc.n_2)
+                  (seq
+                     (let
+                        #RightAssoc.x_3
+                        (opapp
+                           <|>
+                           (tuple
+                              True
+                              (fn
+                                 ((clause () (seq (do (apply Int32# (int32 1))))))))
+                           (opapp
+                              <|>
+                              (tuple
+                                 True
+                                 (fn
+                                    ((clause
+                                        ()
+                                        (seq (do (apply Int32# (int32 2))))))))
+                              (opapp
+                                 <|>
+                                 (tuple
+                                    True
+                                    (fn
+                                       ((clause
+                                           ()
+                                           (seq (do (apply Int32# (int32 3))))))))
+                                 (opapp
+                                    <|>
+                                    (tuple
+                                       True
+                                       (fn
+                                          ((clause
+                                              ()
+                                              (seq (do (apply Int32# (int32 4))))))))
+                                    Nil)))))
+                     (let
+                        #RightAssoc.y_4
+                        (opapp
+                           <|>
+                           (tuple
+                              True
+                              (fn
+                                 ((clause () (seq (do (apply Int32# (int32 1))))))))
+                           (opapp
+                              <|>
+                              (tuple
+                                 True
+                                 (fn
+                                    ((clause
+                                        ()
+                                        (seq (do (apply Int32# (int32 2))))))))
+                              (opapp
+                                 <|>
+                                 (tuple
+                                    True
+                                    (fn
+                                       ((clause
+                                           ()
+                                           (seq (do (apply Int32# (int32 3))))))))
+                                 (opapp
+                                    <|>
+                                    (tuple
+                                       True
+                                       (fn
+                                          ((clause
+                                              ()
+                                              (seq (do (apply Int32# (int32 4))))))))
+                                    Nil)))))
+                     (do #RightAssoc.y_4)))))))
+       ((((./test/testcases/malgo/RightAssoc.mlg 35 1)
+            (./test/testcases/malgo/RightAssoc.mlg 39 1))
+           main
+           (fn
+              ((clause
+                  ()
+                  (seq
+                     (let #RightAssoc.x_5 (apply f (apply Int32# (int32 4))))
+                     (do (apply printString (apply String# (string "OK")))))))))))
+      ((((./test/testcases/malgo/RightAssoc.mlg 5 1)
+           (./test/testcases/malgo/RightAssoc.mlg 6 1))
+          <|>
+          (->
+             #RightAssoc.a_1
+             (->
+                (app #RightAssoc.List_0 (#RightAssoc.a_1))
+                (app #RightAssoc.List_0 (#RightAssoc.a_1)))))
+         (((./test/testcases/malgo/RightAssoc.mlg 34 1)
+             (./test/testcases/malgo/RightAssoc.mlg 35 1))
+            main
+            (-> (tuple) (tuple))))
+      ()
+      ()
+      ()
+      ((((./test/testcases/malgo/RightAssoc.mlg 1 1)
+           (./test/testcases/malgo/RightAssoc.mlg 2 1))
+          "runtime/malgo/Builtin.mlg"
+          all)
+         (((./test/testcases/malgo/RightAssoc.mlg 2 1)
+             (./test/testcases/malgo/RightAssoc.mlg 4 1))
+            "runtime/malgo/Prelude.mlg"
+            all))))

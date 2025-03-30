@@ -1,30 +1,34 @@
 ((main
-   $TestExplicitModule.return_8
-   (cut
-      (lambda
-         ($TestExplicitModule.param_7 $TestExplicitModule.return_9)
-         (join
-            $TestExplicitModule.select_16
-            (select
-               (#TestExplicitModule.$__6
-                  (join
-                     $TestExplicitModule.then_15
-                     (then $TestExplicitModule.outer_11
-                        (join
-                           $TestExplicitModule.return_10
-                           (then $TestExplicitModule.inner_12
-                              (join
-                                 $TestExplicitModule.apply_14
-                                 (apply
-                                    ($TestExplicitModule.inner_12)
-                                    ($TestExplicitModule.return_9))
-                                 (cut $TestExplicitModule.outer_11 $TestExplicitModule.apply_14)))
-                           (join
-                              $TestExplicitModule.apply_13
-                              (apply
-                                 ("Hello, world")
-                                 ($TestExplicitModule.return_10))
-                              (invoke String# $TestExplicitModule.apply_13))))
-                     (invoke putStrLn $TestExplicitModule.then_15))))
-            (cut $TestExplicitModule.param_7 $TestExplicitModule.select_16)))
-      $TestExplicitModule.return_8)))
+    $TestExplicitModule.return_8
+    (cut
+       (lambda
+          ($TestExplicitModule.param_7 $TestExplicitModule.return_9)
+          (join
+             $TestExplicitModule.select_16
+             (select
+                (#TestExplicitModule.$__6
+                   (join
+                      $TestExplicitModule.then_15
+                      (then
+                         $TestExplicitModule.outer_11
+                         (join
+                            $TestExplicitModule.return_10
+                            (then
+                               $TestExplicitModule.inner_12
+                               (join
+                                  $TestExplicitModule.apply_14
+                                  (apply
+                                     ($TestExplicitModule.inner_12)
+                                     ($TestExplicitModule.return_9))
+                                  (cut
+                                     $TestExplicitModule.outer_11
+                                     $TestExplicitModule.apply_14)))
+                            (join
+                               $TestExplicitModule.apply_13
+                               (apply
+                                  ("Hello, world")
+                                  ($TestExplicitModule.return_10))
+                               (invoke String# $TestExplicitModule.apply_13))))
+                      (invoke putStrLn $TestExplicitModule.then_15))))
+             (cut $TestExplicitModule.param_7 $TestExplicitModule.select_16)))
+       $TestExplicitModule.return_8)))

@@ -1,0 +1,39 @@
+(module
+   "test/testcases/malgo/Undefined.mlg"
+   ((((((./test/testcases/malgo/Undefined.mlg 8 1)
+          (./test/testcases/malgo/Undefined.mlg 10 1))
+         g
+         (fn ((clause (#Undefined.x_2) (seq (do undefined)))))))
+       ((((./test/testcases/malgo/Undefined.mlg 10 1)
+            (./test/testcases/malgo/Undefined.mlg 15 1))
+           main
+           (fn
+              ((clause
+                  ()
+                  (seq
+                     (let #Undefined.x_3 undefined)
+                     (let #Undefined.y_4 (apply g #Undefined.x_3))
+                     (do (apply printString (apply String# (string "OK"))))))))))
+       ((((./test/testcases/malgo/Undefined.mlg 5 1)
+            (./test/testcases/malgo/Undefined.mlg 7 1))
+           f
+           undefined)))
+      ((((./test/testcases/malgo/Undefined.mlg 4 1)
+           (./test/testcases/malgo/Undefined.mlg 5 1))
+          f
+          (-> #Undefined.Int32_0 #Undefined.Int32_0))
+         (((./test/testcases/malgo/Undefined.mlg 7 1)
+             (./test/testcases/malgo/Undefined.mlg 8 1))
+            g
+            (-> #Undefined.Int32_1 #Undefined.Int32_1)))
+      ()
+      ()
+      ()
+      ((((./test/testcases/malgo/Undefined.mlg 1 1)
+           (./test/testcases/malgo/Undefined.mlg 2 1))
+          "runtime/malgo/Builtin.mlg"
+          all)
+         (((./test/testcases/malgo/Undefined.mlg 2 1)
+             (./test/testcases/malgo/Undefined.mlg 4 1))
+            "runtime/malgo/Prelude.mlg"
+            all))))

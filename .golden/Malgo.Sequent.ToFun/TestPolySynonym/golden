@@ -1,33 +1,23 @@
 ((first
-   (lambda
-      ($TestPolySynonym.param_40)
-      (select
-         $TestPolySynonym.param_40
-         (((expand
-            ((fst #TestPolySynonym.x_5)
-               (snd #TestPolySynonym.__6)))
-            #TestPolySynonym.x_5)))))
+    (lambda
+       ($TestPolySynonym.param_40)
+       (select
+          $TestPolySynonym.param_40
+          (((expand ((fst #TestPolySynonym.x_5) (snd #TestPolySynonym.__6)))
+              #TestPolySynonym.x_5)))))
    (main
       (lambda
          ($TestPolySynonym.param_41)
          (select
             $TestPolySynonym.param_41
             ((#TestPolySynonym.$__39
-               (let
-                  #TestPolySynonym.x_7
-                  (object
-                     ((fst
-                        (apply
-                           (invoke Int32#)
-                           (1_i32)))
-                        (snd
-                           (apply
-                              (invoke String#)
-                              ("hoge")))))
-                  (apply
-                     (apply
-                        (invoke |>)
-                        ((apply
-                           (invoke first)
-                           (#TestPolySynonym.x_7))))
-                     ((invoke printInt32))))))))))
+                (let
+                   #TestPolySynonym.x_7
+                   (object
+                      ((fst (apply (invoke Int32#) (1_i32)))
+                         (snd (apply (invoke String#) ("hoge")))))
+                   (apply
+                      (apply
+                         (invoke |>)
+                         ((apply (invoke first) (#TestPolySynonym.x_7))))
+                      ((invoke printInt32))))))))))

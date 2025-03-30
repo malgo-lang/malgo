@@ -1,56 +1,52 @@
 (()
    ((define
-      (main $HelloImport.$__18)
-      (->
-         ((sum (con Tuple#)))
-         (sum (con Tuple#)))
-      (= $HelloImport.d_22
-         (= $HelloImport.d_20
-            (= $HelloImport.d_19
-               (call String# "hello")
-               (cast Any# $HelloImport.d_19))
-            (= $HelloImport.d_21
-               (call putStr $HelloImport.d_20)
-               (cast
-                  (sum (con Tuple#))
-                  $HelloImport.d_21)))
-         (= $HelloImport.d_25
-            (= $HelloImport.cast_23
-               (cast Any# putStrLn)
-               (= $HelloImport.d_24
-                  (call |> $HelloImport.cast_23)
-                  (cast
-                     (->
-                        ((->
-                           ((->
-                              (Any#)
-                              (sum (con Tuple#))))
-                           (sum (con Tuple#))))
-                        (sum (con Tuple#)))
-                     $HelloImport.d_24)))
-            (= $HelloImport.d_31
-               (let
-                  (($HelloImport.fun_30
-                     (->
-                        ((->
-                           (Any#)
-                           (sum (con Tuple#))))
-                        (sum (con Tuple#)))
-                     (fun
-                        ($HelloImport.f_26)
-                        (= $HelloImport.d_28
-                           (= $HelloImport.d_27
-                              (call String# " world")
-                              (cast Any# $HelloImport.d_27))
-                           (= $HelloImport.d_29
-                              (call $HelloImport.f_26 $HelloImport.d_28)
-                              (cast
-                                 (sum (con Tuple#))
-                                 $HelloImport.d_29))))))
-                  $HelloImport.fun_30)
-               (= $HelloImport.d_32
-                  (call $HelloImport.d_25 $HelloImport.d_31)
-                  (cast
-                     (sum (con Tuple#))
-                     $HelloImport.d_32)))))))
+       (main $HelloImport.$__18)
+       (-> ((sum (con Tuple#))) (sum (con Tuple#)))
+       (=
+          $HelloImport.d_22
+          (=
+             $HelloImport.d_20
+             (=
+                $HelloImport.d_19
+                (call String# "hello")
+                (cast Any# $HelloImport.d_19))
+             (=
+                $HelloImport.d_21
+                (call putStr $HelloImport.d_20)
+                (cast (sum (con Tuple#)) $HelloImport.d_21)))
+          (=
+             $HelloImport.d_25
+             (=
+                $HelloImport.cast_23
+                (cast Any# putStrLn)
+                (=
+                   $HelloImport.d_24
+                   (call |> $HelloImport.cast_23)
+                   (cast
+                      (->
+                         ((-> ((-> (Any#) (sum (con Tuple#)))) (sum (con Tuple#))))
+                         (sum (con Tuple#)))
+                      $HelloImport.d_24)))
+             (=
+                $HelloImport.d_31
+                (let
+                   (($HelloImport.fun_30
+                       (-> ((-> (Any#) (sum (con Tuple#)))) (sum (con Tuple#)))
+                       (fun
+                          ($HelloImport.f_26)
+                          (=
+                             $HelloImport.d_28
+                             (=
+                                $HelloImport.d_27
+                                (call String# " world")
+                                (cast Any# $HelloImport.d_27))
+                             (=
+                                $HelloImport.d_29
+                                (call $HelloImport.f_26 $HelloImport.d_28)
+                                (cast (sum (con Tuple#)) $HelloImport.d_29))))))
+                   $HelloImport.fun_30)
+                (=
+                   $HelloImport.d_32
+                   (call $HelloImport.d_25 $HelloImport.d_31)
+                   (cast (sum (con Tuple#)) $HelloImport.d_32)))))))
    ())

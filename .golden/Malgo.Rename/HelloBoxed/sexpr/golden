@@ -1,0 +1,52 @@
+(module
+   "test/testcases/malgo/HelloBoxed.mlg"
+   ((((((./test/testcases/malgo/HelloBoxed.mlg 13 1)
+          (./test/testcases/malgo/HelloBoxed.mlg 15 1))
+         string#
+         (fn
+            ((clause (#HelloBoxed.x_1) (seq (do (apply String# #HelloBoxed.x_1))))))))
+       ((((./test/testcases/malgo/HelloBoxed.mlg 7 1)
+            (./test/testcases/malgo/HelloBoxed.mlg 12 1))
+           putStrLn
+           (fn
+              ((clause
+                  ((con String# (#HelloBoxed.str_0)))
+                  (seq
+                     (do (apply malgo_print_string #HelloBoxed.str_0))
+                     (do (apply malgo_newline (tuple)))))))))
+       ((((./test/testcases/malgo/HelloBoxed.mlg 15 1)
+            (./test/testcases/malgo/HelloBoxed.mlg 18 1))
+           main
+           (fn
+              ((clause
+                  ()
+                  (seq
+                     (do (apply putStrLn (apply String# (string "Hello, world")))))))))))
+      ((((./test/testcases/malgo/HelloBoxed.mlg 6 1)
+           (./test/testcases/malgo/HelloBoxed.mlg 7 1))
+          putStrLn
+          (-> String (tuple)))
+         (((./test/testcases/malgo/HelloBoxed.mlg 12 1)
+             (./test/testcases/malgo/HelloBoxed.mlg 13 1))
+            string#
+            (-> String# String)))
+      ((((./test/testcases/malgo/HelloBoxed.mlg 4 6)
+           (./test/testcases/malgo/HelloBoxed.mlg 6 1))
+          String
+          ()
+          ((((./test/testcases/malgo/HelloBoxed.mlg 4 15)
+               (./test/testcases/malgo/HelloBoxed.mlg 6 1))
+              String#
+              (String#)))))
+      ()
+      (((((./test/testcases/malgo/HelloBoxed.mlg 1 1)
+            (./test/testcases/malgo/HelloBoxed.mlg 2 1))
+           malgo_print_string)
+          malgo_print_string
+          (-> String# (tuple)))
+         ((((./test/testcases/malgo/HelloBoxed.mlg 2 1)
+              (./test/testcases/malgo/HelloBoxed.mlg 4 1))
+             malgo_newline)
+            malgo_newline
+            (-> (tuple) (tuple))))
+      ()))

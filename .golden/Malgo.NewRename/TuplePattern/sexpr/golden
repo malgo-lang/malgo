@@ -1,0 +1,57 @@
+(module
+   "test/testcases/malgo/TuplePattern.mlg"
+   ((((((./test/testcases/malgo/TuplePattern.mlg 7 1)
+          (./test/testcases/malgo/TuplePattern.mlg 14 1))
+         main
+         (fn
+            ((clause
+                ()
+                (seq
+                   (do
+                      (opapp
+                         |>
+                         (tuple A B)
+                         (fn
+                            ((clause
+                                ((tuple #TuplePattern.A_0 #TuplePattern.rest_1))
+                                (seq
+                                   (do
+                                      (apply
+                                         printString
+                                         (apply String# (string "A"))))))
+                               (clause
+                                  ((tuple #TuplePattern.B_2 #TuplePattern.rest_3))
+                                  (seq (do (tuple))))
+                               (clause
+                                  ((tuple #TuplePattern.C_4 #TuplePattern.rest_5))
+                                  (seq (do (tuple)))))))))))))))
+      ((((./test/testcases/malgo/TuplePattern.mlg 6 1)
+           (./test/testcases/malgo/TuplePattern.mlg 7 1))
+          main
+          (-> (tuple) (tuple))))
+      ((((./test/testcases/malgo/TuplePattern.mlg 4 1)
+           (./test/testcases/malgo/TuplePattern.mlg 6 1))
+          T
+          ()
+          ((((./test/testcases/malgo/TuplePattern.mlg 4 10)
+               (./test/testcases/malgo/TuplePattern.mlg 4 12))
+              A
+              ())
+             (((./test/testcases/malgo/TuplePattern.mlg 4 14)
+                 (./test/testcases/malgo/TuplePattern.mlg 4 16))
+                B
+                ())
+             (((./test/testcases/malgo/TuplePattern.mlg 4 18)
+                 (./test/testcases/malgo/TuplePattern.mlg 6 1))
+                C
+                ()))))
+      ()
+      ()
+      ((((./test/testcases/malgo/TuplePattern.mlg 1 1)
+           (./test/testcases/malgo/TuplePattern.mlg 2 1))
+          "runtime/malgo/Builtin.mlg"
+          all)
+         (((./test/testcases/malgo/TuplePattern.mlg 2 1)
+             (./test/testcases/malgo/TuplePattern.mlg 4 1))
+            "runtime/malgo/Prelude.mlg"
+            all))))

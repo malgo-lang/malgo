@@ -1,0 +1,54 @@
+(module
+   "test/testcases/malgo/Test2.mlg"
+   ((((((./test/testcases/malgo/Test2.mlg 3 1)
+          (./test/testcases/malgo/Test2.mlg 5 1))
+         rtob
+         (fn
+            ((clause ((con R ())) (seq (do B)))
+               (clause (#Test2.a_0) (seq (do #Test2.a_0)))))))
+       ((((./test/testcases/malgo/Test2.mlg 7 1)
+            (./test/testcases/malgo/Test2.mlg 8 1))
+           main
+           (fn
+              ((clause
+                  ()
+                  (seq
+                     (do
+                        (apply
+                           (fn
+                              ((clause
+                                  ((con B ()))
+                                  (seq
+                                     (do (apply malgo_print_string (string "OK")))))
+                                 (clause
+                                    (#Test2.__1)
+                                    (seq
+                                       (do
+                                          (apply
+                                             malgo_print_string
+                                             (string "WRONG")))))))
+                           (seq (do (apply rtob R))))))))))))
+      ()
+      ((((./test/testcases/malgo/Test2.mlg 1 6)
+           (./test/testcases/malgo/Test2.mlg 3 1))
+          RGB
+          ()
+          ((((./test/testcases/malgo/Test2.mlg 1 12)
+               (./test/testcases/malgo/Test2.mlg 1 14))
+              R
+              ())
+             (((./test/testcases/malgo/Test2.mlg 1 16)
+                 (./test/testcases/malgo/Test2.mlg 1 18))
+                G
+                ())
+             (((./test/testcases/malgo/Test2.mlg 1 20)
+                 (./test/testcases/malgo/Test2.mlg 3 1))
+                B
+                ()))))
+      ()
+      (((((./test/testcases/malgo/Test2.mlg 5 1)
+            (./test/testcases/malgo/Test2.mlg 7 1))
+           malgo_print_string)
+          malgo_print_string
+          (-> String# (tuple))))
+      ()))

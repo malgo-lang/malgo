@@ -1,688 +1,645 @@
 (()
    ((define
-      ($Prelude.<<_curry_1136 $Prelude.f_1137 $Prelude.g_1138)
-      (->
-         ((->
-            (Any#)
-            Any#)
-            (->
-               (Any#)
-               Any#))
-         (->
-            (Any#)
-            Any#))
-      (let
-         (($Prelude.fun_1139
-            (->
-               (Any#)
-               Any#)
-            (fun
-               ($Prelude.x_1140)
-               (= $Prelude.d_1142
-                  (= $Prelude.d_1141
-                     (call $Prelude.g_1138 $Prelude.x_1140)
-                     (cast Any# $Prelude.d_1141))
-                  (= $Prelude.d_1143
-                     (call $Prelude.f_1137 $Prelude.d_1142)
-                     (cast Any# $Prelude.d_1143))))))
-         $Prelude.fun_1139))
+       ($Prelude.<<_curry_1136 $Prelude.f_1137 $Prelude.g_1138)
+       (-> ((-> (Any#) Any#) (-> (Any#) Any#)) (-> (Any#) Any#))
+       (let
+          (($Prelude.fun_1139
+              (-> (Any#) Any#)
+              (fun
+                 ($Prelude.x_1140)
+                 (=
+                    $Prelude.d_1142
+                    (=
+                       $Prelude.d_1141
+                       (call $Prelude.g_1138 $Prelude.x_1140)
+                       (cast Any# $Prelude.d_1141))
+                    (=
+                       $Prelude.d_1143
+                       (call $Prelude.f_1137 $Prelude.d_1142)
+                       (cast Any# $Prelude.d_1143))))))
+          $Prelude.fun_1139))
       (define
          ($Prelude.<|_curry_1124 $Prelude.f_1125 $Prelude.x_1126)
-         (->
-            ((->
-               (Any#)
-               Any#)
-               Any#)
-            Any#)
-         (= $Prelude.d_1127
+         (-> ((-> (Any#) Any#) Any#) Any#)
+         (=
+            $Prelude.d_1127
             (call $Prelude.f_1125 $Prelude.x_1126)
             (cast Any# $Prelude.d_1127)))
       (define
-         ($Prelude.takeWhileString_curry_1085 $Prelude.pred_1086 $Prelude.str_1087)
-         (->
-            ((->
-               (Any#)
-               Any#)
-               Any#)
-            Any#)
-         (= $Prelude.d_1091
-            (= $Prelude.d_1089
-               (= $Prelude.d_1088
+         ($Prelude.takeWhileString_curry_1085
+            $Prelude.pred_1086
+            $Prelude.str_1087)
+         (-> ((-> (Any#) Any#) Any#) Any#)
+         (=
+            $Prelude.d_1091
+            (=
+               $Prelude.d_1089
+               (=
+                  $Prelude.d_1088
                   (call headString $Prelude.str_1087)
                   (cast Any# $Prelude.d_1088))
-               (= $Prelude.d_1090
+               (=
+                  $Prelude.d_1090
                   (call case $Prelude.d_1089)
-                  (cast
-                     (->
-                        ((->
-                           (Any#)
-                           Any#))
-                        Any#)
-                     $Prelude.d_1090)))
-            (= $Prelude.d_1118
+                  (cast (-> ((-> (Any#) Any#)) Any#) $Prelude.d_1090)))
+            (=
+               $Prelude.d_1118
                (let
                   (($Prelude.fun_1092
-                     (->
-                        (Any#)
-                        Any#)
-                     (fun
-                        ($Prelude.nothing_1093)
-                        (match
-                           (cast
-                              (sum (con runtime/malgo/Prelude.mlg.Nothing)
-                                 (con runtime/malgo/Prelude.mlg.Just Any#))
-                              $Prelude.nothing_1093)
-                           (unpack
-                              (con runtime/malgo/Prelude.mlg.Nothing)
-                              ()
-                              $Prelude.str_1087)
-                           (unpack
-                              (con runtime/malgo/Prelude.mlg.Just Any#)
-                              ($Prelude.p_1094)
-                              (= $Prelude.d_1112
-                                 (= $Prelude.d_1098
-                                    (= $Prelude.d_1096
-                                       (= $Prelude.d_1095
-                                          (call $Prelude.pred_1086 $Prelude.p_1094)
-                                          (cast Any# $Prelude.d_1095))
-                                       (= $Prelude.d_1097
-                                          (call if $Prelude.d_1096)
-                                          (cast
-                                             (->
-                                                ((->
-                                                   ((sum (con Tuple#)))
-                                                   Any#))
-                                                (->
-                                                   ((->
-                                                      ((sum (con Tuple#)))
-                                                      Any#))
-                                                   Any#))
-                                             $Prelude.d_1097)))
-                                    (= $Prelude.d_1110
-                                       (let
-                                          (($Prelude.fun_1099
-                                             (->
-                                                ((sum (con Tuple#)))
-                                                Any#)
-                                             (fun
-                                                ($Prelude.$__1100)
-                                                (= $Prelude.d_1102
-                                                   (= $Prelude.d_1101
-                                                      (call consString $Prelude.p_1094)
-                                                      (cast
-                                                         (->
-                                                            (Any#)
-                                                            Any#)
-                                                         $Prelude.d_1101))
-                                                   (= $Prelude.d_1108
-                                                      (= $Prelude.d_1104
-                                                         (= $Prelude.d_1103
-                                                            (call takeWhileString $Prelude.pred_1086)
-                                                            (cast
-                                                               (->
-                                                                  (Any#)
-                                                                  Any#)
-                                                               $Prelude.d_1103))
-                                                         (= $Prelude.d_1106
-                                                            (= $Prelude.d_1105
-                                                               (call tailString $Prelude.str_1087)
-                                                               (cast Any# $Prelude.d_1105))
-                                                            (= $Prelude.d_1107
-                                                               (call $Prelude.d_1104 $Prelude.d_1106)
-                                                               (cast Any# $Prelude.d_1107))))
-                                                      (= $Prelude.d_1109
-                                                         (call $Prelude.d_1102 $Prelude.d_1108)
-                                                         (cast Any# $Prelude.d_1109)))))))
-                                          $Prelude.fun_1099)
-                                       (= $Prelude.d_1111
-                                          (call $Prelude.d_1098 $Prelude.d_1110)
-                                          (cast
-                                             (->
-                                                ((->
-                                                   ((sum (con Tuple#)))
-                                                   Any#))
-                                                Any#)
-                                             $Prelude.d_1111))))
-                                 (= $Prelude.d_1116
-                                    (let
-                                       (($Prelude.fun_1113
-                                          (->
-                                             ((sum (con Tuple#)))
-                                             Any#)
-                                          (fun
-                                             ($Prelude.$__1114)
-                                             (= $Prelude.d_1115
-                                                (call String# "")
-                                                (cast Any# $Prelude.d_1115)))))
-                                       $Prelude.fun_1113)
-                                    (= $Prelude.d_1117
-                                       (call $Prelude.d_1112 $Prelude.d_1116)
-                                       (cast Any# $Prelude.d_1117)))))))))
+                      (-> (Any#) Any#)
+                      (fun
+                         ($Prelude.nothing_1093)
+                         (match
+                            (cast
+                               (sum
+                                  (con runtime/malgo/Prelude.mlg.Nothing)
+                                  (con runtime/malgo/Prelude.mlg.Just Any#))
+                               $Prelude.nothing_1093)
+                            (unpack
+                               (con runtime/malgo/Prelude.mlg.Nothing)
+                               ()
+                               $Prelude.str_1087)
+                            (unpack
+                               (con runtime/malgo/Prelude.mlg.Just Any#)
+                               ($Prelude.p_1094)
+                               (=
+                                  $Prelude.d_1112
+                                  (=
+                                     $Prelude.d_1098
+                                     (=
+                                        $Prelude.d_1096
+                                        (=
+                                           $Prelude.d_1095
+                                           (call
+                                              $Prelude.pred_1086
+                                              $Prelude.p_1094)
+                                           (cast Any# $Prelude.d_1095))
+                                        (=
+                                           $Prelude.d_1097
+                                           (call if $Prelude.d_1096)
+                                           (cast
+                                              (->
+                                                 ((-> ((sum (con Tuple#))) Any#))
+                                                 (->
+                                                    ((->
+                                                        ((sum (con Tuple#)))
+                                                        Any#))
+                                                    Any#))
+                                              $Prelude.d_1097)))
+                                     (=
+                                        $Prelude.d_1110
+                                        (let
+                                           (($Prelude.fun_1099
+                                               (-> ((sum (con Tuple#))) Any#)
+                                               (fun
+                                                  ($Prelude.$__1100)
+                                                  (=
+                                                     $Prelude.d_1102
+                                                     (=
+                                                        $Prelude.d_1101
+                                                        (call
+                                                           consString
+                                                           $Prelude.p_1094)
+                                                        (cast
+                                                           (-> (Any#) Any#)
+                                                           $Prelude.d_1101))
+                                                     (=
+                                                        $Prelude.d_1108
+                                                        (=
+                                                           $Prelude.d_1104
+                                                           (=
+                                                              $Prelude.d_1103
+                                                              (call
+                                                                 takeWhileString
+                                                                 $Prelude.pred_1086)
+                                                              (cast
+                                                                 (-> (Any#) Any#)
+                                                                 $Prelude.d_1103))
+                                                           (=
+                                                              $Prelude.d_1106
+                                                              (=
+                                                                 $Prelude.d_1105
+                                                                 (call
+                                                                    tailString
+                                                                    $Prelude.str_1087)
+                                                                 (cast
+                                                                    Any#
+                                                                    $Prelude.d_1105))
+                                                              (=
+                                                                 $Prelude.d_1107
+                                                                 (call
+                                                                    $Prelude.d_1104
+                                                                    $Prelude.d_1106)
+                                                                 (cast
+                                                                    Any#
+                                                                    $Prelude.d_1107))))
+                                                        (=
+                                                           $Prelude.d_1109
+                                                           (call
+                                                              $Prelude.d_1102
+                                                              $Prelude.d_1108)
+                                                           (cast
+                                                              Any#
+                                                              $Prelude.d_1109)))))))
+                                           $Prelude.fun_1099)
+                                        (=
+                                           $Prelude.d_1111
+                                           (call $Prelude.d_1098 $Prelude.d_1110)
+                                           (cast
+                                              (->
+                                                 ((-> ((sum (con Tuple#))) Any#))
+                                                 Any#)
+                                              $Prelude.d_1111))))
+                                  (=
+                                     $Prelude.d_1116
+                                     (let
+                                        (($Prelude.fun_1113
+                                            (-> ((sum (con Tuple#))) Any#)
+                                            (fun
+                                               ($Prelude.$__1114)
+                                               (=
+                                                  $Prelude.d_1115
+                                                  (call String# "")
+                                                  (cast Any# $Prelude.d_1115)))))
+                                        $Prelude.fun_1113)
+                                     (=
+                                        $Prelude.d_1117
+                                        (call $Prelude.d_1112 $Prelude.d_1116)
+                                        (cast Any# $Prelude.d_1117)))))))))
                   $Prelude.fun_1092)
-               (= $Prelude.d_1119
+               (=
+                  $Prelude.d_1119
                   (call $Prelude.d_1091 $Prelude.d_1118)
                   (cast Any# $Prelude.d_1119)))))
       (define
-         ($Prelude.dropWhileString_curry_1020 $Prelude.pred_1021 $Prelude.str_1022)
-         (->
-            ((->
-               (Any#)
-               Any#)
-               Any#)
-            Any#)
-         (= $Prelude.d_1026
-            (= $Prelude.d_1024
-               (= $Prelude.d_1023
+         ($Prelude.dropWhileString_curry_1020
+            $Prelude.pred_1021
+            $Prelude.str_1022)
+         (-> ((-> (Any#) Any#) Any#) Any#)
+         (=
+            $Prelude.d_1026
+            (=
+               $Prelude.d_1024
+               (=
+                  $Prelude.d_1023
                   (call headString $Prelude.str_1022)
                   (cast Any# $Prelude.d_1023))
-               (= $Prelude.d_1025
+               (=
+                  $Prelude.d_1025
                   (call case $Prelude.d_1024)
-                  (cast
-                     (->
-                        ((->
-                           (Any#)
-                           Any#))
-                        Any#)
-                     $Prelude.d_1025)))
-            (= $Prelude.d_1048
+                  (cast (-> ((-> (Any#) Any#)) Any#) $Prelude.d_1025)))
+            (=
+               $Prelude.d_1048
                (let
                   (($Prelude.fun_1027
-                     (->
-                        (Any#)
-                        Any#)
-                     (fun
-                        ($Prelude.nothing_1028)
-                        (match
-                           (cast
-                              (sum (con runtime/malgo/Prelude.mlg.Nothing)
-                                 (con runtime/malgo/Prelude.mlg.Just Any#))
-                              $Prelude.nothing_1028)
-                           (unpack
-                              (con runtime/malgo/Prelude.mlg.Nothing)
-                              ()
-                              $Prelude.str_1022)
-                           (unpack
-                              (con runtime/malgo/Prelude.mlg.Just Any#)
-                              ($Prelude.p_1029)
-                              (= $Prelude.d_1043
-                                 (= $Prelude.d_1033
-                                    (= $Prelude.d_1031
-                                       (= $Prelude.d_1030
-                                          (call $Prelude.pred_1021 $Prelude.p_1029)
-                                          (cast Any# $Prelude.d_1030))
-                                       (= $Prelude.d_1032
-                                          (call if $Prelude.d_1031)
-                                          (cast
-                                             (->
-                                                ((->
-                                                   ((sum (con Tuple#)))
-                                                   Any#))
-                                                (->
-                                                   ((->
-                                                      ((sum (con Tuple#)))
-                                                      Any#))
-                                                   Any#))
-                                             $Prelude.d_1032)))
-                                    (= $Prelude.d_1041
-                                       (let
-                                          (($Prelude.fun_1034
-                                             (->
-                                                ((sum (con Tuple#)))
-                                                Any#)
-                                             (fun
-                                                ($Prelude.$__1035)
-                                                (= $Prelude.d_1037
-                                                   (= $Prelude.d_1036
-                                                      (call dropWhileString $Prelude.pred_1021)
-                                                      (cast
-                                                         (->
-                                                            (Any#)
-                                                            Any#)
-                                                         $Prelude.d_1036))
-                                                   (= $Prelude.d_1039
-                                                      (= $Prelude.d_1038
-                                                         (call tailString $Prelude.str_1022)
-                                                         (cast Any# $Prelude.d_1038))
-                                                      (= $Prelude.d_1040
-                                                         (call $Prelude.d_1037 $Prelude.d_1039)
-                                                         (cast Any# $Prelude.d_1040)))))))
-                                          $Prelude.fun_1034)
-                                       (= $Prelude.d_1042
-                                          (call $Prelude.d_1033 $Prelude.d_1041)
-                                          (cast
-                                             (->
-                                                ((->
-                                                   ((sum (con Tuple#)))
-                                                   Any#))
-                                                Any#)
-                                             $Prelude.d_1042))))
-                                 (= $Prelude.d_1046
-                                    (let
-                                       (($Prelude.fun_1044
-                                          (->
-                                             ((sum (con Tuple#)))
-                                             Any#)
-                                          (fun
-                                             ($Prelude.$__1045)
-                                             $Prelude.str_1022)))
-                                       $Prelude.fun_1044)
-                                    (= $Prelude.d_1047
-                                       (call $Prelude.d_1043 $Prelude.d_1046)
-                                       (cast Any# $Prelude.d_1047)))))))))
+                      (-> (Any#) Any#)
+                      (fun
+                         ($Prelude.nothing_1028)
+                         (match
+                            (cast
+                               (sum
+                                  (con runtime/malgo/Prelude.mlg.Nothing)
+                                  (con runtime/malgo/Prelude.mlg.Just Any#))
+                               $Prelude.nothing_1028)
+                            (unpack
+                               (con runtime/malgo/Prelude.mlg.Nothing)
+                               ()
+                               $Prelude.str_1022)
+                            (unpack
+                               (con runtime/malgo/Prelude.mlg.Just Any#)
+                               ($Prelude.p_1029)
+                               (=
+                                  $Prelude.d_1043
+                                  (=
+                                     $Prelude.d_1033
+                                     (=
+                                        $Prelude.d_1031
+                                        (=
+                                           $Prelude.d_1030
+                                           (call
+                                              $Prelude.pred_1021
+                                              $Prelude.p_1029)
+                                           (cast Any# $Prelude.d_1030))
+                                        (=
+                                           $Prelude.d_1032
+                                           (call if $Prelude.d_1031)
+                                           (cast
+                                              (->
+                                                 ((-> ((sum (con Tuple#))) Any#))
+                                                 (->
+                                                    ((->
+                                                        ((sum (con Tuple#)))
+                                                        Any#))
+                                                    Any#))
+                                              $Prelude.d_1032)))
+                                     (=
+                                        $Prelude.d_1041
+                                        (let
+                                           (($Prelude.fun_1034
+                                               (-> ((sum (con Tuple#))) Any#)
+                                               (fun
+                                                  ($Prelude.$__1035)
+                                                  (=
+                                                     $Prelude.d_1037
+                                                     (=
+                                                        $Prelude.d_1036
+                                                        (call
+                                                           dropWhileString
+                                                           $Prelude.pred_1021)
+                                                        (cast
+                                                           (-> (Any#) Any#)
+                                                           $Prelude.d_1036))
+                                                     (=
+                                                        $Prelude.d_1039
+                                                        (=
+                                                           $Prelude.d_1038
+                                                           (call
+                                                              tailString
+                                                              $Prelude.str_1022)
+                                                           (cast
+                                                              Any#
+                                                              $Prelude.d_1038))
+                                                        (=
+                                                           $Prelude.d_1040
+                                                           (call
+                                                              $Prelude.d_1037
+                                                              $Prelude.d_1039)
+                                                           (cast
+                                                              Any#
+                                                              $Prelude.d_1040)))))))
+                                           $Prelude.fun_1034)
+                                        (=
+                                           $Prelude.d_1042
+                                           (call $Prelude.d_1033 $Prelude.d_1041)
+                                           (cast
+                                              (->
+                                                 ((-> ((sum (con Tuple#))) Any#))
+                                                 Any#)
+                                              $Prelude.d_1042))))
+                                  (=
+                                     $Prelude.d_1046
+                                     (let
+                                        (($Prelude.fun_1044
+                                            (-> ((sum (con Tuple#))) Any#)
+                                            (fun
+                                               ($Prelude.$__1045)
+                                               $Prelude.str_1022)))
+                                        $Prelude.fun_1044)
+                                     (=
+                                        $Prelude.d_1047
+                                        (call $Prelude.d_1043 $Prelude.d_1046)
+                                        (cast Any# $Prelude.d_1047)))))))))
                   $Prelude.fun_1027)
-               (= $Prelude.d_1049
+               (=
+                  $Prelude.d_1049
                   (call $Prelude.d_1026 $Prelude.d_1048)
                   (cast Any# $Prelude.d_1049)))))
       (define
          ($Prelude.case_curry_986 $Prelude.x_987 $Prelude.f_988)
-         (->
-            (Any#
-               (->
-                  (Any#)
-                  Any#))
-            Any#)
-         (= $Prelude.d_989
+         (-> (Any# (-> (Any#) Any#)) Any#)
+         (=
+            $Prelude.d_989
             (call $Prelude.f_988 $Prelude.x_987)
             (cast Any# $Prelude.d_989)))
       (define
          ($Prelude.const_curry_958 $Prelude.a_959 $Prelude.__960)
-         (->
-            (Any# Any#)
-            Any#)
+         (-> (Any# Any#) Any#)
          $Prelude.a_959)
       (define
          ($Prelude.foldl_curry_939 $Prelude.__940 $Prelude.z_941 $Prelude.nil_942)
-         (->
-            ((->
-               (Any#)
-               (->
-                  (Any#)
-                  Any#))
-               Any#
-               Any#)
-            Any#)
+         (-> ((-> (Any#) (-> (Any#) Any#)) Any# Any#) Any#)
          (match
             (cast
-               (sum (con runtime/malgo/Prelude.mlg.Nil)
+               (sum
+                  (con runtime/malgo/Prelude.mlg.Nil)
                   (con runtime/malgo/Prelude.mlg.Cons Any# Any#))
                $Prelude.nil_942)
-            (unpack
-               (con runtime/malgo/Prelude.mlg.Nil)
-               ()
-               $Prelude.z_941)
+            (unpack (con runtime/malgo/Prelude.mlg.Nil) () $Prelude.z_941)
             (unpack
                (con runtime/malgo/Prelude.mlg.Cons Any# Any#)
                ($Prelude.p_943 $Prelude.p_944)
-               (= $Prelude.d_952
-                  (= $Prelude.d_946
-                     (= $Prelude.d_945
+               (=
+                  $Prelude.d_952
+                  (=
+                     $Prelude.d_946
+                     (=
+                        $Prelude.d_945
                         (call foldl $Prelude.__940)
-                        (cast
-                           (->
-                              (Any#)
-                              (->
-                                 (Any#)
-                                 Any#))
-                           $Prelude.d_945))
-                     (= $Prelude.d_950
-                        (= $Prelude.d_948
-                           (= $Prelude.d_947
+                        (cast (-> (Any#) (-> (Any#) Any#)) $Prelude.d_945))
+                     (=
+                        $Prelude.d_950
+                        (=
+                           $Prelude.d_948
+                           (=
+                              $Prelude.d_947
                               (call $Prelude.__940 $Prelude.z_941)
-                              (cast
-                                 (->
-                                    (Any#)
-                                    Any#)
-                                 $Prelude.d_947))
-                           (= $Prelude.d_949
+                              (cast (-> (Any#) Any#) $Prelude.d_947))
+                           (=
+                              $Prelude.d_949
                               (call $Prelude.d_948 $Prelude.p_943)
                               (cast Any# $Prelude.d_949)))
-                        (= $Prelude.d_951
+                        (=
+                           $Prelude.d_951
                            (call $Prelude.d_946 $Prelude.d_950)
-                           (cast
-                              (->
-                                 (Any#)
-                                 Any#)
-                              $Prelude.d_951))))
-                  (= $Prelude.d_953
+                           (cast (-> (Any#) Any#) $Prelude.d_951))))
+                  (=
+                     $Prelude.d_953
                      (call $Prelude.d_952 $Prelude.p_944)
                      (cast Any# $Prelude.d_953))))))
       (define
-         ($Prelude.unless_curry_876 $Prelude.c_877 $Prelude.tValue_878 $Prelude.f_879)
-         (->
-            (Any#
-               Any#
-               (->
-                  ((sum (con Tuple#)))
-                  Any#))
-            Any#)
-         (= $Prelude.d_886
-            (= $Prelude.d_881
-               (= $Prelude.d_880
+         ($Prelude.unless_curry_876
+            $Prelude.c_877
+            $Prelude.tValue_878
+            $Prelude.f_879)
+         (-> (Any# Any# (-> ((sum (con Tuple#))) Any#)) Any#)
+         (=
+            $Prelude.d_886
+            (=
+               $Prelude.d_881
+               (=
+                  $Prelude.d_880
                   (call if $Prelude.c_877)
                   (cast
                      (->
-                        ((->
-                           ((sum (con Tuple#)))
-                           Any#))
-                        (->
-                           ((->
-                              ((sum (con Tuple#)))
-                              Any#))
-                           Any#))
+                        ((-> ((sum (con Tuple#))) Any#))
+                        (-> ((-> ((sum (con Tuple#))) Any#)) Any#))
                      $Prelude.d_880))
-               (= $Prelude.d_884
+               (=
+                  $Prelude.d_884
                   (let
                      (($Prelude.fun_882
-                        (->
-                           ((sum (con Tuple#)))
-                           Any#)
-                        (fun
-                           ($Prelude.$__883)
-                           $Prelude.tValue_878)))
+                         (-> ((sum (con Tuple#))) Any#)
+                         (fun ($Prelude.$__883) $Prelude.tValue_878)))
                      $Prelude.fun_882)
-                  (= $Prelude.d_885
+                  (=
+                     $Prelude.d_885
                      (call $Prelude.d_881 $Prelude.d_884)
                      (cast
-                        (->
-                           ((->
-                              ((sum (con Tuple#)))
-                              Any#))
-                           Any#)
+                        (-> ((-> ((sum (con Tuple#))) Any#)) Any#)
                         $Prelude.d_885))))
-            (= $Prelude.d_887
+            (=
+               $Prelude.d_887
                (call $Prelude.d_886 $Prelude.f_879)
                (cast Any# $Prelude.d_887))))
       (define
          ($Prelude.if_curry_826 $Prelude.true_827 $Prelude.t_828 $Prelude.__829)
          (->
-            (Any#
-               (->
-                  ((sum (con Tuple#)))
-                  Any#)
-               (->
-                  ((sum (con Tuple#)))
-                  Any#))
+            (Any# (-> ((sum (con Tuple#))) Any#) (-> ((sum (con Tuple#))) Any#))
             Any#)
          (match
             (cast
-               (sum (con runtime/malgo/Builtin.mlg.False)
+               (sum
+                  (con runtime/malgo/Builtin.mlg.False)
                   (con runtime/malgo/Builtin.mlg.True))
                $Prelude.true_827)
             (unpack
                (con runtime/malgo/Builtin.mlg.False)
                ()
-               (= $Prelude.d_831
+               (=
+                  $Prelude.d_831
                   (let
                      (($Prelude.let_830
-                        (sum (con Tuple#))
-                        (pack
-                           (sum (con Tuple#))
-                           (con Tuple#))))
+                         (sum (con Tuple#))
+                         (pack (sum (con Tuple#)) (con Tuple#))))
                      $Prelude.let_830)
-                  (= $Prelude.d_832
+                  (=
+                     $Prelude.d_832
                      (call $Prelude.__829 $Prelude.d_831)
                      (cast Any# $Prelude.d_832))))
             (unpack
                (con runtime/malgo/Builtin.mlg.True)
                ()
-               (= $Prelude.d_834
+               (=
+                  $Prelude.d_834
                   (let
                      (($Prelude.let_833
-                        (sum (con Tuple#))
-                        (pack
-                           (sum (con Tuple#))
-                           (con Tuple#))))
+                         (sum (con Tuple#))
+                         (pack (sum (con Tuple#)) (con Tuple#))))
                      $Prelude.let_833)
-                  (= $Prelude.d_835
+                  (=
+                     $Prelude.d_835
                      (call $Prelude.t_828 $Prelude.d_834)
                      (cast Any# $Prelude.d_835))))))
       (define
          ($Prelude.mapList_curry_790 $Prelude.__791 $Prelude.nil_792)
-         (->
-            ((->
-               (Any#)
-               Any#)
-               Any#)
-            Any#)
+         (-> ((-> (Any#) Any#) Any#) Any#)
          (match
             (cast
-               (sum (con runtime/malgo/Prelude.mlg.Nil)
+               (sum
+                  (con runtime/malgo/Prelude.mlg.Nil)
                   (con runtime/malgo/Prelude.mlg.Cons Any# Any#))
                $Prelude.nil_792)
-            (unpack
-               (con runtime/malgo/Prelude.mlg.Nil)
-               ()
-               (direct Nil))
+            (unpack (con runtime/malgo/Prelude.mlg.Nil) () (direct Nil))
             (unpack
                (con runtime/malgo/Prelude.mlg.Cons Any# Any#)
                ($Prelude.p_793 $Prelude.p_794)
-               (= $Prelude.d_798
-                  (= $Prelude.d_796
-                     (= $Prelude.d_795
+               (=
+                  $Prelude.d_798
+                  (=
+                     $Prelude.d_796
+                     (=
+                        $Prelude.d_795
                         (call $Prelude.__791 $Prelude.p_793)
                         (cast Any# $Prelude.d_795))
-                     (= $Prelude.d_797
+                     (=
+                        $Prelude.d_797
                         (call Cons $Prelude.d_796)
-                        (cast
-                           (->
-                              (Any#)
-                              Any#)
-                           $Prelude.d_797)))
-                  (= $Prelude.d_802
-                     (= $Prelude.d_800
-                        (= $Prelude.d_799
+                        (cast (-> (Any#) Any#) $Prelude.d_797)))
+                  (=
+                     $Prelude.d_802
+                     (=
+                        $Prelude.d_800
+                        (=
+                           $Prelude.d_799
                            (call mapList $Prelude.__791)
-                           (cast
-                              (->
-                                 (Any#)
-                                 Any#)
-                              $Prelude.d_799))
-                        (= $Prelude.d_801
+                           (cast (-> (Any#) Any#) $Prelude.d_799))
+                        (=
+                           $Prelude.d_801
                            (call $Prelude.d_800 $Prelude.p_794)
                            (cast Any# $Prelude.d_801)))
-                     (= $Prelude.d_803
+                     (=
+                        $Prelude.d_803
                         (call $Prelude.d_798 $Prelude.d_802)
                         (cast Any# $Prelude.d_803)))))))
       (define
          ($Prelude.punctuate_curry_746 $Prelude.__747 $Prelude.nil_748)
-         (->
-            (Any# Any#)
-            Any#)
+         (-> (Any# Any#) Any#)
          (match
             (cast
-               (sum (con runtime/malgo/Prelude.mlg.Nil)
+               (sum
+                  (con runtime/malgo/Prelude.mlg.Nil)
                   (con runtime/malgo/Prelude.mlg.Cons Any# Any#))
                $Prelude.nil_748)
-            (unpack
-               (con runtime/malgo/Prelude.mlg.Nil)
-               ()
-               (direct Nil))
+            (unpack (con runtime/malgo/Prelude.mlg.Nil) () (direct Nil))
             (unpack
                (con runtime/malgo/Prelude.mlg.Cons Any# Any#)
                ($Prelude.p_749 $Prelude.p_750)
                (match
                   (cast
-                     (sum (con runtime/malgo/Prelude.mlg.Nil)
+                     (sum
+                        (con runtime/malgo/Prelude.mlg.Nil)
                         (con runtime/malgo/Prelude.mlg.Cons Any# Any#))
                      $Prelude.p_750)
                   (unpack
                      (con runtime/malgo/Prelude.mlg.Nil)
                      ()
-                     (= $Prelude.d_752
-                        (= $Prelude.d_751
+                     (=
+                        $Prelude.d_752
+                        (=
+                           $Prelude.d_751
                            (call Cons $Prelude.p_749)
-                           (cast
-                              (->
-                                 (Any#)
-                                 Any#)
-                              $Prelude.d_751))
-                        (= $Prelude.d_753
+                           (cast (-> (Any#) Any#) $Prelude.d_751))
+                        (=
+                           $Prelude.d_753
                            (direct Nil)
-                           (= $Prelude.d_754
+                           (=
+                              $Prelude.d_754
                               (call $Prelude.d_752 $Prelude.d_753)
                               (cast Any# $Prelude.d_754)))))
                   (unpack
                      (con runtime/malgo/Prelude.mlg.Cons Any# Any#)
                      ($Prelude.p_755 $Prelude.p_756)
-                     (= $Prelude.d_758
-                        (= $Prelude.d_757
+                     (=
+                        $Prelude.d_758
+                        (=
+                           $Prelude.d_757
                            (call Cons $Prelude.p_749)
-                           (cast
-                              (->
-                                 (Any#)
-                                 Any#)
-                              $Prelude.d_757))
-                        (= $Prelude.d_766
-                           (= $Prelude.d_760
-                              (= $Prelude.d_759
+                           (cast (-> (Any#) Any#) $Prelude.d_757))
+                        (=
+                           $Prelude.d_766
+                           (=
+                              $Prelude.d_760
+                              (=
+                                 $Prelude.d_759
                                  (call Cons $Prelude.__747)
-                                 (cast
-                                    (->
-                                       (Any#)
-                                       Any#)
-                                    $Prelude.d_759))
-                              (= $Prelude.d_764
-                                 (= $Prelude.d_762
-                                    (= $Prelude.d_761
+                                 (cast (-> (Any#) Any#) $Prelude.d_759))
+                              (=
+                                 $Prelude.d_764
+                                 (=
+                                    $Prelude.d_762
+                                    (=
+                                       $Prelude.d_761
                                        (call punctuate $Prelude.__747)
-                                       (cast
-                                          (->
-                                             (Any#)
-                                             Any#)
-                                          $Prelude.d_761))
-                                    (= $Prelude.d_763
+                                       (cast (-> (Any#) Any#) $Prelude.d_761))
+                                    (=
+                                       $Prelude.d_763
                                        (call $Prelude.d_762 $Prelude.p_750)
                                        (cast Any# $Prelude.d_763)))
-                                 (= $Prelude.d_765
+                                 (=
+                                    $Prelude.d_765
                                     (call $Prelude.d_760 $Prelude.d_764)
                                     (cast Any# $Prelude.d_765))))
-                           (= $Prelude.d_767
+                           (=
+                              $Prelude.d_767
                               (call $Prelude.d_758 $Prelude.d_766)
                               (cast Any# $Prelude.d_767)))))))))
       (define
          ($Prelude.|>_curry_702 $Prelude.x_703 $Prelude.f_704)
-         (->
-            (Any#
-               (->
-                  (Any#)
-                  Any#))
-            Any#)
-         (= $Prelude.d_705
+         (-> (Any# (-> (Any#) Any#)) Any#)
+         (=
+            $Prelude.d_705
             (call $Prelude.f_704 $Prelude.x_703)
             (cast Any# $Prelude.d_705)))
       (define
          ($Prelude.Cons_curry_694 $Prelude.p_695 $Prelude.p_696)
-         (->
-            (Any# Any#)
-            Any#)
+         (-> (Any# Any#) Any#)
          (let
             (($Prelude.let_697
-               (sum (con runtime/malgo/Prelude.mlg.Nil)
-                  (con runtime/malgo/Prelude.mlg.Cons Any# Any#))
-               (pack
-                  (sum (con runtime/malgo/Prelude.mlg.Nil)
-                     (con runtime/malgo/Prelude.mlg.Cons Any# Any#))
-                  (con runtime/malgo/Prelude.mlg.Cons Any# Any#)
-                  $Prelude.p_695
-                  $Prelude.p_696)))
+                (sum
+                   (con runtime/malgo/Prelude.mlg.Nil)
+                   (con runtime/malgo/Prelude.mlg.Cons Any# Any#))
+                (pack
+                   (sum
+                      (con runtime/malgo/Prelude.mlg.Nil)
+                      (con runtime/malgo/Prelude.mlg.Cons Any# Any#))
+                   (con runtime/malgo/Prelude.mlg.Cons Any# Any#)
+                   $Prelude.p_695
+                   $Prelude.p_696)))
             (cast Any# $Prelude.let_697)))
       (define
          (Nothing)
          (-> () Any#)
          (let
             (($Prelude.let_687
-               (sum (con runtime/malgo/Prelude.mlg.Nothing)
-                  (con runtime/malgo/Prelude.mlg.Just Any#))
-               (pack
-                  (sum (con runtime/malgo/Prelude.mlg.Nothing)
-                     (con runtime/malgo/Prelude.mlg.Just Any#))
-                  (con runtime/malgo/Prelude.mlg.Nothing))))
+                (sum
+                   (con runtime/malgo/Prelude.mlg.Nothing)
+                   (con runtime/malgo/Prelude.mlg.Just Any#))
+                (pack
+                   (sum
+                      (con runtime/malgo/Prelude.mlg.Nothing)
+                      (con runtime/malgo/Prelude.mlg.Just Any#))
+                   (con runtime/malgo/Prelude.mlg.Nothing))))
             (cast Any# $Prelude.let_687)))
       (define
          (Just $Prelude.p_688)
-         (->
-            (Any#)
-            Any#)
+         (-> (Any#) Any#)
          (let
             (($Prelude.let_689
-               (sum (con runtime/malgo/Prelude.mlg.Nothing)
-                  (con runtime/malgo/Prelude.mlg.Just Any#))
-               (pack
-                  (sum (con runtime/malgo/Prelude.mlg.Nothing)
-                     (con runtime/malgo/Prelude.mlg.Just Any#))
-                  (con runtime/malgo/Prelude.mlg.Just Any#)
-                  $Prelude.p_688)))
+                (sum
+                   (con runtime/malgo/Prelude.mlg.Nothing)
+                   (con runtime/malgo/Prelude.mlg.Just Any#))
+                (pack
+                   (sum
+                      (con runtime/malgo/Prelude.mlg.Nothing)
+                      (con runtime/malgo/Prelude.mlg.Just Any#))
+                   (con runtime/malgo/Prelude.mlg.Just Any#)
+                   $Prelude.p_688)))
             (cast Any# $Prelude.let_689)))
       (define
          (Nil)
          (-> () Any#)
          (let
             (($Prelude.let_690
-               (sum (con runtime/malgo/Prelude.mlg.Nil)
-                  (con runtime/malgo/Prelude.mlg.Cons Any# Any#))
-               (pack
-                  (sum (con runtime/malgo/Prelude.mlg.Nil)
-                     (con runtime/malgo/Prelude.mlg.Cons Any# Any#))
-                  (con runtime/malgo/Prelude.mlg.Nil))))
+                (sum
+                   (con runtime/malgo/Prelude.mlg.Nil)
+                   (con runtime/malgo/Prelude.mlg.Cons Any# Any#))
+                (pack
+                   (sum
+                      (con runtime/malgo/Prelude.mlg.Nil)
+                      (con runtime/malgo/Prelude.mlg.Cons Any# Any#))
+                   (con runtime/malgo/Prelude.mlg.Nil))))
             (cast Any# $Prelude.let_690)))
       (define
          (Cons $Prelude.p_691)
-         (->
-            (Any#)
-            (->
-               (Any#)
-               Any#))
+         (-> (Any#) (-> (Any#) Any#))
          (let
             (($Prelude.let_698
-               (->
-                  (Any#)
-                  Any#)
-               (fun
-                  ($Prelude.p_692)
-                  (direct $Prelude.Cons_curry_694 $Prelude.p_691 $Prelude.p_692))))
+                (-> (Any#) Any#)
+                (fun
+                   ($Prelude.p_692)
+                   (direct $Prelude.Cons_curry_694 $Prelude.p_691 $Prelude.p_692))))
             $Prelude.let_698))
       (define
          (|> $Prelude.x_699)
-         (->
-            (Any#)
-            (->
-               ((->
-                  (Any#)
-                  Any#))
-               Any#))
+         (-> (Any#) (-> ((-> (Any#) Any#)) Any#))
          (let
             (($Prelude.let_706
-               (->
-                  ((->
-                     (Any#)
-                     Any#))
-                  Any#)
-               (fun
-                  ($Prelude.f_700)
-                  (direct $Prelude.|>_curry_702 $Prelude.x_699 $Prelude.f_700))))
+                (-> ((-> (Any#) Any#)) Any#)
+                (fun
+                   ($Prelude.f_700)
+                   (direct $Prelude.|>_curry_702 $Prelude.x_699 $Prelude.f_700))))
             $Prelude.let_706))
       (define
          (tail $Prelude.cons_707)
-         (->
-            (Any#)
-            Any#)
+         (-> (Any#) Any#)
          (match
             (cast
-               (sum (con runtime/malgo/Prelude.mlg.Nil)
+               (sum
+                  (con runtime/malgo/Prelude.mlg.Nil)
                   (con runtime/malgo/Prelude.mlg.Cons Any# Any#))
                $Prelude.cons_707)
             (unpack
                (con runtime/malgo/Prelude.mlg.Nil)
                ()
-               (= $Prelude.d_709
+               (=
+                  $Prelude.d_709
                   (let
                      (($Prelude.let_708
-                        (sum (con Tuple#))
-                        (pack
-                           (sum (con Tuple#))
-                           (con Tuple#))))
+                         (sum (con Tuple#))
+                         (pack (sum (con Tuple#)) (con Tuple#))))
                      $Prelude.let_708)
-                  (= $Prelude.d_710
+                  (=
+                     $Prelude.d_710
                      (call exitFailure $Prelude.d_709)
                      (cast Any# $Prelude.d_710))))
             (unpack
@@ -691,9 +648,7 @@
                $Prelude.p_712)))
       (define
          (snd $Prelude.tuple_713)
-         (->
-            ((sum (con Tuple# Any# Any#)))
-            Any#)
+         (-> ((sum (con Tuple# Any# Any#))) Any#)
          (match
             $Prelude.tuple_713
             (unpack
@@ -702,141 +657,121 @@
                $Prelude.p_715)))
       (define
          (putStrLn $Prelude.str_716)
-         (->
-            (Any#)
-            (sum (con Tuple#)))
-         (= $Prelude.d_718
-            (= $Prelude.d_717
+         (-> (Any#) (sum (con Tuple#)))
+         (=
+            $Prelude.d_718
+            (=
+               $Prelude.d_717
                (call printString $Prelude.str_716)
-               (cast
-                  (sum (con Tuple#))
-                  $Prelude.d_717))
-            (= $Prelude.d_720
+               (cast (sum (con Tuple#)) $Prelude.d_717))
+            (=
+               $Prelude.d_720
                (let
                   (($Prelude.let_719
-                     (sum (con Tuple#))
-                     (pack
-                        (sum (con Tuple#))
-                        (con Tuple#))))
+                      (sum (con Tuple#))
+                      (pack (sum (con Tuple#)) (con Tuple#))))
                   $Prelude.let_719)
-               (= $Prelude.cast_721
+               (=
+                  $Prelude.cast_721
                   (cast Any# $Prelude.d_720)
-                  (= $Prelude.d_722
+                  (=
+                     $Prelude.d_722
                      (call newline $Prelude.cast_721)
-                     (cast
-                        (sum (con Tuple#))
-                        $Prelude.d_722))))))
+                     (cast (sum (con Tuple#)) $Prelude.d_722))))))
       (define
          (putStr $Prelude.str_723)
-         (->
-            (Any#)
-            (sum (con Tuple#)))
-         (= $Prelude.d_724
+         (-> (Any#) (sum (con Tuple#)))
+         (=
+            $Prelude.d_724
             (call printString $Prelude.str_723)
-            (cast
-               (sum (con Tuple#))
-               $Prelude.d_724)))
+            (cast (sum (con Tuple#)) $Prelude.d_724)))
       (define
          (punctuate $Prelude.__725)
-         (->
-            (Any#)
-            (->
-               (Any#)
-               Any#))
+         (-> (Any#) (-> (Any#) Any#))
          (let
             (($Prelude.let_768
-               (->
-                  (Any#)
-                  Any#)
-               (fun
-                  ($Prelude.nil_726)
-                  (direct $Prelude.punctuate_curry_746 $Prelude.__725 $Prelude.nil_726))))
+                (-> (Any#) Any#)
+                (fun
+                   ($Prelude.nil_726)
+                   (direct
+                      $Prelude.punctuate_curry_746
+                      $Prelude.__725
+                      $Prelude.nil_726))))
             $Prelude.let_768))
       (define
          (printInt64 $Prelude.i_769)
-         (->
-            (Any#)
-            (sum (con Tuple#)))
-         (= $Prelude.d_771
-            (= $Prelude.d_770
+         (-> (Any#) (sum (con Tuple#)))
+         (=
+            $Prelude.d_771
+            (=
+               $Prelude.d_770
                (call toStringInt64 $Prelude.i_769)
                (cast Any# $Prelude.d_770))
-            (= $Prelude.d_772
+            (=
+               $Prelude.d_772
                (call printString $Prelude.d_771)
-               (cast
-                  (sum (con Tuple#))
-                  $Prelude.d_772))))
+               (cast (sum (con Tuple#)) $Prelude.d_772))))
       (define
          (printInt32 $Prelude.i_773)
-         (->
-            (Any#)
-            (sum (con Tuple#)))
-         (= $Prelude.d_775
-            (= $Prelude.d_774
+         (-> (Any#) (sum (con Tuple#)))
+         (=
+            $Prelude.d_775
+            (=
+               $Prelude.d_774
                (call toStringInt32 $Prelude.i_773)
                (cast Any# $Prelude.d_774))
-            (= $Prelude.d_776
+            (=
+               $Prelude.d_776
                (call printString $Prelude.d_775)
-               (cast
-                  (sum (con Tuple#))
-                  $Prelude.d_776))))
+               (cast (sum (con Tuple#)) $Prelude.d_776))))
       (define
          (mapList $Prelude.__777)
-         (->
-            ((->
-               (Any#)
-               Any#))
-            (->
-               (Any#)
-               Any#))
+         (-> ((-> (Any#) Any#)) (-> (Any#) Any#))
          (let
             (($Prelude.let_804
-               (->
-                  (Any#)
-                  Any#)
-               (fun
-                  ($Prelude.nil_778)
-                  (direct $Prelude.mapList_curry_790 $Prelude.__777 $Prelude.nil_778))))
+                (-> (Any#) Any#)
+                (fun
+                   ($Prelude.nil_778)
+                   (direct
+                      $Prelude.mapList_curry_790
+                      $Prelude.__777
+                      $Prelude.nil_778))))
             $Prelude.let_804))
       (define
          (listToString $Prelude.nil_805)
-         (->
-            (Any#)
-            Any#)
+         (-> (Any#) Any#)
          (match
             (cast
-               (sum (con runtime/malgo/Prelude.mlg.Nil)
+               (sum
+                  (con runtime/malgo/Prelude.mlg.Nil)
                   (con runtime/malgo/Prelude.mlg.Cons Any# Any#))
                $Prelude.nil_805)
             (unpack
                (con runtime/malgo/Prelude.mlg.Nil)
                ()
-               (= $Prelude.d_806
-                  (call String# "")
-                  (cast Any# $Prelude.d_806)))
+               (= $Prelude.d_806 (call String# "") (cast Any# $Prelude.d_806)))
             (unpack
                (con runtime/malgo/Prelude.mlg.Cons Any# Any#)
                ($Prelude.p_807 $Prelude.p_808)
-               (= $Prelude.d_810
-                  (= $Prelude.d_809
+               (=
+                  $Prelude.d_810
+                  (=
+                     $Prelude.d_809
                      (call consString $Prelude.p_807)
-                     (cast
-                        (->
-                           (Any#)
-                           Any#)
-                        $Prelude.d_809))
-                  (= $Prelude.d_812
-                     (= $Prelude.d_811
+                     (cast (-> (Any#) Any#) $Prelude.d_809))
+                  (=
+                     $Prelude.d_812
+                     (=
+                        $Prelude.d_811
                         (call listToString $Prelude.p_808)
                         (cast Any# $Prelude.d_811))
-                     (= $Prelude.d_813
+                     (=
+                        $Prelude.d_813
                         (call $Prelude.d_810 $Prelude.d_812)
                         (cast Any# $Prelude.d_813)))))))
       (define
          (isWhiteSpace $Prelude.char#_814)
-         (->
-            (Any#)
-            Any#)
+         (-> (Any#) Any#)
          (match
             (cast
                (sum (con runtime/malgo/Builtin.mlg.Char# Char#))
@@ -846,304 +781,247 @@
                ($Prelude.p_815)
                (match
                   $Prelude.p_815
-                  (exact
-                     ' '
-                     (direct True))
-                  (exact
-                     '\n'
-                     (direct True))
-                  (exact
-                     '\r'
-                     (direct True))
-                  (exact
-                     '\t'
-                     (direct True))
-                  (bind
-                     $Prelude.__816
-                     Char#
-                     (direct False))))))
+                  (exact ' ' (direct True))
+                  (exact '\n' (direct True))
+                  (exact '\r' (direct True))
+                  (exact '\t' (direct True))
+                  (bind $Prelude.__816 Char# (direct False))))))
       (define
          (if $Prelude.true_817)
          (->
             (Any#)
             (->
-               ((->
-                  ((sum (con Tuple#)))
-                  Any#))
-               (->
-                  ((->
-                     ((sum (con Tuple#)))
-                     Any#))
-                  Any#)))
+               ((-> ((sum (con Tuple#))) Any#))
+               (-> ((-> ((sum (con Tuple#))) Any#)) Any#)))
          (let
             (($Prelude.let_837
-               (->
-                  ((->
-                     ((sum (con Tuple#)))
-                     Any#))
-                  (->
-                     ((->
-                        ((sum (con Tuple#)))
-                        Any#))
-                     Any#))
-               (fun
-                  ($Prelude.t_818)
-                  (let
-                     (($Prelude.let_836
-                        (->
-                           ((->
-                              ((sum (con Tuple#)))
-                              Any#))
-                           Any#)
-                        (fun
-                           ($Prelude.__819)
-                           (direct $Prelude.if_curry_826 $Prelude.true_817 $Prelude.t_818 $Prelude.__819))))
-                     $Prelude.let_836))))
+                (->
+                   ((-> ((sum (con Tuple#))) Any#))
+                   (-> ((-> ((sum (con Tuple#))) Any#)) Any#))
+                (fun
+                   ($Prelude.t_818)
+                   (let
+                      (($Prelude.let_836
+                          (-> ((-> ((sum (con Tuple#))) Any#)) Any#)
+                          (fun
+                             ($Prelude.__819)
+                             (direct
+                                $Prelude.if_curry_826
+                                $Prelude.true_817
+                                $Prelude.t_818
+                                $Prelude.__819))))
+                      $Prelude.let_836))))
             $Prelude.let_837))
       (define
          (tailString $Prelude.str_838)
-         (->
-            (Any#)
-            Any#)
-         (= $Prelude.d_851
-            (= $Prelude.d_846
-               (= $Prelude.d_844
-                  (= $Prelude.d_840
-                     (= $Prelude.d_839
+         (-> (Any#) Any#)
+         (=
+            $Prelude.d_851
+            (=
+               $Prelude.d_846
+               (=
+                  $Prelude.d_844
+                  (=
+                     $Prelude.d_840
+                     (=
+                        $Prelude.d_839
                         (call eqString $Prelude.str_838)
-                        (cast
-                           (->
-                              (Any#)
-                              Any#)
-                           $Prelude.d_839))
-                     (= $Prelude.d_842
-                        (= $Prelude.d_841
+                        (cast (-> (Any#) Any#) $Prelude.d_839))
+                     (=
+                        $Prelude.d_842
+                        (=
+                           $Prelude.d_841
                            (call String# "")
                            (cast Any# $Prelude.d_841))
-                        (= $Prelude.d_843
+                        (=
+                           $Prelude.d_843
                            (call $Prelude.d_840 $Prelude.d_842)
                            (cast Any# $Prelude.d_843))))
-                  (= $Prelude.d_845
+                  (=
+                     $Prelude.d_845
                      (call if $Prelude.d_844)
                      (cast
                         (->
-                           ((->
-                              ((sum (con Tuple#)))
-                              Any#))
-                           (->
-                              ((->
-                                 ((sum (con Tuple#)))
-                                 Any#))
-                              Any#))
+                           ((-> ((sum (con Tuple#))) Any#))
+                           (-> ((-> ((sum (con Tuple#))) Any#)) Any#))
                         $Prelude.d_845)))
-               (= $Prelude.d_849
+               (=
+                  $Prelude.d_849
                   (let
                      (($Prelude.fun_848
-                        (->
-                           ((sum (con Tuple#)))
-                           Any#)
-                        (fun
-                           ($Prelude.$__847)
-                           $Prelude.str_838)))
+                         (-> ((sum (con Tuple#))) Any#)
+                         (fun ($Prelude.$__847) $Prelude.str_838)))
                      $Prelude.fun_848)
-                  (= $Prelude.d_850
+                  (=
+                     $Prelude.d_850
                      (call $Prelude.d_846 $Prelude.d_849)
                      (cast
-                        (->
-                           ((->
-                              ((sum (con Tuple#)))
-                              Any#))
-                           Any#)
+                        (-> ((-> ((sum (con Tuple#))) Any#)) Any#)
                         $Prelude.d_850))))
-            (= $Prelude.d_863
+            (=
+               $Prelude.d_863
                (let
                   (($Prelude.fun_862
-                     (->
-                        ((sum (con Tuple#)))
-                        Any#)
-                     (fun
-                        ($Prelude.$__852)
-                        (= $Prelude.d_858
-                           (= $Prelude.d_854
-                              (= $Prelude.d_853
-                                 (call substring $Prelude.str_838)
-                                 (cast
-                                    (->
-                                       (Any#)
-                                       (->
-                                          (Any#)
-                                          Any#))
-                                    $Prelude.d_853))
-                              (= $Prelude.d_856
-                                 (= $Prelude.d_855
-                                    (call Int64# 1_i64)
-                                    (cast Any# $Prelude.d_855))
-                                 (= $Prelude.d_857
-                                    (call $Prelude.d_854 $Prelude.d_856)
-                                    (cast
-                                       (->
-                                          (Any#)
-                                          Any#)
-                                       $Prelude.d_857))))
-                           (= $Prelude.d_860
-                              (= $Prelude.d_859
-                                 (call lengthString $Prelude.str_838)
-                                 (cast Any# $Prelude.d_859))
-                              (= $Prelude.d_861
-                                 (call $Prelude.d_858 $Prelude.d_860)
-                                 (cast Any# $Prelude.d_861)))))))
+                      (-> ((sum (con Tuple#))) Any#)
+                      (fun
+                         ($Prelude.$__852)
+                         (=
+                            $Prelude.d_858
+                            (=
+                               $Prelude.d_854
+                               (=
+                                  $Prelude.d_853
+                                  (call substring $Prelude.str_838)
+                                  (cast
+                                     (-> (Any#) (-> (Any#) Any#))
+                                     $Prelude.d_853))
+                               (=
+                                  $Prelude.d_856
+                                  (=
+                                     $Prelude.d_855
+                                     (call Int64# 1_i64)
+                                     (cast Any# $Prelude.d_855))
+                                  (=
+                                     $Prelude.d_857
+                                     (call $Prelude.d_854 $Prelude.d_856)
+                                     (cast (-> (Any#) Any#) $Prelude.d_857))))
+                            (=
+                               $Prelude.d_860
+                               (=
+                                  $Prelude.d_859
+                                  (call lengthString $Prelude.str_838)
+                                  (cast Any# $Prelude.d_859))
+                               (=
+                                  $Prelude.d_861
+                                  (call $Prelude.d_858 $Prelude.d_860)
+                                  (cast Any# $Prelude.d_861)))))))
                   $Prelude.fun_862)
-               (= $Prelude.d_864
+               (=
+                  $Prelude.d_864
                   (call $Prelude.d_851 $Prelude.d_863)
                   (cast Any# $Prelude.d_864)))))
       (define
          (unless $Prelude.c_865)
-         (->
-            (Any#)
-            (->
-               (Any#)
-               (->
-                  ((->
-                     ((sum (con Tuple#)))
-                     Any#))
-                  Any#)))
+         (-> (Any#) (-> (Any#) (-> ((-> ((sum (con Tuple#))) Any#)) Any#)))
          (let
             (($Prelude.let_889
-               (->
-                  (Any#)
-                  (->
-                     ((->
-                        ((sum (con Tuple#)))
-                        Any#))
-                     Any#))
-               (fun
-                  ($Prelude.tValue_866)
-                  (let
-                     (($Prelude.let_888
-                        (->
-                           ((->
-                              ((sum (con Tuple#)))
-                              Any#))
-                           Any#)
-                        (fun
-                           ($Prelude.f_867)
-                           (direct $Prelude.unless_curry_876 $Prelude.c_865 $Prelude.tValue_866 $Prelude.f_867))))
-                     $Prelude.let_888))))
+                (-> (Any#) (-> ((-> ((sum (con Tuple#))) Any#)) Any#))
+                (fun
+                   ($Prelude.tValue_866)
+                   (let
+                      (($Prelude.let_888
+                          (-> ((-> ((sum (con Tuple#))) Any#)) Any#)
+                          (fun
+                             ($Prelude.f_867)
+                             (direct
+                                $Prelude.unless_curry_876
+                                $Prelude.c_865
+                                $Prelude.tValue_866
+                                $Prelude.f_867))))
+                      $Prelude.let_888))))
             $Prelude.let_889))
-      (define
-         (identity $Prelude.x_890)
-         (->
-            (Any#)
-            Any#)
-         $Prelude.x_890)
+      (define (identity $Prelude.x_890) (-> (Any#) Any#) $Prelude.x_890)
       (define
          (headString $Prelude.str_891)
-         (->
-            (Any#)
-            Any#)
-         (= $Prelude.d_904
-            (= $Prelude.d_899
-               (= $Prelude.d_897
-                  (= $Prelude.d_893
-                     (= $Prelude.d_892
+         (-> (Any#) Any#)
+         (=
+            $Prelude.d_904
+            (=
+               $Prelude.d_899
+               (=
+                  $Prelude.d_897
+                  (=
+                     $Prelude.d_893
+                     (=
+                        $Prelude.d_892
                         (call eqString $Prelude.str_891)
-                        (cast
-                           (->
-                              (Any#)
-                              Any#)
-                           $Prelude.d_892))
-                     (= $Prelude.d_895
-                        (= $Prelude.d_894
+                        (cast (-> (Any#) Any#) $Prelude.d_892))
+                     (=
+                        $Prelude.d_895
+                        (=
+                           $Prelude.d_894
                            (call String# "")
                            (cast Any# $Prelude.d_894))
-                        (= $Prelude.d_896
+                        (=
+                           $Prelude.d_896
                            (call $Prelude.d_893 $Prelude.d_895)
                            (cast Any# $Prelude.d_896))))
-                  (= $Prelude.d_898
+                  (=
+                     $Prelude.d_898
                      (call if $Prelude.d_897)
                      (cast
                         (->
-                           ((->
-                              ((sum (con Tuple#)))
-                              Any#))
-                           (->
-                              ((->
-                                 ((sum (con Tuple#)))
-                                 Any#))
-                              Any#))
+                           ((-> ((sum (con Tuple#))) Any#))
+                           (-> ((-> ((sum (con Tuple#))) Any#)) Any#))
                         $Prelude.d_898)))
-               (= $Prelude.d_902
+               (=
+                  $Prelude.d_902
                   (let
                      (($Prelude.fun_901
-                        (->
-                           ((sum (con Tuple#)))
-                           Any#)
-                        (fun
-                           ($Prelude.$__900)
-                           (direct Nothing))))
+                         (-> ((sum (con Tuple#))) Any#)
+                         (fun ($Prelude.$__900) (direct Nothing))))
                      $Prelude.fun_901)
-                  (= $Prelude.d_903
+                  (=
+                     $Prelude.d_903
                      (call $Prelude.d_899 $Prelude.d_902)
                      (cast
-                        (->
-                           ((->
-                              ((sum (con Tuple#)))
-                              Any#))
-                           Any#)
+                        (-> ((-> ((sum (con Tuple#))) Any#)) Any#)
                         $Prelude.d_903))))
-            (= $Prelude.d_914
+            (=
+               $Prelude.d_914
                (let
                   (($Prelude.fun_913
-                     (->
-                        ((sum (con Tuple#)))
-                        Any#)
-                     (fun
-                        ($Prelude.$__905)
-                        (= $Prelude.d_911
-                           (= $Prelude.d_909
-                              (= $Prelude.d_907
-                                 (= $Prelude.d_906
-                                    (call Int64# 0_i64)
-                                    (cast Any# $Prelude.d_906))
-                                 (= $Prelude.d_908
-                                    (call atString $Prelude.d_907)
-                                    (cast
-                                       (->
-                                          (Any#)
-                                          Any#)
-                                       $Prelude.d_908)))
-                              (= $Prelude.d_910
-                                 (call $Prelude.d_909 $Prelude.str_891)
-                                 (cast Any# $Prelude.d_910)))
-                           (= $Prelude.d_912
-                              (call Just $Prelude.d_911)
-                              (cast Any# $Prelude.d_912))))))
+                      (-> ((sum (con Tuple#))) Any#)
+                      (fun
+                         ($Prelude.$__905)
+                         (=
+                            $Prelude.d_911
+                            (=
+                               $Prelude.d_909
+                               (=
+                                  $Prelude.d_907
+                                  (=
+                                     $Prelude.d_906
+                                     (call Int64# 0_i64)
+                                     (cast Any# $Prelude.d_906))
+                                  (=
+                                     $Prelude.d_908
+                                     (call atString $Prelude.d_907)
+                                     (cast (-> (Any#) Any#) $Prelude.d_908)))
+                               (=
+                                  $Prelude.d_910
+                                  (call $Prelude.d_909 $Prelude.str_891)
+                                  (cast Any# $Prelude.d_910)))
+                            (=
+                               $Prelude.d_912
+                               (call Just $Prelude.d_911)
+                               (cast Any# $Prelude.d_912))))))
                   $Prelude.fun_913)
-               (= $Prelude.d_915
+               (=
+                  $Prelude.d_915
                   (call $Prelude.d_904 $Prelude.d_914)
                   (cast Any# $Prelude.d_915)))))
       (define
          (head $Prelude.cons_916)
-         (->
-            (Any#)
-            Any#)
+         (-> (Any#) Any#)
          (match
             (cast
-               (sum (con runtime/malgo/Prelude.mlg.Nil)
+               (sum
+                  (con runtime/malgo/Prelude.mlg.Nil)
                   (con runtime/malgo/Prelude.mlg.Cons Any# Any#))
                $Prelude.cons_916)
             (unpack
                (con runtime/malgo/Prelude.mlg.Nil)
                ()
-               (= $Prelude.d_918
+               (=
+                  $Prelude.d_918
                   (let
                      (($Prelude.let_917
-                        (sum (con Tuple#))
-                        (pack
-                           (sum (con Tuple#))
-                           (con Tuple#))))
+                         (sum (con Tuple#))
+                         (pack (sum (con Tuple#)) (con Tuple#))))
                      $Prelude.let_917)
-                  (= $Prelude.d_919
+                  (=
+                     $Prelude.d_919
                      (call exitFailure $Prelude.d_918)
                      (cast Any# $Prelude.d_919))))
             (unpack
@@ -1152,9 +1030,7 @@
                $Prelude.p_920)))
       (define
          (fst $Prelude.tuple_922)
-         (->
-            ((sum (con Tuple# Any# Any#)))
-            Any#)
+         (-> ((sum (con Tuple# Any# Any#))) Any#)
          (match
             $Prelude.tuple_922
             (unpack
@@ -1163,248 +1039,183 @@
                $Prelude.p_923)))
       (define
          (foldl $Prelude.__925)
-         (->
-            ((->
-               (Any#)
-               (->
-                  (Any#)
-                  Any#)))
-            (->
-               (Any#)
-               (->
-                  (Any#)
-                  Any#)))
+         (-> ((-> (Any#) (-> (Any#) Any#))) (-> (Any#) (-> (Any#) Any#)))
          (let
             (($Prelude.let_955
-               (->
-                  (Any#)
-                  (->
-                     (Any#)
-                     Any#))
-               (fun
-                  ($Prelude.z_926)
-                  (let
-                     (($Prelude.let_954
-                        (->
-                           (Any#)
-                           Any#)
-                        (fun
-                           ($Prelude.nil_927)
-                           (direct $Prelude.foldl_curry_939 $Prelude.__925 $Prelude.z_926 $Prelude.nil_927))))
-                     $Prelude.let_954))))
+                (-> (Any#) (-> (Any#) Any#))
+                (fun
+                   ($Prelude.z_926)
+                   (let
+                      (($Prelude.let_954
+                          (-> (Any#) Any#)
+                          (fun
+                             ($Prelude.nil_927)
+                             (direct
+                                $Prelude.foldl_curry_939
+                                $Prelude.__925
+                                $Prelude.z_926
+                                $Prelude.nil_927))))
+                      $Prelude.let_954))))
             $Prelude.let_955))
       (define
          (const $Prelude.a_956)
-         (->
-            (Any#)
-            (->
-               (Any#)
-               Any#))
+         (-> (Any#) (-> (Any#) Any#))
          (let
             (($Prelude.let_961
-               (->
-                  (Any#)
-                  Any#)
-               (fun
-                  ($Prelude.__957)
-                  (direct $Prelude.const_curry_958 $Prelude.a_956 $Prelude.__957))))
+                (-> (Any#) Any#)
+                (fun
+                   ($Prelude.__957)
+                   (direct $Prelude.const_curry_958 $Prelude.a_956 $Prelude.__957))))
             $Prelude.let_961))
       (define
          (cond $Prelude.nil_962)
-         (->
-            (Any#)
-            Any#)
+         (-> (Any#) Any#)
          (match
             (cast
-               (sum (con runtime/malgo/Prelude.mlg.Nil)
+               (sum
+                  (con runtime/malgo/Prelude.mlg.Nil)
                   (con
                      runtime/malgo/Prelude.mlg.Cons
-                     (sum (con    Tuple#    Any#    (->       ((sum (con Tuple#)))       Any#)))
+                     (sum (con Tuple# Any# (-> ((sum (con Tuple#))) Any#)))
                      Any#))
                $Prelude.nil_962)
             (unpack
                (con runtime/malgo/Prelude.mlg.Nil)
                ()
-               (= $Prelude.d_964
-                  (= $Prelude.d_963
+               (=
+                  $Prelude.d_964
+                  (=
+                     $Prelude.d_963
                      (call String# "no branch")
                      (cast Any# $Prelude.d_963))
-                  (= $Prelude.d_965
+                  (=
+                     $Prelude.d_965
                      (call panic $Prelude.d_964)
                      (cast Any# $Prelude.d_965))))
             (unpack
                (con
                   runtime/malgo/Prelude.mlg.Cons
-                  (sum (con    Tuple#    Any#    (->       ((sum (con Tuple#)))       Any#)))
+                  (sum (con Tuple# Any# (-> ((sum (con Tuple#))) Any#)))
                   Any#)
                ($Prelude.p_966 $Prelude.p_967)
                (match
                   $Prelude.p_966
                   (unpack
-                     (con
-                        Tuple#
-                        Any#
-                        (->
-                           ((sum (con Tuple#)))
-                           Any#))
+                     (con Tuple# Any# (-> ((sum (con Tuple#))) Any#))
                      ($Prelude.p_968 $Prelude.p_969)
                      (match
                         (cast
-                           (sum (con runtime/malgo/Builtin.mlg.False)
+                           (sum
+                              (con runtime/malgo/Builtin.mlg.False)
                               (con runtime/malgo/Builtin.mlg.True))
                            $Prelude.p_968)
                         (unpack
                            (con runtime/malgo/Builtin.mlg.False)
                            ()
-                           (= $Prelude.d_970
+                           (=
+                              $Prelude.d_970
                               (call cond $Prelude.p_967)
                               (cast Any# $Prelude.d_970)))
                         (unpack
                            (con runtime/malgo/Builtin.mlg.True)
                            ()
-                           (= $Prelude.d_972
+                           (=
+                              $Prelude.d_972
                               (let
                                  (($Prelude.let_971
-                                    (sum (con Tuple#))
-                                    (pack
-                                       (sum (con Tuple#))
-                                       (con Tuple#))))
+                                     (sum (con Tuple#))
+                                     (pack (sum (con Tuple#)) (con Tuple#))))
                                  $Prelude.let_971)
-                              (= $Prelude.d_973
+                              (=
+                                 $Prelude.d_973
                                  (call $Prelude.p_969 $Prelude.d_972)
                                  (cast Any# $Prelude.d_973))))))))))
       (define
          (concatString $Prelude.nil_974)
-         (->
-            (Any#)
-            Any#)
+         (-> (Any#) Any#)
          (match
             (cast
-               (sum (con runtime/malgo/Prelude.mlg.Nil)
+               (sum
+                  (con runtime/malgo/Prelude.mlg.Nil)
                   (con runtime/malgo/Prelude.mlg.Cons Any# Any#))
                $Prelude.nil_974)
             (unpack
                (con runtime/malgo/Prelude.mlg.Nil)
                ()
-               (= $Prelude.d_975
-                  (call String# "")
-                  (cast Any# $Prelude.d_975)))
+               (= $Prelude.d_975 (call String# "") (cast Any# $Prelude.d_975)))
             (unpack
                (con runtime/malgo/Prelude.mlg.Cons Any# Any#)
                ($Prelude.p_976 $Prelude.p_977)
-               (= $Prelude.d_979
-                  (= $Prelude.d_978
+               (=
+                  $Prelude.d_979
+                  (=
+                     $Prelude.d_978
                      (call appendString $Prelude.p_976)
-                     (cast
-                        (->
-                           (Any#)
-                           Any#)
-                        $Prelude.d_978))
-                  (= $Prelude.d_981
-                     (= $Prelude.d_980
+                     (cast (-> (Any#) Any#) $Prelude.d_978))
+                  (=
+                     $Prelude.d_981
+                     (=
+                        $Prelude.d_980
                         (call concatString $Prelude.p_977)
                         (cast Any# $Prelude.d_980))
-                     (= $Prelude.d_982
+                     (=
+                        $Prelude.d_982
                         (call $Prelude.d_979 $Prelude.d_981)
                         (cast Any# $Prelude.d_982)))))))
       (define
          (case $Prelude.x_983)
-         (->
-            (Any#)
-            (->
-               ((->
-                  (Any#)
-                  Any#))
-               Any#))
+         (-> (Any#) (-> ((-> (Any#) Any#)) Any#))
          (let
             (($Prelude.let_990
-               (->
-                  ((->
-                     (Any#)
-                     Any#))
-                  Any#)
-               (fun
-                  ($Prelude.f_984)
-                  (direct $Prelude.case_curry_986 $Prelude.x_983 $Prelude.f_984))))
+                (-> ((-> (Any#) Any#)) Any#)
+                (fun
+                   ($Prelude.f_984)
+                   (direct $Prelude.case_curry_986 $Prelude.x_983 $Prelude.f_984))))
             $Prelude.let_990))
       (define
          (dropWhileString $Prelude.pred_991)
-         (->
-            ((->
-               (Any#)
-               Any#))
-            (->
-               (Any#)
-               Any#))
+         (-> ((-> (Any#) Any#)) (-> (Any#) Any#))
          (let
             (($Prelude.let_1050
-               (->
-                  (Any#)
-                  Any#)
-               (fun
-                  ($Prelude.str_992)
-                  (direct $Prelude.dropWhileString_curry_1020 $Prelude.pred_991 $Prelude.str_992))))
+                (-> (Any#) Any#)
+                (fun
+                   ($Prelude.str_992)
+                   (direct
+                      $Prelude.dropWhileString_curry_1020
+                      $Prelude.pred_991
+                      $Prelude.str_992))))
             $Prelude.let_1050))
       (define
          (takeWhileString $Prelude.pred_1051)
-         (->
-            ((->
-               (Any#)
-               Any#))
-            (->
-               (Any#)
-               Any#))
+         (-> ((-> (Any#) Any#)) (-> (Any#) Any#))
          (let
             (($Prelude.let_1120
-               (->
-                  (Any#)
-                  Any#)
-               (fun
-                  ($Prelude.str_1052)
-                  (direct $Prelude.takeWhileString_curry_1085 $Prelude.pred_1051 $Prelude.str_1052))))
+                (-> (Any#) Any#)
+                (fun
+                   ($Prelude.str_1052)
+                   (direct
+                      $Prelude.takeWhileString_curry_1085
+                      $Prelude.pred_1051
+                      $Prelude.str_1052))))
             $Prelude.let_1120))
       (define
          (<| $Prelude.f_1121)
-         (->
-            ((->
-               (Any#)
-               Any#))
-            (->
-               (Any#)
-               Any#))
+         (-> ((-> (Any#) Any#)) (-> (Any#) Any#))
          (let
             (($Prelude.let_1128
-               (->
-                  (Any#)
-                  Any#)
-               (fun
-                  ($Prelude.x_1122)
-                  (direct $Prelude.<|_curry_1124 $Prelude.f_1121 $Prelude.x_1122))))
+                (-> (Any#) Any#)
+                (fun
+                   ($Prelude.x_1122)
+                   (direct $Prelude.<|_curry_1124 $Prelude.f_1121 $Prelude.x_1122))))
             $Prelude.let_1128))
       (define
          (<< $Prelude.f_1129)
-         (->
-            ((->
-               (Any#)
-               Any#))
-            (->
-               ((->
-                  (Any#)
-                  Any#))
-               (->
-                  (Any#)
-                  Any#)))
+         (-> ((-> (Any#) Any#)) (-> ((-> (Any#) Any#)) (-> (Any#) Any#)))
          (let
             (($Prelude.let_1144
-               (->
-                  ((->
-                     (Any#)
-                     Any#))
-                  (->
-                     (Any#)
-                     Any#))
-               (fun
-                  ($Prelude.g_1130)
-                  (direct $Prelude.<<_curry_1136 $Prelude.f_1129 $Prelude.g_1130))))
+                (-> ((-> (Any#) Any#)) (-> (Any#) Any#))
+                (fun
+                   ($Prelude.g_1130)
+                   (direct $Prelude.<<_curry_1136 $Prelude.f_1129 $Prelude.g_1130))))
             $Prelude.let_1144)))
    ())

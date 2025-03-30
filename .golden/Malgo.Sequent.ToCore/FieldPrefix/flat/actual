@@ -1,40 +1,25 @@
 ((zero3D
-   $FieldPrefix.return_53
-   (cut
-      ((x
-         ($FieldPrefix.return_54
-            (invoke Float#
-               (apply
-                  (0.0_f32)
-                  ($FieldPrefix.return_54)))))
-         (y
-            ($FieldPrefix.return_55
-               (invoke Float#
-                  (apply
-                     (0.0_f32)
-                     ($FieldPrefix.return_55)))))
-         (z
-            ($FieldPrefix.return_56
-               (invoke Float#
-                  (apply
-                     (0.0_f32)
-                     ($FieldPrefix.return_56))))))
-      $FieldPrefix.return_53))
+    $FieldPrefix.return_53
+    (cut
+       ((x
+           ($FieldPrefix.return_54
+              (invoke Float# (apply (0.0_f32) ($FieldPrefix.return_54)))))
+          (y
+             ($FieldPrefix.return_55
+                (invoke Float# (apply (0.0_f32) ($FieldPrefix.return_55)))))
+          (z
+             ($FieldPrefix.return_56
+                (invoke Float# (apply (0.0_f32) ($FieldPrefix.return_56))))))
+       $FieldPrefix.return_53))
    (zero2D
       $FieldPrefix.return_57
       (cut
          ((x
-            ($FieldPrefix.return_58
-               (invoke Int32#
-                  (apply
-                     (0_i32)
-                     ($FieldPrefix.return_58)))))
+             ($FieldPrefix.return_58
+                (invoke Int32# (apply (0_i32) ($FieldPrefix.return_58)))))
             (y
                ($FieldPrefix.return_59
-                  (invoke Int32#
-                     (apply
-                        (0_i32)
-                        ($FieldPrefix.return_59))))))
+                  (invoke Int32# (apply (0_i32) ($FieldPrefix.return_59))))))
          $FieldPrefix.return_57))
    (y2D
       $FieldPrefix.return_60
@@ -44,9 +29,7 @@
             (cut
                $FieldPrefix.param_47
                (select
-                  ((expand
-                     ((x #FieldPrefix.__4)
-                        (y #FieldPrefix.y_5)))
+                  ((expand ((x #FieldPrefix.__4) (y #FieldPrefix.y_5)))
                      (cut #FieldPrefix.y_5 $FieldPrefix.return_61)))))
          $FieldPrefix.return_60))
    (x2D
@@ -57,9 +40,7 @@
             (cut
                $FieldPrefix.param_48
                (select
-                  ((expand
-                     ((x #FieldPrefix.x_2)
-                        (y #FieldPrefix.__3)))
+                  ((expand ((x #FieldPrefix.x_2) (y #FieldPrefix.__3)))
                      (cut #FieldPrefix.x_2 $FieldPrefix.return_63)))))
          $FieldPrefix.return_62))
    (print2D
@@ -70,72 +51,86 @@
             (cut
                $FieldPrefix.param_49
                (select
-                  ((expand
-                     ((x #FieldPrefix.x_0)
-                        (y #FieldPrefix.y_1)))
+                  ((expand ((x #FieldPrefix.x_0) (y #FieldPrefix.y_1)))
                      (cut
                         (lambda
                            ($FieldPrefix.tmp_50 $FieldPrefix.return_68)
                            (cut
                               (lambda
                                  ($FieldPrefix.tmp_51 $FieldPrefix.return_71)
-                                 (invoke printString
-                                    (then $FieldPrefix.outer_76
+                                 (invoke
+                                    printString
+                                    (then
+                                       $FieldPrefix.outer_76
                                        (join
                                           $FieldPrefix.return_72
-                                          (then $FieldPrefix.inner_77
+                                          (then
+                                             $FieldPrefix.inner_77
                                              (cut
                                                 $FieldPrefix.outer_76
                                                 (apply
                                                    ($FieldPrefix.inner_77)
                                                    ($FieldPrefix.return_71))))
-                                          (invoke toStringInt32
+                                          (invoke
+                                             toStringInt32
                                              (apply
                                                 (#FieldPrefix.y_1)
                                                 ($FieldPrefix.return_72)))))))
-                              (then $FieldPrefix.outer_78
+                              (then
+                                 $FieldPrefix.outer_78
                                  (join
                                     $FieldPrefix.return_69
-                                    (then $FieldPrefix.inner_79
+                                    (then
+                                       $FieldPrefix.inner_79
                                        (cut
                                           $FieldPrefix.outer_78
                                           (apply
                                              ($FieldPrefix.inner_79)
                                              ($FieldPrefix.return_68))))
-                                    (invoke printString
-                                       (then $FieldPrefix.outer_80
+                                    (invoke
+                                       printString
+                                       (then
+                                          $FieldPrefix.outer_80
                                           (join
                                              $FieldPrefix.return_70
-                                             (then $FieldPrefix.inner_81
+                                             (then
+                                                $FieldPrefix.inner_81
                                                 (cut
                                                    $FieldPrefix.outer_80
                                                    (apply
                                                       ($FieldPrefix.inner_81)
                                                       ($FieldPrefix.return_69))))
-                                             (invoke String#
+                                             (invoke
+                                                String#
                                                 (apply
                                                    (", ")
                                                    ($FieldPrefix.return_70))))))))))
-                        (then $FieldPrefix.outer_82
+                        (then
+                           $FieldPrefix.outer_82
                            (join
                               $FieldPrefix.return_66
-                              (then $FieldPrefix.inner_83
+                              (then
+                                 $FieldPrefix.inner_83
                                  (cut
                                     $FieldPrefix.outer_82
                                     (apply
                                        ($FieldPrefix.inner_83)
                                        ($FieldPrefix.return_65))))
-                              (invoke printString
-                                 (then $FieldPrefix.outer_84
+                              (invoke
+                                 printString
+                                 (then
+                                    $FieldPrefix.outer_84
                                     (join
                                        $FieldPrefix.return_67
-                                       (then $FieldPrefix.inner_85
+                                       (then
+                                          $FieldPrefix.inner_85
                                           (cut
                                              $FieldPrefix.outer_84
                                              (apply
                                                 ($FieldPrefix.inner_85)
                                                 ($FieldPrefix.return_66))))
-                                       (invoke toStringInt32
+                                       (invoke
+                                          toStringInt32
                                           (apply
                                              (#FieldPrefix.x_0)
                                              ($FieldPrefix.return_67)))))))))))))
@@ -149,11 +144,14 @@
                $FieldPrefix.param_52
                (select
                   (#FieldPrefix.$__46
-                     (invoke print2D
-                        (then $FieldPrefix.outer_86
+                     (invoke
+                        print2D
+                        (then
+                           $FieldPrefix.outer_86
                            (join
                               $FieldPrefix.return_75
-                              (then $FieldPrefix.inner_87
+                              (then
+                                 $FieldPrefix.inner_87
                                  (cut
                                     $FieldPrefix.outer_86
                                     (apply

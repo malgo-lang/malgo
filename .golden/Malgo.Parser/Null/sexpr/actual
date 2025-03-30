@@ -1,0 +1,56 @@
+(module
+   "test/testcases/malgo/Null.mlg"
+   ((data Maybe (a) ((Nothing ()) (Just (a))))
+      (data Bool () ((False ()) (True ())))
+      (data List (a) ((Nil ()) (Cons (a (app List (a))))))
+      (sig isNothing (-> (app Maybe (a)) Bool))
+      (def
+         isNothing
+         (fn
+            ((clause ((con Nothing ())) (seq (do True)))
+               (clause ((con Just ()) _) (seq (do False))))))
+      (sig mHead (-> (app List (a)) (app Maybe (a))))
+      (def
+         mHead
+         (fn
+            ((clause ((con Nil ())) (seq (do Nothing)))
+               (clause ((con Cons ()) p _) (seq (do (apply Just p)))))))
+      (sig null (-> (app List (a)) Bool))
+      (def
+         null
+         (fn
+            ((clause
+                (as)
+                (seq (do (apply isNothing (seq (do (apply mHead as))))))))))
+      (infix left 0 |>)
+      (sig |> (-> a (-> (-> a b) b)))
+      (def |> (fn ((clause (x f) (seq (do (apply f x)))))))
+      (foreign malgo_print_string (-> String# (tuple)))
+      (foreign malgo_exit_failure (-> (tuple) a))
+      (def
+         main
+         (fn
+            ((clause
+                ()
+                (seq
+                   (do
+                      (opapp
+                         |>
+                         (seq
+                            (do
+                               (apply
+                                  null
+                                  (seq
+                                     (do
+                                        (apply
+                                           (apply Cons True)
+                                           (seq
+                                              (do (apply (apply Cons True) Nil)))))))))
+                         (fn
+                            ((clause
+                                ((con False ()))
+                                (seq
+                                   (do (apply malgo_print_string (string "OK")))))
+                               (clause
+                                  ((con True ()))
+                                  (seq (do (apply malgo_exit_failure (tuple))))))))))))))))

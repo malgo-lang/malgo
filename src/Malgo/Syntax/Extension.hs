@@ -70,12 +70,15 @@ where
 
 import Control.Lens (lens)
 import Data.Kind qualified as K
+import Data.SCargot.Repr.Basic qualified as S
 import Data.Store.TH
 import Data.Void
 import Malgo.Id
 import Malgo.Infer.TypeRep as TypeRep
 import Malgo.Module
-import Malgo.Prelude
+import Malgo.Prelude hiding (All)
+import Malgo.SExpr (ToSExpr (..))
+import Malgo.SExpr qualified as S
 import Prettyprinter ((<+>))
 
 -- | Phase and type instance
@@ -104,6 +107,10 @@ data Qualified x = Qualified {visibility :: Visibility, value :: x}
 
 instance (HasRange x) => HasRange (Qualified x) where
   range (Qualified _ v) = range v
+
+instance (ToSExpr x) => ToSExpr (Qualified x) where
+  toSExpr (Qualified Implicit v) = toSExpr v
+  toSExpr (Qualified (Explicit x) v) = S.L [toSExpr x, toSExpr v]
 
 instance (Pretty x) => Pretty (Qualified x) where
   pretty (Qualified Implicit v) = pretty v
@@ -137,6 +144,11 @@ data Boxed
 
 data Assoc = LeftA | RightA | NeutralA
   deriving stock (Eq, Show, Generic)
+
+instance ToSExpr Assoc where
+  toSExpr LeftA = S.A $ S.Symbol "left"
+  toSExpr RightA = S.A $ S.Symbol "right"
+  toSExpr NeutralA = S.A $ S.Symbol "neutral"
 
 instance Pretty Assoc where
   pretty LeftA = "l"
@@ -344,6 +356,11 @@ data ImportList = All | Selected [PsId] | As ModuleName
 deriving stock instance Eq ImportList
 
 deriving stock instance Show ImportList
+
+instance ToSExpr ImportList where
+  toSExpr All = S.A $ S.Symbol "all"
+  toSExpr (Selected ids) = S.L (S.A (S.Symbol "selected") : map toSExpr ids)
+  toSExpr (As moduleName) = S.L [S.A (S.Symbol "as"), toSExpr moduleName]
 
 type ForallDeclX (c :: K.Type -> Constraint) x =
   ( c (XScDef x),

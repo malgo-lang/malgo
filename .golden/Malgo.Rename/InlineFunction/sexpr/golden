@@ -1,0 +1,133 @@
+(module
+   "test/testcases/malgo/InlineFunction.mlg"
+   ((((((./test/testcases/malgo/InlineFunction.mlg 13 1)
+          (./test/testcases/malgo/InlineFunction.mlg 15 1))
+         fix
+         (fn
+            ((clause
+                (#InlineFunction.f_6 #InlineFunction.x_7)
+                (seq
+                   (do
+                      (apply
+                         (apply
+                            #InlineFunction.f_6
+                            (seq (do (apply fix #InlineFunction.f_6))))
+                         #InlineFunction.x_7))))))))
+       ((((./test/testcases/malgo/InlineFunction.mlg 5 1)
+            (./test/testcases/malgo/InlineFunction.mlg 7 1))
+           <=
+           (fn
+              ((clause
+                  (#InlineFunction.x_0 #InlineFunction.y_1)
+                  (seq
+                     (do
+                        (apply
+                           (apply leInt32 #InlineFunction.x_0)
+                           #InlineFunction.y_1))))))))
+       ((((./test/testcases/malgo/InlineFunction.mlg 11 1)
+            (./test/testcases/malgo/InlineFunction.mlg 13 1))
+           -
+           (fn
+              ((clause
+                  (#InlineFunction.x_4 #InlineFunction.y_5)
+                  (seq
+                     (do
+                        (apply
+                           (apply subInt32 #InlineFunction.x_4)
+                           #InlineFunction.y_5))))))))
+       ((((./test/testcases/malgo/InlineFunction.mlg 8 1)
+            (./test/testcases/malgo/InlineFunction.mlg 10 1))
+           +
+           (fn
+              ((clause
+                  (#InlineFunction.x_2 #InlineFunction.y_3)
+                  (seq
+                     (do
+                        (apply
+                           (apply addInt32 #InlineFunction.x_2)
+                           #InlineFunction.y_3))))))))
+       ((((./test/testcases/malgo/InlineFunction.mlg 15 1)
+            (./test/testcases/malgo/InlineFunction.mlg 23 1))
+           main
+           (fn
+              ((clause
+                  ()
+                  (seq
+                     (let
+                        #InlineFunction.fib_10
+                        (apply
+                           fix
+                           (fn
+                              ((clause
+                                  (#InlineFunction.f_8 #InlineFunction.n_9)
+                                  (seq
+                                     (do
+                                        (apply
+                                           (apply
+                                              (apply
+                                                 if
+                                                 (seq
+                                                    (do
+                                                       (opapp
+                                                          <=
+                                                          #InlineFunction.n_9
+                                                          (apply Int32# (int32 1))))))
+                                              (fn
+                                                 ((clause
+                                                     ()
+                                                     (seq
+                                                        (do
+                                                           (apply
+                                                              Int32#
+                                                              (int32 1))))))))
+                                           (fn
+                                              ((clause
+                                                  ()
+                                                  (seq
+                                                     (do
+                                                        (opapp
+                                                           +
+                                                           (apply
+                                                              #InlineFunction.f_8
+                                                              (seq
+                                                                 (do
+                                                                    (opapp
+                                                                       -
+                                                                       #InlineFunction.n_9
+                                                                       (apply
+                                                                          Int32#
+                                                                          (int32
+                                                                             1))))))
+                                                           (apply
+                                                              #InlineFunction.f_8
+                                                              (seq
+                                                                 (do
+                                                                    (opapp
+                                                                       -
+                                                                       #InlineFunction.n_9
+                                                                       (apply
+                                                                          Int32#
+                                                                          (int32
+                                                                             2))))))))))))))))))))
+                     (do
+                        (opapp
+                           |>
+                           (opapp
+                              |>
+                              (apply
+                                 #InlineFunction.fib_10
+                                 (apply Int32# (int32 5)))
+                              toStringInt32)
+                           putStrLn)))))))))
+      ()
+      ()
+      ()
+      ()
+      ((((./test/testcases/malgo/InlineFunction.mlg 1 1)
+           (./test/testcases/malgo/InlineFunction.mlg 2 1))
+          "runtime/malgo/Builtin.mlg"
+          all)
+         (((./test/testcases/malgo/InlineFunction.mlg 2 1)
+             (./test/testcases/malgo/InlineFunction.mlg 4 1))
+            "runtime/malgo/Prelude.mlg"
+            all))))

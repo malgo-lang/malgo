@@ -1,53 +1,36 @@
 ((string#
-   (lambda
-      ($HelloBoxed.param_21)
-      (select
-         $HelloBoxed.param_21
-         ((#HelloBoxed.x_1
-            (apply
-               (invoke String#)
-               (#HelloBoxed.x_1)))))))
+    (lambda
+       ($HelloBoxed.param_21)
+       (select
+          $HelloBoxed.param_21
+          ((#HelloBoxed.x_1 (apply (invoke String#) (#HelloBoxed.x_1)))))))
    (putStrLn
       (lambda
          ($HelloBoxed.param_22)
          (select
             $HelloBoxed.param_22
-            (((String#
-               (#HelloBoxed.str_0))
-               (apply
-                  (lambda
-                     ($HelloBoxed.tmp_23)
-                     (apply
-                        (invoke malgo_newline)
-                        ((tuple ()))))
-                  ((apply
-                     (invoke malgo_print_string)
-                     (#HelloBoxed.str_0)))))))))
+            (((String# (#HelloBoxed.str_0))
+                (apply
+                   (lambda
+                      ($HelloBoxed.tmp_23)
+                      (apply (invoke malgo_newline) ((tuple ()))))
+                   ((apply (invoke malgo_print_string) (#HelloBoxed.str_0)))))))))
    (main
       (lambda
          ($HelloBoxed.param_24)
          (select
             $HelloBoxed.param_24
             ((#HelloBoxed.$__20
-               (apply
-                  (invoke putStrLn)
-                  ((apply
-                     (invoke String#)
-                     ("Hello, world")))))))))
+                (apply
+                   (invoke putStrLn)
+                   ((apply (invoke String#) ("Hello, world")))))))))
    (String#
-      (lambda
-         ($HelloBoxed.constructor_25)
-         (String#
-            ($HelloBoxed.constructor_25))))
+      (lambda ($HelloBoxed.constructor_25) (String# ($HelloBoxed.constructor_25))))
    (malgo_print_string
       (lambda
          ($HelloBoxed.primitive_26)
-         (primitive
-            malgo_print_string
-            ($HelloBoxed.primitive_26))))
+         (primitive malgo_print_string ($HelloBoxed.primitive_26))))
    (malgo_newline
       (lambda
          ($HelloBoxed.primitive_27)
-         (primitive
-            malgo_newline
-            ($HelloBoxed.primitive_27)))))
+         (primitive malgo_newline ($HelloBoxed.primitive_27)))))

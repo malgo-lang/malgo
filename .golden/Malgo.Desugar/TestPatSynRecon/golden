@@ -1,50 +1,44 @@
 (()
    ((define
-      ($TestPatSynRecon.+#_curry_88 $TestPatSynRecon.x_89 $TestPatSynRecon.y_90)
-      (->
-         (Int64# Int64#)
-         Int64#)
-      (= $TestPatSynRecon.d_92
-         (= $TestPatSynRecon.d_91
-            (call addInt64# $TestPatSynRecon.x_89)
-            (cast
-               (->
-                  (Int64#)
-                  Int64#)
-               $TestPatSynRecon.d_91))
-         (= $TestPatSynRecon.d_93
-            (call $TestPatSynRecon.d_92 $TestPatSynRecon.y_90)
-            (cast Int64# $TestPatSynRecon.d_93))))
+       ($TestPatSynRecon.+#_curry_88 $TestPatSynRecon.x_89 $TestPatSynRecon.y_90)
+       (-> (Int64# Int64#) Int64#)
+       (=
+          $TestPatSynRecon.d_92
+          (=
+             $TestPatSynRecon.d_91
+             (call addInt64# $TestPatSynRecon.x_89)
+             (cast (-> (Int64#) Int64#) $TestPatSynRecon.d_91))
+          (=
+             $TestPatSynRecon.d_93
+             (call $TestPatSynRecon.d_92 $TestPatSynRecon.y_90)
+             (cast Int64# $TestPatSynRecon.d_93))))
       (define
          (+# $TestPatSynRecon.x_83)
-         (->
-            (Int64#)
-            (->
-               (Int64#)
-               Int64#))
+         (-> (Int64#) (-> (Int64#) Int64#))
          (let
             (($TestPatSynRecon.let_94
-               (->
-                  (Int64#)
-                  Int64#)
-               (fun
-                  ($TestPatSynRecon.y_84)
-                  (direct $TestPatSynRecon.+#_curry_88 $TestPatSynRecon.x_83 $TestPatSynRecon.y_84))))
+                (-> (Int64#) Int64#)
+                (fun
+                   ($TestPatSynRecon.y_84)
+                   (direct
+                      $TestPatSynRecon.+#_curry_88
+                      $TestPatSynRecon.x_83
+                      $TestPatSynRecon.y_84))))
             $TestPatSynRecon.let_94))
       (define
          (sum $TestPatSynRecon.cons_95)
-         (->
-            (Any#)
-            Any#)
+         (-> (Any#) Any#)
          (match
             (cast
-               (sum (con runtime/malgo/Prelude.mlg.Nil)
+               (sum
+                  (con runtime/malgo/Prelude.mlg.Nil)
                   (con runtime/malgo/Prelude.mlg.Cons Any# Any#))
                $TestPatSynRecon.cons_95)
             (unpack
                (con runtime/malgo/Prelude.mlg.Nil)
                ()
-               (= $TestPatSynRecon.d_96
+               (=
+                  $TestPatSynRecon.d_96
                   (call Int64# 0_i64)
                   (cast Any# $TestPatSynRecon.d_96)))
             (unpack
@@ -57,124 +51,144 @@
                   (unpack
                      (con runtime/malgo/Builtin.mlg.Int64# Int64#)
                      ($TestPatSynRecon.p_99)
-                     (= $TestPatSynRecon.d_103
-                        (= $TestPatSynRecon.d_101
-                           (= $TestPatSynRecon.d_100
+                     (=
+                        $TestPatSynRecon.d_103
+                        (=
+                           $TestPatSynRecon.d_101
+                           (=
+                              $TestPatSynRecon.d_100
                               (call sum $TestPatSynRecon.p_98)
                               (cast Any# $TestPatSynRecon.d_100))
-                           (= $TestPatSynRecon.d_102
+                           (=
+                              $TestPatSynRecon.d_102
                               (call |> $TestPatSynRecon.d_101)
                               (cast
-                                 (->
-                                    ((->
-                                       (Any#)
-                                       Any#))
-                                    Any#)
+                                 (-> ((-> (Any#) Any#)) Any#)
                                  $TestPatSynRecon.d_102)))
-                        (= $TestPatSynRecon.d_112
+                        (=
+                           $TestPatSynRecon.d_112
                            (let
                               (($TestPatSynRecon.fun_111
-                                 (->
-                                    (Any#)
-                                    Any#)
-                                 (fun
-                                    ($TestPatSynRecon.int64#_104)
-                                    (match
-                                       (cast
-                                          (sum (con runtime/malgo/Builtin.mlg.Int64# Int64#))
-                                          $TestPatSynRecon.int64#_104)
-                                       (unpack
-                                          (con runtime/malgo/Builtin.mlg.Int64# Int64#)
-                                          ($TestPatSynRecon.p_105)
-                                          (= $TestPatSynRecon.d_109
-                                             (= $TestPatSynRecon.d_107
-                                                (= $TestPatSynRecon.d_106
-                                                   (call +# $TestPatSynRecon.p_99)
-                                                   (cast
-                                                      (->
-                                                         (Int64#)
-                                                         Int64#)
-                                                      $TestPatSynRecon.d_106))
-                                                (= $TestPatSynRecon.d_108
-                                                   (call $TestPatSynRecon.d_107 $TestPatSynRecon.p_105)
-                                                   (cast Int64# $TestPatSynRecon.d_108)))
-                                             (= $TestPatSynRecon.d_110
-                                                (call Int64# $TestPatSynRecon.d_109)
-                                                (cast Any# $TestPatSynRecon.d_110))))))))
+                                  (-> (Any#) Any#)
+                                  (fun
+                                     ($TestPatSynRecon.int64#_104)
+                                     (match
+                                        (cast
+                                           (sum
+                                              (con
+                                                 runtime/malgo/Builtin.mlg.Int64#
+                                                 Int64#))
+                                           $TestPatSynRecon.int64#_104)
+                                        (unpack
+                                           (con
+                                              runtime/malgo/Builtin.mlg.Int64#
+                                              Int64#)
+                                           ($TestPatSynRecon.p_105)
+                                           (=
+                                              $TestPatSynRecon.d_109
+                                              (=
+                                                 $TestPatSynRecon.d_107
+                                                 (=
+                                                    $TestPatSynRecon.d_106
+                                                    (call
+                                                       +#
+                                                       $TestPatSynRecon.p_99)
+                                                    (cast
+                                                       (-> (Int64#) Int64#)
+                                                       $TestPatSynRecon.d_106))
+                                                 (=
+                                                    $TestPatSynRecon.d_108
+                                                    (call
+                                                       $TestPatSynRecon.d_107
+                                                       $TestPatSynRecon.p_105)
+                                                    (cast
+                                                       Int64#
+                                                       $TestPatSynRecon.d_108)))
+                                              (=
+                                                 $TestPatSynRecon.d_110
+                                                 (call
+                                                    Int64#
+                                                    $TestPatSynRecon.d_109)
+                                                 (cast
+                                                    Any#
+                                                    $TestPatSynRecon.d_110))))))))
                               $TestPatSynRecon.fun_111)
-                           (= $TestPatSynRecon.d_113
+                           (=
+                              $TestPatSynRecon.d_113
                               (call $TestPatSynRecon.d_103 $TestPatSynRecon.d_112)
                               (cast Any# $TestPatSynRecon.d_113)))))))))
       (define
          (main $TestPatSynRecon.$__114)
-         (->
-            ((sum (con Tuple#)))
-            (sum (con Tuple#)))
-         (= $TestPatSynRecon.d_131
-            (= $TestPatSynRecon.d_129
-               (= $TestPatSynRecon.d_127
-                  (= $TestPatSynRecon.d_118
-                     (= $TestPatSynRecon.d_116
-                        (= $TestPatSynRecon.d_115
+         (-> ((sum (con Tuple#))) (sum (con Tuple#)))
+         (=
+            $TestPatSynRecon.d_131
+            (=
+               $TestPatSynRecon.d_129
+               (=
+                  $TestPatSynRecon.d_127
+                  (=
+                     $TestPatSynRecon.d_118
+                     (=
+                        $TestPatSynRecon.d_116
+                        (=
+                           $TestPatSynRecon.d_115
                            (call Int64# 1_i64)
                            (cast Any# $TestPatSynRecon.d_115))
-                        (= $TestPatSynRecon.d_117
+                        (=
+                           $TestPatSynRecon.d_117
                            (call Cons $TestPatSynRecon.d_116)
-                           (cast
-                              (->
-                                 (Any#)
-                                 Any#)
-                              $TestPatSynRecon.d_117)))
-                     (= $TestPatSynRecon.d_125
-                        (= $TestPatSynRecon.d_122
-                           (= $TestPatSynRecon.d_120
-                              (= $TestPatSynRecon.d_119
+                           (cast (-> (Any#) Any#) $TestPatSynRecon.d_117)))
+                     (=
+                        $TestPatSynRecon.d_125
+                        (=
+                           $TestPatSynRecon.d_122
+                           (=
+                              $TestPatSynRecon.d_120
+                              (=
+                                 $TestPatSynRecon.d_119
                                  (call Int64# 2_i64)
                                  (cast Any# $TestPatSynRecon.d_119))
-                              (= $TestPatSynRecon.d_121
+                              (=
+                                 $TestPatSynRecon.d_121
                                  (call Cons $TestPatSynRecon.d_120)
-                                 (cast
-                                    (->
-                                       (Any#)
-                                       Any#)
-                                    $TestPatSynRecon.d_121)))
-                           (= $TestPatSynRecon.d_123
+                                 (cast (-> (Any#) Any#) $TestPatSynRecon.d_121)))
+                           (=
+                              $TestPatSynRecon.d_123
                               (direct Nil)
-                              (= $TestPatSynRecon.d_124
-                                 (call $TestPatSynRecon.d_122 $TestPatSynRecon.d_123)
+                              (=
+                                 $TestPatSynRecon.d_124
+                                 (call
+                                    $TestPatSynRecon.d_122
+                                    $TestPatSynRecon.d_123)
                                  (cast Any# $TestPatSynRecon.d_124))))
-                        (= $TestPatSynRecon.d_126
+                        (=
+                           $TestPatSynRecon.d_126
                            (call $TestPatSynRecon.d_118 $TestPatSynRecon.d_125)
                            (cast Any# $TestPatSynRecon.d_126))))
-                  (= $TestPatSynRecon.d_128
+                  (=
+                     $TestPatSynRecon.d_128
                      (call sum $TestPatSynRecon.d_127)
                      (cast Any# $TestPatSynRecon.d_128)))
-               (= $TestPatSynRecon.d_130
+               (=
+                  $TestPatSynRecon.d_130
                   (call |> $TestPatSynRecon.d_129)
                   (cast
-                     (->
-                        ((->
-                           (Any#)
-                           (sum (con Tuple#))))
-                        (sum (con Tuple#)))
+                     (-> ((-> (Any#) (sum (con Tuple#)))) (sum (con Tuple#)))
                      $TestPatSynRecon.d_130)))
-            (= $TestPatSynRecon.d_135
+            (=
+               $TestPatSynRecon.d_135
                (let
                   (($TestPatSynRecon.fun_134
-                     (->
-                        (Any#)
-                        (sum (con Tuple#)))
-                     (fun
-                        ($TestPatSynRecon.i_132)
-                        (= $TestPatSynRecon.d_133
-                           (call printInt64 $TestPatSynRecon.i_132)
-                           (cast
-                              (sum (con Tuple#))
-                              $TestPatSynRecon.d_133)))))
+                      (-> (Any#) (sum (con Tuple#)))
+                      (fun
+                         ($TestPatSynRecon.i_132)
+                         (=
+                            $TestPatSynRecon.d_133
+                            (call printInt64 $TestPatSynRecon.i_132)
+                            (cast (sum (con Tuple#)) $TestPatSynRecon.d_133)))))
                   $TestPatSynRecon.fun_134)
-               (= $TestPatSynRecon.d_136
+               (=
+                  $TestPatSynRecon.d_136
                   (call $TestPatSynRecon.d_131 $TestPatSynRecon.d_135)
-                  (cast
-                     (sum (con Tuple#))
-                     $TestPatSynRecon.d_136))))))
+                  (cast (sum (con Tuple#)) $TestPatSynRecon.d_136))))))
    ())

@@ -1,24 +1,28 @@
 ((main
-   $TestExplicitModule.return_8
-   (cut
-      (lambda
-         ($TestExplicitModule.param_7 $TestExplicitModule.return_9)
-         (cut
-            $TestExplicitModule.param_7
-            (select
-               (#TestExplicitModule.$__6
-                  (invoke putStrLn
-                     (then $TestExplicitModule.outer_11
-                        (join
-                           $TestExplicitModule.return_10
-                           (then $TestExplicitModule.inner_12
-                              (cut
-                                 $TestExplicitModule.outer_11
-                                 (apply
-                                    ($TestExplicitModule.inner_12)
-                                    ($TestExplicitModule.return_9))))
-                           (invoke String#
-                              (apply
-                                 ("Hello, world")
-                                 ($TestExplicitModule.return_10))))))))))
-      $TestExplicitModule.return_8)))
+    $TestExplicitModule.return_8
+    (cut
+       (lambda
+          ($TestExplicitModule.param_7 $TestExplicitModule.return_9)
+          (cut
+             $TestExplicitModule.param_7
+             (select
+                (#TestExplicitModule.$__6
+                   (invoke
+                      putStrLn
+                      (then
+                         $TestExplicitModule.outer_11
+                         (join
+                            $TestExplicitModule.return_10
+                            (then
+                               $TestExplicitModule.inner_12
+                               (cut
+                                  $TestExplicitModule.outer_11
+                                  (apply
+                                     ($TestExplicitModule.inner_12)
+                                     ($TestExplicitModule.return_9))))
+                            (invoke
+                               String#
+                               (apply
+                                  ("Hello, world")
+                                  ($TestExplicitModule.return_10))))))))))
+       $TestExplicitModule.return_8)))

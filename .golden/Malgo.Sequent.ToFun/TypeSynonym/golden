@@ -1,49 +1,34 @@
 ((idOverS
-   (lambda
-      ($TypeSynonym.param_30)
-      (select
-         $TypeSynonym.param_30
-         ((#TypeSynonym.x_1 #TypeSynonym.x_1)))))
+    (lambda
+       ($TypeSynonym.param_30)
+       (select $TypeSynonym.param_30 ((#TypeSynonym.x_1 #TypeSynonym.x_1)))))
    (hello
       (tuple
-         ((apply
-            (invoke String#)
-            ("hello"))
-            (apply
-               (invoke String#)
-               ("world")))))
+         ((apply (invoke String#) ("hello")) (apply (invoke String#) ("world")))))
    (main
       (lambda
          ($TypeSynonym.param_31)
          (select
             $TypeSynonym.param_31
             ((#TypeSynonym.$__29
-               (apply
-                  (apply
-                     (invoke |>)
-                     ((invoke hello)))
-                  ((lambda
-                     ($TypeSynonym.param_32)
-                     (select
-                        $TypeSynonym.param_32
-                        (((tuple
-                           (#TypeSynonym.h_2 #TypeSynonym.w_3))
-                           (apply
-                              (lambda
-                                 ($TypeSynonym.tmp_33)
-                                 (apply
-                                    (lambda
-                                       ($TypeSynonym.tmp_34)
-                                       (apply
-                                          (invoke putStrLn)
-                                          (#TypeSynonym.w_3)))
-                                    ((apply
-                                       (invoke putStr)
+                (apply
+                   (apply (invoke |>) ((invoke hello)))
+                   ((lambda
+                       ($TypeSynonym.param_32)
+                       (select
+                          $TypeSynonym.param_32
+                          (((tuple (#TypeSynonym.h_2 #TypeSynonym.w_3))
+                              (apply
+                                 (lambda
+                                    ($TypeSynonym.tmp_33)
+                                    (apply
+                                       (lambda
+                                          ($TypeSynonym.tmp_34)
+                                          (apply
+                                             (invoke putStrLn)
+                                             (#TypeSynonym.w_3)))
                                        ((apply
-                                          (invoke String#)
-                                          (" ")))))))
-                              ((apply
-                                 (invoke putStr)
-                                 (#TypeSynonym.h_2)))))))))))))))
-   (TCon
-      (TCon ())))
+                                           (invoke putStr)
+                                           ((apply (invoke String#) (" ")))))))
+                                 ((apply (invoke putStr) (#TypeSynonym.h_2)))))))))))))))
+   (TCon (TCon ())))

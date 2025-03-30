@@ -1,123 +1,93 @@
 ((==
-   (lambda
-      ($Factorial.param_98)
-      (lambda
-         ($Factorial.param_99)
-         (select
-            (tuple
-               ($Factorial.param_98 $Factorial.param_99))
-            (((tuple
-               (#Factorial.x_0 #Factorial.y_1))
-               (apply
-                  (apply
-                     (invoke eqInt64)
-                     (#Factorial.x_0))
-                  (#Factorial.y_1))))))))
+    (lambda
+       ($Factorial.param_98)
+       (lambda
+          ($Factorial.param_99)
+          (select
+             (tuple ($Factorial.param_98 $Factorial.param_99))
+             (((tuple (#Factorial.x_0 #Factorial.y_1))
+                 (apply
+                    (apply (invoke eqInt64) (#Factorial.x_0))
+                    (#Factorial.y_1))))))))
    (-
       (lambda
          ($Factorial.param_100)
          (lambda
             ($Factorial.param_101)
             (select
-               (tuple
-                  ($Factorial.param_100 $Factorial.param_101))
-               (((tuple
-                  (#Factorial.x_2 #Factorial.y_3))
-                  (apply
-                     (apply
-                        (invoke subInt64)
-                        (#Factorial.x_2))
-                     (#Factorial.y_3))))))))
+               (tuple ($Factorial.param_100 $Factorial.param_101))
+               (((tuple (#Factorial.x_2 #Factorial.y_3))
+                   (apply
+                      (apply (invoke subInt64) (#Factorial.x_2))
+                      (#Factorial.y_3))))))))
    (*
       (lambda
          ($Factorial.param_102)
          (lambda
             ($Factorial.param_103)
             (select
-               (tuple
-                  ($Factorial.param_102 $Factorial.param_103))
-               (((tuple
-                  (#Factorial.x_4 #Factorial.y_5))
-                  (apply
-                     (apply
-                        (invoke mulInt64)
-                        (#Factorial.x_4))
-                     (#Factorial.y_5))))))))
+               (tuple ($Factorial.param_102 $Factorial.param_103))
+               (((tuple (#Factorial.x_4 #Factorial.y_5))
+                   (apply
+                      (apply (invoke mulInt64) (#Factorial.x_4))
+                      (#Factorial.y_5))))))))
    (factAcc
       (lambda
          ($Factorial.param_104)
          (lambda
             ($Factorial.param_105)
             (select
-               (tuple
-                  ($Factorial.param_104 $Factorial.param_105))
-               (((tuple
-                  (#Factorial.n_7 #Factorial.acc_8))
-                  (apply
-                     (apply
-                        (apply
-                           (invoke if)
-                           ((apply
-                              (apply
-                                 (invoke ==)
-                                 (#Factorial.n_7))
-                              ((apply
-                                 (invoke Int64#)
-                                 (0_i64))))))
-                        ((lambda
-                           ($Factorial.param_106)
-                           (select
-                              $Factorial.param_106
-                              ((#Factorial.$__57 #Factorial.acc_8))))))
-                     ((lambda
-                        ($Factorial.param_107)
-                        (select
-                           $Factorial.param_107
-                           ((#Factorial.$__70
-                              (apply
+               (tuple ($Factorial.param_104 $Factorial.param_105))
+               (((tuple (#Factorial.n_7 #Factorial.acc_8))
+                   (apply
+                      (apply
+                         (apply
+                            (invoke if)
+                            ((apply
+                                (apply (invoke ==) (#Factorial.n_7))
+                                ((apply (invoke Int64#) (0_i64))))))
+                         ((lambda
+                             ($Factorial.param_106)
+                             (select
+                                $Factorial.param_106
+                                ((#Factorial.$__57 #Factorial.acc_8))))))
+                      ((lambda
+                          ($Factorial.param_107)
+                          (select
+                             $Factorial.param_107
+                             ((#Factorial.$__70
                                  (apply
-                                    (invoke factAcc)
-                                    ((apply
-                                       (apply
-                                          (invoke -)
-                                          (#Factorial.n_7))
-                                       ((apply
-                                          (invoke Int64#)
-                                          (1_i64))))))
-                                 ((apply
                                     (apply
-                                       (invoke *)
-                                       (#Factorial.n_7))
-                                    (#Factorial.acc_8))))))))))))))))
+                                       (invoke factAcc)
+                                       ((apply
+                                           (apply (invoke -) (#Factorial.n_7))
+                                           ((apply (invoke Int64#) (1_i64))))))
+                                    ((apply
+                                        (apply (invoke *) (#Factorial.n_7))
+                                        (#Factorial.acc_8))))))))))))))))
    (fact
       (lambda
          ($Factorial.param_108)
          (select
             $Factorial.param_108
             ((#Factorial.n_6
-               (apply
-                  (apply
-                     (invoke factAcc)
-                     (#Factorial.n_6))
-                  ((apply
-                     (invoke Int64#)
-                     (1_i64)))))))))
+                (apply
+                   (apply (invoke factAcc) (#Factorial.n_6))
+                   ((apply (invoke Int64#) (1_i64)))))))))
    (main
       (lambda
          ($Factorial.param_109)
          (select
             $Factorial.param_109
             ((#Factorial.$__97
-               (apply
-                  (apply
-                     (invoke |>)
-                     ((apply
-                        (apply
-                           (invoke |>)
-                           ((apply
-                              (invoke fact)
-                              ((apply
-                                 (invoke Int64#)
-                                 (5_i64))))))
-                        ((invoke toStringInt64)))))
-                  ((invoke putStrLn)))))))))
+                (apply
+                   (apply
+                      (invoke |>)
+                      ((apply
+                          (apply
+                             (invoke |>)
+                             ((apply
+                                 (invoke fact)
+                                 ((apply (invoke Int64#) (5_i64))))))
+                          ((invoke toStringInt64)))))
+                   ((invoke putStrLn)))))))))

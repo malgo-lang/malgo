@@ -1,0 +1,83 @@
+(module
+   "test/testcases/malgo/FieldPrefix.mlg"
+   ((((((./test/testcases/malgo/FieldPrefix.mlg 24 1)
+          (./test/testcases/malgo/FieldPrefix.mlg 26 1))
+         zero3D
+         (record
+            (x (apply Float# (float 0.0_f32)))
+            (y (apply Float# (float 0.0_f32)))
+            (z (apply Float# (float 0.0_f32))))))
+       ((((./test/testcases/malgo/FieldPrefix.mlg 21 1)
+            (./test/testcases/malgo/FieldPrefix.mlg 23 1))
+           zero2D
+           (record (x (apply Int32# (int32 0))) (y (apply Int32# (int32 0))))))
+       ((((./test/testcases/malgo/FieldPrefix.mlg 18 1)
+            (./test/testcases/malgo/FieldPrefix.mlg 20 1))
+           y2D
+           (fn
+              ((clause
+                  ((record (x #FieldPrefix.__4) (y #FieldPrefix.y_5)))
+                  (seq (do #FieldPrefix.y_5)))))))
+       ((((./test/testcases/malgo/FieldPrefix.mlg 15 1)
+            (./test/testcases/malgo/FieldPrefix.mlg 17 1))
+           x2D
+           (fn
+              ((clause
+                  ((record (x #FieldPrefix.x_2) (y #FieldPrefix.__3)))
+                  (seq (do #FieldPrefix.x_2)))))))
+       ((((./test/testcases/malgo/FieldPrefix.mlg 8 1)
+            (./test/testcases/malgo/FieldPrefix.mlg 14 1))
+           print2D
+           (fn
+              ((clause
+                  ((record (x #FieldPrefix.x_0) (y #FieldPrefix.y_1)))
+                  (seq
+                     (do
+                        (apply
+                           printString
+                           (seq (do (apply toStringInt32 #FieldPrefix.x_0)))))
+                     (do (apply printString (apply String# (string ", "))))
+                     (do
+                        (apply
+                           printString
+                           (seq (do (apply toStringInt32 #FieldPrefix.y_1)))))))))))
+       ((((./test/testcases/malgo/FieldPrefix.mlg 26 1)
+            (./test/testcases/malgo/FieldPrefix.mlg 29 1))
+           main
+           (fn ((clause () (seq (do (apply print2D zero2D)))))))))
+      ((((./test/testcases/malgo/FieldPrefix.mlg 14 1)
+           (./test/testcases/malgo/FieldPrefix.mlg 15 1))
+          x2D
+          (-> Point2D Int32))
+         (((./test/testcases/malgo/FieldPrefix.mlg 17 1)
+             (./test/testcases/malgo/FieldPrefix.mlg 18 1))
+            y2D
+            (-> Point2D Int32))
+         (((./test/testcases/malgo/FieldPrefix.mlg 20 1)
+             (./test/testcases/malgo/FieldPrefix.mlg 21 1))
+            zero2D
+            Point2D)
+         (((./test/testcases/malgo/FieldPrefix.mlg 23 1)
+             (./test/testcases/malgo/FieldPrefix.mlg 24 1))
+            zero3D
+            Point3D))
+      ()
+      ((((./test/testcases/malgo/FieldPrefix.mlg 4 6)
+           (./test/testcases/malgo/FieldPrefix.mlg 6 1))
+          Point2D
+          ()
+          (record (x Int32) (y Int32)))
+         (((./test/testcases/malgo/FieldPrefix.mlg 6 6)
+             (./test/testcases/malgo/FieldPrefix.mlg 8 1))
+            Point3D
+            ()
+            (record (x Float) (y Float) (z Float))))
+      ()
+      ((((./test/testcases/malgo/FieldPrefix.mlg 1 1)
+           (./test/testcases/malgo/FieldPrefix.mlg 2 1))
+          "runtime/malgo/Builtin.mlg"
+          all)
+         (((./test/testcases/malgo/FieldPrefix.mlg 2 1)
+             (./test/testcases/malgo/FieldPrefix.mlg 4 1))
+            "runtime/malgo/Prelude.mlg"
+            all))))

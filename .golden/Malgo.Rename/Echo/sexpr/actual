@@ -1,0 +1,21 @@
+(module
+   "test/testcases/malgo/Echo.mlg"
+   ((((((./test/testcases/malgo/Echo.mlg 4 1)
+          (./test/testcases/malgo/Echo.mlg 7 1))
+         main
+         (fn
+            ((clause
+                ()
+                (seq (do (apply putStr (seq (do (apply getContents (tuple)))))))))))))
+      ()
+      ()
+      ()
+      ()
+      ((((./test/testcases/malgo/Echo.mlg 1 1)
+           (./test/testcases/malgo/Echo.mlg 2 1))
+          "runtime/malgo/Builtin.mlg"
+          all)
+         (((./test/testcases/malgo/Echo.mlg 2 1)
+             (./test/testcases/malgo/Echo.mlg 4 1))
+            "runtime/malgo/Prelude.mlg"
+            all))))

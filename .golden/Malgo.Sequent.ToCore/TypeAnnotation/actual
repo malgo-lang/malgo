@@ -1,29 +1,36 @@
 ((main
-   $TypeAnnotation.return_14
-   (cut
-      (lambda
-         ($TypeAnnotation.param_12 $TypeAnnotation.return_15)
-         (cut
-            $TypeAnnotation.param_12
-            (select
-               (#TypeAnnotation.$__11
-                  (invoke printString
-                     (apply
-                        ((do $TypeAnnotation.return_16
-                           (cut
-                              (lambda
-                                 ($TypeAnnotation.param_13 $TypeAnnotation.return_18)
-                                 (cut
-                                    $TypeAnnotation.param_13
-                                    (select
-                                       (#TypeAnnotation.x_0
-                                          (cut #TypeAnnotation.x_0 $TypeAnnotation.return_18)))))
-                              (apply
-                                 ((do $TypeAnnotation.return_17
-                                    (invoke String#
-                                       (apply
-                                          ("hoge")
-                                          ($TypeAnnotation.return_17)))))
-                                 ($TypeAnnotation.return_16)))))
-                        ($TypeAnnotation.return_15)))))))
-      $TypeAnnotation.return_14)))
+    $TypeAnnotation.return_14
+    (cut
+       (lambda
+          ($TypeAnnotation.param_12 $TypeAnnotation.return_15)
+          (cut
+             $TypeAnnotation.param_12
+             (select
+                (#TypeAnnotation.$__11
+                   (invoke
+                      printString
+                      (apply
+                         ((do
+                             $TypeAnnotation.return_16
+                             (cut
+                                (lambda
+                                   ($TypeAnnotation.param_13
+                                      $TypeAnnotation.return_18)
+                                   (cut
+                                      $TypeAnnotation.param_13
+                                      (select
+                                         (#TypeAnnotation.x_0
+                                            (cut
+                                               #TypeAnnotation.x_0
+                                               $TypeAnnotation.return_18)))))
+                                (apply
+                                   ((do
+                                       $TypeAnnotation.return_17
+                                       (invoke
+                                          String#
+                                          (apply
+                                             ("hoge")
+                                             ($TypeAnnotation.return_17)))))
+                                   ($TypeAnnotation.return_16)))))
+                         ($TypeAnnotation.return_15)))))))
+       $TypeAnnotation.return_14)))

@@ -1,0 +1,46 @@
+(module
+   "test/testcases/malgo/TestDot.mlg"
+   ((((((./test/testcases/malgo/TestDot.mlg 4 1)
+          (./test/testcases/malgo/TestDot.mlg 6 1))
+         succ
+         (fn
+            ((clause
+                ((con Int64# (#TestDot.x_0)))
+                (seq
+                   (do
+                      (seq
+                         (do
+                            (apply
+                               Int64#
+                               (seq
+                                  (do
+                                     (apply
+                                        (apply addInt64# #TestDot.x_0)
+                                        (int64 1))))))))))))))
+       ((((./test/testcases/malgo/TestDot.mlg 6 1)
+            (./test/testcases/malgo/TestDot.mlg 7 1))
+           main
+           (fn
+              ((clause
+                  ()
+                  (seq
+                     (do
+                        (apply
+                           printInt64
+                           (seq
+                              (do
+                                 (apply
+                                    (seq (do (opapp << succ succ)))
+                                    (seq (do (apply Int64# (int64 0))))))))))))))))
+      ()
+      ()
+      ()
+      ()
+      ((((./test/testcases/malgo/TestDot.mlg 1 1)
+           (./test/testcases/malgo/TestDot.mlg 2 1))
+          "runtime/malgo/Builtin.mlg"
+          all)
+         (((./test/testcases/malgo/TestDot.mlg 2 1)
+             (./test/testcases/malgo/TestDot.mlg 4 1))
+            "runtime/malgo/Prelude.mlg"
+            all))))

@@ -1,84 +1,72 @@
 (()
    ((define
-      (succ $UseModule.x_36)
-      (->
-         (Any#)
-         Any#)
-      (= $UseModule.d_38
-         (= $UseModule.d_37
-            (call addInt32 $UseModule.x_36)
-            (cast
-               (->
-                  (Any#)
-                  Any#)
-               $UseModule.d_37))
-         (= $UseModule.d_40
-            (= $UseModule.d_39
-               (call Int32# 1_i32)
-               (cast Any# $UseModule.d_39))
-            (= $UseModule.d_41
-               (call $UseModule.d_38 $UseModule.d_40)
-               (cast Any# $UseModule.d_41)))))
+       (succ $UseModule.x_36)
+       (-> (Any#) Any#)
+       (=
+          $UseModule.d_38
+          (=
+             $UseModule.d_37
+             (call addInt32 $UseModule.x_36)
+             (cast (-> (Any#) Any#) $UseModule.d_37))
+          (=
+             $UseModule.d_40
+             (= $UseModule.d_39 (call Int32# 1_i32) (cast Any# $UseModule.d_39))
+             (=
+                $UseModule.d_41
+                (call $UseModule.d_38 $UseModule.d_40)
+                (cast Any# $UseModule.d_41)))))
       (define
          (main $UseModule.$__42)
-         (->
-            ((sum (con Tuple#)))
-            (sum (con Tuple#)))
-         (= $UseModule.d_46
-            (= $UseModule.d_44
-               (= $UseModule.d_43
+         (-> ((sum (con Tuple#))) (sum (con Tuple#)))
+         (=
+            $UseModule.d_46
+            (=
+               $UseModule.d_44
+               (=
+                  $UseModule.d_43
                   (call String# "Hello, world!")
                   (cast Any# $UseModule.d_43))
-               (= $UseModule.d_45
+               (=
+                  $UseModule.d_45
                   (call putStrLn $UseModule.d_44)
-                  (cast
-                     (sum (con Tuple#))
-                     $UseModule.d_45)))
-            (= $UseModule.d_49
-               (= $UseModule.cast_47
-                  (cast
-                     (->
-                        (Any#)
-                        Any#)
-                     printInt32)
-                  (= $UseModule.d_48
+                  (cast (sum (con Tuple#)) $UseModule.d_45)))
+            (=
+               $UseModule.d_49
+               (=
+                  $UseModule.cast_47
+                  (cast (-> (Any#) Any#) printInt32)
+                  (=
+                     $UseModule.d_48
                      (call <| $UseModule.cast_47)
-                     (cast
-                        (->
-                           (Any#)
-                           (sum (con Tuple#)))
-                        $UseModule.d_48)))
-               (= $UseModule.d_57
-                  (= $UseModule.d_53
-                     (= $UseModule.d_51
-                        (= $UseModule.d_50
+                     (cast (-> (Any#) (sum (con Tuple#))) $UseModule.d_48)))
+               (=
+                  $UseModule.d_57
+                  (=
+                     $UseModule.d_53
+                     (=
+                        $UseModule.d_51
+                        (=
+                           $UseModule.d_50
                            (call << succ)
                            (cast
-                              (->
-                                 ((->
-                                    (Any#)
-                                    Any#))
-                                 (->
-                                    (Any#)
-                                    Any#))
+                              (-> ((-> (Any#) Any#)) (-> (Any#) Any#))
                               $UseModule.d_50))
-                        (= $UseModule.d_52
+                        (=
+                           $UseModule.d_52
                            (call $UseModule.d_51 succ)
-                           (cast
-                              (->
-                                 (Any#)
-                                 Any#)
-                              $UseModule.d_52)))
-                     (= $UseModule.d_55
-                        (= $UseModule.d_54
+                           (cast (-> (Any#) Any#) $UseModule.d_52)))
+                     (=
+                        $UseModule.d_55
+                        (=
+                           $UseModule.d_54
                            (call Int32# 1_i32)
                            (cast Any# $UseModule.d_54))
-                        (= $UseModule.d_56
+                        (=
+                           $UseModule.d_56
                            (call $UseModule.d_53 $UseModule.d_55)
                            (cast Any# $UseModule.d_56))))
-                  (= $UseModule.d_58
+                  (=
+                     $UseModule.d_58
                      (call $UseModule.d_49 $UseModule.d_57)
-                     (cast
-                        (sum (con Tuple#))
-                        $UseModule.d_58)))))))
+                     (cast (sum (con Tuple#)) $UseModule.d_58)))))))
    ())

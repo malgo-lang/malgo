@@ -1,0 +1,241 @@
+(module
+   "test/testcases/malgo/ToplevelVariableNoImport.mlg"
+   ((((((./test/testcases/malgo/ToplevelVariableNoImport.mlg 22 1)
+          (./test/testcases/malgo/ToplevelVariableNoImport.mlg 23 1))
+         toStringInt32#
+         (fn
+            ((clause
+                (#ToplevelVariableNoImport.x_14)
+                (seq
+                   (do
+                      (apply
+                         malgo_int32_t_to_string
+                         #ToplevelVariableNoImport.x_14))))))))
+       ((((./test/testcases/malgo/ToplevelVariableNoImport.mlg 24 1)
+            (./test/testcases/malgo/ToplevelVariableNoImport.mlg 26 1))
+           toStringInt32
+           (fn
+              ((clause
+                  ((con Int32# ()) #ToplevelVariableNoImport.x_15)
+                  (seq
+                     (do
+                        (apply
+                           String#
+                           (seq
+                              (do
+                                 (apply
+                                    toStringInt32#
+                                    #ToplevelVariableNoImport.x_15)))))))))))
+       ((((./test/testcases/malgo/ToplevelVariableNoImport.mlg 5 1)
+            (./test/testcases/malgo/ToplevelVariableNoImport.mlg 6 1))
+           printString#
+           (fn
+              ((clause
+                  (#ToplevelVariableNoImport.x_4)
+                  (seq
+                     (do (apply malgo_print_string #ToplevelVariableNoImport.x_4))))))))
+       ((((./test/testcases/malgo/ToplevelVariableNoImport.mlg 7 1)
+            (./test/testcases/malgo/ToplevelVariableNoImport.mlg 9 1))
+           printString
+           (fn
+              ((clause
+                  ((con String# ()) #ToplevelVariableNoImport.x_5)
+                  (seq (do (apply printString# #ToplevelVariableNoImport.x_5))))))))
+       ((((./test/testcases/malgo/ToplevelVariableNoImport.mlg 18 1)
+            (./test/testcases/malgo/ToplevelVariableNoImport.mlg 20 1))
+           printInt32
+           (fn
+              ((clause
+                  (#ToplevelVariableNoImport.i_13)
+                  (seq
+                     (do
+                        (apply
+                           printString
+                           (seq
+                              (do
+                                 (apply
+                                    toStringInt32
+                                    #ToplevelVariableNoImport.i_13)))))))))))
+       ((((./test/testcases/malgo/ToplevelVariableNoImport.mlg 26 1)
+            (./test/testcases/malgo/ToplevelVariableNoImport.mlg 28 1))
+           one
+           (apply Int32# (int32 1))))
+       ((((./test/testcases/malgo/ToplevelVariableNoImport.mlg 10 1)
+            (./test/testcases/malgo/ToplevelVariableNoImport.mlg 12 1))
+           identity
+           (fn
+              ((clause
+                  (#ToplevelVariableNoImport.x_7)
+                  (seq (do #ToplevelVariableNoImport.x_7)))))))
+       ((((./test/testcases/malgo/ToplevelVariableNoImport.mlg 13 1)
+            (./test/testcases/malgo/ToplevelVariableNoImport.mlg 15 1))
+           const
+           (fn
+              ((clause
+                  (#ToplevelVariableNoImport.a_10 #ToplevelVariableNoImport.__11)
+                  (seq (do #ToplevelVariableNoImport.a_10)))))))
+       ((((./test/testcases/malgo/ToplevelVariableNoImport.mlg 30 1)
+            (./test/testcases/malgo/ToplevelVariableNoImport.mlg 32 1))
+           constId
+           (apply const identity)))
+       ((((./test/testcases/malgo/ToplevelVariableNoImport.mlg 33 1)
+            (./test/testcases/malgo/ToplevelVariableNoImport.mlg 38 1))
+           comp
+           (apply
+              (fn
+                 ((clause ((con Nothing ())) (seq (do Nothing)))
+                    (clause
+                       ((con Just ()) #ToplevelVariableNoImport.x_17)
+                       (seq (do Nothing)))))
+              (seq (do (apply Just (tuple)))))))
+       ((((./test/testcases/malgo/ToplevelVariableNoImport.mlg 1 163)
+            (./test/testcases/malgo/ToplevelVariableNoImport.mlg 1 212))
+           addInt32#
+           (fn
+              ((clause
+                  (#ToplevelVariableNoImport.x_0 #ToplevelVariableNoImport.y_1)
+                  (seq
+                     (do
+                        (apply
+                           (apply malgo_add_int32_t #ToplevelVariableNoImport.x_0)
+                           #ToplevelVariableNoImport.y_1))))))))
+       ((((./test/testcases/malgo/ToplevelVariableNoImport.mlg 1 251)
+            (./test/testcases/malgo/ToplevelVariableNoImport.mlg 3 1))
+           addInt32
+           (fn
+              ((clause
+                  ((con Int32# (#ToplevelVariableNoImport.x_2))
+                     (con Int32# (#ToplevelVariableNoImport.y_3)))
+                  (seq
+                     (do
+                        (apply
+                           Int32#
+                           (seq
+                              (do
+                                 (apply
+                                    (apply
+                                       addInt32#
+                                       #ToplevelVariableNoImport.x_2)
+                                    #ToplevelVariableNoImport.y_3)))))))))))
+       ((((./test/testcases/malgo/ToplevelVariableNoImport.mlg 28 1)
+            (./test/testcases/malgo/ToplevelVariableNoImport.mlg 30 1))
+           addOne
+           (apply addInt32 one)))
+       ((((./test/testcases/malgo/ToplevelVariableNoImport.mlg 38 1)
+            (./test/testcases/malgo/ToplevelVariableNoImport.mlg 44 1))
+           main
+           (fn
+              ((clause
+                  ()
+                  (seq
+                     (do
+                        (apply
+                           (fn
+                              ((clause
+                                  ((con Nothing ()))
+                                  (seq
+                                     (do
+                                        (apply
+                                           printString
+                                           (apply String# (string "OK"))))))
+                                 (clause
+                                    ((con Just ()) #ToplevelVariableNoImport.__18)
+                                    (seq (do (tuple))))))
+                           comp))
+                     (do
+                        (apply
+                           printInt32
+                           (seq
+                              (do
+                                 (apply
+                                    (apply constId const)
+                                    (seq (do (apply addOne one)))))))))))))))
+      ((((./test/testcases/malgo/ToplevelVariableNoImport.mlg 1 120)
+           (./test/testcases/malgo/ToplevelVariableNoImport.mlg 1 163))
+          addInt32#
+          (-> Int32# (-> Int32# Int32#)))
+         (((./test/testcases/malgo/ToplevelVariableNoImport.mlg 1 212)
+             (./test/testcases/malgo/ToplevelVariableNoImport.mlg 1 251))
+            addInt32
+            (-> Int32 (-> Int32 Int32)))
+         (((./test/testcases/malgo/ToplevelVariableNoImport.mlg 4 1)
+             (./test/testcases/malgo/ToplevelVariableNoImport.mlg 5 1))
+            printString#
+            (-> String# (tuple)))
+         (((./test/testcases/malgo/ToplevelVariableNoImport.mlg 6 1)
+             (./test/testcases/malgo/ToplevelVariableNoImport.mlg 7 1))
+            printString
+            (-> String (tuple)))
+         (((./test/testcases/malgo/ToplevelVariableNoImport.mlg 9 1)
+             (./test/testcases/malgo/ToplevelVariableNoImport.mlg 10 1))
+            identity
+            (-> #ToplevelVariableNoImport.a_6 #ToplevelVariableNoImport.a_6))
+         (((./test/testcases/malgo/ToplevelVariableNoImport.mlg 12 1)
+             (./test/testcases/malgo/ToplevelVariableNoImport.mlg 13 1))
+            const
+            (->
+               #ToplevelVariableNoImport.a_8
+               (-> #ToplevelVariableNoImport.b_9 #ToplevelVariableNoImport.a_8)))
+         (((./test/testcases/malgo/ToplevelVariableNoImport.mlg 17 1)
+             (./test/testcases/malgo/ToplevelVariableNoImport.mlg 18 1))
+            printInt32
+            (-> Int32 (tuple)))
+         (((./test/testcases/malgo/ToplevelVariableNoImport.mlg 21 1)
+             (./test/testcases/malgo/ToplevelVariableNoImport.mlg 22 1))
+            toStringInt32#
+            (-> Int32# String#))
+         (((./test/testcases/malgo/ToplevelVariableNoImport.mlg 23 1)
+             (./test/testcases/malgo/ToplevelVariableNoImport.mlg 24 1))
+            toStringInt32
+            (-> Int32 String))
+         (((./test/testcases/malgo/ToplevelVariableNoImport.mlg 32 1)
+             (./test/testcases/malgo/ToplevelVariableNoImport.mlg 33 1))
+            comp
+            (app Maybe (#ToplevelVariableNoImport.a_16))))
+      ((((./test/testcases/malgo/ToplevelVariableNoImport.mlg 1 6)
+           (./test/testcases/malgo/ToplevelVariableNoImport.mlg 1 28))
+          Int32
+          ()
+          ((((./test/testcases/malgo/ToplevelVariableNoImport.mlg 1 14)
+               (./test/testcases/malgo/ToplevelVariableNoImport.mlg 1 28))
+              Int32#
+              (Int32#))))
+         (((./test/testcases/malgo/ToplevelVariableNoImport.mlg 1 33)
+             (./test/testcases/malgo/ToplevelVariableNoImport.mlg 1 58))
+            String
+            ()
+            ((((./test/testcases/malgo/ToplevelVariableNoImport.mlg 1 42)
+                 (./test/testcases/malgo/ToplevelVariableNoImport.mlg 1 58))
+                String#
+                (String#))))
+         (((./test/testcases/malgo/ToplevelVariableNoImport.mlg 15 6)
+             (./test/testcases/malgo/ToplevelVariableNoImport.mlg 17 1))
+            Maybe
+            ((((./test/testcases/malgo/ToplevelVariableNoImport.mlg 15 12)
+                 (./test/testcases/malgo/ToplevelVariableNoImport.mlg 15 14))
+                #ToplevelVariableNoImport.a_12))
+            ((((./test/testcases/malgo/ToplevelVariableNoImport.mlg 15 16)
+                 (./test/testcases/malgo/ToplevelVariableNoImport.mlg 15 24))
+                Nothing
+                ())
+               (((./test/testcases/malgo/ToplevelVariableNoImport.mlg 15 26)
+                   (./test/testcases/malgo/ToplevelVariableNoImport.mlg 17 1))
+                  Just
+                  (#ToplevelVariableNoImport.a_12)))))
+      ()
+      (((((./test/testcases/malgo/ToplevelVariableNoImport.mlg 1 58)
+            (./test/testcases/malgo/ToplevelVariableNoImport.mlg 1 120))
+           malgo_add_int32_t)
+          malgo_add_int32_t
+          (-> Int32# (-> Int32# Int32#)))
+         ((((./test/testcases/malgo/ToplevelVariableNoImport.mlg 3 1)
+              (./test/testcases/malgo/ToplevelVariableNoImport.mlg 4 1))
+             malgo_print_string)
+            malgo_print_string
+            (-> String# (tuple)))
+         ((((./test/testcases/malgo/ToplevelVariableNoImport.mlg 20 1)
+              (./test/testcases/malgo/ToplevelVariableNoImport.mlg 21 1))
+             malgo_int32_t_to_string)
+            malgo_int32_t_to_string
+            (-> Int32# String#)))
+      ()))

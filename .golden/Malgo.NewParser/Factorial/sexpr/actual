@@ -1,0 +1,53 @@
+(module
+   "test/testcases/malgo/Factorial.mlg"
+   ((import "runtime/malgo/Builtin.mlg" all)
+      (import "runtime/malgo/Prelude.mlg" all)
+      (infix neutral 4 ==)
+      (def
+         ==
+         (fn ((clause ((con x (y))) (seq (do (apply (apply eqInt64 y) x)))))))
+      (infix left 6 -)
+      (def
+         -
+         (fn ((clause ((con x (y))) (seq (do (apply (apply subInt64 y) x)))))))
+      (infix left 7 *)
+      (def
+         *
+         (fn ((clause ((con x (y))) (seq (do (apply (apply mulInt64 y) x)))))))
+      (def
+         fact
+         (fn ((clause (n) (seq (do (apply (apply factAcc (int64 1)) n)))))))
+      (def
+         factAcc
+         (fn
+            ((clause
+                ((con n (acc)))
+                (seq
+                   (do
+                      (apply
+                         (apply
+                            (apply
+                               if
+                               (fn
+                                  ((clause
+                                      ()
+                                      (seq
+                                         (do
+                                            (apply
+                                               (apply
+                                                  factAcc
+                                                  (parens (opapp * n acc)))
+                                               (parens (opapp - n (int64 1))))))))))
+                            (fn ((clause () (seq (do acc))))))
+                         (parens (opapp == n (int64 0))))))))))
+      (def
+         main
+         (fn
+            ((clause
+                ()
+                (seq
+                   (do
+                      (opapp
+                         |>
+                         (opapp |> (apply fact (int64 5)) toStringInt64)
+                         putStrLn)))))))))

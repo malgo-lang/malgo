@@ -1,78 +1,74 @@
 ((main
-   $DataDef.return_25
-   (cut
-      (lambda
-         ($DataDef.param_18 $DataDef.return_26)
-         (join
-            $DataDef.select_51
-            (select
-               (#DataDef.$__17
-                  (join
-                     $DataDef.then_50
-                     (then $DataDef.outer_42
-                        (join
-                           $DataDef.return_27
-                           (then $DataDef.inner_43
-                              (join
-                                 $DataDef.apply_49
-                                 (apply
-                                    ($DataDef.inner_43)
-                                    ($DataDef.return_26))
-                                 (cut $DataDef.outer_42 $DataDef.apply_49)))
-                           (join
-                              $DataDef.apply_48
-                              (apply
-                                 (1_i64)
-                                 ($DataDef.return_27))
-                              (invoke Int# $DataDef.apply_48))))
-                     (cut
-                        (lambda
-                           ($DataDef.param_19 $DataDef.return_28)
-                           (join
-                              $DataDef.select_47
-                              (select
-                                 ((Int#
-                                    (#DataDef.x_1))
-                                    (join
-                                       $DataDef.then_46
-                                       (then $DataDef.outer_40
-                                          (join
-                                             $DataDef.return_29
-                                             (then $DataDef.inner_41
-                                                (join
-                                                   $DataDef.apply_45
-                                                   (apply
-                                                      ($DataDef.inner_41)
-                                                      ($DataDef.return_28))
-                                                   (cut $DataDef.outer_40 $DataDef.apply_45)))
-                                             (join
-                                                $DataDef.apply_44
-                                                (apply
-                                                   (#DataDef.x_1)
-                                                   ($DataDef.return_29))
-                                                (invoke malgo_int64_t_to_string $DataDef.apply_44))))
-                                       (invoke malgo_print_string $DataDef.then_46))))
-                              (cut $DataDef.param_19 $DataDef.select_47)))
-                        $DataDef.then_50))))
-            (cut $DataDef.param_18 $DataDef.select_51)))
-      $DataDef.return_25))
+    $DataDef.return_25
+    (cut
+       (lambda
+          ($DataDef.param_18 $DataDef.return_26)
+          (join
+             $DataDef.select_51
+             (select
+                (#DataDef.$__17
+                   (join
+                      $DataDef.then_50
+                      (then
+                         $DataDef.outer_42
+                         (join
+                            $DataDef.return_27
+                            (then
+                               $DataDef.inner_43
+                               (join
+                                  $DataDef.apply_49
+                                  (apply ($DataDef.inner_43) ($DataDef.return_26))
+                                  (cut $DataDef.outer_42 $DataDef.apply_49)))
+                            (join
+                               $DataDef.apply_48
+                               (apply (1_i64) ($DataDef.return_27))
+                               (invoke Int# $DataDef.apply_48))))
+                      (cut
+                         (lambda
+                            ($DataDef.param_19 $DataDef.return_28)
+                            (join
+                               $DataDef.select_47
+                               (select
+                                  ((Int# (#DataDef.x_1))
+                                     (join
+                                        $DataDef.then_46
+                                        (then
+                                           $DataDef.outer_40
+                                           (join
+                                              $DataDef.return_29
+                                              (then
+                                                 $DataDef.inner_41
+                                                 (join
+                                                    $DataDef.apply_45
+                                                    (apply
+                                                       ($DataDef.inner_41)
+                                                       ($DataDef.return_28))
+                                                    (cut
+                                                       $DataDef.outer_40
+                                                       $DataDef.apply_45)))
+                                              (join
+                                                 $DataDef.apply_44
+                                                 (apply
+                                                    (#DataDef.x_1)
+                                                    ($DataDef.return_29))
+                                                 (invoke
+                                                    malgo_int64_t_to_string
+                                                    $DataDef.apply_44))))
+                                        (invoke
+                                           malgo_print_string
+                                           $DataDef.then_46))))
+                               (cut $DataDef.param_19 $DataDef.select_47)))
+                         $DataDef.then_50))))
+             (cut $DataDef.param_18 $DataDef.select_51)))
+       $DataDef.return_25))
    (Int#
       $DataDef.return_30
       (cut
          (lambda
             ($DataDef.constructor_20 $DataDef.return_31)
-            (cut
-               (construct
-                  Int#
-                  ($DataDef.constructor_20)
-                  ())
-               $DataDef.return_31))
+            (cut (construct Int# ($DataDef.constructor_20) ()) $DataDef.return_31))
          $DataDef.return_30))
-   (Nil
-      $DataDef.return_32
-      (cut
-         (construct Nil () ())
-         $DataDef.return_32))
+   (Nil $DataDef.return_32 (cut (construct Nil () ()) $DataDef.return_32))
    (Cons
       $DataDef.return_33
       (cut
@@ -94,7 +90,8 @@
       (cut
          (lambda
             ($DataDef.primitive_23 $DataDef.return_37)
-            (prim malgo_int64_t_to_string
+            (prim
+               malgo_int64_t_to_string
                ($DataDef.primitive_23)
                $DataDef.return_37))
          $DataDef.return_36))
@@ -103,7 +100,5 @@
       (cut
          (lambda
             ($DataDef.primitive_24 $DataDef.return_39)
-            (prim malgo_print_string
-               ($DataDef.primitive_24)
-               $DataDef.return_39))
+            (prim malgo_print_string ($DataDef.primitive_24) $DataDef.return_39))
          $DataDef.return_38)))

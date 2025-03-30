@@ -1,0 +1,84 @@
+(module
+   "test/testcases/malgo/RecordTest.mlg"
+   ((((((./test/testcases/malgo/RecordTest.mlg 12 1)
+          (./test/testcases/malgo/RecordTest.mlg 14 1))
+         g
+         (fn
+            ((clause
+                ((con B ()) (record (a #RecordTest.a_3) (b #RecordTest.__4)))
+                (seq (do #RecordTest.a_3)))))))
+       ((((./test/testcases/malgo/RecordTest.mlg 10 1)
+            (./test/testcases/malgo/RecordTest.mlg 12 1))
+           f
+           (fn
+              ((clause
+                  ((record (a #RecordTest.a_1) (b #RecordTest.__2)))
+                  (seq (do #RecordTest.a_1)))))))
+       ((((./test/testcases/malgo/RecordTest.mlg 14 1)
+            (./test/testcases/malgo/RecordTest.mlg 18 1))
+           main
+           (fn
+              ((clause
+                  ()
+                  (seq
+                     (let
+                        #RecordTest.x_5
+                        (record
+                           (a (apply Int32# (int32 32)))
+                           (b (apply Int32# (int32 10)))))
+                     (do
+                        (apply
+                           printString
+                           (seq
+                              (do
+                                 (apply
+                                    toStringInt32
+                                    (seq
+                                       (do
+                                          (apply
+                                             (apply
+                                                addInt32
+                                                (seq
+                                                   (do (apply f #RecordTest.x_5))))
+                                             (seq
+                                                (do
+                                                   (apply
+                                                      (fn
+                                                         ((clause
+                                                             ((record
+                                                                 (a
+                                                                    #RecordTest.__6)
+                                                                 (b
+                                                                    #RecordTest.b_7)))
+                                                             (seq
+                                                                (do
+                                                                   #RecordTest.b_7)))))
+                                                      #RecordTest.x_5))))))))))))))))))
+      ()
+      ((((./test/testcases/malgo/RecordTest.mlg 6 6)
+           (./test/testcases/malgo/RecordTest.mlg 8 1))
+          B
+          ()
+          ((((./test/testcases/malgo/RecordTest.mlg 6 10)
+               (./test/testcases/malgo/RecordTest.mlg 8 1))
+              B
+              (A)))))
+      ((((./test/testcases/malgo/RecordTest.mlg 4 6)
+           (./test/testcases/malgo/RecordTest.mlg 6 1))
+          A
+          ()
+          (record (a Int32) (b Int32)))
+         (((./test/testcases/malgo/RecordTest.mlg 8 6)
+             (./test/testcases/malgo/RecordTest.mlg 10 1))
+            C
+            (#RecordTest.a_0)
+            (record (x #RecordTest.a_0) (y #RecordTest.a_0))))
+      ()
+      ((((./test/testcases/malgo/RecordTest.mlg 1 1)
+           (./test/testcases/malgo/RecordTest.mlg 2 1))
+          "runtime/malgo/Builtin.mlg"
+          all)
+         (((./test/testcases/malgo/RecordTest.mlg 2 1)
+             (./test/testcases/malgo/RecordTest.mlg 4 1))
+            "runtime/malgo/Prelude.mlg"
+            all))))

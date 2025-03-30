@@ -1,130 +1,123 @@
 (()
    ((define
-      (B $RecordTest.p_50)
-      (->
-         ((Record#
-            (a Any#)
-            (b Any#)))
-         Any#)
-      (let
-         (($RecordTest.let_51
-            (sum (con    test/testcases/malgo/RecordTest.mlg.B    (Record#       (a Any#)       (b Any#))))
-            (pack
-               (sum (con    test/testcases/malgo/RecordTest.mlg.B    (Record#       (a Any#)       (b Any#))))
-               (con
-                  test/testcases/malgo/RecordTest.mlg.B
-                  (Record#
-                     (a Any#)
-                     (b Any#)))
-               $RecordTest.p_50)))
-         (cast Any# $RecordTest.let_51)))
+       (B $RecordTest.p_50)
+       (-> ((Record# (a Any#) (b Any#))) Any#)
+       (let
+          (($RecordTest.let_51
+              (sum
+                 (con
+                    test/testcases/malgo/RecordTest.mlg.B
+                    (Record# (a Any#) (b Any#))))
+              (pack
+                 (sum
+                    (con
+                       test/testcases/malgo/RecordTest.mlg.B
+                       (Record# (a Any#) (b Any#))))
+                 (con
+                    test/testcases/malgo/RecordTest.mlg.B
+                    (Record# (a Any#) (b Any#)))
+                 $RecordTest.p_50)))
+          (cast Any# $RecordTest.let_51)))
       (define
          (g $RecordTest.b_52)
-         (->
-            (Any#)
-            Any#)
+         (-> (Any#) Any#)
          (match
             (cast
-               (sum (con    test/testcases/malgo/RecordTest.mlg.B    (Record#       (a Any#)       (b Any#))))
+               (sum
+                  (con
+                     test/testcases/malgo/RecordTest.mlg.B
+                     (Record# (a Any#) (b Any#))))
                $RecordTest.b_52)
             (unpack
                (con
                   test/testcases/malgo/RecordTest.mlg.B
-                  (Record#
-                     (a Any#)
-                     (b Any#)))
+                  (Record# (a Any#) (b Any#)))
                ($RecordTest.p_53)
                (match
                   $RecordTest.p_53
                   (open
-                     ((a $RecordTest.p_54)
-                        (b $RecordTest.p_55))
+                     ((a $RecordTest.p_54) (b $RecordTest.p_55))
                      $RecordTest.p_54)))))
       (define
          (f $RecordTest.record_56)
-         (->
-            ((Record#
-               (a Any#)
-               (b Any#)))
-            Any#)
+         (-> ((Record# (a Any#) (b Any#))) Any#)
          (match
             $RecordTest.record_56
-            (open
-               ((a $RecordTest.p_57)
-                  (b $RecordTest.p_58))
-               $RecordTest.p_57)))
+            (open ((a $RecordTest.p_57) (b $RecordTest.p_58)) $RecordTest.p_57)))
       (define
          (main $RecordTest.$__59)
-         (->
-            ((sum (con Tuple#)))
-            (sum (con Tuple#)))
+         (-> ((sum (con Tuple#))) (sum (con Tuple#)))
          (match
-            (= $RecordTest.d_61
-               (= $RecordTest.d_60
+            (=
+               $RecordTest.d_61
+               (=
+                  $RecordTest.d_60
                   (call Int32# 32_i32)
                   (cast Any# $RecordTest.d_60))
-               (= $RecordTest.d_63
-                  (= $RecordTest.d_62
+               (=
+                  $RecordTest.d_63
+                  (=
+                     $RecordTest.d_62
                      (call Int32# 10_i32)
                      (cast Any# $RecordTest.d_62))
                   (let
                      (($RecordTest.record_64
-                        (Record#
-                           (a Any#)
-                           (b Any#))
-                        (record
-                           (a $RecordTest.d_61)
-                           (b $RecordTest.d_63))))
+                         (Record# (a Any#) (b Any#))
+                         (record (a $RecordTest.d_61) (b $RecordTest.d_63))))
                      $RecordTest.record_64)))
             (bind
                $RecordTest.let_test/testcases/malgo/RecordTest.mlg.#x_5_65
-               (Record#
-                  (a Any#)
-                  (b Any#))
-               (= $RecordTest.d_80
-                  (= $RecordTest.d_78
-                     (= $RecordTest.d_69
-                        (= $RecordTest.d_67
-                           (= $RecordTest.d_66
-                              (call f $RecordTest.let_test/testcases/malgo/RecordTest.mlg.#x_5_65)
+               (Record# (a Any#) (b Any#))
+               (=
+                  $RecordTest.d_80
+                  (=
+                     $RecordTest.d_78
+                     (=
+                        $RecordTest.d_69
+                        (=
+                           $RecordTest.d_67
+                           (=
+                              $RecordTest.d_66
+                              (call
+                                 f
+                                 $RecordTest.let_test/testcases/malgo/RecordTest.mlg.#x_5_65)
                               (cast Any# $RecordTest.d_66))
-                           (= $RecordTest.d_68
+                           (=
+                              $RecordTest.d_68
                               (call addInt32 $RecordTest.d_67)
-                              (cast
-                                 (->
-                                    (Any#)
-                                    Any#)
-                                 $RecordTest.d_68)))
-                        (= $RecordTest.d_76
-                           (= $RecordTest.d_74
+                              (cast (-> (Any#) Any#) $RecordTest.d_68)))
+                        (=
+                           $RecordTest.d_76
+                           (=
+                              $RecordTest.d_74
                               (let
                                  (($RecordTest.fun_73
-                                    (->
-                                       ((Record#
-                                          (a Any#)
-                                          (b Any#)))
-                                       Any#)
-                                    (fun
-                                       ($RecordTest.record_70)
-                                       (match
-                                          $RecordTest.record_70
-                                          (open
-                                             ((a $RecordTest.p_71)
-                                                (b $RecordTest.p_72))
-                                             $RecordTest.p_72)))))
+                                     (-> ((Record# (a Any#) (b Any#))) Any#)
+                                     (fun
+                                        ($RecordTest.record_70)
+                                        (match
+                                           $RecordTest.record_70
+                                           (open
+                                              ((a $RecordTest.p_71)
+                                                 (b $RecordTest.p_72))
+                                              $RecordTest.p_72)))))
                                  $RecordTest.fun_73)
-                              (= $RecordTest.d_75
-                                 (call $RecordTest.d_74 $RecordTest.let_test/testcases/malgo/RecordTest.mlg.#x_5_65)
+                              (=
+                                 $RecordTest.d_75
+                                 (call
+                                    $RecordTest.d_74
+                                    $RecordTest.let_test/testcases/malgo/RecordTest.mlg.#x_5_65)
                                  (cast Any# $RecordTest.d_75)))
-                           (= $RecordTest.d_77
+                           (=
+                              $RecordTest.d_77
                               (call $RecordTest.d_69 $RecordTest.d_76)
                               (cast Any# $RecordTest.d_77))))
-                     (= $RecordTest.d_79
+                     (=
+                        $RecordTest.d_79
                         (call toStringInt32 $RecordTest.d_78)
                         (cast Any# $RecordTest.d_79)))
-                  (= $RecordTest.d_81
+                  (=
+                     $RecordTest.d_81
                      (call printString $RecordTest.d_80)
-                     (cast
-                        (sum (con Tuple#))
-                        $RecordTest.d_81)))))))
+                     (cast (sum (con Tuple#)) $RecordTest.d_81)))))))
    ())

@@ -1,26 +1,25 @@
 (()
    ((define
-      (main $Echo.$__9)
-      (->
-         ((sum (con Tuple#)))
-         (sum (con Tuple#)))
-      (= $Echo.d_14
-         (= $Echo.d_11
-            (let
-               (($Echo.let_10
-                  (sum (con Tuple#))
-                  (pack
-                     (sum (con Tuple#))
-                     (con Tuple#))))
-               $Echo.let_10)
-            (= $Echo.cast_12
-               (cast Any# $Echo.d_11)
-               (= $Echo.d_13
-                  (call getContents $Echo.cast_12)
-                  (cast Any# $Echo.d_13))))
-         (= $Echo.d_15
-            (call putStr $Echo.d_14)
-            (cast
-               (sum (con Tuple#))
-               $Echo.d_15)))))
+       (main $Echo.$__9)
+       (-> ((sum (con Tuple#))) (sum (con Tuple#)))
+       (=
+          $Echo.d_14
+          (=
+             $Echo.d_11
+             (let
+                (($Echo.let_10
+                    (sum (con Tuple#))
+                    (pack (sum (con Tuple#)) (con Tuple#))))
+                $Echo.let_10)
+             (=
+                $Echo.cast_12
+                (cast Any# $Echo.d_11)
+                (=
+                   $Echo.d_13
+                   (call getContents $Echo.cast_12)
+                   (cast Any# $Echo.d_13))))
+          (=
+             $Echo.d_15
+             (call putStr $Echo.d_14)
+             (cast (sum (con Tuple#)) $Echo.d_15)))))
    ())

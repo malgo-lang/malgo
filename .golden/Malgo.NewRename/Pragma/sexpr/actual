@@ -1,0 +1,51 @@
+(module
+   "test/testcases/malgo/Pragma.mlg"
+   ((((((./test/testcases/malgo/Pragma.mlg 15 1)
+          (./test/testcases/malgo/Pragma.mlg 17 1))
+         string#
+         (fn ((clause (#Pragma.x_5) (seq (do (apply String# #Pragma.x_5))))))))
+       ((((./test/testcases/malgo/Pragma.mlg 9 1)
+            (./test/testcases/malgo/Pragma.mlg 14 1))
+           putStrLn
+           (fn
+              ((clause
+                  ((con String# (#Pragma.str_2)))
+                  (seq
+                     (do (apply malgo_print_string #Pragma.str_2))
+                     (do (apply malgo_newline (tuple)))))))))
+       ((((./test/testcases/malgo/Pragma.mlg 17 1)
+            (./test/testcases/malgo/Pragma.mlg 20 1))
+           main
+           (fn
+              ((clause
+                  ()
+                  (seq
+                     (do (apply putStrLn (apply String# (string "Hello, world")))))))))))
+      ((((./test/testcases/malgo/Pragma.mlg 8 1)
+           (./test/testcases/malgo/Pragma.mlg 9 1))
+          putStrLn
+          (-> #Pragma.String_1 (tuple)))
+         (((./test/testcases/malgo/Pragma.mlg 14 1)
+             (./test/testcases/malgo/Pragma.mlg 15 1))
+            string#
+            (-> #Pragma.String#_4 #Pragma.String_3)))
+      ((((./test/testcases/malgo/Pragma.mlg 6 1)
+           (./test/testcases/malgo/Pragma.mlg 8 1))
+          String
+          ()
+          ((((./test/testcases/malgo/Pragma.mlg 6 15)
+               (./test/testcases/malgo/Pragma.mlg 8 1))
+              String#
+              (String#)))))
+      ()
+      (((((./test/testcases/malgo/Pragma.mlg 3 1)
+            (./test/testcases/malgo/Pragma.mlg 4 1))
+           malgo_print_string)
+          malgo_print_string
+          (-> #Pragma.String#_0 (tuple)))
+         ((((./test/testcases/malgo/Pragma.mlg 4 1)
+              (./test/testcases/malgo/Pragma.mlg 6 1))
+             malgo_newline)
+            malgo_newline
+            (-> (tuple) (tuple))))
+      ()))

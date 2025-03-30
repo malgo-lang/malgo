@@ -1,21 +1,24 @@
 ((show
-   $TestArithDouble.return_105
-   (cut
-      (lambda
-         ($TestArithDouble.param_91 $TestArithDouble.return_106)
-         (cut
-            $TestArithDouble.param_91
-            (select
-               (#TestArithDouble.x_9
-                  (invoke String#
-                     (apply
-                        ((do $TestArithDouble.return_107
-                           (invoke toStringDouble#
-                              (apply
-                                 (#TestArithDouble.x_9)
-                                 ($TestArithDouble.return_107)))))
-                        ($TestArithDouble.return_106)))))))
-      $TestArithDouble.return_105))
+    $TestArithDouble.return_105
+    (cut
+       (lambda
+          ($TestArithDouble.param_91 $TestArithDouble.return_106)
+          (cut
+             $TestArithDouble.param_91
+             (select
+                (#TestArithDouble.x_9
+                   (invoke
+                      String#
+                      (apply
+                         ((do
+                             $TestArithDouble.return_107
+                             (invoke
+                                toStringDouble#
+                                (apply
+                                   (#TestArithDouble.x_9)
+                                   ($TestArithDouble.return_107)))))
+                         ($TestArithDouble.return_106)))))))
+       $TestArithDouble.return_105))
    (traceShowId
       $TestArithDouble.return_108
       (cut
@@ -30,15 +33,19 @@
                            ($TestArithDouble.tmp_93 $TestArithDouble.return_112)
                            (cut #TestArithDouble.x_10 $TestArithDouble.return_112))
                         (apply
-                           ((do $TestArithDouble.return_110
-                              (invoke putStrLn
-                                 (apply
-                                    ((do $TestArithDouble.return_111
-                                       (invoke show
-                                          (apply
-                                             (#TestArithDouble.x_10)
-                                             ($TestArithDouble.return_111)))))
-                                    ($TestArithDouble.return_110)))))
+                           ((do
+                               $TestArithDouble.return_110
+                               (invoke
+                                  putStrLn
+                                  (apply
+                                     ((do
+                                         $TestArithDouble.return_111
+                                         (invoke
+                                            show
+                                            (apply
+                                               (#TestArithDouble.x_10)
+                                               ($TestArithDouble.return_111)))))
+                                     ($TestArithDouble.return_110)))))
                            ($TestArithDouble.return_109)))))))
          $TestArithDouble.return_108))
    (neg
@@ -50,12 +57,13 @@
                $TestArithDouble.param_94
                (select
                   (#TestArithDouble.x_0
-                     (invoke subDouble#
+                     (invoke
+                        subDouble#
                         (apply
                            (0.0_f64)
                            ((apply
-                              (#TestArithDouble.x_0)
-                              ($TestArithDouble.return_114)))))))))
+                               (#TestArithDouble.x_0)
+                               ($TestArithDouble.return_114)))))))))
          $TestArithDouble.return_113))
    (mul
       $TestArithDouble.return_115
@@ -71,14 +79,14 @@
                         ($TestArithDouble.param_95 $TestArithDouble.param_96)
                         ())
                      (select
-                        ((tuple
-                           (#TestArithDouble.x_3 #TestArithDouble.y_4))
-                           (invoke mulDouble#
+                        ((tuple (#TestArithDouble.x_3 #TestArithDouble.y_4))
+                           (invoke
+                              mulDouble#
                               (apply
                                  (#TestArithDouble.x_3)
                                  ((apply
-                                    (#TestArithDouble.y_4)
-                                    ($TestArithDouble.return_117)))))))))
+                                     (#TestArithDouble.y_4)
+                                     ($TestArithDouble.return_117)))))))))
                $TestArithDouble.return_116))
          $TestArithDouble.return_115))
    (add
@@ -95,14 +103,14 @@
                         ($TestArithDouble.param_97 $TestArithDouble.param_98)
                         ())
                      (select
-                        ((tuple
-                           (#TestArithDouble.x_7 #TestArithDouble.y_8))
-                           (invoke addDouble#
+                        ((tuple (#TestArithDouble.x_7 #TestArithDouble.y_8))
+                           (invoke
+                              addDouble#
                               (apply
                                  (#TestArithDouble.x_7)
                                  ((apply
-                                    (#TestArithDouble.y_8)
-                                    ($TestArithDouble.return_120)))))))))
+                                     (#TestArithDouble.y_8)
+                                     ($TestArithDouble.return_120)))))))))
                $TestArithDouble.return_119))
          $TestArithDouble.return_118))
    (+
@@ -119,14 +127,14 @@
                         ($TestArithDouble.param_99 $TestArithDouble.param_100)
                         ())
                      (select
-                        ((tuple
-                           (#TestArithDouble.x_5 #TestArithDouble.y_6))
-                           (invoke addDouble#
+                        ((tuple (#TestArithDouble.x_5 #TestArithDouble.y_6))
+                           (invoke
+                              addDouble#
                               (apply
                                  (#TestArithDouble.x_5)
                                  ((apply
-                                    (#TestArithDouble.y_6)
-                                    ($TestArithDouble.return_123)))))))))
+                                     (#TestArithDouble.y_6)
+                                     ($TestArithDouble.return_123)))))))))
                $TestArithDouble.return_122))
          $TestArithDouble.return_121))
    (*
@@ -143,14 +151,14 @@
                         ($TestArithDouble.param_101 $TestArithDouble.param_102)
                         ())
                      (select
-                        ((tuple
-                           (#TestArithDouble.x_1 #TestArithDouble.y_2))
-                           (invoke mulDouble#
+                        ((tuple (#TestArithDouble.x_1 #TestArithDouble.y_2))
+                           (invoke
+                              mulDouble#
                               (apply
                                  (#TestArithDouble.x_1)
                                  ((apply
-                                    (#TestArithDouble.y_2)
-                                    ($TestArithDouble.return_126)))))))))
+                                     (#TestArithDouble.y_2)
+                                     ($TestArithDouble.return_126)))))))))
                $TestArithDouble.return_125))
          $TestArithDouble.return_124))
    (f
@@ -162,18 +170,21 @@
                $TestArithDouble.param_103
                (select
                   (#TestArithDouble.x_11
-                     (invoke *
+                     (invoke
+                        *
                         (apply
-                           ((do $TestArithDouble.return_129
-                              (invoke +
-                                 (apply
-                                    (#TestArithDouble.x_11)
-                                    ((apply
-                                       (0.0_f64)
-                                       ($TestArithDouble.return_129)))))))
+                           ((do
+                               $TestArithDouble.return_129
+                               (invoke
+                                  +
+                                  (apply
+                                     (#TestArithDouble.x_11)
+                                     ((apply
+                                         (0.0_f64)
+                                         ($TestArithDouble.return_129)))))))
                            ((apply
-                              (#TestArithDouble.x_11)
-                              ($TestArithDouble.return_128)))))))))
+                               (#TestArithDouble.x_11)
+                               ($TestArithDouble.return_128)))))))))
          $TestArithDouble.return_127))
    (main
       $TestArithDouble.return_130
@@ -184,16 +195,21 @@
                $TestArithDouble.param_104
                (select
                   (#TestArithDouble.$__90
-                     (invoke putStrLn
+                     (invoke
+                        putStrLn
                         (apply
-                           ((do $TestArithDouble.return_132
-                              (invoke show
-                                 (apply
-                                    ((do $TestArithDouble.return_133
-                                       (invoke f
-                                          (apply
-                                             (0.5_f64)
-                                             ($TestArithDouble.return_133)))))
-                                    ($TestArithDouble.return_132)))))
+                           ((do
+                               $TestArithDouble.return_132
+                               (invoke
+                                  show
+                                  (apply
+                                     ((do
+                                         $TestArithDouble.return_133
+                                         (invoke
+                                            f
+                                            (apply
+                                               (0.5_f64)
+                                               ($TestArithDouble.return_133)))))
+                                     ($TestArithDouble.return_132)))))
                            ($TestArithDouble.return_131)))))))
          $TestArithDouble.return_130)))

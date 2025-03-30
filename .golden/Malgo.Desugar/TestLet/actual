@@ -1,79 +1,67 @@
 (()
    ((define
-      ($TestLet.|>_curry_52 $TestLet.x_53 $TestLet.f_54)
-      (->
-         (Any#
-            (->
-               (Any#)
-               Any#))
-         Any#)
-      (= $TestLet.d_55
-         (call $TestLet.f_54 $TestLet.x_53)
-         (cast Any# $TestLet.d_55)))
+       ($TestLet.|>_curry_52 $TestLet.x_53 $TestLet.f_54)
+       (-> (Any# (-> (Any#) Any#)) Any#)
+       (=
+          $TestLet.d_55
+          (call $TestLet.f_54 $TestLet.x_53)
+          (cast Any# $TestLet.d_55)))
       (define
          (|> $TestLet.x_49)
-         (->
-            (Any#)
-            (->
-               ((->
-                  (Any#)
-                  Any#))
-               Any#))
+         (-> (Any#) (-> ((-> (Any#) Any#)) Any#))
          (let
             (($TestLet.let_56
-               (->
-                  ((->
-                     (Any#)
-                     Any#))
-                  Any#)
-               (fun
-                  ($TestLet.f_50)
-                  (direct $TestLet.|>_curry_52 $TestLet.x_49 $TestLet.f_50))))
+                (-> ((-> (Any#) Any#)) Any#)
+                (fun
+                   ($TestLet.f_50)
+                   (direct $TestLet.|>_curry_52 $TestLet.x_49 $TestLet.f_50))))
             $TestLet.let_56))
       (define
          (main $TestLet.$__57)
-         (->
-            ((sum (con Tuple#)))
-            (sum (con Tuple#)))
+         (-> ((sum (con Tuple#))) (sum (con Tuple#)))
          (match
-            (= $TestLet.d_59
-               (= $TestLet.d_58
+            (=
+               $TestLet.d_59
+               (=
+                  $TestLet.d_58
                   (call addInt32# 1_i32)
-                  (cast
-                     (->
-                        (Int32#)
-                        Int32#)
-                     $TestLet.d_58))
-               (= $TestLet.d_60
+                  (cast (-> (Int32#) Int32#) $TestLet.d_58))
+               (=
+                  $TestLet.d_60
                   (call $TestLet.d_59 2_i32)
                   (cast Int32# $TestLet.d_60)))
             (bind
                $TestLet.let_test/testcases/malgo/TestLet.mlg.#x_4_61
                Int32#
-               (= $TestLet.d_65
-                  (= $TestLet.d_63
-                     (= $TestLet.d_62
-                        (call toStringInt32# $TestLet.let_test/testcases/malgo/TestLet.mlg.#x_4_61)
+               (=
+                  $TestLet.d_65
+                  (=
+                     $TestLet.d_63
+                     (=
+                        $TestLet.d_62
+                        (call
+                           toStringInt32#
+                           $TestLet.let_test/testcases/malgo/TestLet.mlg.#x_4_61)
                         (cast String# $TestLet.d_62))
-                     (= $TestLet.d_64
+                     (=
+                        $TestLet.d_64
                         (call printString# $TestLet.d_63)
-                        (cast
-                           (sum (con Tuple#))
-                           $TestLet.d_64)))
+                        (cast (sum (con Tuple#)) $TestLet.d_64)))
                   (match
-                     (= $TestLet.d_69
-                        (= $TestLet.d_67
-                           (= $TestLet.d_66
+                     (=
+                        $TestLet.d_69
+                        (=
+                           $TestLet.d_67
+                           (=
+                              $TestLet.d_66
                               (call addInt32# 1_i32)
-                              (cast
-                                 (->
-                                    (Int32#)
-                                    Int32#)
-                                 $TestLet.d_66))
-                           (= $TestLet.d_68
+                              (cast (-> (Int32#) Int32#) $TestLet.d_66))
+                           (=
+                              $TestLet.d_68
                               (call $TestLet.d_67 2_i32)
                               (cast Int32# $TestLet.d_68)))
-                        (= $TestLet.d_70
+                        (=
+                           $TestLet.d_70
                            (call Int32# $TestLet.d_69)
                            (cast Any# $TestLet.d_70)))
                      (bind
@@ -82,36 +70,43 @@
                         (match
                            (let
                               (($TestLet.fun_77
-                                 (->
-                                    (Any#)
-                                    (sum (con Tuple#)))
-                                 (fun
-                                    ($TestLet.int32#_72)
-                                    (match
-                                       (cast
-                                          (sum (con runtime/malgo/Builtin.mlg.Int32# Int32#))
-                                          $TestLet.int32#_72)
-                                       (unpack
-                                          (con runtime/malgo/Builtin.mlg.Int32# Int32#)
-                                          ($TestLet.p_73)
-                                          (= $TestLet.d_75
-                                             (= $TestLet.d_74
-                                                (call toStringInt32# $TestLet.p_73)
-                                                (cast String# $TestLet.d_74))
-                                             (= $TestLet.d_76
-                                                (call printString# $TestLet.d_75)
-                                                (cast
-                                                   (sum (con Tuple#))
-                                                   $TestLet.d_76))))))))
+                                  (-> (Any#) (sum (con Tuple#)))
+                                  (fun
+                                     ($TestLet.int32#_72)
+                                     (match
+                                        (cast
+                                           (sum
+                                              (con
+                                                 runtime/malgo/Builtin.mlg.Int32#
+                                                 Int32#))
+                                           $TestLet.int32#_72)
+                                        (unpack
+                                           (con
+                                              runtime/malgo/Builtin.mlg.Int32#
+                                              Int32#)
+                                           ($TestLet.p_73)
+                                           (=
+                                              $TestLet.d_75
+                                              (=
+                                                 $TestLet.d_74
+                                                 (call
+                                                    toStringInt32#
+                                                    $TestLet.p_73)
+                                                 (cast String# $TestLet.d_74))
+                                              (=
+                                                 $TestLet.d_76
+                                                 (call printString# $TestLet.d_75)
+                                                 (cast
+                                                    (sum (con Tuple#))
+                                                    $TestLet.d_76))))))))
                               $TestLet.fun_77)
                            (bind
                               $TestLet.let_test/testcases/malgo/TestLet.mlg.#printInt32_7_78
-                              (->
-                                 (Any#)
-                                 (sum (con Tuple#)))
-                              (= $TestLet.d_79
-                                 (call $TestLet.let_test/testcases/malgo/TestLet.mlg.#printInt32_7_78 $TestLet.let_test/testcases/malgo/TestLet.mlg.#x_5_71)
-                                 (cast
-                                    (sum (con Tuple#))
-                                    $TestLet.d_79)))))))))))
+                              (-> (Any#) (sum (con Tuple#)))
+                              (=
+                                 $TestLet.d_79
+                                 (call
+                                    $TestLet.let_test/testcases/malgo/TestLet.mlg.#printInt32_7_78
+                                    $TestLet.let_test/testcases/malgo/TestLet.mlg.#x_5_71)
+                                 (cast (sum (con Tuple#)) $TestLet.d_79)))))))))))
    ())

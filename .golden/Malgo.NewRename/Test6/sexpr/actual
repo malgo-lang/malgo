@@ -1,0 +1,59 @@
+(module
+   "test/testcases/malgo/Test6.mlg"
+   ((((((./test/testcases/malgo/Test6.mlg 5 1)
+          (./test/testcases/malgo/Test6.mlg 7 1))
+         rtob
+         (fn
+            ((clause (#Test6.R_1) (seq (do B)))
+               (clause (#Test6.__2) (seq (do (apply malgo_exit_failure (tuple)))))))))
+       ((((./test/testcases/malgo/Test6.mlg 9 1)
+            (./test/testcases/malgo/Test6.mlg 10 1))
+           main
+           (fn
+              ((clause
+                  ()
+                  (seq
+                     (do
+                        (apply
+                           (fn
+                              ((clause
+                                  (#Test6.B_4)
+                                  (seq
+                                     (do (apply malgo_print_string (string "OK")))))
+                                 (clause
+                                    (#Test6.__5)
+                                    (seq
+                                       (do
+                                          (apply
+                                             malgo_print_string
+                                             (string "WRONG")))))))
+                           (apply rtob R))))))))))
+      ()
+      ((((./test/testcases/malgo/Test6.mlg 1 1)
+           (./test/testcases/malgo/Test6.mlg 3 1))
+          RGB
+          ()
+          ((((./test/testcases/malgo/Test6.mlg 1 12)
+               (./test/testcases/malgo/Test6.mlg 1 14))
+              R
+              ())
+             (((./test/testcases/malgo/Test6.mlg 1 16)
+                 (./test/testcases/malgo/Test6.mlg 1 18))
+                G
+                ())
+             (((./test/testcases/malgo/Test6.mlg 1 20)
+                 (./test/testcases/malgo/Test6.mlg 3 1))
+                B
+                ()))))
+      ()
+      (((((./test/testcases/malgo/Test6.mlg 3 1)
+            (./test/testcases/malgo/Test6.mlg 5 1))
+           malgo_exit_failure)
+          malgo_exit_failure
+          (-> (tuple) #Test6.a_0))
+         ((((./test/testcases/malgo/Test6.mlg 7 1)
+              (./test/testcases/malgo/Test6.mlg 9 1))
+             malgo_print_string)
+            malgo_print_string
+            (-> #Test6.String#_3 (tuple))))
+      ()))

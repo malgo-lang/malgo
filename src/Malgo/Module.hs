@@ -30,6 +30,7 @@ import Data.ByteString (ByteString)
 import Data.ByteString qualified as BS
 import Data.Data
 import Data.Map qualified as Map
+import Data.SCargot.Repr.Basic qualified as S
 import Data.Store
 import Effectful
 import Effectful.Dispatch.Static
@@ -37,6 +38,8 @@ import Effectful.Error.Static (prettyCallStack)
 import GHC.Records
 import GHC.Stack (callStack)
 import Malgo.Prelude
+import Malgo.SExpr (ToSExpr (..))
+import Malgo.SExpr qualified as S
 import Path
 import System.Directory (canonicalizePath, createDirectoryIfMissing, doesFileExist, findFile, getCurrentDirectory, makeAbsolute)
 import System.Directory.Extra (listDirectories)
@@ -49,6 +52,10 @@ data ModuleName
   | Artifact ArtifactPath
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
   deriving anyclass (Hashable, ToJSON, ToJSONKey, FromJSON, FromJSONKey, Store)
+
+instance ToSExpr ModuleName where
+  toSExpr (ModuleName raw) = S.A $ S.Symbol $ raw
+  toSExpr (Artifact path) = S.A $ S.String $ convertString $ toFilePath path.relPath
 
 instance Pretty ModuleName where
   pretty (ModuleName raw) = pretty raw

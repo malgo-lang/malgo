@@ -1,0 +1,36 @@
+(module
+   "test/testcases/malgo/TypeAnnotation.mlg"
+   ((((((./test/testcases/malgo/TypeAnnotation.mlg 4 1)
+          (./test/testcases/malgo/TypeAnnotation.mlg 7 1))
+         main
+         (fn
+            ((clause
+                ()
+                (seq
+                   (do
+                      (apply
+                         printString
+                         (seq
+                            (do
+                               (apply
+                                  (seq
+                                     (do
+                                        (ann
+                                           (fn
+                                              ((clause
+                                                  (#TypeAnnotation.x_0)
+                                                  (seq (do #TypeAnnotation.x_0)))))
+                                           (-> String String))))
+                                  (apply String# (string "hoge"))))))))))))))
+      ()
+      ()
+      ()
+      ()
+      ((((./test/testcases/malgo/TypeAnnotation.mlg 1 1)
+           (./test/testcases/malgo/TypeAnnotation.mlg 2 1))
+          "runtime/malgo/Builtin.mlg"
+          all)
+         (((./test/testcases/malgo/TypeAnnotation.mlg 2 1)
+             (./test/testcases/malgo/TypeAnnotation.mlg 4 1))
+            "runtime/malgo/Prelude.mlg"
+            all))))

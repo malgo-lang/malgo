@@ -1,0 +1,120 @@
+(module
+   "test/testcases/malgo/Show.mlg"
+   ((((((./test/testcases/malgo/Show.mlg 13 1)
+          (./test/testcases/malgo/Show.mlg 17 1))
+         showInt32
+         (record
+            (show
+               (fn
+                  ((clause (#Show.x_6) (seq (do (apply toStringInt32 #Show.x_6))))))))))
+       ((((./test/testcases/malgo/Show.mlg 18 1)
+            (./test/testcases/malgo/Show.mlg 20 1))
+           show
+           (fn
+              ((clause ((record (show #Show.show_10))) (seq (do #Show.show_10)))))))
+       ((((./test/testcases/malgo/Show.mlg 30 1)
+            (./test/testcases/malgo/Show.mlg 32 1))
+           print
+           (fn
+              ((clause
+                  (#Show.showDict_20 #Show.x_21)
+                  (seq
+                     (do
+                        (apply
+                           printString
+                           (apply (apply show #Show.x_21) #Show.showDict_20)))))))))
+       ((((./test/testcases/malgo/Show.mlg 6 1)
+            (./test/testcases/malgo/Show.mlg 8 1))
+           <>
+           (fn
+              ((clause
+                  (#Show.x_1 #Show.y_2)
+                  (seq (do (apply (apply appendString #Show.y_2) #Show.x_1))))))))
+       ((((./test/testcases/malgo/Show.mlg 21 1)
+            (./test/testcases/malgo/Show.mlg 29 1))
+           showTuple2
+           (fn
+              ((clause
+                  (#Show.showDictA_14 #Show.showDictB_15)
+                  (seq
+                     (do
+                        (record
+                           (show
+                              (fn
+                                 ((clause
+                                     ((tuple #Show.a_16 #Show.b_17))
+                                     (seq
+                                        (do
+                                           (opapp
+                                              <>
+                                              (apply String# (string "("))
+                                              (opapp
+                                                 <>
+                                                 (apply
+                                                    (apply show #Show.a_16)
+                                                    #Show.showDictA_14)
+                                                 (opapp
+                                                    <>
+                                                    (apply String# (string ", "))
+                                                    (opapp
+                                                       <>
+                                                       (apply
+                                                          (apply show #Show.b_17)
+                                                          #Show.showDictB_15)
+                                                       (apply
+                                                          String#
+                                                          (string ")"))))))))))))))))))))
+       ((((./test/testcases/malgo/Show.mlg 32 1)
+            (./test/testcases/malgo/Show.mlg 33 1))
+           main
+           (fn
+              ((clause
+                  ()
+                  (seq
+                     (do
+                        (apply
+                           (apply
+                              print
+                              (tuple
+                                 (apply Int32# (int32 1))
+                                 (apply Int32# (int32 2))))
+                           (apply (apply showTuple2 showInt32) showInt32))))))))))
+      ((((./test/testcases/malgo/Show.mlg 5 1)
+           (./test/testcases/malgo/Show.mlg 6 1))
+          <>
+          (-> #Show.String_0 (-> #Show.String_0 #Show.String_0)))
+         (((./test/testcases/malgo/Show.mlg 12 1)
+             (./test/testcases/malgo/Show.mlg 13 1))
+            showInt32
+            (app #Show.Show_5 (#Show.Int32_4)))
+         (((./test/testcases/malgo/Show.mlg 17 1)
+             (./test/testcases/malgo/Show.mlg 18 1))
+            show
+            (-> (app #Show.Show_7 (#Show.a_9)) (-> #Show.a_9 #Show.String_8)))
+         (((./test/testcases/malgo/Show.mlg 20 1)
+             (./test/testcases/malgo/Show.mlg 21 1))
+            showTuple2
+            (->
+               (app #Show.Show_11 (#Show.a_12))
+               (->
+                  (app #Show.Show_11 (#Show.b_13))
+                  (app #Show.Show_11 ((tuple #Show.a_12 #Show.b_13))))))
+         (((./test/testcases/malgo/Show.mlg 29 1)
+             (./test/testcases/malgo/Show.mlg 30 1))
+            print
+            (-> (app #Show.Show_18 (#Show.a_19)) (-> #Show.a_19 (tuple)))))
+      ()
+      ((((./test/testcases/malgo/Show.mlg 8 1)
+           (./test/testcases/malgo/Show.mlg 12 1))
+          Show
+          (#Show.a_3)
+          (record (show (-> #Show.a_3 String)))))
+      ()
+      ((((./test/testcases/malgo/Show.mlg 1 1)
+           (./test/testcases/malgo/Show.mlg 2 1))
+          "runtime/malgo/Builtin.mlg"
+          all)
+         (((./test/testcases/malgo/Show.mlg 2 1)
+             (./test/testcases/malgo/Show.mlg 4 1))
+            "runtime/malgo/Prelude.mlg"
+            all))))

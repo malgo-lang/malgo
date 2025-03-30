@@ -1,0 +1,93 @@
+(module
+   "test/testcases/malgo/With.mlg"
+   ((((((./test/testcases/malgo/With.mlg 11 1)
+          (./test/testcases/malgo/With.mlg 16 1))
+         twice
+         (fn
+            ((clause
+                (#With.k_6)
+                (seq
+                   (do (apply #With.k_6 (tuple)))
+                   (do (apply #With.k_6 (tuple)))))))))
+       ((((./test/testcases/malgo/With.mlg 16 1)
+            (./test/testcases/malgo/With.mlg 21 1))
+           printAndReturn
+           (fn
+              ((clause
+                  (#With.str_7 #With.k_8)
+                  (seq
+                     (do (apply printString #With.str_7))
+                     (do (apply #With.k_8 #With.str_7))))))))
+       ((((./test/testcases/malgo/With.mlg 5 1)
+            (./test/testcases/malgo/With.mlg 10 1))
+           finally
+           (fn
+              ((clause
+                  (#With.finalizer_2 #With.k_3)
+                  (seq
+                     (let #With.x_4 (apply #With.k_3 (tuple)))
+                     (do (apply #With.finalizer_2 #With.x_4))))))))
+       ((((./test/testcases/malgo/With.mlg 21 1)
+            (./test/testcases/malgo/With.mlg 27 1))
+           main
+           (fn
+              ((clause
+                  ()
+                  (seq
+                     (do
+                        (apply
+                           (apply
+                              finally
+                              (fn
+                                 ((clause
+                                     ((tuple))
+                                     (seq
+                                        (do
+                                           (apply
+                                              printString
+                                              (apply String# (string "end")))))))))
+                           (fn
+                              ((clause
+                                  ()
+                                  (seq
+                                     (do
+                                        (apply
+                                           twice
+                                           (fn
+                                              ((clause
+                                                  ()
+                                                  (seq
+                                                     (do
+                                                        (apply
+                                                           (apply
+                                                              printAndReturn
+                                                              (apply
+                                                                 String#
+                                                                 (string "foo")))
+                                                           (fn
+                                                              ((clause
+                                                                  (#With.x_9)
+                                                                  (seq
+                                                                     (do
+                                                                        (apply
+                                                                           printString
+                                                                           #With.x_9)))))))))))))))))))))))))))
+      ((((./test/testcases/malgo/With.mlg 4 1)
+           (./test/testcases/malgo/With.mlg 5 1))
+          finally
+          (-> (-> #With.a_0 #With.r_1) (-> (-> (tuple) #With.a_0) #With.r_1)))
+         (((./test/testcases/malgo/With.mlg 10 1)
+             (./test/testcases/malgo/With.mlg 11 1))
+            twice
+            (-> (-> (tuple) #With.a_5) #With.a_5)))
+      ()
+      ()
+      ()
+      ((((./test/testcases/malgo/With.mlg 1 1)
+           (./test/testcases/malgo/With.mlg 2 1))
+          "runtime/malgo/Builtin.mlg"
+          all)
+         (((./test/testcases/malgo/With.mlg 2 1)
+             (./test/testcases/malgo/With.mlg 4 1))
+            "runtime/malgo/Prelude.mlg"
+            all))))

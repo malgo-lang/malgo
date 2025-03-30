@@ -1,0 +1,47 @@
+(module
+   "test/testcases/malgo/TestLet.mlg"
+   ((((((./test/testcases/malgo/TestLet.mlg 5 1)
+          (./test/testcases/malgo/TestLet.mlg 7 1))
+         |>
+         (fn
+            ((clause
+                (#TestLet.x_2 #TestLet.f_3)
+                (seq (do (apply #TestLet.f_3 #TestLet.x_2))))))))
+       ((((./test/testcases/malgo/TestLet.mlg 7 1)
+            (./test/testcases/malgo/TestLet.mlg 15 1))
+           main
+           (fn
+              ((clause
+                  ()
+                  (seq
+                     (let
+                        #TestLet.x_4
+                        (apply (apply addInt32# (int32 2)) (int32 1)))
+                     (do (apply printString# (apply toStringInt32# #TestLet.x_4)))
+                     (let
+                        #TestLet.x_5
+                        (apply
+                           Int32#
+                           (apply (apply addInt32# (int32 2)) (int32 1))))
+                     (let
+                        #TestLet.printInt32_7
+                        (fn
+                           ((clause
+                               ((con Int32# (#TestLet.x_6)))
+                               (seq
+                                  (do
+                                     (apply
+                                        printString#
+                                        (apply toStringInt32# #TestLet.x_6))))))))
+                     (do (apply #TestLet.printInt32_7 #TestLet.x_5)))))))))
+      ((((./test/testcases/malgo/TestLet.mlg 4 1)
+           (./test/testcases/malgo/TestLet.mlg 5 1))
+          |>
+          (-> #TestLet.a_0 (-> (-> #TestLet.a_0 #TestLet.b_1) #TestLet.b_1))))
+      ()
+      ()
+      ()
+      ((((./test/testcases/malgo/TestLet.mlg 1 1)
+           (./test/testcases/malgo/TestLet.mlg 3 1))
+          "runtime/malgo/Builtin.mlg"
+          all))))

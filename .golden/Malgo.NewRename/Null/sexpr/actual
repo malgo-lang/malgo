@@ -1,0 +1,121 @@
+(module
+   "test/testcases/malgo/Null.mlg"
+   ((((((./test/testcases/malgo/Null.mlg 26 1)
+          (./test/testcases/malgo/Null.mlg 31 1))
+         |>
+         (fn
+            ((clause
+                (#Null.x_19 #Null.f_20)
+                (seq (do (apply #Null.f_20 #Null.x_19))))))))
+       ((((./test/testcases/malgo/Null.mlg 14 1)
+            (./test/testcases/malgo/Null.mlg 19 1))
+           mHead
+           (fn
+              ((clause (#Null.Nil_10) (seq (do Nothing)))
+                 (clause
+                    ((con Cons (#Null.p_11 #Null.__12)))
+                    (seq (do (apply Just #Null.p_11))))))))
+       ((((./test/testcases/malgo/Null.mlg 8 1)
+            (./test/testcases/malgo/Null.mlg 13 1))
+           isNothing
+           (fn
+              ((clause (#Null.Nothing_5) (seq (do True)))
+                 (clause ((con Just (#Null.__6))) (seq (do False)))))))
+       ((((./test/testcases/malgo/Null.mlg 20 1)
+            (./test/testcases/malgo/Null.mlg 24 1))
+           null
+           (fn
+              ((clause
+                  (#Null.as_16)
+                  (seq (do (apply isNothing (apply mHead #Null.as_16)))))))))
+       ((((./test/testcases/malgo/Null.mlg 35 1)
+            (./test/testcases/malgo/Null.mlg 41 1))
+           main
+           (fn
+              ((clause
+                  ()
+                  (seq
+                     (do
+                        (opapp
+                           |>
+                           (apply
+                              null
+                              (apply
+                                 (apply Cons (apply (apply Cons Nil) True))
+                                 True))
+                           (fn
+                              ((clause
+                                  (#Null.False_23)
+                                  (seq
+                                     (do (apply malgo_print_string (string "OK")))))
+                                 (clause
+                                    (#Null.True_24)
+                                    (seq (do (apply malgo_exit_failure (tuple))))))))))))))))
+      ((((./test/testcases/malgo/Null.mlg 7 1)
+           (./test/testcases/malgo/Null.mlg 8 1))
+          isNothing
+          (-> (app #Null.Maybe_3 (#Null.a_4)) #Null.Bool_2))
+         (((./test/testcases/malgo/Null.mlg 13 1)
+             (./test/testcases/malgo/Null.mlg 14 1))
+            mHead
+            (-> (app #Null.List_7 (#Null.a_9)) (app #Null.Maybe_8 (#Null.a_9))))
+         (((./test/testcases/malgo/Null.mlg 19 1)
+             (./test/testcases/malgo/Null.mlg 20 1))
+            null
+            (-> (app #Null.List_14 (#Null.a_15)) #Null.Bool_13))
+         (((./test/testcases/malgo/Null.mlg 25 1)
+             (./test/testcases/malgo/Null.mlg 26 1))
+            |>
+            (-> #Null.a_17 (-> (-> #Null.a_17 #Null.b_18) #Null.b_18))))
+      ((((./test/testcases/malgo/Null.mlg 1 1)
+           (./test/testcases/malgo/Null.mlg 3 1))
+          Maybe
+          ((((./test/testcases/malgo/Null.mlg 1 12)
+               (./test/testcases/malgo/Null.mlg 1 14))
+              #Null.a_0))
+          ((((./test/testcases/malgo/Null.mlg 1 16)
+               (./test/testcases/malgo/Null.mlg 1 24))
+              Nothing
+              ())
+             (((./test/testcases/malgo/Null.mlg 1 26)
+                 (./test/testcases/malgo/Null.mlg 3 1))
+                Just
+                (#Null.a_0))))
+         (((./test/testcases/malgo/Null.mlg 3 1)
+             (./test/testcases/malgo/Null.mlg 5 1))
+            Bool
+            ()
+            ((((./test/testcases/malgo/Null.mlg 3 13)
+                 (./test/testcases/malgo/Null.mlg 3 19))
+                False
+                ())
+               (((./test/testcases/malgo/Null.mlg 3 21)
+                   (./test/testcases/malgo/Null.mlg 5 1))
+                  True
+                  ())))
+         (((./test/testcases/malgo/Null.mlg 5 1)
+             (./test/testcases/malgo/Null.mlg 7 1))
+            List
+            ((((./test/testcases/malgo/Null.mlg 5 11)
+                 (./test/testcases/malgo/Null.mlg 5 13))
+                #Null.a_1))
+            ((((./test/testcases/malgo/Null.mlg 5 15)
+                 (./test/testcases/malgo/Null.mlg 5 19))
+                Nil
+                ())
+               (((./test/testcases/malgo/Null.mlg 5 21)
+                   (./test/testcases/malgo/Null.mlg 7 1))
+                  Cons
+                  (#Null.a_1 (app List (#Null.a_1)))))))
+      ()
+      (((((./test/testcases/malgo/Null.mlg 31 1)
+            (./test/testcases/malgo/Null.mlg 33 1))
+           malgo_print_string)
+          malgo_print_string
+          (-> #Null.String#_21 (tuple)))
+         ((((./test/testcases/malgo/Null.mlg 33 1)
+              (./test/testcases/malgo/Null.mlg 35 1))
+             malgo_exit_failure)
+            malgo_exit_failure
+            (-> (tuple) #Null.a_22)))
+      ()))

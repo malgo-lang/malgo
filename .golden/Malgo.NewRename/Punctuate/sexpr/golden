@@ -1,0 +1,122 @@
+(module
+   "test/testcases/malgo/Punctuate.mlg"
+   ((((((./test/testcases/malgo/Punctuate.mlg 6 1)
+          (./test/testcases/malgo/Punctuate.mlg 8 1))
+         <>
+         appendString))
+       ((((./test/testcases/malgo/Punctuate.mlg 13 1)
+            (./test/testcases/malgo/Punctuate.mlg 19 1))
+           show
+           (fn
+              ((clause
+                  ((con Symbol (#Punctuate.str_3)))
+                  (seq
+                     (do
+                        (opapp
+                           <>
+                           (apply String# (string "Symbol "))
+                           #Punctuate.str_3))))
+                 (clause
+                    ((con SInt (#Punctuate.int_4)))
+                    (seq
+                       (do
+                          (opapp
+                             <>
+                             (apply String# (string "SInt "))
+                             (apply toStringInt32 #Punctuate.int_4)))))
+                 (clause
+                    ((con SList (#Punctuate.ss_5)))
+                    (seq
+                       (do
+                          (opapp
+                             <>
+                             (apply String# (string "SList ["))
+                             (opapp
+                                <>
+                                (apply
+                                   concatString
+                                   (apply
+                                      (apply
+                                         punctuate
+                                         (apply
+                                            (apply mapList #Punctuate.ss_5)
+                                            show))
+                                      (apply String# (string ", "))))
+                                (apply String# (string "]")))))))))))
+       ((((./test/testcases/malgo/Punctuate.mlg 19 1)
+            (./test/testcases/malgo/Punctuate.mlg 24 1))
+           main
+           (fn
+              ((clause
+                  ()
+                  (seq
+                     (let
+                        #Punctuate.x_6
+                        (apply
+                           SList
+                           (apply
+                              (apply
+                                 Cons
+                                 (apply Symbol (apply String# (string "x"))))
+                              (apply
+                                 (apply
+                                    Cons
+                                    (apply
+                                       SList
+                                       (apply
+                                          (apply
+                                             Cons
+                                             (apply
+                                                Symbol
+                                                (apply String# (string "y"))))
+                                          (apply
+                                             (apply
+                                                Cons
+                                                (apply
+                                                   SList
+                                                   (apply
+                                                      (apply
+                                                         Cons
+                                                         (apply
+                                                            Symbol
+                                                            (apply
+                                                               String#
+                                                               (string "z"))))
+                                                      Nil)))
+                                             Nil))))
+                                 Nil))))
+                     (do (apply putStrLn (apply show #Punctuate.x_6))))))))))
+      ((((./test/testcases/malgo/Punctuate.mlg 5 1)
+           (./test/testcases/malgo/Punctuate.mlg 6 1))
+          <>
+          (-> #Punctuate.String_0 (-> #Punctuate.String_0 #Punctuate.String_0)))
+         (((./test/testcases/malgo/Punctuate.mlg 12 1)
+             (./test/testcases/malgo/Punctuate.mlg 13 1))
+            show
+            (-> #Punctuate.SExpr_1 #Punctuate.String_2)))
+      ((((./test/testcases/malgo/Punctuate.mlg 8 1)
+           (./test/testcases/malgo/Punctuate.mlg 12 1))
+          SExpr
+          ()
+          ((((./test/testcases/malgo/Punctuate.mlg 8 14)
+               (./test/testcases/malgo/Punctuate.mlg 9 12))
+              Symbol
+              (String))
+             (((./test/testcases/malgo/Punctuate.mlg 9 14)
+                 (./test/testcases/malgo/Punctuate.mlg 10 12))
+                SInt
+                (Int32))
+             (((./test/testcases/malgo/Punctuate.mlg 10 14)
+                 (./test/testcases/malgo/Punctuate.mlg 12 1))
+                SList
+                ((app List (SExpr)))))))
+      ()
+      ()
+      ((((./test/testcases/malgo/Punctuate.mlg 1 1)
+           (./test/testcases/malgo/Punctuate.mlg 2 1))
+          "runtime/malgo/Builtin.mlg"
+          all)
+         (((./test/testcases/malgo/Punctuate.mlg 2 1)
+             (./test/testcases/malgo/Punctuate.mlg 4 1))
+            "runtime/malgo/Prelude.mlg"
+            all))))

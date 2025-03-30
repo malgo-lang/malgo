@@ -1,48 +1,45 @@
 (()
    ((define
-      (even $EvenOdd.int32#_51)
-      (->
-         (Any#)
-         Any#)
-      (match
-         (cast
-            (sum (con runtime/malgo/Builtin.mlg.Int32# Int32#))
-            $EvenOdd.int32#_51)
-         (unpack
-            (con runtime/malgo/Builtin.mlg.Int32# Int32#)
-            ($EvenOdd.p_59)
-            (match
-               $EvenOdd.p_59
-               (exact
-                  0_i32
-                  (direct True))
-               (bind
-                  $EvenOdd.__60
-                  Int32#
-                  (= $EvenOdd.d_57
-                     (= $EvenOdd.d_53
-                        (= $EvenOdd.d_52
-                           (call subInt32 $EvenOdd.int32#_51)
-                           (cast
-                              (->
-                                 (Any#)
-                                 Any#)
-                              $EvenOdd.d_52))
-                        (= $EvenOdd.d_55
-                           (= $EvenOdd.d_54
-                              (call Int32# 1_i32)
-                              (cast Any# $EvenOdd.d_54))
-                           (= $EvenOdd.d_56
-                              (call $EvenOdd.d_53 $EvenOdd.d_55)
-                              (cast Any# $EvenOdd.d_56))))
-                     (= $EvenOdd.d_58
-                        (call odd $EvenOdd.d_57)
-                        (cast Any# $EvenOdd.d_58))))))))
+       (even $EvenOdd.int32#_51)
+       (-> (Any#) Any#)
+       (match
+          (cast
+             (sum (con runtime/malgo/Builtin.mlg.Int32# Int32#))
+             $EvenOdd.int32#_51)
+          (unpack
+             (con runtime/malgo/Builtin.mlg.Int32# Int32#)
+             ($EvenOdd.p_59)
+             (match
+                $EvenOdd.p_59
+                (exact 0_i32 (direct True))
+                (bind
+                   $EvenOdd.__60
+                   Int32#
+                   (=
+                      $EvenOdd.d_57
+                      (=
+                         $EvenOdd.d_53
+                         (=
+                            $EvenOdd.d_52
+                            (call subInt32 $EvenOdd.int32#_51)
+                            (cast (-> (Any#) Any#) $EvenOdd.d_52))
+                         (=
+                            $EvenOdd.d_55
+                            (=
+                               $EvenOdd.d_54
+                               (call Int32# 1_i32)
+                               (cast Any# $EvenOdd.d_54))
+                            (=
+                               $EvenOdd.d_56
+                               (call $EvenOdd.d_53 $EvenOdd.d_55)
+                               (cast Any# $EvenOdd.d_56))))
+                      (=
+                         $EvenOdd.d_58
+                         (call odd $EvenOdd.d_57)
+                         (cast Any# $EvenOdd.d_58))))))))
       (define
          (odd $EvenOdd.int32#_61)
-         (->
-            (Any#)
-            Any#)
+         (-> (Any#) Any#)
          (match
             (cast
                (sum (con runtime/malgo/Builtin.mlg.Int32# Int32#))
@@ -52,85 +49,86 @@
                ($EvenOdd.p_69)
                (match
                   $EvenOdd.p_69
-                  (exact
-                     0_i32
-                     (direct False))
+                  (exact 0_i32 (direct False))
                   (bind
                      $EvenOdd.__70
                      Int32#
-                     (= $EvenOdd.d_67
-                        (= $EvenOdd.d_63
-                           (= $EvenOdd.d_62
+                     (=
+                        $EvenOdd.d_67
+                        (=
+                           $EvenOdd.d_63
+                           (=
+                              $EvenOdd.d_62
                               (call subInt32 $EvenOdd.int32#_61)
-                              (cast
-                                 (->
-                                    (Any#)
-                                    Any#)
-                                 $EvenOdd.d_62))
-                           (= $EvenOdd.d_65
-                              (= $EvenOdd.d_64
+                              (cast (-> (Any#) Any#) $EvenOdd.d_62))
+                           (=
+                              $EvenOdd.d_65
+                              (=
+                                 $EvenOdd.d_64
                                  (call Int32# 1_i32)
                                  (cast Any# $EvenOdd.d_64))
-                              (= $EvenOdd.d_66
+                              (=
+                                 $EvenOdd.d_66
                                  (call $EvenOdd.d_63 $EvenOdd.d_65)
                                  (cast Any# $EvenOdd.d_66))))
-                        (= $EvenOdd.d_68
+                        (=
+                           $EvenOdd.d_68
                            (call even $EvenOdd.d_67)
                            (cast Any# $EvenOdd.d_68))))))))
       (define
          (main $EvenOdd.$__71)
-         (->
-            ((sum (con Tuple#)))
-            (sum (con Tuple#)))
-         (= $EvenOdd.d_80
+         (-> ((sum (con Tuple#))) (sum (con Tuple#)))
+         (=
+            $EvenOdd.d_80
             (let
                (($EvenOdd.fun_79
-                  (->
-                     (Any#)
-                     (sum (con Tuple#)))
-                  (fun
-                     ($EvenOdd.false_72)
-                     (match
-                        (cast
-                           (sum (con runtime/malgo/Builtin.mlg.False)
-                              (con runtime/malgo/Builtin.mlg.True))
-                           $EvenOdd.false_72)
-                        (unpack
-                           (con runtime/malgo/Builtin.mlg.False)
-                           ()
-                           (= $EvenOdd.d_74
-                              (= $EvenOdd.d_73
-                                 (call String# "False")
-                                 (cast Any# $EvenOdd.d_73))
-                              (= $EvenOdd.d_75
-                                 (call putStrLn $EvenOdd.d_74)
-                                 (cast
-                                    (sum (con Tuple#))
-                                    $EvenOdd.d_75))))
-                        (unpack
-                           (con runtime/malgo/Builtin.mlg.True)
-                           ()
-                           (= $EvenOdd.d_77
-                              (= $EvenOdd.d_76
-                                 (call String# "True")
-                                 (cast Any# $EvenOdd.d_76))
-                              (= $EvenOdd.d_78
-                                 (call putStrLn $EvenOdd.d_77)
-                                 (cast
-                                    (sum (con Tuple#))
-                                    $EvenOdd.d_78))))))))
+                   (-> (Any#) (sum (con Tuple#)))
+                   (fun
+                      ($EvenOdd.false_72)
+                      (match
+                         (cast
+                            (sum
+                               (con runtime/malgo/Builtin.mlg.False)
+                               (con runtime/malgo/Builtin.mlg.True))
+                            $EvenOdd.false_72)
+                         (unpack
+                            (con runtime/malgo/Builtin.mlg.False)
+                            ()
+                            (=
+                               $EvenOdd.d_74
+                               (=
+                                  $EvenOdd.d_73
+                                  (call String# "False")
+                                  (cast Any# $EvenOdd.d_73))
+                               (=
+                                  $EvenOdd.d_75
+                                  (call putStrLn $EvenOdd.d_74)
+                                  (cast (sum (con Tuple#)) $EvenOdd.d_75))))
+                         (unpack
+                            (con runtime/malgo/Builtin.mlg.True)
+                            ()
+                            (=
+                               $EvenOdd.d_77
+                               (=
+                                  $EvenOdd.d_76
+                                  (call String# "True")
+                                  (cast Any# $EvenOdd.d_76))
+                               (=
+                                  $EvenOdd.d_78
+                                  (call putStrLn $EvenOdd.d_77)
+                                  (cast (sum (con Tuple#)) $EvenOdd.d_78))))))))
                $EvenOdd.fun_79)
-            (= $EvenOdd.d_84
-               (= $EvenOdd.d_82
-                  (= $EvenOdd.d_81
-                     (call Int32# 10_i32)
-                     (cast Any# $EvenOdd.d_81))
-                  (= $EvenOdd.d_83
+            (=
+               $EvenOdd.d_84
+               (=
+                  $EvenOdd.d_82
+                  (= $EvenOdd.d_81 (call Int32# 10_i32) (cast Any# $EvenOdd.d_81))
+                  (=
+                     $EvenOdd.d_83
                      (call even $EvenOdd.d_82)
                      (cast Any# $EvenOdd.d_83)))
-               (= $EvenOdd.d_85
+               (=
+                  $EvenOdd.d_85
                   (call $EvenOdd.d_80 $EvenOdd.d_84)
-                  (cast
-                     (sum (con Tuple#))
-                     $EvenOdd.d_85))))))
+                  (cast (sum (con Tuple#)) $EvenOdd.d_85))))))
    ())

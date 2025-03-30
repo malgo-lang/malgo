@@ -8,14 +8,32 @@ import Data.SCargot qualified as S
 import Data.SCargot.Repr qualified as S
 import Data.SCargot.Repr.Basic qualified as S
 import Malgo.Prelude
+import Text.Megaparsec (SourcePos (..), unPos)
 
 class ToSExpr a where
   toSExpr :: a -> S.SExpr Atom
   sShow :: (ConvertibleStrings Text s) => a -> s
-  sShow = convertString . S.encodeOne (S.unconstrainedPrint atomToText & S.setIndentStrategy indentStrategy) . toSExpr
+  sShow = convertString . S.encodeOne (S.basicPrint atomToText) . toSExpr
+
+instance ToSExpr Void where
+  toSExpr = absurd
+
+instance ToSExpr Range where
+  toSExpr (Range start end) = S.L [toSExpr start, toSExpr end]
+
+instance ToSExpr SourcePos where
+  toSExpr (SourcePos file line column) =
+    S.L
+      [ S.A $ Symbol $ convertString file,
+        S.A $ Int (fromIntegral $ unPos line) Nothing,
+        S.A $ Int (fromIntegral $ unPos column) Nothing
+      ]
 
 instance ToSExpr Text where
   toSExpr = S.A . Symbol
+
+instance ToSExpr Int where
+  toSExpr = S.A . (\i -> Int i Nothing) . fromIntegral
 
 instance (ToSExpr a, ToSExpr b) => ToSExpr (a, b) where
   toSExpr (a, b) = S.L [toSExpr a, toSExpr b]
@@ -23,9 +41,18 @@ instance (ToSExpr a, ToSExpr b) => ToSExpr (a, b) where
 instance (ToSExpr a, ToSExpr b, ToSExpr c) => ToSExpr (a, b, c) where
   toSExpr (a, b, c) = S.L [toSExpr a, toSExpr b, toSExpr c]
 
+instance (ToSExpr a, ToSExpr b, ToSExpr c, ToSExpr d) => ToSExpr (a, b, c, d) where
+  toSExpr (a, b, c, d) = S.L [toSExpr a, toSExpr b, toSExpr c, toSExpr d]
+
 instance (ToSExpr a) => ToSExpr [a] where
   toSExpr = S.L . map toSExpr
-  sShow = convertString . S.encode (S.unconstrainedPrint atomToText & S.setIndentStrategy indentStrategy) . map toSExpr
+  sShow =
+    convertString
+      . S.encode (S.basicPrint atomToText)
+        -- ( S.unconstrainedPrint atomToText
+        --     & S.setIndentStrategy indentStrategy
+        -- )
+      . map toSExpr
 
 data Atom
   = Symbol Text

@@ -1,51 +1,33 @@
 ((|>
-   (lambda
-      ($Test0.param_50)
-      (lambda
-         ($Test0.param_51)
-         (select
-            (tuple
-               ($Test0.param_50 $Test0.param_51))
-            (((tuple
-               (#Test0.x_2 #Test0.f_3))
-               (apply
-                  #Test0.f_3
-                  (#Test0.x_2))))))))
+    (lambda
+       ($Test0.param_50)
+       (lambda
+          ($Test0.param_51)
+          (select
+             (tuple ($Test0.param_50 $Test0.param_51))
+             (((tuple (#Test0.x_2 #Test0.f_3)) (apply #Test0.f_3 (#Test0.x_2))))))))
    (main
       (lambda
          ($Test0.param_52)
          (select
             $Test0.param_52
             ((#Test0.$__41
-               (apply
-                  (apply
-                     (invoke |>)
-                     ((apply
-                        (invoke Int64#)
-                        (1_i64))))
-                  ((lambda
-                     ($Test0.param_53)
-                     (select
-                        $Test0.param_53
-                        (((Int64#
-                           (#Test0.i_6))
-                           (apply
-                              (invoke printString#)
-                              ((apply
-                                 (invoke toStringInt64#)
-                                 (#Test0.i_6)))))))))))))))
+                (apply
+                   (apply (invoke |>) ((apply (invoke Int64#) (1_i64))))
+                   ((lambda
+                       ($Test0.param_53)
+                       (select
+                          $Test0.param_53
+                          (((Int64# (#Test0.i_6))
+                              (apply
+                                 (invoke printString#)
+                                 ((apply (invoke toStringInt64#) (#Test0.i_6)))))))))))))))
    (+#
       (lambda
          ($Test0.param_54)
          (lambda
             ($Test0.param_55)
             (select
-               (tuple
-                  ($Test0.param_54 $Test0.param_55))
-               (((tuple
-                  (#Test0.x_4 #Test0.y_5))
-                  (apply
-                     (apply
-                        (invoke addInt64#)
-                        (#Test0.x_4))
-                     (#Test0.y_5)))))))))
+               (tuple ($Test0.param_54 $Test0.param_55))
+               (((tuple (#Test0.x_4 #Test0.y_5))
+                   (apply (apply (invoke addInt64#) (#Test0.x_4)) (#Test0.y_5)))))))))

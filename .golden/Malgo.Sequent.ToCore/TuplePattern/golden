@@ -1,64 +1,52 @@
 ((main
-   $TuplePattern.return_28
-   (cut
-      (lambda
-         ($TuplePattern.param_26 $TuplePattern.return_29)
-         (cut
-            $TuplePattern.param_26
-            (select
-               (#TuplePattern.$__25
-                  (invoke |>
-                     (apply
-                        ((construct
-                           tuple
-                           ((do $TuplePattern.return_32
-                              (invoke A $TuplePattern.return_32))
-                              (do $TuplePattern.return_33
-                                 (invoke B $TuplePattern.return_33)))
-                           ()))
-                        ((apply
-                           ((lambda
-                              ($TuplePattern.param_27 $TuplePattern.return_30)
-                              (cut
-                                 $TuplePattern.param_27
-                                 (select
-                                    ((tuple
-                                       ((A ())
-                                          #TuplePattern.rest_0))
-                                       (invoke printString
-                                          (apply
-                                             ((do $TuplePattern.return_31
-                                                (invoke String#
-                                                   (apply
-                                                      ("A")
-                                                      ($TuplePattern.return_31)))))
-                                             ($TuplePattern.return_30))))
-                                    ((tuple
-                                       ((B ())
-                                          #TuplePattern.rest_1))
-                                       (cut
-                                          (construct tuple () ())
-                                          $TuplePattern.return_30))
-                                    ((tuple
-                                       ((C ())
-                                          #TuplePattern.rest_2))
-                                       (cut
-                                          (construct tuple () ())
-                                          $TuplePattern.return_30))))))
-                           ($TuplePattern.return_29)))))))))
-      $TuplePattern.return_28))
-   (A
-      $TuplePattern.return_34
-      (cut
-         (construct A () ())
-         $TuplePattern.return_34))
-   (B
-      $TuplePattern.return_35
-      (cut
-         (construct B () ())
-         $TuplePattern.return_35))
-   (C
-      $TuplePattern.return_36
-      (cut
-         (construct C () ())
-         $TuplePattern.return_36)))
+    $TuplePattern.return_28
+    (cut
+       (lambda
+          ($TuplePattern.param_26 $TuplePattern.return_29)
+          (cut
+             $TuplePattern.param_26
+             (select
+                (#TuplePattern.$__25
+                   (invoke
+                      |>
+                      (apply
+                         ((construct
+                             tuple
+                             ((do
+                                 $TuplePattern.return_32
+                                 (invoke A $TuplePattern.return_32))
+                                (do
+                                   $TuplePattern.return_33
+                                   (invoke B $TuplePattern.return_33)))
+                             ()))
+                         ((apply
+                             ((lambda
+                                 ($TuplePattern.param_27 $TuplePattern.return_30)
+                                 (cut
+                                    $TuplePattern.param_27
+                                    (select
+                                       ((tuple ((A ()) #TuplePattern.rest_0))
+                                          (invoke
+                                             printString
+                                             (apply
+                                                ((do
+                                                    $TuplePattern.return_31
+                                                    (invoke
+                                                       String#
+                                                       (apply
+                                                          ("A")
+                                                          ($TuplePattern.return_31)))))
+                                                ($TuplePattern.return_30))))
+                                       ((tuple ((B ()) #TuplePattern.rest_1))
+                                          (cut
+                                             (construct tuple () ())
+                                             $TuplePattern.return_30))
+                                       ((tuple ((C ()) #TuplePattern.rest_2))
+                                          (cut
+                                             (construct tuple () ())
+                                             $TuplePattern.return_30))))))
+                             ($TuplePattern.return_29)))))))))
+       $TuplePattern.return_28))
+   (A $TuplePattern.return_34 (cut (construct A () ()) $TuplePattern.return_34))
+   (B $TuplePattern.return_35 (cut (construct B () ()) $TuplePattern.return_35))
+   (C $TuplePattern.return_36 (cut (construct C () ()) $TuplePattern.return_36)))
