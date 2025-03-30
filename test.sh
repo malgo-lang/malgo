@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Remove .malgo-work directory if it exists
+if [ -d ".malgo-work" ]; then
+  rm -rf .malgo-work
+fi
+
 # Add `--test-option=` to the all arguments
 args=("$@")
 for i in "${!args[@]}"; do
