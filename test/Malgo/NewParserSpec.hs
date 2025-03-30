@@ -25,5 +25,5 @@ driveParse srcPath = do
     parsed <- parse srcPath src
     case parsed of
       Left err -> error $ errorBundlePretty err
-      Right parsed ->
+      Right (_, parsed) ->
         pure $ pShowCompact parsed
