@@ -18,7 +18,7 @@ module Malgo.Rename.RnEnv
   )
 where
 
-import Control.Lens (ASetter', makeFieldsNoPrefix)
+import Control.Lens (ASetter', makeFieldsId)
 import Data.Map.Strict qualified as Map
 import Data.Set qualified as Set
 import Effectful (Eff, (:>))
@@ -83,12 +83,12 @@ data RnEnv = RnEnv
   { -- | Environment for resolved variable identifiers.
     -- The key is the raw identifier (e.g. `foo`, `bar`).
     -- The value is the list of resolved identifiers (e.g. `foo`, `Foo.foo`, `B.bar`).
-    _resolvedVarIdentMap :: Map PsId [Resolved],
-    _resolvedTypeIdentMap :: Map PsId [Resolved],
+    resolvedVarIdentMap :: Map PsId [Resolved],
+    resolvedTypeIdentMap :: Map PsId [Resolved],
     constructors :: Set Id
   }
 
-makeFieldsNoPrefix ''RnEnv
+makeFieldsId ''RnEnv
 
 -- | Append resolved identifiers to the environment.
 appendRnEnv :: ASetter' RnEnv (Map PsId [Resolved]) -> [(PsId, Resolved)] -> RnEnv -> RnEnv
@@ -114,8 +114,8 @@ genBuiltinRnEnv = runReader (ModuleName "Builtin") do
 
   pure
     $ RnEnv
-      { _resolvedVarIdentMap = mempty,
-        _resolvedTypeIdentMap =
+      { resolvedVarIdentMap = mempty,
+        resolvedTypeIdentMap =
           Map.fromList
             [ ("Int32#", [Qualified Implicit int32_t]),
               ("Int64#", [Qualified Implicit int64_t]),
@@ -142,7 +142,7 @@ resolveGlobalName = newExternalId
 -- | Resolving a variable name that is already resolved
 lookupVarName :: (Reader RnEnv :> es, Error RenameError :> es) => Range -> Text -> Eff es Id
 lookupVarName pos name =
-  asks @RnEnv ((._resolvedVarIdentMap) >>> Map.lookup name) >>= \case
+  asks @RnEnv ((.resolvedVarIdentMap) >>> Map.lookup name) >>= \case
     Just names -> case find (\(Qualified visi _) -> visi == Implicit) names of
       Just (Qualified _ name) -> pure name
       Nothing -> throwError $ NoSuchNameInScope pos name names
@@ -151,7 +151,7 @@ lookupVarName pos name =
 -- | Resolving a type name that is already resolved
 lookupTypeName :: (Reader RnEnv :> es, Error RenameError :> es) => Range -> Text -> Eff es Id
 lookupTypeName pos name =
-  asks @RnEnv ((._resolvedTypeIdentMap) >>> Map.lookup name) >>= \case
+  asks @RnEnv ((.resolvedTypeIdentMap) >>> Map.lookup name) >>= \case
     Just names -> case find (\(Qualified visi _) -> visi == Implicit) names of
       Just (Qualified _ name) -> pure name
       Nothing -> throwError $ NoSuchNameInScope pos name names
@@ -165,7 +165,7 @@ lookupQualifiedVarName ::
   Text ->
   Eff es Id
 lookupQualifiedVarName pos modName name =
-  asks @RnEnv ((._resolvedVarIdentMap) >>> Map.lookup name) >>= \case
+  asks @RnEnv ((.resolvedVarIdentMap) >>> Map.lookup name) >>= \case
     Just names ->
       case find (\(Qualified visi _) -> visi == Explicit modName) names of
         Just (Qualified _ name) -> pure name

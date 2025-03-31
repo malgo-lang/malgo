@@ -104,7 +104,7 @@ library
     , generic-data
     , hashable
     , io-streams
-    , lens
+    , lens >=5.3.4
     , megaparsec
     , mtl
     , optparse-applicative
@@ -163,7 +163,7 @@ executable malgo
     , generic-data
     , hashable
     , io-streams
-    , lens
+    , lens >=5.3.4
     , malgo
     , megaparsec
     , mtl
@@ -238,7 +238,7 @@ test-suite malgo-test
     , hspec-core
     , hspec-golden >=0.2.2.0
     , io-streams
-    , lens
+    , lens >=5.3.4
     , malgo
     , megaparsec
     , mtl

@@ -364,7 +364,7 @@ genToplevelEnv (ds :: [Decl (Malgo NewParse)]) env = do
   execState env (traverse aux ds)
   where
     aux (ScDef pos x _) = do
-      env <- gets @RnEnv (._resolvedVarIdentMap)
+      env <- gets @RnEnv (.resolvedVarIdentMap)
       when (x `elem` Map.keys env) do
         errorOn pos $ "Duplicate name:" <+> squotes (pretty x)
       x' <- resolveGlobalName x

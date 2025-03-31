@@ -62,7 +62,8 @@ constraints: any.Glob ==0.10.2,
              any.invariant ==0.6.3,
              any.io-streams ==1.5.2.2,
              any.kan-extensions ==5.2.6,
-             any.lens ==5.3.2,
+             any.lens ==5.3.4,
+             lens -benchmark-uniplate -dump-splices +inlining -j +test-hunit +test-properties +test-templates +trustworthy,
              any.lifted-base ==0.2.3.12,
              any.logict ==0.8.2.0,
              any.megaparsec ==9.5.0,
@@ -143,4 +144,4 @@ constraints: any.Glob ==0.10.2,
              any.witherable ==0.4.2,
              any.zlib ==0.6.3.0,
              any.zlib-bindings ==0.1.1.5
-index-state: hackage.haskell.org 2025-03-23T13:31:26Z
+index-state: hackage.haskell.org 2025-03-24T02:47:50Z
