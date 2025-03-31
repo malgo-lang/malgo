@@ -48,14 +48,14 @@ library
       Malgo.Module
       Malgo.Monad
       Malgo.MonadUniq
-      Malgo.NewRename.Pass
-      Malgo.NewRename.RnEnv
-      Malgo.NewRename.RnState
       Malgo.Parser
       Malgo.Prelude
       Malgo.Refine.Pass
       Malgo.Refine.RefineEnv
       Malgo.Refine.Space
+      Malgo.Rename.Pass
+      Malgo.Rename.RnEnv
+      Malgo.Rename.RnState
       Malgo.Sequent.Core
       Malgo.Sequent.Core.Flat
       Malgo.Sequent.Core.Join
@@ -191,9 +191,9 @@ test-suite malgo-test
       Malgo.DesugarSpec
       Malgo.InferSpec
       Malgo.LinkSpec
-      Malgo.NewRenameSpec
       Malgo.ParserSpec
       Malgo.RefineSpec
+      Malgo.RenameSpec
       Malgo.Sequent.EvalSpec
       Malgo.Sequent.ToCoreSpec
       Malgo.Sequent.ToFunSpec

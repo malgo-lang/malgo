@@ -8,11 +8,11 @@ import Malgo.Driver (failIfError)
 import Malgo.Infer.Pass (infer)
 import Malgo.Module
 import Malgo.Monad (runMalgoM)
-import Malgo.NewRename.Pass (rename)
-import Malgo.NewRename.RnEnv qualified as RnEnv
 import Malgo.Parser (parse)
 import Malgo.Prelude
 import Malgo.Refine.Pass (refine)
+import Malgo.Rename.Pass (rename)
+import Malgo.Rename.RnEnv qualified as RnEnv
 import Malgo.Sequent.Core
 import Malgo.Sequent.Core.Flat (flatProgram)
 import Malgo.Sequent.Core.Join (joinProgram)

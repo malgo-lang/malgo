@@ -1,8 +1,8 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
--- | 'Malgo.NewRename.RnEnv' contains functions which convert 'PsId' to 'RnId'.
-module Malgo.NewRename.RnEnv
+-- | 'Malgo.Rename.RnEnv' contains functions which convert 'PsId' to 'RnId'.
+module Malgo.Rename.RnEnv
   ( RenameError (..),
     Resolved,
     RnEnv (..),

@@ -1,4 +1,4 @@
-module Malgo.NewRename.RnState (RnState (..)) where
+module Malgo.Rename.RnState (RnState (..)) where
 
 import Data.Map.Strict qualified as Map
 import Data.Set qualified as Set

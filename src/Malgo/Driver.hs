@@ -21,9 +21,9 @@ import Malgo.Link qualified as Link
 import Malgo.Module
 import Malgo.Monad
 import Malgo.MonadUniq
-import Malgo.NewRename.Pass (rename)
-import Malgo.NewRename.RnEnv qualified as RnEnv
-import Malgo.NewRename.RnState (RnState (..))
+import Malgo.Rename.Pass (rename)
+import Malgo.Rename.RnEnv qualified as RnEnv
+import Malgo.Rename.RnState (RnState (..))
 import Malgo.Parser (parse)
 import Malgo.Prelude
 import Malgo.Refine.Pass (refine)

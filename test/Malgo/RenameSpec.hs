@@ -1,12 +1,12 @@
-module Malgo.NewRenameSpec (spec) where
+module Malgo.RenameSpec (spec) where
 
 import Data.ByteString qualified as BS
 import Malgo.Driver (failIfError)
 import Malgo.Monad (runMalgoM)
-import Malgo.NewRename.Pass (rename)
-import Malgo.NewRename.RnEnv qualified as RnEnv
 import Malgo.Parser (parse)
 import Malgo.Prelude
+import Malgo.Rename.Pass (rename)
+import Malgo.Rename.RnEnv qualified as RnEnv
 import Malgo.SExpr (sShow)
 import Malgo.TestUtils
 import System.Directory

@@ -1,5 +1,5 @@
 -- | Name resolution and simple desugar transformation
-module Malgo.NewRename.Pass (rename) where
+module Malgo.Rename.Pass (rename) where
 
 import Control.Lens (view, (^.), _2)
 import Data.List (intersect)
@@ -16,8 +16,8 @@ import Malgo.Interface
 import Malgo.Lens
 import Malgo.Module
 import Malgo.MonadUniq (Uniq)
-import Malgo.NewRename.RnEnv
-import Malgo.NewRename.RnState as RnState
+import Malgo.Rename.RnEnv
+import Malgo.Rename.RnState as RnState
 import Malgo.Prelude hiding (All, catchError)
 import Malgo.Syntax hiding (getTyVars)
 import Malgo.Syntax.Extension

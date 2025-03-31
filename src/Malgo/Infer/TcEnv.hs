@@ -23,8 +23,8 @@ import Malgo.Infer.TypeRep qualified as TypeRep
 import Malgo.Interface (Interface (..), externalFromInterface)
 import Malgo.Lens
 import Malgo.Module
-import Malgo.NewRename.RnEnv (Resolved)
 import Malgo.Prelude
+import Malgo.Rename.RnEnv (Resolved)
 import Malgo.Syntax.Extension
 
 type RecordTypeName = Text
