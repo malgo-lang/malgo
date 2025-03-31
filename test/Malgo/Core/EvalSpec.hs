@@ -12,10 +12,10 @@ import Malgo.Infer.Pass (infer)
 import Malgo.Interface (buildInterface)
 import Malgo.Link qualified as Link
 import Malgo.Monad (runMalgoM)
-import Malgo.NewParser (parse)
 import Malgo.NewRename.Pass (rename)
 import Malgo.NewRename.RnEnv qualified as RnEnv
 import Malgo.NewRename.RnState (RnState (..))
+import Malgo.Parser (parse)
 import Malgo.Prelude
 import Malgo.Refine.Pass (refine)
 import Malgo.Syntax

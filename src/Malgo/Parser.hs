@@ -1,6 +1,6 @@
 {-# LANGUAGE NoMonomorphismRestriction #-}
 
-module Malgo.NewParser (parse) where
+module Malgo.Parser (parse) where
 
 import Control.Monad.Combinators.Expr (Operator (..), makeExprParser)
 import Control.Monad.Trans (lift)

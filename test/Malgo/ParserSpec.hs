@@ -1,15 +1,15 @@
-module Malgo.NewParserSpec (spec) where
+module Malgo.ParserSpec (spec) where
 
 import Data.ByteString.Lazy qualified as BL
 import Malgo.Monad (runMalgoM)
-import Malgo.NewParser (parse)
+import Malgo.Parser (parse)
 import Malgo.Prelude
+import Malgo.SExpr (ToSExpr (..))
 import Malgo.TestUtils
 import System.Directory (listDirectory)
 import System.FilePath (isExtensionOf, takeBaseName, (</>))
 import Test.Hspec
 import Text.Megaparsec (errorBundlePretty)
-import Malgo.SExpr (ToSExpr(..))
 
 spec :: Spec
 spec = parallel do

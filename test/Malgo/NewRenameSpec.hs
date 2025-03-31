@@ -3,15 +3,15 @@ module Malgo.NewRenameSpec (spec) where
 import Data.ByteString qualified as BS
 import Malgo.Driver (failIfError)
 import Malgo.Monad (runMalgoM)
-import Malgo.NewParser (parse)
-import Malgo.Prelude
 import Malgo.NewRename.Pass (rename)
 import Malgo.NewRename.RnEnv qualified as RnEnv
+import Malgo.Parser (parse)
+import Malgo.Prelude
+import Malgo.SExpr (sShow)
 import Malgo.TestUtils
 import System.Directory
 import System.FilePath
 import Test.Hspec
-import Malgo.SExpr (sShow)
 
 spec :: Spec
 spec = parallel do
