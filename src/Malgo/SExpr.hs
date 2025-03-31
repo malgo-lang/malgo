@@ -62,15 +62,3 @@ atomToText (Float n) = convertString $ show n <> "_f32"
 atomToText (Double n) = convertString $ show n <> "_f64"
 atomToText (Char c) = "'" <> convertString (showLitChar c "") <> "'"
 atomToText (String t) = "\"" <> convertString (concatMap (`showLitChar` "") (convertString @_ @String t)) <> "\""
-
-indentStrategy :: S.SExpr Atom -> S.Indent
-indentStrategy (S.A (Symbol "def")) = S.SwingAfter 4
-indentStrategy (S.A (Symbol "$")) = S.SwingAfter 2
-indentStrategy (S.A (Symbol ".")) = S.SwingAfter 2
-indentStrategy (S.A (Symbol "=")) = S.SwingAfter 2
-indentStrategy (S.A (Symbol "do")) = S.SwingAfter 2
-indentStrategy (S.A (Symbol "then")) = S.SwingAfter 2
-indentStrategy (S.A (Symbol "prim")) = S.SwingAfter 2
-indentStrategy (S.A (Symbol "invoke")) = S.SwingAfter 2
-indentStrategy (S.A (Symbol "sum")) = S.SwingAfter 2
-indentStrategy _ = S.Swing
