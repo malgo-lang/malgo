@@ -13,13 +13,11 @@
            comp
            (apply
               (fn
-                 ((clause
-                     (#ToplevelVariable.Nothing_2)
-                     (seq (do #ToplevelVariable.Nothing_2)))
+                 ((clause ((con Nothing ())) (seq (do Nothing)))
                     (clause
-                       ((con Just (#ToplevelVariable.x_3)))
+                       ((con Just ()) #ToplevelVariable.x_xxx)
                        (seq (do Nothing)))))
-              (apply Just (tuple)))))
+              (seq (do (apply Just (tuple)))))))
        ((((./test/testcases/malgo/ToplevelVariable.mlg 6 1)
             (./test/testcases/malgo/ToplevelVariable.mlg 8 1))
            addOne
@@ -35,24 +33,28 @@
                         (apply
                            (fn
                               ((clause
-                                  (#ToplevelVariable.Nothing_4)
+                                  ((con Nothing ()))
                                   (seq
                                      (do
                                         (apply
                                            printString
                                            (apply String# (string "OK"))))))
                                  (clause
-                                    ((con Just (#ToplevelVariable.__5)))
+                                    ((con Just ()) #ToplevelVariable.__xxx)
                                     (seq (do (tuple))))))
                            comp))
                      (do
                         (apply
                            printInt32
-                           (apply (apply constId (apply addOne one)) const))))))))))
+                           (seq
+                              (do
+                                 (apply
+                                    (apply constId (seq (do (apply addOne one))))
+                                    const))))))))))))
       ((((./test/testcases/malgo/ToplevelVariable.mlg 10 1)
            (./test/testcases/malgo/ToplevelVariable.mlg 11 1))
           comp
-          (app #ToplevelVariable.Maybe_0 (#ToplevelVariable.a_1))))
+          (app #ToplevelVariable.Maybe_xxx (#ToplevelVariable.a_xxx))))
       ()
       ()
       ()

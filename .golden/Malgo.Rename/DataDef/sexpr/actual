@@ -11,7 +11,7 @@
                       (apply
                          (fn
                             ((clause
-                                ((con Int# (#DataDef.x_1)))
+                                ((con Int# (#DataDef.x_xxx)))
                                 (seq
                                    (do
                                       (apply
@@ -20,7 +20,7 @@
                                             (do
                                                (apply
                                                   malgo_int64_t_to_string
-                                                  #DataDef.x_1)))))))))
+                                                  #DataDef.x_xxx)))))))))
                          (seq (do (apply Int# (int64 1)))))))))))))
       ()
       ((((./test/testcases/malgo/DataDef.mlg 1 6)
@@ -36,7 +36,7 @@
             List
             ((((./test/testcases/malgo/DataDef.mlg 2 11)
                  (./test/testcases/malgo/DataDef.mlg 2 13))
-                #DataDef.a_0))
+                #DataDef.a_xxx))
             ((((./test/testcases/malgo/DataDef.mlg 2 15)
                  (./test/testcases/malgo/DataDef.mlg 2 19))
                 Nil
@@ -44,7 +44,7 @@
                (((./test/testcases/malgo/DataDef.mlg 2 21)
                    (./test/testcases/malgo/DataDef.mlg 4 1))
                   Cons
-                  (#DataDef.a_0 (app List (#DataDef.a_0)))))))
+                  (#DataDef.a_xxx (app List (#DataDef.a_xxx)))))))
       ()
       (((((./test/testcases/malgo/DataDef.mlg 4 1)
             (./test/testcases/malgo/DataDef.mlg 5 1))

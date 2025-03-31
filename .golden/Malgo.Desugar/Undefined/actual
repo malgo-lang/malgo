@@ -1,41 +1,41 @@
 (()
-   ((define (g $Undefined.x_20) (-> (Any#) Any#) undefined)
+   ((define (g $Undefined.x_xxx) (-> (Any#) Any#) undefined)
       (define
-         (main $Undefined.$__21)
+         (main $Undefined.$__xxx)
          (-> ((sum (con Tuple#))) (sum (con Tuple#)))
          (match
             undefined
             (bind
-               $Undefined.let_test/testcases/malgo/Undefined.mlg.#x_1_22
+               $Undefined.let_test/testcases/malgo/Undefined.mlg.#x_1_xxx
                Any#
                (match
                   (=
-                     $Undefined.d_23
+                     $Undefined.d_xxx
                      (call
                         g
-                        $Undefined.let_test/testcases/malgo/Undefined.mlg.#x_1_22)
-                     (cast Any# $Undefined.d_23))
+                        $Undefined.let_test/testcases/malgo/Undefined.mlg.#x_1_xxx)
+                     (cast Any# $Undefined.d_xxx))
                   (bind
-                     $Undefined.let_test/testcases/malgo/Undefined.mlg.#y_2_24
+                     $Undefined.let_test/testcases/malgo/Undefined.mlg.#y_2_xxx
                      Any#
                      (=
-                        $Undefined.d_26
+                        $Undefined.d_xxx
                         (=
-                           $Undefined.d_25
+                           $Undefined.d_xxx
                            (call String# "OK")
-                           (cast Any# $Undefined.d_25))
+                           (cast Any# $Undefined.d_xxx))
                         (=
-                           $Undefined.d_27
-                           (call printString $Undefined.d_26)
-                           (cast (sum (con Tuple#)) $Undefined.d_27))))))))
+                           $Undefined.d_xxx
+                           (call printString $Undefined.d_xxx)
+                           (cast (sum (con Tuple#)) $Undefined.d_xxx))))))))
       (define
-         (f $Undefined.eta_29)
+         (f $Undefined.eta_xxx)
          (-> (Any#) Any#)
          (=
-            $Undefined.d_30
+            $Undefined.d_xxx
             (=
-               $Undefined.cast_28
+               $Undefined.cast_xxx
                (cast (-> (Any#) Any#) undefined)
-               $Undefined.cast_28)
-            (call $Undefined.d_30 $Undefined.eta_29))))
+               $Undefined.cast_xxx)
+            (call $Undefined.d_xxx $Undefined.eta_xxx))))
    ())

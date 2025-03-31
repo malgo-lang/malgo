@@ -9,10 +9,11 @@
                 ((con Int64# (x)))
                 (seq
                    (do
-                      (parens
-                         (apply
-                            Int64#
-                            (parens (apply (apply addInt64# (int64 1)) x))))))))))
+                      (seq
+                         (do
+                            (apply
+                               Int64#
+                               (seq (do (apply (apply addInt64# (int64 1)) x))))))))))))
       (def
          main
          (fn
@@ -22,7 +23,8 @@
                    (do
                       (apply
                          printInt64
-                         (parens
-                            (apply
-                               (parens (opapp << succ succ))
-                               (parens (apply Int64# (int64 0))))))))))))))
+                         (seq
+                            (do
+                               (apply
+                                  (seq (do (opapp << succ succ)))
+                                  (seq (do (apply Int64# (int64 0))))))))))))))))

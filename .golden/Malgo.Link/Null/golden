@@ -1,13 +1,13 @@
 (()
    ((define
-       ($Null.|>_curry_138 $Null.x_139 $Null.f_140)
+       ($Null.|>_curry_xxx $Null.x_xxx $Null.f_xxx)
        (-> (Any# (-> (Any#) Any#)) Any#)
-       (= $Null.d_141 (call $Null.f_140 $Null.x_139) (cast Any# $Null.d_141)))
+       (= $Null.d_xxx (call $Null.f_xxx $Null.x_xxx) (cast Any# $Null.d_xxx)))
       (define
-         ($Null.Cons_curry_128 $Null.p_129 $Null.p_130)
+         ($Null.Cons_curry_xxx $Null.p_xxx $Null.p_xxx)
          (-> (Any# Any#) Any#)
          (let
-            (($Null.let_131
+            (($Null.let_xxx
                 (sum
                    (con test/testcases/malgo/Null.mlg.Nil)
                    (con test/testcases/malgo/Null.mlg.Cons Any# Any#))
@@ -16,14 +16,14 @@
                       (con test/testcases/malgo/Null.mlg.Nil)
                       (con test/testcases/malgo/Null.mlg.Cons Any# Any#))
                    (con test/testcases/malgo/Null.mlg.Cons Any# Any#)
-                   $Null.p_129
-                   $Null.p_130)))
-            (cast Any# $Null.let_131)))
+                   $Null.p_xxx
+                   $Null.p_xxx)))
+            (cast Any# $Null.let_xxx)))
       (define
          (Nothing)
          (-> () Any#)
          (let
-            (($Null.let_119
+            (($Null.let_xxx
                 (sum
                    (con test/testcases/malgo/Null.mlg.Nothing)
                    (con test/testcases/malgo/Null.mlg.Just Any#))
@@ -32,12 +32,12 @@
                       (con test/testcases/malgo/Null.mlg.Nothing)
                       (con test/testcases/malgo/Null.mlg.Just Any#))
                    (con test/testcases/malgo/Null.mlg.Nothing))))
-            (cast Any# $Null.let_119)))
+            (cast Any# $Null.let_xxx)))
       (define
-         (Just $Null.p_120)
+         (Just $Null.p_xxx)
          (-> (Any#) Any#)
          (let
-            (($Null.let_121
+            (($Null.let_xxx
                 (sum
                    (con test/testcases/malgo/Null.mlg.Nothing)
                    (con test/testcases/malgo/Null.mlg.Just Any#))
@@ -46,13 +46,13 @@
                       (con test/testcases/malgo/Null.mlg.Nothing)
                       (con test/testcases/malgo/Null.mlg.Just Any#))
                    (con test/testcases/malgo/Null.mlg.Just Any#)
-                   $Null.p_120)))
-            (cast Any# $Null.let_121)))
+                   $Null.p_xxx)))
+            (cast Any# $Null.let_xxx)))
       (define
          (False)
          (-> () Any#)
          (let
-            (($Null.let_122
+            (($Null.let_xxx
                 (sum
                    (con test/testcases/malgo/Null.mlg.False)
                    (con test/testcases/malgo/Null.mlg.True))
@@ -61,12 +61,12 @@
                       (con test/testcases/malgo/Null.mlg.False)
                       (con test/testcases/malgo/Null.mlg.True))
                    (con test/testcases/malgo/Null.mlg.False))))
-            (cast Any# $Null.let_122)))
+            (cast Any# $Null.let_xxx)))
       (define
          (True)
          (-> () Any#)
          (let
-            (($Null.let_123
+            (($Null.let_xxx
                 (sum
                    (con test/testcases/malgo/Null.mlg.False)
                    (con test/testcases/malgo/Null.mlg.True))
@@ -75,12 +75,12 @@
                       (con test/testcases/malgo/Null.mlg.False)
                       (con test/testcases/malgo/Null.mlg.True))
                    (con test/testcases/malgo/Null.mlg.True))))
-            (cast Any# $Null.let_123)))
+            (cast Any# $Null.let_xxx)))
       (define
          (Nil)
          (-> () Any#)
          (let
-            (($Null.let_124
+            (($Null.let_xxx
                 (sum
                    (con test/testcases/malgo/Null.mlg.Nil)
                    (con test/testcases/malgo/Null.mlg.Cons Any# Any#))
@@ -89,181 +89,181 @@
                       (con test/testcases/malgo/Null.mlg.Nil)
                       (con test/testcases/malgo/Null.mlg.Cons Any# Any#))
                    (con test/testcases/malgo/Null.mlg.Nil))))
-            (cast Any# $Null.let_124)))
+            (cast Any# $Null.let_xxx)))
       (define
-         (Cons $Null.p_125)
+         (Cons $Null.p_xxx)
          (-> (Any#) (-> (Any#) Any#))
          (let
-            (($Null.let_132
+            (($Null.let_xxx
                 (-> (Any#) Any#)
                 (fun
-                   ($Null.p_126)
-                   (direct $Null.Cons_curry_128 $Null.p_125 $Null.p_126))))
-            $Null.let_132))
+                   ($Null.p_xxx)
+                   (direct $Null.Cons_curry_xxx $Null.p_xxx $Null.p_xxx))))
+            $Null.let_xxx))
       (define
-         (malgo_print_string $Null.p_133)
+         (malgo_print_string $Null.p_xxx)
          (-> (String#) (sum (con Tuple#)))
-         (raw malgo_print_string (-> (String#) (sum (con Tuple#))) $Null.p_133))
+         (raw malgo_print_string (-> (String#) (sum (con Tuple#))) $Null.p_xxx))
       (define
-         (malgo_exit_failure $Null.p_134)
+         (malgo_exit_failure $Null.p_xxx)
          (-> ((sum (con Tuple#))) Any#)
-         (raw malgo_exit_failure (-> ((sum (con Tuple#))) Any#) $Null.p_134))
+         (raw malgo_exit_failure (-> ((sum (con Tuple#))) Any#) $Null.p_xxx))
       (define
-         (|> $Null.x_135)
+         (|> $Null.x_xxx)
          (-> (Any#) (-> ((-> (Any#) Any#)) Any#))
          (let
-            (($Null.let_142
+            (($Null.let_xxx
                 (-> ((-> (Any#) Any#)) Any#)
                 (fun
-                   ($Null.f_136)
-                   (direct $Null.|>_curry_138 $Null.x_135 $Null.f_136))))
-            $Null.let_142))
+                   ($Null.f_xxx)
+                   (direct $Null.|>_curry_xxx $Null.x_xxx $Null.f_xxx))))
+            $Null.let_xxx))
       (define
-         (mHead $Null.nil_143)
+         (mHead $Null.nil_xxx)
          (-> (Any#) Any#)
          (=
-            $Null.scrutinee_177
+            $Null.scrutinee_xxx
             (cast
                (sum
                   (con test/testcases/malgo/Null.mlg.Nil)
                   (con test/testcases/malgo/Null.mlg.Cons Any# Any#))
-               $Null.nil_143)
+               $Null.nil_xxx)
             (switch
-               $Null.scrutinee_177
+               $Null.scrutinee_xxx
                (test/testcases/malgo/Null.mlg.Nil
                   (destruct
-                     $Null.scrutinee_177
+                     $Null.scrutinee_xxx
                      (con test/testcases/malgo/Null.mlg.Nil)
                      ()
                      (direct Nothing)))
                (test/testcases/malgo/Null.mlg.Cons
                   (destruct
-                     $Null.scrutinee_177
+                     $Null.scrutinee_xxx
                      (con test/testcases/malgo/Null.mlg.Cons Any# Any#)
-                     ($Null.p_144 $Null.p_145)
+                     ($Null.p_xxx $Null.p_xxx)
                      (=
-                        $Null.d_146
-                        (call Just $Null.p_144)
-                        (cast Any# $Null.d_146))))
+                        $Null.d_xxx
+                        (call Just $Null.p_xxx)
+                        (cast Any# $Null.d_xxx))))
                (ERROR Any#))))
       (define
-         (isNothing $Null.nothing_147)
+         (isNothing $Null.nothing_xxx)
          (-> (Any#) Any#)
          (=
-            $Null.scrutinee_178
+            $Null.scrutinee_xxx
             (cast
                (sum
                   (con test/testcases/malgo/Null.mlg.Nothing)
                   (con test/testcases/malgo/Null.mlg.Just Any#))
-               $Null.nothing_147)
+               $Null.nothing_xxx)
             (switch
-               $Null.scrutinee_178
+               $Null.scrutinee_xxx
                (test/testcases/malgo/Null.mlg.Nothing
                   (destruct
-                     $Null.scrutinee_178
+                     $Null.scrutinee_xxx
                      (con test/testcases/malgo/Null.mlg.Nothing)
                      ()
                      (direct True)))
                (test/testcases/malgo/Null.mlg.Just
                   (destruct
-                     $Null.scrutinee_178
+                     $Null.scrutinee_xxx
                      (con test/testcases/malgo/Null.mlg.Just Any#)
-                     ($Null.p_148)
+                     ($Null.p_xxx)
                      (direct False)))
                (ERROR Any#))))
       (define
-         (null $Null.as_149)
+         (null $Null.as_xxx)
          (-> (Any#) Any#)
          (=
-            $Null.d_150
-            (call mHead $Null.as_149)
+            $Null.d_xxx
+            (call mHead $Null.as_xxx)
             (=
-               $Null.d_151
-               (cast Any# $Null.d_150)
+               $Null.d_xxx
+               (cast Any# $Null.d_xxx)
                (=
-                  $Null.d_152
-                  (call isNothing $Null.d_151)
-                  (cast Any# $Null.d_152)))))
+                  $Null.d_xxx
+                  (call isNothing $Null.d_xxx)
+                  (cast Any# $Null.d_xxx)))))
       (define
-         (main $Null.$__153)
+         (main $Null.$__xxx)
          (-> ((sum (con Tuple#))) (sum (con Tuple#)))
          (=
-            $Null.d_154
+            $Null.d_xxx
             (direct True)
             (=
-               $Null.d_155
-               (call Cons $Null.d_154)
+               $Null.d_xxx
+               (call Cons $Null.d_xxx)
                (=
-                  $Null.d_156
-                  (cast (-> (Any#) Any#) $Null.d_155)
+                  $Null.d_xxx
+                  (cast (-> (Any#) Any#) $Null.d_xxx)
                   (=
-                     $Null.d_157
+                     $Null.d_xxx
                      (direct True)
                      (=
-                        $Null.d_158
-                        (call Cons $Null.d_157)
+                        $Null.d_xxx
+                        (call Cons $Null.d_xxx)
                         (=
-                           $Null.d_159
-                           (cast (-> (Any#) Any#) $Null.d_158)
+                           $Null.d_xxx
+                           (cast (-> (Any#) Any#) $Null.d_xxx)
                            (=
-                              $Null.d_160
+                              $Null.d_xxx
                               (direct Nil)
                               (=
-                                 $Null.d_161
-                                 (call $Null.d_159 $Null.d_160)
+                                 $Null.d_xxx
+                                 (call $Null.d_xxx $Null.d_xxx)
                                  (=
-                                    $Null.d_162
-                                    (cast Any# $Null.d_161)
+                                    $Null.d_xxx
+                                    (cast Any# $Null.d_xxx)
                                     (=
-                                       $Null.d_163
-                                       (call $Null.d_156 $Null.d_162)
+                                       $Null.d_xxx
+                                       (call $Null.d_xxx $Null.d_xxx)
                                        (=
-                                          $Null.d_164
-                                          (cast Any# $Null.d_163)
+                                          $Null.d_xxx
+                                          (cast Any# $Null.d_xxx)
                                           (=
-                                             $Null.d_165
-                                             (call null $Null.d_164)
+                                             $Null.d_xxx
+                                             (call null $Null.d_xxx)
                                              (=
-                                                $Null.d_166
-                                                (cast Any# $Null.d_165)
+                                                $Null.d_xxx
+                                                (cast Any# $Null.d_xxx)
                                                 (=
-                                                   $Null.d_167
-                                                   (call |> $Null.d_166)
+                                                   $Null.d_xxx
+                                                   (call |> $Null.d_xxx)
                                                    (=
-                                                      $Null.d_168
+                                                      $Null.d_xxx
                                                       (cast
                                                          (->
                                                             ((->
                                                                 (Any#)
                                                                 (sum (con Tuple#))))
                                                             (sum (con Tuple#)))
-                                                         $Null.d_167)
+                                                         $Null.d_xxx)
                                                       (let
-                                                         (($Null.fun_174
+                                                         (($Null.fun_xxx
                                                              (->
                                                                 (Any#)
                                                                 (sum (con Tuple#)))
                                                              (fun
-                                                                ($Null.false_169)
+                                                                ($Null.false_xxx)
                                                                 (=
-                                                                   $Null.scrutinee_179
+                                                                   $Null.scrutinee_xxx
                                                                    (cast
                                                                       (sum
                                                                          (con
                                                                             test/testcases/malgo/Null.mlg.False)
                                                                          (con
                                                                             test/testcases/malgo/Null.mlg.True))
-                                                                      $Null.false_169)
+                                                                      $Null.false_xxx)
                                                                    (switch
-                                                                      $Null.scrutinee_179
+                                                                      $Null.scrutinee_xxx
                                                                       (test/testcases/malgo/Null.mlg.False
                                                                          (destruct
-                                                                            $Null.scrutinee_179
+                                                                            $Null.scrutinee_xxx
                                                                             (con
                                                                                test/testcases/malgo/Null.mlg.False)
                                                                             ()
                                                                             (=
-                                                                               $Null.d_170
+                                                                               $Null.d_xxx
                                                                                (call
                                                                                   malgo_print_string
                                                                                   "OK")
@@ -271,15 +271,15 @@
                                                                                   (sum
                                                                                      (con
                                                                                         Tuple#))
-                                                                                  $Null.d_170))))
+                                                                                  $Null.d_xxx))))
                                                                       (test/testcases/malgo/Null.mlg.True
                                                                          (destruct
-                                                                            $Null.scrutinee_179
+                                                                            $Null.scrutinee_xxx
                                                                             (con
                                                                                test/testcases/malgo/Null.mlg.True)
                                                                             ()
                                                                             (let
-                                                                               (($Null.let_171
+                                                                               (($Null.let_xxx
                                                                                    (sum
                                                                                       (con
                                                                                          Tuple#))
@@ -290,26 +290,26 @@
                                                                                       (con
                                                                                          Tuple#))))
                                                                                (=
-                                                                                  $Null.d_173
+                                                                                  $Null.d_xxx
                                                                                   (call
                                                                                      malgo_exit_failure
-                                                                                     $Null.let_171)
+                                                                                     $Null.let_xxx)
                                                                                   (cast
                                                                                      (sum
                                                                                         (con
                                                                                            Tuple#))
-                                                                                     $Null.d_173)))))
+                                                                                     $Null.d_xxx)))))
                                                                       (ERROR
                                                                          (sum
                                                                             (con
                                                                                Tuple#))))))))
                                                          (=
-                                                            $Null.d_176
+                                                            $Null.d_xxx
                                                             (call
-                                                               $Null.d_168
-                                                               $Null.fun_174)
+                                                               $Null.d_xxx
+                                                               $Null.fun_xxx)
                                                             (cast
                                                                (sum (con Tuple#))
-                                                               $Null.d_176))))))))))))))))))))
+                                                               $Null.d_xxx))))))))))))))))))))
    ((extern malgo_print_string (-> (String#) (sum (con Tuple#))))
       (extern malgo_exit_failure (-> ((sum (con Tuple#))) Any#))))

@@ -3,14 +3,12 @@
    ((import "runtime/malgo/Builtin.mlg" all)
       (import "runtime/malgo/Prelude.mlg" all)
       (infix left 6 +#)
-      (def
-         +#
-         (fn ((clause ((con x (y))) (seq (do (apply (apply addInt64# y) x)))))))
+      (def +# (fn ((clause (x y) (seq (do (apply (apply addInt64# y) x)))))))
       (def
          sum
          (fn
             ((clause
-                ((con Cons ((con Int64# (x)) xs)))
+                (Cons (con Int64# (x)) xs)
                 (seq
                    (do
                       (opapp
@@ -19,7 +17,8 @@
                          (fn
                             ((clause
                                 ((con Int64# (s)))
-                                (seq (do (apply Int64# (parens (opapp +# x s))))))))))))
+                                (seq
+                                   (do (apply Int64# (seq (do (opapp +# x s)))))))))))))
                (clause (Nil) (seq (do (apply Int64# (int64 0))))))))
       (def
          main
@@ -32,13 +31,16 @@
                          |>
                          (apply
                             sum
-                            (parens
-                               (apply
+                            (seq
+                               (do
                                   (apply
-                                     Cons
-                                     (parens
-                                        (apply
-                                           (apply Cons Nil)
-                                           (parens (apply Int64# (int64 2))))))
-                                  (parens (apply Int64# (int64 1))))))
+                                     (apply
+                                        Cons
+                                        (seq
+                                           (do
+                                              (apply
+                                                 (apply Cons Nil)
+                                                 (seq
+                                                    (do (apply Int64# (int64 2))))))))
+                                     (seq (do (apply Int64# (int64 1))))))))
                          (fn ((clause (i) (seq (do (apply printInt64 i)))))))))))))))

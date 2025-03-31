@@ -4,9 +4,7 @@
       (import "runtime/malgo/Prelude.mlg" all)
       (infix right 5 <>)
       (sig <> (-> String (-> String String)))
-      (def
-         <>
-         (fn ((clause ((con x (y))) (seq (do (apply (apply appendString y) x)))))))
+      (def <> (fn ((clause (x y) (seq (do (apply (apply appendString y) x)))))))
       (type Show (a) (record (show (-> a String))))
       (sig showInt32 (app Show (Int32)))
       (def
@@ -21,7 +19,7 @@
          showTuple2
          (fn
             ((clause
-                ((con showDictA (showDictB)))
+                (showDictA showDictB)
                 (seq
                    (do
                       (record
@@ -51,10 +49,12 @@
          print
          (fn
             ((clause
-                ((con showDict (x)))
+                (showDict x)
                 (seq
                    (do
-                      (apply printString (parens (apply (apply show x) showDict)))))))))
+                      (apply
+                         printString
+                         (seq (do (apply (apply show x) showDict))))))))))
       (def
          main
          (fn
@@ -64,4 +64,4 @@
                    (do
                       (apply
                          (apply print (tuple (int32 1) (int32 2)))
-                         (parens (apply (apply showTuple2 showInt32) showInt32)))))))))))
+                         (seq (do (apply (apply showTuple2 showInt32) showInt32))))))))))))

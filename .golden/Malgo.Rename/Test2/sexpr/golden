@@ -5,7 +5,7 @@
          rtob
          (fn
             ((clause ((con R ())) (seq (do B)))
-               (clause (#Test2.a_0) (seq (do #Test2.a_0)))))))
+               (clause (#Test2.a_xxx) (seq (do #Test2.a_xxx)))))))
        ((((./test/testcases/malgo/Test2.mlg 7 1)
             (./test/testcases/malgo/Test2.mlg 8 1))
            main
@@ -21,7 +21,7 @@
                                   (seq
                                      (do (apply malgo_print_string (string "OK")))))
                                  (clause
-                                    (#Test2.__1)
+                                    (#Test2.__xxx)
                                     (seq
                                        (do
                                           (apply

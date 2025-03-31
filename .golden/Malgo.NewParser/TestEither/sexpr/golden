@@ -7,8 +7,8 @@
       (def
          andThen
          (fn
-            ((clause ((con _ ((con Left (x))))) (seq (do (apply Left x))))
-               (clause ((con f ((con Right (x))))) (seq (do (apply f x)))))))
+            ((clause (_ (con Left (x))) (seq (do (apply Left x))))
+               (clause (f (con Right (x))) (seq (do (apply f x)))))))
       (def
          main
          (fn
@@ -21,12 +21,12 @@
                          (apply Right (int32 1))
                          (fn
                             ((clause
-                                ((con Right (x)))
+                                (Right x)
                                 (seq
                                    (do
                                       (apply
                                          putStr
-                                         (parens (apply toStringInt32 x))))))
+                                         (seq (do (apply toStringInt32 x)))))))
                                (clause
                                   (_)
                                   (seq
@@ -47,10 +47,11 @@
                                          (do
                                             (apply
                                                Right
-                                               (parens
-                                                  (apply
-                                                     (apply addInt32 (int32 1))
-                                                     x))))))))))
+                                               (seq
+                                                  (do
+                                                     (apply
+                                                        (apply addInt32 (int32 1))
+                                                        x)))))))))))
                          (apply
                             andThen
                             (fn
@@ -88,16 +89,15 @@
                                          (do
                                             (apply
                                                Right
-                                               (parens
-                                                  (apply
-                                                     (apply addInt32 (int32 1))
-                                                     x))))))))))
+                                               (seq
+                                                  (do
+                                                     (apply
+                                                        (apply addInt32 (int32 1))
+                                                        x)))))))))))
                          (fn
-                            ((clause
-                                ((con Left (err)))
-                                (seq (do (apply putStrLn err))))
+                            ((clause (Left err) (seq (do (apply putStrLn err))))
                                (clause
-                                  ((con Right (x)))
+                                  (Right x)
                                   (seq
                                      (do
                                         (opapp

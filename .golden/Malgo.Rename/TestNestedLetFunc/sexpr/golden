@@ -8,17 +8,17 @@
                 ()
                 (seq
                    (let
-                      #TestNestedLetFunc.f_2
+                      #TestNestedLetFunc.f_xxx
                       (fn
                          ((clause
                              ()
                              (seq
                                 (let
-                                   #TestNestedLetFunc.y_1
+                                   #TestNestedLetFunc.y_xxx
                                    (apply
                                       (fn
                                          ((clause
-                                             (#TestNestedLetFunc.a_0)
+                                             (#TestNestedLetFunc.a_xxx)
                                              (seq (do (tuple))))))
                                       (tuple))))))))
                    (do (apply malgo_print_string (string "PASS"))))))))))

@@ -1,40 +1,42 @@
 ((main
-    $Pattern.return_18
+    $Pattern.return_xxx
     (cut
        (lambda
-          ($Pattern.param_16 $Pattern.return_19)
+          ($Pattern.param_xxx $Pattern.return_xxx)
           (join
-             $Pattern.select_28
+             $Pattern.select_xxx
              (select
-                (#Pattern.$__9
+                (#Pattern.$__xxx
                    (join
-                      $Pattern.then_27
+                      $Pattern.then_xxx
                       (then
-                         $Pattern.outer_23
+                         $Pattern.outer_xxx
                          (join
-                            $Pattern.return_20
+                            $Pattern.return_xxx
                             (then
-                               $Pattern.inner_24
+                               $Pattern.inner_xxx
                                (join
-                                  $Pattern.apply_26
-                                  (apply ($Pattern.inner_24) ($Pattern.return_19))
-                                  (cut $Pattern.outer_23 $Pattern.apply_26)))
+                                  $Pattern.apply_xxx
+                                  (apply
+                                     ($Pattern.inner_xxx)
+                                     ($Pattern.return_xxx))
+                                  (cut $Pattern.outer_xxx $Pattern.apply_xxx)))
                             (join
-                               $Pattern.apply_25
-                               (apply ("OK") ($Pattern.return_20))
-                               (invoke String# $Pattern.apply_25))))
-                      (invoke putStrLn $Pattern.then_27))))
-             (cut $Pattern.param_16 $Pattern.select_28)))
-       $Pattern.return_18))
+                               $Pattern.apply_xxx
+                               (apply ("OK") ($Pattern.return_xxx))
+                               (invoke String# $Pattern.apply_xxx))))
+                      (invoke putStrLn $Pattern.then_xxx))))
+             (cut $Pattern.param_xxx $Pattern.select_xxx)))
+       $Pattern.return_xxx))
    (isNil
-      $Pattern.return_21
+      $Pattern.return_xxx
       (cut
          (lambda
-            ($Pattern.param_17 $Pattern.return_22)
+            ($Pattern.param_xxx $Pattern.return_xxx)
             (join
-               $Pattern.select_29
+               $Pattern.select_xxx
                (select
-                  ((Nil ()) (invoke True $Pattern.return_22))
-                  (#Pattern.__0 (invoke False $Pattern.return_22)))
-               (cut $Pattern.param_17 $Pattern.select_29)))
-         $Pattern.return_21)))
+                  ((Nil ()) (invoke True $Pattern.return_xxx))
+                  (#Pattern.__xxx (invoke False $Pattern.return_xxx)))
+               (cut $Pattern.param_xxx $Pattern.select_xxx)))
+         $Pattern.return_xxx)))

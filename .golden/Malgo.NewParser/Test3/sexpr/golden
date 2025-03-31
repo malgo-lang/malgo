@@ -4,7 +4,7 @@
       (data List (a) ((Nil ()) (Cons (a (app List (a))))))
       (infix left 0 |>)
       (sig |> (-> a (-> (-> a b) b)))
-      (def |> (fn ((clause ((con x (f))) (seq (do (apply f x)))))))
+      (def |> (fn ((clause (x f) (seq (do (apply f x)))))))
       (foreign malgo_print_string (-> String# (tuple)))
       (def
          main
@@ -16,7 +16,7 @@
                       (opapp
                          |>
                          (apply
-                            (apply Cons (parens (apply (apply Cons Nil) B)))
+                            (apply Cons (seq (do (apply (apply Cons Nil) B))))
                             A)
                          (fn
                             ((clause

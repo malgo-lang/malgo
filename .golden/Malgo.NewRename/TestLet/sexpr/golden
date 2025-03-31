@@ -5,8 +5,8 @@
          |>
          (fn
             ((clause
-                (#TestLet.x_2 #TestLet.f_3)
-                (seq (do (apply #TestLet.f_3 #TestLet.x_2))))))))
+                (#TestLet.x_xxx #TestLet.f_xxx)
+                (seq (do (apply #TestLet.f_xxx #TestLet.x_xxx))))))))
        ((((./test/testcases/malgo/TestLet.mlg 7 1)
             (./test/testcases/malgo/TestLet.mlg 15 1))
            main
@@ -15,29 +15,39 @@
                   ()
                   (seq
                      (let
-                        #TestLet.x_4
+                        #TestLet.x_xxx
                         (apply (apply addInt32# (int32 2)) (int32 1)))
-                     (do (apply printString# (apply toStringInt32# #TestLet.x_4)))
+                     (do
+                        (apply
+                           printString#
+                           (seq (do (apply toStringInt32# #TestLet.x_xxx)))))
                      (let
-                        #TestLet.x_5
+                        #TestLet.x_xxx
                         (apply
                            Int32#
-                           (apply (apply addInt32# (int32 2)) (int32 1))))
+                           (seq
+                              (do (apply (apply addInt32# (int32 2)) (int32 1))))))
                      (let
-                        #TestLet.printInt32_7
+                        #TestLet.printInt32_xxx
                         (fn
                            ((clause
-                               ((con Int32# (#TestLet.x_6)))
+                               ((con Int32# (#TestLet.x_xxx)))
                                (seq
                                   (do
                                      (apply
                                         printString#
-                                        (apply toStringInt32# #TestLet.x_6))))))))
-                     (do (apply #TestLet.printInt32_7 #TestLet.x_5)))))))))
+                                        (seq
+                                           (do
+                                              (apply
+                                                 toStringInt32#
+                                                 #TestLet.x_xxx))))))))))
+                     (do (apply #TestLet.printInt32_xxx #TestLet.x_xxx)))))))))
       ((((./test/testcases/malgo/TestLet.mlg 4 1)
            (./test/testcases/malgo/TestLet.mlg 5 1))
           |>
-          (-> #TestLet.a_0 (-> (-> #TestLet.a_0 #TestLet.b_1) #TestLet.b_1))))
+          (->
+             #TestLet.a_xxx
+             (-> (-> #TestLet.a_xxx #TestLet.b_xxx) #TestLet.b_xxx))))
       ()
       ()
       ()

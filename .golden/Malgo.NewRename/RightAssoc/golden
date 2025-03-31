@@ -325,365 +325,45 @@ Module
             )
            ]
           )
-          ( OpApp
+          ( Seq
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-             , sourceLine = Pos 14
-             , sourceColumn = Pos 17
+             , sourceLine = Pos 13
+             , sourceColumn = Pos 16
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-             , sourceLine = Pos 14
-             , sourceColumn = Pos 21
+             , sourceLine = Pos 16
+             , sourceColumn = Pos 38
              }
             }
-           ,
-            ( RightA
-            , 2
-            )
            )
-           ( Id
-            { name = "<|>"
-            , moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-            , sort = External
-            }
-           )
-           ( Tuple
+           ( NoBind
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
               , sourceLine = Pos 13
-              , sourceColumn = Pos 17
+              , sourceColumn = Pos 16
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-              , sourceLine = Pos 14
-              , sourceColumn = Pos 17
+              , sourceLine = Pos 16
+              , sourceColumn = Pos 38
               }
              }
-            )
-            [ Var
-             ( Range
-              { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-               , sourceLine = Pos 13
-               , sourceColumn = Pos 18
-               }
-              , _end = SourcePos
-               { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-               , sourceLine = Pos 13
-               , sourceColumn = Pos 22
-               }
-              }
-             )
-             ( Id
-              { name = "True"
-              , moduleName = Artifact
-               ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-              , sort = External
-              }
-             )
-            , Fn
-             ( Range
-              { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-               , sourceLine = Pos 13
-               , sourceColumn = Pos 24
-               }
-              , _end = SourcePos
-               { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-               , sourceLine = Pos 13
-               , sourceColumn = Pos 29
-               }
-              }
-             )
-             ( Clause
-              ( Range
-               { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                , sourceLine = Pos 13
-                , sourceColumn = Pos 26
-                }
-               , _end = SourcePos
-                { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                , sourceLine = Pos 13
-                , sourceColumn = Pos 28
-                }
-               }
-              ) []
-              ( Seq
-               ( Range
-                { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                 , sourceLine = Pos 13
-                 , sourceColumn = Pos 26
-                 }
-                , _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                 , sourceLine = Pos 13
-                 , sourceColumn = Pos 28
-                 }
-                }
-               )
-               ( NoBind
-                ( Range
-                 { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                  , sourceLine = Pos 13
-                  , sourceColumn = Pos 26
-                  }
-                 , _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                  , sourceLine = Pos 13
-                  , sourceColumn = Pos 28
-                  }
-                 }
-                )
-                ( Apply
-                 ( Range
-                  { _start = SourcePos
-                   { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                   , sourceLine = Pos 13
-                   , sourceColumn = Pos 26
-                   }
-                  , _end = SourcePos
-                   { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                   , sourceLine = Pos 13
-                   , sourceColumn = Pos 28
-                   }
-                  }
-                 )
-                 ( Var
-                  ( Range
-                   { _start = SourcePos
-                    { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                    , sourceLine = Pos 13
-                    , sourceColumn = Pos 26
-                    }
-                   , _end = SourcePos
-                    { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                    , sourceLine = Pos 13
-                    , sourceColumn = Pos 28
-                    }
-                   }
-                  )
-                  ( Id
-                   { name = "Int32#"
-                   , moduleName = Artifact
-                    ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-                   , sort = External
-                   }
-                  )
-                 )
-                 ( Unboxed
-                  ( Range
-                   { _start = SourcePos
-                    { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                    , sourceLine = Pos 13
-                    , sourceColumn = Pos 26
-                    }
-                   , _end = SourcePos
-                    { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                    , sourceLine = Pos 13
-                    , sourceColumn = Pos 28
-                    }
-                   }
-                  )
-                  ( Int32 2 )
-                 )
-                ) :| []
-               )
-              ) :| []
-             )
-            ]
-           )
-           ( OpApp
-            ( Range
-             { _start = SourcePos
-              { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-              , sourceLine = Pos 15
-              , sourceColumn = Pos 22
-              }
-             , _end = SourcePos
-              { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-              , sourceLine = Pos 15
-              , sourceColumn = Pos 26
-              }
-             }
-            ,
-             ( RightA
-             , 2
-             )
-            )
-            ( Id
-             { name = "<|>"
-             , moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-             , sort = External
-             }
-            )
-            ( Tuple
-             ( Range
-              { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-               , sourceLine = Pos 14
-               , sourceColumn = Pos 22
-               }
-              , _end = SourcePos
-               { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-               , sourceLine = Pos 15
-               , sourceColumn = Pos 22
-               }
-              }
-             )
-             [ Var
-              ( Range
-               { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                , sourceLine = Pos 14
-                , sourceColumn = Pos 23
-                }
-               , _end = SourcePos
-                { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                , sourceLine = Pos 14
-                , sourceColumn = Pos 27
-                }
-               }
-              )
-              ( Id
-               { name = "True"
-               , moduleName = Artifact
-                ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-               , sort = External
-               }
-              )
-             , Fn
-              ( Range
-               { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                , sourceLine = Pos 14
-                , sourceColumn = Pos 29
-                }
-               , _end = SourcePos
-                { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                , sourceLine = Pos 14
-                , sourceColumn = Pos 34
-                }
-               }
-              )
-              ( Clause
-               ( Range
-                { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                 , sourceLine = Pos 14
-                 , sourceColumn = Pos 31
-                 }
-                , _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                 , sourceLine = Pos 14
-                 , sourceColumn = Pos 33
-                 }
-                }
-               ) []
-               ( Seq
-                ( Range
-                 { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                  , sourceLine = Pos 14
-                  , sourceColumn = Pos 31
-                  }
-                 , _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                  , sourceLine = Pos 14
-                  , sourceColumn = Pos 33
-                  }
-                 }
-                )
-                ( NoBind
-                 ( Range
-                  { _start = SourcePos
-                   { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                   , sourceLine = Pos 14
-                   , sourceColumn = Pos 31
-                   }
-                  , _end = SourcePos
-                   { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                   , sourceLine = Pos 14
-                   , sourceColumn = Pos 33
-                   }
-                  }
-                 )
-                 ( Apply
-                  ( Range
-                   { _start = SourcePos
-                    { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                    , sourceLine = Pos 14
-                    , sourceColumn = Pos 31
-                    }
-                   , _end = SourcePos
-                    { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                    , sourceLine = Pos 14
-                    , sourceColumn = Pos 33
-                    }
-                   }
-                  )
-                  ( Var
-                   ( Range
-                    { _start = SourcePos
-                     { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                     , sourceLine = Pos 14
-                     , sourceColumn = Pos 31
-                     }
-                    , _end = SourcePos
-                     { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                     , sourceLine = Pos 14
-                     , sourceColumn = Pos 33
-                     }
-                    }
-                   )
-                   ( Id
-                    { name = "Int32#"
-                    , moduleName = Artifact
-                     ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-                    , sort = External
-                    }
-                   )
-                  )
-                  ( Unboxed
-                   ( Range
-                    { _start = SourcePos
-                     { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                     , sourceLine = Pos 14
-                     , sourceColumn = Pos 31
-                     }
-                    , _end = SourcePos
-                     { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                     , sourceLine = Pos 14
-                     , sourceColumn = Pos 33
-                     }
-                    }
-                   )
-                   ( Int32 3 )
-                  )
-                 ) :| []
-                )
-               ) :| []
-              )
-             ]
             )
             ( OpApp
              ( Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-               , sourceLine = Pos 16
-               , sourceColumn = Pos 28
+               , sourceLine = Pos 14
+               , sourceColumn = Pos 17
                }
               , _end = SourcePos
                { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-               , sourceLine = Pos 16
-               , sourceColumn = Pos 32
+               , sourceLine = Pos 14
+               , sourceColumn = Pos 21
                }
               }
              ,
@@ -702,13 +382,13 @@ Module
               ( Range
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                , sourceLine = Pos 15
-                , sourceColumn = Pos 27
+                , sourceLine = Pos 13
+                , sourceColumn = Pos 17
                 }
                , _end = SourcePos
                 { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                , sourceLine = Pos 16
-                , sourceColumn = Pos 28
+                , sourceLine = Pos 14
+                , sourceColumn = Pos 17
                 }
                }
               )
@@ -716,13 +396,13 @@ Module
                ( Range
                 { _start = SourcePos
                  { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                 , sourceLine = Pos 15
-                 , sourceColumn = Pos 28
+                 , sourceLine = Pos 13
+                 , sourceColumn = Pos 18
                  }
                 , _end = SourcePos
                  { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                 , sourceLine = Pos 15
-                 , sourceColumn = Pos 32
+                 , sourceLine = Pos 13
+                 , sourceColumn = Pos 22
                  }
                 }
                )
@@ -737,13 +417,13 @@ Module
                ( Range
                 { _start = SourcePos
                  { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                 , sourceLine = Pos 15
-                 , sourceColumn = Pos 34
+                 , sourceLine = Pos 13
+                 , sourceColumn = Pos 24
                  }
                 , _end = SourcePos
                  { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                 , sourceLine = Pos 15
-                 , sourceColumn = Pos 39
+                 , sourceLine = Pos 13
+                 , sourceColumn = Pos 29
                  }
                 }
                )
@@ -751,13 +431,13 @@ Module
                 ( Range
                  { _start = SourcePos
                   { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                  , sourceLine = Pos 15
-                  , sourceColumn = Pos 36
+                  , sourceLine = Pos 13
+                  , sourceColumn = Pos 26
                   }
                  , _end = SourcePos
                   { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                  , sourceLine = Pos 15
-                  , sourceColumn = Pos 38
+                  , sourceLine = Pos 13
+                  , sourceColumn = Pos 28
                   }
                  }
                 ) []
@@ -765,13 +445,13 @@ Module
                  ( Range
                   { _start = SourcePos
                    { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                   , sourceLine = Pos 15
-                   , sourceColumn = Pos 36
+                   , sourceLine = Pos 13
+                   , sourceColumn = Pos 26
                    }
                   , _end = SourcePos
                    { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                   , sourceLine = Pos 15
-                   , sourceColumn = Pos 38
+                   , sourceLine = Pos 13
+                   , sourceColumn = Pos 28
                    }
                   }
                  )
@@ -779,13 +459,13 @@ Module
                   ( Range
                    { _start = SourcePos
                     { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                    , sourceLine = Pos 15
-                    , sourceColumn = Pos 36
+                    , sourceLine = Pos 13
+                    , sourceColumn = Pos 26
                     }
                    , _end = SourcePos
                     { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                    , sourceLine = Pos 15
-                    , sourceColumn = Pos 38
+                    , sourceLine = Pos 13
+                    , sourceColumn = Pos 28
                     }
                    }
                   )
@@ -793,13 +473,13 @@ Module
                    ( Range
                     { _start = SourcePos
                      { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                     , sourceLine = Pos 15
-                     , sourceColumn = Pos 36
+                     , sourceLine = Pos 13
+                     , sourceColumn = Pos 26
                      }
                     , _end = SourcePos
                      { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                     , sourceLine = Pos 15
-                     , sourceColumn = Pos 38
+                     , sourceLine = Pos 13
+                     , sourceColumn = Pos 28
                      }
                     }
                    )
@@ -807,13 +487,13 @@ Module
                     ( Range
                      { _start = SourcePos
                       { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                      , sourceLine = Pos 15
-                      , sourceColumn = Pos 36
+                      , sourceLine = Pos 13
+                      , sourceColumn = Pos 26
                       }
                      , _end = SourcePos
                       { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                      , sourceLine = Pos 15
-                      , sourceColumn = Pos 38
+                      , sourceLine = Pos 13
+                      , sourceColumn = Pos 28
                       }
                      }
                     )
@@ -829,17 +509,17 @@ Module
                     ( Range
                      { _start = SourcePos
                       { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                      , sourceLine = Pos 15
-                      , sourceColumn = Pos 36
+                      , sourceLine = Pos 13
+                      , sourceColumn = Pos 26
                       }
                      , _end = SourcePos
                       { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                      , sourceLine = Pos 15
-                      , sourceColumn = Pos 38
+                      , sourceLine = Pos 13
+                      , sourceColumn = Pos 28
                       }
                      }
                     )
-                    ( Int32 4 )
+                    ( Int32 2 )
                    )
                   ) :| []
                  )
@@ -847,29 +527,439 @@ Module
                )
               ]
              )
-             ( Var
+             ( Seq
               ( Range
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-                , sourceLine = Pos 16
-                , sourceColumn = Pos 32
+                , sourceLine = Pos 14
+                , sourceColumn = Pos 21
                 }
                , _end = SourcePos
                 { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
                 , sourceLine = Pos 16
-                , sourceColumn = Pos 35
+                , sourceColumn = Pos 37
                 }
                }
               )
-              ( Id
-               { name = "Nil"
-               , moduleName = Artifact
-                ( ArtifactPath "runtime/malgo/Prelude.mlg" )
-               , sort = External
-               }
+              ( NoBind
+               ( Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                 , sourceLine = Pos 14
+                 , sourceColumn = Pos 21
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                 , sourceLine = Pos 16
+                 , sourceColumn = Pos 37
+                 }
+                }
+               )
+               ( OpApp
+                ( Range
+                 { _start = SourcePos
+                  { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                  , sourceLine = Pos 15
+                  , sourceColumn = Pos 22
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                  , sourceLine = Pos 15
+                  , sourceColumn = Pos 26
+                  }
+                 }
+                ,
+                 ( RightA
+                 , 2
+                 )
+                )
+                ( Id
+                 { name = "<|>"
+                 , moduleName = Artifact
+                  ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                 , sort = External
+                 }
+                )
+                ( Tuple
+                 ( Range
+                  { _start = SourcePos
+                   { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                   , sourceLine = Pos 14
+                   , sourceColumn = Pos 22
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                   , sourceLine = Pos 15
+                   , sourceColumn = Pos 22
+                   }
+                  }
+                 )
+                 [ Var
+                  ( Range
+                   { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                    , sourceLine = Pos 14
+                    , sourceColumn = Pos 23
+                    }
+                   , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                    , sourceLine = Pos 14
+                    , sourceColumn = Pos 27
+                    }
+                   }
+                  )
+                  ( Id
+                   { name = "True"
+                   , moduleName = Artifact
+                    ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+                   , sort = External
+                   }
+                  )
+                 , Fn
+                  ( Range
+                   { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                    , sourceLine = Pos 14
+                    , sourceColumn = Pos 29
+                    }
+                   , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                    , sourceLine = Pos 14
+                    , sourceColumn = Pos 34
+                    }
+                   }
+                  )
+                  ( Clause
+                   ( Range
+                    { _start = SourcePos
+                     { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                     , sourceLine = Pos 14
+                     , sourceColumn = Pos 31
+                     }
+                    , _end = SourcePos
+                     { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                     , sourceLine = Pos 14
+                     , sourceColumn = Pos 33
+                     }
+                    }
+                   ) []
+                   ( Seq
+                    ( Range
+                     { _start = SourcePos
+                      { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                      , sourceLine = Pos 14
+                      , sourceColumn = Pos 31
+                      }
+                     , _end = SourcePos
+                      { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                      , sourceLine = Pos 14
+                      , sourceColumn = Pos 33
+                      }
+                     }
+                    )
+                    ( NoBind
+                     ( Range
+                      { _start = SourcePos
+                       { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                       , sourceLine = Pos 14
+                       , sourceColumn = Pos 31
+                       }
+                      , _end = SourcePos
+                       { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                       , sourceLine = Pos 14
+                       , sourceColumn = Pos 33
+                       }
+                      }
+                     )
+                     ( Apply
+                      ( Range
+                       { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                        , sourceLine = Pos 14
+                        , sourceColumn = Pos 31
+                        }
+                       , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                        , sourceLine = Pos 14
+                        , sourceColumn = Pos 33
+                        }
+                       }
+                      )
+                      ( Var
+                       ( Range
+                        { _start = SourcePos
+                         { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                         , sourceLine = Pos 14
+                         , sourceColumn = Pos 31
+                         }
+                        , _end = SourcePos
+                         { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                         , sourceLine = Pos 14
+                         , sourceColumn = Pos 33
+                         }
+                        }
+                       )
+                       ( Id
+                        { name = "Int32#"
+                        , moduleName = Artifact
+                         ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+                        , sort = External
+                        }
+                       )
+                      )
+                      ( Unboxed
+                       ( Range
+                        { _start = SourcePos
+                         { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                         , sourceLine = Pos 14
+                         , sourceColumn = Pos 31
+                         }
+                        , _end = SourcePos
+                         { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                         , sourceLine = Pos 14
+                         , sourceColumn = Pos 33
+                         }
+                        }
+                       )
+                       ( Int32 3 )
+                      )
+                     ) :| []
+                    )
+                   ) :| []
+                  )
+                 ]
+                )
+                ( Seq
+                 ( Range
+                  { _start = SourcePos
+                   { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                   , sourceLine = Pos 15
+                   , sourceColumn = Pos 26
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                   , sourceLine = Pos 16
+                   , sourceColumn = Pos 36
+                   }
+                  }
+                 )
+                 ( NoBind
+                  ( Range
+                   { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                    , sourceLine = Pos 15
+                    , sourceColumn = Pos 26
+                    }
+                   , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                    , sourceLine = Pos 16
+                    , sourceColumn = Pos 36
+                    }
+                   }
+                  )
+                  ( OpApp
+                   ( Range
+                    { _start = SourcePos
+                     { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                     , sourceLine = Pos 16
+                     , sourceColumn = Pos 28
+                     }
+                    , _end = SourcePos
+                     { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                     , sourceLine = Pos 16
+                     , sourceColumn = Pos 32
+                     }
+                    }
+                   ,
+                    ( RightA
+                    , 2
+                    )
+                   )
+                   ( Id
+                    { name = "<|>"
+                    , moduleName = Artifact
+                     ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                    , sort = External
+                    }
+                   )
+                   ( Tuple
+                    ( Range
+                     { _start = SourcePos
+                      { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                      , sourceLine = Pos 15
+                      , sourceColumn = Pos 27
+                      }
+                     , _end = SourcePos
+                      { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                      , sourceLine = Pos 16
+                      , sourceColumn = Pos 28
+                      }
+                     }
+                    )
+                    [ Var
+                     ( Range
+                      { _start = SourcePos
+                       { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                       , sourceLine = Pos 15
+                       , sourceColumn = Pos 28
+                       }
+                      , _end = SourcePos
+                       { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                       , sourceLine = Pos 15
+                       , sourceColumn = Pos 32
+                       }
+                      }
+                     )
+                     ( Id
+                      { name = "True"
+                      , moduleName = Artifact
+                       ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+                      , sort = External
+                      }
+                     )
+                    , Fn
+                     ( Range
+                      { _start = SourcePos
+                       { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                       , sourceLine = Pos 15
+                       , sourceColumn = Pos 34
+                       }
+                      , _end = SourcePos
+                       { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                       , sourceLine = Pos 15
+                       , sourceColumn = Pos 39
+                       }
+                      }
+                     )
+                     ( Clause
+                      ( Range
+                       { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                        , sourceLine = Pos 15
+                        , sourceColumn = Pos 36
+                        }
+                       , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                        , sourceLine = Pos 15
+                        , sourceColumn = Pos 38
+                        }
+                       }
+                      ) []
+                      ( Seq
+                       ( Range
+                        { _start = SourcePos
+                         { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                         , sourceLine = Pos 15
+                         , sourceColumn = Pos 36
+                         }
+                        , _end = SourcePos
+                         { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                         , sourceLine = Pos 15
+                         , sourceColumn = Pos 38
+                         }
+                        }
+                       )
+                       ( NoBind
+                        ( Range
+                         { _start = SourcePos
+                          { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                          , sourceLine = Pos 15
+                          , sourceColumn = Pos 36
+                          }
+                         , _end = SourcePos
+                          { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                          , sourceLine = Pos 15
+                          , sourceColumn = Pos 38
+                          }
+                         }
+                        )
+                        ( Apply
+                         ( Range
+                          { _start = SourcePos
+                           { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                           , sourceLine = Pos 15
+                           , sourceColumn = Pos 36
+                           }
+                          , _end = SourcePos
+                           { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                           , sourceLine = Pos 15
+                           , sourceColumn = Pos 38
+                           }
+                          }
+                         )
+                         ( Var
+                          ( Range
+                           { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                            , sourceLine = Pos 15
+                            , sourceColumn = Pos 36
+                            }
+                           , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                            , sourceLine = Pos 15
+                            , sourceColumn = Pos 38
+                            }
+                           }
+                          )
+                          ( Id
+                           { name = "Int32#"
+                           , moduleName = Artifact
+                            ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+                           , sort = External
+                           }
+                          )
+                         )
+                         ( Unboxed
+                          ( Range
+                           { _start = SourcePos
+                            { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                            , sourceLine = Pos 15
+                            , sourceColumn = Pos 36
+                            }
+                           , _end = SourcePos
+                            { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                            , sourceLine = Pos 15
+                            , sourceColumn = Pos 38
+                            }
+                           }
+                          )
+                          ( Int32 4 )
+                         )
+                        ) :| []
+                       )
+                      ) :| []
+                     )
+                    ]
+                   )
+                   ( Var
+                    ( Range
+                     { _start = SourcePos
+                      { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                      , sourceLine = Pos 16
+                      , sourceColumn = Pos 32
+                      }
+                     , _end = SourcePos
+                      { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
+                      , sourceLine = Pos 16
+                      , sourceColumn = Pos 35
+                      }
+                     }
+                    )
+                    ( Id
+                     { name = "Nil"
+                     , moduleName = Artifact
+                      ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+                     , sort = External
+                     }
+                    )
+                   )
+                  ) :| []
+                 )
+                )
+               ) :| []
               )
              )
-            )
+            ) :| []
            )
           )
          ) :|

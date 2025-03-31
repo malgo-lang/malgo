@@ -6,7 +6,7 @@
          (fn
             ((clause ((con Int32# ((unboxed (int32 0))))) (seq (do True)))
                (clause
-                  (#EvenOdd.n_0)
+                  (#EvenOdd.n_xxx)
                   (seq
                      (do
                         (apply
@@ -14,7 +14,7 @@
                            (seq
                               (do
                                  (apply
-                                    (apply subInt32 #EvenOdd.n_0)
+                                    (apply subInt32 #EvenOdd.n_xxx)
                                     (apply Int32# (int32 1))))))))))))
         (((./test/testcases/malgo/EvenOdd.mlg 9 1)
             (./test/testcases/malgo/EvenOdd.mlg 14 1))
@@ -22,7 +22,7 @@
            (fn
               ((clause ((con Int32# ((unboxed (int32 0))))) (seq (do False)))
                  (clause
-                    (#EvenOdd.n_1)
+                    (#EvenOdd.n_xxx)
                     (seq
                        (do
                           (apply
@@ -30,7 +30,7 @@
                              (seq
                                 (do
                                    (apply
-                                      (apply subInt32 #EvenOdd.n_1)
+                                      (apply subInt32 #EvenOdd.n_xxx)
                                       (apply Int32# (int32 1)))))))))))))
        ((((./test/testcases/malgo/EvenOdd.mlg 14 1)
             (./test/testcases/malgo/EvenOdd.mlg 17 1))

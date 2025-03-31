@@ -212,7 +212,7 @@ Module
        }
       }
      )
-     [ ConP
+     [ VarP
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/With.mlg"
@@ -222,25 +222,24 @@ Module
        , _end = SourcePos
         { sourceName = "./test/testcases/malgo/With.mlg"
         , sourceLine = Pos 5
-        , sourceColumn = Pos 29
+        , sourceColumn = Pos 27
         }
        }
       ) "finalizer"
-      [ VarP
-       ( Range
-        { _start = SourcePos
-         { sourceName = "./test/testcases/malgo/With.mlg"
-         , sourceLine = Pos 5
-         , sourceColumn = Pos 27
-         }
-        , _end = SourcePos
-         { sourceName = "./test/testcases/malgo/With.mlg"
-         , sourceLine = Pos 5
-         , sourceColumn = Pos 29
-         }
+     , VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/With.mlg"
+        , sourceLine = Pos 5
+        , sourceColumn = Pos 27
         }
-       ) "k"
-      ]
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/With.mlg"
+        , sourceLine = Pos 5
+        , sourceColumn = Pos 29
+        }
+       }
+      ) "k"
      ]
      ( Seq
       ( Range
@@ -689,7 +688,7 @@ Module
        }
       }
      )
-     [ ConP
+     [ VarP
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/With.mlg"
@@ -699,25 +698,24 @@ Module
        , _end = SourcePos
         { sourceName = "./test/testcases/malgo/With.mlg"
         , sourceLine = Pos 16
-        , sourceColumn = Pos 30
+        , sourceColumn = Pos 28
         }
        }
       ) "str"
-      [ VarP
-       ( Range
-        { _start = SourcePos
-         { sourceName = "./test/testcases/malgo/With.mlg"
-         , sourceLine = Pos 16
-         , sourceColumn = Pos 28
-         }
-        , _end = SourcePos
-         { sourceName = "./test/testcases/malgo/With.mlg"
-         , sourceLine = Pos 16
-         , sourceColumn = Pos 30
-         }
+     , VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/With.mlg"
+        , sourceLine = Pos 16
+        , sourceColumn = Pos 28
         }
-       ) "k"
-      ]
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/With.mlg"
+        , sourceLine = Pos 16
+        , sourceColumn = Pos 30
+        }
+       }
+      ) "k"
      ]
      ( Seq
       ( Range

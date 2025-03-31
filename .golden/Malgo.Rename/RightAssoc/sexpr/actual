@@ -9,10 +9,10 @@
            f
            (fn
               ((clause
-                  (#RightAssoc.n_1)
+                  (#RightAssoc.n_xxx)
                   (seq
                      (let
-                        #RightAssoc.x_2
+                        #RightAssoc.x_xxx
                         (opapp
                            <|>
                            (tuple
@@ -59,7 +59,7 @@
                                                                          (int32 4))))))))
                                                       Nil)))))))))))
                      (let
-                        #RightAssoc.y_3
+                        #RightAssoc.y_xxx
                         (opapp
                            <|>
                            (tuple
@@ -91,7 +91,7 @@
                                               ()
                                               (seq (do (apply Int32# (int32 4))))))))
                                     Nil)))))
-                     (do #RightAssoc.y_3)))))))
+                     (do #RightAssoc.y_xxx)))))))
        ((((./test/testcases/malgo/RightAssoc.mlg 35 1)
             (./test/testcases/malgo/RightAssoc.mlg 39 1))
            main
@@ -99,14 +99,14 @@
               ((clause
                   ()
                   (seq
-                     (let #RightAssoc.x_4 (apply f (apply Int32# (int32 4))))
+                     (let #RightAssoc.x_xxx (apply f (apply Int32# (int32 4))))
                      (do (apply printString (apply String# (string "OK")))))))))))
       ((((./test/testcases/malgo/RightAssoc.mlg 5 1)
            (./test/testcases/malgo/RightAssoc.mlg 6 1))
           <|>
           (->
-             #RightAssoc.a_0
-             (-> (app List (#RightAssoc.a_0)) (app List (#RightAssoc.a_0)))))
+             #RightAssoc.a_xxx
+             (-> (app List (#RightAssoc.a_xxx)) (app List (#RightAssoc.a_xxx)))))
          (((./test/testcases/malgo/RightAssoc.mlg 34 1)
              (./test/testcases/malgo/RightAssoc.mlg 35 1))
             main

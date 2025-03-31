@@ -11,8 +11,7 @@
       (sig putStr (-> String (tuple)))
       (def
          putStr
-         (fn
-            ((clause ((con String# (x))) (seq (do (apply malgo_print_string x)))))))
+         (fn ((clause (String# x) (seq (do (apply malgo_print_string x)))))))
       (foreign malgo_int32_t_to_string (-> Int32# String#))
       (type Show (a) (record (show (-> a String))))
       (sig show (-> (app Show (a)) (-> a String)))
@@ -28,20 +27,23 @@
                    (do
                       (apply
                          putStr
-                         (parens
-                            (apply
-                               (apply show (int32 1))
-                               (parens
-                                  (apply
-                                     wrap
-                                     (fn
-                                        ((clause
-                                            ((con Int32# (x)))
-                                            (seq
-                                               (do
-                                                  (apply
-                                                     String#
-                                                     (parens
+                         (seq
+                            (do
+                               (apply
+                                  (apply show (int32 1))
+                                  (seq
+                                     (do
+                                        (apply
+                                           wrap
+                                           (fn
+                                              ((clause
+                                                  (Int32# x)
+                                                  (seq
+                                                     (do
                                                         (apply
-                                                           malgo_int32_t_to_string
-                                                           x)))))))))))))))))))))
+                                                           String#
+                                                           (seq
+                                                              (do
+                                                                 (apply
+                                                                    malgo_int32_t_to_string
+                                                                    x))))))))))))))))))))))))

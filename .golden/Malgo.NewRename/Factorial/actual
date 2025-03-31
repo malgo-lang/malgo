@@ -61,7 +61,7 @@ Module
          , _end = SourcePos
           { sourceName = "./test/testcases/malgo/Factorial.mlg"
           , sourceLine = Pos 5
-          , sourceColumn = Pos 18
+          , sourceColumn = Pos 16
           }
          }
         )
@@ -281,7 +281,7 @@ Module
          , _end = SourcePos
           { sourceName = "./test/testcases/malgo/Factorial.mlg"
           , sourceLine = Pos 8
-          , sourceColumn = Pos 17
+          , sourceColumn = Pos 15
           }
          }
         )
@@ -501,7 +501,7 @@ Module
          , _end = SourcePos
           { sourceName = "./test/testcases/malgo/Factorial.mlg"
           , sourceLine = Pos 11
-          , sourceColumn = Pos 17
+          , sourceColumn = Pos 15
           }
          }
         )
@@ -721,7 +721,7 @@ Module
          , _end = SourcePos
           { sourceName = "./test/testcases/malgo/Factorial.mlg"
           , sourceLine = Pos 15
-          , sourceColumn = Pos 23
+          , sourceColumn = Pos 19
           }
          }
         )
@@ -952,176 +952,236 @@ Module
                     }
                    )
                   )
-                  ( OpApp
+                  ( Seq
                    ( Range
                     { _start = SourcePos
                      { sourceName = "./test/testcases/malgo/Factorial.mlg"
                      , sourceLine = Pos 15
-                     , sourceColumn = Pos 69
+                     , sourceColumn = Pos 66
                      }
                     , _end = SourcePos
                      { sourceName = "./test/testcases/malgo/Factorial.mlg"
                      , sourceLine = Pos 15
-                     , sourceColumn = Pos 71
+                     , sourceColumn = Pos 76
                      }
                     }
-                   ,
-                    ( LeftA
-                    , 7
-                    )
                    )
-                   ( Id
-                    { name = "*"
-                    , moduleName = Artifact
-                     ( ArtifactPath "test/testcases/malgo/Factorial.mlg" )
-                    , sort = External
-                    }
-                   )
-                   ( Var
+                   ( NoBind
                     ( Range
                      { _start = SourcePos
                       { sourceName = "./test/testcases/malgo/Factorial.mlg"
                       , sourceLine = Pos 15
-                      , sourceColumn = Pos 67
+                      , sourceColumn = Pos 66
                       }
                      , _end = SourcePos
                       { sourceName = "./test/testcases/malgo/Factorial.mlg"
                       , sourceLine = Pos 15
-                      , sourceColumn = Pos 69
+                      , sourceColumn = Pos 76
                       }
                      }
                     )
-                    ( Id
-                     { name = "n"
-                     , moduleName = Artifact
-                      ( ArtifactPath "test/testcases/malgo/Factorial.mlg" )
-                     , sort = Internal 7
-                     }
-                    )
-                   )
-                   ( Var
-                    ( Range
-                     { _start = SourcePos
-                      { sourceName = "./test/testcases/malgo/Factorial.mlg"
-                      , sourceLine = Pos 15
-                      , sourceColumn = Pos 71
+                    ( OpApp
+                     ( Range
+                      { _start = SourcePos
+                       { sourceName = "./test/testcases/malgo/Factorial.mlg"
+                       , sourceLine = Pos 15
+                       , sourceColumn = Pos 69
+                       }
+                      , _end = SourcePos
+                       { sourceName = "./test/testcases/malgo/Factorial.mlg"
+                       , sourceLine = Pos 15
+                       , sourceColumn = Pos 71
+                       }
                       }
-                     , _end = SourcePos
-                      { sourceName = "./test/testcases/malgo/Factorial.mlg"
-                      , sourceLine = Pos 15
-                      , sourceColumn = Pos 74
+                     ,
+                      ( LeftA
+                      , 7
+                      )
+                     )
+                     ( Id
+                      { name = "*"
+                      , moduleName = Artifact
+                       ( ArtifactPath "test/testcases/malgo/Factorial.mlg" )
+                      , sort = External
                       }
-                     }
-                    )
-                    ( Id
-                     { name = "acc"
-                     , moduleName = Artifact
-                      ( ArtifactPath "test/testcases/malgo/Factorial.mlg" )
-                     , sort = Internal 8
-                     }
-                    )
+                     )
+                     ( Var
+                      ( Range
+                       { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/Factorial.mlg"
+                        , sourceLine = Pos 15
+                        , sourceColumn = Pos 67
+                        }
+                       , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/Factorial.mlg"
+                        , sourceLine = Pos 15
+                        , sourceColumn = Pos 69
+                        }
+                       }
+                      )
+                      ( Id
+                       { name = "n"
+                       , moduleName = Artifact
+                        ( ArtifactPath "test/testcases/malgo/Factorial.mlg" )
+                       , sort = Internal 7
+                       }
+                      )
+                     )
+                     ( Var
+                      ( Range
+                       { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/Factorial.mlg"
+                        , sourceLine = Pos 15
+                        , sourceColumn = Pos 71
+                        }
+                       , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/Factorial.mlg"
+                        , sourceLine = Pos 15
+                        , sourceColumn = Pos 74
+                        }
+                       }
+                      )
+                      ( Id
+                       { name = "acc"
+                       , moduleName = Artifact
+                        ( ArtifactPath "test/testcases/malgo/Factorial.mlg" )
+                       , sort = Internal 8
+                       }
+                      )
+                     )
+                    ) :| []
                    )
                   )
                  )
-                 ( OpApp
+                 ( Seq
                   ( Range
                    { _start = SourcePos
                     { sourceName = "./test/testcases/malgo/Factorial.mlg"
                     , sourceLine = Pos 15
-                    , sourceColumn = Pos 60
+                    , sourceColumn = Pos 57
                     }
                    , _end = SourcePos
                     { sourceName = "./test/testcases/malgo/Factorial.mlg"
                     , sourceLine = Pos 15
-                    , sourceColumn = Pos 62
+                    , sourceColumn = Pos 66
                     }
                    }
-                  ,
-                   ( LeftA
-                   , 6
-                   )
                   )
-                  ( Id
-                   { name = "-"
-                   , moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/Factorial.mlg" )
-                   , sort = External
-                   }
-                  )
-                  ( Var
+                  ( NoBind
                    ( Range
                     { _start = SourcePos
                      { sourceName = "./test/testcases/malgo/Factorial.mlg"
                      , sourceLine = Pos 15
-                     , sourceColumn = Pos 58
+                     , sourceColumn = Pos 57
                      }
                     , _end = SourcePos
                      { sourceName = "./test/testcases/malgo/Factorial.mlg"
                      , sourceLine = Pos 15
-                     , sourceColumn = Pos 60
+                     , sourceColumn = Pos 66
                      }
                     }
                    )
-                   ( Id
-                    { name = "n"
-                    , moduleName = Artifact
-                     ( ArtifactPath "test/testcases/malgo/Factorial.mlg" )
-                    , sort = Internal 7
-                    }
-                   )
-                  )
-                  ( Apply
-                   ( Range
-                    { _start = SourcePos
-                     { sourceName = "./test/testcases/malgo/Factorial.mlg"
-                     , sourceLine = Pos 15
-                     , sourceColumn = Pos 62
-                     }
-                    , _end = SourcePos
-                     { sourceName = "./test/testcases/malgo/Factorial.mlg"
-                     , sourceLine = Pos 15
-                     , sourceColumn = Pos 64
-                     }
-                    }
-                   )
-                   ( Var
+                   ( OpApp
                     ( Range
                      { _start = SourcePos
                       { sourceName = "./test/testcases/malgo/Factorial.mlg"
                       , sourceLine = Pos 15
-                      , sourceColumn = Pos 62
+                      , sourceColumn = Pos 60
                       }
                      , _end = SourcePos
                       { sourceName = "./test/testcases/malgo/Factorial.mlg"
                       , sourceLine = Pos 15
-                      , sourceColumn = Pos 64
+                      , sourceColumn = Pos 62
                       }
                      }
+                    ,
+                     ( LeftA
+                     , 6
+                     )
                     )
                     ( Id
-                     { name = "Int64#"
+                     { name = "-"
                      , moduleName = Artifact
-                      ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+                      ( ArtifactPath "test/testcases/malgo/Factorial.mlg" )
                      , sort = External
                      }
                     )
-                   )
-                   ( Unboxed
-                    ( Range
-                     { _start = SourcePos
-                      { sourceName = "./test/testcases/malgo/Factorial.mlg"
-                      , sourceLine = Pos 15
-                      , sourceColumn = Pos 62
+                    ( Var
+                     ( Range
+                      { _start = SourcePos
+                       { sourceName = "./test/testcases/malgo/Factorial.mlg"
+                       , sourceLine = Pos 15
+                       , sourceColumn = Pos 58
+                       }
+                      , _end = SourcePos
+                       { sourceName = "./test/testcases/malgo/Factorial.mlg"
+                       , sourceLine = Pos 15
+                       , sourceColumn = Pos 60
+                       }
                       }
-                     , _end = SourcePos
-                      { sourceName = "./test/testcases/malgo/Factorial.mlg"
-                      , sourceLine = Pos 15
-                      , sourceColumn = Pos 64
+                     )
+                     ( Id
+                      { name = "n"
+                      , moduleName = Artifact
+                       ( ArtifactPath "test/testcases/malgo/Factorial.mlg" )
+                      , sort = Internal 7
                       }
-                     }
+                     )
                     )
-                    ( Int64 1 )
-                   )
+                    ( Apply
+                     ( Range
+                      { _start = SourcePos
+                       { sourceName = "./test/testcases/malgo/Factorial.mlg"
+                       , sourceLine = Pos 15
+                       , sourceColumn = Pos 62
+                       }
+                      , _end = SourcePos
+                       { sourceName = "./test/testcases/malgo/Factorial.mlg"
+                       , sourceLine = Pos 15
+                       , sourceColumn = Pos 64
+                       }
+                      }
+                     )
+                     ( Var
+                      ( Range
+                       { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/Factorial.mlg"
+                        , sourceLine = Pos 15
+                        , sourceColumn = Pos 62
+                        }
+                       , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/Factorial.mlg"
+                        , sourceLine = Pos 15
+                        , sourceColumn = Pos 64
+                        }
+                       }
+                      )
+                      ( Id
+                       { name = "Int64#"
+                       , moduleName = Artifact
+                        ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+                       , sort = External
+                       }
+                      )
+                     )
+                     ( Unboxed
+                      ( Range
+                       { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/Factorial.mlg"
+                        , sourceLine = Pos 15
+                        , sourceColumn = Pos 62
+                        }
+                       , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/Factorial.mlg"
+                        , sourceLine = Pos 15
+                        , sourceColumn = Pos 64
+                        }
+                       }
+                      )
+                      ( Int64 1 )
+                     )
+                    )
+                   ) :| []
                   )
                  )
                 ) :| []
@@ -1213,105 +1273,135 @@ Module
             )
            )
           )
-          ( OpApp
+          ( Seq
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/Factorial.mlg"
              , sourceLine = Pos 15
-             , sourceColumn = Pos 32
+             , sourceColumn = Pos 29
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/Factorial.mlg"
              , sourceLine = Pos 15
-             , sourceColumn = Pos 35
+             , sourceColumn = Pos 39
              }
             }
-           ,
-            ( NeutralA
-            , 4
-            )
            )
-           ( Id
-            { name = "=="
-            , moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/Factorial.mlg" )
-            , sort = External
-            }
-           )
-           ( Var
+           ( NoBind
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/Factorial.mlg"
               , sourceLine = Pos 15
-              , sourceColumn = Pos 30
+              , sourceColumn = Pos 29
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/Factorial.mlg"
               , sourceLine = Pos 15
-              , sourceColumn = Pos 32
+              , sourceColumn = Pos 39
               }
              }
             )
-            ( Id
-             { name = "n"
-             , moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Factorial.mlg" )
-             , sort = Internal 7
-             }
-            )
-           )
-           ( Apply
-            ( Range
-             { _start = SourcePos
-              { sourceName = "./test/testcases/malgo/Factorial.mlg"
-              , sourceLine = Pos 15
-              , sourceColumn = Pos 35
-              }
-             , _end = SourcePos
-              { sourceName = "./test/testcases/malgo/Factorial.mlg"
-              , sourceLine = Pos 15
-              , sourceColumn = Pos 37
-              }
-             }
-            )
-            ( Var
+            ( OpApp
              ( Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/Factorial.mlg"
                , sourceLine = Pos 15
-               , sourceColumn = Pos 35
+               , sourceColumn = Pos 32
                }
               , _end = SourcePos
                { sourceName = "./test/testcases/malgo/Factorial.mlg"
                , sourceLine = Pos 15
-               , sourceColumn = Pos 37
+               , sourceColumn = Pos 35
                }
               }
+             ,
+              ( NeutralA
+              , 4
+              )
              )
              ( Id
-              { name = "Int64#"
+              { name = "=="
               , moduleName = Artifact
-               ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+               ( ArtifactPath "test/testcases/malgo/Factorial.mlg" )
               , sort = External
               }
              )
-            )
-            ( Unboxed
-             ( Range
-              { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/Factorial.mlg"
-               , sourceLine = Pos 15
-               , sourceColumn = Pos 35
+             ( Var
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/Factorial.mlg"
+                , sourceLine = Pos 15
+                , sourceColumn = Pos 30
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/Factorial.mlg"
+                , sourceLine = Pos 15
+                , sourceColumn = Pos 32
+                }
                }
-              , _end = SourcePos
-               { sourceName = "./test/testcases/malgo/Factorial.mlg"
-               , sourceLine = Pos 15
-               , sourceColumn = Pos 37
+              )
+              ( Id
+               { name = "n"
+               , moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/Factorial.mlg" )
+               , sort = Internal 7
                }
-              }
+              )
              )
-             ( Int64 0 )
-            )
+             ( Apply
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/Factorial.mlg"
+                , sourceLine = Pos 15
+                , sourceColumn = Pos 35
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/Factorial.mlg"
+                , sourceLine = Pos 15
+                , sourceColumn = Pos 37
+                }
+               }
+              )
+              ( Var
+               ( Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/Factorial.mlg"
+                 , sourceLine = Pos 15
+                 , sourceColumn = Pos 35
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/Factorial.mlg"
+                 , sourceLine = Pos 15
+                 , sourceColumn = Pos 37
+                 }
+                }
+               )
+               ( Id
+                { name = "Int64#"
+                , moduleName = Artifact
+                 ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+                , sort = External
+                }
+               )
+              )
+              ( Unboxed
+               ( Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/Factorial.mlg"
+                 , sourceLine = Pos 15
+                 , sourceColumn = Pos 35
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/Factorial.mlg"
+                 , sourceLine = Pos 15
+                 , sourceColumn = Pos 37
+                 }
+                }
+               )
+               ( Int64 0 )
+              )
+             )
+            ) :| []
            )
           )
          ) :| []

@@ -1,41 +1,43 @@
 ((main
-    $Primitive.return_12
+    $Primitive.return_xxx
     (cut
        (lambda
-          ($Primitive.param_11 $Primitive.return_13)
+          ($Primitive.param_xxx $Primitive.return_xxx)
           (cut
-             $Primitive.param_11
+             $Primitive.param_xxx
              (select
-                (#Primitive.$__10
+                (#Primitive.$__xxx
                    (invoke
                       printString#
                       (then
-                         $Primitive.outer_16
+                         $Primitive.outer_xxx
                          (join
-                            $Primitive.return_14
+                            $Primitive.return_xxx
                             (then
-                               $Primitive.inner_17
+                               $Primitive.inner_xxx
                                (cut
-                                  $Primitive.outer_16
+                                  $Primitive.outer_xxx
                                   (apply
-                                     ($Primitive.inner_17)
-                                     ($Primitive.return_13))))
+                                     ($Primitive.inner_xxx)
+                                     ($Primitive.return_xxx))))
                             (invoke
                                toStringInt64#
                                (then
-                                  $Primitive.outer_18
+                                  $Primitive.outer_xxx
                                   (join
-                                     $Primitive.return_15
+                                     $Primitive.return_xxx
                                      (then
-                                        $Primitive.inner_19
+                                        $Primitive.inner_xxx
                                         (cut
-                                           $Primitive.outer_18
+                                           $Primitive.outer_xxx
                                            (apply
-                                              ($Primitive.inner_19)
-                                              ($Primitive.return_14))))
+                                              ($Primitive.inner_xxx)
+                                              ($Primitive.return_xxx))))
                                      (invoke
                                         addInt64#
                                         (apply
                                            (40_i64)
-                                           ((apply (2_i64) ($Primitive.return_15)))))))))))))))
-       $Primitive.return_12)))
+                                           ((apply
+                                               (2_i64)
+                                               ($Primitive.return_xxx)))))))))))))))
+       $Primitive.return_xxx)))

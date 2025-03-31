@@ -1,69 +1,69 @@
 ((fix
     (lambda
-       ($InlineFunction.param_112)
+       ($InlineFunction.param_xxx)
        (lambda
-          ($InlineFunction.param_113)
+          ($InlineFunction.param_xxx)
           (select
-             (tuple ($InlineFunction.param_112 $InlineFunction.param_113))
-             (((tuple (#InlineFunction.f_6 #InlineFunction.x_7))
+             (tuple ($InlineFunction.param_xxx $InlineFunction.param_xxx))
+             (((tuple (#InlineFunction.f_xxx #InlineFunction.x_xxx))
                  (apply
                     (apply
-                       #InlineFunction.f_6
-                       ((apply (invoke fix) (#InlineFunction.f_6))))
-                    (#InlineFunction.x_7))))))))
+                       #InlineFunction.f_xxx
+                       ((apply (invoke fix) (#InlineFunction.f_xxx))))
+                    (#InlineFunction.x_xxx))))))))
    (<=
       (lambda
-         ($InlineFunction.param_114)
+         ($InlineFunction.param_xxx)
          (lambda
-            ($InlineFunction.param_115)
+            ($InlineFunction.param_xxx)
             (select
-               (tuple ($InlineFunction.param_114 $InlineFunction.param_115))
-               (((tuple (#InlineFunction.x_0 #InlineFunction.y_1))
+               (tuple ($InlineFunction.param_xxx $InlineFunction.param_xxx))
+               (((tuple (#InlineFunction.x_xxx #InlineFunction.y_xxx))
                    (apply
-                      (apply (invoke leInt32) (#InlineFunction.x_0))
-                      (#InlineFunction.y_1))))))))
+                      (apply (invoke leInt32) (#InlineFunction.x_xxx))
+                      (#InlineFunction.y_xxx))))))))
    (-
       (lambda
-         ($InlineFunction.param_116)
+         ($InlineFunction.param_xxx)
          (lambda
-            ($InlineFunction.param_117)
+            ($InlineFunction.param_xxx)
             (select
-               (tuple ($InlineFunction.param_116 $InlineFunction.param_117))
-               (((tuple (#InlineFunction.x_4 #InlineFunction.y_5))
+               (tuple ($InlineFunction.param_xxx $InlineFunction.param_xxx))
+               (((tuple (#InlineFunction.x_xxx #InlineFunction.y_xxx))
                    (apply
-                      (apply (invoke subInt32) (#InlineFunction.x_4))
-                      (#InlineFunction.y_5))))))))
+                      (apply (invoke subInt32) (#InlineFunction.x_xxx))
+                      (#InlineFunction.y_xxx))))))))
    (+
       (lambda
-         ($InlineFunction.param_118)
+         ($InlineFunction.param_xxx)
          (lambda
-            ($InlineFunction.param_119)
+            ($InlineFunction.param_xxx)
             (select
-               (tuple ($InlineFunction.param_118 $InlineFunction.param_119))
-               (((tuple (#InlineFunction.x_2 #InlineFunction.y_3))
+               (tuple ($InlineFunction.param_xxx $InlineFunction.param_xxx))
+               (((tuple (#InlineFunction.x_xxx #InlineFunction.y_xxx))
                    (apply
-                      (apply (invoke addInt32) (#InlineFunction.x_2))
-                      (#InlineFunction.y_3))))))))
+                      (apply (invoke addInt32) (#InlineFunction.x_xxx))
+                      (#InlineFunction.y_xxx))))))))
    (main
       (lambda
-         ($InlineFunction.param_120)
+         ($InlineFunction.param_xxx)
          (select
-            $InlineFunction.param_120
-            ((#InlineFunction.$__111
+            $InlineFunction.param_xxx
+            ((#InlineFunction.$__xxx
                 (let
-                   #InlineFunction.fib_10
+                   #InlineFunction.fib_xxx
                    (apply
                       (invoke fix)
                       ((lambda
-                          ($InlineFunction.param_121)
+                          ($InlineFunction.param_xxx)
                           (lambda
-                             ($InlineFunction.param_122)
+                             ($InlineFunction.param_xxx)
                              (select
                                 (tuple
-                                   ($InlineFunction.param_121
-                                      $InlineFunction.param_122))
+                                   ($InlineFunction.param_xxx
+                                      $InlineFunction.param_xxx))
                                 (((tuple
-                                     (#InlineFunction.f_8 #InlineFunction.n_9))
+                                     (#InlineFunction.f_xxx #InlineFunction.n_xxx))
                                     (apply
                                        (apply
                                           (apply
@@ -71,40 +71,40 @@
                                              ((apply
                                                  (apply
                                                     (invoke <=)
-                                                    (#InlineFunction.n_9))
+                                                    (#InlineFunction.n_xxx))
                                                  ((apply (invoke Int32#) (1_i32))))))
                                           ((lambda
-                                              ($InlineFunction.param_123)
+                                              ($InlineFunction.param_xxx)
                                               (select
-                                                 $InlineFunction.param_123
-                                                 ((#InlineFunction.$__73
+                                                 $InlineFunction.param_xxx
+                                                 ((#InlineFunction.$__xxx
                                                      (apply
                                                         (invoke Int32#)
                                                         (1_i32))))))))
                                        ((lambda
-                                           ($InlineFunction.param_124)
+                                           ($InlineFunction.param_xxx)
                                            (select
-                                              $InlineFunction.param_124
-                                              ((#InlineFunction.$__90
+                                              $InlineFunction.param_xxx
+                                              ((#InlineFunction.$__xxx
                                                   (apply
                                                      (apply
                                                         (invoke +)
                                                         ((apply
-                                                            #InlineFunction.f_8
+                                                            #InlineFunction.f_xxx
                                                             ((apply
                                                                 (apply
                                                                    (invoke -)
-                                                                   (#InlineFunction.n_9))
+                                                                   (#InlineFunction.n_xxx))
                                                                 ((apply
                                                                     (invoke
                                                                        Int32#)
                                                                     (1_i32))))))))
                                                      ((apply
-                                                         #InlineFunction.f_8
+                                                         #InlineFunction.f_xxx
                                                          ((apply
                                                              (apply
                                                                 (invoke -)
-                                                                (#InlineFunction.n_9))
+                                                                (#InlineFunction.n_xxx))
                                                              ((apply
                                                                  (invoke Int32#)
                                                                  (2_i32)))))))))))))))))))))
@@ -115,7 +115,7 @@
                              (apply
                                 (invoke |>)
                                 ((apply
-                                    #InlineFunction.fib_10
+                                    #InlineFunction.fib_xxx
                                     ((apply (invoke Int32#) (5_i32))))))
                              ((invoke toStringInt32)))))
                       ((invoke putStrLn))))))))))

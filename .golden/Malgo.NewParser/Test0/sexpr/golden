@@ -3,11 +3,9 @@
    ((import "runtime/malgo/Builtin.mlg" all)
       (infix left 0 |>)
       (sig |> (-> a (-> (-> a b) b)))
-      (def |> (fn ((clause ((con x (f))) (seq (do (apply f x)))))))
+      (def |> (fn ((clause (x f) (seq (do (apply f x)))))))
       (infix left 6 +#)
-      (def
-         +#
-         (fn ((clause ((con x (y))) (seq (do (apply (apply addInt64# y) x)))))))
+      (def +# (fn ((clause (x y) (seq (do (apply (apply addInt64# y) x)))))))
       (def
          main
          (fn
@@ -25,4 +23,4 @@
                                    (do
                                       (apply
                                          printString#
-                                         (parens (apply toStringInt64# i)))))))))))))))))
+                                         (seq (do (apply toStringInt64# i))))))))))))))))))

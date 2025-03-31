@@ -15,7 +15,7 @@
               (fn
                  ((clause ((con Nothing ())) (seq (do Nothing)))
                     (clause
-                       ((con Just ()) #ToplevelVariable.x_1)
+                       ((con Just ()) #ToplevelVariable.x_xxx)
                        (seq (do Nothing)))))
               (seq (do (apply Just (tuple)))))))
        ((((./test/testcases/malgo/ToplevelVariable.mlg 6 1)
@@ -40,7 +40,7 @@
                                            printString
                                            (apply String# (string "OK"))))))
                                  (clause
-                                    ((con Just ()) #ToplevelVariable.__2)
+                                    ((con Just ()) #ToplevelVariable.__xxx)
                                     (seq (do (tuple))))))
                            comp))
                      (do
@@ -54,7 +54,7 @@
       ((((./test/testcases/malgo/ToplevelVariable.mlg 10 1)
            (./test/testcases/malgo/ToplevelVariable.mlg 11 1))
           comp
-          (app Maybe (#ToplevelVariable.a_0))))
+          (app Maybe (#ToplevelVariable.a_xxx))))
       ()
       ()
       ()

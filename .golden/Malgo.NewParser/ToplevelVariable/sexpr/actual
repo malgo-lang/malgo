@@ -11,8 +11,8 @@
          (apply
             (fn
                ((clause (Nothing) (seq (do Nothing)))
-                  (clause ((con Just (x))) (seq (do Nothing)))))
-            (parens (apply Just (tuple)))))
+                  (clause (Just x) (seq (do Nothing)))))
+            (seq (do (apply Just (tuple))))))
       (def
          main
          (fn
@@ -25,12 +25,13 @@
                             ((clause
                                 (Nothing)
                                 (seq (do (apply printString (string "OK")))))
-                               (clause ((con Just (_))) (seq (do (tuple))))))
+                               (clause (Just _) (seq (do (tuple))))))
                          comp))
                    (do
                       (apply
                          printInt32
-                         (parens
-                            (apply
-                               (apply constId (parens (apply addOne one)))
-                               const)))))))))))
+                         (seq
+                            (do
+                               (apply
+                                  (apply constId (seq (do (apply addOne one))))
+                                  const))))))))))))

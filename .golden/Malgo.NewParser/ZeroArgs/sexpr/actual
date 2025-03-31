@@ -27,8 +27,9 @@
                                    (do
                                       (apply
                                          printString
-                                         (parens
-                                            (apply
-                                               toStringInt32
-                                               (parens (apply id one)))))))))))))))
+                                         (seq
+                                            (do
+                                               (apply
+                                                  toStringInt32
+                                                  (seq (do (apply id one)))))))))))))))))
             (tuple)))))

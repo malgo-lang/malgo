@@ -7,7 +7,7 @@
          finally
          (fn
             ((clause
-                ((con finalizer (k)))
+                (finalizer k)
                 (seq (let x (apply k (tuple))) (do (apply finalizer x)))))))
       (sig twice (-> (block a) a))
       (def
@@ -17,7 +17,7 @@
          printAndReturn
          (fn
             ((clause
-                ((con str (k)))
+                (str k)
                 (seq (do (apply printString str)) (do (apply k str)))))))
       (def
          main

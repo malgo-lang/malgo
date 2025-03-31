@@ -1,51 +1,52 @@
 ((first
-    $TestPolySynonym.return_42
+    $TestPolySynonym.return_xxx
     (cut
        (lambda
-          ($TestPolySynonym.param_40 $TestPolySynonym.return_43)
+          ($TestPolySynonym.param_xxx $TestPolySynonym.return_xxx)
           (cut
-             $TestPolySynonym.param_40
+             $TestPolySynonym.param_xxx
              (select
-                ((expand ((fst #TestPolySynonym.x_5) (snd #TestPolySynonym.__6)))
-                   (cut #TestPolySynonym.x_5 $TestPolySynonym.return_43)))))
-       $TestPolySynonym.return_42))
+                ((expand
+                    ((fst #TestPolySynonym.x_xxx) (snd #TestPolySynonym.__xxx)))
+                   (cut #TestPolySynonym.x_xxx $TestPolySynonym.return_xxx)))))
+       $TestPolySynonym.return_xxx))
    (main
-      $TestPolySynonym.return_44
+      $TestPolySynonym.return_xxx
       (cut
          (lambda
-            ($TestPolySynonym.param_41 $TestPolySynonym.return_45)
+            ($TestPolySynonym.param_xxx $TestPolySynonym.return_xxx)
             (cut
-               $TestPolySynonym.param_41
+               $TestPolySynonym.param_xxx
                (select
-                  (#TestPolySynonym.$__39
+                  (#TestPolySynonym.$__xxx
                      (cut
                         ((fst
-                            ($TestPolySynonym.return_48
+                            ($TestPolySynonym.return_xxx
                                (invoke
                                   Int32#
-                                  (apply (1_i32) ($TestPolySynonym.return_48)))))
+                                  (apply (1_i32) ($TestPolySynonym.return_xxx)))))
                            (snd
-                              ($TestPolySynonym.return_49
+                              ($TestPolySynonym.return_xxx
                                  (invoke
                                     String#
-                                    (apply ("hoge") ($TestPolySynonym.return_49))))))
+                                    (apply ("hoge") ($TestPolySynonym.return_xxx))))))
                         (then
-                           #TestPolySynonym.x_7
+                           #TestPolySynonym.x_xxx
                            (invoke
                               |>
                               (apply
                                  ((do
-                                     $TestPolySynonym.return_47
+                                     $TestPolySynonym.return_xxx
                                      (invoke
                                         first
                                         (apply
-                                           (#TestPolySynonym.x_7)
-                                           ($TestPolySynonym.return_47)))))
+                                           (#TestPolySynonym.x_xxx)
+                                           ($TestPolySynonym.return_xxx)))))
                                  ((apply
                                      ((do
-                                         $TestPolySynonym.return_46
+                                         $TestPolySynonym.return_xxx
                                          (invoke
                                             printInt32
-                                            $TestPolySynonym.return_46)))
-                                     ($TestPolySynonym.return_45)))))))))))
-         $TestPolySynonym.return_44)))
+                                            $TestPolySynonym.return_xxx)))
+                                     ($TestPolySynonym.return_xxx)))))))))))
+         $TestPolySynonym.return_xxx)))

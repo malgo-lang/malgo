@@ -1,52 +1,52 @@
 (()
    ((define
-       (main $HelloImport.$__18)
+       (main $HelloImport.$__xxx)
        (-> ((sum (con Tuple#))) (sum (con Tuple#)))
        (=
-          $HelloImport.d_22
+          $HelloImport.d_xxx
           (=
-             $HelloImport.d_20
+             $HelloImport.d_xxx
              (=
-                $HelloImport.d_19
+                $HelloImport.d_xxx
                 (call String# "hello")
-                (cast Any# $HelloImport.d_19))
+                (cast Any# $HelloImport.d_xxx))
              (=
-                $HelloImport.d_21
-                (call putStr $HelloImport.d_20)
-                (cast (sum (con Tuple#)) $HelloImport.d_21)))
+                $HelloImport.d_xxx
+                (call putStr $HelloImport.d_xxx)
+                (cast (sum (con Tuple#)) $HelloImport.d_xxx)))
           (=
-             $HelloImport.d_25
+             $HelloImport.d_xxx
              (=
-                $HelloImport.cast_23
+                $HelloImport.cast_xxx
                 (cast Any# putStrLn)
                 (=
-                   $HelloImport.d_24
-                   (call |> $HelloImport.cast_23)
+                   $HelloImport.d_xxx
+                   (call |> $HelloImport.cast_xxx)
                    (cast
                       (->
                          ((-> ((-> (Any#) (sum (con Tuple#)))) (sum (con Tuple#))))
                          (sum (con Tuple#)))
-                      $HelloImport.d_24)))
+                      $HelloImport.d_xxx)))
              (=
-                $HelloImport.d_31
+                $HelloImport.d_xxx
                 (let
-                   (($HelloImport.fun_30
+                   (($HelloImport.fun_xxx
                        (-> ((-> (Any#) (sum (con Tuple#)))) (sum (con Tuple#)))
                        (fun
-                          ($HelloImport.f_26)
+                          ($HelloImport.f_xxx)
                           (=
-                             $HelloImport.d_28
+                             $HelloImport.d_xxx
                              (=
-                                $HelloImport.d_27
+                                $HelloImport.d_xxx
                                 (call String# " world")
-                                (cast Any# $HelloImport.d_27))
+                                (cast Any# $HelloImport.d_xxx))
                              (=
-                                $HelloImport.d_29
-                                (call $HelloImport.f_26 $HelloImport.d_28)
-                                (cast (sum (con Tuple#)) $HelloImport.d_29))))))
-                   $HelloImport.fun_30)
+                                $HelloImport.d_xxx
+                                (call $HelloImport.f_xxx $HelloImport.d_xxx)
+                                (cast (sum (con Tuple#)) $HelloImport.d_xxx))))))
+                   $HelloImport.fun_xxx)
                 (=
-                   $HelloImport.d_32
-                   (call $HelloImport.d_25 $HelloImport.d_31)
-                   (cast (sum (con Tuple#)) $HelloImport.d_32)))))))
+                   $HelloImport.d_xxx
+                   (call $HelloImport.d_xxx $HelloImport.d_xxx)
+                   (cast (sum (con Tuple#)) $HelloImport.d_xxx)))))))
    ())

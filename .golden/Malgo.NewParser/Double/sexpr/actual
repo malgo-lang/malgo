@@ -11,4 +11,4 @@
                    (do
                       (apply
                          putStr
-                         (parens (apply toStringDouble (double 3.14_f64))))))))))))
+                         (seq (do (apply toStringDouble (double 3.14_f64)))))))))))))

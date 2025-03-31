@@ -1,34 +1,34 @@
 ((idOverS
     (lambda
-       ($TypeSynonym.param_30)
-       (select $TypeSynonym.param_30 ((#TypeSynonym.x_1 #TypeSynonym.x_1)))))
+       ($TypeSynonym.param_xxx)
+       (select $TypeSynonym.param_xxx ((#TypeSynonym.x_xxx #TypeSynonym.x_xxx)))))
    (hello
       (tuple
          ((apply (invoke String#) ("hello")) (apply (invoke String#) ("world")))))
    (main
       (lambda
-         ($TypeSynonym.param_31)
+         ($TypeSynonym.param_xxx)
          (select
-            $TypeSynonym.param_31
-            ((#TypeSynonym.$__29
+            $TypeSynonym.param_xxx
+            ((#TypeSynonym.$__xxx
                 (apply
                    (apply (invoke |>) ((invoke hello)))
                    ((lambda
-                       ($TypeSynonym.param_32)
+                       ($TypeSynonym.param_xxx)
                        (select
-                          $TypeSynonym.param_32
-                          (((tuple (#TypeSynonym.h_2 #TypeSynonym.w_3))
+                          $TypeSynonym.param_xxx
+                          (((tuple (#TypeSynonym.h_xxx #TypeSynonym.w_xxx))
                               (apply
                                  (lambda
-                                    ($TypeSynonym.tmp_33)
+                                    ($TypeSynonym.tmp_xxx)
                                     (apply
                                        (lambda
-                                          ($TypeSynonym.tmp_34)
+                                          ($TypeSynonym.tmp_xxx)
                                           (apply
                                              (invoke putStrLn)
-                                             (#TypeSynonym.w_3)))
+                                             (#TypeSynonym.w_xxx)))
                                        ((apply
                                            (invoke putStr)
                                            ((apply (invoke String#) (" ")))))))
-                                 ((apply (invoke putStr) (#TypeSynonym.h_2)))))))))))))))
+                                 ((apply (invoke putStr) (#TypeSynonym.h_xxx)))))))))))))))
    (TCon (TCon ())))

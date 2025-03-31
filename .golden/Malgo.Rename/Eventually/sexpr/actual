@@ -5,27 +5,27 @@
          step
          (fn
             ((clause
-                ((con Done ()) #Eventually.value_11)
-                (seq (do (apply Done #Eventually.value_11))))
+                ((con Done ()) #Eventually.value_xxx)
+                (seq (do (apply Done #Eventually.value_xxx))))
                (clause
-                  ((con NotYetDone ()) #Eventually.work_12)
-                  (seq (do (seq (do (apply #Eventually.work_12 (tuple)))))))))))
+                  ((con NotYetDone ()) #Eventually.work_xxx)
+                  (seq (do (seq (do (apply #Eventually.work_xxx (tuple)))))))))))
        ((((./test/testcases/malgo/Eventually.mlg 33 1)
             (./test/testcases/malgo/Eventually.mlg 35 1))
            return
            (fn
               ((clause
-                  ((record (bind #Eventually.__19) (return #Eventually.x_20)))
-                  (seq (do #Eventually.x_20)))))))
+                  ((record (bind #Eventually.__xxx) (return #Eventually.x_xxx)))
+                  (seq (do #Eventually.x_xxx)))))))
        ((((./test/testcases/malgo/Eventually.mlg 19 1)
             (./test/testcases/malgo/Eventually.mlg 24 1))
            eventuallyBind
            (fn
               ((clause
-                  ((con Done (#Eventually.value_7)) #Eventually.k_8)
-                  (seq (do (apply #Eventually.k_8 #Eventually.value_7))))
+                  ((con Done (#Eventually.value_xxx)) #Eventually.k_xxx)
+                  (seq (do (apply #Eventually.k_xxx #Eventually.value_xxx))))
                  (clause
-                    ((con NotYetDone (#Eventually.work_9)) #Eventually.k_10)
+                    ((con NotYetDone (#Eventually.work_xxx)) #Eventually.k_xxx)
                     (seq
                        (do
                           (apply
@@ -41,9 +41,9 @@
                                                 (seq
                                                    (do
                                                       (apply
-                                                         #Eventually.work_9
+                                                         #Eventually.work_xxx
                                                          (tuple)))))
-                                             #Eventually.k_10))))))))))))))
+                                             #Eventually.k_xxx))))))))))))))
        ((((./test/testcases/malgo/Eventually.mlg 13 1)
             (./test/testcases/malgo/Eventually.mlg 18 1))
            eventually
@@ -53,8 +53,8 @@
            bind
            (fn
               ((clause
-                  ((record (bind #Eventually.x_15) (return #Eventually.__16)))
-                  (seq (do #Eventually.x_15)))))))
+                  ((record (bind #Eventually.x_xxx) (return #Eventually.__xxx)))
+                  (seq (do #Eventually.x_xxx)))))))
        ((((./test/testcases/malgo/Eventually.mlg 36 1)
             (./test/testcases/malgo/Eventually.mlg 41 1))
            comp
@@ -79,7 +79,7 @@
                                                    (apply String# (string "1")))))))))))))))
               (fn
                  ((clause
-                     (#Eventually.__21)
+                     (#Eventually.__xxx)
                      (seq
                         (do
                            (apply
@@ -105,7 +105,7 @@
                                                                       (string "2")))))))))))))))
                               (fn
                                  ((clause
-                                     (#Eventually.__22)
+                                     (#Eventually.__xxx)
                                      (seq
                                         (do
                                            (apply
@@ -125,7 +125,7 @@
                            (opapp |> (opapp |> (opapp |> comp step) step) step)
                            (fn
                               ((clause
-                                  ((con Done ()) #Eventually.x_23)
+                                  ((con Done ()) #Eventually.x_xxx)
                                   (seq
                                      (do
                                         (apply
@@ -134,9 +134,9 @@
                                               (do
                                                  (apply
                                                     toStringInt32
-                                                    #Eventually.x_23)))))))
+                                                    #Eventually.x_xxx)))))))
                                  (clause
-                                    ((con NotYetDone ()) #Eventually.__24)
+                                    ((con NotYetDone ()) #Eventually.__xxx)
                                     (seq
                                        (do
                                           (apply
@@ -145,31 +145,31 @@
       ((((./test/testcases/malgo/Eventually.mlg 12 1)
            (./test/testcases/malgo/Eventually.mlg 13 1))
           eventually
-          (app EventuallyBuilder (#Eventually.a_3 #Eventually.b_4)))
+          (app EventuallyBuilder (#Eventually.a_xxx #Eventually.b_xxx)))
          (((./test/testcases/malgo/Eventually.mlg 18 1)
              (./test/testcases/malgo/Eventually.mlg 19 1))
             eventuallyBind
             (->
-               (app Eventually (#Eventually.a_5))
+               (app Eventually (#Eventually.a_xxx))
                (->
-                  (-> #Eventually.a_5 (app Eventually (#Eventually.b_6)))
-                  (app Eventually (#Eventually.b_6)))))
+                  (-> #Eventually.a_xxx (app Eventually (#Eventually.b_xxx)))
+                  (app Eventually (#Eventually.b_xxx)))))
          (((./test/testcases/malgo/Eventually.mlg 29 1)
              (./test/testcases/malgo/Eventually.mlg 30 1))
             bind
             (->
-               (app EventuallyBuilder (#Eventually.a_13 #Eventually.b_14))
+               (app EventuallyBuilder (#Eventually.a_xxx #Eventually.b_xxx))
                (->
-                  (app Eventually (#Eventually.a_13))
+                  (app Eventually (#Eventually.a_xxx))
                   (->
-                     (-> #Eventually.a_13 (app Eventually (#Eventually.b_14)))
-                     (app Eventually (#Eventually.b_14))))))
+                     (-> #Eventually.a_xxx (app Eventually (#Eventually.b_xxx)))
+                     (app Eventually (#Eventually.b_xxx))))))
          (((./test/testcases/malgo/Eventually.mlg 32 1)
              (./test/testcases/malgo/Eventually.mlg 33 1))
             return
             (->
-               (app EventuallyBuilder (#Eventually.a_17 #Eventually.b_18))
-               (-> #Eventually.a_17 (app Eventually (#Eventually.a_17)))))
+               (app EventuallyBuilder (#Eventually.a_xxx #Eventually.b_xxx))
+               (-> #Eventually.a_xxx (app Eventually (#Eventually.a_xxx)))))
          (((./test/testcases/malgo/Eventually.mlg 35 1)
              (./test/testcases/malgo/Eventually.mlg 36 1))
             comp
@@ -183,27 +183,27 @@
           Eventually
           ((((./test/testcases/malgo/Eventually.mlg 4 17)
                (./test/testcases/malgo/Eventually.mlg 4 19))
-              #Eventually.a_0))
+              #Eventually.a_xxx))
           ((((./test/testcases/malgo/Eventually.mlg 4 21)
                (./test/testcases/malgo/Eventually.mlg 5 19))
               Done
-              (#Eventually.a_0))
+              (#Eventually.a_xxx))
              (((./test/testcases/malgo/Eventually.mlg 5 21)
                  (./test/testcases/malgo/Eventually.mlg 7 1))
                 NotYetDone
-                ((-> (tuple) (app Eventually (#Eventually.a_0))))))))
+                ((-> (tuple) (app Eventually (#Eventually.a_xxx))))))))
       ((((./test/testcases/malgo/Eventually.mlg 7 6)
            (./test/testcases/malgo/Eventually.mlg 12 1))
           EventuallyBuilder
-          (#Eventually.a_1 #Eventually.b_2)
+          (#Eventually.a_xxx #Eventually.b_xxx)
           (record
              (bind
                 (->
-                   (app Eventually (#Eventually.a_1))
+                   (app Eventually (#Eventually.a_xxx))
                    (->
-                      (-> #Eventually.a_1 (app Eventually (#Eventually.b_2)))
-                      (app Eventually (#Eventually.b_2)))))
-             (return (-> #Eventually.a_1 (app Eventually (#Eventually.a_1)))))))
+                      (-> #Eventually.a_xxx (app Eventually (#Eventually.b_xxx)))
+                      (app Eventually (#Eventually.b_xxx)))))
+             (return (-> #Eventually.a_xxx (app Eventually (#Eventually.a_xxx)))))))
       ()
       ((((./test/testcases/malgo/Eventually.mlg 1 1)
            (./test/testcases/malgo/Eventually.mlg 2 1))

@@ -5,8 +5,8 @@
          |>
          (fn
             ((clause
-                (#Test3.x_3 #Test3.f_4)
-                (seq (do (apply #Test3.f_4 #Test3.x_3))))))))
+                (#Test3.x_xxx #Test3.f_xxx)
+                (seq (do (apply #Test3.f_xxx #Test3.x_xxx))))))))
        ((((./test/testcases/malgo/Test3.mlg 10 1)
             (./test/testcases/malgo/Test3.mlg 16 1))
            main
@@ -29,7 +29,7 @@
                                   (seq
                                      (do (apply malgo_print_string (string "OK")))))
                                  (clause
-                                    (#Test3.__5)
+                                    (#Test3.__xxx)
                                     (seq
                                        (do
                                           (apply
@@ -38,7 +38,7 @@
       ((((./test/testcases/malgo/Test3.mlg 5 1)
            (./test/testcases/malgo/Test3.mlg 6 1))
           |>
-          (-> #Test3.a_1 (-> (-> #Test3.a_1 #Test3.b_2) #Test3.b_2))))
+          (-> #Test3.a_xxx (-> (-> #Test3.a_xxx #Test3.b_xxx) #Test3.b_xxx))))
       ((((./test/testcases/malgo/Test3.mlg 1 6)
            (./test/testcases/malgo/Test3.mlg 2 1))
           Tag
@@ -56,7 +56,7 @@
             List
             ((((./test/testcases/malgo/Test3.mlg 2 11)
                  (./test/testcases/malgo/Test3.mlg 2 13))
-                #Test3.a_0))
+                #Test3.a_xxx))
             ((((./test/testcases/malgo/Test3.mlg 2 15)
                  (./test/testcases/malgo/Test3.mlg 2 19))
                 Nil
@@ -64,7 +64,7 @@
                (((./test/testcases/malgo/Test3.mlg 2 21)
                    (./test/testcases/malgo/Test3.mlg 4 1))
                   Cons
-                  (#Test3.a_0 (app List (#Test3.a_0)))))))
+                  (#Test3.a_xxx (app List (#Test3.a_xxx)))))))
       ()
       (((((./test/testcases/malgo/Test3.mlg 8 1)
             (./test/testcases/malgo/Test3.mlg 10 1))

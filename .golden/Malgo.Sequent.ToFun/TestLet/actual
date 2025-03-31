@@ -1,42 +1,42 @@
 ((|>
     (lambda
-       ($TestLet.param_49)
+       ($TestLet.param_xxx)
        (lambda
-          ($TestLet.param_50)
+          ($TestLet.param_xxx)
           (select
-             (tuple ($TestLet.param_49 $TestLet.param_50))
-             (((tuple (#TestLet.x_2 #TestLet.f_3))
-                 (apply #TestLet.f_3 (#TestLet.x_2))))))))
+             (tuple ($TestLet.param_xxx $TestLet.param_xxx))
+             (((tuple (#TestLet.x_xxx #TestLet.f_xxx))
+                 (apply #TestLet.f_xxx (#TestLet.x_xxx))))))))
    (main
       (lambda
-         ($TestLet.param_51)
+         ($TestLet.param_xxx)
          (select
-            $TestLet.param_51
-            ((#TestLet.$__48
+            $TestLet.param_xxx
+            ((#TestLet.$__xxx
                 (let
-                   #TestLet.x_4
+                   #TestLet.x_xxx
                    (apply (apply (invoke addInt32#) (1_i32)) (2_i32))
                    (apply
                       (lambda
-                         ($TestLet.tmp_52)
+                         ($TestLet.tmp_xxx)
                          (let
-                            #TestLet.x_5
+                            #TestLet.x_xxx
                             (apply
                                (invoke Int32#)
                                ((apply (apply (invoke addInt32#) (1_i32)) (2_i32))))
                             (let
-                               #TestLet.printInt32_7
+                               #TestLet.printInt32_xxx
                                (lambda
-                                  ($TestLet.param_53)
+                                  ($TestLet.param_xxx)
                                   (select
-                                     $TestLet.param_53
-                                     (((Int32# (#TestLet.x_6))
+                                     $TestLet.param_xxx
+                                     (((Int32# (#TestLet.x_xxx))
                                          (apply
                                             (invoke printString#)
                                             ((apply
                                                 (invoke toStringInt32#)
-                                                (#TestLet.x_6))))))))
-                               (apply #TestLet.printInt32_7 (#TestLet.x_5)))))
+                                                (#TestLet.x_xxx))))))))
+                               (apply #TestLet.printInt32_xxx (#TestLet.x_xxx)))))
                       ((apply
                           (invoke printString#)
-                          ((apply (invoke toStringInt32#) (#TestLet.x_4)))))))))))))
+                          ((apply (invoke toStringInt32#) (#TestLet.x_xxx)))))))))))))

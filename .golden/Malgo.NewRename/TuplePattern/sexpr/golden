@@ -13,17 +13,23 @@
                          (tuple A B)
                          (fn
                             ((clause
-                                ((tuple #TuplePattern.A_0 #TuplePattern.rest_1))
+                                ((tuple
+                                    #TuplePattern.A_xxx
+                                    #TuplePattern.rest_xxx))
                                 (seq
                                    (do
                                       (apply
                                          printString
                                          (apply String# (string "A"))))))
                                (clause
-                                  ((tuple #TuplePattern.B_2 #TuplePattern.rest_3))
+                                  ((tuple
+                                      #TuplePattern.B_xxx
+                                      #TuplePattern.rest_xxx))
                                   (seq (do (tuple))))
                                (clause
-                                  ((tuple #TuplePattern.C_4 #TuplePattern.rest_5))
+                                  ((tuple
+                                      #TuplePattern.C_xxx
+                                      #TuplePattern.rest_xxx))
                                   (seq (do (tuple)))))))))))))))
       ((((./test/testcases/malgo/TuplePattern.mlg 6 1)
            (./test/testcases/malgo/TuplePattern.mlg 7 1))

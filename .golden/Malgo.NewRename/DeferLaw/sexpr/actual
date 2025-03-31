@@ -5,10 +5,12 @@
          f
          (fn
             ((clause
-                (#DeferLaw.x_1)
+                (#DeferLaw.x_xxx)
                 (seq
                    (do
-                      (apply (fn ((clause () (seq (do #DeferLaw.x_1))))) (tuple)))))))))
+                      (apply
+                         (fn ((clause () (seq (do #DeferLaw.x_xxx)))))
+                         (tuple)))))))))
        ((((./test/testcases/malgo/DeferLaw.mlg 7 1)
             (./test/testcases/malgo/DeferLaw.mlg 10 1))
            main
@@ -19,11 +21,11 @@
                      (do
                         (apply
                            putStrLn
-                           (apply f (apply String# (string "Hello"))))))))))))
+                           (seq (do (apply f (apply String# (string "Hello"))))))))))))))
       ((((./test/testcases/malgo/DeferLaw.mlg 4 1)
            (./test/testcases/malgo/DeferLaw.mlg 5 1))
           f
-          (-> #DeferLaw.a_0 #DeferLaw.a_0)))
+          (-> #DeferLaw.a_xxx #DeferLaw.a_xxx)))
       ()
       ()
       ()

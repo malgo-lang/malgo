@@ -5,30 +5,33 @@
          ==
          (fn
             ((clause
-                (#Factorial.x_0 #Factorial.y_1)
-                (seq (do (apply (apply eqInt64 #Factorial.y_1) #Factorial.x_0))))))))
+                (#Factorial.x_xxx #Factorial.y_xxx)
+                (seq
+                   (do (apply (apply eqInt64 #Factorial.y_xxx) #Factorial.x_xxx))))))))
        ((((./test/testcases/malgo/Factorial.mlg 8 1)
             (./test/testcases/malgo/Factorial.mlg 10 1))
            -
            (fn
               ((clause
-                  (#Factorial.x_2 #Factorial.y_3)
+                  (#Factorial.x_xxx #Factorial.y_xxx)
                   (seq
-                     (do (apply (apply subInt64 #Factorial.y_3) #Factorial.x_2))))))))
+                     (do
+                        (apply (apply subInt64 #Factorial.y_xxx) #Factorial.x_xxx))))))))
        ((((./test/testcases/malgo/Factorial.mlg 11 1)
             (./test/testcases/malgo/Factorial.mlg 13 1))
            *
            (fn
               ((clause
-                  (#Factorial.x_4 #Factorial.y_5)
+                  (#Factorial.x_xxx #Factorial.y_xxx)
                   (seq
-                     (do (apply (apply mulInt64 #Factorial.y_5) #Factorial.x_4))))))))
+                     (do
+                        (apply (apply mulInt64 #Factorial.y_xxx) #Factorial.x_xxx))))))))
        ((((./test/testcases/malgo/Factorial.mlg 15 1)
             (./test/testcases/malgo/Factorial.mlg 17 1))
            factAcc
            (fn
               ((clause
-                  (#Factorial.n_7 #Factorial.acc_8)
+                  (#Factorial.n_xxx #Factorial.acc_xxx)
                   (seq
                      (do
                         (apply
@@ -43,27 +46,36 @@
                                               (apply
                                                  (apply
                                                     factAcc
-                                                    (opapp
-                                                       *
-                                                       #Factorial.n_7
-                                                       #Factorial.acc_8))
-                                                 (opapp
-                                                    -
-                                                    #Factorial.n_7
-                                                    (apply Int64# (int64 1))))))))))
-                              (fn ((clause () (seq (do #Factorial.acc_8))))))
-                           (opapp == #Factorial.n_7 (apply Int64# (int64 0)))))))))))
+                                                    (seq
+                                                       (do
+                                                          (opapp
+                                                             *
+                                                             #Factorial.n_xxx
+                                                             #Factorial.acc_xxx))))
+                                                 (seq
+                                                    (do
+                                                       (opapp
+                                                          -
+                                                          #Factorial.n_xxx
+                                                          (apply Int64# (int64 1))))))))))))
+                              (fn ((clause () (seq (do #Factorial.acc_xxx))))))
+                           (seq
+                              (do
+                                 (opapp
+                                    ==
+                                    #Factorial.n_xxx
+                                    (apply Int64# (int64 0)))))))))))))
        ((((./test/testcases/malgo/Factorial.mlg 13 1)
             (./test/testcases/malgo/Factorial.mlg 15 1))
            fact
            (fn
               ((clause
-                  (#Factorial.n_6)
+                  (#Factorial.n_xxx)
                   (seq
                      (do
                         (apply
                            (apply factAcc (apply Int64# (int64 1)))
-                           #Factorial.n_6))))))))
+                           #Factorial.n_xxx))))))))
        ((((./test/testcases/malgo/Factorial.mlg 17 1)
             (./test/testcases/malgo/Factorial.mlg 20 1))
            main

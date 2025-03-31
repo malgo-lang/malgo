@@ -4,15 +4,17 @@
           (./test/testcases/malgo/HelloBoxed.mlg 15 1))
          string#
          (fn
-            ((clause (#HelloBoxed.x_5) (seq (do (apply String# #HelloBoxed.x_5))))))))
+            ((clause
+                (#HelloBoxed.x_xxx)
+                (seq (do (apply String# #HelloBoxed.x_xxx))))))))
        ((((./test/testcases/malgo/HelloBoxed.mlg 7 1)
             (./test/testcases/malgo/HelloBoxed.mlg 12 1))
            putStrLn
            (fn
               ((clause
-                  ((con String# (#HelloBoxed.str_2)))
+                  ((con String# (#HelloBoxed.str_xxx)))
                   (seq
-                     (do (apply malgo_print_string #HelloBoxed.str_2))
+                     (do (apply malgo_print_string #HelloBoxed.str_xxx))
                      (do (apply malgo_newline (tuple)))))))))
        ((((./test/testcases/malgo/HelloBoxed.mlg 15 1)
             (./test/testcases/malgo/HelloBoxed.mlg 18 1))
@@ -25,11 +27,11 @@
       ((((./test/testcases/malgo/HelloBoxed.mlg 6 1)
            (./test/testcases/malgo/HelloBoxed.mlg 7 1))
           putStrLn
-          (-> #HelloBoxed.String_1 (tuple)))
+          (-> #HelloBoxed.String_xxx (tuple)))
          (((./test/testcases/malgo/HelloBoxed.mlg 12 1)
              (./test/testcases/malgo/HelloBoxed.mlg 13 1))
             string#
-            (-> #HelloBoxed.String#_4 #HelloBoxed.String_3)))
+            (-> #HelloBoxed.String#_xxx #HelloBoxed.String_xxx)))
       ((((./test/testcases/malgo/HelloBoxed.mlg 4 1)
            (./test/testcases/malgo/HelloBoxed.mlg 6 1))
           String
@@ -43,7 +45,7 @@
             (./test/testcases/malgo/HelloBoxed.mlg 2 1))
            malgo_print_string)
           malgo_print_string
-          (-> #HelloBoxed.String#_0 (tuple)))
+          (-> #HelloBoxed.String#_xxx (tuple)))
          ((((./test/testcases/malgo/HelloBoxed.mlg 2 1)
               (./test/testcases/malgo/HelloBoxed.mlg 4 1))
              malgo_newline)

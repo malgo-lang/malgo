@@ -17,20 +17,24 @@
                    (do
                       (apply
                          printInt32
-                         (parens
-                            (apply
-                               malgo_unsafe_cast
-                               (parens
-                                  (apply
-                                     (apply
-                                        malgo_read_vector
-                                        (parens
+                         (seq
+                            (do
+                               (apply
+                                  malgo_unsafe_cast
+                                  (seq
+                                     (do
+                                        (apply
                                            (apply
-                                              (apply
-                                                 malgo_new_vector
-                                                 (parens
+                                              malgo_read_vector
+                                              (seq
+                                                 (do
                                                     (apply
-                                                       malgo_unsafe_cast
-                                                       (int32 5))))
-                                              (int64 10))))
-                                     (int64 2))))))))))))))
+                                                       (apply
+                                                          malgo_new_vector
+                                                          (seq
+                                                             (do
+                                                                (apply
+                                                                   malgo_unsafe_cast
+                                                                   (int32 5)))))
+                                                       (int64 10)))))
+                                           (int64 2))))))))))))))))

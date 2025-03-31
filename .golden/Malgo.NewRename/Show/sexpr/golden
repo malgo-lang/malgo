@@ -6,43 +6,49 @@
          (record
             (show
                (fn
-                  ((clause (#Show.x_6) (seq (do (apply toStringInt32 #Show.x_6))))))))))
+                  ((clause
+                      (#Show.x_xxx)
+                      (seq (do (apply toStringInt32 #Show.x_xxx))))))))))
        ((((./test/testcases/malgo/Show.mlg 18 1)
             (./test/testcases/malgo/Show.mlg 20 1))
            show
            (fn
-              ((clause ((record (show #Show.show_10))) (seq (do #Show.show_10)))))))
+              ((clause ((record (show #Show.show_xxx))) (seq (do #Show.show_xxx)))))))
        ((((./test/testcases/malgo/Show.mlg 30 1)
             (./test/testcases/malgo/Show.mlg 32 1))
            print
            (fn
               ((clause
-                  (#Show.showDict_20 #Show.x_21)
+                  (#Show.showDict_xxx #Show.x_xxx)
                   (seq
                      (do
                         (apply
                            printString
-                           (apply (apply show #Show.x_21) #Show.showDict_20)))))))))
+                           (seq
+                              (do
+                                 (apply
+                                    (apply show #Show.x_xxx)
+                                    #Show.showDict_xxx)))))))))))
        ((((./test/testcases/malgo/Show.mlg 6 1)
             (./test/testcases/malgo/Show.mlg 8 1))
            <>
            (fn
               ((clause
-                  (#Show.x_1 #Show.y_2)
-                  (seq (do (apply (apply appendString #Show.y_2) #Show.x_1))))))))
+                  (#Show.x_xxx #Show.y_xxx)
+                  (seq (do (apply (apply appendString #Show.y_xxx) #Show.x_xxx))))))))
        ((((./test/testcases/malgo/Show.mlg 21 1)
             (./test/testcases/malgo/Show.mlg 29 1))
            showTuple2
            (fn
               ((clause
-                  (#Show.showDictA_14 #Show.showDictB_15)
+                  (#Show.showDictA_xxx #Show.showDictB_xxx)
                   (seq
                      (do
                         (record
                            (show
                               (fn
                                  ((clause
-                                     ((tuple #Show.a_16 #Show.b_17))
+                                     ((tuple #Show.a_xxx #Show.b_xxx))
                                      (seq
                                         (do
                                            (opapp
@@ -51,16 +57,16 @@
                                               (opapp
                                                  <>
                                                  (apply
-                                                    (apply show #Show.a_16)
-                                                    #Show.showDictA_14)
+                                                    (apply show #Show.a_xxx)
+                                                    #Show.showDictA_xxx)
                                                  (opapp
                                                     <>
                                                     (apply String# (string ", "))
                                                     (opapp
                                                        <>
                                                        (apply
-                                                          (apply show #Show.b_17)
-                                                          #Show.showDictB_15)
+                                                          (apply show #Show.b_xxx)
+                                                          #Show.showDictB_xxx)
                                                        (apply
                                                           String#
                                                           (string ")"))))))))))))))))))))
@@ -78,37 +84,40 @@
                               (tuple
                                  (apply Int32# (int32 1))
                                  (apply Int32# (int32 2))))
-                           (apply (apply showTuple2 showInt32) showInt32))))))))))
+                           (seq
+                              (do (apply (apply showTuple2 showInt32) showInt32))))))))))))
       ((((./test/testcases/malgo/Show.mlg 5 1)
            (./test/testcases/malgo/Show.mlg 6 1))
           <>
-          (-> #Show.String_0 (-> #Show.String_0 #Show.String_0)))
+          (-> #Show.String_xxx (-> #Show.String_xxx #Show.String_xxx)))
          (((./test/testcases/malgo/Show.mlg 12 1)
              (./test/testcases/malgo/Show.mlg 13 1))
             showInt32
-            (app #Show.Show_5 (#Show.Int32_4)))
+            (app #Show.Show_xxx (#Show.Int32_xxx)))
          (((./test/testcases/malgo/Show.mlg 17 1)
              (./test/testcases/malgo/Show.mlg 18 1))
             show
-            (-> (app #Show.Show_7 (#Show.a_9)) (-> #Show.a_9 #Show.String_8)))
+            (->
+               (app #Show.Show_xxx (#Show.a_xxx))
+               (-> #Show.a_xxx #Show.String_xxx)))
          (((./test/testcases/malgo/Show.mlg 20 1)
              (./test/testcases/malgo/Show.mlg 21 1))
             showTuple2
             (->
-               (app #Show.Show_11 (#Show.a_12))
+               (app #Show.Show_xxx (#Show.a_xxx))
                (->
-                  (app #Show.Show_11 (#Show.b_13))
-                  (app #Show.Show_11 ((tuple #Show.a_12 #Show.b_13))))))
+                  (app #Show.Show_xxx (#Show.b_xxx))
+                  (app #Show.Show_xxx ((tuple #Show.a_xxx #Show.b_xxx))))))
          (((./test/testcases/malgo/Show.mlg 29 1)
              (./test/testcases/malgo/Show.mlg 30 1))
             print
-            (-> (app #Show.Show_18 (#Show.a_19)) (-> #Show.a_19 (tuple)))))
+            (-> (app #Show.Show_xxx (#Show.a_xxx)) (-> #Show.a_xxx (tuple)))))
       ()
       ((((./test/testcases/malgo/Show.mlg 8 1)
            (./test/testcases/malgo/Show.mlg 12 1))
           Show
-          (#Show.a_3)
-          (record (show (-> #Show.a_3 String)))))
+          (#Show.a_xxx)
+          (record (show (-> #Show.a_xxx String)))))
       ()
       ((((./test/testcases/malgo/Show.mlg 1 1)
            (./test/testcases/malgo/Show.mlg 2 1))

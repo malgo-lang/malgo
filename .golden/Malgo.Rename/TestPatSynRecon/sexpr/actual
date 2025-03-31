@@ -5,28 +5,28 @@
          +#
          (fn
             ((clause
-                (#TestPatSynRecon.x_0 #TestPatSynRecon.y_1)
+                (#TestPatSynRecon.x_xxx #TestPatSynRecon.y_xxx)
                 (seq
                    (do
                       (apply
-                         (apply addInt64# #TestPatSynRecon.x_0)
-                         #TestPatSynRecon.y_1))))))))
+                         (apply addInt64# #TestPatSynRecon.x_xxx)
+                         #TestPatSynRecon.y_xxx))))))))
        ((((./test/testcases/malgo/TestPatSynRecon.mlg 7 1)
             (./test/testcases/malgo/TestPatSynRecon.mlg 13 1))
            sum
            (fn
               ((clause
                   ((con Cons ())
-                     (con Int64# (#TestPatSynRecon.x_2))
-                     #TestPatSynRecon.xs_3)
+                     (con Int64# (#TestPatSynRecon.x_xxx))
+                     #TestPatSynRecon.xs_xxx)
                   (seq
                      (do
                         (opapp
                            |>
-                           (apply sum #TestPatSynRecon.xs_3)
+                           (apply sum #TestPatSynRecon.xs_xxx)
                            (fn
                               ((clause
-                                  ((con Int64# (#TestPatSynRecon.s_4)))
+                                  ((con Int64# (#TestPatSynRecon.s_xxx)))
                                   (seq
                                      (do
                                         (apply
@@ -35,8 +35,8 @@
                                               (do
                                                  (opapp
                                                     +#
-                                                    #TestPatSynRecon.x_2
-                                                    #TestPatSynRecon.s_4)))))))))))))
+                                                    #TestPatSynRecon.x_xxx
+                                                    #TestPatSynRecon.s_xxx)))))))))))))
                  (clause ((con Nil ())) (seq (do (apply Int64# (int64 0)))))))))
        ((((./test/testcases/malgo/TestPatSynRecon.mlg 13 1)
             (./test/testcases/malgo/TestPatSynRecon.mlg 17 1))
@@ -67,9 +67,10 @@
                                                 Nil)))))))
                            (fn
                               ((clause
-                                  (#TestPatSynRecon.i_5)
+                                  (#TestPatSynRecon.i_xxx)
                                   (seq
-                                     (do (apply printInt64 #TestPatSynRecon.i_5)))))))))))))))
+                                     (do
+                                        (apply printInt64 #TestPatSynRecon.i_xxx)))))))))))))))
       ()
       ()
       ()

@@ -9,32 +9,18 @@
            f
            (fn
               ((clause
-                  (#RightAssoc.n_2)
+                  (#RightAssoc.n_xxx)
                   (seq
                      (let
-                        #RightAssoc.x_3
+                        #RightAssoc.x_xxx
                         (opapp
                            <|>
                            (tuple
                               True
                               (fn
                                  ((clause () (seq (do (apply Int32# (int32 1))))))))
-                           (opapp
-                              <|>
-                              (tuple
-                                 True
-                                 (fn
-                                    ((clause
-                                        ()
-                                        (seq (do (apply Int32# (int32 2))))))))
-                              (opapp
-                                 <|>
-                                 (tuple
-                                    True
-                                    (fn
-                                       ((clause
-                                           ()
-                                           (seq (do (apply Int32# (int32 3))))))))
+                           (seq
+                              (do
                                  (opapp
                                     <|>
                                     (tuple
@@ -42,10 +28,38 @@
                                        (fn
                                           ((clause
                                               ()
-                                              (seq (do (apply Int32# (int32 4))))))))
-                                    Nil)))))
+                                              (seq (do (apply Int32# (int32 2))))))))
+                                    (seq
+                                       (do
+                                          (opapp
+                                             <|>
+                                             (tuple
+                                                True
+                                                (fn
+                                                   ((clause
+                                                       ()
+                                                       (seq
+                                                          (do
+                                                             (apply
+                                                                Int32#
+                                                                (int32 3))))))))
+                                             (seq
+                                                (do
+                                                   (opapp
+                                                      <|>
+                                                      (tuple
+                                                         True
+                                                         (fn
+                                                            ((clause
+                                                                ()
+                                                                (seq
+                                                                   (do
+                                                                      (apply
+                                                                         Int32#
+                                                                         (int32 4))))))))
+                                                      Nil)))))))))))
                      (let
-                        #RightAssoc.y_4
+                        #RightAssoc.y_xxx
                         (opapp
                            <|>
                            (tuple
@@ -77,7 +91,7 @@
                                               ()
                                               (seq (do (apply Int32# (int32 4))))))))
                                     Nil)))))
-                     (do #RightAssoc.y_4)))))))
+                     (do #RightAssoc.y_xxx)))))))
        ((((./test/testcases/malgo/RightAssoc.mlg 35 1)
             (./test/testcases/malgo/RightAssoc.mlg 39 1))
            main
@@ -85,16 +99,16 @@
               ((clause
                   ()
                   (seq
-                     (let #RightAssoc.x_5 (apply f (apply Int32# (int32 4))))
+                     (let #RightAssoc.x_xxx (apply f (apply Int32# (int32 4))))
                      (do (apply printString (apply String# (string "OK")))))))))))
       ((((./test/testcases/malgo/RightAssoc.mlg 5 1)
            (./test/testcases/malgo/RightAssoc.mlg 6 1))
           <|>
           (->
-             #RightAssoc.a_1
+             #RightAssoc.a_xxx
              (->
-                (app #RightAssoc.List_0 (#RightAssoc.a_1))
-                (app #RightAssoc.List_0 (#RightAssoc.a_1)))))
+                (app #RightAssoc.List_xxx (#RightAssoc.a_xxx))
+                (app #RightAssoc.List_xxx (#RightAssoc.a_xxx)))))
          (((./test/testcases/malgo/RightAssoc.mlg 34 1)
              (./test/testcases/malgo/RightAssoc.mlg 35 1))
             main

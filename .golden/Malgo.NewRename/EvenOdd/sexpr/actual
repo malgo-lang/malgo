@@ -6,28 +6,32 @@
          (fn
             ((clause ((con Int32# ((unboxed (int32 0))))) (seq (do True)))
                (clause
-                  (#EvenOdd.n_0)
+                  (#EvenOdd.n_xxx)
                   (seq
                      (do
                         (apply
                            odd
-                           (apply
-                              (apply subInt32 (apply Int32# (int32 1)))
-                              #EvenOdd.n_0))))))))
+                           (seq
+                              (do
+                                 (apply
+                                    (apply subInt32 (apply Int32# (int32 1)))
+                                    #EvenOdd.n_xxx))))))))))
         (((./test/testcases/malgo/EvenOdd.mlg 9 1)
             (./test/testcases/malgo/EvenOdd.mlg 14 1))
            odd
            (fn
               ((clause ((con Int32# ((unboxed (int32 0))))) (seq (do False)))
                  (clause
-                    (#EvenOdd.n_1)
+                    (#EvenOdd.n_xxx)
                     (seq
                        (do
                           (apply
                              even
-                             (apply
-                                (apply subInt32 (apply Int32# (int32 1)))
-                                #EvenOdd.n_1)))))))))
+                             (seq
+                                (do
+                                   (apply
+                                      (apply subInt32 (apply Int32# (int32 1)))
+                                      #EvenOdd.n_xxx)))))))))))
        ((((./test/testcases/malgo/EvenOdd.mlg 14 1)
             (./test/testcases/malgo/EvenOdd.mlg 17 1))
            main
@@ -39,20 +43,20 @@
                         (apply
                            (fn
                               ((clause
-                                  (#EvenOdd.False_2)
+                                  ((con False ()))
                                   (seq
                                      (do
                                         (apply
                                            putStrLn
                                            (apply String# (string "False"))))))
                                  (clause
-                                    (#EvenOdd.True_3)
+                                    ((con True ()))
                                     (seq
                                        (do
                                           (apply
                                              putStrLn
                                              (apply String# (string "True"))))))))
-                           (apply even (apply Int32# (int32 10))))))))))))
+                           (seq (do (apply even (apply Int32# (int32 10))))))))))))))
       ()
       ()
       ()

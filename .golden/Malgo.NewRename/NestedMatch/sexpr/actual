@@ -11,25 +11,29 @@
                       (apply
                          (fn
                             ((clause
-                                (#NestedMatch.True_2)
+                                ((con True ()))
                                 (seq
                                    (do (apply malgo_print_string (string "OK")))))
                                (clause
-                                  (#NestedMatch.False_3)
+                                  ((con False ()))
                                   (seq (do (apply malgo_exit_failure (tuple)))))))
-                         (apply
-                            (fn
-                               ((clause (#NestedMatch.True1_4) (seq (do False)))
-                                  (clause (#NestedMatch.False1_5) (seq (do True)))))
-                            (apply
-                               (fn
-                                  ((clause
-                                      (#NestedMatch.True2_6)
-                                      (seq (do False1)))
-                                     (clause
-                                        (#NestedMatch.False2_7)
-                                        (seq (do True1)))))
-                               True2)))))))))))
+                         (seq
+                            (do
+                               (apply
+                                  (fn
+                                     ((clause ((con True1 ())) (seq (do False)))
+                                        (clause ((con False1 ())) (seq (do True)))))
+                                  (seq
+                                     (do
+                                        (apply
+                                           (fn
+                                              ((clause
+                                                  ((con True2 ()))
+                                                  (seq (do False1)))
+                                                 (clause
+                                                    ((con False2 ()))
+                                                    (seq (do True1)))))
+                                           True2)))))))))))))))
       ()
       ((((./test/testcases/malgo/NestedMatch.mlg 5 1)
            (./test/testcases/malgo/NestedMatch.mlg 6 1))
@@ -72,10 +76,10 @@
             (./test/testcases/malgo/NestedMatch.mlg 12 1))
            malgo_print_string)
           malgo_print_string
-          (-> #NestedMatch.String#_0 (tuple)))
+          (-> #NestedMatch.String#_xxx (tuple)))
          ((((./test/testcases/malgo/NestedMatch.mlg 12 1)
               (./test/testcases/malgo/NestedMatch.mlg 14 1))
              malgo_exit_failure)
             malgo_exit_failure
-            (-> (tuple) #NestedMatch.a_1)))
+            (-> (tuple) #NestedMatch.a_xxx)))
       ()))

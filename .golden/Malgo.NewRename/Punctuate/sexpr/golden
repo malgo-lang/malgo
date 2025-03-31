@@ -9,23 +9,23 @@
            show
            (fn
               ((clause
-                  ((con Symbol (#Punctuate.str_3)))
+                  ((con Symbol ()) #Punctuate.str_xxx)
                   (seq
                      (do
                         (opapp
                            <>
                            (apply String# (string "Symbol "))
-                           #Punctuate.str_3))))
+                           #Punctuate.str_xxx))))
                  (clause
-                    ((con SInt (#Punctuate.int_4)))
+                    ((con SInt ()) #Punctuate.int_xxx)
                     (seq
                        (do
                           (opapp
                              <>
                              (apply String# (string "SInt "))
-                             (apply toStringInt32 #Punctuate.int_4)))))
+                             (apply toStringInt32 #Punctuate.int_xxx)))))
                  (clause
-                    ((con SList (#Punctuate.ss_5)))
+                    ((con SList ()) #Punctuate.ss_xxx)
                     (seq
                        (do
                           (opapp
@@ -35,13 +35,19 @@
                                 <>
                                 (apply
                                    concatString
-                                   (apply
-                                      (apply
-                                         punctuate
+                                   (seq
+                                      (do
                                          (apply
-                                            (apply mapList #Punctuate.ss_5)
-                                            show))
-                                      (apply String# (string ", "))))
+                                            (apply
+                                               punctuate
+                                               (seq
+                                                  (do
+                                                     (apply
+                                                        (apply
+                                                           mapList
+                                                           #Punctuate.ss_xxx)
+                                                        show))))
+                                            (apply String# (string ", "))))))
                                 (apply String# (string "]")))))))))))
        ((((./test/testcases/malgo/Punctuate.mlg 19 1)
             (./test/testcases/malgo/Punctuate.mlg 24 1))
@@ -51,7 +57,7 @@
                   ()
                   (seq
                      (let
-                        #Punctuate.x_6
+                        #Punctuate.x_xxx
                         (apply
                            SList
                            (apply
@@ -85,15 +91,18 @@
                                                       Nil)))
                                              Nil))))
                                  Nil))))
-                     (do (apply putStrLn (apply show #Punctuate.x_6))))))))))
+                     (do
+                        (apply putStrLn (seq (do (apply show #Punctuate.x_xxx))))))))))))
       ((((./test/testcases/malgo/Punctuate.mlg 5 1)
            (./test/testcases/malgo/Punctuate.mlg 6 1))
           <>
-          (-> #Punctuate.String_0 (-> #Punctuate.String_0 #Punctuate.String_0)))
+          (->
+             #Punctuate.String_xxx
+             (-> #Punctuate.String_xxx #Punctuate.String_xxx)))
          (((./test/testcases/malgo/Punctuate.mlg 12 1)
              (./test/testcases/malgo/Punctuate.mlg 13 1))
             show
-            (-> #Punctuate.SExpr_1 #Punctuate.String_2)))
+            (-> #Punctuate.SExpr_xxx #Punctuate.String_xxx)))
       ((((./test/testcases/malgo/Punctuate.mlg 8 1)
            (./test/testcases/malgo/Punctuate.mlg 12 1))
           SExpr

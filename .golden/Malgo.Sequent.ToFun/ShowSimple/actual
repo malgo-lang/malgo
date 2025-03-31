@@ -1,34 +1,34 @@
 ((wrap
     (lambda
-       ($ShowSimple.param_54)
+       ($ShowSimple.param_xxx)
        (select
-          $ShowSimple.param_54
-          ((#ShowSimple.fn_6 (object ((show #ShowSimple.fn_6))))))))
+          $ShowSimple.param_xxx
+          ((#ShowSimple.fn_xxx (object ((show #ShowSimple.fn_xxx))))))))
    (string#
       (lambda
-         ($ShowSimple.param_55)
+         ($ShowSimple.param_xxx)
          (select
-            $ShowSimple.param_55
-            ((#ShowSimple.x_1 (apply (invoke String#) (#ShowSimple.x_1)))))))
+            $ShowSimple.param_xxx
+            ((#ShowSimple.x_xxx (apply (invoke String#) (#ShowSimple.x_xxx)))))))
    (show
       (lambda
-         ($ShowSimple.param_56)
+         ($ShowSimple.param_xxx)
          (select
-            $ShowSimple.param_56
-            (((expand ((show #ShowSimple.show_5))) #ShowSimple.show_5)))))
+            $ShowSimple.param_xxx
+            (((expand ((show #ShowSimple.show_xxx))) #ShowSimple.show_xxx)))))
    (putStr
       (lambda
-         ($ShowSimple.param_57)
+         ($ShowSimple.param_xxx)
          (select
-            $ShowSimple.param_57
-            (((String# (#ShowSimple.x_2))
-                (apply (invoke malgo_print_string) (#ShowSimple.x_2)))))))
+            $ShowSimple.param_xxx
+            (((String# (#ShowSimple.x_xxx))
+                (apply (invoke malgo_print_string) (#ShowSimple.x_xxx)))))))
    (main
       (lambda
-         ($ShowSimple.param_58)
+         ($ShowSimple.param_xxx)
          (select
-            $ShowSimple.param_58
-            ((#ShowSimple.$__49
+            $ShowSimple.param_xxx
+            ((#ShowSimple.$__xxx
                 (apply
                    (invoke putStr)
                    ((apply
@@ -37,35 +37,39 @@
                           ((apply
                               (invoke wrap)
                               ((lambda
-                                  ($ShowSimple.param_59)
+                                  ($ShowSimple.param_xxx)
                                   (select
-                                     $ShowSimple.param_59
-                                     (((Int32# (#ShowSimple.x_7))
+                                     $ShowSimple.param_xxx
+                                     (((Int32# (#ShowSimple.x_xxx))
                                          (apply
                                             (invoke String#)
                                             ((apply
                                                 (invoke malgo_int32_t_to_string)
-                                                (#ShowSimple.x_7))))))))))))
+                                                (#ShowSimple.x_xxx))))))))))))
                        ((apply (invoke Int32#) (1_i32)))))))))))
    (int32#
       (lambda
-         ($ShowSimple.param_60)
+         ($ShowSimple.param_xxx)
          (select
-            $ShowSimple.param_60
-            ((#ShowSimple.x_0 (apply (invoke Int32#) (#ShowSimple.x_0)))))))
+            $ShowSimple.param_xxx
+            ((#ShowSimple.x_xxx (apply (invoke Int32#) (#ShowSimple.x_xxx)))))))
    (Int32#
-      (lambda ($ShowSimple.constructor_61) (Int32# ($ShowSimple.constructor_61))))
+      (lambda
+         ($ShowSimple.constructor_xxx)
+         (Int32# ($ShowSimple.constructor_xxx))))
    (String#
-      (lambda ($ShowSimple.constructor_62) (String# ($ShowSimple.constructor_62))))
+      (lambda
+         ($ShowSimple.constructor_xxx)
+         (String# ($ShowSimple.constructor_xxx))))
    (malgo_print_string
       (lambda
-         ($ShowSimple.primitive_63)
-         (primitive malgo_print_string ($ShowSimple.primitive_63))))
+         ($ShowSimple.primitive_xxx)
+         (primitive malgo_print_string ($ShowSimple.primitive_xxx))))
    (malgo_newline
       (lambda
-         ($ShowSimple.primitive_64)
-         (primitive malgo_newline ($ShowSimple.primitive_64))))
+         ($ShowSimple.primitive_xxx)
+         (primitive malgo_newline ($ShowSimple.primitive_xxx))))
    (malgo_int32_t_to_string
       (lambda
-         ($ShowSimple.primitive_65)
-         (primitive malgo_int32_t_to_string ($ShowSimple.primitive_65)))))
+         ($ShowSimple.primitive_xxx)
+         (primitive malgo_int32_t_to_string ($ShowSimple.primitive_xxx)))))

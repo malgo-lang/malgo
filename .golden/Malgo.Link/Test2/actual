@@ -3,7 +3,7 @@
        (R)
        (-> () Any#)
        (let
-          (($Test2.let_23
+          (($Test2.let_xxx
               (sum
                  (con test/testcases/malgo/Test2.mlg.R)
                  (con test/testcases/malgo/Test2.mlg.G)
@@ -14,12 +14,12 @@
                     (con test/testcases/malgo/Test2.mlg.G)
                     (con test/testcases/malgo/Test2.mlg.B))
                  (con test/testcases/malgo/Test2.mlg.R))))
-          (cast Any# $Test2.let_23)))
+          (cast Any# $Test2.let_xxx)))
       (define
          (G)
          (-> () Any#)
          (let
-            (($Test2.let_24
+            (($Test2.let_xxx
                 (sum
                    (con test/testcases/malgo/Test2.mlg.R)
                    (con test/testcases/malgo/Test2.mlg.G)
@@ -30,12 +30,12 @@
                       (con test/testcases/malgo/Test2.mlg.G)
                       (con test/testcases/malgo/Test2.mlg.B))
                    (con test/testcases/malgo/Test2.mlg.G))))
-            (cast Any# $Test2.let_24)))
+            (cast Any# $Test2.let_xxx)))
       (define
          (B)
          (-> () Any#)
          (let
-            (($Test2.let_25
+            (($Test2.let_xxx
                 (sum
                    (con test/testcases/malgo/Test2.mlg.R)
                    (con test/testcases/malgo/Test2.mlg.G)
@@ -46,100 +46,100 @@
                       (con test/testcases/malgo/Test2.mlg.G)
                       (con test/testcases/malgo/Test2.mlg.B))
                    (con test/testcases/malgo/Test2.mlg.B))))
-            (cast Any# $Test2.let_25)))
+            (cast Any# $Test2.let_xxx)))
       (define
-         (malgo_print_string $Test2.p_26)
+         (malgo_print_string $Test2.p_xxx)
          (-> (String#) (sum (con Tuple#)))
-         (raw malgo_print_string (-> (String#) (sum (con Tuple#))) $Test2.p_26))
+         (raw malgo_print_string (-> (String#) (sum (con Tuple#))) $Test2.p_xxx))
       (define
-         (rtob $Test2.r_27)
+         (rtob $Test2.r_xxx)
          (-> (Any#) Any#)
          (=
-            $Test2.scrutinee_38
+            $Test2.scrutinee_xxx
             (cast
                (sum
                   (con test/testcases/malgo/Test2.mlg.R)
                   (con test/testcases/malgo/Test2.mlg.G)
                   (con test/testcases/malgo/Test2.mlg.B))
-               $Test2.r_27)
+               $Test2.r_xxx)
             (switch
-               $Test2.scrutinee_38
+               $Test2.scrutinee_xxx
                (test/testcases/malgo/Test2.mlg.R
                   (destruct
-                     $Test2.scrutinee_38
+                     $Test2.scrutinee_xxx
                      (con test/testcases/malgo/Test2.mlg.R)
                      ()
                      (direct B)))
                (test/testcases/malgo/Test2.mlg.G
                   (destruct
-                     $Test2.scrutinee_38
+                     $Test2.scrutinee_xxx
                      (con test/testcases/malgo/Test2.mlg.G)
                      ()
-                     $Test2.r_27))
+                     $Test2.r_xxx))
                (test/testcases/malgo/Test2.mlg.B
                   (destruct
-                     $Test2.scrutinee_38
+                     $Test2.scrutinee_xxx
                      (con test/testcases/malgo/Test2.mlg.B)
                      ()
-                     $Test2.r_27))
+                     $Test2.r_xxx))
                (ERROR Any#))))
       (define
-         (main $Test2.$__28)
+         (main $Test2.$__xxx)
          (-> ((sum (con Tuple#))) (sum (con Tuple#)))
          (let
-            (($Test2.fun_32
+            (($Test2.fun_xxx
                 (-> (Any#) (sum (con Tuple#)))
                 (fun
-                   ($Test2.b_29)
+                   ($Test2.b_xxx)
                    (=
-                      $Test2.scrutinee_39
+                      $Test2.scrutinee_xxx
                       (cast
                          (sum
                             (con test/testcases/malgo/Test2.mlg.R)
                             (con test/testcases/malgo/Test2.mlg.G)
                             (con test/testcases/malgo/Test2.mlg.B))
-                         $Test2.b_29)
+                         $Test2.b_xxx)
                       (switch
-                         $Test2.scrutinee_39
+                         $Test2.scrutinee_xxx
                          (test/testcases/malgo/Test2.mlg.R
                             (destruct
-                               $Test2.scrutinee_39
+                               $Test2.scrutinee_xxx
                                (con test/testcases/malgo/Test2.mlg.R)
                                ()
                                (=
-                                  $Test2.d_30
+                                  $Test2.d_xxx
                                   (call malgo_print_string "WRONG")
-                                  (cast (sum (con Tuple#)) $Test2.d_30))))
+                                  (cast (sum (con Tuple#)) $Test2.d_xxx))))
                          (test/testcases/malgo/Test2.mlg.G
                             (destruct
-                               $Test2.scrutinee_39
+                               $Test2.scrutinee_xxx
                                (con test/testcases/malgo/Test2.mlg.G)
                                ()
                                (=
-                                  $Test2.d_30
+                                  $Test2.d_xxx
                                   (call malgo_print_string "WRONG")
-                                  (cast (sum (con Tuple#)) $Test2.d_30))))
+                                  (cast (sum (con Tuple#)) $Test2.d_xxx))))
                          (test/testcases/malgo/Test2.mlg.B
                             (destruct
-                               $Test2.scrutinee_39
+                               $Test2.scrutinee_xxx
                                (con test/testcases/malgo/Test2.mlg.B)
                                ()
                                (=
-                                  $Test2.d_31
+                                  $Test2.d_xxx
                                   (call malgo_print_string "OK")
-                                  (cast (sum (con Tuple#)) $Test2.d_31))))
+                                  (cast (sum (con Tuple#)) $Test2.d_xxx))))
                          (ERROR (sum (con Tuple#))))))))
             (=
-               $Test2.d_34
+               $Test2.d_xxx
                (direct R)
                (=
-                  $Test2.d_35
-                  (call rtob $Test2.d_34)
+                  $Test2.d_xxx
+                  (call rtob $Test2.d_xxx)
                   (=
-                     $Test2.d_36
-                     (cast Any# $Test2.d_35)
+                     $Test2.d_xxx
+                     (cast Any# $Test2.d_xxx)
                      (=
-                        $Test2.d_37
-                        (call $Test2.fun_32 $Test2.d_36)
-                        (cast (sum (con Tuple#)) $Test2.d_37))))))))
+                        $Test2.d_xxx
+                        (call $Test2.fun_xxx $Test2.d_xxx)
+                        (cast (sum (con Tuple#)) $Test2.d_xxx))))))))
    ((extern malgo_print_string (-> (String#) (sum (con Tuple#))))))

@@ -6,13 +6,25 @@
          (fn
             ((clause
                 ((unboxed (int64 0)))
-                (seq (do (apply printString# (apply toStringInt64# (int64 1))))))
+                (seq
+                   (do
+                      (apply
+                         printString#
+                         (seq (do (apply toStringInt64# (int64 1))))))))
                (clause
                   ((unboxed (int64 1)))
-                  (seq (do (apply printString# (apply toStringInt64# (int64 1))))))
+                  (seq
+                     (do
+                        (apply
+                           printString#
+                           (seq (do (apply toStringInt64# (int64 1))))))))
                (clause
-                  (#FuncOverUnboxed.__0)
-                  (seq (do (apply printString# (apply toStringInt64# (int64 0))))))))))
+                  (#FuncOverUnboxed.__xxx)
+                  (seq
+                     (do
+                        (apply
+                           printString#
+                           (seq (do (apply toStringInt64# (int64 0))))))))))))
        ((((./test/testcases/malgo/FuncOverUnboxed.mlg 9 1)
             (./test/testcases/malgo/FuncOverUnboxed.mlg 12 1))
            main

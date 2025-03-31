@@ -4,8 +4,8 @@
       (def
          if
          (fn
-            ((clause ((con True (t _))) (seq (do (apply t (tuple)))))
-               (clause ((con False (_ f))) (seq (do (apply f (tuple))))))))
+            ((clause (True t _) (seq (do (apply t (tuple)))))
+               (clause (False _ f) (seq (do (apply f (tuple))))))))
       (foreign malgo_print_string (-> String# (tuple)))
       (def
          main

@@ -1,13 +1,13 @@
 (()
    ((define
-       ($Test3.|>_curry_81 $Test3.x_82 $Test3.f_83)
+       ($Test3.|>_curry_xxx $Test3.x_xxx $Test3.f_xxx)
        (-> (Any# (-> (Any#) Any#)) Any#)
-       (= $Test3.d_84 (call $Test3.f_83 $Test3.x_82) (cast Any# $Test3.d_84)))
+       (= $Test3.d_xxx (call $Test3.f_xxx $Test3.x_xxx) (cast Any# $Test3.d_xxx)))
       (define
-         ($Test3.Cons_curry_72 $Test3.p_73 $Test3.p_74)
+         ($Test3.Cons_curry_xxx $Test3.p_xxx $Test3.p_xxx)
          (-> (Any# Any#) Any#)
          (let
-            (($Test3.let_75
+            (($Test3.let_xxx
                 (sum
                    (con test/testcases/malgo/Test3.mlg.Nil)
                    (con test/testcases/malgo/Test3.mlg.Cons Any# Any#))
@@ -16,14 +16,14 @@
                       (con test/testcases/malgo/Test3.mlg.Nil)
                       (con test/testcases/malgo/Test3.mlg.Cons Any# Any#))
                    (con test/testcases/malgo/Test3.mlg.Cons Any# Any#)
-                   $Test3.p_73
-                   $Test3.p_74)))
-            (cast Any# $Test3.let_75)))
+                   $Test3.p_xxx
+                   $Test3.p_xxx)))
+            (cast Any# $Test3.let_xxx)))
       (define
          (A)
          (-> () Any#)
          (let
-            (($Test3.let_66
+            (($Test3.let_xxx
                 (sum
                    (con test/testcases/malgo/Test3.mlg.A)
                    (con test/testcases/malgo/Test3.mlg.B))
@@ -32,12 +32,12 @@
                       (con test/testcases/malgo/Test3.mlg.A)
                       (con test/testcases/malgo/Test3.mlg.B))
                    (con test/testcases/malgo/Test3.mlg.A))))
-            (cast Any# $Test3.let_66)))
+            (cast Any# $Test3.let_xxx)))
       (define
          (B)
          (-> () Any#)
          (let
-            (($Test3.let_67
+            (($Test3.let_xxx
                 (sum
                    (con test/testcases/malgo/Test3.mlg.A)
                    (con test/testcases/malgo/Test3.mlg.B))
@@ -46,12 +46,12 @@
                       (con test/testcases/malgo/Test3.mlg.A)
                       (con test/testcases/malgo/Test3.mlg.B))
                    (con test/testcases/malgo/Test3.mlg.B))))
-            (cast Any# $Test3.let_67)))
+            (cast Any# $Test3.let_xxx)))
       (define
          (Nil)
          (-> () Any#)
          (let
-            (($Test3.let_68
+            (($Test3.let_xxx
                 (sum
                    (con test/testcases/malgo/Test3.mlg.Nil)
                    (con test/testcases/malgo/Test3.mlg.Cons Any# Any#))
@@ -60,88 +60,88 @@
                       (con test/testcases/malgo/Test3.mlg.Nil)
                       (con test/testcases/malgo/Test3.mlg.Cons Any# Any#))
                    (con test/testcases/malgo/Test3.mlg.Nil))))
-            (cast Any# $Test3.let_68)))
+            (cast Any# $Test3.let_xxx)))
       (define
-         (Cons $Test3.p_69)
+         (Cons $Test3.p_xxx)
          (-> (Any#) (-> (Any#) Any#))
          (let
-            (($Test3.let_76
+            (($Test3.let_xxx
                 (-> (Any#) Any#)
                 (fun
-                   ($Test3.p_70)
-                   (direct $Test3.Cons_curry_72 $Test3.p_69 $Test3.p_70))))
-            $Test3.let_76))
+                   ($Test3.p_xxx)
+                   (direct $Test3.Cons_curry_xxx $Test3.p_xxx $Test3.p_xxx))))
+            $Test3.let_xxx))
       (define
-         (malgo_print_string $Test3.p_77)
+         (malgo_print_string $Test3.p_xxx)
          (-> (String#) (sum (con Tuple#)))
-         (raw malgo_print_string (-> (String#) (sum (con Tuple#))) $Test3.p_77))
+         (raw malgo_print_string (-> (String#) (sum (con Tuple#))) $Test3.p_xxx))
       (define
-         (|> $Test3.x_78)
+         (|> $Test3.x_xxx)
          (-> (Any#) (-> ((-> (Any#) Any#)) Any#))
          (let
-            (($Test3.let_85
+            (($Test3.let_xxx
                 (-> ((-> (Any#) Any#)) Any#)
                 (fun
-                   ($Test3.f_79)
-                   (direct $Test3.|>_curry_81 $Test3.x_78 $Test3.f_79))))
-            $Test3.let_85))
+                   ($Test3.f_xxx)
+                   (direct $Test3.|>_curry_xxx $Test3.x_xxx $Test3.f_xxx))))
+            $Test3.let_xxx))
       (define
-         (main $Test3.$__86)
+         (main $Test3.$__xxx)
          (-> ((sum (con Tuple#))) (sum (con Tuple#)))
          (=
-            $Test3.d_87
+            $Test3.d_xxx
             (direct A)
             (=
-               $Test3.d_88
-               (call Cons $Test3.d_87)
+               $Test3.d_xxx
+               (call Cons $Test3.d_xxx)
                (=
-                  $Test3.d_89
-                  (cast (-> (Any#) Any#) $Test3.d_88)
+                  $Test3.d_xxx
+                  (cast (-> (Any#) Any#) $Test3.d_xxx)
                   (=
-                     $Test3.d_90
+                     $Test3.d_xxx
                      (direct B)
                      (=
-                        $Test3.d_91
-                        (call Cons $Test3.d_90)
+                        $Test3.d_xxx
+                        (call Cons $Test3.d_xxx)
                         (=
-                           $Test3.d_92
-                           (cast (-> (Any#) Any#) $Test3.d_91)
+                           $Test3.d_xxx
+                           (cast (-> (Any#) Any#) $Test3.d_xxx)
                            (=
-                              $Test3.d_93
+                              $Test3.d_xxx
                               (direct Nil)
                               (=
-                                 $Test3.d_94
-                                 (call $Test3.d_92 $Test3.d_93)
+                                 $Test3.d_xxx
+                                 (call $Test3.d_xxx $Test3.d_xxx)
                                  (=
-                                    $Test3.d_95
-                                    (cast Any# $Test3.d_94)
+                                    $Test3.d_xxx
+                                    (cast Any# $Test3.d_xxx)
                                     (=
-                                       $Test3.d_96
-                                       (call $Test3.d_89 $Test3.d_95)
+                                       $Test3.d_xxx
+                                       (call $Test3.d_xxx $Test3.d_xxx)
                                        (=
-                                          $Test3.d_97
-                                          (cast Any# $Test3.d_96)
+                                          $Test3.d_xxx
+                                          (cast Any# $Test3.d_xxx)
                                           (=
-                                             $Test3.d_98
-                                             (call |> $Test3.d_97)
+                                             $Test3.d_xxx
+                                             (call |> $Test3.d_xxx)
                                              (=
-                                                $Test3.d_99
+                                                $Test3.d_xxx
                                                 (cast
                                                    (->
                                                       ((->
                                                           (Any#)
                                                           (sum (con Tuple#))))
                                                       (sum (con Tuple#)))
-                                                   $Test3.d_98)
+                                                   $Test3.d_xxx)
                                                 (let
-                                                   (($Test3.fun_109
+                                                   (($Test3.fun_xxx
                                                        (->
                                                           (Any#)
                                                           (sum (con Tuple#)))
                                                        (fun
-                                                          ($Test3.cons_100)
+                                                          ($Test3.cons_xxx)
                                                           (=
-                                                             $Test3.scrutinee_116
+                                                             $Test3.scrutinee_xxx
                                                              (cast
                                                                 (sum
                                                                    (con
@@ -150,17 +150,17 @@
                                                                       test/testcases/malgo/Test3.mlg.Cons
                                                                       Any#
                                                                       Any#))
-                                                                $Test3.cons_100)
+                                                                $Test3.cons_xxx)
                                                              (switch
-                                                                $Test3.scrutinee_116
+                                                                $Test3.scrutinee_xxx
                                                                 (test/testcases/malgo/Test3.mlg.Nil
                                                                    (destruct
-                                                                      $Test3.scrutinee_116
+                                                                      $Test3.scrutinee_xxx
                                                                       (con
                                                                          test/testcases/malgo/Test3.mlg.Nil)
                                                                       ()
                                                                       (=
-                                                                         $Test3.d_101
+                                                                         $Test3.d_xxx
                                                                          (call
                                                                             malgo_print_string
                                                                             "WRONG")
@@ -168,35 +168,35 @@
                                                                             (sum
                                                                                (con
                                                                                   Tuple#))
-                                                                            $Test3.d_101))))
+                                                                            $Test3.d_xxx))))
                                                                 (test/testcases/malgo/Test3.mlg.Cons
                                                                    (destruct
-                                                                      $Test3.scrutinee_116
+                                                                      $Test3.scrutinee_xxx
                                                                       (con
                                                                          test/testcases/malgo/Test3.mlg.Cons
                                                                          Any#
                                                                          Any#)
-                                                                      ($Test3.p_102
-                                                                         $Test3.p_103)
+                                                                      ($Test3.p_xxx
+                                                                         $Test3.p_xxx)
                                                                       (=
-                                                                         $Test3.scrutinee_115
+                                                                         $Test3.scrutinee_xxx
                                                                          (cast
                                                                             (sum
                                                                                (con
                                                                                   test/testcases/malgo/Test3.mlg.A)
                                                                                (con
                                                                                   test/testcases/malgo/Test3.mlg.B))
-                                                                            $Test3.p_102)
+                                                                            $Test3.p_xxx)
                                                                          (switch
-                                                                            $Test3.scrutinee_115
+                                                                            $Test3.scrutinee_xxx
                                                                             (test/testcases/malgo/Test3.mlg.A
                                                                                (destruct
-                                                                                  $Test3.scrutinee_115
+                                                                                  $Test3.scrutinee_xxx
                                                                                   (con
                                                                                      test/testcases/malgo/Test3.mlg.A)
                                                                                   ()
                                                                                   (=
-                                                                                     $Test3.scrutinee_114
+                                                                                     $Test3.scrutinee_xxx
                                                                                      (cast
                                                                                         (sum
                                                                                            (con
@@ -205,17 +205,17 @@
                                                                                               test/testcases/malgo/Test3.mlg.Cons
                                                                                               Any#
                                                                                               Any#))
-                                                                                        $Test3.p_103)
+                                                                                        $Test3.p_xxx)
                                                                                      (switch
-                                                                                        $Test3.scrutinee_114
+                                                                                        $Test3.scrutinee_xxx
                                                                                         (test/testcases/malgo/Test3.mlg.Nil
                                                                                            (destruct
-                                                                                              $Test3.scrutinee_114
+                                                                                              $Test3.scrutinee_xxx
                                                                                               (con
                                                                                                  test/testcases/malgo/Test3.mlg.Nil)
                                                                                               ()
                                                                                               (=
-                                                                                                 $Test3.d_101
+                                                                                                 $Test3.d_xxx
                                                                                                  (call
                                                                                                     malgo_print_string
                                                                                                     "WRONG")
@@ -223,35 +223,35 @@
                                                                                                     (sum
                                                                                                        (con
                                                                                                           Tuple#))
-                                                                                                    $Test3.d_101))))
+                                                                                                    $Test3.d_xxx))))
                                                                                         (test/testcases/malgo/Test3.mlg.Cons
                                                                                            (destruct
-                                                                                              $Test3.scrutinee_114
+                                                                                              $Test3.scrutinee_xxx
                                                                                               (con
                                                                                                  test/testcases/malgo/Test3.mlg.Cons
                                                                                                  Any#
                                                                                                  Any#)
-                                                                                              ($Test3.p_104
-                                                                                                 $Test3.p_105)
+                                                                                              ($Test3.p_xxx
+                                                                                                 $Test3.p_xxx)
                                                                                               (=
-                                                                                                 $Test3.scrutinee_113
+                                                                                                 $Test3.scrutinee_xxx
                                                                                                  (cast
                                                                                                     (sum
                                                                                                        (con
                                                                                                           test/testcases/malgo/Test3.mlg.A)
                                                                                                        (con
                                                                                                           test/testcases/malgo/Test3.mlg.B))
-                                                                                                    $Test3.p_104)
+                                                                                                    $Test3.p_xxx)
                                                                                                  (switch
-                                                                                                    $Test3.scrutinee_113
+                                                                                                    $Test3.scrutinee_xxx
                                                                                                     (test/testcases/malgo/Test3.mlg.A
                                                                                                        (destruct
-                                                                                                          $Test3.scrutinee_113
+                                                                                                          $Test3.scrutinee_xxx
                                                                                                           (con
                                                                                                              test/testcases/malgo/Test3.mlg.A)
                                                                                                           ()
                                                                                                           (=
-                                                                                                             $Test3.d_101
+                                                                                                             $Test3.d_xxx
                                                                                                              (call
                                                                                                                 malgo_print_string
                                                                                                                 "WRONG")
@@ -259,15 +259,15 @@
                                                                                                                 (sum
                                                                                                                    (con
                                                                                                                       Tuple#))
-                                                                                                                $Test3.d_101))))
+                                                                                                                $Test3.d_xxx))))
                                                                                                     (test/testcases/malgo/Test3.mlg.B
                                                                                                        (destruct
-                                                                                                          $Test3.scrutinee_113
+                                                                                                          $Test3.scrutinee_xxx
                                                                                                           (con
                                                                                                              test/testcases/malgo/Test3.mlg.B)
                                                                                                           ()
                                                                                                           (=
-                                                                                                             $Test3.scrutinee_112
+                                                                                                             $Test3.scrutinee_xxx
                                                                                                              (cast
                                                                                                                 (sum
                                                                                                                    (con
@@ -276,17 +276,17 @@
                                                                                                                       test/testcases/malgo/Test3.mlg.Cons
                                                                                                                       Any#
                                                                                                                       Any#))
-                                                                                                                $Test3.p_105)
+                                                                                                                $Test3.p_xxx)
                                                                                                              (switch
-                                                                                                                $Test3.scrutinee_112
+                                                                                                                $Test3.scrutinee_xxx
                                                                                                                 (test/testcases/malgo/Test3.mlg.Nil
                                                                                                                    (destruct
-                                                                                                                      $Test3.scrutinee_112
+                                                                                                                      $Test3.scrutinee_xxx
                                                                                                                       (con
                                                                                                                          test/testcases/malgo/Test3.mlg.Nil)
                                                                                                                       ()
                                                                                                                       (=
-                                                                                                                         $Test3.d_106
+                                                                                                                         $Test3.d_xxx
                                                                                                                          (call
                                                                                                                             malgo_print_string
                                                                                                                             "OK")
@@ -294,18 +294,18 @@
                                                                                                                             (sum
                                                                                                                                (con
                                                                                                                                   Tuple#))
-                                                                                                                            $Test3.d_106))))
+                                                                                                                            $Test3.d_xxx))))
                                                                                                                 (test/testcases/malgo/Test3.mlg.Cons
                                                                                                                    (destruct
-                                                                                                                      $Test3.scrutinee_112
+                                                                                                                      $Test3.scrutinee_xxx
                                                                                                                       (con
                                                                                                                          test/testcases/malgo/Test3.mlg.Cons
                                                                                                                          Any#
                                                                                                                          Any#)
-                                                                                                                      ($Test3.p_107
-                                                                                                                         $Test3.p_108)
+                                                                                                                      ($Test3.p_xxx
+                                                                                                                         $Test3.p_xxx)
                                                                                                                       (=
-                                                                                                                         $Test3.d_101
+                                                                                                                         $Test3.d_xxx
                                                                                                                          (call
                                                                                                                             malgo_print_string
                                                                                                                             "WRONG")
@@ -313,7 +313,7 @@
                                                                                                                             (sum
                                                                                                                                (con
                                                                                                                                   Tuple#))
-                                                                                                                            $Test3.d_101))))
+                                                                                                                            $Test3.d_xxx))))
                                                                                                                 (ERROR
                                                                                                                    (sum
                                                                                                                       (con
@@ -328,12 +328,12 @@
                                                                                                  Tuple#)))))))
                                                                             (test/testcases/malgo/Test3.mlg.B
                                                                                (destruct
-                                                                                  $Test3.scrutinee_115
+                                                                                  $Test3.scrutinee_xxx
                                                                                   (con
                                                                                      test/testcases/malgo/Test3.mlg.B)
                                                                                   ()
                                                                                   (=
-                                                                                     $Test3.d_101
+                                                                                     $Test3.d_xxx
                                                                                      (call
                                                                                         malgo_print_string
                                                                                         "WRONG")
@@ -341,7 +341,7 @@
                                                                                         (sum
                                                                                            (con
                                                                                               Tuple#))
-                                                                                        $Test3.d_101))))
+                                                                                        $Test3.d_xxx))))
                                                                             (ERROR
                                                                                (sum
                                                                                   (con
@@ -350,11 +350,11 @@
                                                                    (sum
                                                                       (con Tuple#))))))))
                                                    (=
-                                                      $Test3.d_111
+                                                      $Test3.d_xxx
                                                       (call
-                                                         $Test3.d_99
-                                                         $Test3.fun_109)
+                                                         $Test3.d_xxx
+                                                         $Test3.fun_xxx)
                                                       (cast
                                                          (sum (con Tuple#))
-                                                         $Test3.d_111))))))))))))))))))
+                                                         $Test3.d_xxx))))))))))))))))))
    ((extern malgo_print_string (-> (String#) (sum (con Tuple#))))))

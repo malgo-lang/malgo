@@ -1,149 +1,149 @@
 (()
    ((define
-       (Int32# $ShowSimple.p_54)
+       (Int32# $ShowSimple.p_xxx)
        (-> (Int32#) Any#)
        (let
-          (($ShowSimple.let_55
+          (($ShowSimple.let_xxx
               (sum (con test/testcases/malgo/ShowSimple.mlg.Int32# Int32#))
               (pack
                  (sum (con test/testcases/malgo/ShowSimple.mlg.Int32# Int32#))
                  (con test/testcases/malgo/ShowSimple.mlg.Int32# Int32#)
-                 $ShowSimple.p_54)))
-          (cast Any# $ShowSimple.let_55)))
+                 $ShowSimple.p_xxx)))
+          (cast Any# $ShowSimple.let_xxx)))
       (define
-         (String# $ShowSimple.p_56)
+         (String# $ShowSimple.p_xxx)
          (-> (String#) Any#)
          (let
-            (($ShowSimple.let_57
+            (($ShowSimple.let_xxx
                 (sum (con test/testcases/malgo/ShowSimple.mlg.String# String#))
                 (pack
                    (sum (con test/testcases/malgo/ShowSimple.mlg.String# String#))
                    (con test/testcases/malgo/ShowSimple.mlg.String# String#)
-                   $ShowSimple.p_56)))
-            (cast Any# $ShowSimple.let_57)))
+                   $ShowSimple.p_xxx)))
+            (cast Any# $ShowSimple.let_xxx)))
       (define
-         (malgo_print_string $ShowSimple.p_58)
+         (malgo_print_string $ShowSimple.p_xxx)
          (-> (String#) (sum (con Tuple#)))
          (raw
             malgo_print_string
             (-> (String#) (sum (con Tuple#)))
-            $ShowSimple.p_58))
+            $ShowSimple.p_xxx))
       (define
-         (malgo_newline $ShowSimple.p_59)
+         (malgo_newline $ShowSimple.p_xxx)
          (-> ((sum (con Tuple#))) (sum (con Tuple#)))
          (raw
             malgo_newline
             (-> ((sum (con Tuple#))) (sum (con Tuple#)))
-            $ShowSimple.p_59))
+            $ShowSimple.p_xxx))
       (define
-         (malgo_int32_t_to_string $ShowSimple.p_60)
+         (malgo_int32_t_to_string $ShowSimple.p_xxx)
          (-> (Int32#) String#)
-         (raw malgo_int32_t_to_string (-> (Int32#) String#) $ShowSimple.p_60))
+         (raw malgo_int32_t_to_string (-> (Int32#) String#) $ShowSimple.p_xxx))
       (define
-         (wrap $ShowSimple.fn_61)
+         (wrap $ShowSimple.fn_xxx)
          (-> ((-> (Any#) Any#)) (Record# (show (-> (Any#) Any#))))
          (let
-            (($ShowSimple.record_62
+            (($ShowSimple.record_xxx
                 (Record# (show (-> (Any#) Any#)))
-                (record (show $ShowSimple.fn_61))))
-            $ShowSimple.record_62))
+                (record (show $ShowSimple.fn_xxx))))
+            $ShowSimple.record_xxx))
       (define
-         (string# $ShowSimple.x_63)
+         (string# $ShowSimple.x_xxx)
          (-> (String#) Any#)
          (=
-            $ShowSimple.d_64
-            (call String# $ShowSimple.x_63)
-            (cast Any# $ShowSimple.d_64)))
+            $ShowSimple.d_xxx
+            (call String# $ShowSimple.x_xxx)
+            (cast Any# $ShowSimple.d_xxx)))
       (define
-         (show $ShowSimple.record_65)
+         (show $ShowSimple.record_xxx)
          (-> ((Record# (show (-> (Any#) Any#)))) (-> (Any#) Any#))
          (match
-            $ShowSimple.record_65
-            (open ((show $ShowSimple.p_66)) $ShowSimple.p_66)))
+            $ShowSimple.record_xxx
+            (open ((show $ShowSimple.p_xxx)) $ShowSimple.p_xxx)))
       (define
-         (putStr $ShowSimple.string#_67)
+         (putStr $ShowSimple.string#_xxx)
          (-> (Any#) (sum (con Tuple#)))
          (match
             (cast
                (sum (con test/testcases/malgo/ShowSimple.mlg.String# String#))
-               $ShowSimple.string#_67)
+               $ShowSimple.string#_xxx)
             (unpack
                (con test/testcases/malgo/ShowSimple.mlg.String# String#)
-               ($ShowSimple.p_68)
+               ($ShowSimple.p_xxx)
                (=
-                  $ShowSimple.d_69
-                  (call malgo_print_string $ShowSimple.p_68)
-                  (cast (sum (con Tuple#)) $ShowSimple.d_69)))))
+                  $ShowSimple.d_xxx
+                  (call malgo_print_string $ShowSimple.p_xxx)
+                  (cast (sum (con Tuple#)) $ShowSimple.d_xxx)))))
       (define
-         (main $ShowSimple.$__70)
+         (main $ShowSimple.$__xxx)
          (-> ((sum (con Tuple#))) (sum (con Tuple#)))
          (=
-            $ShowSimple.d_85
+            $ShowSimple.d_xxx
             (=
-               $ShowSimple.d_81
+               $ShowSimple.d_xxx
                (=
-                  $ShowSimple.d_79
+                  $ShowSimple.d_xxx
                   (=
-                     $ShowSimple.d_77
+                     $ShowSimple.d_xxx
                      (let
-                        (($ShowSimple.fun_76
+                        (($ShowSimple.fun_xxx
                             (-> (Any#) Any#)
                             (fun
-                               ($ShowSimple.int32#_71)
+                               ($ShowSimple.int32#_xxx)
                                (match
                                   (cast
                                      (sum
                                         (con
                                            test/testcases/malgo/ShowSimple.mlg.Int32#
                                            Int32#))
-                                     $ShowSimple.int32#_71)
+                                     $ShowSimple.int32#_xxx)
                                   (unpack
                                      (con
                                         test/testcases/malgo/ShowSimple.mlg.Int32#
                                         Int32#)
-                                     ($ShowSimple.p_72)
+                                     ($ShowSimple.p_xxx)
                                      (=
-                                        $ShowSimple.d_74
+                                        $ShowSimple.d_xxx
                                         (=
-                                           $ShowSimple.d_73
+                                           $ShowSimple.d_xxx
                                            (call
                                               malgo_int32_t_to_string
-                                              $ShowSimple.p_72)
-                                           (cast String# $ShowSimple.d_73))
+                                              $ShowSimple.p_xxx)
+                                           (cast String# $ShowSimple.d_xxx))
                                         (=
-                                           $ShowSimple.d_75
-                                           (call String# $ShowSimple.d_74)
-                                           (cast Any# $ShowSimple.d_75))))))))
-                        $ShowSimple.fun_76)
+                                           $ShowSimple.d_xxx
+                                           (call String# $ShowSimple.d_xxx)
+                                           (cast Any# $ShowSimple.d_xxx))))))))
+                        $ShowSimple.fun_xxx)
                      (=
-                        $ShowSimple.d_78
-                        (call wrap $ShowSimple.d_77)
-                        (cast (Record# (show (-> (Any#) Any#))) $ShowSimple.d_78)))
+                        $ShowSimple.d_xxx
+                        (call wrap $ShowSimple.d_xxx)
+                        (cast (Record# (show (-> (Any#) Any#))) $ShowSimple.d_xxx)))
                   (=
-                     $ShowSimple.d_80
-                     (call show $ShowSimple.d_79)
-                     (cast (-> (Any#) Any#) $ShowSimple.d_80)))
+                     $ShowSimple.d_xxx
+                     (call show $ShowSimple.d_xxx)
+                     (cast (-> (Any#) Any#) $ShowSimple.d_xxx)))
                (=
-                  $ShowSimple.d_83
+                  $ShowSimple.d_xxx
                   (=
-                     $ShowSimple.d_82
+                     $ShowSimple.d_xxx
                      (call Int32# 1_i32)
-                     (cast Any# $ShowSimple.d_82))
+                     (cast Any# $ShowSimple.d_xxx))
                   (=
-                     $ShowSimple.d_84
-                     (call $ShowSimple.d_81 $ShowSimple.d_83)
-                     (cast Any# $ShowSimple.d_84))))
+                     $ShowSimple.d_xxx
+                     (call $ShowSimple.d_xxx $ShowSimple.d_xxx)
+                     (cast Any# $ShowSimple.d_xxx))))
             (=
-               $ShowSimple.d_86
-               (call putStr $ShowSimple.d_85)
-               (cast (sum (con Tuple#)) $ShowSimple.d_86))))
+               $ShowSimple.d_xxx
+               (call putStr $ShowSimple.d_xxx)
+               (cast (sum (con Tuple#)) $ShowSimple.d_xxx))))
       (define
-         (int32# $ShowSimple.x_87)
+         (int32# $ShowSimple.x_xxx)
          (-> (Int32#) Any#)
          (=
-            $ShowSimple.d_88
-            (call Int32# $ShowSimple.x_87)
-            (cast Any# $ShowSimple.d_88))))
+            $ShowSimple.d_xxx
+            (call Int32# $ShowSimple.x_xxx)
+            (cast Any# $ShowSimple.d_xxx))))
    ((extern malgo_print_string (-> (String#) (sum (con Tuple#))))
       (extern malgo_newline (-> ((sum (con Tuple#))) (sum (con Tuple#))))
       (extern malgo_int32_t_to_string (-> (Int32#) String#))))

@@ -11,15 +11,17 @@
                       (apply
                          (fn
                             ((clause
-                                ((con Int# (#DataDef.x_4)))
+                                ((con Int# (#DataDef.x_xxx)))
                                 (seq
                                    (do
                                       (apply
                                          malgo_print_string
-                                         (apply
-                                            malgo_int64_t_to_string
-                                            #DataDef.x_4)))))))
-                         (apply Int# (int64 1)))))))))))
+                                         (seq
+                                            (do
+                                               (apply
+                                                  malgo_int64_t_to_string
+                                                  #DataDef.x_xxx)))))))))
+                         (seq (do (apply Int# (int64 1)))))))))))))
       ()
       ((((./test/testcases/malgo/DataDef.mlg 1 1)
            (./test/testcases/malgo/DataDef.mlg 2 1))
@@ -34,7 +36,7 @@
             List
             ((((./test/testcases/malgo/DataDef.mlg 2 11)
                  (./test/testcases/malgo/DataDef.mlg 2 13))
-                #DataDef.a_0))
+                #DataDef.a_xxx))
             ((((./test/testcases/malgo/DataDef.mlg 2 15)
                  (./test/testcases/malgo/DataDef.mlg 2 19))
                 Nil
@@ -42,16 +44,16 @@
                (((./test/testcases/malgo/DataDef.mlg 2 21)
                    (./test/testcases/malgo/DataDef.mlg 4 1))
                   Cons
-                  (#DataDef.a_0 (app List (#DataDef.a_0)))))))
+                  (#DataDef.a_xxx (app List (#DataDef.a_xxx)))))))
       ()
       (((((./test/testcases/malgo/DataDef.mlg 4 1)
             (./test/testcases/malgo/DataDef.mlg 5 1))
            malgo_int64_t_to_string)
           malgo_int64_t_to_string
-          (-> #DataDef.Int64#_1 #DataDef.String#_2))
+          (-> #DataDef.Int64#_xxx #DataDef.String#_xxx))
          ((((./test/testcases/malgo/DataDef.mlg 5 1)
               (./test/testcases/malgo/DataDef.mlg 7 1))
              malgo_print_string)
             malgo_print_string
-            (-> #DataDef.String#_3 (tuple))))
+            (-> #DataDef.String#_xxx (tuple))))
       ()))

@@ -1,73 +1,75 @@
 ((main
-    $TestList.return_42
+    $TestList.return_xxx
     (cut
        (lambda
-          ($TestList.param_41 $TestList.return_43)
+          ($TestList.param_xxx $TestList.return_xxx)
           (cut
-             $TestList.param_41
+             $TestList.param_xxx
              (select
-                (#TestList.$__40
+                (#TestList.$__xxx
                    (invoke
                       Cons
                       (apply
                          ((do
-                             $TestList.return_51
-                             (invoke Int32# (apply (1_i32) ($TestList.return_51)))))
+                             $TestList.return_xxx
+                             (invoke
+                                Int32#
+                                (apply (1_i32) ($TestList.return_xxx)))))
                          ((apply
                              ((do
-                                 $TestList.return_46
+                                 $TestList.return_xxx
                                  (invoke
                                     Cons
                                     (apply
                                        ((do
-                                           $TestList.return_50
+                                           $TestList.return_xxx
                                            (invoke
                                               Int32#
                                               (apply
                                                  (2_i32)
-                                                 ($TestList.return_50)))))
+                                                 ($TestList.return_xxx)))))
                                        ((apply
                                            ((do
-                                               $TestList.return_47
+                                               $TestList.return_xxx
                                                (invoke
                                                   Cons
                                                   (apply
                                                      ((do
-                                                         $TestList.return_49
+                                                         $TestList.return_xxx
                                                          (invoke
                                                             Int32#
                                                             (apply
                                                                (3_i32)
-                                                               ($TestList.return_49)))))
+                                                               ($TestList.return_xxx)))))
                                                      ((apply
                                                          ((do
-                                                             $TestList.return_48
+                                                             $TestList.return_xxx
                                                              (invoke
                                                                 Nil
-                                                                $TestList.return_48)))
-                                                         ($TestList.return_47)))))))
-                                           ($TestList.return_46)))))))
+                                                                $TestList.return_xxx)))
+                                                         ($TestList.return_xxx)))))))
+                                           ($TestList.return_xxx)))))))
                              ((then
-                                 #TestList.xs_0
+                                 #TestList.xs_xxx
                                  (invoke
                                     Nil
                                     (then
-                                       #TestList.nil_1
+                                       #TestList.nil_xxx
                                        (invoke
                                           putStrLn
                                           (apply
                                              ((do
-                                                 $TestList.return_44
+                                                 $TestList.return_xxx
                                                  (invoke
                                                     toStringInt32
                                                     (apply
                                                        ((do
-                                                           $TestList.return_45
+                                                           $TestList.return_xxx
                                                            (invoke
                                                               head
                                                               (apply
-                                                                 (#TestList.xs_0)
-                                                                 ($TestList.return_45)))))
-                                                       ($TestList.return_44)))))
-                                             ($TestList.return_43)))))))))))))))
-       $TestList.return_42)))
+                                                                 (#TestList.xs_xxx)
+                                                                 ($TestList.return_xxx)))))
+                                                       ($TestList.return_xxx)))))
+                                             ($TestList.return_xxx)))))))))))))))
+       $TestList.return_xxx)))

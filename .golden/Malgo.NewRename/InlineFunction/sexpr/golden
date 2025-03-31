@@ -5,45 +5,45 @@
          fix
          (fn
             ((clause
-                (#InlineFunction.f_6 #InlineFunction.x_7)
+                (#InlineFunction.f_xxx #InlineFunction.x_xxx)
                 (seq
                    (do
                       (apply
-                         (apply #InlineFunction.f_6 #InlineFunction.x_7)
-                         (apply fix #InlineFunction.f_6)))))))))
+                         (apply #InlineFunction.f_xxx #InlineFunction.x_xxx)
+                         (seq (do (apply fix #InlineFunction.f_xxx)))))))))))
        ((((./test/testcases/malgo/InlineFunction.mlg 5 1)
             (./test/testcases/malgo/InlineFunction.mlg 7 1))
            <=
            (fn
               ((clause
-                  (#InlineFunction.x_0 #InlineFunction.y_1)
+                  (#InlineFunction.x_xxx #InlineFunction.y_xxx)
                   (seq
                      (do
                         (apply
-                           (apply leInt32 #InlineFunction.y_1)
-                           #InlineFunction.x_0))))))))
+                           (apply leInt32 #InlineFunction.y_xxx)
+                           #InlineFunction.x_xxx))))))))
        ((((./test/testcases/malgo/InlineFunction.mlg 11 1)
             (./test/testcases/malgo/InlineFunction.mlg 13 1))
            -
            (fn
               ((clause
-                  (#InlineFunction.x_4 #InlineFunction.y_5)
+                  (#InlineFunction.x_xxx #InlineFunction.y_xxx)
                   (seq
                      (do
                         (apply
-                           (apply subInt32 #InlineFunction.y_5)
-                           #InlineFunction.x_4))))))))
+                           (apply subInt32 #InlineFunction.y_xxx)
+                           #InlineFunction.x_xxx))))))))
        ((((./test/testcases/malgo/InlineFunction.mlg 8 1)
             (./test/testcases/malgo/InlineFunction.mlg 10 1))
            +
            (fn
               ((clause
-                  (#InlineFunction.x_2 #InlineFunction.y_3)
+                  (#InlineFunction.x_xxx #InlineFunction.y_xxx)
                   (seq
                      (do
                         (apply
-                           (apply addInt32 #InlineFunction.y_3)
-                           #InlineFunction.x_2))))))))
+                           (apply addInt32 #InlineFunction.y_xxx)
+                           #InlineFunction.x_xxx))))))))
        ((((./test/testcases/malgo/InlineFunction.mlg 15 1)
             (./test/testcases/malgo/InlineFunction.mlg 23 1))
            main
@@ -52,12 +52,12 @@
                   ()
                   (seq
                      (let
-                        #InlineFunction.fib_10
+                        #InlineFunction.fib_xxx
                         (apply
                            fix
                            (fn
                               ((clause
-                                  (#InlineFunction.f_8 #InlineFunction.n_9)
+                                  (#InlineFunction.f_xxx #InlineFunction.n_xxx)
                                   (seq
                                      (do
                                         (apply
@@ -72,23 +72,27 @@
                                                               (opapp
                                                                  +
                                                                  (apply
-                                                                    #InlineFunction.f_8
-                                                                    (opapp
-                                                                       -
-                                                                       #InlineFunction.n_9
-                                                                       (apply
-                                                                          Int32#
-                                                                          (int32
-                                                                             1))))
+                                                                    #InlineFunction.f_xxx
+                                                                    (seq
+                                                                       (do
+                                                                          (opapp
+                                                                             -
+                                                                             #InlineFunction.n_xxx
+                                                                             (apply
+                                                                                Int32#
+                                                                                (int32
+                                                                                   1))))))
                                                                  (apply
-                                                                    #InlineFunction.f_8
-                                                                    (opapp
-                                                                       -
-                                                                       #InlineFunction.n_9
-                                                                       (apply
-                                                                          Int32#
-                                                                          (int32
-                                                                             2)))))))))))
+                                                                    #InlineFunction.f_xxx
+                                                                    (seq
+                                                                       (do
+                                                                          (opapp
+                                                                             -
+                                                                             #InlineFunction.n_xxx
+                                                                             (apply
+                                                                                Int32#
+                                                                                (int32
+                                                                                   2)))))))))))))
                                               (fn
                                                  ((clause
                                                      ()
@@ -97,17 +101,19 @@
                                                            (apply
                                                               Int32#
                                                               (int32 1))))))))
-                                           (opapp
-                                              <=
-                                              #InlineFunction.n_9
-                                              (apply Int32# (int32 1)))))))))))
+                                           (seq
+                                              (do
+                                                 (opapp
+                                                    <=
+                                                    #InlineFunction.n_xxx
+                                                    (apply Int32# (int32 1)))))))))))))
                      (do
                         (opapp
                            |>
                            (opapp
                               |>
                               (apply
-                                 #InlineFunction.fib_10
+                                 #InlineFunction.fib_xxx
                                  (apply Int32# (int32 5)))
                               toStringInt32)
                            putStrLn)))))))))

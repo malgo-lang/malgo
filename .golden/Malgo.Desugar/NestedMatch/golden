@@ -3,7 +3,7 @@
        (False)
        (-> () Any#)
        (let
-          (($NestedMatch.let_30
+          (($NestedMatch.let_xxx
               (sum
                  (con test/testcases/malgo/NestedMatch.mlg.False)
                  (con test/testcases/malgo/NestedMatch.mlg.True))
@@ -12,12 +12,12 @@
                     (con test/testcases/malgo/NestedMatch.mlg.False)
                     (con test/testcases/malgo/NestedMatch.mlg.True))
                  (con test/testcases/malgo/NestedMatch.mlg.False))))
-          (cast Any# $NestedMatch.let_30)))
+          (cast Any# $NestedMatch.let_xxx)))
       (define
          (True)
          (-> () Any#)
          (let
-            (($NestedMatch.let_31
+            (($NestedMatch.let_xxx
                 (sum
                    (con test/testcases/malgo/NestedMatch.mlg.False)
                    (con test/testcases/malgo/NestedMatch.mlg.True))
@@ -26,12 +26,12 @@
                       (con test/testcases/malgo/NestedMatch.mlg.False)
                       (con test/testcases/malgo/NestedMatch.mlg.True))
                    (con test/testcases/malgo/NestedMatch.mlg.True))))
-            (cast Any# $NestedMatch.let_31)))
+            (cast Any# $NestedMatch.let_xxx)))
       (define
          (False1)
          (-> () Any#)
          (let
-            (($NestedMatch.let_32
+            (($NestedMatch.let_xxx
                 (sum
                    (con test/testcases/malgo/NestedMatch.mlg.False1)
                    (con test/testcases/malgo/NestedMatch.mlg.True1))
@@ -40,12 +40,12 @@
                       (con test/testcases/malgo/NestedMatch.mlg.False1)
                       (con test/testcases/malgo/NestedMatch.mlg.True1))
                    (con test/testcases/malgo/NestedMatch.mlg.False1))))
-            (cast Any# $NestedMatch.let_32)))
+            (cast Any# $NestedMatch.let_xxx)))
       (define
          (True1)
          (-> () Any#)
          (let
-            (($NestedMatch.let_33
+            (($NestedMatch.let_xxx
                 (sum
                    (con test/testcases/malgo/NestedMatch.mlg.False1)
                    (con test/testcases/malgo/NestedMatch.mlg.True1))
@@ -54,12 +54,12 @@
                       (con test/testcases/malgo/NestedMatch.mlg.False1)
                       (con test/testcases/malgo/NestedMatch.mlg.True1))
                    (con test/testcases/malgo/NestedMatch.mlg.True1))))
-            (cast Any# $NestedMatch.let_33)))
+            (cast Any# $NestedMatch.let_xxx)))
       (define
          (False2)
          (-> () Any#)
          (let
-            (($NestedMatch.let_34
+            (($NestedMatch.let_xxx
                 (sum
                    (con test/testcases/malgo/NestedMatch.mlg.False2)
                    (con test/testcases/malgo/NestedMatch.mlg.True2))
@@ -68,12 +68,12 @@
                       (con test/testcases/malgo/NestedMatch.mlg.False2)
                       (con test/testcases/malgo/NestedMatch.mlg.True2))
                    (con test/testcases/malgo/NestedMatch.mlg.False2))))
-            (cast Any# $NestedMatch.let_34)))
+            (cast Any# $NestedMatch.let_xxx)))
       (define
          (True2)
          (-> () Any#)
          (let
-            (($NestedMatch.let_35
+            (($NestedMatch.let_xxx
                 (sum
                    (con test/testcases/malgo/NestedMatch.mlg.False2)
                    (con test/testcases/malgo/NestedMatch.mlg.True2))
@@ -82,65 +82,68 @@
                       (con test/testcases/malgo/NestedMatch.mlg.False2)
                       (con test/testcases/malgo/NestedMatch.mlg.True2))
                    (con test/testcases/malgo/NestedMatch.mlg.True2))))
-            (cast Any# $NestedMatch.let_35)))
+            (cast Any# $NestedMatch.let_xxx)))
       (define
-         (malgo_print_string $NestedMatch.p_36)
+         (malgo_print_string $NestedMatch.p_xxx)
          (-> (String#) (sum (con Tuple#)))
          (raw
             malgo_print_string
             (-> (String#) (sum (con Tuple#)))
-            $NestedMatch.p_36))
+            $NestedMatch.p_xxx))
       (define
-         (malgo_exit_failure $NestedMatch.p_37)
+         (malgo_exit_failure $NestedMatch.p_xxx)
          (-> ((sum (con Tuple#))) Any#)
-         (raw malgo_exit_failure (-> ((sum (con Tuple#))) Any#) $NestedMatch.p_37))
+         (raw
+            malgo_exit_failure
+            (-> ((sum (con Tuple#))) Any#)
+            $NestedMatch.p_xxx))
       (define
-         (main $NestedMatch.$__38)
+         (main $NestedMatch.$__xxx)
          (-> ((sum (con Tuple#))) (sum (con Tuple#)))
          (=
-            $NestedMatch.d_45
+            $NestedMatch.d_xxx
             (let
-               (($NestedMatch.fun_44
+               (($NestedMatch.fun_xxx
                    (-> (Any#) (sum (con Tuple#)))
                    (fun
-                      ($NestedMatch.true_39)
+                      ($NestedMatch.true_xxx)
                       (match
                          (cast
                             (sum
                                (con test/testcases/malgo/NestedMatch.mlg.False)
                                (con test/testcases/malgo/NestedMatch.mlg.True))
-                            $NestedMatch.true_39)
+                            $NestedMatch.true_xxx)
                          (unpack
                             (con test/testcases/malgo/NestedMatch.mlg.False)
                             ()
                             (=
-                               $NestedMatch.d_41
+                               $NestedMatch.d_xxx
                                (let
-                                  (($NestedMatch.let_40
+                                  (($NestedMatch.let_xxx
                                       (sum (con Tuple#))
                                       (pack (sum (con Tuple#)) (con Tuple#))))
-                                  $NestedMatch.let_40)
+                                  $NestedMatch.let_xxx)
                                (=
-                                  $NestedMatch.d_42
-                                  (call malgo_exit_failure $NestedMatch.d_41)
-                                  (cast (sum (con Tuple#)) $NestedMatch.d_42))))
+                                  $NestedMatch.d_xxx
+                                  (call malgo_exit_failure $NestedMatch.d_xxx)
+                                  (cast (sum (con Tuple#)) $NestedMatch.d_xxx))))
                          (unpack
                             (con test/testcases/malgo/NestedMatch.mlg.True)
                             ()
                             (=
-                               $NestedMatch.d_43
+                               $NestedMatch.d_xxx
                                (call malgo_print_string "OK")
-                               (cast (sum (con Tuple#)) $NestedMatch.d_43)))))))
-               $NestedMatch.fun_44)
+                               (cast (sum (con Tuple#)) $NestedMatch.d_xxx)))))))
+               $NestedMatch.fun_xxx)
             (=
-               $NestedMatch.d_56
+               $NestedMatch.d_xxx
                (=
-                  $NestedMatch.d_48
+                  $NestedMatch.d_xxx
                   (let
-                     (($NestedMatch.fun_47
+                     (($NestedMatch.fun_xxx
                          (-> (Any#) Any#)
                          (fun
-                            ($NestedMatch.true1_46)
+                            ($NestedMatch.true1_xxx)
                             (match
                                (cast
                                   (sum
@@ -148,7 +151,7 @@
                                         test/testcases/malgo/NestedMatch.mlg.False1)
                                      (con
                                         test/testcases/malgo/NestedMatch.mlg.True1))
-                                  $NestedMatch.true1_46)
+                                  $NestedMatch.true1_xxx)
                                (unpack
                                   (con
                                      test/testcases/malgo/NestedMatch.mlg.False1)
@@ -158,16 +161,16 @@
                                   (con test/testcases/malgo/NestedMatch.mlg.True1)
                                   ()
                                   (direct False))))))
-                     $NestedMatch.fun_47)
+                     $NestedMatch.fun_xxx)
                   (=
-                     $NestedMatch.d_54
+                     $NestedMatch.d_xxx
                      (=
-                        $NestedMatch.d_51
+                        $NestedMatch.d_xxx
                         (let
-                           (($NestedMatch.fun_50
+                           (($NestedMatch.fun_xxx
                                (-> (Any#) Any#)
                                (fun
-                                  ($NestedMatch.true2_49)
+                                  ($NestedMatch.true2_xxx)
                                   (match
                                      (cast
                                         (sum
@@ -175,7 +178,7 @@
                                               test/testcases/malgo/NestedMatch.mlg.False2)
                                            (con
                                               test/testcases/malgo/NestedMatch.mlg.True2))
-                                        $NestedMatch.true2_49)
+                                        $NestedMatch.true2_xxx)
                                      (unpack
                                         (con
                                            test/testcases/malgo/NestedMatch.mlg.False2)
@@ -186,21 +189,21 @@
                                            test/testcases/malgo/NestedMatch.mlg.True2)
                                         ()
                                         (direct False1))))))
-                           $NestedMatch.fun_50)
+                           $NestedMatch.fun_xxx)
                         (=
-                           $NestedMatch.d_52
+                           $NestedMatch.d_xxx
                            (direct True2)
                            (=
-                              $NestedMatch.d_53
-                              (call $NestedMatch.d_51 $NestedMatch.d_52)
-                              (cast Any# $NestedMatch.d_53))))
+                              $NestedMatch.d_xxx
+                              (call $NestedMatch.d_xxx $NestedMatch.d_xxx)
+                              (cast Any# $NestedMatch.d_xxx))))
                      (=
-                        $NestedMatch.d_55
-                        (call $NestedMatch.d_48 $NestedMatch.d_54)
-                        (cast Any# $NestedMatch.d_55))))
+                        $NestedMatch.d_xxx
+                        (call $NestedMatch.d_xxx $NestedMatch.d_xxx)
+                        (cast Any# $NestedMatch.d_xxx))))
                (=
-                  $NestedMatch.d_57
-                  (call $NestedMatch.d_45 $NestedMatch.d_56)
-                  (cast (sum (con Tuple#)) $NestedMatch.d_57))))))
+                  $NestedMatch.d_xxx
+                  (call $NestedMatch.d_xxx $NestedMatch.d_xxx)
+                  (cast (sum (con Tuple#)) $NestedMatch.d_xxx))))))
    ((extern malgo_print_string (-> (String#) (sum (con Tuple#))))
       (extern malgo_exit_failure (-> ((sum (con Tuple#))) Any#))))

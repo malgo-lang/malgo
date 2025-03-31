@@ -1,35 +1,36 @@
 ((string#
     (lambda
-       ($Pragma.param_21)
+       ($Pragma.param_xxx)
        (select
-          $Pragma.param_21
-          ((#Pragma.x_1 (apply (invoke String#) (#Pragma.x_1)))))))
+          $Pragma.param_xxx
+          ((#Pragma.x_xxx (apply (invoke String#) (#Pragma.x_xxx)))))))
    (putStrLn
       (lambda
-         ($Pragma.param_22)
+         ($Pragma.param_xxx)
          (select
-            $Pragma.param_22
-            (((String# (#Pragma.str_0))
+            $Pragma.param_xxx
+            (((String# (#Pragma.str_xxx))
                 (apply
                    (lambda
-                      ($Pragma.tmp_23)
+                      ($Pragma.tmp_xxx)
                       (apply (invoke malgo_newline) ((tuple ()))))
-                   ((apply (invoke malgo_print_string) (#Pragma.str_0)))))))))
+                   ((apply (invoke malgo_print_string) (#Pragma.str_xxx)))))))))
    (main
       (lambda
-         ($Pragma.param_24)
+         ($Pragma.param_xxx)
          (select
-            $Pragma.param_24
-            ((#Pragma.$__20
+            $Pragma.param_xxx
+            ((#Pragma.$__xxx
                 (apply
                    (invoke putStrLn)
                    ((apply (invoke String#) ("Hello, world")))))))))
-   (String# (lambda ($Pragma.constructor_25) (String# ($Pragma.constructor_25))))
+   (String#
+      (lambda ($Pragma.constructor_xxx) (String# ($Pragma.constructor_xxx))))
    (malgo_print_string
       (lambda
-         ($Pragma.primitive_26)
-         (primitive malgo_print_string ($Pragma.primitive_26))))
+         ($Pragma.primitive_xxx)
+         (primitive malgo_print_string ($Pragma.primitive_xxx))))
    (malgo_newline
       (lambda
-         ($Pragma.primitive_27)
-         (primitive malgo_newline ($Pragma.primitive_27)))))
+         ($Pragma.primitive_xxx)
+         (primitive malgo_newline ($Pragma.primitive_xxx)))))

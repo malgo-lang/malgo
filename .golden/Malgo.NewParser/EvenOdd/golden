@@ -225,7 +225,7 @@ Module
            }
           ) "odd"
          )
-         ( Parens
+         ( Seq
           ( Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
@@ -239,17 +239,17 @@ Module
             }
            }
           )
-          ( Apply
+          ( NoBind
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
              , sourceLine = Pos 6
-             , sourceColumn = Pos 22
+             , sourceColumn = Pos 12
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
              , sourceLine = Pos 6
-             , sourceColumn = Pos 24
+             , sourceColumn = Pos 26
              }
             }
            )
@@ -258,31 +258,16 @@ Module
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
               , sourceLine = Pos 6
-              , sourceColumn = Pos 24
+              , sourceColumn = Pos 22
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
               , sourceLine = Pos 6
-              , sourceColumn = Pos 25
+              , sourceColumn = Pos 24
               }
              }
             )
-            ( Var
-             ( Range
-              { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-               , sourceLine = Pos 6
-               , sourceColumn = Pos 13
-               }
-              , _end = SourcePos
-               { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-               , sourceLine = Pos 6
-               , sourceColumn = Pos 22
-               }
-              }
-             ) "subInt32"
-            )
-            ( Boxed
+            ( Apply
              ( Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
@@ -296,24 +281,54 @@ Module
                }
               }
              )
-             ( Int32 1 )
+             ( Var
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+                , sourceLine = Pos 6
+                , sourceColumn = Pos 13
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+                , sourceLine = Pos 6
+                , sourceColumn = Pos 22
+                }
+               }
+              ) "subInt32"
+             )
+             ( Boxed
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+                , sourceLine = Pos 6
+                , sourceColumn = Pos 24
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+                , sourceLine = Pos 6
+                , sourceColumn = Pos 25
+                }
+               }
+              )
+              ( Int32 1 )
+             )
             )
-           )
-           ( Var
-            ( Range
-             { _start = SourcePos
-              { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-              , sourceLine = Pos 6
-              , sourceColumn = Pos 22
+            ( Var
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+               , sourceLine = Pos 6
+               , sourceColumn = Pos 22
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+               , sourceLine = Pos 6
+               , sourceColumn = Pos 24
+               }
               }
-             , _end = SourcePos
-              { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-              , sourceLine = Pos 6
-              , sourceColumn = Pos 24
-              }
-             }
-            ) "n"
-           )
+             ) "n"
+            )
+           ) :| []
           )
          )
         ) :| []
@@ -511,7 +526,7 @@ Module
            }
           ) "even"
          )
-         ( Parens
+         ( Seq
           ( Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
@@ -525,17 +540,17 @@ Module
             }
            }
           )
-          ( Apply
+          ( NoBind
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
              , sourceLine = Pos 11
-             , sourceColumn = Pos 23
+             , sourceColumn = Pos 13
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
              , sourceLine = Pos 11
-             , sourceColumn = Pos 25
+             , sourceColumn = Pos 27
              }
             }
            )
@@ -544,31 +559,16 @@ Module
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
               , sourceLine = Pos 11
-              , sourceColumn = Pos 25
+              , sourceColumn = Pos 23
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
               , sourceLine = Pos 11
-              , sourceColumn = Pos 26
+              , sourceColumn = Pos 25
               }
              }
             )
-            ( Var
-             ( Range
-              { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-               , sourceLine = Pos 11
-               , sourceColumn = Pos 14
-               }
-              , _end = SourcePos
-               { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-               , sourceLine = Pos 11
-               , sourceColumn = Pos 23
-               }
-              }
-             ) "subInt32"
-            )
-            ( Boxed
+            ( Apply
              ( Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
@@ -582,24 +582,54 @@ Module
                }
               }
              )
-             ( Int32 1 )
+             ( Var
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+                , sourceLine = Pos 11
+                , sourceColumn = Pos 14
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+                , sourceLine = Pos 11
+                , sourceColumn = Pos 23
+                }
+               }
+              ) "subInt32"
+             )
+             ( Boxed
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+                , sourceLine = Pos 11
+                , sourceColumn = Pos 25
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+                , sourceLine = Pos 11
+                , sourceColumn = Pos 26
+                }
+               }
+              )
+              ( Int32 1 )
+             )
             )
-           )
-           ( Var
-            ( Range
-             { _start = SourcePos
-              { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-              , sourceLine = Pos 11
-              , sourceColumn = Pos 23
+            ( Var
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+               , sourceLine = Pos 11
+               , sourceColumn = Pos 23
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+               , sourceLine = Pos 11
+               , sourceColumn = Pos 25
+               }
               }
-             , _end = SourcePos
-              { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-              , sourceLine = Pos 11
-              , sourceColumn = Pos 25
-              }
-             }
-            ) "n"
-           )
+             ) "n"
+            )
+           ) :| []
           )
          )
         ) :| []
@@ -919,7 +949,7 @@ Module
           ]
          )
         )
-        ( Parens
+        ( Seq
          ( Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
@@ -933,36 +963,21 @@ Module
            }
           }
          )
-         ( Apply
+         ( NoBind
           ( Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
             , sourceLine = Pos 16
-            , sourceColumn = Pos 39
+            , sourceColumn = Pos 33
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
             , sourceLine = Pos 16
-            , sourceColumn = Pos 41
+            , sourceColumn = Pos 43
             }
            }
           )
-          ( Var
-           ( Range
-            { _start = SourcePos
-             { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-             , sourceLine = Pos 16
-             , sourceColumn = Pos 34
-             }
-            , _end = SourcePos
-             { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-             , sourceLine = Pos 16
-             , sourceColumn = Pos 39
-             }
-            }
-           ) "even"
-          )
-          ( Boxed
+          ( Apply
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
@@ -976,8 +991,38 @@ Module
              }
             }
            )
-           ( Int32 10 )
-          )
+           ( Var
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+              , sourceLine = Pos 16
+              , sourceColumn = Pos 34
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+              , sourceLine = Pos 16
+              , sourceColumn = Pos 39
+              }
+             }
+            ) "even"
+           )
+           ( Boxed
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+              , sourceLine = Pos 16
+              , sourceColumn = Pos 39
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+              , sourceLine = Pos 16
+              , sourceColumn = Pos 41
+              }
+             }
+            )
+            ( Int32 10 )
+           )
+          ) :| []
          )
         )
        ) :| []

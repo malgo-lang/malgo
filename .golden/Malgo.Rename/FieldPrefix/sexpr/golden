@@ -16,31 +16,31 @@
            y2D
            (fn
               ((clause
-                  ((record (x #FieldPrefix.__4) (y #FieldPrefix.y_5)))
-                  (seq (do #FieldPrefix.y_5)))))))
+                  ((record (x #FieldPrefix.__xxx) (y #FieldPrefix.y_xxx)))
+                  (seq (do #FieldPrefix.y_xxx)))))))
        ((((./test/testcases/malgo/FieldPrefix.mlg 15 1)
             (./test/testcases/malgo/FieldPrefix.mlg 17 1))
            x2D
            (fn
               ((clause
-                  ((record (x #FieldPrefix.x_2) (y #FieldPrefix.__3)))
-                  (seq (do #FieldPrefix.x_2)))))))
+                  ((record (x #FieldPrefix.x_xxx) (y #FieldPrefix.__xxx)))
+                  (seq (do #FieldPrefix.x_xxx)))))))
        ((((./test/testcases/malgo/FieldPrefix.mlg 8 1)
             (./test/testcases/malgo/FieldPrefix.mlg 14 1))
            print2D
            (fn
               ((clause
-                  ((record (x #FieldPrefix.x_0) (y #FieldPrefix.y_1)))
+                  ((record (x #FieldPrefix.x_xxx) (y #FieldPrefix.y_xxx)))
                   (seq
                      (do
                         (apply
                            printString
-                           (seq (do (apply toStringInt32 #FieldPrefix.x_0)))))
+                           (seq (do (apply toStringInt32 #FieldPrefix.x_xxx)))))
                      (do (apply printString (apply String# (string ", "))))
                      (do
                         (apply
                            printString
-                           (seq (do (apply toStringInt32 #FieldPrefix.y_1)))))))))))
+                           (seq (do (apply toStringInt32 #FieldPrefix.y_xxx)))))))))))
        ((((./test/testcases/malgo/FieldPrefix.mlg 26 1)
             (./test/testcases/malgo/FieldPrefix.mlg 29 1))
            main

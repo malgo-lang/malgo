@@ -39,14 +39,14 @@
                                      (do
                                         (apply
                                            (apply eventuallyBind k)
-                                           (parens (apply work (tuple))))))))))))))))
+                                           (seq (do (apply work (tuple)))))))))))))))))
       (def
          step
          (fn
-            ((clause ((con Done (value))) (seq (do (apply Done value))))
+            ((clause (Done value) (seq (do (apply Done value))))
                (clause
-                  ((con NotYetDone (work)))
-                  (seq (do (parens (apply work (tuple)))))))))
+                  (NotYetDone work)
+                  (seq (do (seq (do (apply work (tuple))))))))))
       (sig
          bind
          (->
@@ -81,32 +81,37 @@
                                                      (apply
                                                         (apply return (int32 3))
                                                         eventually)))))))
-                                     (parens
-                                        (apply
-                                           NotYetDone
-                                           (fn
-                                              ((clause
-                                                  ()
-                                                  (seq
-                                                     (do
-                                                        (apply
-                                                           Done
-                                                           (parens
-                                                              (apply
-                                                                 printString
-                                                                 (string "2"))))))))))))
+                                     (seq
+                                        (do
+                                           (apply
+                                              NotYetDone
+                                              (fn
+                                                 ((clause
+                                                     ()
+                                                     (seq
+                                                        (do
+                                                           (apply
+                                                              Done
+                                                              (seq
+                                                                 (do
+                                                                    (apply
+                                                                       printString
+                                                                       (string
+                                                                          "2"))))))))))))))
                                   eventually)))))))
-               (parens
-                  (apply
-                     NotYetDone
-                     (fn
-                        ((clause
-                            ()
-                            (seq
-                               (do
-                                  (apply
-                                     Done
-                                     (parens (apply printString (string "1"))))))))))))
+               (seq
+                  (do
+                     (apply
+                        NotYetDone
+                        (fn
+                           ((clause
+                               ()
+                               (seq
+                                  (do
+                                     (apply
+                                        Done
+                                        (seq
+                                           (do (apply printString (string "1"))))))))))))))
             eventually))
       (sig main (block (tuple)))
       (def
@@ -122,13 +127,13 @@
                          (opapp |> (opapp |> (opapp |> comp step) step) step)
                          (fn
                             ((clause
-                                ((con Done (x)))
+                                (Done x)
                                 (seq
                                    (do
                                       (apply
                                          printString
-                                         (parens (apply toStringInt32 x))))))
+                                         (seq (do (apply toStringInt32 x)))))))
                                (clause
-                                  ((con NotYetDone (_)))
+                                  (NotYetDone _)
                                   (seq
                                      (do (apply printString (string "not yet"))))))))))))))))

@@ -257,7 +257,7 @@ Module
        }
       }
      )
-     [ ConP
+     [ VarP
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
@@ -267,25 +267,24 @@ Module
        , _end = SourcePos
         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
         , sourceLine = Pos 8
-        , sourceColumn = Pos 16
+        , sourceColumn = Pos 14
         }
        }
       ) "x"
-      [ VarP
-       ( Range
-        { _start = SourcePos
-         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
-         , sourceLine = Pos 8
-         , sourceColumn = Pos 14
-         }
-        , _end = SourcePos
-         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
-         , sourceLine = Pos 8
-         , sourceColumn = Pos 16
-         }
+     , VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 8
+        , sourceColumn = Pos 14
         }
-       ) "y"
-      ]
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 8
+        , sourceColumn = Pos 16
+        }
+       }
+      ) "y"
      ]
      ( Seq
       ( Range
@@ -436,7 +435,7 @@ Module
        }
       }
      )
-     [ ConP
+     [ VarP
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
@@ -446,25 +445,24 @@ Module
        , _end = SourcePos
         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
         , sourceLine = Pos 10
-        , sourceColumn = Pos 16
+        , sourceColumn = Pos 14
         }
        }
       ) "x"
-      [ VarP
-       ( Range
-        { _start = SourcePos
-         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
-         , sourceLine = Pos 10
-         , sourceColumn = Pos 14
-         }
-        , _end = SourcePos
-         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
-         , sourceLine = Pos 10
-         , sourceColumn = Pos 16
-         }
+     , VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 10
+        , sourceColumn = Pos 14
         }
-       ) "y"
-      ]
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 10
+        , sourceColumn = Pos 16
+        }
+       }
+      ) "y"
      ]
      ( Seq
       ( Range
@@ -629,7 +627,7 @@ Module
        }
       }
      )
-     [ ConP
+     [ VarP
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
@@ -639,25 +637,24 @@ Module
        , _end = SourcePos
         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
         , sourceLine = Pos 13
-        , sourceColumn = Pos 16
+        , sourceColumn = Pos 14
         }
        }
       ) "x"
-      [ VarP
-       ( Range
-        { _start = SourcePos
-         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
-         , sourceLine = Pos 13
-         , sourceColumn = Pos 14
-         }
-        , _end = SourcePos
-         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
-         , sourceLine = Pos 13
-         , sourceColumn = Pos 16
-         }
+     , VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 13
+        , sourceColumn = Pos 14
         }
-       ) "y"
-      ]
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 13
+        , sourceColumn = Pos 16
+        }
+       }
+      ) "y"
      ]
      ( Seq
       ( Range
@@ -808,7 +805,7 @@ Module
        }
       }
      )
-     [ ConP
+     [ VarP
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
@@ -818,25 +815,24 @@ Module
        , _end = SourcePos
         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
         , sourceLine = Pos 15
-        , sourceColumn = Pos 16
+        , sourceColumn = Pos 14
         }
        }
       ) "x"
-      [ VarP
-       ( Range
-        { _start = SourcePos
-         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
-         , sourceLine = Pos 15
-         , sourceColumn = Pos 14
-         }
-        , _end = SourcePos
-         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
-         , sourceLine = Pos 15
-         , sourceColumn = Pos 16
-         }
+     , VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 15
+        , sourceColumn = Pos 14
         }
-       ) "y"
-      ]
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+        , sourceLine = Pos 15
+        , sourceColumn = Pos 16
+        }
+       }
+      ) "y"
      ]
      ( Seq
       ( Range
@@ -1059,7 +1055,7 @@ Module
           }
          ) "String#"
         )
-        ( Parens
+        ( Seq
          ( Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
@@ -1073,36 +1069,21 @@ Module
            }
           }
          )
-         ( Apply
+         ( NoBind
           ( Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
             , sourceLine = Pos 17
-            , sourceColumn = Pos 43
+            , sourceColumn = Pos 26
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
             , sourceLine = Pos 17
-            , sourceColumn = Pos 44
+            , sourceColumn = Pos 45
             }
            }
           )
-          ( Var
-           ( Range
-            { _start = SourcePos
-             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
-             , sourceLine = Pos 17
-             , sourceColumn = Pos 27
-             }
-            , _end = SourcePos
-             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
-             , sourceLine = Pos 17
-             , sourceColumn = Pos 43
-             }
-            }
-           ) "toStringDouble#"
-          )
-          ( Var
+          ( Apply
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
@@ -1115,8 +1096,38 @@ Module
              , sourceColumn = Pos 44
              }
             }
-           ) "x"
-          )
+           )
+           ( Var
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+              , sourceLine = Pos 17
+              , sourceColumn = Pos 27
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+              , sourceLine = Pos 17
+              , sourceColumn = Pos 43
+              }
+             }
+            ) "toStringDouble#"
+           )
+           ( Var
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+              , sourceLine = Pos 17
+              , sourceColumn = Pos 43
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+              , sourceLine = Pos 17
+              , sourceColumn = Pos 44
+              }
+             }
+            ) "x"
+           )
+          ) :| []
          )
         )
        ) :| []
@@ -1238,7 +1249,7 @@ Module
           }
          ) "putStrLn"
         )
-        ( Parens
+        ( Seq
          ( Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
@@ -1252,36 +1263,21 @@ Module
            }
           }
          )
-         ( Apply
+         ( NoBind
           ( Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
             , sourceLine = Pos 19
-            , sourceColumn = Pos 41
+            , sourceColumn = Pos 35
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
             , sourceLine = Pos 19
-            , sourceColumn = Pos 42
+            , sourceColumn = Pos 43
             }
            }
           )
-          ( Var
-           ( Range
-            { _start = SourcePos
-             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
-             , sourceLine = Pos 19
-             , sourceColumn = Pos 36
-             }
-            , _end = SourcePos
-             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
-             , sourceLine = Pos 19
-             , sourceColumn = Pos 41
-             }
-            }
-           ) "show"
-          )
-          ( Var
+          ( Apply
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
@@ -1294,8 +1290,38 @@ Module
              , sourceColumn = Pos 42
              }
             }
-           ) "x"
-          )
+           )
+           ( Var
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+              , sourceLine = Pos 19
+              , sourceColumn = Pos 36
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+              , sourceLine = Pos 19
+              , sourceColumn = Pos 41
+              }
+             }
+            ) "show"
+           )
+           ( Var
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+              , sourceLine = Pos 19
+              , sourceColumn = Pos 41
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+              , sourceLine = Pos 19
+              , sourceColumn = Pos 42
+              }
+             }
+            ) "x"
+           )
+          ) :| []
          )
         )
        ) :|
@@ -1491,7 +1517,7 @@ Module
           }
          }
         ) "*"
-        ( Parens
+        ( Seq
          ( Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
@@ -1505,51 +1531,66 @@ Module
            }
           }
          )
-         ( OpApp
+         ( NoBind
           ( Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
             , sourceLine = Pos 22
-            , sourceColumn = Pos 18
+            , sourceColumn = Pos 15
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
             , sourceLine = Pos 22
-            , sourceColumn = Pos 20
+            , sourceColumn = Pos 26
             }
            }
-          ) "+"
-          ( Var
+          )
+          ( OpApp
            ( Range
             { _start = SourcePos
-             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
-             , sourceLine = Pos 22
-             , sourceColumn = Pos 16
-             }
-            , _end = SourcePos
              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
              , sourceLine = Pos 22
              , sourceColumn = Pos 18
              }
-            }
-           ) "x"
-          )
-          ( Unboxed
-           ( Range
-            { _start = SourcePos
+            , _end = SourcePos
              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
              , sourceLine = Pos 22
              , sourceColumn = Pos 20
              }
-            , _end = SourcePos
-             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
-             , sourceLine = Pos 22
-             , sourceColumn = Pos 24
-             }
             }
+           ) "+"
+           ( Var
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+              , sourceLine = Pos 22
+              , sourceColumn = Pos 16
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+              , sourceLine = Pos 22
+              , sourceColumn = Pos 18
+              }
+             }
+            ) "x"
            )
-           ( Double 0.0 )
-          )
+           ( Unboxed
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+              , sourceLine = Pos 22
+              , sourceColumn = Pos 20
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+              , sourceLine = Pos 22
+              , sourceColumn = Pos 24
+              }
+             }
+            )
+            ( Double 0.0 )
+           )
+          ) :| []
          )
         )
         ( Var
@@ -1671,7 +1712,7 @@ Module
           }
          ) "putStrLn"
         )
-        ( Parens
+        ( Seq
          ( Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
@@ -1685,36 +1726,21 @@ Module
            }
           }
          )
-         ( Apply
+         ( NoBind
           ( Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
             , sourceLine = Pos 25
-            , sourceColumn = Pos 18
+            , sourceColumn = Pos 12
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
-            , sourceLine = Pos 25
-            , sourceColumn = Pos 26
+            , sourceLine = Pos 26
+            , sourceColumn = Pos 1
             }
            }
           )
-          ( Var
-           ( Range
-            { _start = SourcePos
-             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
-             , sourceLine = Pos 25
-             , sourceColumn = Pos 13
-             }
-            , _end = SourcePos
-             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
-             , sourceLine = Pos 25
-             , sourceColumn = Pos 18
-             }
-            }
-           ) "show"
-          )
-          ( Parens
+          ( Apply
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
@@ -1728,53 +1754,98 @@ Module
              }
             }
            )
-           ( Apply
+           ( Var
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
               , sourceLine = Pos 25
-              , sourceColumn = Pos 21
+              , sourceColumn = Pos 13
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
               , sourceLine = Pos 25
-              , sourceColumn = Pos 25
+              , sourceColumn = Pos 18
+              }
+             }
+            ) "show"
+           )
+           ( Seq
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+              , sourceLine = Pos 25
+              , sourceColumn = Pos 18
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+              , sourceLine = Pos 25
+              , sourceColumn = Pos 26
               }
              }
             )
-            ( Var
+            ( NoBind
              ( Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
                , sourceLine = Pos 25
-               , sourceColumn = Pos 19
+               , sourceColumn = Pos 18
                }
               , _end = SourcePos
                { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
                , sourceLine = Pos 25
-               , sourceColumn = Pos 21
-               }
-              }
-             ) "f"
-            )
-            ( Unboxed
-             ( Range
-              { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
-               , sourceLine = Pos 25
-               , sourceColumn = Pos 21
-               }
-              , _end = SourcePos
-               { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
-               , sourceLine = Pos 25
-               , sourceColumn = Pos 25
+               , sourceColumn = Pos 26
                }
               }
              )
-             ( Double 0.5 )
+             ( Apply
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+                , sourceLine = Pos 25
+                , sourceColumn = Pos 21
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+                , sourceLine = Pos 25
+                , sourceColumn = Pos 25
+                }
+               }
+              )
+              ( Var
+               ( Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+                 , sourceLine = Pos 25
+                 , sourceColumn = Pos 19
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+                 , sourceLine = Pos 25
+                 , sourceColumn = Pos 21
+                 }
+                }
+               ) "f"
+              )
+              ( Unboxed
+               ( Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+                 , sourceLine = Pos 25
+                 , sourceColumn = Pos 21
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
+                 , sourceLine = Pos 25
+                 , sourceColumn = Pos 25
+                 }
+                }
+               )
+               ( Double 0.5 )
+              )
+             ) :| []
             )
            )
-          )
+          ) :| []
          )
         )
        ) :| []

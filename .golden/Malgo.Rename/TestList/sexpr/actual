@@ -8,13 +8,13 @@
                 ()
                 (seq
                    (let
-                      #TestList.xs_0
+                      #TestList.xs_xxx
                       (apply
                          (apply Cons (apply Int32# (int32 1)))
                          (apply
                             (apply Cons (apply Int32# (int32 2)))
                             (apply (apply Cons (apply Int32# (int32 3))) Nil))))
-                   (let #TestList.nil_1 Nil)
+                   (let #TestList.nil_xxx Nil)
                    (do
                       (apply
                          putStrLn
@@ -22,7 +22,7 @@
                             (do
                                (apply
                                   toStringInt32
-                                  (seq (do (apply head #TestList.xs_0)))))))))))))))
+                                  (seq (do (apply head #TestList.xs_xxx)))))))))))))))
       ()
       ()
       ()

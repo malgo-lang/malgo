@@ -13,4 +13,5 @@
                    (do
                       (apply
                          putStrLn
-                         (parens (apply toStringInt32 (parens (apply head xs)))))))))))))
+                         (seq
+                            (do (apply toStringInt32 (seq (do (apply head xs)))))))))))))))

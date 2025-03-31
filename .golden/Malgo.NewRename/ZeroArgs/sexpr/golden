@@ -9,11 +9,11 @@
            id
            (fn
               ((clause
-                  (#ZeroArgs.x_2)
+                  (#ZeroArgs.x_xxx)
                   (seq
                      (do
                         (apply
-                           (fn ((clause () (seq (do #ZeroArgs.x_2)))))
+                           (fn ((clause () (seq (do #ZeroArgs.x_xxx)))))
                            (tuple)))))))))
        ((((./test/testcases/malgo/ZeroArgs.mlg 11 1)
             (./test/testcases/malgo/ZeroArgs.mlg 14 1))
@@ -31,16 +31,20 @@
                                      (do
                                         (apply
                                            printString
-                                           (apply toStringInt32 (apply id one)))))))))))))
+                                           (seq
+                                              (do
+                                                 (apply
+                                                    toStringInt32
+                                                    (seq (do (apply id one)))))))))))))))))
               (tuple)))))
       ((((./test/testcases/malgo/ZeroArgs.mlg 4 1)
            (./test/testcases/malgo/ZeroArgs.mlg 5 1))
           one
-          #ZeroArgs.Int32_0)
+          #ZeroArgs.Int32_xxx)
          (((./test/testcases/malgo/ZeroArgs.mlg 7 1)
              (./test/testcases/malgo/ZeroArgs.mlg 8 1))
             id
-            (-> #ZeroArgs.a_1 #ZeroArgs.a_1))
+            (-> #ZeroArgs.a_xxx #ZeroArgs.a_xxx))
          (((./test/testcases/malgo/ZeroArgs.mlg 10 1)
              (./test/testcases/malgo/ZeroArgs.mlg 11 1))
             main

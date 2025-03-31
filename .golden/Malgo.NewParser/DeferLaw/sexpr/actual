@@ -14,4 +14,4 @@
          (fn
             ((clause
                 ()
-                (seq (do (apply putStrLn (parens (apply f (string "Hello"))))))))))))
+                (seq (do (apply putStrLn (seq (do (apply f (string "Hello")))))))))))))

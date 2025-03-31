@@ -4,8 +4,8 @@
           (./test/testcases/malgo/Test2.mlg 5 1))
          rtob
          (fn
-            ((clause (#Test2.R_0) (seq (do B)))
-               (clause (#Test2.a_1) (seq (do #Test2.a_1)))))))
+            ((clause ((con R ())) (seq (do B)))
+               (clause (#Test2.a_xxx) (seq (do #Test2.a_xxx)))))))
        ((((./test/testcases/malgo/Test2.mlg 7 1)
             (./test/testcases/malgo/Test2.mlg 8 1))
            main
@@ -17,17 +17,17 @@
                         (apply
                            (fn
                               ((clause
-                                  (#Test2.B_3)
+                                  ((con B ()))
                                   (seq
                                      (do (apply malgo_print_string (string "OK")))))
                                  (clause
-                                    (#Test2.__4)
+                                    (#Test2.__xxx)
                                     (seq
                                        (do
                                           (apply
                                              malgo_print_string
                                              (string "WRONG")))))))
-                           (apply rtob R))))))))))
+                           (seq (do (apply rtob R))))))))))))
       ()
       ((((./test/testcases/malgo/Test2.mlg 1 1)
            (./test/testcases/malgo/Test2.mlg 3 1))
@@ -50,5 +50,5 @@
             (./test/testcases/malgo/Test2.mlg 7 1))
            malgo_print_string)
           malgo_print_string
-          (-> #Test2.String#_2 (tuple))))
+          (-> #Test2.String#_xxx (tuple))))
       ()))

@@ -92,7 +92,7 @@ Module
        }
       }
      )
-     [ ConP
+     [ VarP
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
@@ -102,25 +102,24 @@ Module
        , _end = SourcePos
         { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
         , sourceLine = Pos 5
-        , sourceColumn = Pos 17
+        , sourceColumn = Pos 15
         }
        }
       ) "x"
-      [ VarP
-       ( Range
-        { _start = SourcePos
-         { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-         , sourceLine = Pos 5
-         , sourceColumn = Pos 15
-         }
-        , _end = SourcePos
-         { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-         , sourceLine = Pos 5
-         , sourceColumn = Pos 17
-         }
+     , VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+        , sourceLine = Pos 5
+        , sourceColumn = Pos 15
         }
-       ) "y"
-      ]
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+        , sourceLine = Pos 5
+        , sourceColumn = Pos 17
+        }
+       }
+      ) "y"
      ]
      ( Seq
       ( Range
@@ -271,7 +270,7 @@ Module
        }
       }
      )
-     [ ConP
+     [ VarP
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
@@ -281,16 +280,30 @@ Module
        , _end = SourcePos
         { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
         , sourceLine = Pos 8
-        , sourceColumn = Pos 24
+        , sourceColumn = Pos 10
         }
        }
       ) "Cons"
-      [ ConP
+     , ConP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+        , sourceLine = Pos 8
+        , sourceColumn = Pos 11
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+        , sourceLine = Pos 8
+        , sourceColumn = Pos 19
+        }
+       }
+      ) "Int64#"
+      [ VarP
        ( Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
          , sourceLine = Pos 8
-         , sourceColumn = Pos 11
+         , sourceColumn = Pos 18
          }
         , _end = SourcePos
          { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
@@ -298,37 +311,22 @@ Module
          , sourceColumn = Pos 19
          }
         }
-       ) "Int64#"
-       [ VarP
-        ( Range
-         { _start = SourcePos
-          { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-          , sourceLine = Pos 8
-          , sourceColumn = Pos 18
-          }
-         , _end = SourcePos
-          { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-          , sourceLine = Pos 8
-          , sourceColumn = Pos 19
-          }
-         }
-        ) "x"
-       ]
-      , VarP
-       ( Range
-        { _start = SourcePos
-         { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-         , sourceLine = Pos 8
-         , sourceColumn = Pos 21
-         }
-        , _end = SourcePos
-         { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-         , sourceLine = Pos 8
-         , sourceColumn = Pos 24
-         }
-        }
-       ) "xs"
+       ) "x"
       ]
+     , VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+        , sourceLine = Pos 8
+        , sourceColumn = Pos 21
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+        , sourceLine = Pos 8
+        , sourceColumn = Pos 24
+        }
+       }
+      ) "xs"
      ]
      ( Seq
       ( Range
@@ -532,7 +530,7 @@ Module
                }
               ) "Int64#"
              )
-             ( Parens
+             ( Seq
               ( Range
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
@@ -546,50 +544,65 @@ Module
                 }
                }
               )
-              ( OpApp
+              ( NoBind
                ( Range
                 { _start = SourcePos
                  { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
                  , sourceLine = Pos 9
-                 , sourceColumn = Pos 42
+                 , sourceColumn = Pos 39
                  }
                 , _end = SourcePos
                  { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
                  , sourceLine = Pos 9
-                 , sourceColumn = Pos 45
+                 , sourceColumn = Pos 47
                  }
                 }
-               ) "+#"
-               ( Var
+               )
+               ( OpApp
                 ( Range
                  { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                  , sourceLine = Pos 9
-                  , sourceColumn = Pos 40
-                  }
-                 , _end = SourcePos
                   { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
                   , sourceLine = Pos 9
                   , sourceColumn = Pos 42
                   }
-                 }
-                ) "x"
-               )
-               ( Var
-                ( Range
-                 { _start = SourcePos
+                 , _end = SourcePos
                   { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
                   , sourceLine = Pos 9
                   , sourceColumn = Pos 45
                   }
-                 , _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                  , sourceLine = Pos 9
-                  , sourceColumn = Pos 46
-                  }
                  }
-                ) "s"
-               )
+                ) "+#"
+                ( Var
+                 ( Range
+                  { _start = SourcePos
+                   { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                   , sourceLine = Pos 9
+                   , sourceColumn = Pos 40
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                   , sourceLine = Pos 9
+                   , sourceColumn = Pos 42
+                   }
+                  }
+                 ) "x"
+                )
+                ( Var
+                 ( Range
+                  { _start = SourcePos
+                   { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                   , sourceLine = Pos 9
+                   , sourceColumn = Pos 45
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                   , sourceLine = Pos 9
+                   , sourceColumn = Pos 46
+                   }
+                  }
+                 ) "s"
+                )
+               ) :| []
               )
              )
             ) :| []
@@ -821,7 +834,7 @@ Module
            }
           ) "sum"
          )
-         ( Parens
+         ( Seq
           ( Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
@@ -835,187 +848,21 @@ Module
             }
            }
           )
-          ( Apply
+          ( NoBind
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
              , sourceLine = Pos 14
-             , sourceColumn = Pos 13
+             , sourceColumn = Pos 7
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-             , sourceLine = Pos 14
-             , sourceColumn = Pos 26
+             , sourceLine = Pos 15
+             , sourceColumn = Pos 5
              }
             }
            )
            ( Apply
-            ( Range
-             { _start = SourcePos
-              { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-              , sourceLine = Pos 14
-              , sourceColumn = Pos 26
-              }
-             , _end = SourcePos
-              { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-              , sourceLine = Pos 14
-              , sourceColumn = Pos 49
-              }
-             }
-            )
-            ( Var
-             ( Range
-              { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-               , sourceLine = Pos 14
-               , sourceColumn = Pos 8
-               }
-              , _end = SourcePos
-               { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-               , sourceLine = Pos 14
-               , sourceColumn = Pos 13
-               }
-              }
-             ) "Cons"
-            )
-            ( Parens
-             ( Range
-              { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-               , sourceLine = Pos 14
-               , sourceColumn = Pos 26
-               }
-              , _end = SourcePos
-               { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-               , sourceLine = Pos 14
-               , sourceColumn = Pos 49
-               }
-              }
-             )
-             ( Apply
-              ( Range
-               { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                , sourceLine = Pos 14
-                , sourceColumn = Pos 32
-                }
-               , _end = SourcePos
-                { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                , sourceLine = Pos 14
-                , sourceColumn = Pos 45
-                }
-               }
-              )
-              ( Apply
-               ( Range
-                { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                 , sourceLine = Pos 14
-                 , sourceColumn = Pos 45
-                 }
-                , _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                 , sourceLine = Pos 14
-                 , sourceColumn = Pos 48
-                 }
-                }
-               )
-               ( Var
-                ( Range
-                 { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                  , sourceLine = Pos 14
-                  , sourceColumn = Pos 27
-                  }
-                 , _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                  , sourceLine = Pos 14
-                  , sourceColumn = Pos 32
-                  }
-                 }
-                ) "Cons"
-               )
-               ( Var
-                ( Range
-                 { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                  , sourceLine = Pos 14
-                  , sourceColumn = Pos 45
-                  }
-                 , _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                  , sourceLine = Pos 14
-                  , sourceColumn = Pos 48
-                  }
-                 }
-                ) "Nil"
-               )
-              )
-              ( Parens
-               ( Range
-                { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                 , sourceLine = Pos 14
-                 , sourceColumn = Pos 32
-                 }
-                , _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                 , sourceLine = Pos 14
-                 , sourceColumn = Pos 45
-                 }
-                }
-               )
-               ( Apply
-                ( Range
-                 { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                  , sourceLine = Pos 14
-                  , sourceColumn = Pos 40
-                  }
-                 , _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                  , sourceLine = Pos 14
-                  , sourceColumn = Pos 43
-                  }
-                 }
-                )
-                ( Var
-                 ( Range
-                  { _start = SourcePos
-                   { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                   , sourceLine = Pos 14
-                   , sourceColumn = Pos 33
-                   }
-                  , _end = SourcePos
-                   { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                   , sourceLine = Pos 14
-                   , sourceColumn = Pos 40
-                   }
-                  }
-                 ) "Int64#"
-                )
-                ( Unboxed
-                 ( Range
-                  { _start = SourcePos
-                   { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                   , sourceLine = Pos 14
-                   , sourceColumn = Pos 40
-                   }
-                  , _end = SourcePos
-                   { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                   , sourceLine = Pos 14
-                   , sourceColumn = Pos 43
-                   }
-                  }
-                 )
-                 ( Int64 2 )
-                )
-               )
-              )
-             )
-            )
-           )
-           ( Parens
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
@@ -1034,12 +881,12 @@ Module
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
                , sourceLine = Pos 14
-               , sourceColumn = Pos 21
+               , sourceColumn = Pos 26
                }
               , _end = SourcePos
                { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
                , sourceLine = Pos 14
-               , sourceColumn = Pos 24
+               , sourceColumn = Pos 49
                }
               }
              )
@@ -1048,34 +895,260 @@ Module
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
                 , sourceLine = Pos 14
-                , sourceColumn = Pos 14
+                , sourceColumn = Pos 8
                 }
                , _end = SourcePos
                 { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
                 , sourceLine = Pos 14
-                , sourceColumn = Pos 21
+                , sourceColumn = Pos 13
                 }
                }
-              ) "Int64#"
+              ) "Cons"
              )
-             ( Unboxed
+             ( Seq
               ( Range
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
                 , sourceLine = Pos 14
-                , sourceColumn = Pos 21
+                , sourceColumn = Pos 26
                 }
                , _end = SourcePos
                 { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
                 , sourceLine = Pos 14
-                , sourceColumn = Pos 24
+                , sourceColumn = Pos 49
                 }
                }
               )
-              ( Int64 1 )
+              ( NoBind
+               ( Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                 , sourceLine = Pos 14
+                 , sourceColumn = Pos 26
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                 , sourceLine = Pos 14
+                 , sourceColumn = Pos 49
+                 }
+                }
+               )
+               ( Apply
+                ( Range
+                 { _start = SourcePos
+                  { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                  , sourceLine = Pos 14
+                  , sourceColumn = Pos 32
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                  , sourceLine = Pos 14
+                  , sourceColumn = Pos 45
+                  }
+                 }
+                )
+                ( Apply
+                 ( Range
+                  { _start = SourcePos
+                   { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                   , sourceLine = Pos 14
+                   , sourceColumn = Pos 45
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                   , sourceLine = Pos 14
+                   , sourceColumn = Pos 48
+                   }
+                  }
+                 )
+                 ( Var
+                  ( Range
+                   { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                    , sourceLine = Pos 14
+                    , sourceColumn = Pos 27
+                    }
+                   , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                    , sourceLine = Pos 14
+                    , sourceColumn = Pos 32
+                    }
+                   }
+                  ) "Cons"
+                 )
+                 ( Var
+                  ( Range
+                   { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                    , sourceLine = Pos 14
+                    , sourceColumn = Pos 45
+                    }
+                   , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                    , sourceLine = Pos 14
+                    , sourceColumn = Pos 48
+                    }
+                   }
+                  ) "Nil"
+                 )
+                )
+                ( Seq
+                 ( Range
+                  { _start = SourcePos
+                   { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                   , sourceLine = Pos 14
+                   , sourceColumn = Pos 32
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                   , sourceLine = Pos 14
+                   , sourceColumn = Pos 45
+                   }
+                  }
+                 )
+                 ( NoBind
+                  ( Range
+                   { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                    , sourceLine = Pos 14
+                    , sourceColumn = Pos 32
+                    }
+                   , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                    , sourceLine = Pos 14
+                    , sourceColumn = Pos 45
+                    }
+                   }
+                  )
+                  ( Apply
+                   ( Range
+                    { _start = SourcePos
+                     { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                     , sourceLine = Pos 14
+                     , sourceColumn = Pos 40
+                     }
+                    , _end = SourcePos
+                     { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                     , sourceLine = Pos 14
+                     , sourceColumn = Pos 43
+                     }
+                    }
+                   )
+                   ( Var
+                    ( Range
+                     { _start = SourcePos
+                      { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                      , sourceLine = Pos 14
+                      , sourceColumn = Pos 33
+                      }
+                     , _end = SourcePos
+                      { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                      , sourceLine = Pos 14
+                      , sourceColumn = Pos 40
+                      }
+                     }
+                    ) "Int64#"
+                   )
+                   ( Unboxed
+                    ( Range
+                     { _start = SourcePos
+                      { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                      , sourceLine = Pos 14
+                      , sourceColumn = Pos 40
+                      }
+                     , _end = SourcePos
+                      { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                      , sourceLine = Pos 14
+                      , sourceColumn = Pos 43
+                      }
+                     }
+                    )
+                    ( Int64 2 )
+                   )
+                  ) :| []
+                 )
+                )
+               ) :| []
+              )
              )
             )
-           )
+            ( Seq
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+               , sourceLine = Pos 14
+               , sourceColumn = Pos 13
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+               , sourceLine = Pos 14
+               , sourceColumn = Pos 26
+               }
+              }
+             )
+             ( NoBind
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                , sourceLine = Pos 14
+                , sourceColumn = Pos 13
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                , sourceLine = Pos 14
+                , sourceColumn = Pos 26
+                }
+               }
+              )
+              ( Apply
+               ( Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                 , sourceLine = Pos 14
+                 , sourceColumn = Pos 21
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                 , sourceLine = Pos 14
+                 , sourceColumn = Pos 24
+                 }
+                }
+               )
+               ( Var
+                ( Range
+                 { _start = SourcePos
+                  { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                  , sourceLine = Pos 14
+                  , sourceColumn = Pos 14
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                  , sourceLine = Pos 14
+                  , sourceColumn = Pos 21
+                  }
+                 }
+                ) "Int64#"
+               )
+               ( Unboxed
+                ( Range
+                 { _start = SourcePos
+                  { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                  , sourceLine = Pos 14
+                  , sourceColumn = Pos 21
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                  , sourceLine = Pos 14
+                  , sourceColumn = Pos 24
+                  }
+                 }
+                )
+                ( Int64 1 )
+               )
+              ) :| []
+             )
+            )
+           ) :| []
           )
          )
         )

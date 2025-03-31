@@ -4,8 +4,10 @@
           (./test/testcases/malgo/Test6.mlg 7 1))
          rtob
          (fn
-            ((clause (#Test6.R_1) (seq (do B)))
-               (clause (#Test6.__2) (seq (do (apply malgo_exit_failure (tuple)))))))))
+            ((clause ((con R ())) (seq (do B)))
+               (clause
+                  (#Test6.__xxx)
+                  (seq (do (apply malgo_exit_failure (tuple)))))))))
        ((((./test/testcases/malgo/Test6.mlg 9 1)
             (./test/testcases/malgo/Test6.mlg 10 1))
            main
@@ -17,17 +19,17 @@
                         (apply
                            (fn
                               ((clause
-                                  (#Test6.B_4)
+                                  ((con B ()))
                                   (seq
                                      (do (apply malgo_print_string (string "OK")))))
                                  (clause
-                                    (#Test6.__5)
+                                    (#Test6.__xxx)
                                     (seq
                                        (do
                                           (apply
                                              malgo_print_string
                                              (string "WRONG")))))))
-                           (apply rtob R))))))))))
+                           (seq (do (apply rtob R))))))))))))
       ()
       ((((./test/testcases/malgo/Test6.mlg 1 1)
            (./test/testcases/malgo/Test6.mlg 3 1))
@@ -50,10 +52,10 @@
             (./test/testcases/malgo/Test6.mlg 5 1))
            malgo_exit_failure)
           malgo_exit_failure
-          (-> (tuple) #Test6.a_0))
+          (-> (tuple) #Test6.a_xxx))
          ((((./test/testcases/malgo/Test6.mlg 7 1)
               (./test/testcases/malgo/Test6.mlg 9 1))
              malgo_print_string)
             malgo_print_string
-            (-> #Test6.String#_3 (tuple))))
+            (-> #Test6.String#_xxx (tuple))))
       ()))

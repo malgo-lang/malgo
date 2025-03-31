@@ -10,8 +10,12 @@
                    (do
                       (apply
                          printString#
-                         (parens
-                            (apply
-                               toStringInt64#
-                               (parens
-                                  (apply (apply addInt64# (int64 2)) (int64 40))))))))))))))
+                         (seq
+                            (do
+                               (apply
+                                  toStringInt64#
+                                  (seq
+                                     (do
+                                        (apply
+                                           (apply addInt64# (int64 2))
+                                           (int64 40))))))))))))))))

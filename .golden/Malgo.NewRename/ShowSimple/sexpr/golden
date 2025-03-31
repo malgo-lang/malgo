@@ -5,29 +5,29 @@
          wrap
          (fn
             ((clause
-                (#ShowSimple.fn_19)
-                (seq (do (record (show #ShowSimple.fn_19)))))))))
+                (#ShowSimple.fn_xxx)
+                (seq (do (record (show #ShowSimple.fn_xxx)))))))))
        ((((./test/testcases/malgo/ShowSimple.mlg 10 1)
             (./test/testcases/malgo/ShowSimple.mlg 12 1))
            string#
            (fn
               ((clause
-                  (#ShowSimple.x_6)
-                  (seq (do (apply String# #ShowSimple.x_6))))))))
+                  (#ShowSimple.x_xxx)
+                  (seq (do (apply String# #ShowSimple.x_xxx))))))))
        ((((./test/testcases/malgo/ShowSimple.mlg 22 1)
             (./test/testcases/malgo/ShowSimple.mlg 24 1))
            show
            (fn
               ((clause
-                  ((record (show #ShowSimple.show_15)))
-                  (seq (do #ShowSimple.show_15)))))))
+                  ((record (show #ShowSimple.show_xxx)))
+                  (seq (do #ShowSimple.show_xxx)))))))
        ((((./test/testcases/malgo/ShowSimple.mlg 13 1)
             (./test/testcases/malgo/ShowSimple.mlg 15 1))
            putStr
            (fn
               ((clause
-                  ((con String# (#ShowSimple.x_8)))
-                  (seq (do (apply malgo_print_string #ShowSimple.x_8))))))))
+                  ((con String# ()) #ShowSimple.x_xxx)
+                  (seq (do (apply malgo_print_string #ShowSimple.x_xxx))))))))
        ((((./test/testcases/malgo/ShowSimple.mlg 31 1)
             (./test/testcases/malgo/ShowSimple.mlg 32 1))
            main
@@ -38,51 +38,58 @@
                      (do
                         (apply
                            putStr
-                           (apply
-                              (apply show (apply Int32# (int32 1)))
-                              (apply
-                                 wrap
-                                 (fn
-                                    ((clause
-                                        ((con Int32# (#ShowSimple.x_20)))
-                                        (seq
-                                           (do
-                                              (apply
-                                                 String#
-                                                 (apply
-                                                    malgo_int32_t_to_string
-                                                    #ShowSimple.x_20)))))))))))))))))
+                           (seq
+                              (do
+                                 (apply
+                                    (apply show (apply Int32# (int32 1)))
+                                    (seq
+                                       (do
+                                          (apply
+                                             wrap
+                                             (fn
+                                                ((clause
+                                                    ((con Int32# ())
+                                                       #ShowSimple.x_xxx)
+                                                    (seq
+                                                       (do
+                                                          (apply
+                                                             String#
+                                                             (seq
+                                                                (do
+                                                                   (apply
+                                                                      malgo_int32_t_to_string
+                                                                      #ShowSimple.x_xxx)))))))))))))))))))))))
        ((((./test/testcases/malgo/ShowSimple.mlg 6 1)
             (./test/testcases/malgo/ShowSimple.mlg 8 1))
            int32#
            (fn
               ((clause
-                  (#ShowSimple.x_3)
-                  (seq (do (apply Int32# #ShowSimple.x_3)))))))))
+                  (#ShowSimple.x_xxx)
+                  (seq (do (apply Int32# #ShowSimple.x_xxx)))))))))
       ((((./test/testcases/malgo/ShowSimple.mlg 5 1)
            (./test/testcases/malgo/ShowSimple.mlg 6 1))
           int32#
-          (-> #ShowSimple.Int32#_2 #ShowSimple.Int32_1))
+          (-> #ShowSimple.Int32#_xxx #ShowSimple.Int32_xxx))
          (((./test/testcases/malgo/ShowSimple.mlg 9 1)
              (./test/testcases/malgo/ShowSimple.mlg 10 1))
             string#
-            (-> #ShowSimple.String#_5 #ShowSimple.String_4))
+            (-> #ShowSimple.String#_xxx #ShowSimple.String_xxx))
          (((./test/testcases/malgo/ShowSimple.mlg 12 1)
              (./test/testcases/malgo/ShowSimple.mlg 13 1))
             putStr
-            (-> #ShowSimple.String_7 (tuple)))
+            (-> #ShowSimple.String_xxx (tuple)))
          (((./test/testcases/malgo/ShowSimple.mlg 21 1)
              (./test/testcases/malgo/ShowSimple.mlg 22 1))
             show
             (->
-               (app #ShowSimple.Show_12 (#ShowSimple.a_14))
-               (-> #ShowSimple.a_14 #ShowSimple.String_13)))
+               (app #ShowSimple.Show_xxx (#ShowSimple.a_xxx))
+               (-> #ShowSimple.a_xxx #ShowSimple.String_xxx)))
          (((./test/testcases/malgo/ShowSimple.mlg 24 1)
              (./test/testcases/malgo/ShowSimple.mlg 25 1))
             wrap
             (->
-               (-> #ShowSimple.Int32_16 #ShowSimple.String_18)
-               (app #ShowSimple.Show_17 (#ShowSimple.Int32_16)))))
+               (-> #ShowSimple.Int32_xxx #ShowSimple.String_xxx)
+               (app #ShowSimple.Show_xxx (#ShowSimple.Int32_xxx)))))
       ((((./test/testcases/malgo/ShowSimple.mlg 4 1)
            (./test/testcases/malgo/ShowSimple.mlg 5 1))
           Int32
@@ -102,13 +109,13 @@
       ((((./test/testcases/malgo/ShowSimple.mlg 17 1)
            (./test/testcases/malgo/ShowSimple.mlg 21 1))
           Show
-          (#ShowSimple.a_11)
-          (record (show (-> #ShowSimple.a_11 String)))))
+          (#ShowSimple.a_xxx)
+          (record (show (-> #ShowSimple.a_xxx String)))))
       (((((./test/testcases/malgo/ShowSimple.mlg 1 1)
             (./test/testcases/malgo/ShowSimple.mlg 2 1))
            malgo_print_string)
           malgo_print_string
-          (-> #ShowSimple.String#_0 (tuple)))
+          (-> #ShowSimple.String#_xxx (tuple)))
          ((((./test/testcases/malgo/ShowSimple.mlg 2 1)
               (./test/testcases/malgo/ShowSimple.mlg 4 1))
              malgo_newline)
@@ -118,5 +125,5 @@
               (./test/testcases/malgo/ShowSimple.mlg 17 1))
              malgo_int32_t_to_string)
             malgo_int32_t_to_string
-            (-> #ShowSimple.Int32#_9 #ShowSimple.String#_10)))
+            (-> #ShowSimple.Int32#_xxx #ShowSimple.String#_xxx)))
       ()))

@@ -1,56 +1,56 @@
 ((succ
-    $TestDot.return_32
+    $TestDot.return_xxx
     (cut
        (lambda
-          ($TestDot.param_30 $TestDot.return_33)
+          ($TestDot.param_xxx $TestDot.return_xxx)
           (cut
-             $TestDot.param_30
+             $TestDot.param_xxx
              (select
-                ((Int64# (#TestDot.x_0))
+                ((Int64# (#TestDot.x_xxx))
                    (invoke
                       Int64#
                       (apply
                          ((do
-                             $TestDot.return_34
+                             $TestDot.return_xxx
                              (invoke
                                 addInt64#
                                 (apply
-                                   (#TestDot.x_0)
-                                   ((apply (1_i64) ($TestDot.return_34)))))))
-                         ($TestDot.return_33)))))))
-       $TestDot.return_32))
+                                   (#TestDot.x_xxx)
+                                   ((apply (1_i64) ($TestDot.return_xxx)))))))
+                         ($TestDot.return_xxx)))))))
+       $TestDot.return_xxx))
    (main
-      $TestDot.return_35
+      $TestDot.return_xxx
       (cut
          (lambda
-            ($TestDot.param_31 $TestDot.return_36)
+            ($TestDot.param_xxx $TestDot.return_xxx)
             (cut
-               $TestDot.param_31
+               $TestDot.param_xxx
                (select
-                  (#TestDot.$__29
+                  (#TestDot.$__xxx
                      (invoke
                         printInt64
                         (apply
                            ((do
-                               $TestDot.return_37
+                               $TestDot.return_xxx
                                (invoke
                                   <<
                                   (apply
                                      ((do
-                                         $TestDot.return_40
-                                         (invoke succ $TestDot.return_40)))
+                                         $TestDot.return_xxx
+                                         (invoke succ $TestDot.return_xxx)))
                                      ((apply
                                          ((do
-                                             $TestDot.return_39
-                                             (invoke succ $TestDot.return_39)))
+                                             $TestDot.return_xxx
+                                             (invoke succ $TestDot.return_xxx)))
                                          ((apply
                                              ((do
-                                                 $TestDot.return_38
+                                                 $TestDot.return_xxx
                                                  (invoke
                                                     Int64#
                                                     (apply
                                                        (0_i64)
-                                                       ($TestDot.return_38)))))
-                                             ($TestDot.return_37)))))))))
-                           ($TestDot.return_36)))))))
-         $TestDot.return_35)))
+                                                       ($TestDot.return_xxx)))))
+                                             ($TestDot.return_xxx)))))))))
+                           ($TestDot.return_xxx)))))))
+         $TestDot.return_xxx)))

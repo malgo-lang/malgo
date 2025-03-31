@@ -6,7 +6,7 @@
       (data B () ((B (A))))
       (type C (a) (record (x a) (y a)))
       (def f (fn ((clause ((record (a a) (b _))) (seq (do a))))))
-      (def g (fn ((clause ((con B ((record (a a) (b _))))) (seq (do a))))))
+      (def g (fn ((clause (B (record (a a) (b _))) (seq (do a))))))
       (def
          main
          (fn
@@ -17,18 +17,23 @@
                    (do
                       (apply
                          printString
-                         (parens
-                            (apply
-                               toStringInt32
-                               (parens
-                                  (apply
-                                     (apply
-                                        addInt32
-                                        (parens
+                         (seq
+                            (do
+                               (apply
+                                  toStringInt32
+                                  (seq
+                                     (do
+                                        (apply
                                            (apply
-                                              (fn
-                                                 ((clause
-                                                     ((record (a _) (b b)))
-                                                     (seq (do b)))))
-                                              x)))
-                                     (parens (apply f x)))))))))))))))
+                                              addInt32
+                                              (seq
+                                                 (do
+                                                    (apply
+                                                       (fn
+                                                          ((clause
+                                                              ((record
+                                                                  (a _)
+                                                                  (b b)))
+                                                              (seq (do b)))))
+                                                       x))))
+                                           (seq (do (apply f x))))))))))))))))))

@@ -16,27 +16,31 @@
            y2D
            (fn
               ((clause
-                  ((record (x #FieldPrefix.__8) (y #FieldPrefix.y_9)))
-                  (seq (do #FieldPrefix.y_9)))))))
+                  ((record (x #FieldPrefix.__xxx) (y #FieldPrefix.y_xxx)))
+                  (seq (do #FieldPrefix.y_xxx)))))))
        ((((./test/testcases/malgo/FieldPrefix.mlg 15 1)
             (./test/testcases/malgo/FieldPrefix.mlg 17 1))
            x2D
            (fn
               ((clause
-                  ((record (x #FieldPrefix.x_4) (y #FieldPrefix.__5)))
-                  (seq (do #FieldPrefix.x_4)))))))
+                  ((record (x #FieldPrefix.x_xxx) (y #FieldPrefix.__xxx)))
+                  (seq (do #FieldPrefix.x_xxx)))))))
        ((((./test/testcases/malgo/FieldPrefix.mlg 8 1)
             (./test/testcases/malgo/FieldPrefix.mlg 14 1))
            print2D
            (fn
               ((clause
-                  ((record (x #FieldPrefix.x_0) (y #FieldPrefix.y_1)))
+                  ((record (x #FieldPrefix.x_xxx) (y #FieldPrefix.y_xxx)))
                   (seq
                      (do
-                        (apply printString (apply toStringInt32 #FieldPrefix.x_0)))
+                        (apply
+                           printString
+                           (seq (do (apply toStringInt32 #FieldPrefix.x_xxx)))))
                      (do (apply printString (apply String# (string ", "))))
                      (do
-                        (apply printString (apply toStringInt32 #FieldPrefix.y_1)))))))))
+                        (apply
+                           printString
+                           (seq (do (apply toStringInt32 #FieldPrefix.y_xxx)))))))))))
        ((((./test/testcases/malgo/FieldPrefix.mlg 26 1)
             (./test/testcases/malgo/FieldPrefix.mlg 29 1))
            main
@@ -44,19 +48,19 @@
       ((((./test/testcases/malgo/FieldPrefix.mlg 14 1)
            (./test/testcases/malgo/FieldPrefix.mlg 15 1))
           x2D
-          (-> #FieldPrefix.Point2D_3 #FieldPrefix.Int32_2))
+          (-> #FieldPrefix.Point2D_xxx #FieldPrefix.Int32_xxx))
          (((./test/testcases/malgo/FieldPrefix.mlg 17 1)
              (./test/testcases/malgo/FieldPrefix.mlg 18 1))
             y2D
-            (-> #FieldPrefix.Point2D_7 #FieldPrefix.Int32_6))
+            (-> #FieldPrefix.Point2D_xxx #FieldPrefix.Int32_xxx))
          (((./test/testcases/malgo/FieldPrefix.mlg 20 1)
              (./test/testcases/malgo/FieldPrefix.mlg 21 1))
             zero2D
-            #FieldPrefix.Point2D_10)
+            #FieldPrefix.Point2D_xxx)
          (((./test/testcases/malgo/FieldPrefix.mlg 23 1)
              (./test/testcases/malgo/FieldPrefix.mlg 24 1))
             zero3D
-            #FieldPrefix.Point3D_11))
+            #FieldPrefix.Point3D_xxx))
       ()
       ((((./test/testcases/malgo/FieldPrefix.mlg 4 1)
            (./test/testcases/malgo/FieldPrefix.mlg 6 1))

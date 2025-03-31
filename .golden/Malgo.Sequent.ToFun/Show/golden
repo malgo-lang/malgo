@@ -2,51 +2,55 @@
     (object
        ((show
            (lambda
-              ($Show.param_113)
+              ($Show.param_xxx)
               (select
-                 $Show.param_113
-                 ((#Show.x_3 (apply (invoke toStringInt32) (#Show.x_3))))))))))
+                 $Show.param_xxx
+                 ((#Show.x_xxx (apply (invoke toStringInt32) (#Show.x_xxx))))))))))
    (show
       (lambda
-         ($Show.param_114)
-         (select $Show.param_114 (((expand ((show #Show.show_5))) #Show.show_5)))))
+         ($Show.param_xxx)
+         (select
+            $Show.param_xxx
+            (((expand ((show #Show.show_xxx))) #Show.show_xxx)))))
    (print
       (lambda
-         ($Show.param_115)
+         ($Show.param_xxx)
          (lambda
-            ($Show.param_116)
+            ($Show.param_xxx)
             (select
-               (tuple ($Show.param_115 $Show.param_116))
-               (((tuple (#Show.showDict_13 #Show.x_14))
+               (tuple ($Show.param_xxx $Show.param_xxx))
+               (((tuple (#Show.showDict_xxx #Show.x_xxx))
                    (apply
                       (invoke printString)
                       ((apply
-                          (apply (invoke show) (#Show.showDict_13))
-                          (#Show.x_14))))))))))
+                          (apply (invoke show) (#Show.showDict_xxx))
+                          (#Show.x_xxx))))))))))
    (<>
       (lambda
-         ($Show.param_117)
+         ($Show.param_xxx)
          (lambda
-            ($Show.param_118)
+            ($Show.param_xxx)
             (select
-               (tuple ($Show.param_117 $Show.param_118))
-               (((tuple (#Show.x_0 #Show.y_1))
-                   (apply (apply (invoke appendString) (#Show.x_0)) (#Show.y_1))))))))
+               (tuple ($Show.param_xxx $Show.param_xxx))
+               (((tuple (#Show.x_xxx #Show.y_xxx))
+                   (apply
+                      (apply (invoke appendString) (#Show.x_xxx))
+                      (#Show.y_xxx))))))))
    (showTuple2
       (lambda
-         ($Show.param_119)
+         ($Show.param_xxx)
          (lambda
-            ($Show.param_120)
+            ($Show.param_xxx)
             (select
-               (tuple ($Show.param_119 $Show.param_120))
-               (((tuple (#Show.showDictA_8 #Show.showDictB_9))
+               (tuple ($Show.param_xxx $Show.param_xxx))
+               (((tuple (#Show.showDictA_xxx #Show.showDictB_xxx))
                    (object
                       ((show
                           (lambda
-                             ($Show.param_121)
+                             ($Show.param_xxx)
                              (select
-                                $Show.param_121
-                                (((tuple (#Show.a_10 #Show.b_11))
+                                $Show.param_xxx
+                                (((tuple (#Show.a_xxx #Show.b_xxx))
                                     (apply
                                        (apply
                                           (invoke <>)
@@ -57,8 +61,8 @@
                                               ((apply
                                                   (apply
                                                      (invoke show)
-                                                     (#Show.showDictA_8))
-                                                  (#Show.a_10))))
+                                                     (#Show.showDictA_xxx))
+                                                  (#Show.a_xxx))))
                                            ((apply
                                                (apply
                                                   (invoke <>)
@@ -69,15 +73,15 @@
                                                       ((apply
                                                           (apply
                                                              (invoke show)
-                                                             (#Show.showDictB_9))
-                                                          (#Show.b_11))))
+                                                             (#Show.showDictB_xxx))
+                                                          (#Show.b_xxx))))
                                                    ((apply (invoke String#) (")")))))))))))))))))))))))
    (main
       (lambda
-         ($Show.param_122)
+         ($Show.param_xxx)
          (select
-            $Show.param_122
-            ((#Show.$__112
+            $Show.param_xxx
+            ((#Show.$__xxx
                 (apply
                    (apply
                       (invoke print)

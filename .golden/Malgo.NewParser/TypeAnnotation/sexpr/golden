@@ -11,10 +11,12 @@
                    (do
                       (apply
                          printString
-                         (parens
-                            (apply
-                               (parens
-                                  (ann
-                                     (fn ((clause (x) (seq (do x)))))
-                                     (-> String String)))
-                               (string "hoge"))))))))))))
+                         (seq
+                            (do
+                               (apply
+                                  (seq
+                                     (do
+                                        (ann
+                                           (fn ((clause (x) (seq (do x)))))
+                                           (-> String String))))
+                                  (string "hoge")))))))))))))

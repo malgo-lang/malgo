@@ -1,21 +1,21 @@
 ((main
-    $TestExplicitModule.return_8
+    $TestExplicitModule.return_xxx
     (cut
        (lambda
-          ($TestExplicitModule.param_7 $TestExplicitModule.return_9)
+          ($TestExplicitModule.param_xxx $TestExplicitModule.return_xxx)
           (cut
-             $TestExplicitModule.param_7
+             $TestExplicitModule.param_xxx
              (select
-                (#TestExplicitModule.$__6
+                (#TestExplicitModule.$__xxx
                    (invoke
                       putStrLn
                       (apply
                          ((do
-                             $TestExplicitModule.return_10
+                             $TestExplicitModule.return_xxx
                              (invoke
                                 String#
                                 (apply
                                    ("Hello, world")
-                                   ($TestExplicitModule.return_10)))))
-                         ($TestExplicitModule.return_9)))))))
-       $TestExplicitModule.return_8)))
+                                   ($TestExplicitModule.return_xxx)))))
+                         ($TestExplicitModule.return_xxx)))))))
+       $TestExplicitModule.return_xxx)))

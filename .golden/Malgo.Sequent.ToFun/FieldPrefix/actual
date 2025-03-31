@@ -8,42 +8,44 @@
          ((x (apply (invoke Int32#) (0_i32))) (y (apply (invoke Int32#) (0_i32))))))
    (y2D
       (lambda
-         ($FieldPrefix.param_47)
+         ($FieldPrefix.param_xxx)
          (select
-            $FieldPrefix.param_47
-            (((expand ((x #FieldPrefix.__4) (y #FieldPrefix.y_5)))
-                #FieldPrefix.y_5)))))
+            $FieldPrefix.param_xxx
+            (((expand ((x #FieldPrefix.__xxx) (y #FieldPrefix.y_xxx)))
+                #FieldPrefix.y_xxx)))))
    (x2D
       (lambda
-         ($FieldPrefix.param_48)
+         ($FieldPrefix.param_xxx)
          (select
-            $FieldPrefix.param_48
-            (((expand ((x #FieldPrefix.x_2) (y #FieldPrefix.__3)))
-                #FieldPrefix.x_2)))))
+            $FieldPrefix.param_xxx
+            (((expand ((x #FieldPrefix.x_xxx) (y #FieldPrefix.__xxx)))
+                #FieldPrefix.x_xxx)))))
    (print2D
       (lambda
-         ($FieldPrefix.param_49)
+         ($FieldPrefix.param_xxx)
          (select
-            $FieldPrefix.param_49
-            (((expand ((x #FieldPrefix.x_0) (y #FieldPrefix.y_1)))
+            $FieldPrefix.param_xxx
+            (((expand ((x #FieldPrefix.x_xxx) (y #FieldPrefix.y_xxx)))
                 (apply
                    (lambda
-                      ($FieldPrefix.tmp_50)
+                      ($FieldPrefix.tmp_xxx)
                       (apply
                          (lambda
-                            ($FieldPrefix.tmp_51)
+                            ($FieldPrefix.tmp_xxx)
                             (apply
                                (invoke printString)
-                               ((apply (invoke toStringInt32) (#FieldPrefix.y_1)))))
+                               ((apply
+                                   (invoke toStringInt32)
+                                   (#FieldPrefix.y_xxx)))))
                          ((apply
                              (invoke printString)
                              ((apply (invoke String#) (", ")))))))
                    ((apply
                        (invoke printString)
-                       ((apply (invoke toStringInt32) (#FieldPrefix.x_0)))))))))))
+                       ((apply (invoke toStringInt32) (#FieldPrefix.x_xxx)))))))))))
    (main
       (lambda
-         ($FieldPrefix.param_52)
+         ($FieldPrefix.param_xxx)
          (select
-            $FieldPrefix.param_52
-            ((#FieldPrefix.$__46 (apply (invoke print2D) ((invoke zero2D)))))))))
+            $FieldPrefix.param_xxx
+            ((#FieldPrefix.$__xxx (apply (invoke print2D) ((invoke zero2D)))))))))

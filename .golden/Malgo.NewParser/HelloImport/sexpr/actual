@@ -9,7 +9,7 @@
             ((clause
                 ()
                 (seq
-                   (do (apply putStr (parens (apply String# (string "hello")))))
+                   (do (apply putStr (seq (do (apply String# (string "hello"))))))
                    (do
                       (opapp
                          |>
@@ -21,5 +21,5 @@
                                    (do
                                       (apply
                                          f
-                                         (parens
-                                            (apply String# (string " world"))))))))))))))))))
+                                         (seq
+                                            (do (apply String# (string " world")))))))))))))))))))

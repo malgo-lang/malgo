@@ -3,7 +3,10 @@
    ((((((./test/testcases/malgo/Echo.mlg 4 1)
           (./test/testcases/malgo/Echo.mlg 7 1))
          main
-         (fn ((clause () (seq (do (apply putStr (apply getContents (tuple)))))))))))
+         (fn
+            ((clause
+                ()
+                (seq (do (apply putStr (seq (do (apply getContents (tuple)))))))))))))
       ()
       ()
       ()

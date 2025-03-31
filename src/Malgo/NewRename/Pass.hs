@@ -195,25 +195,11 @@ rnClause ::
   Clause (Malgo NewParse) ->
   Eff es (Clause (Malgo Rename))
 rnClause (Clause pos ps e) = do
-  -- 変数を集める前に、ConPが本当にコンストラクタパターンを表しているか確認する。
-  -- ConP x y z の x がコンストラクタであるなら、このまま進める。
-  -- そうでないなら、 [x, y, z] のようなパターン列に置き換えて進める。
-  -- ps <- case ps of
-  --   [ConP pos name parameters] -> do
-  --     name' <- (Just <$> lookupVarName pos name) `catchError` \_ (_ :: RenameError) -> pure Nothing
-  --     case name' of
-  --       Just name' -> do
-  --         isConstructor <- asks (isConstructor name')
-  --         if isConstructor
-  --           then pure ps
-  --           else pure $ VarP pos name : parameters
-  --       Nothing -> pure $ VarP pos name : parameters
-  --   _ -> pure ps
   ps <- case ps of
-    -- If name starts with a capital letter, it is a constructor.
-    [ConP pos name parameters]
-      | isUpper (T.head name) -> pure ps
-      | otherwise -> pure $ VarP pos name : parameters
+    VarP pos name : rest -> do
+      if isUpper (T.head name)
+        then pure $ ConP pos name [] : rest
+        else pure ps
     _ -> pure ps
   let vars = concatMap patVars ps
   -- パターンが束縛する変数に重複がないことを確認する

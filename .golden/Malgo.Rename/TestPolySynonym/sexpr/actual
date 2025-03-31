@@ -5,8 +5,10 @@
          first
          (fn
             ((clause
-                ((record (fst #TestPolySynonym.x_5) (snd #TestPolySynonym.__6)))
-                (seq (do #TestPolySynonym.x_5)))))))
+                ((record
+                    (fst #TestPolySynonym.x_xxx)
+                    (snd #TestPolySynonym.__xxx)))
+                (seq (do #TestPolySynonym.x_xxx)))))))
        ((((./test/testcases/malgo/TestPolySynonym.mlg 12 1)
             (./test/testcases/malgo/TestPolySynonym.mlg 16 1))
            main
@@ -15,17 +17,18 @@
                   ()
                   (seq
                      (let
-                        #TestPolySynonym.x_7
+                        #TestPolySynonym.x_xxx
                         (record
                            (fst (apply Int32# (int32 1)))
                            (snd (apply String# (string "hoge")))))
-                     (do (opapp |> (apply first #TestPolySynonym.x_7) printInt32)))))))))
+                     (do
+                        (opapp |> (apply first #TestPolySynonym.x_xxx) printInt32)))))))))
       ((((./test/testcases/malgo/TestPolySynonym.mlg 8 1)
            (./test/testcases/malgo/TestPolySynonym.mlg 9 1))
           first
           (->
-             (record (fst #TestPolySynonym.a_3) (snd #TestPolySynonym.b_4))
-             #TestPolySynonym.a_3))
+             (record (fst #TestPolySynonym.a_xxx) (snd #TestPolySynonym.b_xxx))
+             #TestPolySynonym.a_xxx))
          (((./test/testcases/malgo/TestPolySynonym.mlg 11 1)
              (./test/testcases/malgo/TestPolySynonym.mlg 12 1))
             main
@@ -34,13 +37,13 @@
       ((((./test/testcases/malgo/TestPolySynonym.mlg 4 6)
            (./test/testcases/malgo/TestPolySynonym.mlg 6 1))
           Fun0
-          (#TestPolySynonym.a_0)
-          (-> (tuple) #TestPolySynonym.a_0))
+          (#TestPolySynonym.a_xxx)
+          (-> (tuple) #TestPolySynonym.a_xxx))
          (((./test/testcases/malgo/TestPolySynonym.mlg 6 6)
              (./test/testcases/malgo/TestPolySynonym.mlg 8 1))
             Pair
-            (#TestPolySynonym.a_1 #TestPolySynonym.b_2)
-            (record (fst #TestPolySynonym.b_2) (snd #TestPolySynonym.a_1))))
+            (#TestPolySynonym.a_xxx #TestPolySynonym.b_xxx)
+            (record (fst #TestPolySynonym.b_xxx) (snd #TestPolySynonym.a_xxx))))
       ()
       ((((./test/testcases/malgo/TestPolySynonym.mlg 1 1)
            (./test/testcases/malgo/TestPolySynonym.mlg 2 1))

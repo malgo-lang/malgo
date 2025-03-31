@@ -1,38 +1,38 @@
 ((even
     (lambda
-       ($EvenOdd.param_51)
+       ($EvenOdd.param_xxx)
        (select
-          $EvenOdd.param_51
+          $EvenOdd.param_xxx
           (((Int32# (0_i32)) (invoke True))
-             (#EvenOdd.n_0
+             (#EvenOdd.n_xxx
                 (apply
                    (invoke odd)
                    ((apply
-                       (apply (invoke subInt32) (#EvenOdd.n_0))
+                       (apply (invoke subInt32) (#EvenOdd.n_xxx))
                        ((apply (invoke Int32#) (1_i32)))))))))))
    (odd
       (lambda
-         ($EvenOdd.param_52)
+         ($EvenOdd.param_xxx)
          (select
-            $EvenOdd.param_52
+            $EvenOdd.param_xxx
             (((Int32# (0_i32)) (invoke False))
-               (#EvenOdd.n_1
+               (#EvenOdd.n_xxx
                   (apply
                      (invoke even)
                      ((apply
-                         (apply (invoke subInt32) (#EvenOdd.n_1))
+                         (apply (invoke subInt32) (#EvenOdd.n_xxx))
                          ((apply (invoke Int32#) (1_i32)))))))))))
    (main
       (lambda
-         ($EvenOdd.param_53)
+         ($EvenOdd.param_xxx)
          (select
-            $EvenOdd.param_53
-            ((#EvenOdd.$__50
+            $EvenOdd.param_xxx
+            ((#EvenOdd.$__xxx
                 (apply
                    (lambda
-                      ($EvenOdd.param_54)
+                      ($EvenOdd.param_xxx)
                       (select
-                         $EvenOdd.param_54
+                         $EvenOdd.param_xxx
                          (((False ())
                              (apply
                                 (invoke putStrLn)

@@ -1,290 +1,297 @@
 ((==
-    $Factorial.return_110
+    $Factorial.return_xxx
     (cut
        (lambda
-          ($Factorial.param_98 $Factorial.return_111)
+          ($Factorial.param_xxx $Factorial.return_xxx)
           (cut
              (lambda
-                ($Factorial.param_99 $Factorial.return_112)
+                ($Factorial.param_xxx $Factorial.return_xxx)
                 (cut
-                   (construct tuple ($Factorial.param_98 $Factorial.param_99) ())
+                   (construct
+                      tuple
+                      ($Factorial.param_xxx $Factorial.param_xxx)
+                      ())
                    (select
-                      ((tuple (#Factorial.x_0 #Factorial.y_1))
+                      ((tuple (#Factorial.x_xxx #Factorial.y_xxx))
                          (invoke
                             eqInt64
                             (apply
-                               (#Factorial.x_0)
-                               ((apply (#Factorial.y_1) ($Factorial.return_112)))))))))
-             $Factorial.return_111))
-       $Factorial.return_110))
+                               (#Factorial.x_xxx)
+                               ((apply (#Factorial.y_xxx) ($Factorial.return_xxx)))))))))
+             $Factorial.return_xxx))
+       $Factorial.return_xxx))
    (-
-      $Factorial.return_113
+      $Factorial.return_xxx
       (cut
          (lambda
-            ($Factorial.param_100 $Factorial.return_114)
+            ($Factorial.param_xxx $Factorial.return_xxx)
             (cut
                (lambda
-                  ($Factorial.param_101 $Factorial.return_115)
+                  ($Factorial.param_xxx $Factorial.return_xxx)
                   (cut
                      (construct
                         tuple
-                        ($Factorial.param_100 $Factorial.param_101)
+                        ($Factorial.param_xxx $Factorial.param_xxx)
                         ())
                      (select
-                        ((tuple (#Factorial.x_2 #Factorial.y_3))
+                        ((tuple (#Factorial.x_xxx #Factorial.y_xxx))
                            (invoke
                               subInt64
                               (apply
-                                 (#Factorial.x_2)
-                                 ((apply (#Factorial.y_3) ($Factorial.return_115)))))))))
-               $Factorial.return_114))
-         $Factorial.return_113))
+                                 (#Factorial.x_xxx)
+                                 ((apply
+                                     (#Factorial.y_xxx)
+                                     ($Factorial.return_xxx)))))))))
+               $Factorial.return_xxx))
+         $Factorial.return_xxx))
    (*
-      $Factorial.return_116
+      $Factorial.return_xxx
       (cut
          (lambda
-            ($Factorial.param_102 $Factorial.return_117)
+            ($Factorial.param_xxx $Factorial.return_xxx)
             (cut
                (lambda
-                  ($Factorial.param_103 $Factorial.return_118)
+                  ($Factorial.param_xxx $Factorial.return_xxx)
                   (cut
                      (construct
                         tuple
-                        ($Factorial.param_102 $Factorial.param_103)
+                        ($Factorial.param_xxx $Factorial.param_xxx)
                         ())
                      (select
-                        ((tuple (#Factorial.x_4 #Factorial.y_5))
+                        ((tuple (#Factorial.x_xxx #Factorial.y_xxx))
                            (invoke
                               mulInt64
                               (apply
-                                 (#Factorial.x_4)
-                                 ((apply (#Factorial.y_5) ($Factorial.return_118)))))))))
-               $Factorial.return_117))
-         $Factorial.return_116))
+                                 (#Factorial.x_xxx)
+                                 ((apply
+                                     (#Factorial.y_xxx)
+                                     ($Factorial.return_xxx)))))))))
+               $Factorial.return_xxx))
+         $Factorial.return_xxx))
    (factAcc
-      $Factorial.return_119
+      $Factorial.return_xxx
       (cut
          (lambda
-            ($Factorial.param_104 $Factorial.return_120)
+            ($Factorial.param_xxx $Factorial.return_xxx)
             (cut
                (lambda
-                  ($Factorial.param_105 $Factorial.return_121)
+                  ($Factorial.param_xxx $Factorial.return_xxx)
                   (cut
                      (construct
                         tuple
-                        ($Factorial.param_104 $Factorial.param_105)
+                        ($Factorial.param_xxx $Factorial.param_xxx)
                         ())
                      (select
-                        ((tuple (#Factorial.n_7 #Factorial.acc_8))
+                        ((tuple (#Factorial.n_xxx #Factorial.acc_xxx))
                            (invoke
                               if
                               (then
-                                 $Factorial.outer_139
+                                 $Factorial.outer_xxx
                                  (join
-                                    $Factorial.return_127
+                                    $Factorial.return_xxx
                                     (then
-                                       $Factorial.inner_140
+                                       $Factorial.inner_xxx
                                        (cut
-                                          $Factorial.outer_139
+                                          $Factorial.outer_xxx
                                           (apply
-                                             ($Factorial.inner_140)
+                                             ($Factorial.inner_xxx)
                                              ((apply
                                                  ((lambda
-                                                     ($Factorial.param_106
-                                                        $Factorial.return_126)
+                                                     ($Factorial.param_xxx
+                                                        $Factorial.return_xxx)
                                                      (cut
-                                                        $Factorial.param_106
+                                                        $Factorial.param_xxx
                                                         (select
-                                                           (#Factorial.$__57
+                                                           (#Factorial.$__xxx
                                                               (cut
-                                                                 #Factorial.acc_8
-                                                                 $Factorial.return_126))))))
+                                                                 #Factorial.acc_xxx
+                                                                 $Factorial.return_xxx))))))
                                                  ((apply
                                                      ((lambda
-                                                         ($Factorial.param_107
-                                                            $Factorial.return_122)
+                                                         ($Factorial.param_xxx
+                                                            $Factorial.return_xxx)
                                                          (cut
-                                                            $Factorial.param_107
+                                                            $Factorial.param_xxx
                                                             (select
-                                                               (#Factorial.$__70
+                                                               (#Factorial.$__xxx
                                                                   (invoke
                                                                      factAcc
                                                                      (then
-                                                                        $Factorial.outer_141
+                                                                        $Factorial.outer_xxx
                                                                         (join
-                                                                           $Factorial.return_124
+                                                                           $Factorial.return_xxx
                                                                            (then
-                                                                              $Factorial.inner_142
+                                                                              $Factorial.inner_xxx
                                                                               (cut
-                                                                                 $Factorial.outer_141
+                                                                                 $Factorial.outer_xxx
                                                                                  (apply
-                                                                                    ($Factorial.inner_142)
+                                                                                    ($Factorial.inner_xxx)
                                                                                     ((then
-                                                                                        $Factorial.outer_143
+                                                                                        $Factorial.outer_xxx
                                                                                         (join
-                                                                                           $Factorial.return_123
+                                                                                           $Factorial.return_xxx
                                                                                            (then
-                                                                                              $Factorial.inner_144
+                                                                                              $Factorial.inner_xxx
                                                                                               (cut
-                                                                                                 $Factorial.outer_143
+                                                                                                 $Factorial.outer_xxx
                                                                                                  (apply
-                                                                                                    ($Factorial.inner_144)
-                                                                                                    ($Factorial.return_122))))
+                                                                                                    ($Factorial.inner_xxx)
+                                                                                                    ($Factorial.return_xxx))))
                                                                                            (invoke
                                                                                               *
                                                                                               (apply
-                                                                                                 (#Factorial.n_7)
+                                                                                                 (#Factorial.n_xxx)
                                                                                                  ((apply
-                                                                                                     (#Factorial.acc_8)
-                                                                                                     ($Factorial.return_123)))))))))))
+                                                                                                     (#Factorial.acc_xxx)
+                                                                                                     ($Factorial.return_xxx)))))))))))
                                                                            (invoke
                                                                               -
                                                                               (apply
-                                                                                 (#Factorial.n_7)
+                                                                                 (#Factorial.n_xxx)
                                                                                  ((then
-                                                                                     $Factorial.outer_145
+                                                                                     $Factorial.outer_xxx
                                                                                      (join
-                                                                                        $Factorial.return_125
+                                                                                        $Factorial.return_xxx
                                                                                         (then
-                                                                                           $Factorial.inner_146
+                                                                                           $Factorial.inner_xxx
                                                                                            (cut
-                                                                                              $Factorial.outer_145
+                                                                                              $Factorial.outer_xxx
                                                                                               (apply
-                                                                                                 ($Factorial.inner_146)
-                                                                                                 ($Factorial.return_124))))
+                                                                                                 ($Factorial.inner_xxx)
+                                                                                                 ($Factorial.return_xxx))))
                                                                                         (invoke
                                                                                            Int64#
                                                                                            (apply
                                                                                               (1_i64)
-                                                                                              ($Factorial.return_125))))))))))))))))
-                                                     ($Factorial.return_121))))))))
+                                                                                              ($Factorial.return_xxx))))))))))))))))
+                                                     ($Factorial.return_xxx))))))))
                                     (invoke
                                        ==
                                        (apply
-                                          (#Factorial.n_7)
+                                          (#Factorial.n_xxx)
                                           ((then
-                                              $Factorial.outer_147
+                                              $Factorial.outer_xxx
                                               (join
-                                                 $Factorial.return_128
+                                                 $Factorial.return_xxx
                                                  (then
-                                                    $Factorial.inner_148
+                                                    $Factorial.inner_xxx
                                                     (cut
-                                                       $Factorial.outer_147
+                                                       $Factorial.outer_xxx
                                                        (apply
-                                                          ($Factorial.inner_148)
-                                                          ($Factorial.return_127))))
+                                                          ($Factorial.inner_xxx)
+                                                          ($Factorial.return_xxx))))
                                                  (invoke
                                                     Int64#
                                                     (apply
                                                        (0_i64)
-                                                       ($Factorial.return_128)))))))))))))))
-               $Factorial.return_120))
-         $Factorial.return_119))
+                                                       ($Factorial.return_xxx)))))))))))))))
+               $Factorial.return_xxx))
+         $Factorial.return_xxx))
    (fact
-      $Factorial.return_129
+      $Factorial.return_xxx
       (cut
          (lambda
-            ($Factorial.param_108 $Factorial.return_130)
+            ($Factorial.param_xxx $Factorial.return_xxx)
             (cut
-               $Factorial.param_108
+               $Factorial.param_xxx
                (select
-                  (#Factorial.n_6
+                  (#Factorial.n_xxx
                      (invoke
                         factAcc
                         (apply
-                           (#Factorial.n_6)
+                           (#Factorial.n_xxx)
                            ((then
-                               $Factorial.outer_149
+                               $Factorial.outer_xxx
                                (join
-                                  $Factorial.return_131
+                                  $Factorial.return_xxx
                                   (then
-                                     $Factorial.inner_150
+                                     $Factorial.inner_xxx
                                      (cut
-                                        $Factorial.outer_149
+                                        $Factorial.outer_xxx
                                         (apply
-                                           ($Factorial.inner_150)
-                                           ($Factorial.return_130))))
+                                           ($Factorial.inner_xxx)
+                                           ($Factorial.return_xxx))))
                                   (invoke
                                      Int64#
-                                     (apply (1_i64) ($Factorial.return_131))))))))))))
-         $Factorial.return_129))
+                                     (apply (1_i64) ($Factorial.return_xxx))))))))))))
+         $Factorial.return_xxx))
    (main
-      $Factorial.return_132
+      $Factorial.return_xxx
       (cut
          (lambda
-            ($Factorial.param_109 $Factorial.return_133)
+            ($Factorial.param_xxx $Factorial.return_xxx)
             (cut
-               $Factorial.param_109
+               $Factorial.param_xxx
                (select
-                  (#Factorial.$__97
+                  (#Factorial.$__xxx
                      (invoke
                         |>
                         (then
-                           $Factorial.outer_151
+                           $Factorial.outer_xxx
                            (join
-                              $Factorial.return_135
+                              $Factorial.return_xxx
                               (then
-                                 $Factorial.inner_152
+                                 $Factorial.inner_xxx
                                  (cut
-                                    $Factorial.outer_151
+                                    $Factorial.outer_xxx
                                     (apply
-                                       ($Factorial.inner_152)
+                                       ($Factorial.inner_xxx)
                                        ((then
-                                           $Factorial.outer_153
+                                           $Factorial.outer_xxx
                                            (join
-                                              $Factorial.return_134
+                                              $Factorial.return_xxx
                                               (then
-                                                 $Factorial.inner_154
+                                                 $Factorial.inner_xxx
                                                  (cut
-                                                    $Factorial.outer_153
+                                                    $Factorial.outer_xxx
                                                     (apply
-                                                       ($Factorial.inner_154)
-                                                       ($Factorial.return_133))))
+                                                       ($Factorial.inner_xxx)
+                                                       ($Factorial.return_xxx))))
                                               (invoke
                                                  putStrLn
-                                                 $Factorial.return_134)))))))
+                                                 $Factorial.return_xxx)))))))
                               (invoke
                                  |>
                                  (then
-                                    $Factorial.outer_155
+                                    $Factorial.outer_xxx
                                     (join
-                                       $Factorial.return_137
+                                       $Factorial.return_xxx
                                        (then
-                                          $Factorial.inner_156
+                                          $Factorial.inner_xxx
                                           (cut
-                                             $Factorial.outer_155
+                                             $Factorial.outer_xxx
                                              (apply
-                                                ($Factorial.inner_156)
+                                                ($Factorial.inner_xxx)
                                                 ((then
-                                                    $Factorial.outer_157
+                                                    $Factorial.outer_xxx
                                                     (join
-                                                       $Factorial.return_136
+                                                       $Factorial.return_xxx
                                                        (then
-                                                          $Factorial.inner_158
+                                                          $Factorial.inner_xxx
                                                           (cut
-                                                             $Factorial.outer_157
+                                                             $Factorial.outer_xxx
                                                              (apply
-                                                                ($Factorial.inner_158)
-                                                                ($Factorial.return_135))))
+                                                                ($Factorial.inner_xxx)
+                                                                ($Factorial.return_xxx))))
                                                        (invoke
                                                           toStringInt64
-                                                          $Factorial.return_136)))))))
+                                                          $Factorial.return_xxx)))))))
                                        (invoke
                                           fact
                                           (then
-                                             $Factorial.outer_159
+                                             $Factorial.outer_xxx
                                              (join
-                                                $Factorial.return_138
+                                                $Factorial.return_xxx
                                                 (then
-                                                   $Factorial.inner_160
+                                                   $Factorial.inner_xxx
                                                    (cut
-                                                      $Factorial.outer_159
+                                                      $Factorial.outer_xxx
                                                       (apply
-                                                         ($Factorial.inner_160)
-                                                         ($Factorial.return_137))))
+                                                         ($Factorial.inner_xxx)
+                                                         ($Factorial.return_xxx))))
                                                 (invoke
                                                    Int64#
                                                    (apply
                                                       (5_i64)
-                                                      ($Factorial.return_138))))))))))))))))
-         $Factorial.return_132)))
+                                                      ($Factorial.return_xxx))))))))))))))))
+         $Factorial.return_xxx)))

@@ -1,99 +1,99 @@
 ((executeWhenLoaded
-    $Seq.return_29
+    $Seq.return_xxx
     (invoke
        Int32#
        (apply
           (1_i32)
           ((then
-              #Seq.x_0
+              #Seq.x_xxx
               (invoke
                  Int32#
                  (apply
                     (2_i32)
                     ((then
-                        #Seq.y_1
+                        #Seq.y_xxx
                         (cut
                            (lambda
-                              ($Seq.tmp_27 $Seq.return_33)
+                              ($Seq.tmp_xxx $Seq.return_xxx)
                               (invoke
                                  addInt32
                                  (apply
-                                    (#Seq.x_0)
-                                    ((apply (#Seq.y_1) ($Seq.return_33))))))
+                                    (#Seq.x_xxx)
+                                    ((apply (#Seq.y_xxx) ($Seq.return_xxx))))))
                            (then
-                              $Seq.outer_38
+                              $Seq.outer_xxx
                               (join
-                                 $Seq.return_30
+                                 $Seq.return_xxx
                                  (then
-                                    $Seq.inner_39
+                                    $Seq.inner_xxx
                                     (cut
-                                       $Seq.outer_38
-                                       (apply ($Seq.inner_39) ($Seq.return_29))))
+                                       $Seq.outer_xxx
+                                       (apply ($Seq.inner_xxx) ($Seq.return_xxx))))
                                  (invoke
                                     printString
                                     (then
-                                       $Seq.outer_40
+                                       $Seq.outer_xxx
                                        (join
-                                          $Seq.return_31
+                                          $Seq.return_xxx
                                           (then
-                                             $Seq.inner_41
+                                             $Seq.inner_xxx
                                              (cut
-                                                $Seq.outer_40
+                                                $Seq.outer_xxx
                                                 (apply
-                                                   ($Seq.inner_41)
-                                                   ($Seq.return_30))))
+                                                   ($Seq.inner_xxx)
+                                                   ($Seq.return_xxx))))
                                           (invoke
                                              toStringInt32
                                              (then
-                                                $Seq.outer_42
+                                                $Seq.outer_xxx
                                                 (join
-                                                   $Seq.return_32
+                                                   $Seq.return_xxx
                                                    (then
-                                                      $Seq.inner_43
+                                                      $Seq.inner_xxx
                                                       (cut
-                                                         $Seq.outer_42
+                                                         $Seq.outer_xxx
                                                          (apply
-                                                            ($Seq.inner_43)
-                                                            ($Seq.return_31))))
+                                                            ($Seq.inner_xxx)
+                                                            ($Seq.return_xxx))))
                                                    (invoke
                                                       addInt32
                                                       (apply
-                                                         (#Seq.x_0)
+                                                         (#Seq.x_xxx)
                                                          ((apply
-                                                             (#Seq.y_1)
-                                                             ($Seq.return_32)))))))))))))))))))))))
+                                                             (#Seq.y_xxx)
+                                                             ($Seq.return_xxx)))))))))))))))))))))))
    (main
-      $Seq.return_34
+      $Seq.return_xxx
       (cut
          (lambda
-            ($Seq.param_28 $Seq.return_35)
+            ($Seq.param_xxx $Seq.return_xxx)
             (cut
-               $Seq.param_28
+               $Seq.param_xxx
                (select
-                  (#Seq.$__26
+                  (#Seq.$__xxx
                      (invoke
                         printString
                         (then
-                           $Seq.outer_44
+                           $Seq.outer_xxx
                            (join
-                              $Seq.return_36
+                              $Seq.return_xxx
                               (then
-                                 $Seq.inner_45
+                                 $Seq.inner_xxx
                                  (cut
-                                    $Seq.outer_44
-                                    (apply ($Seq.inner_45) ($Seq.return_35))))
+                                    $Seq.outer_xxx
+                                    (apply ($Seq.inner_xxx) ($Seq.return_xxx))))
                               (invoke
                                  toStringInt32
                                  (then
-                                    $Seq.outer_46
+                                    $Seq.outer_xxx
                                     (join
-                                       $Seq.return_37
+                                       $Seq.return_xxx
                                        (then
-                                          $Seq.inner_47
+                                          $Seq.inner_xxx
                                           (cut
-                                             $Seq.outer_46
+                                             $Seq.outer_xxx
                                              (apply
-                                                ($Seq.inner_47)
-                                                ($Seq.return_36))))
-                                       (invoke executeWhenLoaded $Seq.return_37)))))))))))
-         $Seq.return_34)))
+                                                ($Seq.inner_xxx)
+                                                ($Seq.return_xxx))))
+                                       (invoke executeWhenLoaded $Seq.return_xxx)))))))))))
+         $Seq.return_xxx)))

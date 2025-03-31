@@ -3,23 +3,17 @@
    ((import "runtime/malgo/Builtin.mlg" all)
       (import "runtime/malgo/Prelude.mlg" all)
       (infix neutral 4 <=)
-      (def
-         <=
-         (fn ((clause ((con x (y))) (seq (do (apply (apply leInt32 y) x)))))))
+      (def <= (fn ((clause (x y) (seq (do (apply (apply leInt32 y) x)))))))
       (infix left 6 +)
-      (def
-         +
-         (fn ((clause ((con x (y))) (seq (do (apply (apply addInt32 y) x)))))))
+      (def + (fn ((clause (x y) (seq (do (apply (apply addInt32 y) x)))))))
       (infix left 6 -)
-      (def
-         -
-         (fn ((clause ((con x (y))) (seq (do (apply (apply subInt32 y) x)))))))
+      (def - (fn ((clause (x y) (seq (do (apply (apply subInt32 y) x)))))))
       (def
          fix
          (fn
             ((clause
-                ((con f (x)))
-                (seq (do (apply (apply f x) (parens (apply fix f)))))))))
+                (f x)
+                (seq (do (apply (apply f x) (seq (do (apply fix f))))))))))
       (def
          main
          (fn
@@ -32,7 +26,7 @@
                          fix
                          (fn
                             ((clause
-                                ((con f (n)))
+                                (f n)
                                 (seq
                                    (do
                                       (apply
@@ -48,21 +42,25 @@
                                                                +
                                                                (apply
                                                                   f
-                                                                  (parens
-                                                                     (opapp
-                                                                        -
-                                                                        n
-                                                                        (int32 1))))
+                                                                  (seq
+                                                                     (do
+                                                                        (opapp
+                                                                           -
+                                                                           n
+                                                                           (int32
+                                                                              1)))))
                                                                (apply
                                                                   f
-                                                                  (parens
-                                                                     (opapp
-                                                                        -
-                                                                        n
-                                                                        (int32 2)))))))))))
+                                                                  (seq
+                                                                     (do
+                                                                        (opapp
+                                                                           -
+                                                                           n
+                                                                           (int32
+                                                                              2))))))))))))
                                             (fn
                                                ((clause () (seq (do (int32 1)))))))
-                                         (parens (opapp <= n (int32 1)))))))))))
+                                         (seq (do (opapp <= n (int32 1))))))))))))
                    (do
                       (opapp
                          |>

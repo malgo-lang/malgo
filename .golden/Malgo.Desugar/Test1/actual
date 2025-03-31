@@ -1,6 +1,6 @@
 (()
    ((define
-       ($Test1.if_curry_51 $Test1.true_52 $Test1.t_53 $Test1.__54)
+       ($Test1.if_curry_xxx $Test1.true_xxx $Test1.t_xxx $Test1.__xxx)
        (->
           (Any# (-> ((sum (con Tuple#))) Any#) (-> ((sum (con Tuple#))) Any#))
           Any#)
@@ -9,40 +9,40 @@
              (sum
                 (con test/testcases/malgo/Test1.mlg.True)
                 (con test/testcases/malgo/Test1.mlg.False))
-             $Test1.true_52)
+             $Test1.true_xxx)
           (unpack
              (con test/testcases/malgo/Test1.mlg.True)
              ()
              (=
-                $Test1.d_56
+                $Test1.d_xxx
                 (let
-                   (($Test1.let_55
+                   (($Test1.let_xxx
                        (sum (con Tuple#))
                        (pack (sum (con Tuple#)) (con Tuple#))))
-                   $Test1.let_55)
+                   $Test1.let_xxx)
                 (=
-                   $Test1.d_57
-                   (call $Test1.t_53 $Test1.d_56)
-                   (cast Any# $Test1.d_57))))
+                   $Test1.d_xxx
+                   (call $Test1.t_xxx $Test1.d_xxx)
+                   (cast Any# $Test1.d_xxx))))
           (unpack
              (con test/testcases/malgo/Test1.mlg.False)
              ()
              (=
-                $Test1.d_59
+                $Test1.d_xxx
                 (let
-                   (($Test1.let_58
+                   (($Test1.let_xxx
                        (sum (con Tuple#))
                        (pack (sum (con Tuple#)) (con Tuple#))))
-                   $Test1.let_58)
+                   $Test1.let_xxx)
                 (=
-                   $Test1.d_60
-                   (call $Test1.__54 $Test1.d_59)
-                   (cast Any# $Test1.d_60))))))
+                   $Test1.d_xxx
+                   (call $Test1.__xxx $Test1.d_xxx)
+                   (cast Any# $Test1.d_xxx))))))
       (define
          (True)
          (-> () Any#)
          (let
-            (($Test1.let_39
+            (($Test1.let_xxx
                 (sum
                    (con test/testcases/malgo/Test1.mlg.True)
                    (con test/testcases/malgo/Test1.mlg.False))
@@ -51,12 +51,12 @@
                       (con test/testcases/malgo/Test1.mlg.True)
                       (con test/testcases/malgo/Test1.mlg.False))
                    (con test/testcases/malgo/Test1.mlg.True))))
-            (cast Any# $Test1.let_39)))
+            (cast Any# $Test1.let_xxx)))
       (define
          (False)
          (-> () Any#)
          (let
-            (($Test1.let_40
+            (($Test1.let_xxx
                 (sum
                    (con test/testcases/malgo/Test1.mlg.True)
                    (con test/testcases/malgo/Test1.mlg.False))
@@ -65,91 +65,91 @@
                       (con test/testcases/malgo/Test1.mlg.True)
                       (con test/testcases/malgo/Test1.mlg.False))
                    (con test/testcases/malgo/Test1.mlg.False))))
-            (cast Any# $Test1.let_40)))
+            (cast Any# $Test1.let_xxx)))
       (define
-         (malgo_print_string $Test1.p_41)
+         (malgo_print_string $Test1.p_xxx)
          (-> (String#) (sum (con Tuple#)))
-         (raw malgo_print_string (-> (String#) (sum (con Tuple#))) $Test1.p_41))
+         (raw malgo_print_string (-> (String#) (sum (con Tuple#))) $Test1.p_xxx))
       (define
-         (if $Test1.true_42)
+         (if $Test1.true_xxx)
          (->
             (Any#)
             (->
                ((-> ((sum (con Tuple#))) Any#))
                (-> ((-> ((sum (con Tuple#))) Any#)) Any#)))
          (let
-            (($Test1.let_62
+            (($Test1.let_xxx
                 (->
                    ((-> ((sum (con Tuple#))) Any#))
                    (-> ((-> ((sum (con Tuple#))) Any#)) Any#))
                 (fun
-                   ($Test1.t_43)
+                   ($Test1.t_xxx)
                    (let
-                      (($Test1.let_61
+                      (($Test1.let_xxx
                           (-> ((-> ((sum (con Tuple#))) Any#)) Any#)
                           (fun
-                             ($Test1.__44)
+                             ($Test1.__xxx)
                              (direct
-                                $Test1.if_curry_51
-                                $Test1.true_42
-                                $Test1.t_43
-                                $Test1.__44))))
-                      $Test1.let_61))))
-            $Test1.let_62))
+                                $Test1.if_curry_xxx
+                                $Test1.true_xxx
+                                $Test1.t_xxx
+                                $Test1.__xxx))))
+                      $Test1.let_xxx))))
+            $Test1.let_xxx))
       (define
-         (main $Test1.$__63)
+         (main $Test1.$__xxx)
          (-> ((sum (con Tuple#))) (sum (con Tuple#)))
          (=
-            $Test1.d_72
+            $Test1.d_xxx
             (=
-               $Test1.d_66
+               $Test1.d_xxx
                (=
-                  $Test1.d_64
+                  $Test1.d_xxx
                   (direct True)
                   (=
-                     $Test1.d_65
-                     (call if $Test1.d_64)
+                     $Test1.d_xxx
+                     (call if $Test1.d_xxx)
                      (cast
                         (->
                            ((-> ((sum (con Tuple#))) (sum (con Tuple#))))
                            (->
                               ((-> ((sum (con Tuple#))) (sum (con Tuple#))))
                               (sum (con Tuple#))))
-                        $Test1.d_65)))
+                        $Test1.d_xxx)))
                (=
-                  $Test1.d_70
+                  $Test1.d_xxx
                   (let
-                     (($Test1.fun_69
+                     (($Test1.fun_xxx
                          (-> ((sum (con Tuple#))) (sum (con Tuple#)))
                          (fun
-                            ($Test1.$__67)
+                            ($Test1.$__xxx)
                             (=
-                               $Test1.d_68
+                               $Test1.d_xxx
                                (call malgo_print_string "True")
-                               (cast (sum (con Tuple#)) $Test1.d_68)))))
-                     $Test1.fun_69)
+                               (cast (sum (con Tuple#)) $Test1.d_xxx)))))
+                     $Test1.fun_xxx)
                   (=
-                     $Test1.d_71
-                     (call $Test1.d_66 $Test1.d_70)
+                     $Test1.d_xxx
+                     (call $Test1.d_xxx $Test1.d_xxx)
                      (cast
                         (->
                            ((-> ((sum (con Tuple#))) (sum (con Tuple#))))
                            (sum (con Tuple#)))
-                        $Test1.d_71))))
+                        $Test1.d_xxx))))
             (=
-               $Test1.d_76
+               $Test1.d_xxx
                (let
-                  (($Test1.fun_75
+                  (($Test1.fun_xxx
                       (-> ((sum (con Tuple#))) (sum (con Tuple#)))
                       (fun
-                         ($Test1.$__73)
+                         ($Test1.$__xxx)
                          (=
-                            $Test1.d_74
+                            $Test1.d_xxx
                             (call malgo_print_string "False")
-                            (cast (sum (con Tuple#)) $Test1.d_74)))))
-                  $Test1.fun_75)
+                            (cast (sum (con Tuple#)) $Test1.d_xxx)))))
+                  $Test1.fun_xxx)
                (=
-                  $Test1.d_77
-                  (call $Test1.d_72 $Test1.d_76)
-                  (cast (sum (con Tuple#)) $Test1.d_77))))))
+                  $Test1.d_xxx
+                  (call $Test1.d_xxx $Test1.d_xxx)
+                  (cast (sum (con Tuple#)) $Test1.d_xxx))))))
    ((extern malgo_print_string (-> (String#) (sum (con Tuple#))))))

@@ -1,52 +1,52 @@
 (()
    ((define
-       (malgo_print_string $TestNestedLetFunc.p_13)
+       (malgo_print_string $TestNestedLetFunc.p_xxx)
        (-> (String#) (sum (con Tuple#)))
        (raw
           malgo_print_string
           (-> (String#) (sum (con Tuple#)))
-          $TestNestedLetFunc.p_13))
+          $TestNestedLetFunc.p_xxx))
       (define
-         (main $TestNestedLetFunc.$__14)
+         (main $TestNestedLetFunc.$__xxx)
          (-> ((sum (con Tuple#))) (sum (con Tuple#)))
          (match
             (let
-               (($TestNestedLetFunc.fun_23
+               (($TestNestedLetFunc.fun_xxx
                    (-> ((sum (con Tuple#))) (sum (con Tuple#)))
                    (fun
-                      ($TestNestedLetFunc.$__15)
+                      ($TestNestedLetFunc.$__xxx)
                       (=
-                         $TestNestedLetFunc.d_19
+                         $TestNestedLetFunc.d_xxx
                          (let
-                            (($TestNestedLetFunc.fun_18
+                            (($TestNestedLetFunc.fun_xxx
                                 (-> ((sum (con Tuple#))) (sum (con Tuple#)))
                                 (fun
-                                   ($TestNestedLetFunc.a_16)
+                                   ($TestNestedLetFunc.a_xxx)
                                    (let
-                                      (($TestNestedLetFunc.let_17
+                                      (($TestNestedLetFunc.let_xxx
                                           (sum (con Tuple#))
                                           (pack (sum (con Tuple#)) (con Tuple#))))
-                                      $TestNestedLetFunc.let_17))))
-                            $TestNestedLetFunc.fun_18)
+                                      $TestNestedLetFunc.let_xxx))))
+                            $TestNestedLetFunc.fun_xxx)
                          (=
-                            $TestNestedLetFunc.d_21
+                            $TestNestedLetFunc.d_xxx
                             (let
-                               (($TestNestedLetFunc.let_20
+                               (($TestNestedLetFunc.let_xxx
                                    (sum (con Tuple#))
                                    (pack (sum (con Tuple#)) (con Tuple#))))
-                               $TestNestedLetFunc.let_20)
+                               $TestNestedLetFunc.let_xxx)
                             (=
-                               $TestNestedLetFunc.d_22
+                               $TestNestedLetFunc.d_xxx
                                (call
-                                  $TestNestedLetFunc.d_19
-                                  $TestNestedLetFunc.d_21)
-                               (cast (sum (con Tuple#)) $TestNestedLetFunc.d_22)))))))
-               $TestNestedLetFunc.fun_23)
+                                  $TestNestedLetFunc.d_xxx
+                                  $TestNestedLetFunc.d_xxx)
+                               (cast (sum (con Tuple#)) $TestNestedLetFunc.d_xxx)))))))
+               $TestNestedLetFunc.fun_xxx)
             (bind
-               $TestNestedLetFunc.let_test/testcases/malgo/TestNestedLetFunc.mlg.#f_2_24
+               $TestNestedLetFunc.let_test/testcases/malgo/TestNestedLetFunc.mlg.#f_2_xxx
                (-> ((sum (con Tuple#))) (sum (con Tuple#)))
                (=
-                  $TestNestedLetFunc.d_25
+                  $TestNestedLetFunc.d_xxx
                   (call malgo_print_string "PASS")
-                  (cast (sum (con Tuple#)) $TestNestedLetFunc.d_25))))))
+                  (cast (sum (con Tuple#)) $TestNestedLetFunc.d_xxx))))))
    ((extern malgo_print_string (-> (String#) (sum (con Tuple#))))))

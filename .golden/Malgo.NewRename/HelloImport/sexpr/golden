@@ -7,19 +7,20 @@
             ((clause
                 ()
                 (seq
-                   (do (apply putStr (apply String# (string "hello"))))
+                   (do (apply putStr (seq (do (apply String# (string "hello"))))))
                    (do
                       (opapp
                          |>
                          putStrLn
                          (fn
                             ((clause
-                                (#HelloImport.f_0)
+                                (#HelloImport.f_xxx)
                                 (seq
                                    (do
                                       (apply
-                                         #HelloImport.f_0
-                                         (apply String# (string " world")))))))))))))))))
+                                         #HelloImport.f_xxx
+                                         (seq
+                                            (do (apply String# (string " world")))))))))))))))))))
       ((((./test/testcases/malgo/HelloImport.mlg 4 1)
            (./test/testcases/malgo/HelloImport.mlg 5 1))
           main

@@ -139,7 +139,7 @@ Module
           }
          ) "printString#"
         )
-        ( Parens
+        ( Seq
          ( Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
@@ -153,36 +153,21 @@ Module
            }
           }
          )
-         ( Apply
+         ( NoBind
           ( Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
             , sourceLine = Pos 4
-            , sourceColumn = Pos 41
+            , sourceColumn = Pos 25
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
             , sourceLine = Pos 4
-            , sourceColumn = Pos 44
+            , sourceColumn = Pos 45
             }
            }
           )
-          ( Var
-           ( Range
-            { _start = SourcePos
-             { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
-             , sourceLine = Pos 4
-             , sourceColumn = Pos 26
-             }
-            , _end = SourcePos
-             { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
-             , sourceLine = Pos 4
-             , sourceColumn = Pos 41
-             }
-            }
-           ) "toStringInt64#"
-          )
-          ( Unboxed
+          ( Apply
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
@@ -196,8 +181,38 @@ Module
              }
             }
            )
-           ( Int64 1 )
-          )
+           ( Var
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+              , sourceLine = Pos 4
+              , sourceColumn = Pos 26
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+              , sourceLine = Pos 4
+              , sourceColumn = Pos 41
+              }
+             }
+            ) "toStringInt64#"
+           )
+           ( Unboxed
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+              , sourceLine = Pos 4
+              , sourceColumn = Pos 41
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+              , sourceLine = Pos 4
+              , sourceColumn = Pos 44
+              }
+             }
+            )
+            ( Int64 1 )
+           )
+          ) :| []
          )
         )
        ) :| []
@@ -290,7 +305,7 @@ Module
            }
           ) "printString#"
          )
-         ( Parens
+         ( Seq
           ( Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
@@ -304,36 +319,21 @@ Module
             }
            }
           )
-          ( Apply
+          ( NoBind
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
              , sourceLine = Pos 5
-             , sourceColumn = Pos 41
+             , sourceColumn = Pos 25
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
              , sourceLine = Pos 5
-             , sourceColumn = Pos 44
+             , sourceColumn = Pos 45
              }
             }
            )
-           ( Var
-            ( Range
-             { _start = SourcePos
-              { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
-              , sourceLine = Pos 5
-              , sourceColumn = Pos 26
-              }
-             , _end = SourcePos
-              { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
-              , sourceLine = Pos 5
-              , sourceColumn = Pos 41
-              }
-             }
-            ) "toStringInt64#"
-           )
-           ( Unboxed
+           ( Apply
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
@@ -347,8 +347,38 @@ Module
               }
              }
             )
-            ( Int64 1 )
-           )
+            ( Var
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+               , sourceLine = Pos 5
+               , sourceColumn = Pos 26
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+               , sourceLine = Pos 5
+               , sourceColumn = Pos 41
+               }
+              }
+             ) "toStringInt64#"
+            )
+            ( Unboxed
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+               , sourceLine = Pos 5
+               , sourceColumn = Pos 41
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+               , sourceLine = Pos 5
+               , sourceColumn = Pos 44
+               }
+              }
+             )
+             ( Int64 1 )
+            )
+           ) :| []
           )
          )
         ) :| []
@@ -440,7 +470,7 @@ Module
            }
           ) "printString#"
          )
-         ( Parens
+         ( Seq
           ( Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
@@ -454,36 +484,21 @@ Module
             }
            }
           )
-          ( Apply
+          ( NoBind
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
              , sourceLine = Pos 6
-             , sourceColumn = Pos 39
+             , sourceColumn = Pos 23
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
              , sourceLine = Pos 6
-             , sourceColumn = Pos 42
+             , sourceColumn = Pos 43
              }
             }
            )
-           ( Var
-            ( Range
-             { _start = SourcePos
-              { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
-              , sourceLine = Pos 6
-              , sourceColumn = Pos 24
-              }
-             , _end = SourcePos
-              { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
-              , sourceLine = Pos 6
-              , sourceColumn = Pos 39
-              }
-             }
-            ) "toStringInt64#"
-           )
-           ( Unboxed
+           ( Apply
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
@@ -497,8 +512,38 @@ Module
               }
              }
             )
-            ( Int64 0 )
-           )
+            ( Var
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+               , sourceLine = Pos 6
+               , sourceColumn = Pos 24
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+               , sourceLine = Pos 6
+               , sourceColumn = Pos 39
+               }
+              }
+             ) "toStringInt64#"
+            )
+            ( Unboxed
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+               , sourceLine = Pos 6
+               , sourceColumn = Pos 39
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
+               , sourceLine = Pos 6
+               , sourceColumn = Pos 42
+               }
+              }
+             )
+             ( Int64 0 )
+            )
+           ) :| []
           )
          )
         ) :| []

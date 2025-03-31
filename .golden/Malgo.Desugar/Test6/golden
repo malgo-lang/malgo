@@ -3,7 +3,7 @@
        (R)
        (-> () Any#)
        (let
-          (($Test6.let_30
+          (($Test6.let_xxx
               (sum
                  (con test/testcases/malgo/Test6.mlg.R)
                  (con test/testcases/malgo/Test6.mlg.G)
@@ -14,12 +14,12 @@
                     (con test/testcases/malgo/Test6.mlg.G)
                     (con test/testcases/malgo/Test6.mlg.B))
                  (con test/testcases/malgo/Test6.mlg.R))))
-          (cast Any# $Test6.let_30)))
+          (cast Any# $Test6.let_xxx)))
       (define
          (G)
          (-> () Any#)
          (let
-            (($Test6.let_31
+            (($Test6.let_xxx
                 (sum
                    (con test/testcases/malgo/Test6.mlg.R)
                    (con test/testcases/malgo/Test6.mlg.G)
@@ -30,12 +30,12 @@
                       (con test/testcases/malgo/Test6.mlg.G)
                       (con test/testcases/malgo/Test6.mlg.B))
                    (con test/testcases/malgo/Test6.mlg.G))))
-            (cast Any# $Test6.let_31)))
+            (cast Any# $Test6.let_xxx)))
       (define
          (B)
          (-> () Any#)
          (let
-            (($Test6.let_32
+            (($Test6.let_xxx
                 (sum
                    (con test/testcases/malgo/Test6.mlg.R)
                    (con test/testcases/malgo/Test6.mlg.G)
@@ -46,17 +46,17 @@
                       (con test/testcases/malgo/Test6.mlg.G)
                       (con test/testcases/malgo/Test6.mlg.B))
                    (con test/testcases/malgo/Test6.mlg.B))))
-            (cast Any# $Test6.let_32)))
+            (cast Any# $Test6.let_xxx)))
       (define
-         (malgo_exit_failure $Test6.p_33)
+         (malgo_exit_failure $Test6.p_xxx)
          (-> ((sum (con Tuple#))) Any#)
-         (raw malgo_exit_failure (-> ((sum (con Tuple#))) Any#) $Test6.p_33))
+         (raw malgo_exit_failure (-> ((sum (con Tuple#))) Any#) $Test6.p_xxx))
       (define
-         (malgo_print_string $Test6.p_34)
+         (malgo_print_string $Test6.p_xxx)
          (-> (String#) (sum (con Tuple#)))
-         (raw malgo_print_string (-> (String#) (sum (con Tuple#))) $Test6.p_34))
+         (raw malgo_print_string (-> (String#) (sum (con Tuple#))) $Test6.p_xxx))
       (define
-         (rtob $Test6.r_35)
+         (rtob $Test6.r_xxx)
          (-> (Any#) Any#)
          (match
             (cast
@@ -64,84 +64,87 @@
                   (con test/testcases/malgo/Test6.mlg.R)
                   (con test/testcases/malgo/Test6.mlg.G)
                   (con test/testcases/malgo/Test6.mlg.B))
-               $Test6.r_35)
+               $Test6.r_xxx)
             (unpack (con test/testcases/malgo/Test6.mlg.R) () (direct B))
             (unpack
                (con test/testcases/malgo/Test6.mlg.G)
                ()
                (=
-                  $Test6.d_37
+                  $Test6.d_xxx
                   (let
-                     (($Test6.let_36
+                     (($Test6.let_xxx
                          (sum (con Tuple#))
                          (pack (sum (con Tuple#)) (con Tuple#))))
-                     $Test6.let_36)
+                     $Test6.let_xxx)
                   (=
-                     $Test6.d_38
-                     (call malgo_exit_failure $Test6.d_37)
-                     (cast Any# $Test6.d_38))))
+                     $Test6.d_xxx
+                     (call malgo_exit_failure $Test6.d_xxx)
+                     (cast Any# $Test6.d_xxx))))
             (unpack
                (con test/testcases/malgo/Test6.mlg.B)
                ()
                (=
-                  $Test6.d_37
+                  $Test6.d_xxx
                   (let
-                     (($Test6.let_36
+                     (($Test6.let_xxx
                          (sum (con Tuple#))
                          (pack (sum (con Tuple#)) (con Tuple#))))
-                     $Test6.let_36)
+                     $Test6.let_xxx)
                   (=
-                     $Test6.d_38
-                     (call malgo_exit_failure $Test6.d_37)
-                     (cast Any# $Test6.d_38))))))
+                     $Test6.d_xxx
+                     (call malgo_exit_failure $Test6.d_xxx)
+                     (cast Any# $Test6.d_xxx))))))
       (define
-         (main $Test6.$__39)
+         (main $Test6.$__xxx)
          (-> ((sum (con Tuple#))) (sum (con Tuple#)))
          (=
-            $Test6.d_44
+            $Test6.d_xxx
             (let
-               (($Test6.fun_43
+               (($Test6.fun_xxx
                    (-> (Any#) (sum (con Tuple#)))
                    (fun
-                      ($Test6.b_40)
+                      ($Test6.b_xxx)
                       (match
                          (cast
                             (sum
                                (con test/testcases/malgo/Test6.mlg.R)
                                (con test/testcases/malgo/Test6.mlg.G)
                                (con test/testcases/malgo/Test6.mlg.B))
-                            $Test6.b_40)
+                            $Test6.b_xxx)
                          (unpack
                             (con test/testcases/malgo/Test6.mlg.R)
                             ()
                             (=
-                               $Test6.d_41
+                               $Test6.d_xxx
                                (call malgo_print_string "WRONG")
-                               (cast (sum (con Tuple#)) $Test6.d_41)))
+                               (cast (sum (con Tuple#)) $Test6.d_xxx)))
                          (unpack
                             (con test/testcases/malgo/Test6.mlg.G)
                             ()
                             (=
-                               $Test6.d_41
+                               $Test6.d_xxx
                                (call malgo_print_string "WRONG")
-                               (cast (sum (con Tuple#)) $Test6.d_41)))
+                               (cast (sum (con Tuple#)) $Test6.d_xxx)))
                          (unpack
                             (con test/testcases/malgo/Test6.mlg.B)
                             ()
                             (=
-                               $Test6.d_42
+                               $Test6.d_xxx
                                (call malgo_print_string "OK")
-                               (cast (sum (con Tuple#)) $Test6.d_42)))))))
-               $Test6.fun_43)
+                               (cast (sum (con Tuple#)) $Test6.d_xxx)))))))
+               $Test6.fun_xxx)
             (=
-               $Test6.d_47
+               $Test6.d_xxx
                (=
-                  $Test6.d_45
+                  $Test6.d_xxx
                   (direct R)
-                  (= $Test6.d_46 (call rtob $Test6.d_45) (cast Any# $Test6.d_46)))
+                  (=
+                     $Test6.d_xxx
+                     (call rtob $Test6.d_xxx)
+                     (cast Any# $Test6.d_xxx)))
                (=
-                  $Test6.d_48
-                  (call $Test6.d_44 $Test6.d_47)
-                  (cast (sum (con Tuple#)) $Test6.d_48))))))
+                  $Test6.d_xxx
+                  (call $Test6.d_xxx $Test6.d_xxx)
+                  (cast (sum (con Tuple#)) $Test6.d_xxx))))))
    ((extern malgo_exit_failure (-> ((sum (con Tuple#))) Any#))
       (extern malgo_print_string (-> (String#) (sum (con Tuple#))))))

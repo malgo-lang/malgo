@@ -1,9 +1,9 @@
 (()
    ((define
-       (Symbol $Punctuate.p_113)
+       (Symbol $Punctuate.p_xxx)
        (-> (Any#) Any#)
        (let
-          (($Punctuate.let_114
+          (($Punctuate.let_xxx
               (sum
                  (con test/testcases/malgo/Punctuate.mlg.Symbol Any#)
                  (con test/testcases/malgo/Punctuate.mlg.SInt Any#)
@@ -14,13 +14,13 @@
                     (con test/testcases/malgo/Punctuate.mlg.SInt Any#)
                     (con test/testcases/malgo/Punctuate.mlg.SList Any#))
                  (con test/testcases/malgo/Punctuate.mlg.Symbol Any#)
-                 $Punctuate.p_113)))
-          (cast Any# $Punctuate.let_114)))
+                 $Punctuate.p_xxx)))
+          (cast Any# $Punctuate.let_xxx)))
       (define
-         (SInt $Punctuate.p_115)
+         (SInt $Punctuate.p_xxx)
          (-> (Any#) Any#)
          (let
-            (($Punctuate.let_116
+            (($Punctuate.let_xxx
                 (sum
                    (con test/testcases/malgo/Punctuate.mlg.Symbol Any#)
                    (con test/testcases/malgo/Punctuate.mlg.SInt Any#)
@@ -31,13 +31,13 @@
                       (con test/testcases/malgo/Punctuate.mlg.SInt Any#)
                       (con test/testcases/malgo/Punctuate.mlg.SList Any#))
                    (con test/testcases/malgo/Punctuate.mlg.SInt Any#)
-                   $Punctuate.p_115)))
-            (cast Any# $Punctuate.let_116)))
+                   $Punctuate.p_xxx)))
+            (cast Any# $Punctuate.let_xxx)))
       (define
-         (SList $Punctuate.p_117)
+         (SList $Punctuate.p_xxx)
          (-> (Any#) Any#)
          (let
-            (($Punctuate.let_118
+            (($Punctuate.let_xxx
                 (sum
                    (con test/testcases/malgo/Punctuate.mlg.Symbol Any#)
                    (con test/testcases/malgo/Punctuate.mlg.SInt Any#)
@@ -48,14 +48,14 @@
                       (con test/testcases/malgo/Punctuate.mlg.SInt Any#)
                       (con test/testcases/malgo/Punctuate.mlg.SList Any#))
                    (con test/testcases/malgo/Punctuate.mlg.SList Any#)
-                   $Punctuate.p_117)))
-            (cast Any# $Punctuate.let_118)))
+                   $Punctuate.p_xxx)))
+            (cast Any# $Punctuate.let_xxx)))
       (define
-         (<> $Punctuate.eta_119)
+         (<> $Punctuate.eta_xxx)
          (-> (Any#) (-> (Any#) Any#))
-         (call appendString $Punctuate.eta_119))
+         (call appendString $Punctuate.eta_xxx))
       (define
-         (show $Punctuate.symbol_120)
+         (show $Punctuate.symbol_xxx)
          (-> (Any#) Any#)
          (match
             (cast
@@ -63,276 +63,276 @@
                   (con test/testcases/malgo/Punctuate.mlg.Symbol Any#)
                   (con test/testcases/malgo/Punctuate.mlg.SInt Any#)
                   (con test/testcases/malgo/Punctuate.mlg.SList Any#))
-               $Punctuate.symbol_120)
+               $Punctuate.symbol_xxx)
             (unpack
                (con test/testcases/malgo/Punctuate.mlg.Symbol Any#)
-               ($Punctuate.p_121)
+               ($Punctuate.p_xxx)
                (=
-                  $Punctuate.d_125
+                  $Punctuate.d_xxx
                   (=
-                     $Punctuate.d_123
+                     $Punctuate.d_xxx
                      (=
-                        $Punctuate.d_122
+                        $Punctuate.d_xxx
                         (call String# "Symbol ")
-                        (cast Any# $Punctuate.d_122))
+                        (cast Any# $Punctuate.d_xxx))
                      (=
-                        $Punctuate.d_124
-                        (call <> $Punctuate.d_123)
-                        (cast (-> (Any#) Any#) $Punctuate.d_124)))
+                        $Punctuate.d_xxx
+                        (call <> $Punctuate.d_xxx)
+                        (cast (-> (Any#) Any#) $Punctuate.d_xxx)))
                   (=
-                     $Punctuate.d_126
-                     (call $Punctuate.d_125 $Punctuate.p_121)
-                     (cast Any# $Punctuate.d_126))))
+                     $Punctuate.d_xxx
+                     (call $Punctuate.d_xxx $Punctuate.p_xxx)
+                     (cast Any# $Punctuate.d_xxx))))
             (unpack
                (con test/testcases/malgo/Punctuate.mlg.SInt Any#)
-               ($Punctuate.p_127)
+               ($Punctuate.p_xxx)
                (=
-                  $Punctuate.d_131
+                  $Punctuate.d_xxx
                   (=
-                     $Punctuate.d_129
+                     $Punctuate.d_xxx
                      (=
-                        $Punctuate.d_128
+                        $Punctuate.d_xxx
                         (call String# "SInt ")
-                        (cast Any# $Punctuate.d_128))
+                        (cast Any# $Punctuate.d_xxx))
                      (=
-                        $Punctuate.d_130
-                        (call <> $Punctuate.d_129)
-                        (cast (-> (Any#) Any#) $Punctuate.d_130)))
+                        $Punctuate.d_xxx
+                        (call <> $Punctuate.d_xxx)
+                        (cast (-> (Any#) Any#) $Punctuate.d_xxx)))
                   (=
-                     $Punctuate.d_133
+                     $Punctuate.d_xxx
                      (=
-                        $Punctuate.d_132
-                        (call toStringInt32 $Punctuate.p_127)
-                        (cast Any# $Punctuate.d_132))
+                        $Punctuate.d_xxx
+                        (call toStringInt32 $Punctuate.p_xxx)
+                        (cast Any# $Punctuate.d_xxx))
                      (=
-                        $Punctuate.d_134
-                        (call $Punctuate.d_131 $Punctuate.d_133)
-                        (cast Any# $Punctuate.d_134)))))
+                        $Punctuate.d_xxx
+                        (call $Punctuate.d_xxx $Punctuate.d_xxx)
+                        (cast Any# $Punctuate.d_xxx)))))
             (unpack
                (con test/testcases/malgo/Punctuate.mlg.SList Any#)
-               ($Punctuate.p_135)
+               ($Punctuate.p_xxx)
                (=
-                  $Punctuate.d_139
+                  $Punctuate.d_xxx
                   (=
-                     $Punctuate.d_137
+                     $Punctuate.d_xxx
                      (=
-                        $Punctuate.d_136
+                        $Punctuate.d_xxx
                         (call String# "SList [")
-                        (cast Any# $Punctuate.d_136))
+                        (cast Any# $Punctuate.d_xxx))
                      (=
-                        $Punctuate.d_138
-                        (call <> $Punctuate.d_137)
-                        (cast (-> (Any#) Any#) $Punctuate.d_138)))
+                        $Punctuate.d_xxx
+                        (call <> $Punctuate.d_xxx)
+                        (cast (-> (Any#) Any#) $Punctuate.d_xxx)))
                   (=
-                     $Punctuate.d_157
+                     $Punctuate.d_xxx
                      (=
-                        $Punctuate.d_153
+                        $Punctuate.d_xxx
                         (=
-                           $Punctuate.d_151
+                           $Punctuate.d_xxx
                            (=
-                              $Punctuate.d_149
+                              $Punctuate.d_xxx
                               (=
-                                 $Punctuate.d_143
+                                 $Punctuate.d_xxx
                                  (=
-                                    $Punctuate.d_141
+                                    $Punctuate.d_xxx
                                     (=
-                                       $Punctuate.d_140
+                                       $Punctuate.d_xxx
                                        (call String# ", ")
-                                       (cast Any# $Punctuate.d_140))
+                                       (cast Any# $Punctuate.d_xxx))
                                     (=
-                                       $Punctuate.d_142
-                                       (call punctuate $Punctuate.d_141)
-                                       (cast (-> (Any#) Any#) $Punctuate.d_142)))
+                                       $Punctuate.d_xxx
+                                       (call punctuate $Punctuate.d_xxx)
+                                       (cast (-> (Any#) Any#) $Punctuate.d_xxx)))
                                  (=
-                                    $Punctuate.d_147
+                                    $Punctuate.d_xxx
                                     (=
-                                       $Punctuate.d_145
+                                       $Punctuate.d_xxx
                                        (=
-                                          $Punctuate.d_144
+                                          $Punctuate.d_xxx
                                           (call mapList show)
-                                          (cast (-> (Any#) Any#) $Punctuate.d_144))
+                                          (cast (-> (Any#) Any#) $Punctuate.d_xxx))
                                        (=
-                                          $Punctuate.d_146
-                                          (call $Punctuate.d_145 $Punctuate.p_135)
-                                          (cast Any# $Punctuate.d_146)))
+                                          $Punctuate.d_xxx
+                                          (call $Punctuate.d_xxx $Punctuate.p_xxx)
+                                          (cast Any# $Punctuate.d_xxx)))
                                     (=
-                                       $Punctuate.d_148
-                                       (call $Punctuate.d_143 $Punctuate.d_147)
-                                       (cast Any# $Punctuate.d_148))))
+                                       $Punctuate.d_xxx
+                                       (call $Punctuate.d_xxx $Punctuate.d_xxx)
+                                       (cast Any# $Punctuate.d_xxx))))
                               (=
-                                 $Punctuate.d_150
-                                 (call concatString $Punctuate.d_149)
-                                 (cast Any# $Punctuate.d_150)))
+                                 $Punctuate.d_xxx
+                                 (call concatString $Punctuate.d_xxx)
+                                 (cast Any# $Punctuate.d_xxx)))
                            (=
-                              $Punctuate.d_152
-                              (call <> $Punctuate.d_151)
-                              (cast (-> (Any#) Any#) $Punctuate.d_152)))
+                              $Punctuate.d_xxx
+                              (call <> $Punctuate.d_xxx)
+                              (cast (-> (Any#) Any#) $Punctuate.d_xxx)))
                         (=
-                           $Punctuate.d_155
+                           $Punctuate.d_xxx
                            (=
-                              $Punctuate.d_154
+                              $Punctuate.d_xxx
                               (call String# "]")
-                              (cast Any# $Punctuate.d_154))
+                              (cast Any# $Punctuate.d_xxx))
                            (=
-                              $Punctuate.d_156
-                              (call $Punctuate.d_153 $Punctuate.d_155)
-                              (cast Any# $Punctuate.d_156))))
+                              $Punctuate.d_xxx
+                              (call $Punctuate.d_xxx $Punctuate.d_xxx)
+                              (cast Any# $Punctuate.d_xxx))))
                      (=
-                        $Punctuate.d_158
-                        (call $Punctuate.d_139 $Punctuate.d_157)
-                        (cast Any# $Punctuate.d_158)))))))
+                        $Punctuate.d_xxx
+                        (call $Punctuate.d_xxx $Punctuate.d_xxx)
+                        (cast Any# $Punctuate.d_xxx)))))))
       (define
-         (main $Punctuate.$__159)
+         (main $Punctuate.$__xxx)
          (-> ((sum (con Tuple#))) (sum (con Tuple#)))
          (match
             (=
-               $Punctuate.d_198
+               $Punctuate.d_xxx
                (=
-                  $Punctuate.d_165
+                  $Punctuate.d_xxx
                   (=
-                     $Punctuate.d_163
+                     $Punctuate.d_xxx
                      (=
-                        $Punctuate.d_161
+                        $Punctuate.d_xxx
                         (=
-                           $Punctuate.d_160
+                           $Punctuate.d_xxx
                            (call String# "x")
-                           (cast Any# $Punctuate.d_160))
+                           (cast Any# $Punctuate.d_xxx))
                         (=
-                           $Punctuate.d_162
-                           (call Symbol $Punctuate.d_161)
-                           (cast Any# $Punctuate.d_162)))
+                           $Punctuate.d_xxx
+                           (call Symbol $Punctuate.d_xxx)
+                           (cast Any# $Punctuate.d_xxx)))
                      (=
-                        $Punctuate.d_164
-                        (call Cons $Punctuate.d_163)
-                        (cast (-> (Any#) Any#) $Punctuate.d_164)))
+                        $Punctuate.d_xxx
+                        (call Cons $Punctuate.d_xxx)
+                        (cast (-> (Any#) Any#) $Punctuate.d_xxx)))
                   (=
-                     $Punctuate.d_196
+                     $Punctuate.d_xxx
                      (=
-                        $Punctuate.d_193
+                        $Punctuate.d_xxx
                         (=
-                           $Punctuate.d_191
+                           $Punctuate.d_xxx
                            (=
-                              $Punctuate.d_189
+                              $Punctuate.d_xxx
                               (=
-                                 $Punctuate.d_171
+                                 $Punctuate.d_xxx
                                  (=
-                                    $Punctuate.d_169
+                                    $Punctuate.d_xxx
                                     (=
-                                       $Punctuate.d_167
+                                       $Punctuate.d_xxx
                                        (=
-                                          $Punctuate.d_166
+                                          $Punctuate.d_xxx
                                           (call String# "y")
-                                          (cast Any# $Punctuate.d_166))
+                                          (cast Any# $Punctuate.d_xxx))
                                        (=
-                                          $Punctuate.d_168
-                                          (call Symbol $Punctuate.d_167)
-                                          (cast Any# $Punctuate.d_168)))
+                                          $Punctuate.d_xxx
+                                          (call Symbol $Punctuate.d_xxx)
+                                          (cast Any# $Punctuate.d_xxx)))
                                     (=
-                                       $Punctuate.d_170
-                                       (call Cons $Punctuate.d_169)
-                                       (cast (-> (Any#) Any#) $Punctuate.d_170)))
+                                       $Punctuate.d_xxx
+                                       (call Cons $Punctuate.d_xxx)
+                                       (cast (-> (Any#) Any#) $Punctuate.d_xxx)))
                                  (=
-                                    $Punctuate.d_187
+                                    $Punctuate.d_xxx
                                     (=
-                                       $Punctuate.d_184
+                                       $Punctuate.d_xxx
                                        (=
-                                          $Punctuate.d_182
+                                          $Punctuate.d_xxx
                                           (=
-                                             $Punctuate.d_180
+                                             $Punctuate.d_xxx
                                              (=
-                                                $Punctuate.d_177
+                                                $Punctuate.d_xxx
                                                 (=
-                                                   $Punctuate.d_175
+                                                   $Punctuate.d_xxx
                                                    (=
-                                                      $Punctuate.d_173
+                                                      $Punctuate.d_xxx
                                                       (=
-                                                         $Punctuate.d_172
+                                                         $Punctuate.d_xxx
                                                          (call String# "z")
                                                          (cast
                                                             Any#
-                                                            $Punctuate.d_172))
+                                                            $Punctuate.d_xxx))
                                                       (=
-                                                         $Punctuate.d_174
+                                                         $Punctuate.d_xxx
                                                          (call
                                                             Symbol
-                                                            $Punctuate.d_173)
+                                                            $Punctuate.d_xxx)
                                                          (cast
                                                             Any#
-                                                            $Punctuate.d_174)))
+                                                            $Punctuate.d_xxx)))
                                                    (=
-                                                      $Punctuate.d_176
-                                                      (call Cons $Punctuate.d_175)
+                                                      $Punctuate.d_xxx
+                                                      (call Cons $Punctuate.d_xxx)
                                                       (cast
                                                          (-> (Any#) Any#)
-                                                         $Punctuate.d_176)))
+                                                         $Punctuate.d_xxx)))
                                                 (=
-                                                   $Punctuate.d_178
+                                                   $Punctuate.d_xxx
                                                    (direct Nil)
                                                    (=
-                                                      $Punctuate.d_179
+                                                      $Punctuate.d_xxx
                                                       (call
-                                                         $Punctuate.d_177
-                                                         $Punctuate.d_178)
-                                                      (cast Any# $Punctuate.d_179))))
+                                                         $Punctuate.d_xxx
+                                                         $Punctuate.d_xxx)
+                                                      (cast Any# $Punctuate.d_xxx))))
                                              (=
-                                                $Punctuate.d_181
-                                                (call SList $Punctuate.d_180)
-                                                (cast Any# $Punctuate.d_181)))
+                                                $Punctuate.d_xxx
+                                                (call SList $Punctuate.d_xxx)
+                                                (cast Any# $Punctuate.d_xxx)))
                                           (=
-                                             $Punctuate.d_183
-                                             (call Cons $Punctuate.d_182)
+                                             $Punctuate.d_xxx
+                                             (call Cons $Punctuate.d_xxx)
                                              (cast
                                                 (-> (Any#) Any#)
-                                                $Punctuate.d_183)))
+                                                $Punctuate.d_xxx)))
                                        (=
-                                          $Punctuate.d_185
+                                          $Punctuate.d_xxx
                                           (direct Nil)
                                           (=
-                                             $Punctuate.d_186
+                                             $Punctuate.d_xxx
                                              (call
-                                                $Punctuate.d_184
-                                                $Punctuate.d_185)
-                                             (cast Any# $Punctuate.d_186))))
+                                                $Punctuate.d_xxx
+                                                $Punctuate.d_xxx)
+                                             (cast Any# $Punctuate.d_xxx))))
                                     (=
-                                       $Punctuate.d_188
-                                       (call $Punctuate.d_171 $Punctuate.d_187)
-                                       (cast Any# $Punctuate.d_188))))
+                                       $Punctuate.d_xxx
+                                       (call $Punctuate.d_xxx $Punctuate.d_xxx)
+                                       (cast Any# $Punctuate.d_xxx))))
                               (=
-                                 $Punctuate.d_190
-                                 (call SList $Punctuate.d_189)
-                                 (cast Any# $Punctuate.d_190)))
+                                 $Punctuate.d_xxx
+                                 (call SList $Punctuate.d_xxx)
+                                 (cast Any# $Punctuate.d_xxx)))
                            (=
-                              $Punctuate.d_192
-                              (call Cons $Punctuate.d_191)
-                              (cast (-> (Any#) Any#) $Punctuate.d_192)))
+                              $Punctuate.d_xxx
+                              (call Cons $Punctuate.d_xxx)
+                              (cast (-> (Any#) Any#) $Punctuate.d_xxx)))
                         (=
-                           $Punctuate.d_194
+                           $Punctuate.d_xxx
                            (direct Nil)
                            (=
-                              $Punctuate.d_195
-                              (call $Punctuate.d_193 $Punctuate.d_194)
-                              (cast Any# $Punctuate.d_195))))
+                              $Punctuate.d_xxx
+                              (call $Punctuate.d_xxx $Punctuate.d_xxx)
+                              (cast Any# $Punctuate.d_xxx))))
                      (=
-                        $Punctuate.d_197
-                        (call $Punctuate.d_165 $Punctuate.d_196)
-                        (cast Any# $Punctuate.d_197))))
+                        $Punctuate.d_xxx
+                        (call $Punctuate.d_xxx $Punctuate.d_xxx)
+                        (cast Any# $Punctuate.d_xxx))))
                (=
-                  $Punctuate.d_199
-                  (call SList $Punctuate.d_198)
-                  (cast Any# $Punctuate.d_199)))
+                  $Punctuate.d_xxx
+                  (call SList $Punctuate.d_xxx)
+                  (cast Any# $Punctuate.d_xxx)))
             (bind
-               $Punctuate.let_test/testcases/malgo/Punctuate.mlg.#x_3_200
+               $Punctuate.let_test/testcases/malgo/Punctuate.mlg.#x_3_xxx
                Any#
                (=
-                  $Punctuate.d_202
+                  $Punctuate.d_xxx
                   (=
-                     $Punctuate.d_201
+                     $Punctuate.d_xxx
                      (call
                         show
-                        $Punctuate.let_test/testcases/malgo/Punctuate.mlg.#x_3_200)
-                     (cast Any# $Punctuate.d_201))
+                        $Punctuate.let_test/testcases/malgo/Punctuate.mlg.#x_3_xxx)
+                     (cast Any# $Punctuate.d_xxx))
                   (=
-                     $Punctuate.d_203
-                     (call putStrLn $Punctuate.d_202)
-                     (cast (sum (con Tuple#)) $Punctuate.d_203)))))))
+                     $Punctuate.d_xxx
+                     (call putStrLn $Punctuate.d_xxx)
+                     (cast (sum (con Tuple#)) $Punctuate.d_xxx)))))))
    ())

@@ -3,7 +3,7 @@
    ((((((./test/testcases/malgo/TypeSynonym.mlg 15 1)
           (./test/testcases/malgo/TypeSynonym.mlg 17 1))
          idOverS
-         (fn ((clause (#TypeSynonym.x_1) (seq (do #TypeSynonym.x_1)))))))
+         (fn ((clause (#TypeSynonym.x_xxx) (seq (do #TypeSynonym.x_xxx)))))))
        ((((./test/testcases/malgo/TypeSynonym.mlg 9 1)
             (./test/testcases/malgo/TypeSynonym.mlg 11 1))
            hello
@@ -23,14 +23,14 @@
                            hello
                            (fn
                               ((clause
-                                  ((tuple #TypeSynonym.h_2 #TypeSynonym.w_3))
+                                  ((tuple #TypeSynonym.h_xxx #TypeSynonym.w_xxx))
                                   (seq
-                                     (do (apply putStr #TypeSynonym.h_2))
+                                     (do (apply putStr #TypeSynonym.h_xxx))
                                      (do
                                         (apply
                                            putStr
                                            (apply String# (string " "))))
-                                     (do (apply putStrLn #TypeSynonym.w_3)))))))))))))))
+                                     (do (apply putStrLn #TypeSynonym.w_xxx)))))))))))))))
       ((((./test/testcases/malgo/TypeSynonym.mlg 8 1)
            (./test/testcases/malgo/TypeSynonym.mlg 9 1))
           hello
@@ -54,8 +54,8 @@
       ((((./test/testcases/malgo/TypeSynonym.mlg 4 6)
            (./test/testcases/malgo/TypeSynonym.mlg 6 1))
           MyTuple
-          (#TypeSynonym.a_0)
-          (tuple #TypeSynonym.a_0 #TypeSynonym.a_0))
+          (#TypeSynonym.a_xxx)
+          (tuple #TypeSynonym.a_xxx #TypeSynonym.a_xxx))
          (((./test/testcases/malgo/TypeSynonym.mlg 6 6)
              (./test/testcases/malgo/TypeSynonym.mlg 8 1))
             MyString

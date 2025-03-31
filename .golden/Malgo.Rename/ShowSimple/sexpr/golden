@@ -5,29 +5,29 @@
          wrap
          (fn
             ((clause
-                (#ShowSimple.fn_6)
-                (seq (do (record (show #ShowSimple.fn_6)))))))))
+                (#ShowSimple.fn_xxx)
+                (seq (do (record (show #ShowSimple.fn_xxx)))))))))
        ((((./test/testcases/malgo/ShowSimple.mlg 10 1)
             (./test/testcases/malgo/ShowSimple.mlg 12 1))
            string#
            (fn
               ((clause
-                  (#ShowSimple.x_1)
-                  (seq (do (apply String# #ShowSimple.x_1))))))))
+                  (#ShowSimple.x_xxx)
+                  (seq (do (apply String# #ShowSimple.x_xxx))))))))
        ((((./test/testcases/malgo/ShowSimple.mlg 22 1)
             (./test/testcases/malgo/ShowSimple.mlg 24 1))
            show
            (fn
               ((clause
-                  ((record (show #ShowSimple.show_5)))
-                  (seq (do #ShowSimple.show_5)))))))
+                  ((record (show #ShowSimple.show_xxx)))
+                  (seq (do #ShowSimple.show_xxx)))))))
        ((((./test/testcases/malgo/ShowSimple.mlg 13 1)
             (./test/testcases/malgo/ShowSimple.mlg 15 1))
            putStr
            (fn
               ((clause
-                  ((con String# ()) #ShowSimple.x_2)
-                  (seq (do (apply malgo_print_string #ShowSimple.x_2))))))))
+                  ((con String# ()) #ShowSimple.x_xxx)
+                  (seq (do (apply malgo_print_string #ShowSimple.x_xxx))))))))
        ((((./test/testcases/malgo/ShowSimple.mlg 31 1)
             (./test/testcases/malgo/ShowSimple.mlg 32 1))
            main
@@ -50,7 +50,7 @@
                                                 (fn
                                                    ((clause
                                                        ((con Int32# ())
-                                                          #ShowSimple.x_7)
+                                                          #ShowSimple.x_xxx)
                                                        (seq
                                                           (do
                                                              (apply
@@ -59,15 +59,15 @@
                                                                    (do
                                                                       (apply
                                                                          malgo_int32_t_to_string
-                                                                         #ShowSimple.x_7)))))))))))))
+                                                                         #ShowSimple.x_xxx)))))))))))))
                                     (apply Int32# (int32 1)))))))))))))
        ((((./test/testcases/malgo/ShowSimple.mlg 6 1)
             (./test/testcases/malgo/ShowSimple.mlg 8 1))
            int32#
            (fn
               ((clause
-                  (#ShowSimple.x_0)
-                  (seq (do (apply Int32# #ShowSimple.x_0)))))))))
+                  (#ShowSimple.x_xxx)
+                  (seq (do (apply Int32# #ShowSimple.x_xxx)))))))))
       ((((./test/testcases/malgo/ShowSimple.mlg 5 1)
            (./test/testcases/malgo/ShowSimple.mlg 6 1))
           int32#
@@ -83,7 +83,7 @@
          (((./test/testcases/malgo/ShowSimple.mlg 21 1)
              (./test/testcases/malgo/ShowSimple.mlg 22 1))
             show
-            (-> (app Show (#ShowSimple.a_4)) (-> #ShowSimple.a_4 String)))
+            (-> (app Show (#ShowSimple.a_xxx)) (-> #ShowSimple.a_xxx String)))
          (((./test/testcases/malgo/ShowSimple.mlg 24 1)
              (./test/testcases/malgo/ShowSimple.mlg 25 1))
             wrap
@@ -107,8 +107,8 @@
       ((((./test/testcases/malgo/ShowSimple.mlg 17 6)
            (./test/testcases/malgo/ShowSimple.mlg 21 1))
           Show
-          (#ShowSimple.a_3)
-          (record (show (-> #ShowSimple.a_3 String)))))
+          (#ShowSimple.a_xxx)
+          (record (show (-> #ShowSimple.a_xxx String)))))
       (((((./test/testcases/malgo/ShowSimple.mlg 1 1)
             (./test/testcases/malgo/ShowSimple.mlg 2 1))
            malgo_print_string)

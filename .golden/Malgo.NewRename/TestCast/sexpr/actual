@@ -10,19 +10,29 @@
                    (do
                       (apply
                          printInt32
-                         (apply
-                            malgo_unsafe_cast
-                            (apply
+                         (seq
+                            (do
                                (apply
-                                  malgo_read_vector
-                                  (apply
-                                     (apply
-                                        malgo_new_vector
+                                  malgo_unsafe_cast
+                                  (seq
+                                     (do
                                         (apply
-                                           malgo_unsafe_cast
-                                           (apply Int32# (int32 5))))
-                                     (int64 10)))
-                               (int64 2))))))))))))
+                                           (apply
+                                              malgo_read_vector
+                                              (seq
+                                                 (do
+                                                    (apply
+                                                       (apply
+                                                          malgo_new_vector
+                                                          (seq
+                                                             (do
+                                                                (apply
+                                                                   malgo_unsafe_cast
+                                                                   (apply
+                                                                      Int32#
+                                                                      (int32 5))))))
+                                                       (int64 10)))))
+                                           (int64 2))))))))))))))))
       ()
       ()
       ()
@@ -31,23 +41,23 @@
            malgo_new_vector)
           malgo_new_vector
           (->
-             #TestCast.Int64#_1
+             #TestCast.Int64#_xxx
              (->
-                (app #TestCast.Ptr#_2 (#TestCast.Char#_0))
+                (app #TestCast.Ptr#_xxx (#TestCast.Char#_xxx))
                 (app
-                   #TestCast.Ptr#_2
-                   ((app #TestCast.Ptr#_2 (#TestCast.Char#_0)))))))
+                   #TestCast.Ptr#_xxx
+                   ((app #TestCast.Ptr#_xxx (#TestCast.Char#_xxx)))))))
          ((((./test/testcases/malgo/TestCast.mlg 8 1)
               (./test/testcases/malgo/TestCast.mlg 10 1))
              malgo_read_vector)
             malgo_read_vector
             (->
-               #TestCast.Int64#_4
+               #TestCast.Int64#_xxx
                (->
                   (app
-                     #TestCast.Ptr#_5
-                     ((app #TestCast.Ptr#_5 (#TestCast.Char#_3))))
-                  (app #TestCast.Ptr#_5 (#TestCast.Char#_3))))))
+                     #TestCast.Ptr#_xxx
+                     ((app #TestCast.Ptr#_xxx (#TestCast.Char#_xxx))))
+                  (app #TestCast.Ptr#_xxx (#TestCast.Char#_xxx))))))
       ((((./test/testcases/malgo/TestCast.mlg 3 1)
            (./test/testcases/malgo/TestCast.mlg 4 1))
           "runtime/malgo/Builtin.mlg"

@@ -1,25 +1,25 @@
 ((main
     (lambda
-       ($TestNestedLetFunc.param_13)
+       ($TestNestedLetFunc.param_xxx)
        (select
-          $TestNestedLetFunc.param_13
-          ((#TestNestedLetFunc.$__12
+          $TestNestedLetFunc.param_xxx
+          ((#TestNestedLetFunc.$__xxx
               (let
-                 #TestNestedLetFunc.f_2
+                 #TestNestedLetFunc.f_xxx
                  (lambda
-                    ($TestNestedLetFunc.param_14)
+                    ($TestNestedLetFunc.param_xxx)
                     (select
-                       $TestNestedLetFunc.param_14
-                       ((#TestNestedLetFunc.$__9
+                       $TestNestedLetFunc.param_xxx
+                       ((#TestNestedLetFunc.$__xxx
                            (apply
                               (lambda
-                                 ($TestNestedLetFunc.param_15)
+                                 ($TestNestedLetFunc.param_xxx)
                                  (select
-                                    $TestNestedLetFunc.param_15
-                                    ((#TestNestedLetFunc.a_0 (tuple ())))))
+                                    $TestNestedLetFunc.param_xxx
+                                    ((#TestNestedLetFunc.a_xxx (tuple ())))))
                               ((tuple ())))))))
                  (apply (invoke malgo_print_string) ("PASS"))))))))
    (malgo_print_string
       (lambda
-         ($TestNestedLetFunc.primitive_16)
-         (primitive malgo_print_string ($TestNestedLetFunc.primitive_16)))))
+         ($TestNestedLetFunc.primitive_xxx)
+         (primitive malgo_print_string ($TestNestedLetFunc.primitive_xxx)))))

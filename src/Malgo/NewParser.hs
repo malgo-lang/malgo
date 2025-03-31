@@ -390,7 +390,10 @@ pTuple = do
   exprs <- between (symbol "(") (symbol ")") (sepBy pExpr (symbol ","))
   end <- getSourcePos
   case exprs of
-    [expr] -> pure $ Parens (Range start end) expr
+    [expr] ->
+      -- FIXME: this is a hack to match the behavior of the original parser.
+      -- It should return a Parens expression instead of a Seq expression.
+      pure $ Seq (Range start end) $ NonEmpty.fromList [NoBind (Range start end) expr]
     _ -> pure $ Tuple (Range start end) exprs
 
 -- > record = ident "=" expr ("," ident "=" expr)* ;
@@ -419,7 +422,7 @@ pFn = do
 pClause :: Parser es (Clause (Malgo NewParse))
 pClause = do
   start <- getSourcePos
-  patterns <- try (some pPat <* reservedOperator "->") <|> pure []
+  patterns <- try (some pAtomPat <* reservedOperator "->") <|> pure []
   body <- pStmts
   end <- getSourcePos
   pure $ Clause (Range start end) patterns body
@@ -513,6 +516,8 @@ pAtomPat =
     ]
 
 -- | pVarP parses a variable pattern.
+--
+-- > varPat = ident ;
 pVarP :: Parser es (Pat (Malgo NewParse))
 pVarP = do
   start <- getSourcePos
@@ -667,7 +672,7 @@ optional p = try (fmap Just p) <|> pure Nothing
 
 -- | manyUnaryOp parses zero or more unary operators and returns a function that applies them in order.
 manyUnaryOp :: (MonadPlus f) => f (c -> c) -> f (c -> c)
-manyUnaryOp singleUnaryOp = foldr1 (.) <$> some singleUnaryOp
+manyUnaryOp singleUnaryOp = foldl1 (.) <$> some singleUnaryOp
 
 -- | space skips zero or more white space characters and comments.
 space :: Parser es ()
