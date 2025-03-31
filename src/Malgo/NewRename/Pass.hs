@@ -19,7 +19,7 @@ import Malgo.MonadUniq (Uniq)
 import Malgo.NewRename.RnEnv
 import Malgo.NewRename.RnState as RnState
 import Malgo.Prelude hiding (All, catchError)
-import Malgo.Syntax
+import Malgo.Syntax hiding (getTyVars)
 import Malgo.Syntax.Extension
 import Prettyprinter (brackets, nest, punctuate, sep, squotes, vsep, (<+>))
 
@@ -76,7 +76,7 @@ rnDecl ::
   Eff es (Decl (Malgo Rename))
 rnDecl (ScDef pos name expr) = ScDef pos <$> lookupVarName pos name <*> rnExpr expr
 rnDecl (ScSig pos name typ) = do
-  let tyVars = Set.toList $ getTyVars typ
+  tyVars <- Set.toList <$> getTyVars typ
   tyVars' <- traverse resolveName tyVars
   local (appendRnEnv resolvedTypeIdentMap (zip tyVars $ map (Qualified Implicit) tyVars'))
     $ ScSig pos
@@ -98,7 +98,7 @@ rnDecl (TypeSynonym pos name params typ) = do
     <*> rnType typ
 rnDecl (Infix pos assoc prec name) = Infix pos assoc prec <$> lookupVarName pos name
 rnDecl (Foreign pos name typ) = do
-  let tyVars = Set.toList $ getTyVars typ
+  tyVars <- Set.toList <$> getTyVars typ
   tyVars' <- traverse resolveName tyVars
   local (appendRnEnv resolvedTypeIdentMap (zip tyVars $ map (Qualified Implicit) tyVars'))
     $ Foreign (pos, name)
@@ -112,6 +112,20 @@ rnDecl (Import pos modName importList) = do
         RnState.dependencies = Set.insert modName dependencies <> interface.dependencies
       }
   pure $ Import pos modName importList
+
+-- | Get type variables from a type.
+getTyVars :: Type (Malgo NewParse) -> Eff es (Set Text)
+getTyVars (TyApp _ t ts) = do
+  t <- getTyVars t
+  ts <- mconcat <$> traverse getTyVars ts
+  pure $ t <> ts
+getTyVars (TyVar _ v)
+  | isUpper (T.head v) = pure mempty
+  | otherwise = pure $ Set.singleton v
+getTyVars (TyArr _ t1 t2) = getTyVars t1 <> getTyVars t2
+getTyVars (TyTuple _ ts) = mconcat $ map getTyVars ts
+getTyVars (TyRecord _ kvs) = mconcat $ map (getTyVars . snd) kvs
+getTyVars (TyBlock _ t) = getTyVars t
 
 -- | Rename a expression.
 -- In addition to name resolution, OpApp recombination based on infix declarations is also performed.
@@ -175,8 +189,9 @@ lookupBox pos String {} = lookupVarName pos "String#"
 -- | Rename a type.
 rnType :: (Reader RnEnv :> es, IOE :> es, Reader Flag :> es, Error RenameError :> es) => Type (Malgo NewParse) -> Eff es (Type (Malgo Rename))
 rnType (TyApp pos t ts) = TyApp pos <$> rnType t <*> traverse rnType ts
-rnType (TyVar pos x) = TyVar pos <$> lookupTypeName pos x
-rnType (TyCon pos x) = TyCon pos <$> lookupTypeName pos x
+rnType (TyVar pos x)
+  | isUpper (T.head x) = TyCon pos <$> lookupTypeName pos x
+  | otherwise = TyVar pos <$> lookupTypeName pos x
 rnType (TyArr pos t1 t2) = TyArr pos <$> rnType t1 <*> rnType t2
 rnType (TyTuple pos ts) = TyTuple pos <$> traverse rnType ts
 rnType (TyRecord pos kts) = TyRecord pos <$> traverse (bitraverse pure rnType) kts
@@ -195,12 +210,7 @@ rnClause ::
   Clause (Malgo NewParse) ->
   Eff es (Clause (Malgo Rename))
 rnClause (Clause pos ps e) = do
-  ps <- case ps of
-    VarP pos name : rest -> do
-      if isUpper (T.head name)
-        then pure $ ConP pos name [] : rest
-        else pure ps
-    _ -> pure ps
+  ps <- traverse resolveConP ps
   let vars = concatMap patVars ps
   -- パターンが束縛する変数に重複がないことを確認する
   -- TODO: throwError に置き換える
@@ -208,6 +218,25 @@ rnClause (Clause pos ps e) = do
   vm <- zip vars . map (Qualified Implicit) <$> traverse resolveName vars
   local (appendRnEnv resolvedVarIdentMap vm) $ Clause pos <$> traverse rnPat ps <*> rnExpr e
   where
+    resolveConP :: Pat (Malgo NewParse) -> Eff es (Pat (Malgo NewParse))
+    resolveConP (VarP pos name)
+      | isUpper (T.head name) = pure $ ConP pos name []
+      | otherwise = pure $ VarP pos name
+    resolveConP (ConP pos name parameters) = do
+      parameters' <- traverse resolveConP parameters
+      pure $ ConP pos name parameters'
+    resolveConP (TupleP pos parameters) = do
+      parameters' <- traverse resolveConP parameters
+      pure $ TupleP pos parameters'
+    resolveConP (RecordP pos kvs) = do
+      kvs' <- traverse (bitraverse pure resolveConP) kvs
+      pure $ RecordP pos kvs'
+    resolveConP (ListP pos parameters) = do
+      parameters' <- traverse resolveConP parameters
+      pure $ ListP pos parameters'
+    resolveConP (UnboxedP pos x) = pure $ UnboxedP pos x
+    resolveConP (BoxedP pos x) = pure $ BoxedP pos x
+
     patVars (VarP _ x) = [x]
     patVars (ConP _ _ xs) = concatMap patVars xs
     patVars (TupleP _ xs) = concatMap patVars xs

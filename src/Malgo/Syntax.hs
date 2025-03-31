@@ -475,7 +475,7 @@ deriving stock instance (ForallDeclX Eq x, Eq (XId x)) => Eq (ParsedDefinitions 
 
 deriving stock instance (ForallDeclX Show x, Show (XId x)) => Show (ParsedDefinitions x)
 
-instance (ForallDeclX ToSExpr x, ToSExpr (XId x)) => ToSExpr (ParsedDefinitions x) where
+instance (ToSExpr (XId x)) => ToSExpr (ParsedDefinitions x) where
   toSExpr (ParsedDefinitions ds) = S.L $ map toSExpr ds
 
 instance (ForallDeclX Pretty x, Pretty (XId x)) => Pretty (ParsedDefinitions x) where
@@ -522,16 +522,35 @@ deriving stock instance (ForallDeclX Eq x, Eq (XId x)) => Eq (BindGroup x)
 
 deriving stock instance (ForallDeclX Show x, Show (XId x)) => Show (BindGroup x)
 
-instance (ForallDeclX ToSExpr x, ToSExpr (XId x)) => ToSExpr (BindGroup x) where
+instance (ToSExpr (XId x)) => ToSExpr (BindGroup x) where
   toSExpr BindGroup {..} =
     S.L
-      [ S.L $ map (S.L . map toSExpr) _scDefs,
-        S.L $ map toSExpr _scSigs,
-        S.L $ map toSExpr _dataDefs,
-        S.L $ map toSExpr _typeSynonyms,
-        S.L $ map toSExpr _foreigns,
-        S.L $ map toSExpr _imports
+      [ S.L $ map (S.L . map toSExprScDef) _scDefs,
+        S.L $ map toSExprScSig _scSigs,
+        S.L $ map toSExprDataDef _dataDefs,
+        S.L $ map toSExprTypeSynonym _typeSynonyms,
+        S.L $ map toSExprForeign _foreigns,
+        S.L $ map toSExprImport _imports
       ]
+    where
+      toSExprScDef (_, f, e) = S.L ["def", toSExpr f, toSExpr e]
+      toSExprScSig (_, f, t) = S.L ["sig", toSExpr f, toSExpr t]
+      toSExprDataDef (_, name, ps, cons) =
+        S.L
+          [ "data",
+            toSExpr name,
+            S.L $ map (toSExpr . view _2) ps,
+            S.L $ map (\(_, c, ts) -> S.L [toSExpr c, S.L $ map toSExpr ts]) cons
+          ]
+      toSExprTypeSynonym (_, name, ps, ty) =
+        S.L ["type", toSExpr name, S.L $ map toSExpr ps, toSExpr ty]
+      toSExprForeign (_, n, t) = S.L ["foreign", toSExpr n, toSExpr t]
+      toSExprImport (_, m, list) =
+        S.L ["import", toSExpr m, toImportList list]
+        where
+          toImportList All = "all"
+          toImportList (Selected xs) = S.L $ "selected" : map toSExpr xs
+          toImportList (As m) = S.L ["as", toSExpr m]
 
 instance (Pretty (XId x)) => Pretty (BindGroup x) where
   pretty BindGroup {..} =

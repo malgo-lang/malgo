@@ -305,6 +305,7 @@ type family XTyVar x where
   XTyVar (Malgo _) = SimpleX 'Parse
 
 type family XTyCon x where
+  XTyCon (Malgo NewParse) = Void
   XTyCon (Malgo _) = SimpleX 'Parse
 
 type family XTyArr x where

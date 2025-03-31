@@ -8,7 +8,6 @@ import Data.SCargot qualified as S
 import Data.SCargot.Repr qualified as S
 import Data.SCargot.Repr.Basic qualified as S
 import Malgo.Prelude
-import Text.Megaparsec (SourcePos (..), unPos)
 
 class ToSExpr a where
   toSExpr :: a -> S.SExpr Atom
@@ -17,17 +16,6 @@ class ToSExpr a where
 
 instance ToSExpr Void where
   toSExpr = absurd
-
-instance ToSExpr Range where
-  toSExpr (Range start end) = S.L [toSExpr start, toSExpr end]
-
-instance ToSExpr SourcePos where
-  toSExpr (SourcePos file line column) =
-    S.L
-      [ S.A $ Symbol $ convertString file,
-        S.A $ Int (fromIntegral $ unPos line) Nothing,
-        S.A $ Int (fromIntegral $ unPos column) Nothing
-      ]
 
 instance ToSExpr Text where
   toSExpr = S.A . Symbol
@@ -49,9 +37,9 @@ instance (ToSExpr a) => ToSExpr [a] where
   sShow =
     convertString
       . S.encode (S.basicPrint atomToText)
-        -- ( S.unconstrainedPrint atomToText
-        --     & S.setIndentStrategy indentStrategy
-        -- )
+      -- ( S.unconstrainedPrint atomToText
+      --     & S.setIndentStrategy indentStrategy
+      -- )
       . map toSExpr
 
 data Atom

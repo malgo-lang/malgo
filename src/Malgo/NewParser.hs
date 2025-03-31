@@ -672,7 +672,7 @@ optional p = try (fmap Just p) <|> pure Nothing
 
 -- | manyUnaryOp parses zero or more unary operators and returns a function that applies them in order.
 manyUnaryOp :: (MonadPlus f) => f (c -> c) -> f (c -> c)
-manyUnaryOp singleUnaryOp = foldl1 (.) <$> some singleUnaryOp
+manyUnaryOp singleUnaryOp = foldr1 (>>>) <$> some singleUnaryOp
 
 -- | space skips zero or more white space characters and comments.
 space :: Parser es ()
