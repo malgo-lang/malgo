@@ -161,7 +161,6 @@ compile ::
     IOE :> es,
     State (Map ModuleName Interface) :> es,
     State Uniq :> es,
-    State Pragma :> es,
     Workspace :> es
   ) =>
   FilePath ->
