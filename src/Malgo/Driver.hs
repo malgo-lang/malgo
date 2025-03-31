@@ -26,6 +26,7 @@ import Malgo.Prelude
 import Malgo.Refine.Pass (refine)
 import Malgo.Rename.Pass (rename)
 import Malgo.Rename.RnEnv qualified as RnEnv
+import Malgo.Rename.RnState (RnState (..))
 import Malgo.Syntax qualified as Syntax
 import Malgo.Syntax.Extension
 import System.Exit (exitFailure)

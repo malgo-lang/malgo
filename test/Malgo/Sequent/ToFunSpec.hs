@@ -5,11 +5,12 @@ import Effectful.Reader.Static (runReader)
 import Malgo.Driver (failIfError)
 import Malgo.Infer.Pass (infer)
 import Malgo.Monad (runMalgoM)
-import Malgo.Parser (parseMalgo)
+import Malgo.NewParser (parse)
+import Malgo.NewRename.Pass (rename)
+import Malgo.NewRename.RnEnv qualified as RnEnv
+import Malgo.NewRename.RnState (RnState (..))
 import Malgo.Prelude
 import Malgo.Refine.Pass (refine)
-import Malgo.Rename.Pass (rename)
-import Malgo.Rename.RnEnv qualified as RnEnv
 import Malgo.SExpr (sShow)
 import Malgo.Sequent.ToFun (toFun)
 import Malgo.Syntax (Module (..))
@@ -45,9 +46,9 @@ driveToFun srcPath = do
   src <- convertString <$> (BS.readFile srcPath)
   runMalgoM flag option do
     parsed <-
-      parseMalgo srcPath src >>= \case
+      parse srcPath src >>= \case
         Left err -> error $ show err
-        Right parsed -> pure parsed
+        Right (_, parsed) -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
     (renamed, _) <- failIfError <$> rename rnEnv parsed
     (typed, tcEnv) <- infer rnEnv renamed
