@@ -2,9 +2,10 @@
 
 ## Naming conventions
 
-- Use descriptive names for all identifiers. Do not use single-letter names except:
-  - Well-known names like `f`, `g` for function parameters in higher-order functions.
+- Use descriptive names for all identifiers. Do not use single-letter names.
   - If the variable does not have a meaningful name, use the type name replaced with lowercase.
+  - Codebase sometimes uses single-letter names for variables, but this is not recommended.
+    - If you encounter such a name, consider renaming it to something more descriptive.
 
 ## Converting data to strings
 
