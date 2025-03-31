@@ -1,7 +1,6 @@
 (module
    "test/testcases/malgo/TestArithDouble.mlg"
-   ((((((./test/testcases/malgo/TestArithDouble.mlg 17 1)
-          (./test/testcases/malgo/TestArithDouble.mlg 19 1))
+   ((((def
          show
          (fn
             ((clause
@@ -11,8 +10,7 @@
                       (apply
                          String#
                          (seq (do (apply toStringDouble# #TestArithDouble.x_xxx)))))))))))
-       ((((./test/testcases/malgo/TestArithDouble.mlg 19 1)
-            (./test/testcases/malgo/TestArithDouble.mlg 21 1))
+       ((def
            traceShowId
            (fn
               ((clause
@@ -23,8 +21,7 @@
                            putStrLn
                            (seq (do (apply show #TestArithDouble.x_xxx)))))
                      (do #TestArithDouble.x_xxx)))))))
-       ((((./test/testcases/malgo/TestArithDouble.mlg 5 1)
-            (./test/testcases/malgo/TestArithDouble.mlg 7 1))
+       ((def
            neg
            (fn
               ((clause
@@ -34,8 +31,7 @@
                         (apply
                            (apply subDouble# (double 0.0_f64))
                            #TestArithDouble.x_xxx))))))))
-       ((((./test/testcases/malgo/TestArithDouble.mlg 10 1)
-            (./test/testcases/malgo/TestArithDouble.mlg 12 1))
+       ((def
            mul
            (fn
               ((clause
@@ -45,8 +41,7 @@
                         (apply
                            (apply mulDouble# #TestArithDouble.x_xxx)
                            #TestArithDouble.y_xxx))))))))
-       ((((./test/testcases/malgo/TestArithDouble.mlg 15 1)
-            (./test/testcases/malgo/TestArithDouble.mlg 17 1))
+       ((def
            add
            (fn
               ((clause
@@ -56,8 +51,7 @@
                         (apply
                            (apply addDouble# #TestArithDouble.x_xxx)
                            #TestArithDouble.y_xxx))))))))
-       ((((./test/testcases/malgo/TestArithDouble.mlg 13 1)
-            (./test/testcases/malgo/TestArithDouble.mlg 15 1))
+       ((def
            +
            (fn
               ((clause
@@ -67,8 +61,7 @@
                         (apply
                            (apply addDouble# #TestArithDouble.x_xxx)
                            #TestArithDouble.y_xxx))))))))
-       ((((./test/testcases/malgo/TestArithDouble.mlg 8 1)
-            (./test/testcases/malgo/TestArithDouble.mlg 10 1))
+       ((def
            *
            (fn
               ((clause
@@ -78,8 +71,7 @@
                         (apply
                            (apply mulDouble# #TestArithDouble.x_xxx)
                            #TestArithDouble.y_xxx))))))))
-       ((((./test/testcases/malgo/TestArithDouble.mlg 22 1)
-            (./test/testcases/malgo/TestArithDouble.mlg 24 1))
+       ((def
            f
            (fn
               ((clause
@@ -92,8 +84,7 @@
                               (do
                                  (opapp + #TestArithDouble.x_xxx (double 0.0_f64))))
                            #TestArithDouble.x_xxx))))))))
-       ((((./test/testcases/malgo/TestArithDouble.mlg 24 1)
-            (./test/testcases/malgo/TestArithDouble.mlg 27 1))
+       ((def
            main
            (fn
               ((clause
@@ -107,18 +98,9 @@
                                  (apply
                                     show
                                     (seq (do (apply f (double 0.5_f64))))))))))))))))
-      ((((./test/testcases/malgo/TestArithDouble.mlg 21 1)
-           (./test/testcases/malgo/TestArithDouble.mlg 22 1))
-          f
-          (-> Double# Double#)))
+      ((sig f (-> Double# Double#)))
       ()
       ()
       ()
-      ((((./test/testcases/malgo/TestArithDouble.mlg 1 1)
-           (./test/testcases/malgo/TestArithDouble.mlg 2 1))
-          "runtime/malgo/Builtin.mlg"
-          all)
-         (((./test/testcases/malgo/TestArithDouble.mlg 2 1)
-             (./test/testcases/malgo/TestArithDouble.mlg 5 1))
-            "runtime/malgo/Prelude.mlg"
-            all))))
+      ((import "runtime/malgo/Builtin.mlg" all)
+         (import "runtime/malgo/Prelude.mlg" all))))

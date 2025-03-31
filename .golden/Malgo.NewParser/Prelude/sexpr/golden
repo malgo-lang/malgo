@@ -36,9 +36,9 @@
                      (do
                         (apply
                            (apply
-                              (apply foldl xs)
-                              (seq (do (apply (apply f x) z))))
-                           f)))))))
+                              (apply foldl f)
+                              (seq (do (apply (apply f z) x))))
+                           xs)))))))
       (sig mapList (-> (-> a b) (-> (app List (a)) (app List (b)))))
       (def
          mapList
@@ -49,8 +49,8 @@
                   (seq
                      (do
                         (apply
-                           (apply Cons (seq (do (apply (apply mapList xs) f))))
-                           (seq (do (apply f x))))))))))
+                           (apply Cons (seq (do (apply f x))))
+                           (seq (do (apply (apply mapList f) xs))))))))))
       (sig listToString (-> (app List (Char)) String))
       (def
          listToString
@@ -61,8 +61,8 @@
                   (seq
                      (do
                         (apply
-                           (apply consString (seq (do (apply listToString cs))))
-                           c)))))))
+                           (apply consString c)
+                           (seq (do (apply listToString cs))))))))))
       (sig headString (-> String (app Maybe (Char))))
       (def
          headString
@@ -75,20 +75,20 @@
                          (apply
                             (apply
                                if
-                               (fn
-                                  ((clause
-                                      ()
-                                      (seq
-                                         (do
-                                            (apply
-                                               Just
-                                               (seq
-                                                  (do
-                                                     (apply
-                                                        (apply atString str)
-                                                        (int64 0)))))))))))
+                               (seq (do (apply (apply eqString str) (string "")))))
                             (fn ((clause () (seq (do Nothing))))))
-                         (seq (do (apply (apply eqString (string "")) str))))))))))
+                         (fn
+                            ((clause
+                                ()
+                                (seq
+                                   (do
+                                      (apply
+                                         Just
+                                         (seq
+                                            (do
+                                               (apply
+                                                  (apply atString (int64 0))
+                                                  str))))))))))))))))
       (sig tailString (-> String String))
       (def
          tailString
@@ -101,24 +101,16 @@
                          (apply
                             (apply
                                if
-                               (fn
-                                  ((clause
-                                      ()
-                                      (seq
-                                         (do
-                                            (apply
-                                               (apply
-                                                  (apply
-                                                     substring
-                                                     (seq
-                                                        (do
-                                                           (apply
-                                                              lengthString
-                                                              str))))
-                                                  (int64 1))
-                                               str)))))))
+                               (seq (do (apply (apply eqString str) (string "")))))
                             (fn ((clause () (seq (do str))))))
-                         (seq (do (apply (apply eqString (string "")) str))))))))))
+                         (fn
+                            ((clause
+                                ()
+                                (seq
+                                   (do
+                                      (apply
+                                         (apply (apply substring str) (int64 1))
+                                         (seq (do (apply lengthString str))))))))))))))))
       (def
          takeWhileString
          (fn
@@ -127,44 +119,36 @@
                 (seq
                    (do
                       (apply
-                         (apply
-                            case
-                            (fn
-                               ((clause (Nothing) (seq (do str)))
-                                  (clause
-                                     (Just c)
-                                     (seq
-                                        (do
+                         (apply case (seq (do (apply headString str))))
+                         (fn
+                            ((clause (Nothing) (seq (do str)))
+                               (clause
+                                  (Just c)
+                                  (seq
+                                     (do
+                                        (apply
                                            (apply
-                                              (apply
-                                                 (apply
-                                                    if
-                                                    (fn
-                                                       ((clause
-                                                           ()
-                                                           (seq (do (string "")))))))
-                                                 (fn
-                                                    ((clause
-                                                        ()
-                                                        (seq
-                                                           (do
-                                                              (apply
-                                                                 (apply
-                                                                    consString
-                                                                    (seq
-                                                                       (do
-                                                                          (apply
+                                              (apply if (seq (do (apply pred c))))
+                                              (fn
+                                                 ((clause
+                                                     ()
+                                                     (seq
+                                                        (do
+                                                           (apply
+                                                              (apply consString c)
+                                                              (seq
+                                                                 (do
+                                                                    (apply
+                                                                       (apply
+                                                                          takeWhileString
+                                                                          pred)
+                                                                       (seq
+                                                                          (do
                                                                              (apply
-                                                                                takeWhileString
-                                                                                (seq
-                                                                                   (do
-                                                                                      (apply
-                                                                                         tailString
-                                                                                         str))))
-                                                                             pred))))
-                                                                 c)))))))
-                                              (seq (do (apply pred c))))))))))
-                         (seq (do (apply headString str))))))))))
+                                                                                tailString
+                                                                                str)))))))))))))
+                                           (fn
+                                              ((clause () (seq (do (string "")))))))))))))))))))
       (def
          dropWhileString
          (fn
@@ -173,36 +157,31 @@
                 (seq
                    (do
                       (apply
-                         (apply
-                            case
-                            (fn
-                               ((clause (Nothing) (seq (do str)))
-                                  (clause
-                                     (Just c)
-                                     (seq
-                                        (do
+                         (apply case (seq (do (apply headString str))))
+                         (fn
+                            ((clause (Nothing) (seq (do str)))
+                               (clause
+                                  (Just c)
+                                  (seq
+                                     (do
+                                        (apply
                                            (apply
-                                              (apply
-                                                 (apply
-                                                    if
-                                                    (fn
-                                                       ((clause () (seq (do str))))))
-                                                 (fn
-                                                    ((clause
-                                                        ()
-                                                        (seq
-                                                           (do
+                                              (apply if (seq (do (apply pred c))))
+                                              (fn
+                                                 ((clause
+                                                     ()
+                                                     (seq
+                                                        (do
+                                                           (apply
                                                               (apply
-                                                                 (apply
-                                                                    dropWhileString
-                                                                    (seq
-                                                                       (do
-                                                                          (apply
-                                                                             tailString
-                                                                             str))))
-                                                                 pred)))))))
-                                              (seq (do (apply pred c))))))))))
-                         (seq (do (apply headString str))))))))))
+                                                                 dropWhileString
+                                                                 pred)
+                                                              (seq
+                                                                 (do
+                                                                    (apply
+                                                                       tailString
+                                                                       str))))))))))
+                                           (fn ((clause () (seq (do str))))))))))))))))))
       (sig concatString (-> (app List (String)) String))
       (def
          concatString
@@ -213,8 +192,8 @@
                   (seq
                      (do
                         (apply
-                           (apply appendString (seq (do (apply concatString xs))))
-                           x)))))))
+                           (apply appendString x)
+                           (seq (do (apply concatString xs))))))))))
       (sig punctuate (-> a (-> (app List (a)) (app List (a)))))
       (def
          punctuate
@@ -222,23 +201,18 @@
             ((clause (_ Nil) (seq (do Nil)))
                (clause
                   (_ (con Cons (x Nil)))
-                  (seq (do (apply (apply Cons Nil) x))))
+                  (seq (do (apply (apply Cons x) Nil))))
                (clause
                   (sep (con Cons (x xs)))
                   (seq
                      (do
                         (apply
-                           (apply
-                              Cons
-                              (seq
-                                 (do
-                                    (apply
-                                       (apply
-                                          Cons
-                                          (seq
-                                             (do (apply (apply punctuate xs) sep))))
-                                       sep))))
-                           x)))))))
+                           (apply Cons x)
+                           (seq
+                              (do
+                                 (apply
+                                    (apply Cons sep)
+                                    (seq (do (apply (apply punctuate sep) xs)))))))))))))
       (sig isWhiteSpace (-> Char Bool))
       (def
          isWhiteSpace
@@ -280,8 +254,8 @@
                 (seq
                    (do
                       (apply
-                         (apply (apply if f) (fn ((clause () (seq (do tValue))))))
-                         c)))))))
+                         (apply (apply if c) (fn ((clause () (seq (do tValue))))))
+                         f)))))))
       (sig cond (-> (app List ((tuple Bool (block a)))) a))
       (def
          cond

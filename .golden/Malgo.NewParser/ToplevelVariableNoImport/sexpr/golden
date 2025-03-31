@@ -6,14 +6,14 @@
       (sig addInt32# (-> Int32# (-> Int32# Int32#)))
       (def
          addInt32#
-         (fn ((clause (x y) (seq (do (apply (apply malgo_add_int32_t y) x)))))))
+         (fn ((clause (x y) (seq (do (apply (apply malgo_add_int32_t x) y)))))))
       (sig addInt32 (-> Int32 (-> Int32 Int32)))
       (def
          addInt32
          (fn
             ((clause
                 ((con Int32# (x)) (con Int32# (y)))
-                (seq (do (apply Int32# (seq (do (apply (apply addInt32# y) x))))))))))
+                (seq (do (apply Int32# (seq (do (apply (apply addInt32# x) y))))))))))
       (foreign malgo_print_string (-> String# (tuple)))
       (sig printString# (-> String# (tuple)))
       (def
@@ -78,5 +78,5 @@
                          (seq
                             (do
                                (apply
-                                  (apply constId (seq (do (apply addOne one))))
-                                  const))))))))))))
+                                  (apply constId const)
+                                  (seq (do (apply addOne one)))))))))))))))

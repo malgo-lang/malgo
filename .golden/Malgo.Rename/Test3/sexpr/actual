@@ -1,14 +1,12 @@
 (module
    "test/testcases/malgo/Test3.mlg"
-   ((((((./test/testcases/malgo/Test3.mlg 6 1)
-          (./test/testcases/malgo/Test3.mlg 8 1))
+   ((((def
          |>
          (fn
             ((clause
                 (#Test3.x_xxx #Test3.f_xxx)
                 (seq (do (apply #Test3.f_xxx #Test3.x_xxx))))))))
-       ((((./test/testcases/malgo/Test3.mlg 10 1)
-            (./test/testcases/malgo/Test3.mlg 16 1))
+       ((def
            main
            (fn
               ((clause
@@ -35,40 +33,12 @@
                                           (apply
                                              malgo_print_string
                                              (string "WRONG"))))))))))))))))
-      ((((./test/testcases/malgo/Test3.mlg 5 1)
-           (./test/testcases/malgo/Test3.mlg 6 1))
-          |>
-          (-> #Test3.a_xxx (-> (-> #Test3.a_xxx #Test3.b_xxx) #Test3.b_xxx))))
-      ((((./test/testcases/malgo/Test3.mlg 1 6)
-           (./test/testcases/malgo/Test3.mlg 2 1))
-          Tag
-          ()
-          ((((./test/testcases/malgo/Test3.mlg 1 12)
-               (./test/testcases/malgo/Test3.mlg 1 14))
-              A
-              ())
-             (((./test/testcases/malgo/Test3.mlg 1 16)
-                 (./test/testcases/malgo/Test3.mlg 2 1))
-                B
-                ())))
-         (((./test/testcases/malgo/Test3.mlg 2 6)
-             (./test/testcases/malgo/Test3.mlg 4 1))
+      ((sig |> (-> #Test3.a_xxx (-> (-> #Test3.a_xxx #Test3.b_xxx) #Test3.b_xxx))))
+      ((data Tag () ((A ()) (B ())))
+         (data
             List
-            ((((./test/testcases/malgo/Test3.mlg 2 11)
-                 (./test/testcases/malgo/Test3.mlg 2 13))
-                #Test3.a_xxx))
-            ((((./test/testcases/malgo/Test3.mlg 2 15)
-                 (./test/testcases/malgo/Test3.mlg 2 19))
-                Nil
-                ())
-               (((./test/testcases/malgo/Test3.mlg 2 21)
-                   (./test/testcases/malgo/Test3.mlg 4 1))
-                  Cons
-                  (#Test3.a_xxx (app List (#Test3.a_xxx)))))))
+            (#Test3.a_xxx)
+            ((Nil ()) (Cons (#Test3.a_xxx (app List (#Test3.a_xxx)))))))
       ()
-      (((((./test/testcases/malgo/Test3.mlg 8 1)
-            (./test/testcases/malgo/Test3.mlg 10 1))
-           malgo_print_string)
-          malgo_print_string
-          (-> String# (tuple))))
+      ((foreign malgo_print_string (-> String# (tuple))))
       ()))

@@ -1,15 +1,13 @@
 (module
    "runtime/malgo/Builtin.mlg"
-   ((((((./runtime/malgo/Builtin.mlg 37 1) (./runtime/malgo/Builtin.mlg 40 1))
-         undefined
-         (apply malgo_unsafe_cast (tuple))))
-       ((((./runtime/malgo/Builtin.mlg 447 1) (./runtime/malgo/Builtin.mlg 448 1))
+   ((((def undefined (apply malgo_unsafe_cast (tuple))))
+       ((def
            toStringInt64#
            (fn
               ((clause
                   (#Builtin.x_xxx)
                   (seq (do (apply malgo_int64_t_to_string #Builtin.x_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 449 1) (./runtime/malgo/Builtin.mlg 451 1))
+       ((def
            toStringInt64
            (fn
               ((clause
@@ -19,13 +17,13 @@
                         (apply
                            String#
                            (seq (do (apply toStringInt64# #Builtin.x_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 441 1) (./runtime/malgo/Builtin.mlg 442 1))
+       ((def
            toStringInt32#
            (fn
               ((clause
                   (#Builtin.x_xxx)
                   (seq (do (apply malgo_int32_t_to_string #Builtin.x_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 443 1) (./runtime/malgo/Builtin.mlg 445 1))
+       ((def
            toStringInt32
            (fn
               ((clause
@@ -35,13 +33,13 @@
                         (apply
                            String#
                            (seq (do (apply toStringInt32# #Builtin.x_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 453 1) (./runtime/malgo/Builtin.mlg 454 1))
+       ((def
            toStringFloat#
            (fn
               ((clause
                   (#Builtin.x_xxx)
                   (seq (do (apply malgo_float_to_string #Builtin.x_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 455 1) (./runtime/malgo/Builtin.mlg 457 1))
+       ((def
            toStringFloat
            (fn
               ((clause
@@ -51,13 +49,13 @@
                         (apply
                            String#
                            (seq (do (apply toStringFloat# #Builtin.x_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 459 1) (./runtime/malgo/Builtin.mlg 460 1))
+       ((def
            toStringDouble#
            (fn
               ((clause
                   (#Builtin.x_xxx)
                   (seq (do (apply malgo_double_to_string #Builtin.x_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 461 1) (./runtime/malgo/Builtin.mlg 463 1))
+       ((def
            toStringDouble
            (fn
               ((clause
@@ -67,13 +65,13 @@
                         (apply
                            String#
                            (seq (do (apply toStringDouble# #Builtin.x_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 465 1) (./runtime/malgo/Builtin.mlg 466 1))
+       ((def
            toStringChar#
            (fn
               ((clause
                   (#Builtin.x_xxx)
                   (seq (do (apply malgo_char_to_string #Builtin.x_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 467 1) (./runtime/malgo/Builtin.mlg 471 1))
+       ((def
            toStringChar
            (fn
               ((clause
@@ -83,7 +81,7 @@
                         (apply
                            String#
                            (seq (do (apply toStringChar# #Builtin.x_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 435 1) (./runtime/malgo/Builtin.mlg 436 1))
+       ((def
            substring#
            (fn
               ((clause
@@ -95,7 +93,7 @@
                               (apply malgo_substring #Builtin.str_xxx)
                               #Builtin.start_xxx)
                            #Builtin.end_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 437 1) (./runtime/malgo/Builtin.mlg 439 1))
+       ((def
            substring
            (fn
               ((clause
@@ -113,7 +111,7 @@
                                        (apply substring# #Builtin.str_xxx)
                                        #Builtin.start_xxx)
                                     #Builtin.end_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 72 1) (./runtime/malgo/Builtin.mlg 73 1))
+       ((def
            subInt64#
            (fn
               ((clause
@@ -123,7 +121,7 @@
                         (apply
                            (apply malgo_sub_int64_t #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 74 1) (./runtime/malgo/Builtin.mlg 76 1))
+       ((def
            subInt64
            (fn
               ((clause
@@ -137,7 +135,7 @@
                                  (apply
                                     (apply subInt64# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 48 1) (./runtime/malgo/Builtin.mlg 49 1))
+       ((def
            subInt32#
            (fn
               ((clause
@@ -147,7 +145,7 @@
                         (apply
                            (apply malgo_sub_int32_t #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 50 1) (./runtime/malgo/Builtin.mlg 52 1))
+       ((def
            subInt32
            (fn
               ((clause
@@ -161,7 +159,7 @@
                                  (apply
                                     (apply subInt32# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 96 1) (./runtime/malgo/Builtin.mlg 97 1))
+       ((def
            subFloat#
            (fn
               ((clause
@@ -171,7 +169,7 @@
                         (apply
                            (apply malgo_sub_float #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 98 1) (./runtime/malgo/Builtin.mlg 100 1))
+       ((def
            subFloat
            (fn
               ((clause
@@ -185,7 +183,7 @@
                                  (apply
                                     (apply subFloat# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 120 1) (./runtime/malgo/Builtin.mlg 121 1))
+       ((def
            subDouble#
            (fn
               ((clause
@@ -195,7 +193,7 @@
                         (apply
                            (apply malgo_sub_double #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 122 1) (./runtime/malgo/Builtin.mlg 124 1))
+       ((def
            subDouble
            (fn
               ((clause
@@ -209,15 +207,15 @@
                                  (apply
                                     (apply subDouble# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 27 1) (./runtime/malgo/Builtin.mlg 30 1))
+       ((def
            string#
            (fn
               ((clause (#Builtin.x_xxx) (seq (do (apply String# #Builtin.x_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 139 1) (./runtime/malgo/Builtin.mlg 140 1))
+       ((def
            sqrtFloat#
            (fn
               ((clause (#Builtin.x_xxx) (seq (do (apply sqrtf #Builtin.x_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 141 1) (./runtime/malgo/Builtin.mlg 143 1))
+       ((def
            sqrtFloat
            (fn
               ((clause
@@ -227,10 +225,10 @@
                         (apply
                            Float#
                            (seq (do (apply sqrtFloat# #Builtin.x_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 145 1) (./runtime/malgo/Builtin.mlg 146 1))
+       ((def
            sqrtDouble#
            (fn ((clause (#Builtin.x_xxx) (seq (do (apply sqrt #Builtin.x_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 147 1) (./runtime/malgo/Builtin.mlg 149 1))
+       ((def
            sqrtDouble
            (fn
               ((clause
@@ -240,43 +238,43 @@
                         (apply
                            Double#
                            (seq (do (apply sqrtDouble# #Builtin.x_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 486 1) (./runtime/malgo/Builtin.mlg 487 1))
+       ((def
            printString#
            (fn
               ((clause
                   (#Builtin.x_xxx)
                   (seq (do (apply malgo_print_string #Builtin.x_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 488 1) (./runtime/malgo/Builtin.mlg 490 1))
+       ((def
            printString
            (fn
               ((clause
                   ((con String# ()) #Builtin.x_xxx)
                   (seq (do (apply printString# #Builtin.x_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 480 1) (./runtime/malgo/Builtin.mlg 481 1))
+       ((def
            printChar#
            (fn
               ((clause
                   (#Builtin.x_xxx)
                   (seq (do (apply malgo_print_char #Builtin.x_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 482 1) (./runtime/malgo/Builtin.mlg 484 1))
+       ((def
            printChar
            (fn
               ((clause
                   ((con Char# ()) #Builtin.x_xxx)
                   (seq (do (apply printChar# #Builtin.x_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 32 1) (./runtime/malgo/Builtin.mlg 34 1))
+       ((def
            panic
            (fn
               ((clause
                   ((con String# ()) #Builtin.message_xxx)
                   (seq (do (apply malgo_panic #Builtin.message_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 380 1) (./runtime/malgo/Builtin.mlg 381 1))
+       ((def
            ordChar#
            (fn
               ((clause
                   (#Builtin.x_xxx)
                   (seq (do (apply malgo_char_ord #Builtin.x_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 382 1) (./runtime/malgo/Builtin.mlg 384 1))
+       ((def
            ordChar
            (fn
               ((clause
@@ -286,16 +284,16 @@
                         (apply
                            Int32#
                            (seq (do (apply ordChar# #Builtin.chr_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 156 1) (./runtime/malgo/Builtin.mlg 161 1))
+       ((def
            not
            (fn
               ((clause ((con True ())) (seq (do False)))
                  (clause ((con False ())) (seq (do True)))))))
-       ((((./runtime/malgo/Builtin.mlg 476 1) (./runtime/malgo/Builtin.mlg 478 1))
+       ((def
            newline
            (fn
               ((clause (#Builtin.__xxx) (seq (do (apply malgo_newline (tuple)))))))))
-       ((((./runtime/malgo/Builtin.mlg 349 1) (./runtime/malgo/Builtin.mlg 350 1))
+       ((def
            neString#
            (fn
               ((clause
@@ -305,7 +303,7 @@
                         (apply
                            (apply malgo_ne_string #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 205 1) (./runtime/malgo/Builtin.mlg 206 1))
+       ((def
            neInt64#
            (fn
               ((clause
@@ -315,7 +313,7 @@
                         (apply
                            (apply malgo_ne_int64_t #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 169 1) (./runtime/malgo/Builtin.mlg 170 1))
+       ((def
            neInt32#
            (fn
               ((clause
@@ -325,7 +323,7 @@
                         (apply
                            (apply malgo_ne_int32_t #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 241 1) (./runtime/malgo/Builtin.mlg 242 1))
+       ((def
            neFloat#
            (fn
               ((clause
@@ -335,7 +333,7 @@
                         (apply
                            (apply malgo_ne_float #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 277 1) (./runtime/malgo/Builtin.mlg 278 1))
+       ((def
            neDouble#
            (fn
               ((clause
@@ -345,7 +343,7 @@
                         (apply
                            (apply malgo_ne_double #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 313 1) (./runtime/malgo/Builtin.mlg 314 1))
+       ((def
            neChar#
            (fn
               ((clause
@@ -355,7 +353,7 @@
                         (apply
                            (apply malgo_ne_char #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 78 1) (./runtime/malgo/Builtin.mlg 79 1))
+       ((def
            mulInt64#
            (fn
               ((clause
@@ -365,7 +363,7 @@
                         (apply
                            (apply malgo_mul_int64_t #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 80 1) (./runtime/malgo/Builtin.mlg 82 1))
+       ((def
            mulInt64
            (fn
               ((clause
@@ -379,7 +377,7 @@
                                  (apply
                                     (apply mulInt64# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 54 1) (./runtime/malgo/Builtin.mlg 55 1))
+       ((def
            mulInt32#
            (fn
               ((clause
@@ -389,7 +387,7 @@
                         (apply
                            (apply malgo_mul_int32_t #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 56 1) (./runtime/malgo/Builtin.mlg 58 1))
+       ((def
            mulInt32
            (fn
               ((clause
@@ -403,7 +401,7 @@
                                  (apply
                                     (apply mulInt32# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 102 1) (./runtime/malgo/Builtin.mlg 103 1))
+       ((def
            mulFloat#
            (fn
               ((clause
@@ -413,7 +411,7 @@
                         (apply
                            (apply malgo_mul_float #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 104 1) (./runtime/malgo/Builtin.mlg 106 1))
+       ((def
            mulFloat
            (fn
               ((clause
@@ -427,7 +425,7 @@
                                  (apply
                                     (apply mulFloat# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 126 1) (./runtime/malgo/Builtin.mlg 127 1))
+       ((def
            mulDouble#
            (fn
               ((clause
@@ -437,7 +435,7 @@
                         (apply
                            (apply malgo_mul_double #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 128 1) (./runtime/malgo/Builtin.mlg 130 1))
+       ((def
            mulDouble
            (fn
               ((clause
@@ -451,7 +449,7 @@
                                  (apply
                                     (apply mulDouble# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 355 1) (./runtime/malgo/Builtin.mlg 356 1))
+       ((def
            ltString#
            (fn
               ((clause
@@ -461,7 +459,7 @@
                         (apply
                            (apply malgo_lt_string #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 211 1) (./runtime/malgo/Builtin.mlg 212 1))
+       ((def
            ltInt64#
            (fn
               ((clause
@@ -471,7 +469,7 @@
                         (apply
                            (apply malgo_lt_int64_t #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 175 1) (./runtime/malgo/Builtin.mlg 176 1))
+       ((def
            ltInt32#
            (fn
               ((clause
@@ -481,7 +479,7 @@
                         (apply
                            (apply malgo_lt_int32_t #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 247 1) (./runtime/malgo/Builtin.mlg 248 1))
+       ((def
            ltFloat#
            (fn
               ((clause
@@ -491,7 +489,7 @@
                         (apply
                            (apply malgo_lt_float #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 283 1) (./runtime/malgo/Builtin.mlg 284 1))
+       ((def
            ltDouble#
            (fn
               ((clause
@@ -501,7 +499,7 @@
                         (apply
                            (apply malgo_lt_double #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 319 1) (./runtime/malgo/Builtin.mlg 320 1))
+       ((def
            ltChar#
            (fn
               ((clause
@@ -511,13 +509,13 @@
                         (apply
                            (apply malgo_lt_char #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 411 1) (./runtime/malgo/Builtin.mlg 412 1))
+       ((def
            lengthString#
            (fn
               ((clause
                   (#Builtin.x_xxx)
                   (seq (do (apply malgo_string_length #Builtin.x_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 413 1) (./runtime/malgo/Builtin.mlg 415 1))
+       ((def
            lengthString
            (fn
               ((clause
@@ -527,7 +525,7 @@
                         (apply
                            Int64#
                            (seq (do (apply lengthString# #Builtin.str_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 367 1) (./runtime/malgo/Builtin.mlg 368 1))
+       ((def
            leString#
            (fn
               ((clause
@@ -537,7 +535,7 @@
                         (apply
                            (apply malgo_le_string #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 223 1) (./runtime/malgo/Builtin.mlg 224 1))
+       ((def
            leInt64#
            (fn
               ((clause
@@ -547,7 +545,7 @@
                         (apply
                            (apply malgo_le_int64_t #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 187 1) (./runtime/malgo/Builtin.mlg 188 1))
+       ((def
            leInt32#
            (fn
               ((clause
@@ -557,7 +555,7 @@
                         (apply
                            (apply malgo_le_int32_t #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 259 1) (./runtime/malgo/Builtin.mlg 260 1))
+       ((def
            leFloat#
            (fn
               ((clause
@@ -567,7 +565,7 @@
                         (apply
                            (apply malgo_le_float #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 295 1) (./runtime/malgo/Builtin.mlg 296 1))
+       ((def
            leDouble#
            (fn
               ((clause
@@ -577,7 +575,7 @@
                         (apply
                            (apply malgo_le_double #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 331 1) (./runtime/malgo/Builtin.mlg 332 1))
+       ((def
            leChar#
            (fn
               ((clause
@@ -587,18 +585,18 @@
                         (apply
                            (apply malgo_le_char #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 398 1) (./runtime/malgo/Builtin.mlg 399 1))
+       ((def
            isUpper#
            (fn
               ((clause
                   (#Builtin.x_xxx)
                   (seq (do (apply malgo_is_upper #Builtin.x_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 150 1) (./runtime/malgo/Builtin.mlg 155 1))
+       ((def
            isTrue#
            (fn
               ((clause ((unboxed (int32 1))) (seq (do True)))
                  (clause (#Builtin.__xxx) (seq (do False)))))))
-       ((((./runtime/malgo/Builtin.mlg 400 1) (./runtime/malgo/Builtin.mlg 402 1))
+       ((def
            isUpper
            (fn
               ((clause
@@ -606,7 +604,7 @@
                   (seq
                      (do
                         (apply isTrue# (seq (do (apply isUpper# #Builtin.x_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 333 1) (./runtime/malgo/Builtin.mlg 335 1))
+       ((def
            leChar
            (fn
               ((clause
@@ -620,7 +618,7 @@
                                  (apply
                                     (apply leChar# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 297 1) (./runtime/malgo/Builtin.mlg 299 1))
+       ((def
            leDouble
            (fn
               ((clause
@@ -634,7 +632,7 @@
                                  (apply
                                     (apply leDouble# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 261 1) (./runtime/malgo/Builtin.mlg 263 1))
+       ((def
            leFloat
            (fn
               ((clause
@@ -648,7 +646,7 @@
                                  (apply
                                     (apply leFloat# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 189 1) (./runtime/malgo/Builtin.mlg 191 1))
+       ((def
            leInt32
            (fn
               ((clause
@@ -662,7 +660,7 @@
                                  (apply
                                     (apply leInt32# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 225 1) (./runtime/malgo/Builtin.mlg 227 1))
+       ((def
            leInt64
            (fn
               ((clause
@@ -676,7 +674,7 @@
                                  (apply
                                     (apply leInt64# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 369 1) (./runtime/malgo/Builtin.mlg 371 1))
+       ((def
            leString
            (fn
               ((clause
@@ -690,7 +688,7 @@
                                  (apply
                                     (apply leString# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 321 1) (./runtime/malgo/Builtin.mlg 323 1))
+       ((def
            ltChar
            (fn
               ((clause
@@ -704,7 +702,7 @@
                                  (apply
                                     (apply ltChar# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 285 1) (./runtime/malgo/Builtin.mlg 287 1))
+       ((def
            ltDouble
            (fn
               ((clause
@@ -718,7 +716,7 @@
                                  (apply
                                     (apply ltDouble# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 249 1) (./runtime/malgo/Builtin.mlg 251 1))
+       ((def
            ltFloat
            (fn
               ((clause
@@ -732,7 +730,7 @@
                                  (apply
                                     (apply ltFloat# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 177 1) (./runtime/malgo/Builtin.mlg 179 1))
+       ((def
            ltInt32
            (fn
               ((clause
@@ -746,7 +744,7 @@
                                  (apply
                                     (apply ltInt32# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 213 1) (./runtime/malgo/Builtin.mlg 215 1))
+       ((def
            ltInt64
            (fn
               ((clause
@@ -760,7 +758,7 @@
                                  (apply
                                     (apply ltInt64# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 357 1) (./runtime/malgo/Builtin.mlg 359 1))
+       ((def
            ltString
            (fn
               ((clause
@@ -774,7 +772,7 @@
                                  (apply
                                     (apply ltString# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 315 1) (./runtime/malgo/Builtin.mlg 317 1))
+       ((def
            neChar
            (fn
               ((clause
@@ -788,7 +786,7 @@
                                  (apply
                                     (apply neChar# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 279 1) (./runtime/malgo/Builtin.mlg 281 1))
+       ((def
            neDouble
            (fn
               ((clause
@@ -802,7 +800,7 @@
                                  (apply
                                     (apply neDouble# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 243 1) (./runtime/malgo/Builtin.mlg 245 1))
+       ((def
            neFloat
            (fn
               ((clause
@@ -816,7 +814,7 @@
                                  (apply
                                     (apply neFloat# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 171 1) (./runtime/malgo/Builtin.mlg 173 1))
+       ((def
            neInt32
            (fn
               ((clause
@@ -830,7 +828,7 @@
                                  (apply
                                     (apply neInt32# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 207 1) (./runtime/malgo/Builtin.mlg 209 1))
+       ((def
            neInt64
            (fn
               ((clause
@@ -844,7 +842,7 @@
                                  (apply
                                     (apply neInt64# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 351 1) (./runtime/malgo/Builtin.mlg 353 1))
+       ((def
            neString
            (fn
               ((clause
@@ -858,13 +856,13 @@
                                  (apply
                                     (apply neString# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 392 1) (./runtime/malgo/Builtin.mlg 393 1))
+       ((def
            isLower#
            (fn
               ((clause
                   (#Builtin.x_xxx)
                   (seq (do (apply malgo_is_lower #Builtin.x_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 394 1) (./runtime/malgo/Builtin.mlg 396 1))
+       ((def
            isLower
            (fn
               ((clause
@@ -872,13 +870,13 @@
                   (seq
                      (do
                         (apply isTrue# (seq (do (apply isLower# #Builtin.x_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 386 1) (./runtime/malgo/Builtin.mlg 387 1))
+       ((def
            isDigit#
            (fn
               ((clause
                   (#Builtin.x_xxx)
                   (seq (do (apply malgo_is_digit #Builtin.x_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 388 1) (./runtime/malgo/Builtin.mlg 390 1))
+       ((def
            isDigit
            (fn
               ((clause
@@ -886,13 +884,13 @@
                   (seq
                      (do
                         (apply isTrue# (seq (do (apply isDigit# #Builtin.x_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 404 1) (./runtime/malgo/Builtin.mlg 405 1))
+       ((def
            isAlphanum#
            (fn
               ((clause
                   (#Builtin.x_xxx)
                   (seq (do (apply malgo_is_alphanum #Builtin.x_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 406 1) (./runtime/malgo/Builtin.mlg 409 1))
+       ((def
            isAlphanum
            (fn
               ((clause
@@ -902,15 +900,15 @@
                         (apply
                            isTrue#
                            (seq (do (apply isAlphanum# #Builtin.x_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 15 1) (./runtime/malgo/Builtin.mlg 17 1))
+       ((def
            int64#
            (fn
               ((clause (#Builtin.x_xxx) (seq (do (apply Int64# #Builtin.x_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 12 1) (./runtime/malgo/Builtin.mlg 14 1))
+       ((def
            int32#
            (fn
               ((clause (#Builtin.x_xxx) (seq (do (apply Int32# #Builtin.x_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 361 1) (./runtime/malgo/Builtin.mlg 362 1))
+       ((def
            gtString#
            (fn
               ((clause
@@ -920,7 +918,7 @@
                         (apply
                            (apply malgo_gt_string #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 363 1) (./runtime/malgo/Builtin.mlg 365 1))
+       ((def
            gtString
            (fn
               ((clause
@@ -934,7 +932,7 @@
                                  (apply
                                     (apply gtString# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 217 1) (./runtime/malgo/Builtin.mlg 218 1))
+       ((def
            gtInt64#
            (fn
               ((clause
@@ -944,7 +942,7 @@
                         (apply
                            (apply malgo_gt_int64_t #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 219 1) (./runtime/malgo/Builtin.mlg 221 1))
+       ((def
            gtInt64
            (fn
               ((clause
@@ -958,7 +956,7 @@
                                  (apply
                                     (apply gtInt64# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 181 1) (./runtime/malgo/Builtin.mlg 182 1))
+       ((def
            gtInt32#
            (fn
               ((clause
@@ -968,7 +966,7 @@
                         (apply
                            (apply malgo_gt_int32_t #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 183 1) (./runtime/malgo/Builtin.mlg 185 1))
+       ((def
            gtInt32
            (fn
               ((clause
@@ -982,7 +980,7 @@
                                  (apply
                                     (apply gtInt32# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 253 1) (./runtime/malgo/Builtin.mlg 254 1))
+       ((def
            gtFloat#
            (fn
               ((clause
@@ -992,7 +990,7 @@
                         (apply
                            (apply malgo_gt_float #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 255 1) (./runtime/malgo/Builtin.mlg 257 1))
+       ((def
            gtFloat
            (fn
               ((clause
@@ -1006,7 +1004,7 @@
                                  (apply
                                     (apply gtFloat# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 289 1) (./runtime/malgo/Builtin.mlg 290 1))
+       ((def
            gtDouble#
            (fn
               ((clause
@@ -1016,7 +1014,7 @@
                         (apply
                            (apply malgo_gt_double #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 291 1) (./runtime/malgo/Builtin.mlg 293 1))
+       ((def
            gtDouble
            (fn
               ((clause
@@ -1030,7 +1028,7 @@
                                  (apply
                                     (apply gtDouble# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 325 1) (./runtime/malgo/Builtin.mlg 326 1))
+       ((def
            gtChar#
            (fn
               ((clause
@@ -1040,7 +1038,7 @@
                         (apply
                            (apply malgo_gt_char #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 327 1) (./runtime/malgo/Builtin.mlg 329 1))
+       ((def
            gtChar
            (fn
               ((clause
@@ -1054,7 +1052,7 @@
                                  (apply
                                     (apply gtChar# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 497 1) (./runtime/malgo/Builtin.mlg 498 1))
+       ((def
            getContents
            (fn
               ((clause
@@ -1064,14 +1062,14 @@
                         (apply
                            String#
                            (seq (do (apply malgo_get_contents (tuple))))))))))))
-       ((((./runtime/malgo/Builtin.mlg 494 1) (./runtime/malgo/Builtin.mlg 496 1))
+       ((def
            getChar
            (fn
               ((clause
                   (#Builtin.__xxx)
                   (seq
                      (do (apply Char# (seq (do (apply malgo_get_char (tuple))))))))))))
-       ((((./runtime/malgo/Builtin.mlg 373 1) (./runtime/malgo/Builtin.mlg 374 1))
+       ((def
            geString#
            (fn
               ((clause
@@ -1081,7 +1079,7 @@
                         (apply
                            (apply malgo_ge_string #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 375 1) (./runtime/malgo/Builtin.mlg 378 1))
+       ((def
            geString
            (fn
               ((clause
@@ -1095,7 +1093,7 @@
                                  (apply
                                     (apply geString# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 229 1) (./runtime/malgo/Builtin.mlg 230 1))
+       ((def
            geInt64#
            (fn
               ((clause
@@ -1105,7 +1103,7 @@
                         (apply
                            (apply malgo_ge_int64_t #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 231 1) (./runtime/malgo/Builtin.mlg 233 1))
+       ((def
            geInt64
            (fn
               ((clause
@@ -1119,7 +1117,7 @@
                                  (apply
                                     (apply geInt64# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 193 1) (./runtime/malgo/Builtin.mlg 194 1))
+       ((def
            geInt32#
            (fn
               ((clause
@@ -1129,7 +1127,7 @@
                         (apply
                            (apply malgo_ge_int32_t #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 195 1) (./runtime/malgo/Builtin.mlg 197 1))
+       ((def
            geInt32
            (fn
               ((clause
@@ -1143,7 +1141,7 @@
                                  (apply
                                     (apply geInt32# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 265 1) (./runtime/malgo/Builtin.mlg 266 1))
+       ((def
            geFloat#
            (fn
               ((clause
@@ -1153,7 +1151,7 @@
                         (apply
                            (apply malgo_ge_float #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 267 1) (./runtime/malgo/Builtin.mlg 269 1))
+       ((def
            geFloat
            (fn
               ((clause
@@ -1167,7 +1165,7 @@
                                  (apply
                                     (apply geFloat# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 301 1) (./runtime/malgo/Builtin.mlg 302 1))
+       ((def
            geDouble#
            (fn
               ((clause
@@ -1177,7 +1175,7 @@
                         (apply
                            (apply malgo_ge_double #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 303 1) (./runtime/malgo/Builtin.mlg 305 1))
+       ((def
            geDouble
            (fn
               ((clause
@@ -1191,7 +1189,7 @@
                                  (apply
                                     (apply geDouble# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 337 1) (./runtime/malgo/Builtin.mlg 338 1))
+       ((def
            geChar#
            (fn
               ((clause
@@ -1201,7 +1199,7 @@
                         (apply
                            (apply malgo_ge_char #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 339 1) (./runtime/malgo/Builtin.mlg 341 1))
+       ((def
            geChar
            (fn
               ((clause
@@ -1215,20 +1213,20 @@
                                  (apply
                                     (apply geChar# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 491 1) (./runtime/malgo/Builtin.mlg 493 1))
+       ((def
            flush
            (fn ((clause (#Builtin.__xxx) (seq (do (apply malgo_flush (tuple)))))))))
-       ((((./runtime/malgo/Builtin.mlg 18 1) (./runtime/malgo/Builtin.mlg 20 1))
+       ((def
            float#
            (fn
               ((clause (#Builtin.x_xxx) (seq (do (apply Float# #Builtin.x_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 473 1) (./runtime/malgo/Builtin.mlg 475 1))
+       ((def
            exitFailure
            (fn
               ((clause
                   (#Builtin.__xxx)
                   (seq (do (apply malgo_exit_failure (tuple)))))))))
-       ((((./runtime/malgo/Builtin.mlg 343 1) (./runtime/malgo/Builtin.mlg 344 1))
+       ((def
            eqString#
            (fn
               ((clause
@@ -1238,7 +1236,7 @@
                         (apply
                            (apply malgo_eq_string #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 345 1) (./runtime/malgo/Builtin.mlg 347 1))
+       ((def
            eqString
            (fn
               ((clause
@@ -1252,7 +1250,7 @@
                                  (apply
                                     (apply eqString# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 199 1) (./runtime/malgo/Builtin.mlg 200 1))
+       ((def
            eqInt64#
            (fn
               ((clause
@@ -1262,7 +1260,7 @@
                         (apply
                            (apply malgo_eq_int64_t #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 201 1) (./runtime/malgo/Builtin.mlg 203 1))
+       ((def
            eqInt64
            (fn
               ((clause
@@ -1276,7 +1274,7 @@
                                  (apply
                                     (apply eqInt64# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 163 1) (./runtime/malgo/Builtin.mlg 164 1))
+       ((def
            eqInt32#
            (fn
               ((clause
@@ -1286,7 +1284,7 @@
                         (apply
                            (apply malgo_eq_int32_t #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 165 1) (./runtime/malgo/Builtin.mlg 167 1))
+       ((def
            eqInt32
            (fn
               ((clause
@@ -1300,7 +1298,7 @@
                                  (apply
                                     (apply eqInt32# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 235 1) (./runtime/malgo/Builtin.mlg 236 1))
+       ((def
            eqFloat#
            (fn
               ((clause
@@ -1310,7 +1308,7 @@
                         (apply
                            (apply malgo_eq_float #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 237 1) (./runtime/malgo/Builtin.mlg 239 1))
+       ((def
            eqFloat
            (fn
               ((clause
@@ -1324,7 +1322,7 @@
                                  (apply
                                     (apply eqFloat# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 271 1) (./runtime/malgo/Builtin.mlg 272 1))
+       ((def
            eqDouble#
            (fn
               ((clause
@@ -1334,7 +1332,7 @@
                         (apply
                            (apply malgo_eq_double #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 273 1) (./runtime/malgo/Builtin.mlg 275 1))
+       ((def
            eqDouble
            (fn
               ((clause
@@ -1348,7 +1346,7 @@
                                  (apply
                                     (apply eqDouble# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 307 1) (./runtime/malgo/Builtin.mlg 308 1))
+       ((def
            eqChar#
            (fn
               ((clause
@@ -1358,7 +1356,7 @@
                         (apply
                            (apply malgo_eq_char #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 309 1) (./runtime/malgo/Builtin.mlg 311 1))
+       ((def
            eqChar
            (fn
               ((clause
@@ -1372,11 +1370,11 @@
                                  (apply
                                     (apply eqChar# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 21 1) (./runtime/malgo/Builtin.mlg 23 1))
+       ((def
            double#
            (fn
               ((clause (#Builtin.x_xxx) (seq (do (apply Double# #Builtin.x_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 84 1) (./runtime/malgo/Builtin.mlg 85 1))
+       ((def
            divInt64#
            (fn
               ((clause
@@ -1386,7 +1384,7 @@
                         (apply
                            (apply malgo_div_int64_t #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 86 1) (./runtime/malgo/Builtin.mlg 88 1))
+       ((def
            divInt64
            (fn
               ((clause
@@ -1400,7 +1398,7 @@
                                  (apply
                                     (apply divInt64# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 60 1) (./runtime/malgo/Builtin.mlg 61 1))
+       ((def
            divInt32#
            (fn
               ((clause
@@ -1410,7 +1408,7 @@
                         (apply
                            (apply malgo_div_int32_t #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 62 1) (./runtime/malgo/Builtin.mlg 64 1))
+       ((def
            divInt32
            (fn
               ((clause
@@ -1424,7 +1422,7 @@
                                  (apply
                                     (apply divInt32# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 108 1) (./runtime/malgo/Builtin.mlg 109 1))
+       ((def
            divFloat#
            (fn
               ((clause
@@ -1434,7 +1432,7 @@
                         (apply
                            (apply malgo_div_float #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 110 1) (./runtime/malgo/Builtin.mlg 112 1))
+       ((def
            divFloat
            (fn
               ((clause
@@ -1448,7 +1446,7 @@
                                  (apply
                                     (apply divFloat# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 132 1) (./runtime/malgo/Builtin.mlg 133 1))
+       ((def
            divDouble#
            (fn
               ((clause
@@ -1458,7 +1456,7 @@
                         (apply
                            (apply malgo_div_double #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 134 1) (./runtime/malgo/Builtin.mlg 137 1))
+       ((def
            divDouble
            (fn
               ((clause
@@ -1472,7 +1470,7 @@
                                  (apply
                                     (apply divDouble# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 423 1) (./runtime/malgo/Builtin.mlg 424 1))
+       ((def
            consString#
            (fn
               ((clause
@@ -1482,7 +1480,7 @@
                         (apply
                            (apply malgo_string_cons #Builtin.c_xxx)
                            #Builtin.cs_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 425 1) (./runtime/malgo/Builtin.mlg 427 1))
+       ((def
            consString
            (fn
               ((clause
@@ -1496,11 +1494,11 @@
                                  (apply
                                     (apply consString# #Builtin.c_xxx)
                                     #Builtin.cs_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 24 1) (./runtime/malgo/Builtin.mlg 26 1))
+       ((def
            char#
            (fn
               ((clause (#Builtin.x_xxx) (seq (do (apply Char# #Builtin.x_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 417 1) (./runtime/malgo/Builtin.mlg 418 1))
+       ((def
            atString#
            (fn
               ((clause
@@ -1510,7 +1508,7 @@
                         (apply
                            (apply malgo_string_at #Builtin.i_xxx)
                            #Builtin.x_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 419 1) (./runtime/malgo/Builtin.mlg 421 1))
+       ((def
            atString
            (fn
               ((clause
@@ -1524,7 +1522,7 @@
                                  (apply
                                     (apply atString# #Builtin.i_xxx)
                                     #Builtin.x_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 429 1) (./runtime/malgo/Builtin.mlg 430 1))
+       ((def
            appendString#
            (fn
               ((clause
@@ -1534,7 +1532,7 @@
                         (apply
                            (apply malgo_string_append #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 431 1) (./runtime/malgo/Builtin.mlg 433 1))
+       ((def
            appendString
            (fn
               ((clause
@@ -1548,7 +1546,7 @@
                                  (apply
                                     (apply appendString# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 66 1) (./runtime/malgo/Builtin.mlg 67 1))
+       ((def
            addInt64#
            (fn
               ((clause
@@ -1558,7 +1556,7 @@
                         (apply
                            (apply malgo_add_int64_t #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 68 1) (./runtime/malgo/Builtin.mlg 70 1))
+       ((def
            addInt64
            (fn
               ((clause
@@ -1572,7 +1570,7 @@
                                  (apply
                                     (apply addInt64# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 42 1) (./runtime/malgo/Builtin.mlg 43 1))
+       ((def
            addInt32#
            (fn
               ((clause
@@ -1582,7 +1580,7 @@
                         (apply
                            (apply malgo_add_int32_t #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 44 1) (./runtime/malgo/Builtin.mlg 46 1))
+       ((def
            addInt32
            (fn
               ((clause
@@ -1596,7 +1594,7 @@
                                  (apply
                                     (apply addInt32# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 90 1) (./runtime/malgo/Builtin.mlg 91 1))
+       ((def
            addFloat#
            (fn
               ((clause
@@ -1606,7 +1604,7 @@
                         (apply
                            (apply malgo_add_float #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 92 1) (./runtime/malgo/Builtin.mlg 94 1))
+       ((def
            addFloat
            (fn
               ((clause
@@ -1620,7 +1618,7 @@
                                  (apply
                                     (apply addFloat# #Builtin.x_xxx)
                                     #Builtin.y_xxx)))))))))))
-       ((((./runtime/malgo/Builtin.mlg 114 1) (./runtime/malgo/Builtin.mlg 115 1))
+       ((def
            addDouble#
            (fn
               ((clause
@@ -1630,7 +1628,7 @@
                         (apply
                            (apply malgo_add_double #Builtin.x_xxx)
                            #Builtin.y_xxx))))))))
-       ((((./runtime/malgo/Builtin.mlg 116 1) (./runtime/malgo/Builtin.mlg 118 1))
+       ((def
            addDouble
            (fn
               ((clause
@@ -1644,1019 +1642,243 @@
                                  (apply
                                     (apply addDouble# #Builtin.x_xxx)
                                     #Builtin.y_xxx))))))))))))
-      ((((./runtime/malgo/Builtin.mlg 11 1) (./runtime/malgo/Builtin.mlg 12 1))
-          int32#
-          (-> Int32# Int32))
-         (((./runtime/malgo/Builtin.mlg 14 1) (./runtime/malgo/Builtin.mlg 15 1))
-            int64#
-            (-> Int64# Int64))
-         (((./runtime/malgo/Builtin.mlg 17 1) (./runtime/malgo/Builtin.mlg 18 1))
-            float#
-            (-> Float# Float))
-         (((./runtime/malgo/Builtin.mlg 20 1) (./runtime/malgo/Builtin.mlg 21 1))
-            double#
-            (-> Double# Double))
-         (((./runtime/malgo/Builtin.mlg 23 1) (./runtime/malgo/Builtin.mlg 24 1))
-            char#
-            (-> Char# Char))
-         (((./runtime/malgo/Builtin.mlg 26 1) (./runtime/malgo/Builtin.mlg 27 1))
-            string#
-            (-> String# String))
-         (((./runtime/malgo/Builtin.mlg 31 1) (./runtime/malgo/Builtin.mlg 32 1))
-            panic
-            (-> String #Builtin.a_xxx))
-         (((./runtime/malgo/Builtin.mlg 36 1) (./runtime/malgo/Builtin.mlg 37 1))
-            undefined
-            #Builtin.a_xxx)
-         (((./runtime/malgo/Builtin.mlg 41 1) (./runtime/malgo/Builtin.mlg 42 1))
-            addInt32#
-            (-> Int32# (-> Int32# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 43 1) (./runtime/malgo/Builtin.mlg 44 1))
-            addInt32
-            (-> Int32 (-> Int32 Int32)))
-         (((./runtime/malgo/Builtin.mlg 47 1) (./runtime/malgo/Builtin.mlg 48 1))
-            subInt32#
-            (-> Int32# (-> Int32# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 49 1) (./runtime/malgo/Builtin.mlg 50 1))
-            subInt32
-            (-> Int32 (-> Int32 Int32)))
-         (((./runtime/malgo/Builtin.mlg 53 1) (./runtime/malgo/Builtin.mlg 54 1))
-            mulInt32#
-            (-> Int32# (-> Int32# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 55 1) (./runtime/malgo/Builtin.mlg 56 1))
-            mulInt32
-            (-> Int32 (-> Int32 Int32)))
-         (((./runtime/malgo/Builtin.mlg 59 1) (./runtime/malgo/Builtin.mlg 60 1))
-            divInt32#
-            (-> Int32# (-> Int32# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 61 1) (./runtime/malgo/Builtin.mlg 62 1))
-            divInt32
-            (-> Int32 (-> Int32 Int32)))
-         (((./runtime/malgo/Builtin.mlg 65 1) (./runtime/malgo/Builtin.mlg 66 1))
-            addInt64#
-            (-> Int64# (-> Int64# Int64#)))
-         (((./runtime/malgo/Builtin.mlg 67 1) (./runtime/malgo/Builtin.mlg 68 1))
-            addInt64
-            (-> Int64 (-> Int64 Int64)))
-         (((./runtime/malgo/Builtin.mlg 71 1) (./runtime/malgo/Builtin.mlg 72 1))
-            subInt64#
-            (-> Int64# (-> Int64# Int64#)))
-         (((./runtime/malgo/Builtin.mlg 73 1) (./runtime/malgo/Builtin.mlg 74 1))
-            subInt64
-            (-> Int64 (-> Int64 Int64)))
-         (((./runtime/malgo/Builtin.mlg 77 1) (./runtime/malgo/Builtin.mlg 78 1))
-            mulInt64#
-            (-> Int64# (-> Int64# Int64#)))
-         (((./runtime/malgo/Builtin.mlg 79 1) (./runtime/malgo/Builtin.mlg 80 1))
-            mulInt64
-            (-> Int64 (-> Int64 Int64)))
-         (((./runtime/malgo/Builtin.mlg 83 1) (./runtime/malgo/Builtin.mlg 84 1))
-            divInt64#
-            (-> Int64# (-> Int64# Int64#)))
-         (((./runtime/malgo/Builtin.mlg 85 1) (./runtime/malgo/Builtin.mlg 86 1))
-            divInt64
-            (-> Int64 (-> Int64 Int64)))
-         (((./runtime/malgo/Builtin.mlg 89 1) (./runtime/malgo/Builtin.mlg 90 1))
-            addFloat#
-            (-> Float# (-> Float# Float#)))
-         (((./runtime/malgo/Builtin.mlg 91 1) (./runtime/malgo/Builtin.mlg 92 1))
-            addFloat
-            (-> Float (-> Float Float)))
-         (((./runtime/malgo/Builtin.mlg 95 1) (./runtime/malgo/Builtin.mlg 96 1))
-            subFloat#
-            (-> Float# (-> Float# Float#)))
-         (((./runtime/malgo/Builtin.mlg 97 1) (./runtime/malgo/Builtin.mlg 98 1))
-            subFloat
-            (-> Float (-> Float Float)))
-         (((./runtime/malgo/Builtin.mlg 101 1)
-             (./runtime/malgo/Builtin.mlg 102 1))
-            mulFloat#
-            (-> Float# (-> Float# Float#)))
-         (((./runtime/malgo/Builtin.mlg 103 1)
-             (./runtime/malgo/Builtin.mlg 104 1))
-            mulFloat
-            (-> Float (-> Float Float)))
-         (((./runtime/malgo/Builtin.mlg 107 1)
-             (./runtime/malgo/Builtin.mlg 108 1))
-            divFloat#
-            (-> Float# (-> Float# Float#)))
-         (((./runtime/malgo/Builtin.mlg 109 1)
-             (./runtime/malgo/Builtin.mlg 110 1))
-            divFloat
-            (-> Float (-> Float Float)))
-         (((./runtime/malgo/Builtin.mlg 113 1)
-             (./runtime/malgo/Builtin.mlg 114 1))
-            addDouble#
-            (-> Double# (-> Double# Double#)))
-         (((./runtime/malgo/Builtin.mlg 115 1)
-             (./runtime/malgo/Builtin.mlg 116 1))
-            addDouble
-            (-> Double (-> Double Double)))
-         (((./runtime/malgo/Builtin.mlg 119 1)
-             (./runtime/malgo/Builtin.mlg 120 1))
-            subDouble#
-            (-> Double# (-> Double# Double#)))
-         (((./runtime/malgo/Builtin.mlg 121 1)
-             (./runtime/malgo/Builtin.mlg 122 1))
-            subDouble
-            (-> Double (-> Double Double)))
-         (((./runtime/malgo/Builtin.mlg 125 1)
-             (./runtime/malgo/Builtin.mlg 126 1))
-            mulDouble#
-            (-> Double# (-> Double# Double#)))
-         (((./runtime/malgo/Builtin.mlg 127 1)
-             (./runtime/malgo/Builtin.mlg 128 1))
-            mulDouble
-            (-> Double (-> Double Double)))
-         (((./runtime/malgo/Builtin.mlg 131 1)
-             (./runtime/malgo/Builtin.mlg 132 1))
-            divDouble#
-            (-> Double# (-> Double# Double#)))
-         (((./runtime/malgo/Builtin.mlg 133 1)
-             (./runtime/malgo/Builtin.mlg 134 1))
-            divDouble
-            (-> Double (-> Double Double)))
-         (((./runtime/malgo/Builtin.mlg 138 1)
-             (./runtime/malgo/Builtin.mlg 139 1))
-            sqrtFloat#
-            (-> Float# Float#))
-         (((./runtime/malgo/Builtin.mlg 140 1)
-             (./runtime/malgo/Builtin.mlg 141 1))
-            sqrtFloat
-            (-> Float Float))
-         (((./runtime/malgo/Builtin.mlg 144 1)
-             (./runtime/malgo/Builtin.mlg 145 1))
-            sqrtDouble#
-            (-> Double# Double#))
-         (((./runtime/malgo/Builtin.mlg 146 1)
-             (./runtime/malgo/Builtin.mlg 147 1))
-            sqrtDouble
-            (-> Double Double))
-         (((./runtime/malgo/Builtin.mlg 149 1)
-             (./runtime/malgo/Builtin.mlg 150 1))
-            isTrue#
-            (-> Int32# Bool))
-         (((./runtime/malgo/Builtin.mlg 155 1)
-             (./runtime/malgo/Builtin.mlg 156 1))
-            not
-            (-> Bool Bool))
-         (((./runtime/malgo/Builtin.mlg 162 1)
-             (./runtime/malgo/Builtin.mlg 163 1))
-            eqInt32#
-            (-> Int32# (-> Int32# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 164 1)
-             (./runtime/malgo/Builtin.mlg 165 1))
-            eqInt32
-            (-> Int32 (-> Int32 Bool)))
-         (((./runtime/malgo/Builtin.mlg 168 1)
-             (./runtime/malgo/Builtin.mlg 169 1))
-            neInt32#
-            (-> Int32# (-> Int32# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 170 1)
-             (./runtime/malgo/Builtin.mlg 171 1))
-            neInt32
-            (-> Int32 (-> Int32 Bool)))
-         (((./runtime/malgo/Builtin.mlg 174 1)
-             (./runtime/malgo/Builtin.mlg 175 1))
-            ltInt32#
-            (-> Int32# (-> Int32# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 176 1)
-             (./runtime/malgo/Builtin.mlg 177 1))
-            ltInt32
-            (-> Int32 (-> Int32 Bool)))
-         (((./runtime/malgo/Builtin.mlg 180 1)
-             (./runtime/malgo/Builtin.mlg 181 1))
-            gtInt32#
-            (-> Int32# (-> Int32# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 182 1)
-             (./runtime/malgo/Builtin.mlg 183 1))
-            gtInt32
-            (-> Int32 (-> Int32 Bool)))
-         (((./runtime/malgo/Builtin.mlg 186 1)
-             (./runtime/malgo/Builtin.mlg 187 1))
-            leInt32#
-            (-> Int32# (-> Int32# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 188 1)
-             (./runtime/malgo/Builtin.mlg 189 1))
-            leInt32
-            (-> Int32 (-> Int32 Bool)))
-         (((./runtime/malgo/Builtin.mlg 192 1)
-             (./runtime/malgo/Builtin.mlg 193 1))
-            geInt32#
-            (-> Int32# (-> Int32# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 194 1)
-             (./runtime/malgo/Builtin.mlg 195 1))
-            geInt32
-            (-> Int32 (-> Int32 Bool)))
-         (((./runtime/malgo/Builtin.mlg 198 1)
-             (./runtime/malgo/Builtin.mlg 199 1))
-            eqInt64#
-            (-> Int64# (-> Int64# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 200 1)
-             (./runtime/malgo/Builtin.mlg 201 1))
-            eqInt64
-            (-> Int64 (-> Int64 Bool)))
-         (((./runtime/malgo/Builtin.mlg 204 1)
-             (./runtime/malgo/Builtin.mlg 205 1))
-            neInt64#
-            (-> Int64# (-> Int64# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 206 1)
-             (./runtime/malgo/Builtin.mlg 207 1))
-            neInt64
-            (-> Int64 (-> Int64 Bool)))
-         (((./runtime/malgo/Builtin.mlg 210 1)
-             (./runtime/malgo/Builtin.mlg 211 1))
-            ltInt64#
-            (-> Int64# (-> Int64# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 212 1)
-             (./runtime/malgo/Builtin.mlg 213 1))
-            ltInt64
-            (-> Int64 (-> Int64 Bool)))
-         (((./runtime/malgo/Builtin.mlg 216 1)
-             (./runtime/malgo/Builtin.mlg 217 1))
-            gtInt64#
-            (-> Int64# (-> Int64# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 218 1)
-             (./runtime/malgo/Builtin.mlg 219 1))
-            gtInt64
-            (-> Int64 (-> Int64 Bool)))
-         (((./runtime/malgo/Builtin.mlg 222 1)
-             (./runtime/malgo/Builtin.mlg 223 1))
-            leInt64#
-            (-> Int64# (-> Int64# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 224 1)
-             (./runtime/malgo/Builtin.mlg 225 1))
-            leInt64
-            (-> Int64 (-> Int64 Bool)))
-         (((./runtime/malgo/Builtin.mlg 228 1)
-             (./runtime/malgo/Builtin.mlg 229 1))
-            geInt64#
-            (-> Int64# (-> Int64# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 230 1)
-             (./runtime/malgo/Builtin.mlg 231 1))
-            geInt64
-            (-> Int64 (-> Int64 Bool)))
-         (((./runtime/malgo/Builtin.mlg 234 1)
-             (./runtime/malgo/Builtin.mlg 235 1))
-            eqFloat#
-            (-> Float# (-> Float# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 236 1)
-             (./runtime/malgo/Builtin.mlg 237 1))
-            eqFloat
-            (-> Float (-> Float Bool)))
-         (((./runtime/malgo/Builtin.mlg 240 1)
-             (./runtime/malgo/Builtin.mlg 241 1))
-            neFloat#
-            (-> Float# (-> Float# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 242 1)
-             (./runtime/malgo/Builtin.mlg 243 1))
-            neFloat
-            (-> Float (-> Float Bool)))
-         (((./runtime/malgo/Builtin.mlg 246 1)
-             (./runtime/malgo/Builtin.mlg 247 1))
-            ltFloat#
-            (-> Float# (-> Float# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 248 1)
-             (./runtime/malgo/Builtin.mlg 249 1))
-            ltFloat
-            (-> Float (-> Float Bool)))
-         (((./runtime/malgo/Builtin.mlg 252 1)
-             (./runtime/malgo/Builtin.mlg 253 1))
-            gtFloat#
-            (-> Float# (-> Float# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 254 1)
-             (./runtime/malgo/Builtin.mlg 255 1))
-            gtFloat
-            (-> Float (-> Float Bool)))
-         (((./runtime/malgo/Builtin.mlg 258 1)
-             (./runtime/malgo/Builtin.mlg 259 1))
-            leFloat#
-            (-> Float# (-> Float# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 260 1)
-             (./runtime/malgo/Builtin.mlg 261 1))
-            leFloat
-            (-> Float (-> Float Bool)))
-         (((./runtime/malgo/Builtin.mlg 264 1)
-             (./runtime/malgo/Builtin.mlg 265 1))
-            geFloat#
-            (-> Float# (-> Float# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 266 1)
-             (./runtime/malgo/Builtin.mlg 267 1))
-            geFloat
-            (-> Float (-> Float Bool)))
-         (((./runtime/malgo/Builtin.mlg 270 1)
-             (./runtime/malgo/Builtin.mlg 271 1))
-            eqDouble#
-            (-> Double# (-> Double# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 272 1)
-             (./runtime/malgo/Builtin.mlg 273 1))
-            eqDouble
-            (-> Double (-> Double Bool)))
-         (((./runtime/malgo/Builtin.mlg 276 1)
-             (./runtime/malgo/Builtin.mlg 277 1))
-            neDouble#
-            (-> Double# (-> Double# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 278 1)
-             (./runtime/malgo/Builtin.mlg 279 1))
-            neDouble
-            (-> Double (-> Double Bool)))
-         (((./runtime/malgo/Builtin.mlg 282 1)
-             (./runtime/malgo/Builtin.mlg 283 1))
-            ltDouble#
-            (-> Double# (-> Double# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 284 1)
-             (./runtime/malgo/Builtin.mlg 285 1))
-            ltDouble
-            (-> Double (-> Double Bool)))
-         (((./runtime/malgo/Builtin.mlg 288 1)
-             (./runtime/malgo/Builtin.mlg 289 1))
-            gtDouble#
-            (-> Double# (-> Double# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 290 1)
-             (./runtime/malgo/Builtin.mlg 291 1))
-            gtDouble
-            (-> Double (-> Double Bool)))
-         (((./runtime/malgo/Builtin.mlg 294 1)
-             (./runtime/malgo/Builtin.mlg 295 1))
-            leDouble#
-            (-> Double# (-> Double# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 296 1)
-             (./runtime/malgo/Builtin.mlg 297 1))
-            leDouble
-            (-> Double (-> Double Bool)))
-         (((./runtime/malgo/Builtin.mlg 300 1)
-             (./runtime/malgo/Builtin.mlg 301 1))
-            geDouble#
-            (-> Double# (-> Double# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 302 1)
-             (./runtime/malgo/Builtin.mlg 303 1))
-            geDouble
-            (-> Double (-> Double Bool)))
-         (((./runtime/malgo/Builtin.mlg 306 1)
-             (./runtime/malgo/Builtin.mlg 307 1))
-            eqChar#
-            (-> Char# (-> Char# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 308 1)
-             (./runtime/malgo/Builtin.mlg 309 1))
-            eqChar
-            (-> Char (-> Char Bool)))
-         (((./runtime/malgo/Builtin.mlg 312 1)
-             (./runtime/malgo/Builtin.mlg 313 1))
-            neChar#
-            (-> Char# (-> Char# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 314 1)
-             (./runtime/malgo/Builtin.mlg 315 1))
-            neChar
-            (-> Char (-> Char Bool)))
-         (((./runtime/malgo/Builtin.mlg 318 1)
-             (./runtime/malgo/Builtin.mlg 319 1))
-            ltChar#
-            (-> Char# (-> Char# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 320 1)
-             (./runtime/malgo/Builtin.mlg 321 1))
-            ltChar
-            (-> Char (-> Char Bool)))
-         (((./runtime/malgo/Builtin.mlg 324 1)
-             (./runtime/malgo/Builtin.mlg 325 1))
-            gtChar#
-            (-> Char# (-> Char# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 326 1)
-             (./runtime/malgo/Builtin.mlg 327 1))
-            gtChar
-            (-> Char (-> Char Bool)))
-         (((./runtime/malgo/Builtin.mlg 330 1)
-             (./runtime/malgo/Builtin.mlg 331 1))
-            leChar#
-            (-> Char# (-> Char# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 332 1)
-             (./runtime/malgo/Builtin.mlg 333 1))
-            leChar
-            (-> Char (-> Char Bool)))
-         (((./runtime/malgo/Builtin.mlg 336 1)
-             (./runtime/malgo/Builtin.mlg 337 1))
-            geChar#
-            (-> Char# (-> Char# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 338 1)
-             (./runtime/malgo/Builtin.mlg 339 1))
-            geChar
-            (-> Char (-> Char Bool)))
-         (((./runtime/malgo/Builtin.mlg 342 1)
-             (./runtime/malgo/Builtin.mlg 343 1))
-            eqString#
-            (-> String# (-> String# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 344 1)
-             (./runtime/malgo/Builtin.mlg 345 1))
-            eqString
-            (-> String (-> String Bool)))
-         (((./runtime/malgo/Builtin.mlg 348 1)
-             (./runtime/malgo/Builtin.mlg 349 1))
-            neString#
-            (-> String# (-> String# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 350 1)
-             (./runtime/malgo/Builtin.mlg 351 1))
-            neString
-            (-> String (-> String Bool)))
-         (((./runtime/malgo/Builtin.mlg 354 1)
-             (./runtime/malgo/Builtin.mlg 355 1))
-            ltString#
-            (-> String# (-> String# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 356 1)
-             (./runtime/malgo/Builtin.mlg 357 1))
-            ltString
-            (-> String (-> String Bool)))
-         (((./runtime/malgo/Builtin.mlg 360 1)
-             (./runtime/malgo/Builtin.mlg 361 1))
-            gtString#
-            (-> String# (-> String# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 362 1)
-             (./runtime/malgo/Builtin.mlg 363 1))
-            gtString
-            (-> String (-> String Bool)))
-         (((./runtime/malgo/Builtin.mlg 366 1)
-             (./runtime/malgo/Builtin.mlg 367 1))
-            leString#
-            (-> String# (-> String# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 368 1)
-             (./runtime/malgo/Builtin.mlg 369 1))
-            leString
-            (-> String (-> String Bool)))
-         (((./runtime/malgo/Builtin.mlg 372 1)
-             (./runtime/malgo/Builtin.mlg 373 1))
-            geString#
-            (-> String# (-> String# Int32#)))
-         (((./runtime/malgo/Builtin.mlg 374 1)
-             (./runtime/malgo/Builtin.mlg 375 1))
-            geString
-            (-> String (-> String Bool)))
-         (((./runtime/malgo/Builtin.mlg 379 1)
-             (./runtime/malgo/Builtin.mlg 380 1))
-            ordChar#
-            (-> Char# Int32#))
-         (((./runtime/malgo/Builtin.mlg 381 1)
-             (./runtime/malgo/Builtin.mlg 382 1))
-            ordChar
-            (-> Char Int32))
-         (((./runtime/malgo/Builtin.mlg 385 1)
-             (./runtime/malgo/Builtin.mlg 386 1))
-            isDigit#
-            (-> Char# Int32#))
-         (((./runtime/malgo/Builtin.mlg 387 1)
-             (./runtime/malgo/Builtin.mlg 388 1))
-            isDigit
-            (-> Char Bool))
-         (((./runtime/malgo/Builtin.mlg 391 1)
-             (./runtime/malgo/Builtin.mlg 392 1))
-            isLower#
-            (-> Char# Int32#))
-         (((./runtime/malgo/Builtin.mlg 393 1)
-             (./runtime/malgo/Builtin.mlg 394 1))
-            isLower
-            (-> Char Bool))
-         (((./runtime/malgo/Builtin.mlg 397 1)
-             (./runtime/malgo/Builtin.mlg 398 1))
-            isUpper#
-            (-> Char# Int32#))
-         (((./runtime/malgo/Builtin.mlg 399 1)
-             (./runtime/malgo/Builtin.mlg 400 1))
-            isUpper
-            (-> Char Bool))
-         (((./runtime/malgo/Builtin.mlg 403 1)
-             (./runtime/malgo/Builtin.mlg 404 1))
-            isAlphanum#
-            (-> Char# Int32#))
-         (((./runtime/malgo/Builtin.mlg 405 1)
-             (./runtime/malgo/Builtin.mlg 406 1))
-            isAlphanum
-            (-> Char Bool))
-         (((./runtime/malgo/Builtin.mlg 410 1)
-             (./runtime/malgo/Builtin.mlg 411 1))
-            lengthString#
-            (-> String# Int64#))
-         (((./runtime/malgo/Builtin.mlg 412 1)
-             (./runtime/malgo/Builtin.mlg 413 1))
-            lengthString
-            (-> String Int64))
-         (((./runtime/malgo/Builtin.mlg 416 1)
-             (./runtime/malgo/Builtin.mlg 417 1))
-            atString#
-            (-> Int64# (-> String# Char#)))
-         (((./runtime/malgo/Builtin.mlg 418 1)
-             (./runtime/malgo/Builtin.mlg 419 1))
-            atString
-            (-> Int64 (-> String Char)))
-         (((./runtime/malgo/Builtin.mlg 422 1)
-             (./runtime/malgo/Builtin.mlg 423 1))
-            consString#
-            (-> Char# (-> String# String#)))
-         (((./runtime/malgo/Builtin.mlg 424 1)
-             (./runtime/malgo/Builtin.mlg 425 1))
-            consString
-            (-> Char (-> String String)))
-         (((./runtime/malgo/Builtin.mlg 428 1)
-             (./runtime/malgo/Builtin.mlg 429 1))
-            appendString#
-            (-> String# (-> String# String#)))
-         (((./runtime/malgo/Builtin.mlg 430 1)
-             (./runtime/malgo/Builtin.mlg 431 1))
-            appendString
-            (-> String (-> String String)))
-         (((./runtime/malgo/Builtin.mlg 434 1)
-             (./runtime/malgo/Builtin.mlg 435 1))
-            substring#
-            (-> String# (-> Int64# (-> Int64# String#))))
-         (((./runtime/malgo/Builtin.mlg 436 1)
-             (./runtime/malgo/Builtin.mlg 437 1))
-            substring
-            (-> String (-> Int64 (-> Int64 String))))
-         (((./runtime/malgo/Builtin.mlg 440 1)
-             (./runtime/malgo/Builtin.mlg 441 1))
-            toStringInt32#
-            (-> Int32# String#))
-         (((./runtime/malgo/Builtin.mlg 442 1)
-             (./runtime/malgo/Builtin.mlg 443 1))
-            toStringInt32
-            (-> Int32 String))
-         (((./runtime/malgo/Builtin.mlg 446 1)
-             (./runtime/malgo/Builtin.mlg 447 1))
-            toStringInt64#
-            (-> Int64# String#))
-         (((./runtime/malgo/Builtin.mlg 448 1)
-             (./runtime/malgo/Builtin.mlg 449 1))
-            toStringInt64
-            (-> Int64 String))
-         (((./runtime/malgo/Builtin.mlg 452 1)
-             (./runtime/malgo/Builtin.mlg 453 1))
-            toStringFloat#
-            (-> Float# String#))
-         (((./runtime/malgo/Builtin.mlg 454 1)
-             (./runtime/malgo/Builtin.mlg 455 1))
-            toStringFloat
-            (-> Float String))
-         (((./runtime/malgo/Builtin.mlg 458 1)
-             (./runtime/malgo/Builtin.mlg 459 1))
-            toStringDouble#
-            (-> Double# String#))
-         (((./runtime/malgo/Builtin.mlg 460 1)
-             (./runtime/malgo/Builtin.mlg 461 1))
-            toStringDouble
-            (-> Double String))
-         (((./runtime/malgo/Builtin.mlg 464 1)
-             (./runtime/malgo/Builtin.mlg 465 1))
-            toStringChar#
-            (-> Char# String#))
-         (((./runtime/malgo/Builtin.mlg 466 1)
-             (./runtime/malgo/Builtin.mlg 467 1))
-            toStringChar
-            (-> Char String))
-         (((./runtime/malgo/Builtin.mlg 472 1)
-             (./runtime/malgo/Builtin.mlg 473 1))
-            exitFailure
-            (-> (tuple) #Builtin.a_xxx))
-         (((./runtime/malgo/Builtin.mlg 479 1)
-             (./runtime/malgo/Builtin.mlg 480 1))
-            printChar#
-            (-> Char# (tuple)))
-         (((./runtime/malgo/Builtin.mlg 481 1)
-             (./runtime/malgo/Builtin.mlg 482 1))
-            printChar
-            (-> Char (tuple)))
-         (((./runtime/malgo/Builtin.mlg 485 1)
-             (./runtime/malgo/Builtin.mlg 486 1))
-            printString#
-            (-> String# (tuple)))
-         (((./runtime/malgo/Builtin.mlg 487 1)
-             (./runtime/malgo/Builtin.mlg 488 1))
-            printString
-            (-> String (tuple))))
-      ((((./runtime/malgo/Builtin.mlg 2 6) (./runtime/malgo/Builtin.mlg 3 1))
-          Int32
-          ()
-          ((((./runtime/malgo/Builtin.mlg 2 14) (./runtime/malgo/Builtin.mlg 3 1))
-              Int32#
-              (Int32#))))
-         (((./runtime/malgo/Builtin.mlg 3 6) (./runtime/malgo/Builtin.mlg 4 1))
-            Int64
-            ()
-            ((((./runtime/malgo/Builtin.mlg 3 14)
-                 (./runtime/malgo/Builtin.mlg 4 1))
-                Int64#
-                (Int64#))))
-         (((./runtime/malgo/Builtin.mlg 4 6) (./runtime/malgo/Builtin.mlg 5 1))
-            Float
-            ()
-            ((((./runtime/malgo/Builtin.mlg 4 14)
-                 (./runtime/malgo/Builtin.mlg 5 1))
-                Float#
-                (Float#))))
-         (((./runtime/malgo/Builtin.mlg 5 6) (./runtime/malgo/Builtin.mlg 6 1))
-            Double
-            ()
-            ((((./runtime/malgo/Builtin.mlg 5 15)
-                 (./runtime/malgo/Builtin.mlg 6 1))
-                Double#
-                (Double#))))
-         (((./runtime/malgo/Builtin.mlg 6 6) (./runtime/malgo/Builtin.mlg 7 1))
-            Char
-            ()
-            ((((./runtime/malgo/Builtin.mlg 6 13)
-                 (./runtime/malgo/Builtin.mlg 7 1))
-                Char#
-                (Char#))))
-         (((./runtime/malgo/Builtin.mlg 7 6) (./runtime/malgo/Builtin.mlg 8 1))
-            String
-            ()
-            ((((./runtime/malgo/Builtin.mlg 7 15)
-                 (./runtime/malgo/Builtin.mlg 8 1))
-                String#
-                (String#))))
-         (((./runtime/malgo/Builtin.mlg 8 6) (./runtime/malgo/Builtin.mlg 11 1))
-            Bool
-            ()
-            ((((./runtime/malgo/Builtin.mlg 8 13)
-                 (./runtime/malgo/Builtin.mlg 8 19))
-                False
-                ())
-               (((./runtime/malgo/Builtin.mlg 8 21)
-                   (./runtime/malgo/Builtin.mlg 11 1))
-                  True
-                  ()))))
+      ((sig int32# (-> Int32# Int32))
+         (sig int64# (-> Int64# Int64))
+         (sig float# (-> Float# Float))
+         (sig double# (-> Double# Double))
+         (sig char# (-> Char# Char))
+         (sig string# (-> String# String))
+         (sig panic (-> String #Builtin.a_xxx))
+         (sig undefined #Builtin.a_xxx)
+         (sig addInt32# (-> Int32# (-> Int32# Int32#)))
+         (sig addInt32 (-> Int32 (-> Int32 Int32)))
+         (sig subInt32# (-> Int32# (-> Int32# Int32#)))
+         (sig subInt32 (-> Int32 (-> Int32 Int32)))
+         (sig mulInt32# (-> Int32# (-> Int32# Int32#)))
+         (sig mulInt32 (-> Int32 (-> Int32 Int32)))
+         (sig divInt32# (-> Int32# (-> Int32# Int32#)))
+         (sig divInt32 (-> Int32 (-> Int32 Int32)))
+         (sig addInt64# (-> Int64# (-> Int64# Int64#)))
+         (sig addInt64 (-> Int64 (-> Int64 Int64)))
+         (sig subInt64# (-> Int64# (-> Int64# Int64#)))
+         (sig subInt64 (-> Int64 (-> Int64 Int64)))
+         (sig mulInt64# (-> Int64# (-> Int64# Int64#)))
+         (sig mulInt64 (-> Int64 (-> Int64 Int64)))
+         (sig divInt64# (-> Int64# (-> Int64# Int64#)))
+         (sig divInt64 (-> Int64 (-> Int64 Int64)))
+         (sig addFloat# (-> Float# (-> Float# Float#)))
+         (sig addFloat (-> Float (-> Float Float)))
+         (sig subFloat# (-> Float# (-> Float# Float#)))
+         (sig subFloat (-> Float (-> Float Float)))
+         (sig mulFloat# (-> Float# (-> Float# Float#)))
+         (sig mulFloat (-> Float (-> Float Float)))
+         (sig divFloat# (-> Float# (-> Float# Float#)))
+         (sig divFloat (-> Float (-> Float Float)))
+         (sig addDouble# (-> Double# (-> Double# Double#)))
+         (sig addDouble (-> Double (-> Double Double)))
+         (sig subDouble# (-> Double# (-> Double# Double#)))
+         (sig subDouble (-> Double (-> Double Double)))
+         (sig mulDouble# (-> Double# (-> Double# Double#)))
+         (sig mulDouble (-> Double (-> Double Double)))
+         (sig divDouble# (-> Double# (-> Double# Double#)))
+         (sig divDouble (-> Double (-> Double Double)))
+         (sig sqrtFloat# (-> Float# Float#))
+         (sig sqrtFloat (-> Float Float))
+         (sig sqrtDouble# (-> Double# Double#))
+         (sig sqrtDouble (-> Double Double))
+         (sig isTrue# (-> Int32# Bool))
+         (sig not (-> Bool Bool))
+         (sig eqInt32# (-> Int32# (-> Int32# Int32#)))
+         (sig eqInt32 (-> Int32 (-> Int32 Bool)))
+         (sig neInt32# (-> Int32# (-> Int32# Int32#)))
+         (sig neInt32 (-> Int32 (-> Int32 Bool)))
+         (sig ltInt32# (-> Int32# (-> Int32# Int32#)))
+         (sig ltInt32 (-> Int32 (-> Int32 Bool)))
+         (sig gtInt32# (-> Int32# (-> Int32# Int32#)))
+         (sig gtInt32 (-> Int32 (-> Int32 Bool)))
+         (sig leInt32# (-> Int32# (-> Int32# Int32#)))
+         (sig leInt32 (-> Int32 (-> Int32 Bool)))
+         (sig geInt32# (-> Int32# (-> Int32# Int32#)))
+         (sig geInt32 (-> Int32 (-> Int32 Bool)))
+         (sig eqInt64# (-> Int64# (-> Int64# Int32#)))
+         (sig eqInt64 (-> Int64 (-> Int64 Bool)))
+         (sig neInt64# (-> Int64# (-> Int64# Int32#)))
+         (sig neInt64 (-> Int64 (-> Int64 Bool)))
+         (sig ltInt64# (-> Int64# (-> Int64# Int32#)))
+         (sig ltInt64 (-> Int64 (-> Int64 Bool)))
+         (sig gtInt64# (-> Int64# (-> Int64# Int32#)))
+         (sig gtInt64 (-> Int64 (-> Int64 Bool)))
+         (sig leInt64# (-> Int64# (-> Int64# Int32#)))
+         (sig leInt64 (-> Int64 (-> Int64 Bool)))
+         (sig geInt64# (-> Int64# (-> Int64# Int32#)))
+         (sig geInt64 (-> Int64 (-> Int64 Bool)))
+         (sig eqFloat# (-> Float# (-> Float# Int32#)))
+         (sig eqFloat (-> Float (-> Float Bool)))
+         (sig neFloat# (-> Float# (-> Float# Int32#)))
+         (sig neFloat (-> Float (-> Float Bool)))
+         (sig ltFloat# (-> Float# (-> Float# Int32#)))
+         (sig ltFloat (-> Float (-> Float Bool)))
+         (sig gtFloat# (-> Float# (-> Float# Int32#)))
+         (sig gtFloat (-> Float (-> Float Bool)))
+         (sig leFloat# (-> Float# (-> Float# Int32#)))
+         (sig leFloat (-> Float (-> Float Bool)))
+         (sig geFloat# (-> Float# (-> Float# Int32#)))
+         (sig geFloat (-> Float (-> Float Bool)))
+         (sig eqDouble# (-> Double# (-> Double# Int32#)))
+         (sig eqDouble (-> Double (-> Double Bool)))
+         (sig neDouble# (-> Double# (-> Double# Int32#)))
+         (sig neDouble (-> Double (-> Double Bool)))
+         (sig ltDouble# (-> Double# (-> Double# Int32#)))
+         (sig ltDouble (-> Double (-> Double Bool)))
+         (sig gtDouble# (-> Double# (-> Double# Int32#)))
+         (sig gtDouble (-> Double (-> Double Bool)))
+         (sig leDouble# (-> Double# (-> Double# Int32#)))
+         (sig leDouble (-> Double (-> Double Bool)))
+         (sig geDouble# (-> Double# (-> Double# Int32#)))
+         (sig geDouble (-> Double (-> Double Bool)))
+         (sig eqChar# (-> Char# (-> Char# Int32#)))
+         (sig eqChar (-> Char (-> Char Bool)))
+         (sig neChar# (-> Char# (-> Char# Int32#)))
+         (sig neChar (-> Char (-> Char Bool)))
+         (sig ltChar# (-> Char# (-> Char# Int32#)))
+         (sig ltChar (-> Char (-> Char Bool)))
+         (sig gtChar# (-> Char# (-> Char# Int32#)))
+         (sig gtChar (-> Char (-> Char Bool)))
+         (sig leChar# (-> Char# (-> Char# Int32#)))
+         (sig leChar (-> Char (-> Char Bool)))
+         (sig geChar# (-> Char# (-> Char# Int32#)))
+         (sig geChar (-> Char (-> Char Bool)))
+         (sig eqString# (-> String# (-> String# Int32#)))
+         (sig eqString (-> String (-> String Bool)))
+         (sig neString# (-> String# (-> String# Int32#)))
+         (sig neString (-> String (-> String Bool)))
+         (sig ltString# (-> String# (-> String# Int32#)))
+         (sig ltString (-> String (-> String Bool)))
+         (sig gtString# (-> String# (-> String# Int32#)))
+         (sig gtString (-> String (-> String Bool)))
+         (sig leString# (-> String# (-> String# Int32#)))
+         (sig leString (-> String (-> String Bool)))
+         (sig geString# (-> String# (-> String# Int32#)))
+         (sig geString (-> String (-> String Bool)))
+         (sig ordChar# (-> Char# Int32#))
+         (sig ordChar (-> Char Int32))
+         (sig isDigit# (-> Char# Int32#))
+         (sig isDigit (-> Char Bool))
+         (sig isLower# (-> Char# Int32#))
+         (sig isLower (-> Char Bool))
+         (sig isUpper# (-> Char# Int32#))
+         (sig isUpper (-> Char Bool))
+         (sig isAlphanum# (-> Char# Int32#))
+         (sig isAlphanum (-> Char Bool))
+         (sig lengthString# (-> String# Int64#))
+         (sig lengthString (-> String Int64))
+         (sig atString# (-> Int64# (-> String# Char#)))
+         (sig atString (-> Int64 (-> String Char)))
+         (sig consString# (-> Char# (-> String# String#)))
+         (sig consString (-> Char (-> String String)))
+         (sig appendString# (-> String# (-> String# String#)))
+         (sig appendString (-> String (-> String String)))
+         (sig substring# (-> String# (-> Int64# (-> Int64# String#))))
+         (sig substring (-> String (-> Int64 (-> Int64 String))))
+         (sig toStringInt32# (-> Int32# String#))
+         (sig toStringInt32 (-> Int32 String))
+         (sig toStringInt64# (-> Int64# String#))
+         (sig toStringInt64 (-> Int64 String))
+         (sig toStringFloat# (-> Float# String#))
+         (sig toStringFloat (-> Float String))
+         (sig toStringDouble# (-> Double# String#))
+         (sig toStringDouble (-> Double String))
+         (sig toStringChar# (-> Char# String#))
+         (sig toStringChar (-> Char String))
+         (sig exitFailure (-> (tuple) #Builtin.a_xxx))
+         (sig printChar# (-> Char# (tuple)))
+         (sig printChar (-> Char (tuple)))
+         (sig printString# (-> String# (tuple)))
+         (sig printString (-> String (tuple))))
+      ((data Int32 () ((Int32# (Int32#))))
+         (data Int64 () ((Int64# (Int64#))))
+         (data Float () ((Float# (Float#))))
+         (data Double () ((Double# (Double#))))
+         (data Char () ((Char# (Char#))))
+         (data String () ((String# (String#))))
+         (data Bool () ((False ()) (True ()))))
       ()
-      (((((./runtime/malgo/Builtin.mlg 30 1) (./runtime/malgo/Builtin.mlg 31 1))
-           malgo_panic)
-          malgo_panic
-          (-> String# #Builtin.a_xxx))
-         ((((./runtime/malgo/Builtin.mlg 34 1) (./runtime/malgo/Builtin.mlg 36 1))
-             malgo_unsafe_cast)
-            malgo_unsafe_cast
-            (-> #Builtin.a_xxx #Builtin.b_xxx))
-         ((((./runtime/malgo/Builtin.mlg 40 1) (./runtime/malgo/Builtin.mlg 41 1))
-             malgo_add_int32_t)
-            malgo_add_int32_t
-            (-> Int32# (-> Int32# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 46 1) (./runtime/malgo/Builtin.mlg 47 1))
-             malgo_sub_int32_t)
-            malgo_sub_int32_t
-            (-> Int32# (-> Int32# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 52 1) (./runtime/malgo/Builtin.mlg 53 1))
-             malgo_mul_int32_t)
-            malgo_mul_int32_t
-            (-> Int32# (-> Int32# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 58 1) (./runtime/malgo/Builtin.mlg 59 1))
-             malgo_div_int32_t)
-            malgo_div_int32_t
-            (-> Int32# (-> Int32# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 64 1) (./runtime/malgo/Builtin.mlg 65 1))
-             malgo_add_int64_t)
-            malgo_add_int64_t
-            (-> Int64# (-> Int64# Int64#)))
-         ((((./runtime/malgo/Builtin.mlg 70 1) (./runtime/malgo/Builtin.mlg 71 1))
-             malgo_sub_int64_t)
-            malgo_sub_int64_t
-            (-> Int64# (-> Int64# Int64#)))
-         ((((./runtime/malgo/Builtin.mlg 76 1) (./runtime/malgo/Builtin.mlg 77 1))
-             malgo_mul_int64_t)
-            malgo_mul_int64_t
-            (-> Int64# (-> Int64# Int64#)))
-         ((((./runtime/malgo/Builtin.mlg 82 1) (./runtime/malgo/Builtin.mlg 83 1))
-             malgo_div_int64_t)
-            malgo_div_int64_t
-            (-> Int64# (-> Int64# Int64#)))
-         ((((./runtime/malgo/Builtin.mlg 88 1) (./runtime/malgo/Builtin.mlg 89 1))
-             malgo_add_float)
-            malgo_add_float
-            (-> Float# (-> Float# Float#)))
-         ((((./runtime/malgo/Builtin.mlg 94 1) (./runtime/malgo/Builtin.mlg 95 1))
-             malgo_sub_float)
-            malgo_sub_float
-            (-> Float# (-> Float# Float#)))
-         ((((./runtime/malgo/Builtin.mlg 100 1)
-              (./runtime/malgo/Builtin.mlg 101 1))
-             malgo_mul_float)
-            malgo_mul_float
-            (-> Float# (-> Float# Float#)))
-         ((((./runtime/malgo/Builtin.mlg 106 1)
-              (./runtime/malgo/Builtin.mlg 107 1))
-             malgo_div_float)
-            malgo_div_float
-            (-> Float# (-> Float# Float#)))
-         ((((./runtime/malgo/Builtin.mlg 112 1)
-              (./runtime/malgo/Builtin.mlg 113 1))
-             malgo_add_double)
-            malgo_add_double
-            (-> Double# (-> Double# Double#)))
-         ((((./runtime/malgo/Builtin.mlg 118 1)
-              (./runtime/malgo/Builtin.mlg 119 1))
-             malgo_sub_double)
-            malgo_sub_double
-            (-> Double# (-> Double# Double#)))
-         ((((./runtime/malgo/Builtin.mlg 124 1)
-              (./runtime/malgo/Builtin.mlg 125 1))
-             malgo_mul_double)
-            malgo_mul_double
-            (-> Double# (-> Double# Double#)))
-         ((((./runtime/malgo/Builtin.mlg 130 1)
-              (./runtime/malgo/Builtin.mlg 131 1))
-             malgo_div_double)
-            malgo_div_double
-            (-> Double# (-> Double# Double#)))
-         ((((./runtime/malgo/Builtin.mlg 137 1)
-              (./runtime/malgo/Builtin.mlg 138 1))
-             sqrtf)
-            sqrtf
-            (-> Float# Float#))
-         ((((./runtime/malgo/Builtin.mlg 143 1)
-              (./runtime/malgo/Builtin.mlg 144 1))
-             sqrt)
-            sqrt
-            (-> Double# Double#))
-         ((((./runtime/malgo/Builtin.mlg 161 1)
-              (./runtime/malgo/Builtin.mlg 162 1))
-             malgo_eq_int32_t)
-            malgo_eq_int32_t
-            (-> Int32# (-> Int32# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 167 1)
-              (./runtime/malgo/Builtin.mlg 168 1))
-             malgo_ne_int32_t)
-            malgo_ne_int32_t
-            (-> Int32# (-> Int32# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 173 1)
-              (./runtime/malgo/Builtin.mlg 174 1))
-             malgo_lt_int32_t)
-            malgo_lt_int32_t
-            (-> Int32# (-> Int32# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 179 1)
-              (./runtime/malgo/Builtin.mlg 180 1))
-             malgo_gt_int32_t)
-            malgo_gt_int32_t
-            (-> Int32# (-> Int32# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 185 1)
-              (./runtime/malgo/Builtin.mlg 186 1))
-             malgo_le_int32_t)
-            malgo_le_int32_t
-            (-> Int32# (-> Int32# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 191 1)
-              (./runtime/malgo/Builtin.mlg 192 1))
-             malgo_ge_int32_t)
-            malgo_ge_int32_t
-            (-> Int32# (-> Int32# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 197 1)
-              (./runtime/malgo/Builtin.mlg 198 1))
-             malgo_eq_int64_t)
-            malgo_eq_int64_t
-            (-> Int64# (-> Int64# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 203 1)
-              (./runtime/malgo/Builtin.mlg 204 1))
-             malgo_ne_int64_t)
-            malgo_ne_int64_t
-            (-> Int64# (-> Int64# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 209 1)
-              (./runtime/malgo/Builtin.mlg 210 1))
-             malgo_lt_int64_t)
-            malgo_lt_int64_t
-            (-> Int64# (-> Int64# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 215 1)
-              (./runtime/malgo/Builtin.mlg 216 1))
-             malgo_gt_int64_t)
-            malgo_gt_int64_t
-            (-> Int64# (-> Int64# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 221 1)
-              (./runtime/malgo/Builtin.mlg 222 1))
-             malgo_le_int64_t)
-            malgo_le_int64_t
-            (-> Int64# (-> Int64# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 227 1)
-              (./runtime/malgo/Builtin.mlg 228 1))
-             malgo_ge_int64_t)
-            malgo_ge_int64_t
-            (-> Int64# (-> Int64# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 233 1)
-              (./runtime/malgo/Builtin.mlg 234 1))
-             malgo_eq_float)
-            malgo_eq_float
-            (-> Float# (-> Float# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 239 1)
-              (./runtime/malgo/Builtin.mlg 240 1))
-             malgo_ne_float)
-            malgo_ne_float
-            (-> Float# (-> Float# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 245 1)
-              (./runtime/malgo/Builtin.mlg 246 1))
-             malgo_lt_float)
-            malgo_lt_float
-            (-> Float# (-> Float# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 251 1)
-              (./runtime/malgo/Builtin.mlg 252 1))
-             malgo_gt_float)
-            malgo_gt_float
-            (-> Float# (-> Float# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 257 1)
-              (./runtime/malgo/Builtin.mlg 258 1))
-             malgo_le_float)
-            malgo_le_float
-            (-> Float# (-> Float# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 263 1)
-              (./runtime/malgo/Builtin.mlg 264 1))
-             malgo_ge_float)
-            malgo_ge_float
-            (-> Float# (-> Float# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 269 1)
-              (./runtime/malgo/Builtin.mlg 270 1))
-             malgo_eq_double)
-            malgo_eq_double
-            (-> Double# (-> Double# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 275 1)
-              (./runtime/malgo/Builtin.mlg 276 1))
-             malgo_ne_double)
-            malgo_ne_double
-            (-> Double# (-> Double# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 281 1)
-              (./runtime/malgo/Builtin.mlg 282 1))
-             malgo_lt_double)
-            malgo_lt_double
-            (-> Double# (-> Double# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 287 1)
-              (./runtime/malgo/Builtin.mlg 288 1))
-             malgo_gt_double)
-            malgo_gt_double
-            (-> Double# (-> Double# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 293 1)
-              (./runtime/malgo/Builtin.mlg 294 1))
-             malgo_le_double)
-            malgo_le_double
-            (-> Double# (-> Double# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 299 1)
-              (./runtime/malgo/Builtin.mlg 300 1))
-             malgo_ge_double)
-            malgo_ge_double
-            (-> Double# (-> Double# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 305 1)
-              (./runtime/malgo/Builtin.mlg 306 1))
-             malgo_eq_char)
-            malgo_eq_char
-            (-> Char# (-> Char# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 311 1)
-              (./runtime/malgo/Builtin.mlg 312 1))
-             malgo_ne_char)
-            malgo_ne_char
-            (-> Char# (-> Char# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 317 1)
-              (./runtime/malgo/Builtin.mlg 318 1))
-             malgo_lt_char)
-            malgo_lt_char
-            (-> Char# (-> Char# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 323 1)
-              (./runtime/malgo/Builtin.mlg 324 1))
-             malgo_gt_char)
-            malgo_gt_char
-            (-> Char# (-> Char# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 329 1)
-              (./runtime/malgo/Builtin.mlg 330 1))
-             malgo_le_char)
-            malgo_le_char
-            (-> Char# (-> Char# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 335 1)
-              (./runtime/malgo/Builtin.mlg 336 1))
-             malgo_ge_char)
-            malgo_ge_char
-            (-> Char# (-> Char# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 341 1)
-              (./runtime/malgo/Builtin.mlg 342 1))
-             malgo_eq_string)
-            malgo_eq_string
-            (-> String# (-> String# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 347 1)
-              (./runtime/malgo/Builtin.mlg 348 1))
-             malgo_ne_string)
-            malgo_ne_string
-            (-> String# (-> String# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 353 1)
-              (./runtime/malgo/Builtin.mlg 354 1))
-             malgo_lt_string)
-            malgo_lt_string
-            (-> String# (-> String# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 359 1)
-              (./runtime/malgo/Builtin.mlg 360 1))
-             malgo_gt_string)
-            malgo_gt_string
-            (-> String# (-> String# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 365 1)
-              (./runtime/malgo/Builtin.mlg 366 1))
-             malgo_le_string)
-            malgo_le_string
-            (-> String# (-> String# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 371 1)
-              (./runtime/malgo/Builtin.mlg 372 1))
-             malgo_ge_string)
-            malgo_ge_string
-            (-> String# (-> String# Int32#)))
-         ((((./runtime/malgo/Builtin.mlg 378 1)
-              (./runtime/malgo/Builtin.mlg 379 1))
-             malgo_char_ord)
-            malgo_char_ord
-            (-> Char# Int32#))
-         ((((./runtime/malgo/Builtin.mlg 384 1)
-              (./runtime/malgo/Builtin.mlg 385 1))
-             malgo_is_digit)
-            malgo_is_digit
-            (-> Char# Int32#))
-         ((((./runtime/malgo/Builtin.mlg 390 1)
-              (./runtime/malgo/Builtin.mlg 391 1))
-             malgo_is_lower)
-            malgo_is_lower
-            (-> Char# Int32#))
-         ((((./runtime/malgo/Builtin.mlg 396 1)
-              (./runtime/malgo/Builtin.mlg 397 1))
-             malgo_is_upper)
-            malgo_is_upper
-            (-> Char# Int32#))
-         ((((./runtime/malgo/Builtin.mlg 402 1)
-              (./runtime/malgo/Builtin.mlg 403 1))
-             malgo_is_alphanum)
-            malgo_is_alphanum
-            (-> Char# Int32#))
-         ((((./runtime/malgo/Builtin.mlg 409 1)
-              (./runtime/malgo/Builtin.mlg 410 1))
-             malgo_string_length)
-            malgo_string_length
-            (-> String# Int64#))
-         ((((./runtime/malgo/Builtin.mlg 415 1)
-              (./runtime/malgo/Builtin.mlg 416 1))
-             malgo_string_at)
-            malgo_string_at
-            (-> Int64# (-> String# Char#)))
-         ((((./runtime/malgo/Builtin.mlg 421 1)
-              (./runtime/malgo/Builtin.mlg 422 1))
-             malgo_string_cons)
-            malgo_string_cons
-            (-> Char# (-> String# String#)))
-         ((((./runtime/malgo/Builtin.mlg 427 1)
-              (./runtime/malgo/Builtin.mlg 428 1))
-             malgo_string_append)
-            malgo_string_append
-            (-> String# (-> String# String#)))
-         ((((./runtime/malgo/Builtin.mlg 433 1)
-              (./runtime/malgo/Builtin.mlg 434 1))
-             malgo_substring)
-            malgo_substring
-            (-> String# (-> Int64# (-> Int64# String#))))
-         ((((./runtime/malgo/Builtin.mlg 439 1)
-              (./runtime/malgo/Builtin.mlg 440 1))
-             malgo_int32_t_to_string)
-            malgo_int32_t_to_string
-            (-> Int32# String#))
-         ((((./runtime/malgo/Builtin.mlg 445 1)
-              (./runtime/malgo/Builtin.mlg 446 1))
-             malgo_int64_t_to_string)
-            malgo_int64_t_to_string
-            (-> Int64# String#))
-         ((((./runtime/malgo/Builtin.mlg 451 1)
-              (./runtime/malgo/Builtin.mlg 452 1))
-             malgo_float_to_string)
-            malgo_float_to_string
-            (-> Float# String#))
-         ((((./runtime/malgo/Builtin.mlg 457 1)
-              (./runtime/malgo/Builtin.mlg 458 1))
-             malgo_double_to_string)
-            malgo_double_to_string
-            (-> Double# String#))
-         ((((./runtime/malgo/Builtin.mlg 463 1)
-              (./runtime/malgo/Builtin.mlg 464 1))
-             malgo_char_to_string)
-            malgo_char_to_string
-            (-> Char# String#))
-         ((((./runtime/malgo/Builtin.mlg 471 1)
-              (./runtime/malgo/Builtin.mlg 472 1))
-             malgo_exit_failure)
-            malgo_exit_failure
-            (-> (tuple) #Builtin.a_xxx))
-         ((((./runtime/malgo/Builtin.mlg 475 1)
-              (./runtime/malgo/Builtin.mlg 476 1))
-             malgo_newline)
-            malgo_newline
-            (-> (tuple) (tuple)))
-         ((((./runtime/malgo/Builtin.mlg 478 1)
-              (./runtime/malgo/Builtin.mlg 479 1))
-             malgo_print_char)
-            malgo_print_char
-            (-> Char# (tuple)))
-         ((((./runtime/malgo/Builtin.mlg 484 1)
-              (./runtime/malgo/Builtin.mlg 485 1))
-             malgo_print_string)
-            malgo_print_string
-            (-> String# (tuple)))
-         ((((./runtime/malgo/Builtin.mlg 490 1)
-              (./runtime/malgo/Builtin.mlg 491 1))
-             malgo_flush)
-            malgo_flush
-            (-> (tuple) (tuple)))
-         ((((./runtime/malgo/Builtin.mlg 493 1)
-              (./runtime/malgo/Builtin.mlg 494 1))
-             malgo_get_char)
-            malgo_get_char
-            (-> (tuple) Char#))
-         ((((./runtime/malgo/Builtin.mlg 496 1)
-              (./runtime/malgo/Builtin.mlg 497 1))
-             malgo_get_contents)
-            malgo_get_contents
-            (-> (tuple) String#)))
+      ((foreign malgo_panic (-> String# #Builtin.a_xxx))
+         (foreign malgo_unsafe_cast (-> #Builtin.a_xxx #Builtin.b_xxx))
+         (foreign malgo_add_int32_t (-> Int32# (-> Int32# Int32#)))
+         (foreign malgo_sub_int32_t (-> Int32# (-> Int32# Int32#)))
+         (foreign malgo_mul_int32_t (-> Int32# (-> Int32# Int32#)))
+         (foreign malgo_div_int32_t (-> Int32# (-> Int32# Int32#)))
+         (foreign malgo_add_int64_t (-> Int64# (-> Int64# Int64#)))
+         (foreign malgo_sub_int64_t (-> Int64# (-> Int64# Int64#)))
+         (foreign malgo_mul_int64_t (-> Int64# (-> Int64# Int64#)))
+         (foreign malgo_div_int64_t (-> Int64# (-> Int64# Int64#)))
+         (foreign malgo_add_float (-> Float# (-> Float# Float#)))
+         (foreign malgo_sub_float (-> Float# (-> Float# Float#)))
+         (foreign malgo_mul_float (-> Float# (-> Float# Float#)))
+         (foreign malgo_div_float (-> Float# (-> Float# Float#)))
+         (foreign malgo_add_double (-> Double# (-> Double# Double#)))
+         (foreign malgo_sub_double (-> Double# (-> Double# Double#)))
+         (foreign malgo_mul_double (-> Double# (-> Double# Double#)))
+         (foreign malgo_div_double (-> Double# (-> Double# Double#)))
+         (foreign sqrtf (-> Float# Float#))
+         (foreign sqrt (-> Double# Double#))
+         (foreign malgo_eq_int32_t (-> Int32# (-> Int32# Int32#)))
+         (foreign malgo_ne_int32_t (-> Int32# (-> Int32# Int32#)))
+         (foreign malgo_lt_int32_t (-> Int32# (-> Int32# Int32#)))
+         (foreign malgo_gt_int32_t (-> Int32# (-> Int32# Int32#)))
+         (foreign malgo_le_int32_t (-> Int32# (-> Int32# Int32#)))
+         (foreign malgo_ge_int32_t (-> Int32# (-> Int32# Int32#)))
+         (foreign malgo_eq_int64_t (-> Int64# (-> Int64# Int32#)))
+         (foreign malgo_ne_int64_t (-> Int64# (-> Int64# Int32#)))
+         (foreign malgo_lt_int64_t (-> Int64# (-> Int64# Int32#)))
+         (foreign malgo_gt_int64_t (-> Int64# (-> Int64# Int32#)))
+         (foreign malgo_le_int64_t (-> Int64# (-> Int64# Int32#)))
+         (foreign malgo_ge_int64_t (-> Int64# (-> Int64# Int32#)))
+         (foreign malgo_eq_float (-> Float# (-> Float# Int32#)))
+         (foreign malgo_ne_float (-> Float# (-> Float# Int32#)))
+         (foreign malgo_lt_float (-> Float# (-> Float# Int32#)))
+         (foreign malgo_gt_float (-> Float# (-> Float# Int32#)))
+         (foreign malgo_le_float (-> Float# (-> Float# Int32#)))
+         (foreign malgo_ge_float (-> Float# (-> Float# Int32#)))
+         (foreign malgo_eq_double (-> Double# (-> Double# Int32#)))
+         (foreign malgo_ne_double (-> Double# (-> Double# Int32#)))
+         (foreign malgo_lt_double (-> Double# (-> Double# Int32#)))
+         (foreign malgo_gt_double (-> Double# (-> Double# Int32#)))
+         (foreign malgo_le_double (-> Double# (-> Double# Int32#)))
+         (foreign malgo_ge_double (-> Double# (-> Double# Int32#)))
+         (foreign malgo_eq_char (-> Char# (-> Char# Int32#)))
+         (foreign malgo_ne_char (-> Char# (-> Char# Int32#)))
+         (foreign malgo_lt_char (-> Char# (-> Char# Int32#)))
+         (foreign malgo_gt_char (-> Char# (-> Char# Int32#)))
+         (foreign malgo_le_char (-> Char# (-> Char# Int32#)))
+         (foreign malgo_ge_char (-> Char# (-> Char# Int32#)))
+         (foreign malgo_eq_string (-> String# (-> String# Int32#)))
+         (foreign malgo_ne_string (-> String# (-> String# Int32#)))
+         (foreign malgo_lt_string (-> String# (-> String# Int32#)))
+         (foreign malgo_gt_string (-> String# (-> String# Int32#)))
+         (foreign malgo_le_string (-> String# (-> String# Int32#)))
+         (foreign malgo_ge_string (-> String# (-> String# Int32#)))
+         (foreign malgo_char_ord (-> Char# Int32#))
+         (foreign malgo_is_digit (-> Char# Int32#))
+         (foreign malgo_is_lower (-> Char# Int32#))
+         (foreign malgo_is_upper (-> Char# Int32#))
+         (foreign malgo_is_alphanum (-> Char# Int32#))
+         (foreign malgo_string_length (-> String# Int64#))
+         (foreign malgo_string_at (-> Int64# (-> String# Char#)))
+         (foreign malgo_string_cons (-> Char# (-> String# String#)))
+         (foreign malgo_string_append (-> String# (-> String# String#)))
+         (foreign malgo_substring (-> String# (-> Int64# (-> Int64# String#))))
+         (foreign malgo_int32_t_to_string (-> Int32# String#))
+         (foreign malgo_int64_t_to_string (-> Int64# String#))
+         (foreign malgo_float_to_string (-> Float# String#))
+         (foreign malgo_double_to_string (-> Double# String#))
+         (foreign malgo_char_to_string (-> Char# String#))
+         (foreign malgo_exit_failure (-> (tuple) #Builtin.a_xxx))
+         (foreign malgo_newline (-> (tuple) (tuple)))
+         (foreign malgo_print_char (-> Char# (tuple)))
+         (foreign malgo_print_string (-> String# (tuple)))
+         (foreign malgo_flush (-> (tuple) (tuple)))
+         (foreign malgo_get_char (-> (tuple) Char#))
+         (foreign malgo_get_contents (-> (tuple) String#)))
       ()))

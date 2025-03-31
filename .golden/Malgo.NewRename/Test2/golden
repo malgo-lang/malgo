@@ -472,7 +472,7 @@ Module
                { name = "_"
                , moduleName = Artifact
                 ( ArtifactPath "test/testcases/malgo/Test2.mlg" )
-               , sort = Internal 2
+               , sort = Internal 1
                }
               )
              ]
@@ -785,7 +785,7 @@ Module
        }
       }
      )
-     ( TyVar
+     ( TyCon
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Test2.mlg"
@@ -801,9 +801,8 @@ Module
       )
       ( Id
        { name = "String#"
-       , moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Test2.mlg" )
-       , sort = Internal 1
+       , moduleName = ModuleName "Builtin"
+       , sort = External
        }
       )
      )

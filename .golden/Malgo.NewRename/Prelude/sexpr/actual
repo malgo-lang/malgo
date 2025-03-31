@@ -1,25 +1,25 @@
 (module
    "runtime/malgo/Prelude.mlg"
-   ((((((./runtime/malgo/Prelude.mlg 129 1) (./runtime/malgo/Prelude.mlg 131 1))
+   ((((def
          |>
          (fn
             ((clause
                 (#Prelude.x_xxx #Prelude.f_xxx)
                 (seq (do (apply #Prelude.f_xxx #Prelude.x_xxx))))))))
-       ((((./runtime/malgo/Prelude.mlg 36 1) (./runtime/malgo/Prelude.mlg 42 1))
+       ((def
            tail
            (fn
               ((clause
                   ((con Cons ()) #Prelude.__xxx #Prelude.xs_xxx)
                   (seq (do #Prelude.xs_xxx)))
                  (clause (#Prelude.__xxx) (seq (do (apply exitFailure (tuple)))))))))
-       ((((./runtime/malgo/Prelude.mlg 21 1) (./runtime/malgo/Prelude.mlg 24 1))
+       ((def
            snd
            (fn
               ((clause
                   ((tuple #Prelude.a_xxx #Prelude.b_xxx))
                   (seq (do #Prelude.b_xxx)))))))
-       ((((./runtime/malgo/Prelude.mlg 156 1) (./runtime/malgo/Prelude.mlg 161 1))
+       ((def
            putStrLn
            (fn
               ((clause
@@ -27,45 +27,35 @@
                   (seq
                      (do (apply printString #Prelude.str_xxx))
                      (do (apply newline (tuple)))))))))
-       ((((./runtime/malgo/Prelude.mlg 153 1) (./runtime/malgo/Prelude.mlg 155 1))
+       ((def
            putStr
            (fn
               ((clause
                   (#Prelude.str_xxx)
                   (seq (do (apply printString #Prelude.str_xxx))))))))
-       ((((./runtime/malgo/Prelude.mlg 107 1) (./runtime/malgo/Prelude.mlg 114 1))
+       ((def
            punctuate
            (fn
-              ((clause
-                  (#Prelude.__xxx #Prelude.Nil_xxx)
-                  (seq (do #Prelude.Nil_xxx)))
+              ((clause (#Prelude.__xxx (con Nil ())) (seq (do Nil)))
                  (clause
-                    (#Prelude.__xxx (con Cons (#Prelude.x_xxx #Prelude.Nil_xxx)))
-                    (seq
-                       (do (apply (apply Cons #Prelude.Nil_xxx) #Prelude.x_xxx))))
+                    (#Prelude.__xxx (con Cons (#Prelude.x_xxx (con Nil ()))))
+                    (seq (do (apply (apply Cons #Prelude.x_xxx) Nil))))
                  (clause
                     (#Prelude.sep_xxx (con Cons (#Prelude.x_xxx #Prelude.xs_xxx)))
                     (seq
                        (do
                           (apply
-                             (apply
-                                Cons
-                                (seq
-                                   (do
-                                      (apply
-                                         (apply
-                                            Cons
-                                            (seq
-                                               (do
-                                                  (apply
-                                                     (apply
-                                                        punctuate
-                                                        #Prelude.xs_xxx)
-                                                     #Prelude.sep_xxx))))
-                                         #Prelude.sep_xxx))))
-                             #Prelude.x_xxx))))))))
-       ((((./runtime/malgo/Prelude.mlg 165 1)
-            (./runtime/malgo/Prelude.mlg 165 56))
+                             (apply Cons #Prelude.x_xxx)
+                             (seq
+                                (do
+                                   (apply
+                                      (apply Cons #Prelude.sep_xxx)
+                                      (seq
+                                         (do
+                                            (apply
+                                               (apply punctuate #Prelude.sep_xxx)
+                                               #Prelude.xs_xxx))))))))))))))
+       ((def
            printInt64
            (fn
               ((clause
@@ -75,7 +65,7 @@
                         (apply
                            printString
                            (seq (do (apply toStringInt64 #Prelude.i_xxx)))))))))))
-       ((((./runtime/malgo/Prelude.mlg 162 1) (./runtime/malgo/Prelude.mlg 164 1))
+       ((def
            printInt32
            (fn
               ((clause
@@ -85,12 +75,10 @@
                         (apply
                            printString
                            (seq (do (apply toStringInt32 #Prelude.i_xxx)))))))))))
-       ((((./runtime/malgo/Prelude.mlg 50 1) (./runtime/malgo/Prelude.mlg 56 1))
+       ((def
            mapList
            (fn
-              ((clause
-                  (#Prelude.__xxx #Prelude.Nil_xxx)
-                  (seq (do #Prelude.Nil_xxx)))
+              ((clause (#Prelude.__xxx (con Nil ())) (seq (do Nil)))
                  (clause
                     (#Prelude.f_xxx (con Cons (#Prelude.x_xxx #Prelude.xs_xxx)))
                     (seq
@@ -98,13 +86,13 @@
                           (apply
                              (apply
                                 Cons
-                                (seq
-                                   (do
-                                      (apply
-                                         (apply mapList #Prelude.xs_xxx)
-                                         #Prelude.f_xxx))))
-                             (seq (do (apply #Prelude.f_xxx #Prelude.x_xxx)))))))))))
-       ((((./runtime/malgo/Prelude.mlg 57 1) (./runtime/malgo/Prelude.mlg 63 1))
+                                (seq (do (apply #Prelude.f_xxx #Prelude.x_xxx))))
+                             (seq
+                                (do
+                                   (apply
+                                      (apply mapList #Prelude.f_xxx)
+                                      #Prelude.xs_xxx)))))))))))
+       ((def
            listToString
            (fn
               ((clause ((con Nil ())) (seq (do (apply String# (string "")))))
@@ -113,11 +101,9 @@
                     (seq
                        (do
                           (apply
-                             (apply
-                                consString
-                                (seq (do (apply listToString #Prelude.cs_xxx))))
-                             #Prelude.c_xxx))))))))
-       ((((./runtime/malgo/Prelude.mlg 115 1) (./runtime/malgo/Prelude.mlg 123 1))
+                             (apply consString #Prelude.c_xxx)
+                             (seq (do (apply listToString #Prelude.cs_xxx)))))))))))
+       ((def
            isWhiteSpace
            (fn
               ((clause ((con Char# ()) (unboxed (char ' '))) (seq (do True)))
@@ -125,7 +111,7 @@
                  (clause ((con Char# ()) (unboxed (char '\r'))) (seq (do True)))
                  (clause ((con Char# ()) (unboxed (char '\t'))) (seq (do True)))
                  (clause (#Prelude.__xxx) (seq (do False)))))))
-       ((((./runtime/malgo/Prelude.mlg 136 1) (./runtime/malgo/Prelude.mlg 141 1))
+       ((def
            if
            (fn
               ((clause
@@ -134,7 +120,7 @@
                  (clause
                     ((con False ()) #Prelude.__xxx #Prelude.f_xxx)
                     (seq (do (apply #Prelude.f_xxx (tuple)))))))))
-       ((((./runtime/malgo/Prelude.mlg 72 1) (./runtime/malgo/Prelude.mlg 79 1))
+       ((def
            tailString
            (fn
               ((clause
@@ -145,29 +131,27 @@
                            (apply
                               (apply
                                  if
-                                 (fn
-                                    ((clause
-                                        ()
-                                        (seq
-                                           (do
-                                              (apply
-                                                 (apply
-                                                    (apply
-                                                       substring
-                                                       (seq
-                                                          (do
-                                                             (apply
-                                                                lengthString
-                                                                #Prelude.str_xxx))))
-                                                    (apply Int64# (int64 1)))
-                                                 #Prelude.str_xxx)))))))
+                                 (seq
+                                    (do
+                                       (apply
+                                          (apply eqString #Prelude.str_xxx)
+                                          (apply String# (string ""))))))
                               (fn ((clause () (seq (do #Prelude.str_xxx))))))
-                           (seq
-                              (do
-                                 (apply
-                                    (apply eqString (apply String# (string "")))
-                                    #Prelude.str_xxx)))))))))))
-       ((((./runtime/malgo/Prelude.mlg 142 1) (./runtime/malgo/Prelude.mlg 145 1))
+                           (fn
+                              ((clause
+                                  ()
+                                  (seq
+                                     (do
+                                        (apply
+                                           (apply
+                                              (apply substring #Prelude.str_xxx)
+                                              (apply Int64# (int64 1)))
+                                           (seq
+                                              (do
+                                                 (apply
+                                                    lengthString
+                                                    #Prelude.str_xxx)))))))))))))))))
+       ((def
            unless
            (fn
               ((clause
@@ -176,13 +160,11 @@
                      (do
                         (apply
                            (apply
-                              (apply if #Prelude.f_xxx)
+                              (apply if #Prelude.c_xxx)
                               (fn ((clause () (seq (do #Prelude.tValue_xxx))))))
-                           #Prelude.c_xxx))))))))
-       ((((./runtime/malgo/Prelude.mlg 5 1) (./runtime/malgo/Prelude.mlg 8 1))
-           identity
-           (fn ((clause (#Prelude.x_xxx) (seq (do #Prelude.x_xxx)))))))
-       ((((./runtime/malgo/Prelude.mlg 64 1) (./runtime/malgo/Prelude.mlg 71 1))
+                           #Prelude.f_xxx))))))))
+       ((def identity (fn ((clause (#Prelude.x_xxx) (seq (do #Prelude.x_xxx)))))))
+       ((def
            headString
            (fn
               ((clause
@@ -193,44 +175,44 @@
                            (apply
                               (apply
                                  if
-                                 (fn
-                                    ((clause
-                                        ()
-                                        (seq
-                                           (do
-                                              (apply
-                                                 Just
-                                                 (seq
-                                                    (do
-                                                       (apply
-                                                          (apply
-                                                             atString
-                                                             #Prelude.str_xxx)
-                                                          (apply Int64# (int64 0))))))))))))
+                                 (seq
+                                    (do
+                                       (apply
+                                          (apply eqString #Prelude.str_xxx)
+                                          (apply String# (string ""))))))
                               (fn ((clause () (seq (do Nothing))))))
-                           (seq
-                              (do
-                                 (apply
-                                    (apply eqString (apply String# (string "")))
-                                    #Prelude.str_xxx)))))))))))
-       ((((./runtime/malgo/Prelude.mlg 30 1) (./runtime/malgo/Prelude.mlg 35 1))
+                           (fn
+                              ((clause
+                                  ()
+                                  (seq
+                                     (do
+                                        (apply
+                                           Just
+                                           (seq
+                                              (do
+                                                 (apply
+                                                    (apply
+                                                       atString
+                                                       (apply Int64# (int64 0)))
+                                                    #Prelude.str_xxx)))))))))))))))))
+       ((def
            head
            (fn
               ((clause
                   ((con Cons ()) #Prelude.x_xxx #Prelude.__xxx)
                   (seq (do #Prelude.x_xxx)))
                  (clause (#Prelude.__xxx) (seq (do (apply exitFailure (tuple)))))))))
-       ((((./runtime/malgo/Prelude.mlg 18 1) (./runtime/malgo/Prelude.mlg 20 1))
+       ((def
            fst
            (fn
               ((clause
                   ((tuple #Prelude.a_xxx #Prelude.b_xxx))
                   (seq (do #Prelude.a_xxx)))))))
-       ((((./runtime/malgo/Prelude.mlg 43 1) (./runtime/malgo/Prelude.mlg 49 1))
+       ((def
            foldl
            (fn
               ((clause
-                  (#Prelude.__xxx #Prelude.z_xxx #Prelude.Nil_xxx)
+                  (#Prelude.__xxx #Prelude.z_xxx (con Nil ()))
                   (seq (do #Prelude.z_xxx)))
                  (clause
                     (#Prelude.f_xxx
@@ -240,18 +222,18 @@
                        (do
                           (apply
                              (apply
-                                (apply foldl #Prelude.xs_xxx)
+                                (apply foldl #Prelude.f_xxx)
                                 (seq
                                    (do
                                       (apply
-                                         (apply #Prelude.f_xxx #Prelude.x_xxx)
-                                         #Prelude.z_xxx))))
-                             #Prelude.f_xxx))))))))
-       ((((./runtime/malgo/Prelude.mlg 9 1) (./runtime/malgo/Prelude.mlg 13 1))
+                                         (apply #Prelude.f_xxx #Prelude.z_xxx)
+                                         #Prelude.x_xxx))))
+                             #Prelude.xs_xxx))))))))
+       ((def
            const
            (fn
               ((clause (#Prelude.a_xxx #Prelude.__xxx) (seq (do #Prelude.a_xxx)))))))
-       ((((./runtime/malgo/Prelude.mlg 146 1) (./runtime/malgo/Prelude.mlg 152 1))
+       ((def
            cond
            (fn
               ((clause
@@ -259,15 +241,15 @@
                   (seq (do (apply panic (apply String# (string "no branch"))))))
                  (clause
                     ((con Cons ())
-                       (tuple #Prelude.True_xxx #Prelude.x_xxx)
+                       (tuple (con True ()) #Prelude.x_xxx)
                        #Prelude.__xxx)
                     (seq (do (apply #Prelude.x_xxx (tuple)))))
                  (clause
                     ((con Cons ())
-                       (tuple #Prelude.False_xxx #Prelude.__xxx)
+                       (tuple (con False ()) #Prelude.__xxx)
                        #Prelude.xs_xxx)
                     (seq (do (apply cond #Prelude.xs_xxx))))))))
-       ((((./runtime/malgo/Prelude.mlg 101 1) (./runtime/malgo/Prelude.mlg 106 1))
+       ((def
            concatString
            (fn
               ((clause ((con Nil ())) (seq (do (apply String# (string "")))))
@@ -276,17 +258,15 @@
                     (seq
                        (do
                           (apply
-                             (apply
-                                appendString
-                                (seq (do (apply concatString #Prelude.xs_xxx))))
-                             #Prelude.x_xxx))))))))
-       ((((./runtime/malgo/Prelude.mlg 14 1) (./runtime/malgo/Prelude.mlg 17 1))
+                             (apply appendString #Prelude.x_xxx)
+                             (seq (do (apply concatString #Prelude.xs_xxx)))))))))))
+       ((def
            case
            (fn
               ((clause
                   (#Prelude.x_xxx #Prelude.f_xxx)
                   (seq (do (apply #Prelude.f_xxx #Prelude.x_xxx))))))))
-       ((((./runtime/malgo/Prelude.mlg 90 1) (./runtime/malgo/Prelude.mlg 100 1))
+       ((def
            dropWhileString
            (fn
               ((clause
@@ -296,45 +276,43 @@
                         (apply
                            (apply
                               case
-                              (fn
-                                 ((clause
-                                     ((con Nothing ()))
-                                     (seq (do #Prelude.str_xxx)))
-                                    (clause
-                                       ((con Just ()) #Prelude.c_xxx)
-                                       (seq
-                                          (do
+                              (seq (do (apply headString #Prelude.str_xxx))))
+                           (fn
+                              ((clause
+                                  ((con Nothing ()))
+                                  (seq (do #Prelude.str_xxx)))
+                                 (clause
+                                    ((con Just ()) #Prelude.c_xxx)
+                                    (seq
+                                       (do
+                                          (apply
                                              (apply
                                                 (apply
-                                                   (apply
-                                                      if
-                                                      (fn
-                                                         ((clause
-                                                             ()
-                                                             (seq
-                                                                (do
-                                                                   #Prelude.str_xxx))))))
-                                                   (fn
-                                                      ((clause
-                                                          ()
-                                                          (seq
-                                                             (do
+                                                   if
+                                                   (seq
+                                                      (do
+                                                         (apply
+                                                            #Prelude.pred_xxx
+                                                            #Prelude.c_xxx))))
+                                                (fn
+                                                   ((clause
+                                                       ()
+                                                       (seq
+                                                          (do
+                                                             (apply
                                                                 (apply
-                                                                   (apply
-                                                                      dropWhileString
-                                                                      (seq
-                                                                         (do
-                                                                            (apply
-                                                                               tailString
-                                                                               #Prelude.str_xxx))))
-                                                                   #Prelude.pred_xxx)))))))
-                                                (seq
-                                                   (do
-                                                      (apply
-                                                         #Prelude.pred_xxx
-                                                         #Prelude.c_xxx))))))))))
-                           (seq (do (apply headString #Prelude.str_xxx)))))))))))
-       ((((./runtime/malgo/Prelude.mlg 79 1) (./runtime/malgo/Prelude.mlg 90 1))
+                                                                   dropWhileString
+                                                                   #Prelude.pred_xxx)
+                                                                (seq
+                                                                   (do
+                                                                      (apply
+                                                                         tailString
+                                                                         #Prelude.str_xxx))))))))))
+                                             (fn
+                                                ((clause
+                                                    ()
+                                                    (seq (do #Prelude.str_xxx)))))))))))))))))))
+       ((def
            takeWhileString
            (fn
               ((clause
@@ -344,59 +322,59 @@
                         (apply
                            (apply
                               case
-                              (fn
-                                 ((clause
-                                     ((con Nothing ()))
-                                     (seq (do #Prelude.str_xxx)))
-                                    (clause
-                                       ((con Just ()) #Prelude.c_xxx)
-                                       (seq
-                                          (do
+                              (seq (do (apply headString #Prelude.str_xxx))))
+                           (fn
+                              ((clause
+                                  ((con Nothing ()))
+                                  (seq (do #Prelude.str_xxx)))
+                                 (clause
+                                    ((con Just ()) #Prelude.c_xxx)
+                                    (seq
+                                       (do
+                                          (apply
                                              (apply
                                                 (apply
-                                                   (apply
-                                                      if
-                                                      (fn
-                                                         ((clause
-                                                             ()
-                                                             (seq
-                                                                (do
-                                                                   (apply
-                                                                      String#
-                                                                      (string ""))))))))
-                                                   (fn
-                                                      ((clause
-                                                          ()
-                                                          (seq
-                                                             (do
+                                                   if
+                                                   (seq
+                                                      (do
+                                                         (apply
+                                                            #Prelude.pred_xxx
+                                                            #Prelude.c_xxx))))
+                                                (fn
+                                                   ((clause
+                                                       ()
+                                                       (seq
+                                                          (do
+                                                             (apply
                                                                 (apply
-                                                                   (apply
-                                                                      consString
-                                                                      (seq
-                                                                         (do
-                                                                            (apply
+                                                                   consString
+                                                                   #Prelude.c_xxx)
+                                                                (seq
+                                                                   (do
+                                                                      (apply
+                                                                         (apply
+                                                                            takeWhileString
+                                                                            #Prelude.pred_xxx)
+                                                                         (seq
+                                                                            (do
                                                                                (apply
-                                                                                  takeWhileString
-                                                                                  (seq
-                                                                                     (do
-                                                                                        (apply
-                                                                                           tailString
-                                                                                           #Prelude.str_xxx))))
-                                                                               #Prelude.pred_xxx))))
-                                                                   #Prelude.c_xxx)))))))
-                                                (seq
-                                                   (do
-                                                      (apply
-                                                         #Prelude.pred_xxx
-                                                         #Prelude.c_xxx))))))))))
-                           (seq (do (apply headString #Prelude.str_xxx)))))))))))
-       ((((./runtime/malgo/Prelude.mlg 133 1) (./runtime/malgo/Prelude.mlg 135 1))
+                                                                                  tailString
+                                                                                  #Prelude.str_xxx)))))))))))))
+                                             (fn
+                                                ((clause
+                                                    ()
+                                                    (seq
+                                                       (do
+                                                          (apply
+                                                             String#
+                                                             (string "")))))))))))))))))))))
+       ((def
            <|
            (fn
               ((clause
                   (#Prelude.f_xxx #Prelude.x_xxx)
                   (seq (do (apply #Prelude.f_xxx #Prelude.x_xxx))))))))
-       ((((./runtime/malgo/Prelude.mlg 125 1) (./runtime/malgo/Prelude.mlg 127 1))
+       ((def
            <<
            (fn
               ((clause
@@ -415,156 +393,80 @@
                                               (apply
                                                  #Prelude.g_xxx
                                                  #Prelude.x_xxx)))))))))))))))))
-      ((((./runtime/malgo/Prelude.mlg 4 1) (./runtime/malgo/Prelude.mlg 5 1))
-          identity
-          (-> #Prelude.a_xxx #Prelude.a_xxx))
-         (((./runtime/malgo/Prelude.mlg 8 1) (./runtime/malgo/Prelude.mlg 9 1))
-            const
-            (-> #Prelude.a_xxx (-> #Prelude.b_xxx #Prelude.a_xxx)))
-         (((./runtime/malgo/Prelude.mlg 13 1) (./runtime/malgo/Prelude.mlg 14 1))
+      ((sig identity (-> #Prelude.a_xxx #Prelude.a_xxx))
+         (sig const (-> #Prelude.a_xxx (-> #Prelude.b_xxx #Prelude.a_xxx)))
+         (sig
             case
             (->
                #Prelude.a_xxx
                (-> (-> #Prelude.a_xxx #Prelude.b_xxx) #Prelude.b_xxx)))
-         (((./runtime/malgo/Prelude.mlg 17 1) (./runtime/malgo/Prelude.mlg 18 1))
-            fst
-            (-> (tuple #Prelude.a_xxx #Prelude.b_xxx) #Prelude.a_xxx))
-         (((./runtime/malgo/Prelude.mlg 20 1) (./runtime/malgo/Prelude.mlg 21 1))
-            snd
-            (-> (tuple #Prelude.a_xxx #Prelude.b_xxx) #Prelude.b_xxx))
-         (((./runtime/malgo/Prelude.mlg 29 1) (./runtime/malgo/Prelude.mlg 30 1))
-            head
-            (-> (app #Prelude.List_xxx (#Prelude.a_xxx)) #Prelude.a_xxx))
-         (((./runtime/malgo/Prelude.mlg 35 1) (./runtime/malgo/Prelude.mlg 36 1))
-            tail
-            (->
-               (app #Prelude.List_xxx (#Prelude.a_xxx))
-               (app #Prelude.List_xxx (#Prelude.a_xxx))))
-         (((./runtime/malgo/Prelude.mlg 42 1) (./runtime/malgo/Prelude.mlg 43 1))
+         (sig fst (-> (tuple #Prelude.a_xxx #Prelude.b_xxx) #Prelude.a_xxx))
+         (sig snd (-> (tuple #Prelude.a_xxx #Prelude.b_xxx) #Prelude.b_xxx))
+         (sig head (-> (app List (#Prelude.a_xxx)) #Prelude.a_xxx))
+         (sig tail (-> (app List (#Prelude.a_xxx)) (app List (#Prelude.a_xxx))))
+         (sig
             foldl
             (->
                (-> #Prelude.a_xxx (-> #Prelude.b_xxx #Prelude.a_xxx))
-               (->
-                  #Prelude.a_xxx
-                  (-> (app #Prelude.List_xxx (#Prelude.b_xxx)) #Prelude.a_xxx))))
-         (((./runtime/malgo/Prelude.mlg 49 1) (./runtime/malgo/Prelude.mlg 50 1))
+               (-> #Prelude.a_xxx (-> (app List (#Prelude.b_xxx)) #Prelude.a_xxx))))
+         (sig
             mapList
             (->
                (-> #Prelude.a_xxx #Prelude.b_xxx)
-               (->
-                  (app #Prelude.List_xxx (#Prelude.a_xxx))
-                  (app #Prelude.List_xxx (#Prelude.b_xxx)))))
-         (((./runtime/malgo/Prelude.mlg 56 1) (./runtime/malgo/Prelude.mlg 57 1))
-            listToString
-            (-> (app #Prelude.List_xxx (#Prelude.Char_xxx)) #Prelude.String_xxx))
-         (((./runtime/malgo/Prelude.mlg 63 1) (./runtime/malgo/Prelude.mlg 64 1))
-            headString
-            (-> #Prelude.String_xxx (app #Prelude.Maybe_xxx (#Prelude.Char_xxx))))
-         (((./runtime/malgo/Prelude.mlg 71 1) (./runtime/malgo/Prelude.mlg 72 1))
-            tailString
-            (-> #Prelude.String_xxx #Prelude.String_xxx))
-         (((./runtime/malgo/Prelude.mlg 100 1)
-             (./runtime/malgo/Prelude.mlg 101 1))
-            concatString
-            (-> (app #Prelude.List_xxx (#Prelude.String_xxx)) #Prelude.String_xxx))
-         (((./runtime/malgo/Prelude.mlg 106 1)
-             (./runtime/malgo/Prelude.mlg 107 1))
+               (-> (app List (#Prelude.a_xxx)) (app List (#Prelude.b_xxx)))))
+         (sig listToString (-> (app List (Char)) String))
+         (sig headString (-> String (app Maybe (Char))))
+         (sig tailString (-> String String))
+         (sig concatString (-> (app List (String)) String))
+         (sig
             punctuate
             (->
                #Prelude.a_xxx
-               (->
-                  (app #Prelude.List_xxx (#Prelude.a_xxx))
-                  (app #Prelude.List_xxx (#Prelude.a_xxx)))))
-         (((./runtime/malgo/Prelude.mlg 114 1)
-             (./runtime/malgo/Prelude.mlg 115 1))
-            isWhiteSpace
-            (-> #Prelude.Char_xxx #Prelude.Bool_xxx))
-         (((./runtime/malgo/Prelude.mlg 124 1)
-             (./runtime/malgo/Prelude.mlg 125 1))
+               (-> (app List (#Prelude.a_xxx)) (app List (#Prelude.a_xxx)))))
+         (sig isWhiteSpace (-> Char Bool))
+         (sig
             <<
             (->
                (-> #Prelude.b_xxx #Prelude.c_xxx)
                (->
                   (-> #Prelude.a_xxx #Prelude.b_xxx)
                   (-> #Prelude.a_xxx #Prelude.c_xxx))))
-         (((./runtime/malgo/Prelude.mlg 128 1)
-             (./runtime/malgo/Prelude.mlg 129 1))
+         (sig
             |>
             (->
                #Prelude.a_xxx
                (-> (-> #Prelude.a_xxx #Prelude.b_xxx) #Prelude.b_xxx)))
-         (((./runtime/malgo/Prelude.mlg 132 1)
-             (./runtime/malgo/Prelude.mlg 133 1))
+         (sig
             <|
             (->
                (-> #Prelude.a_xxx #Prelude.b_xxx)
                (-> #Prelude.a_xxx #Prelude.b_xxx)))
-         (((./runtime/malgo/Prelude.mlg 135 1)
-             (./runtime/malgo/Prelude.mlg 136 1))
+         (sig
             if
             (->
-               #Prelude.Bool_xxx
+               Bool
                (->
                   (-> (tuple) #Prelude.a_xxx)
                   (-> (-> (tuple) #Prelude.a_xxx) #Prelude.a_xxx))))
-         (((./runtime/malgo/Prelude.mlg 141 1)
-             (./runtime/malgo/Prelude.mlg 142 1))
+         (sig
             unless
             (->
-               #Prelude.Bool_xxx
+               Bool
                (-> #Prelude.a_xxx (-> (-> (tuple) #Prelude.a_xxx) #Prelude.a_xxx))))
-         (((./runtime/malgo/Prelude.mlg 145 1)
-             (./runtime/malgo/Prelude.mlg 146 1))
+         (sig
             cond
             (->
-               (app
-                  #Prelude.List_xxx
-                  ((tuple #Prelude.Bool_xxx (-> (tuple) #Prelude.a_xxx))))
+               (app List ((tuple Bool (-> (tuple) #Prelude.a_xxx))))
                #Prelude.a_xxx))
-         (((./runtime/malgo/Prelude.mlg 152 1)
-             (./runtime/malgo/Prelude.mlg 153 1))
-            putStr
-            (-> #Prelude.String_xxx (tuple)))
-         (((./runtime/malgo/Prelude.mlg 155 1)
-             (./runtime/malgo/Prelude.mlg 156 1))
-            putStrLn
-            (-> #Prelude.String_xxx (tuple)))
-         (((./runtime/malgo/Prelude.mlg 161 1)
-             (./runtime/malgo/Prelude.mlg 162 1))
-            printInt32
-            (-> #Prelude.Int32_xxx (tuple)))
-         (((./runtime/malgo/Prelude.mlg 164 1)
-             (./runtime/malgo/Prelude.mlg 165 1))
-            printInt64
-            (-> #Prelude.Int64_xxx (tuple))))
-      ((((./runtime/malgo/Prelude.mlg 24 1) (./runtime/malgo/Prelude.mlg 27 1))
-          Maybe
-          ((((./runtime/malgo/Prelude.mlg 24 12)
-               (./runtime/malgo/Prelude.mlg 24 14))
-              #Prelude.a_xxx))
-          ((((./runtime/malgo/Prelude.mlg 24 16)
-               (./runtime/malgo/Prelude.mlg 24 24))
-              Nothing
-              ())
-             (((./runtime/malgo/Prelude.mlg 24 26)
-                 (./runtime/malgo/Prelude.mlg 27 1))
-                Just
-                (#Prelude.a_xxx))))
-         (((./runtime/malgo/Prelude.mlg 27 1) (./runtime/malgo/Prelude.mlg 29 1))
+         (sig putStr (-> String (tuple)))
+         (sig putStrLn (-> String (tuple)))
+         (sig printInt32 (-> Int32 (tuple)))
+         (sig printInt64 (-> Int64 (tuple))))
+      ((data Maybe (#Prelude.a_xxx) ((Nothing ()) (Just (#Prelude.a_xxx))))
+         (data
             List
-            ((((./runtime/malgo/Prelude.mlg 27 11)
-                 (./runtime/malgo/Prelude.mlg 27 13))
-                #Prelude.a_xxx))
-            ((((./runtime/malgo/Prelude.mlg 27 15)
-                 (./runtime/malgo/Prelude.mlg 27 19))
-                Nil
-                ())
-               (((./runtime/malgo/Prelude.mlg 27 21)
-                   (./runtime/malgo/Prelude.mlg 29 1))
-                  Cons
-                  (#Prelude.a_xxx (app List (#Prelude.a_xxx)))))))
+            (#Prelude.a_xxx)
+            ((Nil ()) (Cons (#Prelude.a_xxx (app List (#Prelude.a_xxx)))))))
       ()
       ()
-      ((((./runtime/malgo/Prelude.mlg 1 1) (./runtime/malgo/Prelude.mlg 4 1))
-          Builtin
-          all))))
+      ((import Builtin all))))

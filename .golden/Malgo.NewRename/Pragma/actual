@@ -69,7 +69,7 @@ Module
          { name = "x"
          , moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/Pragma.mlg" )
-         , sort = Internal 5
+         , sort = Internal 1
          }
         )
        ]
@@ -155,7 +155,7 @@ Module
             { name = "x"
             , moduleName = Artifact
              ( ArtifactPath "test/testcases/malgo/Pragma.mlg" )
-            , sort = Internal 5
+            , sort = Internal 1
             }
            )
           )
@@ -252,7 +252,7 @@ Module
           { name = "str"
           , moduleName = Artifact
            ( ArtifactPath "test/testcases/malgo/Pragma.mlg" )
-          , sort = Internal 2
+          , sort = Internal 0
           }
          )
         ]
@@ -339,7 +339,7 @@ Module
             { name = "str"
             , moduleName = Artifact
              ( ArtifactPath "test/testcases/malgo/Pragma.mlg" )
-            , sort = Internal 2
+            , sort = Internal 0
             }
            )
           )
@@ -622,7 +622,7 @@ Module
        }
       }
      )
-     ( TyVar
+     ( TyCon
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Pragma.mlg"
@@ -640,7 +640,7 @@ Module
        { name = "String"
        , moduleName = Artifact
         ( ArtifactPath "test/testcases/malgo/Pragma.mlg" )
-       , sort = Internal 1
+       , sort = External
        }
       )
      )
@@ -693,7 +693,7 @@ Module
        }
       }
      )
-     ( TyVar
+     ( TyCon
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Pragma.mlg"
@@ -709,13 +709,12 @@ Module
       )
       ( Id
        { name = "String#"
-       , moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Pragma.mlg" )
-       , sort = Internal 4
+       , moduleName = ModuleName "Builtin"
+       , sort = External
        }
       )
      )
-     ( TyVar
+     ( TyCon
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Pragma.mlg"
@@ -733,7 +732,7 @@ Module
        { name = "String"
        , moduleName = Artifact
         ( ArtifactPath "test/testcases/malgo/Pragma.mlg" )
-       , sort = Internal 3
+       , sort = External
        }
       )
      )
@@ -781,7 +780,7 @@ Module
        , sort = External
        }
       ,
-       [ TyVar
+       [ TyCon
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/Pragma.mlg"
@@ -844,7 +843,7 @@ Module
        }
       }
      )
-     ( TyVar
+     ( TyCon
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Pragma.mlg"
@@ -860,9 +859,8 @@ Module
       )
       ( Id
        { name = "String#"
-       , moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Pragma.mlg" )
-       , sort = Internal 0
+       , moduleName = ModuleName "Builtin"
+       , sort = External
        }
       )
      )

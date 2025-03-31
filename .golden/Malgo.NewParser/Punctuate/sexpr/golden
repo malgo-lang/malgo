@@ -31,12 +31,9 @@
                                  (seq
                                     (do
                                        (apply
-                                          (apply
-                                             punctuate
-                                             (seq
-                                                (do
-                                                   (apply (apply mapList ss) show))))
-                                          (string ", "))))))
+                                          (apply punctuate (string ", "))
+                                          (seq
+                                             (do (apply (apply mapList show) ss))))))))
                            (string "]"))))))))
       (def
          main

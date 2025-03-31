@@ -1,21 +1,18 @@
 (module
    "test/testcases/malgo/RecordTest.mlg"
-   ((((((./test/testcases/malgo/RecordTest.mlg 12 1)
-          (./test/testcases/malgo/RecordTest.mlg 14 1))
+   ((((def
          g
          (fn
             ((clause
                 ((con B ()) (record (a #RecordTest.a_xxx) (b #RecordTest.__xxx)))
                 (seq (do #RecordTest.a_xxx)))))))
-       ((((./test/testcases/malgo/RecordTest.mlg 10 1)
-            (./test/testcases/malgo/RecordTest.mlg 12 1))
+       ((def
            f
            (fn
               ((clause
                   ((record (a #RecordTest.a_xxx) (b #RecordTest.__xxx)))
                   (seq (do #RecordTest.a_xxx)))))))
-       ((((./test/testcases/malgo/RecordTest.mlg 14 1)
-            (./test/testcases/malgo/RecordTest.mlg 18 1))
+       ((def
            main
            (fn
               ((clause
@@ -56,30 +53,12 @@
                                                                    #RecordTest.b_xxx)))))
                                                       #RecordTest.x_xxx))))))))))))))))))
       ()
-      ((((./test/testcases/malgo/RecordTest.mlg 6 6)
-           (./test/testcases/malgo/RecordTest.mlg 8 1))
-          B
-          ()
-          ((((./test/testcases/malgo/RecordTest.mlg 6 10)
-               (./test/testcases/malgo/RecordTest.mlg 8 1))
-              B
-              (A)))))
-      ((((./test/testcases/malgo/RecordTest.mlg 4 6)
-           (./test/testcases/malgo/RecordTest.mlg 6 1))
-          A
-          ()
-          (record (a Int32) (b Int32)))
-         (((./test/testcases/malgo/RecordTest.mlg 8 6)
-             (./test/testcases/malgo/RecordTest.mlg 10 1))
+      ((data B () ((B (A)))))
+      ((type A () (record (a Int32) (b Int32)))
+         (type
             C
             (#RecordTest.a_xxx)
             (record (x #RecordTest.a_xxx) (y #RecordTest.a_xxx))))
       ()
-      ((((./test/testcases/malgo/RecordTest.mlg 1 1)
-           (./test/testcases/malgo/RecordTest.mlg 2 1))
-          "runtime/malgo/Builtin.mlg"
-          all)
-         (((./test/testcases/malgo/RecordTest.mlg 2 1)
-             (./test/testcases/malgo/RecordTest.mlg 4 1))
-            "runtime/malgo/Prelude.mlg"
-            all))))
+      ((import "runtime/malgo/Builtin.mlg" all)
+         (import "runtime/malgo/Prelude.mlg" all))))

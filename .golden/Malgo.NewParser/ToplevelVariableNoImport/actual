@@ -376,12 +376,12 @@ Module
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
           , sourceLine = Pos 1
-          , sourceColumn = Pos 206
+          , sourceColumn = Pos 208
           }
          , _end = SourcePos
           { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
           , sourceLine = Pos 1
-          , sourceColumn = Pos 208
+          , sourceColumn = Pos 210
           }
          }
         )
@@ -390,12 +390,12 @@ Module
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
            , sourceLine = Pos 1
-           , sourceColumn = Pos 208
+           , sourceColumn = Pos 206
            }
           , _end = SourcePos
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
            , sourceLine = Pos 1
-           , sourceColumn = Pos 210
+           , sourceColumn = Pos 208
            }
           }
          )
@@ -419,15 +419,15 @@ Module
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
             , sourceLine = Pos 1
-            , sourceColumn = Pos 208
+            , sourceColumn = Pos 206
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
             , sourceLine = Pos 1
-            , sourceColumn = Pos 210
+            , sourceColumn = Pos 208
             }
            }
-          ) "y"
+          ) "x"
          )
         )
         ( Var
@@ -435,15 +435,15 @@ Module
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
            , sourceLine = Pos 1
-           , sourceColumn = Pos 206
+           , sourceColumn = Pos 208
            }
           , _end = SourcePos
            { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
            , sourceLine = Pos 1
-           , sourceColumn = Pos 208
+           , sourceColumn = Pos 210
            }
           }
-         ) "x"
+         ) "y"
         )
        ) :| []
       )
@@ -730,12 +730,12 @@ Module
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
              , sourceLine = Pos 1
-             , sourceColumn = Pos 311
+             , sourceColumn = Pos 313
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
              , sourceLine = Pos 1
-             , sourceColumn = Pos 313
+             , sourceColumn = Pos 314
              }
             }
            )
@@ -744,12 +744,12 @@ Module
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
               , sourceLine = Pos 1
-              , sourceColumn = Pos 313
+              , sourceColumn = Pos 311
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
               , sourceLine = Pos 1
-              , sourceColumn = Pos 314
+              , sourceColumn = Pos 313
               }
              }
             )
@@ -773,15 +773,15 @@ Module
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
                , sourceLine = Pos 1
-               , sourceColumn = Pos 313
+               , sourceColumn = Pos 311
                }
               , _end = SourcePos
                { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
                , sourceLine = Pos 1
-               , sourceColumn = Pos 314
+               , sourceColumn = Pos 313
                }
               }
-             ) "y"
+             ) "x"
             )
            )
            ( Var
@@ -789,15 +789,15 @@ Module
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
               , sourceLine = Pos 1
-              , sourceColumn = Pos 311
+              , sourceColumn = Pos 313
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
               , sourceLine = Pos 1
-              , sourceColumn = Pos 313
+              , sourceColumn = Pos 314
               }
              }
-            ) "x"
+            ) "y"
            )
           ) :| []
          )
@@ -3362,12 +3362,12 @@ Module
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
               , sourceLine = Pos 42
-              , sourceColumn = Pos 23
+              , sourceColumn = Pos 29
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
               , sourceLine = Pos 42
-              , sourceColumn = Pos 29
+              , sourceColumn = Pos 41
               }
              }
             )
@@ -3376,12 +3376,12 @@ Module
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
                , sourceLine = Pos 42
-               , sourceColumn = Pos 29
+               , sourceColumn = Pos 23
                }
               , _end = SourcePos
                { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
                , sourceLine = Pos 42
-               , sourceColumn = Pos 41
+               , sourceColumn = Pos 29
                }
               }
              )
@@ -3400,7 +3400,37 @@ Module
                }
               ) "constId"
              )
-             ( Seq
+             ( Var
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
+                , sourceLine = Pos 42
+                , sourceColumn = Pos 23
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
+                , sourceLine = Pos 42
+                , sourceColumn = Pos 29
+                }
+               }
+              ) "const"
+             )
+            )
+            ( Seq
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
+               , sourceLine = Pos 42
+               , sourceColumn = Pos 29
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
+               , sourceLine = Pos 42
+               , sourceColumn = Pos 41
+               }
+              }
+             )
+             ( NoBind
               ( Range
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
@@ -3414,21 +3444,36 @@ Module
                 }
                }
               )
-              ( NoBind
+              ( Apply
                ( Range
                 { _start = SourcePos
                  { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
                  , sourceLine = Pos 42
-                 , sourceColumn = Pos 29
+                 , sourceColumn = Pos 37
                  }
                 , _end = SourcePos
                  { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
                  , sourceLine = Pos 42
-                 , sourceColumn = Pos 41
+                 , sourceColumn = Pos 40
                  }
                 }
                )
-               ( Apply
+               ( Var
+                ( Range
+                 { _start = SourcePos
+                  { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
+                  , sourceLine = Pos 42
+                  , sourceColumn = Pos 30
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
+                  , sourceLine = Pos 42
+                  , sourceColumn = Pos 37
+                  }
+                 }
+                ) "addOne"
+               )
+               ( Var
                 ( Range
                  { _start = SourcePos
                   { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
@@ -3441,55 +3486,10 @@ Module
                   , sourceColumn = Pos 40
                   }
                  }
-                )
-                ( Var
-                 ( Range
-                  { _start = SourcePos
-                   { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
-                   , sourceLine = Pos 42
-                   , sourceColumn = Pos 30
-                   }
-                  , _end = SourcePos
-                   { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
-                   , sourceLine = Pos 42
-                   , sourceColumn = Pos 37
-                   }
-                  }
-                 ) "addOne"
-                )
-                ( Var
-                 ( Range
-                  { _start = SourcePos
-                   { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
-                   , sourceLine = Pos 42
-                   , sourceColumn = Pos 37
-                   }
-                  , _end = SourcePos
-                   { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
-                   , sourceLine = Pos 42
-                   , sourceColumn = Pos 40
-                   }
-                  }
-                 ) "one"
-                )
-               ) :| []
-              )
+                ) "one"
+               )
+              ) :| []
              )
-            )
-            ( Var
-             ( Range
-              { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
-               , sourceLine = Pos 42
-               , sourceColumn = Pos 23
-               }
-              , _end = SourcePos
-               { sourceName = "./test/testcases/malgo/ToplevelVariableNoImport.mlg"
-               , sourceLine = Pos 42
-               , sourceColumn = Pos 29
-               }
-              }
-             ) "const"
             )
            ) :| []
           )

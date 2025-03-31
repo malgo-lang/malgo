@@ -69,7 +69,7 @@ Module
          { name = "x"
          , moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" )
-         , sort = Internal 5
+         , sort = Internal 1
          }
         )
        ]
@@ -119,7 +119,7 @@ Module
            { name = "x"
            , moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" )
-           , sort = Internal 5
+           , sort = Internal 1
            }
           )
          ) :| []
@@ -452,7 +452,7 @@ Module
                { name = "h"
                , moduleName = Artifact
                 ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" )
-               , sort = Internal 6
+               , sort = Internal 2
                }
               )
              , VarP
@@ -473,7 +473,7 @@ Module
                { name = "w"
                , moduleName = Artifact
                 ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" )
-               , sort = Internal 7
+               , sort = Internal 3
                }
               )
              ]
@@ -560,7 +560,7 @@ Module
                  { name = "h"
                  , moduleName = Artifact
                   ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" )
-                 , sort = Internal 6
+                 , sort = Internal 2
                  }
                 )
                )
@@ -737,7 +737,7 @@ Module
                   { name = "w"
                   , moduleName = Artifact
                    ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" )
-                  , sort = Internal 7
+                  , sort = Internal 3
                   }
                  )
                 )
@@ -788,7 +788,7 @@ Module
        }
       }
      )
-     ( TyVar
+     ( TyCon
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
@@ -806,11 +806,11 @@ Module
        { name = "MyTuple"
        , moduleName = Artifact
         ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" )
-       , sort = Internal 2
+       , sort = External
        }
       )
      )
-     [ TyVar
+     [ TyCon
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
@@ -828,7 +828,7 @@ Module
        { name = "MyString"
        , moduleName = Artifact
         ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" )
-       , sort = Internal 1
+       , sort = External
        }
       )
      ]
@@ -866,7 +866,7 @@ Module
        }
       }
      )
-     ( TyVar
+     ( TyCon
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
@@ -884,11 +884,11 @@ Module
        { name = "S"
        , moduleName = Artifact
         ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" )
-       , sort = Internal 3
+       , sort = External
        }
       )
      )
-     ( TyVar
+     ( TyCon
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
@@ -906,7 +906,7 @@ Module
        { name = "T"
        , moduleName = Artifact
         ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" )
-       , sort = Internal 4
+       , sort = External
        }
       )
      )
@@ -1128,7 +1128,7 @@ Module
      , sort = External
      }
     , []
-    , TyVar
+    , TyCon
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
@@ -1170,7 +1170,7 @@ Module
      , sort = External
      }
     , []
-    , TyVar
+    , TyCon
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"

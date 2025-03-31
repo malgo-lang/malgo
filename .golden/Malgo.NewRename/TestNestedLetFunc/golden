@@ -83,7 +83,7 @@ Module
           { name = "f"
           , moduleName = Artifact
            ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" )
-          , sort = Internal 3
+          , sort = Internal 2
           }
          )
          ( Fn
@@ -146,7 +146,7 @@ Module
               { name = "y"
               , moduleName = Artifact
                ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" )
-              , sort = Internal 2
+              , sort = Internal 1
               }
              )
              ( Apply
@@ -209,7 +209,7 @@ Module
                   { name = "a"
                   , moduleName = Artifact
                    ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" )
-                  , sort = Internal 1
+                  , sort = Internal 0
                   }
                  )
                 ]
@@ -394,7 +394,7 @@ Module
        }
       }
      )
-     ( TyVar
+     ( TyCon
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
@@ -410,9 +410,8 @@ Module
       )
       ( Id
        { name = "String#"
-       , moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" )
-       , sort = Internal 0
+       , moduleName = ModuleName "Builtin"
+       , sort = External
        }
       )
      )

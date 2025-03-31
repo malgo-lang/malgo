@@ -3,7 +3,7 @@
    ((import "runtime/malgo/Builtin.mlg" all)
       (import "runtime/malgo/Prelude.mlg" all)
       (infix left 6 +#)
-      (def +# (fn ((clause (x y) (seq (do (apply (apply addInt64# y) x)))))))
+      (def +# (fn ((clause (x y) (seq (do (apply (apply addInt64# x) y)))))))
       (def
          sum
          (fn
@@ -36,11 +36,13 @@
                                   (apply
                                      (apply
                                         Cons
-                                        (seq
-                                           (do
+                                        (seq (do (apply Int64# (int64 1)))))
+                                     (seq
+                                        (do
+                                           (apply
                                               (apply
-                                                 (apply Cons Nil)
+                                                 Cons
                                                  (seq
-                                                    (do (apply Int64# (int64 2))))))))
-                                     (seq (do (apply Int64# (int64 1))))))))
+                                                    (do (apply Int64# (int64 2)))))
+                                              Nil)))))))
                          (fn ((clause (i) (seq (do (apply printInt64 i)))))))))))))))

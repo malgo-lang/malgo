@@ -33,5 +33,5 @@
                          (seq
                             (do
                                (apply
-                                  (apply constId (seq (do (apply addOne one))))
-                                  const))))))))))))
+                                  (apply constId const)
+                                  (seq (do (apply addOne one)))))))))))))))

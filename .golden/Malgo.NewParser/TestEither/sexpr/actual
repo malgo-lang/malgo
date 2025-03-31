@@ -50,8 +50,8 @@
                                                (seq
                                                   (do
                                                      (apply
-                                                        (apply addInt32 (int32 1))
-                                                        x)))))))))))
+                                                        (apply addInt32 x)
+                                                        (int32 1))))))))))))
                          (apply
                             andThen
                             (fn
@@ -92,8 +92,8 @@
                                                (seq
                                                   (do
                                                      (apply
-                                                        (apply addInt32 (int32 1))
-                                                        x)))))))))))
+                                                        (apply addInt32 x)
+                                                        (int32 1))))))))))))
                          (fn
                             ((clause (Left err) (seq (do (apply putStrLn err))))
                                (clause

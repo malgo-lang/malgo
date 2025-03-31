@@ -838,12 +838,12 @@ Module
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/Punctuate.mlg"
                 , sourceLine = Pos 16
-                , sourceColumn = Pos 54
+                , sourceColumn = Pos 59
                 }
                , _end = SourcePos
                 { sourceName = "./test/testcases/malgo/Punctuate.mlg"
                 , sourceLine = Pos 16
-                , sourceColumn = Pos 59
+                , sourceColumn = Pos 76
                 }
                }
               )
@@ -852,12 +852,12 @@ Module
                 { _start = SourcePos
                  { sourceName = "./test/testcases/malgo/Punctuate.mlg"
                  , sourceLine = Pos 16
-                 , sourceColumn = Pos 59
+                 , sourceColumn = Pos 54
                  }
                 , _end = SourcePos
                  { sourceName = "./test/testcases/malgo/Punctuate.mlg"
                  , sourceLine = Pos 16
-                 , sourceColumn = Pos 76
+                 , sourceColumn = Pos 59
                  }
                 }
                )
@@ -876,7 +876,38 @@ Module
                  }
                 ) "punctuate"
                )
-               ( Seq
+               ( Boxed
+                ( Range
+                 { _start = SourcePos
+                  { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+                  , sourceLine = Pos 16
+                  , sourceColumn = Pos 54
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+                  , sourceLine = Pos 16
+                  , sourceColumn = Pos 59
+                  }
+                 }
+                )
+                ( String ", " )
+               )
+              )
+              ( Seq
+               ( Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+                 , sourceLine = Pos 16
+                 , sourceColumn = Pos 59
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+                 , sourceLine = Pos 16
+                 , sourceColumn = Pos 76
+                 }
+                }
+               )
+               ( NoBind
                 ( Range
                  { _start = SourcePos
                   { sourceName = "./test/testcases/malgo/Punctuate.mlg"
@@ -890,17 +921,17 @@ Module
                   }
                  }
                 )
-                ( NoBind
+                ( Apply
                  ( Range
                   { _start = SourcePos
                    { sourceName = "./test/testcases/malgo/Punctuate.mlg"
                    , sourceLine = Pos 16
-                   , sourceColumn = Pos 59
+                   , sourceColumn = Pos 73
                    }
                   , _end = SourcePos
                    { sourceName = "./test/testcases/malgo/Punctuate.mlg"
                    , sourceLine = Pos 16
-                   , sourceColumn = Pos 76
+                   , sourceColumn = Pos 75
                    }
                   }
                  )
@@ -918,50 +949,20 @@ Module
                     }
                    }
                   )
-                  ( Apply
+                  ( Var
                    ( Range
                     { _start = SourcePos
                      { sourceName = "./test/testcases/malgo/Punctuate.mlg"
                      , sourceLine = Pos 16
-                     , sourceColumn = Pos 73
+                     , sourceColumn = Pos 60
                      }
                     , _end = SourcePos
                      { sourceName = "./test/testcases/malgo/Punctuate.mlg"
                      , sourceLine = Pos 16
-                     , sourceColumn = Pos 75
+                     , sourceColumn = Pos 68
                      }
                     }
-                   )
-                   ( Var
-                    ( Range
-                     { _start = SourcePos
-                      { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-                      , sourceLine = Pos 16
-                      , sourceColumn = Pos 60
-                      }
-                     , _end = SourcePos
-                      { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-                      , sourceLine = Pos 16
-                      , sourceColumn = Pos 68
-                      }
-                     }
-                    ) "mapList"
-                   )
-                   ( Var
-                    ( Range
-                     { _start = SourcePos
-                      { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-                      , sourceLine = Pos 16
-                      , sourceColumn = Pos 73
-                      }
-                     , _end = SourcePos
-                      { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-                      , sourceLine = Pos 16
-                      , sourceColumn = Pos 75
-                      }
-                     }
-                    ) "ss"
-                   )
+                   ) "mapList"
                   )
                   ( Var
                    ( Range
@@ -978,25 +979,24 @@ Module
                     }
                    ) "show"
                   )
-                 ) :| []
-                )
+                 )
+                 ( Var
+                  ( Range
+                   { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+                    , sourceLine = Pos 16
+                    , sourceColumn = Pos 73
+                    }
+                   , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+                    , sourceLine = Pos 16
+                    , sourceColumn = Pos 75
+                    }
+                   }
+                  ) "ss"
+                 )
+                ) :| []
                )
-              )
-              ( Boxed
-               ( Range
-                { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-                 , sourceLine = Pos 16
-                 , sourceColumn = Pos 54
-                 }
-                , _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-                 , sourceLine = Pos 16
-                 , sourceColumn = Pos 59
-                 }
-                }
-               )
-               ( String ", " )
               )
              ) :| []
             )

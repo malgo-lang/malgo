@@ -1,7 +1,6 @@
 (module
    "test/testcases/malgo/DataDef.mlg"
-   ((((((./test/testcases/malgo/DataDef.mlg 7 1)
-          (./test/testcases/malgo/DataDef.mlg 8 1))
+   ((((def
          main
          (fn
             ((clause
@@ -23,37 +22,12 @@
                                                   #DataDef.x_xxx)))))))))
                          (seq (do (apply Int# (int64 1)))))))))))))
       ()
-      ((((./test/testcases/malgo/DataDef.mlg 1 1)
-           (./test/testcases/malgo/DataDef.mlg 2 1))
-          Int
-          ()
-          ((((./test/testcases/malgo/DataDef.mlg 1 12)
-               (./test/testcases/malgo/DataDef.mlg 2 1))
-              Int#
-              (Int64#))))
-         (((./test/testcases/malgo/DataDef.mlg 2 1)
-             (./test/testcases/malgo/DataDef.mlg 4 1))
+      ((data Int () ((Int# (Int64#))))
+         (data
             List
-            ((((./test/testcases/malgo/DataDef.mlg 2 11)
-                 (./test/testcases/malgo/DataDef.mlg 2 13))
-                #DataDef.a_xxx))
-            ((((./test/testcases/malgo/DataDef.mlg 2 15)
-                 (./test/testcases/malgo/DataDef.mlg 2 19))
-                Nil
-                ())
-               (((./test/testcases/malgo/DataDef.mlg 2 21)
-                   (./test/testcases/malgo/DataDef.mlg 4 1))
-                  Cons
-                  (#DataDef.a_xxx (app List (#DataDef.a_xxx)))))))
+            (#DataDef.a_xxx)
+            ((Nil ()) (Cons (#DataDef.a_xxx (app List (#DataDef.a_xxx)))))))
       ()
-      (((((./test/testcases/malgo/DataDef.mlg 4 1)
-            (./test/testcases/malgo/DataDef.mlg 5 1))
-           malgo_int64_t_to_string)
-          malgo_int64_t_to_string
-          (-> #DataDef.Int64#_xxx #DataDef.String#_xxx))
-         ((((./test/testcases/malgo/DataDef.mlg 5 1)
-              (./test/testcases/malgo/DataDef.mlg 7 1))
-             malgo_print_string)
-            malgo_print_string
-            (-> #DataDef.String#_xxx (tuple))))
+      ((foreign malgo_int64_t_to_string (-> Int64# String#))
+         (foreign malgo_print_string (-> String# (tuple))))
       ()))

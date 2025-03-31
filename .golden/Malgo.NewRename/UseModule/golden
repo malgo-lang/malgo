@@ -106,12 +106,12 @@ Module
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/UseModule.mlg"
             , sourceLine = Pos 5
-            , sourceColumn = Pos 28
+            , sourceColumn = Pos 30
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/UseModule.mlg"
             , sourceLine = Pos 5
-            , sourceColumn = Pos 30
+            , sourceColumn = Pos 32
             }
            }
           )
@@ -120,12 +120,12 @@ Module
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/UseModule.mlg"
              , sourceLine = Pos 5
-             , sourceColumn = Pos 30
+             , sourceColumn = Pos 28
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/UseModule.mlg"
              , sourceLine = Pos 5
-             , sourceColumn = Pos 32
+             , sourceColumn = Pos 30
              }
             }
            )
@@ -151,7 +151,44 @@ Module
              }
             )
            )
-           ( Apply
+           ( Var
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/UseModule.mlg"
+              , sourceLine = Pos 5
+              , sourceColumn = Pos 28
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/UseModule.mlg"
+              , sourceLine = Pos 5
+              , sourceColumn = Pos 30
+              }
+             }
+            )
+            ( Id
+             { name = "x"
+             , moduleName = Artifact
+              ( ArtifactPath "test/testcases/malgo/UseModule.mlg" )
+             , sort = Internal 0
+             }
+            )
+           )
+          )
+          ( Apply
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/UseModule.mlg"
+             , sourceLine = Pos 5
+             , sourceColumn = Pos 30
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/UseModule.mlg"
+             , sourceLine = Pos 5
+             , sourceColumn = Pos 32
+             }
+            }
+           )
+           ( Var
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/UseModule.mlg"
@@ -165,66 +202,29 @@ Module
               }
              }
             )
-            ( Var
-             ( Range
-              { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/UseModule.mlg"
-               , sourceLine = Pos 5
-               , sourceColumn = Pos 30
-               }
-              , _end = SourcePos
-               { sourceName = "./test/testcases/malgo/UseModule.mlg"
-               , sourceLine = Pos 5
-               , sourceColumn = Pos 32
-               }
-              }
-             )
-             ( Id
-              { name = "Int32#"
-              , moduleName = Artifact
-               ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-              , sort = External
-              }
-             )
-            )
-            ( Unboxed
-             ( Range
-              { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/UseModule.mlg"
-               , sourceLine = Pos 5
-               , sourceColumn = Pos 30
-               }
-              , _end = SourcePos
-               { sourceName = "./test/testcases/malgo/UseModule.mlg"
-               , sourceLine = Pos 5
-               , sourceColumn = Pos 32
-               }
-              }
-             )
-             ( Int32 1 )
+            ( Id
+             { name = "Int32#"
+             , moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+             , sort = External
+             }
             )
            )
-          )
-          ( Var
-           ( Range
-            { _start = SourcePos
-             { sourceName = "./test/testcases/malgo/UseModule.mlg"
-             , sourceLine = Pos 5
-             , sourceColumn = Pos 28
+           ( Unboxed
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/UseModule.mlg"
+              , sourceLine = Pos 5
+              , sourceColumn = Pos 30
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/UseModule.mlg"
+              , sourceLine = Pos 5
+              , sourceColumn = Pos 32
+              }
              }
-            , _end = SourcePos
-             { sourceName = "./test/testcases/malgo/UseModule.mlg"
-             , sourceLine = Pos 5
-             , sourceColumn = Pos 30
-             }
-            }
-           )
-           ( Id
-            { name = "x"
-            , moduleName = Artifact
-             ( ArtifactPath "test/testcases/malgo/UseModule.mlg" )
-            , sort = Internal 0
-            }
+            )
+            ( Int32 1 )
            )
           )
          ) :| []

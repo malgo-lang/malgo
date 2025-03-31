@@ -5,7 +5,7 @@
       (sig |> (-> a (-> (-> a b) b)))
       (def |> (fn ((clause (x f) (seq (do (apply f x)))))))
       (infix left 6 +#)
-      (def +# (fn ((clause (x y) (seq (do (apply (apply addInt64# y) x)))))))
+      (def +# (fn ((clause (x y) (seq (do (apply (apply addInt64# x) y)))))))
       (def
          main
          (fn

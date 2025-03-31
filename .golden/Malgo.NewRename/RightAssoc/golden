@@ -112,7 +112,7 @@ Module
          { name = "n"
          , moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-         , sort = Internal 2
+         , sort = Internal 1
          }
         )
        ]
@@ -148,7 +148,7 @@ Module
           { name = "x"
           , moduleName = Artifact
            ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-          , sort = Internal 3
+          , sort = Internal 2
           }
          )
          ( OpApp
@@ -981,7 +981,7 @@ Module
            { name = "y"
            , moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-           , sort = Internal 4
+           , sort = Internal 3
            }
           )
           ( OpApp
@@ -1738,7 +1738,7 @@ Module
             { name = "y"
             , moduleName = Artifact
              ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-            , sort = Internal 4
+            , sort = Internal 3
             }
            )
           )
@@ -1828,7 +1828,7 @@ Module
           { name = "x"
           , moduleName = Artifact
            ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-          , sort = Internal 5
+          , sort = Internal 4
           }
          )
          ( Apply
@@ -2084,7 +2084,7 @@ Module
        { name = "a"
        , moduleName = Artifact
         ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-       , sort = Internal 1
+       , sort = Internal 0
        }
       )
      )
@@ -2116,7 +2116,7 @@ Module
          }
         }
        )
-       ( TyVar
+       ( TyCon
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
@@ -2133,8 +2133,8 @@ Module
         ( Id
          { name = "List"
          , moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-         , sort = Internal 0
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+         , sort = External
          }
         )
        )
@@ -2156,7 +2156,7 @@ Module
          { name = "a"
          , moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-         , sort = Internal 1
+         , sort = Internal 0
          }
         )
        ]
@@ -2175,7 +2175,7 @@ Module
          }
         }
        )
-       ( TyVar
+       ( TyCon
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
@@ -2192,8 +2192,8 @@ Module
         ( Id
          { name = "List"
          , moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-         , sort = Internal 0
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+         , sort = External
          }
         )
        )
@@ -2215,7 +2215,7 @@ Module
          { name = "a"
          , moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-         , sort = Internal 1
+         , sort = Internal 0
          }
         )
        ]

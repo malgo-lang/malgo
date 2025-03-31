@@ -1,7 +1,6 @@
 (module
    "test/testcases/malgo/Primitive.mlg"
-   ((((((./test/testcases/malgo/Primitive.mlg 2 1)
-          (./test/testcases/malgo/Primitive.mlg 3 1))
+   ((((def
          main
          (fn
             ((clause
@@ -23,7 +22,4 @@
       ()
       ()
       ()
-      ((((./test/testcases/malgo/Primitive.mlg 1 1)
-           (./test/testcases/malgo/Primitive.mlg 2 1))
-          "runtime/malgo/Builtin.mlg"
-          all))))
+      ((import "runtime/malgo/Builtin.mlg" all))))

@@ -1,7 +1,6 @@
 (module
    "test/testcases/malgo/With.mlg"
-   ((((((./test/testcases/malgo/With.mlg 11 1)
-          (./test/testcases/malgo/With.mlg 16 1))
+   ((((def
          twice
          (fn
             ((clause
@@ -9,8 +8,7 @@
                 (seq
                    (do (apply #With.k_xxx (tuple)))
                    (do (apply #With.k_xxx (tuple)))))))))
-       ((((./test/testcases/malgo/With.mlg 16 1)
-            (./test/testcases/malgo/With.mlg 21 1))
+       ((def
            printAndReturn
            (fn
               ((clause
@@ -18,8 +16,7 @@
                   (seq
                      (do (apply printString #With.str_xxx))
                      (do (apply #With.k_xxx #With.str_xxx))))))))
-       ((((./test/testcases/malgo/With.mlg 5 1)
-            (./test/testcases/malgo/With.mlg 10 1))
+       ((def
            finally
            (fn
               ((clause
@@ -27,8 +24,7 @@
                   (seq
                      (let #With.x_xxx (apply #With.k_xxx (tuple)))
                      (do (apply #With.finalizer_xxx #With.x_xxx))))))))
-       ((((./test/testcases/malgo/With.mlg 21 1)
-            (./test/testcases/malgo/With.mlg 27 1))
+       ((def
            main
            (fn
               ((clause
@@ -72,24 +68,14 @@
                                                                         (apply
                                                                            printString
                                                                            #With.x_xxx)))))))))))))))))))))))))))
-      ((((./test/testcases/malgo/With.mlg 4 1)
-           (./test/testcases/malgo/With.mlg 5 1))
+      ((sig
           finally
           (->
              (-> #With.a_xxx #With.r_xxx)
              (-> (-> (tuple) #With.a_xxx) #With.r_xxx)))
-         (((./test/testcases/malgo/With.mlg 10 1)
-             (./test/testcases/malgo/With.mlg 11 1))
-            twice
-            (-> (-> (tuple) #With.a_xxx) #With.a_xxx)))
+         (sig twice (-> (-> (tuple) #With.a_xxx) #With.a_xxx)))
       ()
       ()
       ()
-      ((((./test/testcases/malgo/With.mlg 1 1)
-           (./test/testcases/malgo/With.mlg 2 1))
-          "runtime/malgo/Builtin.mlg"
-          all)
-         (((./test/testcases/malgo/With.mlg 2 1)
-             (./test/testcases/malgo/With.mlg 4 1))
-            "runtime/malgo/Prelude.mlg"
-            all))))
+      ((import "runtime/malgo/Builtin.mlg" all)
+         (import "runtime/malgo/Prelude.mlg" all))))

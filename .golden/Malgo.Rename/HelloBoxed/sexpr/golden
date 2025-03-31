@@ -1,14 +1,12 @@
 (module
    "test/testcases/malgo/HelloBoxed.mlg"
-   ((((((./test/testcases/malgo/HelloBoxed.mlg 13 1)
-          (./test/testcases/malgo/HelloBoxed.mlg 15 1))
+   ((((def
          string#
          (fn
             ((clause
                 (#HelloBoxed.x_xxx)
                 (seq (do (apply String# #HelloBoxed.x_xxx))))))))
-       ((((./test/testcases/malgo/HelloBoxed.mlg 7 1)
-            (./test/testcases/malgo/HelloBoxed.mlg 12 1))
+       ((def
            putStrLn
            (fn
               ((clause
@@ -16,39 +14,16 @@
                   (seq
                      (do (apply malgo_print_string #HelloBoxed.str_xxx))
                      (do (apply malgo_newline (tuple)))))))))
-       ((((./test/testcases/malgo/HelloBoxed.mlg 15 1)
-            (./test/testcases/malgo/HelloBoxed.mlg 18 1))
+       ((def
            main
            (fn
               ((clause
                   ()
                   (seq
                      (do (apply putStrLn (apply String# (string "Hello, world")))))))))))
-      ((((./test/testcases/malgo/HelloBoxed.mlg 6 1)
-           (./test/testcases/malgo/HelloBoxed.mlg 7 1))
-          putStrLn
-          (-> String (tuple)))
-         (((./test/testcases/malgo/HelloBoxed.mlg 12 1)
-             (./test/testcases/malgo/HelloBoxed.mlg 13 1))
-            string#
-            (-> String# String)))
-      ((((./test/testcases/malgo/HelloBoxed.mlg 4 6)
-           (./test/testcases/malgo/HelloBoxed.mlg 6 1))
-          String
-          ()
-          ((((./test/testcases/malgo/HelloBoxed.mlg 4 15)
-               (./test/testcases/malgo/HelloBoxed.mlg 6 1))
-              String#
-              (String#)))))
+      ((sig putStrLn (-> String (tuple))) (sig string# (-> String# String)))
+      ((data String () ((String# (String#)))))
       ()
-      (((((./test/testcases/malgo/HelloBoxed.mlg 1 1)
-            (./test/testcases/malgo/HelloBoxed.mlg 2 1))
-           malgo_print_string)
-          malgo_print_string
-          (-> String# (tuple)))
-         ((((./test/testcases/malgo/HelloBoxed.mlg 2 1)
-              (./test/testcases/malgo/HelloBoxed.mlg 4 1))
-             malgo_newline)
-            malgo_newline
-            (-> (tuple) (tuple))))
+      ((foreign malgo_print_string (-> String# (tuple)))
+         (foreign malgo_newline (-> (tuple) (tuple))))
       ()))

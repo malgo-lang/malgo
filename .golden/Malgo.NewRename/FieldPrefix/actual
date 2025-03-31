@@ -434,7 +434,7 @@ Module
            { name = "_"
            , moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/FieldPrefix.mlg" )
-           , sort = Internal 8
+           , sort = Internal 4
            }
           )
          )
@@ -458,7 +458,7 @@ Module
            { name = "y"
            , moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/FieldPrefix.mlg" )
-           , sort = Internal 9
+           , sort = Internal 5
            }
           )
          )
@@ -510,7 +510,7 @@ Module
            { name = "y"
            , moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/FieldPrefix.mlg" )
-           , sort = Internal 9
+           , sort = Internal 5
            }
           )
          ) :| []
@@ -601,7 +601,7 @@ Module
            { name = "x"
            , moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/FieldPrefix.mlg" )
-           , sort = Internal 4
+           , sort = Internal 2
            }
           )
          )
@@ -625,7 +625,7 @@ Module
            { name = "_"
            , moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/FieldPrefix.mlg" )
-           , sort = Internal 5
+           , sort = Internal 3
            }
           )
          )
@@ -677,7 +677,7 @@ Module
            { name = "x"
            , moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/FieldPrefix.mlg" )
-           , sort = Internal 4
+           , sort = Internal 2
            }
           )
          ) :| []
@@ -1377,7 +1377,7 @@ Module
        }
       }
      )
-     ( TyVar
+     ( TyCon
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/FieldPrefix.mlg"
@@ -1395,11 +1395,11 @@ Module
        { name = "Point2D"
        , moduleName = Artifact
         ( ArtifactPath "test/testcases/malgo/FieldPrefix.mlg" )
-       , sort = Internal 3
+       , sort = External
        }
       )
      )
-     ( TyVar
+     ( TyCon
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/FieldPrefix.mlg"
@@ -1416,8 +1416,8 @@ Module
       ( Id
        { name = "Int32"
        , moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/FieldPrefix.mlg" )
-       , sort = Internal 2
+        ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+       , sort = External
        }
       )
      )
@@ -1455,7 +1455,7 @@ Module
        }
       }
      )
-     ( TyVar
+     ( TyCon
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/FieldPrefix.mlg"
@@ -1473,11 +1473,11 @@ Module
        { name = "Point2D"
        , moduleName = Artifact
         ( ArtifactPath "test/testcases/malgo/FieldPrefix.mlg" )
-       , sort = Internal 7
+       , sort = External
        }
       )
      )
-     ( TyVar
+     ( TyCon
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/FieldPrefix.mlg"
@@ -1494,8 +1494,8 @@ Module
       ( Id
        { name = "Int32"
        , moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/FieldPrefix.mlg" )
-       , sort = Internal 6
+        ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+       , sort = External
        }
       )
      )
@@ -1519,7 +1519,7 @@ Module
       ( ArtifactPath "test/testcases/malgo/FieldPrefix.mlg" )
      , sort = External
      }
-    , TyVar
+    , TyCon
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/FieldPrefix.mlg"
@@ -1537,7 +1537,7 @@ Module
       { name = "Point2D"
       , moduleName = Artifact
        ( ArtifactPath "test/testcases/malgo/FieldPrefix.mlg" )
-      , sort = Internal 10
+      , sort = External
       }
      )
     )
@@ -1560,7 +1560,7 @@ Module
       ( ArtifactPath "test/testcases/malgo/FieldPrefix.mlg" )
      , sort = External
      }
-    , TyVar
+    , TyCon
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/FieldPrefix.mlg"
@@ -1578,7 +1578,7 @@ Module
       { name = "Point3D"
       , moduleName = Artifact
        ( ArtifactPath "test/testcases/malgo/FieldPrefix.mlg" )
-      , sort = Internal 11
+      , sort = External
       }
      )
     )
@@ -1621,7 +1621,7 @@ Module
      )
      [
       ( "x"
-      , TyVar
+      , TyCon
        ( Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/FieldPrefix.mlg"
@@ -1645,7 +1645,7 @@ Module
       )
      ,
       ( "y"
-      , TyVar
+      , TyCon
        ( Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/FieldPrefix.mlg"
@@ -1705,7 +1705,7 @@ Module
      )
      [
       ( "x"
-      , TyVar
+      , TyCon
        ( Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/FieldPrefix.mlg"
@@ -1729,7 +1729,7 @@ Module
       )
      ,
       ( "y"
-      , TyVar
+      , TyCon
        ( Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/FieldPrefix.mlg"
@@ -1753,7 +1753,7 @@ Module
       )
      ,
       ( "z"
-      , TyVar
+      , TyCon
        ( Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/FieldPrefix.mlg"

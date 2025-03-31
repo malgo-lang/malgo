@@ -1,13 +1,11 @@
 (module
    "test/testcases/malgo/Test2.mlg"
-   ((((((./test/testcases/malgo/Test2.mlg 3 1)
-          (./test/testcases/malgo/Test2.mlg 5 1))
+   ((((def
          rtob
          (fn
             ((clause ((con R ())) (seq (do B)))
                (clause (#Test2.a_xxx) (seq (do #Test2.a_xxx)))))))
-       ((((./test/testcases/malgo/Test2.mlg 7 1)
-            (./test/testcases/malgo/Test2.mlg 8 1))
+       ((def
            main
            (fn
               ((clause
@@ -29,26 +27,7 @@
                                              (string "WRONG")))))))
                            (seq (do (apply rtob R))))))))))))
       ()
-      ((((./test/testcases/malgo/Test2.mlg 1 1)
-           (./test/testcases/malgo/Test2.mlg 3 1))
-          RGB
-          ()
-          ((((./test/testcases/malgo/Test2.mlg 1 12)
-               (./test/testcases/malgo/Test2.mlg 1 14))
-              R
-              ())
-             (((./test/testcases/malgo/Test2.mlg 1 16)
-                 (./test/testcases/malgo/Test2.mlg 1 18))
-                G
-                ())
-             (((./test/testcases/malgo/Test2.mlg 1 20)
-                 (./test/testcases/malgo/Test2.mlg 3 1))
-                B
-                ()))))
+      ((data RGB () ((R ()) (G ()) (B ()))))
       ()
-      (((((./test/testcases/malgo/Test2.mlg 5 1)
-            (./test/testcases/malgo/Test2.mlg 7 1))
-           malgo_print_string)
-          malgo_print_string
-          (-> #Test2.String#_xxx (tuple))))
+      ((foreign malgo_print_string (-> String# (tuple))))
       ()))

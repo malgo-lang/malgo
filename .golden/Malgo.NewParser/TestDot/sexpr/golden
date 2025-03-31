@@ -13,7 +13,7 @@
                          (do
                             (apply
                                Int64#
-                               (seq (do (apply (apply addInt64# (int64 1)) x))))))))))))
+                               (seq (do (apply (apply addInt64# x) (int64 1)))))))))))))
       (def
          main
          (fn

@@ -1,11 +1,7 @@
 (module
    "test/testcases/malgo/RightAssoc.mlg"
-   ((((((./test/testcases/malgo/RightAssoc.mlg 6 1)
-          (./test/testcases/malgo/RightAssoc.mlg 8 1))
-         <|>
-         Cons))
-       ((((./test/testcases/malgo/RightAssoc.mlg 8 1)
-            (./test/testcases/malgo/RightAssoc.mlg 34 1))
+   ((((def <|> Cons))
+       ((def
            f
            (fn
               ((clause
@@ -92,8 +88,7 @@
                                               (seq (do (apply Int32# (int32 4))))))))
                                     Nil)))))
                      (do #RightAssoc.y_xxx)))))))
-       ((((./test/testcases/malgo/RightAssoc.mlg 35 1)
-            (./test/testcases/malgo/RightAssoc.mlg 39 1))
+       ((def
            main
            (fn
               ((clause
@@ -101,26 +96,14 @@
                   (seq
                      (let #RightAssoc.x_xxx (apply f (apply Int32# (int32 4))))
                      (do (apply printString (apply String# (string "OK")))))))))))
-      ((((./test/testcases/malgo/RightAssoc.mlg 5 1)
-           (./test/testcases/malgo/RightAssoc.mlg 6 1))
+      ((sig
           <|>
           (->
              #RightAssoc.a_xxx
-             (->
-                (app #RightAssoc.List_xxx (#RightAssoc.a_xxx))
-                (app #RightAssoc.List_xxx (#RightAssoc.a_xxx)))))
-         (((./test/testcases/malgo/RightAssoc.mlg 34 1)
-             (./test/testcases/malgo/RightAssoc.mlg 35 1))
-            main
-            (-> (tuple) (tuple))))
+             (-> (app List (#RightAssoc.a_xxx)) (app List (#RightAssoc.a_xxx)))))
+         (sig main (-> (tuple) (tuple))))
       ()
       ()
       ()
-      ((((./test/testcases/malgo/RightAssoc.mlg 1 1)
-           (./test/testcases/malgo/RightAssoc.mlg 2 1))
-          "runtime/malgo/Builtin.mlg"
-          all)
-         (((./test/testcases/malgo/RightAssoc.mlg 2 1)
-             (./test/testcases/malgo/RightAssoc.mlg 4 1))
-            "runtime/malgo/Prelude.mlg"
-            all))))
+      ((import "runtime/malgo/Builtin.mlg" all)
+         (import "runtime/malgo/Prelude.mlg" all))))

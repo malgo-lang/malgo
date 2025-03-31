@@ -1,7 +1,6 @@
 (module
    "test/testcases/malgo/Eventually.mlg"
-   ((((((./test/testcases/malgo/Eventually.mlg 24 1)
-          (./test/testcases/malgo/Eventually.mlg 29 1))
+   ((((def
          step
          (fn
             ((clause
@@ -10,15 +9,13 @@
                (clause
                   ((con NotYetDone ()) #Eventually.work_xxx)
                   (seq (do (seq (do (apply #Eventually.work_xxx (tuple)))))))))))
-       ((((./test/testcases/malgo/Eventually.mlg 33 1)
-            (./test/testcases/malgo/Eventually.mlg 35 1))
+       ((def
            return
            (fn
               ((clause
                   ((record (bind #Eventually.__xxx) (return #Eventually.x_xxx)))
                   (seq (do #Eventually.x_xxx)))))))
-       ((((./test/testcases/malgo/Eventually.mlg 19 1)
-            (./test/testcases/malgo/Eventually.mlg 24 1))
+       ((def
            eventuallyBind
            (fn
               ((clause
@@ -38,71 +35,24 @@
                                           (apply
                                              (apply
                                                 eventuallyBind
-                                                #Eventually.k_xxx)
-                                             (seq
-                                                (do
-                                                   (apply
-                                                      #Eventually.work_xxx
-                                                      (tuple))))))))))))))))))
-       ((((./test/testcases/malgo/Eventually.mlg 13 1)
-            (./test/testcases/malgo/Eventually.mlg 18 1))
-           eventually
-           (record (bind eventuallyBind) (return Done))))
-       ((((./test/testcases/malgo/Eventually.mlg 30 1)
-            (./test/testcases/malgo/Eventually.mlg 32 1))
+                                                (seq
+                                                   (do
+                                                      (apply
+                                                         #Eventually.work_xxx
+                                                         (tuple)))))
+                                             #Eventually.k_xxx))))))))))))))
+       ((def eventually (record (bind eventuallyBind) (return Done))))
+       ((def
            bind
            (fn
               ((clause
                   ((record (bind #Eventually.x_xxx) (return #Eventually.__xxx)))
                   (seq (do #Eventually.x_xxx)))))))
-       ((((./test/testcases/malgo/Eventually.mlg 36 1)
-            (./test/testcases/malgo/Eventually.mlg 41 1))
+       ((def
            comp
            (apply
               (apply
-                 (apply
-                    bind
-                    (fn
-                       ((clause
-                           (#Eventually.__xxx)
-                           (seq
-                              (do
-                                 (apply
-                                    (apply
-                                       (apply
-                                          bind
-                                          (fn
-                                             ((clause
-                                                 (#Eventually.__xxx)
-                                                 (seq
-                                                    (do
-                                                       (apply
-                                                          (apply
-                                                             return
-                                                             (apply
-                                                                Int32#
-                                                                (int32 3)))
-                                                          eventually)))))))
-                                       (seq
-                                          (do
-                                             (apply
-                                                NotYetDone
-                                                (fn
-                                                   ((clause
-                                                       ()
-                                                       (seq
-                                                          (do
-                                                             (apply
-                                                                Done
-                                                                (seq
-                                                                   (do
-                                                                      (apply
-                                                                         printString
-                                                                         (apply
-                                                                            String#
-                                                                            (string
-                                                                               "2")))))))))))))))
-                                    eventually)))))))
+                 (apply bind eventually)
                  (seq
                     (do
                        (apply
@@ -119,9 +69,41 @@
                                                 (apply
                                                    printString
                                                    (apply String# (string "1")))))))))))))))
-              eventually)))
-       ((((./test/testcases/malgo/Eventually.mlg 42 1)
-            (./test/testcases/malgo/Eventually.mlg 48 1))
+              (fn
+                 ((clause
+                     (#Eventually.__xxx)
+                     (seq
+                        (do
+                           (apply
+                              (apply
+                                 (apply bind eventually)
+                                 (seq
+                                    (do
+                                       (apply
+                                          NotYetDone
+                                          (fn
+                                             ((clause
+                                                 ()
+                                                 (seq
+                                                    (do
+                                                       (apply
+                                                          Done
+                                                          (seq
+                                                             (do
+                                                                (apply
+                                                                   printString
+                                                                   (apply
+                                                                      String#
+                                                                      (string "2")))))))))))))))
+                              (fn
+                                 ((clause
+                                     (#Eventually.__xxx)
+                                     (seq
+                                        (do
+                                           (apply
+                                              (apply return eventually)
+                                              (apply Int32# (int32 3)))))))))))))))))
+       ((def
            main
            (fn
               ((clause
@@ -151,70 +133,38 @@
                                           (apply
                                              printString
                                              (apply String# (string "not yet")))))))))))))))))
-      ((((./test/testcases/malgo/Eventually.mlg 12 1)
-           (./test/testcases/malgo/Eventually.mlg 13 1))
+      ((sig
           eventually
-          (app
-             #Eventually.EventuallyBuilder_xxx
-             (#Eventually.a_xxx #Eventually.b_xxx)))
-         (((./test/testcases/malgo/Eventually.mlg 18 1)
-             (./test/testcases/malgo/Eventually.mlg 19 1))
+          (app EventuallyBuilder (#Eventually.a_xxx #Eventually.b_xxx)))
+         (sig
             eventuallyBind
             (->
-               (app #Eventually.Eventually_xxx (#Eventually.a_xxx))
+               (app Eventually (#Eventually.a_xxx))
                (->
-                  (->
-                     #Eventually.a_xxx
-                     (app #Eventually.Eventually_xxx (#Eventually.b_xxx)))
-                  (app #Eventually.Eventually_xxx (#Eventually.b_xxx)))))
-         (((./test/testcases/malgo/Eventually.mlg 29 1)
-             (./test/testcases/malgo/Eventually.mlg 30 1))
+                  (-> #Eventually.a_xxx (app Eventually (#Eventually.b_xxx)))
+                  (app Eventually (#Eventually.b_xxx)))))
+         (sig
             bind
             (->
-               (app
-                  #Eventually.EventuallyBuilder_xxx
-                  (#Eventually.a_xxx #Eventually.b_xxx))
+               (app EventuallyBuilder (#Eventually.a_xxx #Eventually.b_xxx))
                (->
-                  (app #Eventually.Eventually_xxx (#Eventually.a_xxx))
+                  (app Eventually (#Eventually.a_xxx))
                   (->
-                     (->
-                        #Eventually.a_xxx
-                        (app #Eventually.Eventually_xxx (#Eventually.b_xxx)))
-                     (app #Eventually.Eventually_xxx (#Eventually.b_xxx))))))
-         (((./test/testcases/malgo/Eventually.mlg 32 1)
-             (./test/testcases/malgo/Eventually.mlg 33 1))
+                     (-> #Eventually.a_xxx (app Eventually (#Eventually.b_xxx)))
+                     (app Eventually (#Eventually.b_xxx))))))
+         (sig
             return
             (->
-               (app
-                  #Eventually.EventuallyBuilder_xxx
-                  (#Eventually.a_xxx #Eventually.b_xxx))
-               (->
-                  #Eventually.a_xxx
-                  (app #Eventually.Eventually_xxx (#Eventually.a_xxx)))))
-         (((./test/testcases/malgo/Eventually.mlg 35 1)
-             (./test/testcases/malgo/Eventually.mlg 36 1))
-            comp
-            (app #Eventually.Eventually_xxx (#Eventually.Int32_xxx)))
-         (((./test/testcases/malgo/Eventually.mlg 41 1)
-             (./test/testcases/malgo/Eventually.mlg 42 1))
-            main
-            (-> (tuple) (tuple))))
-      ((((./test/testcases/malgo/Eventually.mlg 4 1)
-           (./test/testcases/malgo/Eventually.mlg 7 1))
+               (app EventuallyBuilder (#Eventually.a_xxx #Eventually.b_xxx))
+               (-> #Eventually.a_xxx (app Eventually (#Eventually.a_xxx)))))
+         (sig comp (app Eventually (Int32)))
+         (sig main (-> (tuple) (tuple))))
+      ((data
           Eventually
-          ((((./test/testcases/malgo/Eventually.mlg 4 17)
-               (./test/testcases/malgo/Eventually.mlg 4 19))
-              #Eventually.a_xxx))
-          ((((./test/testcases/malgo/Eventually.mlg 4 21)
-               (./test/testcases/malgo/Eventually.mlg 5 19))
-              Done
-              (#Eventually.a_xxx))
-             (((./test/testcases/malgo/Eventually.mlg 5 21)
-                 (./test/testcases/malgo/Eventually.mlg 7 1))
-                NotYetDone
-                ((-> (tuple) (app Eventually (#Eventually.a_xxx))))))))
-      ((((./test/testcases/malgo/Eventually.mlg 7 1)
-           (./test/testcases/malgo/Eventually.mlg 12 1))
+          (#Eventually.a_xxx)
+          ((Done (#Eventually.a_xxx))
+             (NotYetDone ((-> (tuple) (app Eventually (#Eventually.a_xxx))))))))
+      ((type
           EventuallyBuilder
           (#Eventually.a_xxx #Eventually.b_xxx)
           (record
@@ -226,11 +176,5 @@
                       (app Eventually (#Eventually.b_xxx)))))
              (return (-> #Eventually.a_xxx (app Eventually (#Eventually.a_xxx)))))))
       ()
-      ((((./test/testcases/malgo/Eventually.mlg 1 1)
-           (./test/testcases/malgo/Eventually.mlg 2 1))
-          "runtime/malgo/Builtin.mlg"
-          all)
-         (((./test/testcases/malgo/Eventually.mlg 2 1)
-             (./test/testcases/malgo/Eventually.mlg 4 1))
-            "runtime/malgo/Prelude.mlg"
-            all))))
+      ((import "runtime/malgo/Builtin.mlg" all)
+         (import "runtime/malgo/Prelude.mlg" all))))

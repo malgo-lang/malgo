@@ -38,8 +38,10 @@
                                   (seq
                                      (do
                                         (apply
-                                           (apply eventuallyBind k)
-                                           (seq (do (apply work (tuple)))))))))))))))))
+                                           (apply
+                                              eventuallyBind
+                                              (seq (do (apply work (tuple)))))
+                                           k)))))))))))))
       (def
          step
          (fn
@@ -62,43 +64,7 @@
          comp
          (apply
             (apply
-               (apply
-                  bind
-                  (fn
-                     ((clause
-                         (_)
-                         (seq
-                            (do
-                               (apply
-                                  (apply
-                                     (apply
-                                        bind
-                                        (fn
-                                           ((clause
-                                               (_)
-                                               (seq
-                                                  (do
-                                                     (apply
-                                                        (apply return (int32 3))
-                                                        eventually)))))))
-                                     (seq
-                                        (do
-                                           (apply
-                                              NotYetDone
-                                              (fn
-                                                 ((clause
-                                                     ()
-                                                     (seq
-                                                        (do
-                                                           (apply
-                                                              Done
-                                                              (seq
-                                                                 (do
-                                                                    (apply
-                                                                       printString
-                                                                       (string
-                                                                          "2"))))))))))))))
-                                  eventually)))))))
+               (apply bind eventually)
                (seq
                   (do
                      (apply
@@ -112,7 +78,38 @@
                                         Done
                                         (seq
                                            (do (apply printString (string "1"))))))))))))))
-            eventually))
+            (fn
+               ((clause
+                   (_)
+                   (seq
+                      (do
+                         (apply
+                            (apply
+                               (apply bind eventually)
+                               (seq
+                                  (do
+                                     (apply
+                                        NotYetDone
+                                        (fn
+                                           ((clause
+                                               ()
+                                               (seq
+                                                  (do
+                                                     (apply
+                                                        Done
+                                                        (seq
+                                                           (do
+                                                              (apply
+                                                                 printString
+                                                                 (string "2"))))))))))))))
+                            (fn
+                               ((clause
+                                   (_)
+                                   (seq
+                                      (do
+                                         (apply
+                                            (apply return eventually)
+                                            (int32 3)))))))))))))))
       (sig main (block (tuple)))
       (def
          main

@@ -1,14 +1,12 @@
 (module
    "test/testcases/malgo/Test0.mlg"
-   ((((((./test/testcases/malgo/Test0.mlg 5 1)
-          (./test/testcases/malgo/Test0.mlg 7 1))
+   ((((def
          |>
          (fn
             ((clause
                 (#Test0.x_xxx #Test0.f_xxx)
                 (seq (do (apply #Test0.f_xxx #Test0.x_xxx))))))))
-       ((((./test/testcases/malgo/Test0.mlg 10 1)
-            (./test/testcases/malgo/Test0.mlg 11 1))
+       ((def
            main
            (fn
               ((clause
@@ -30,21 +28,14 @@
                                                  (apply
                                                     toStringInt64#
                                                     #Test0.i_xxx)))))))))))))))))
-       ((((./test/testcases/malgo/Test0.mlg 8 1)
-            (./test/testcases/malgo/Test0.mlg 10 1))
+       ((def
            +#
            (fn
               ((clause
                   (#Test0.x_xxx #Test0.y_xxx)
-                  (seq (do (apply (apply addInt64# #Test0.y_xxx) #Test0.x_xxx)))))))))
-      ((((./test/testcases/malgo/Test0.mlg 4 1)
-           (./test/testcases/malgo/Test0.mlg 5 1))
-          |>
-          (-> #Test0.a_xxx (-> (-> #Test0.a_xxx #Test0.b_xxx) #Test0.b_xxx))))
+                  (seq (do (apply (apply addInt64# #Test0.x_xxx) #Test0.y_xxx)))))))))
+      ((sig |> (-> #Test0.a_xxx (-> (-> #Test0.a_xxx #Test0.b_xxx) #Test0.b_xxx))))
       ()
       ()
       ()
-      ((((./test/testcases/malgo/Test0.mlg 1 1)
-           (./test/testcases/malgo/Test0.mlg 3 1))
-          "runtime/malgo/Builtin.mlg"
-          all))))
+      ((import "runtime/malgo/Builtin.mlg" all))))

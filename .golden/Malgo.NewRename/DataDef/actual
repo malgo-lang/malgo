@@ -160,7 +160,7 @@ Module
                { name = "x"
                , moduleName = Artifact
                 ( ArtifactPath "test/testcases/malgo/DataDef.mlg" )
-               , sort = Internal 4
+               , sort = Internal 1
                }
               )
              ]
@@ -311,7 +311,7 @@ Module
                     { name = "x"
                     , moduleName = Artifact
                      ( ArtifactPath "test/testcases/malgo/DataDef.mlg" )
-                    , sort = Internal 4
+                    , sort = Internal 1
                     }
                    )
                   )
@@ -456,7 +456,7 @@ Module
        , sort = External
        }
       ,
-       [ TyVar
+       [ TyCon
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/DataDef.mlg"
@@ -598,7 +598,7 @@ Module
           }
          }
         )
-        ( TyVar
+        ( TyCon
          ( Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/DataDef.mlg"
@@ -685,7 +685,7 @@ Module
        }
       }
      )
-     ( TyVar
+     ( TyCon
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/DataDef.mlg"
@@ -701,13 +701,12 @@ Module
       )
       ( Id
        { name = "Int64#"
-       , moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/DataDef.mlg" )
-       , sort = Internal 1
+       , moduleName = ModuleName "Builtin"
+       , sort = External
        }
       )
      )
-     ( TyVar
+     ( TyCon
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/DataDef.mlg"
@@ -723,9 +722,8 @@ Module
       )
       ( Id
        { name = "String#"
-       , moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/DataDef.mlg" )
-       , sort = Internal 2
+       , moduleName = ModuleName "Builtin"
+       , sort = External
        }
       )
      )
@@ -766,7 +764,7 @@ Module
        }
       }
      )
-     ( TyVar
+     ( TyCon
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/DataDef.mlg"
@@ -782,9 +780,8 @@ Module
       )
       ( Id
        { name = "String#"
-       , moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/DataDef.mlg" )
-       , sort = Internal 3
+       , moduleName = ModuleName "Builtin"
+       , sort = External
        }
       )
      )

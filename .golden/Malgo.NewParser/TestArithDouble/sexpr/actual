@@ -5,13 +5,13 @@
       (def
          neg
          (fn
-            ((clause (x) (seq (do (apply (apply subDouble# x) (double 0.0_f64))))))))
+            ((clause (x) (seq (do (apply (apply subDouble# (double 0.0_f64)) x)))))))
       (infix left 7 *)
-      (def * (fn ((clause (x y) (seq (do (apply (apply mulDouble# y) x)))))))
-      (def mul (fn ((clause (x y) (seq (do (apply (apply mulDouble# y) x)))))))
+      (def * (fn ((clause (x y) (seq (do (apply (apply mulDouble# x) y)))))))
+      (def mul (fn ((clause (x y) (seq (do (apply (apply mulDouble# x) y)))))))
       (infix left 6 +)
-      (def + (fn ((clause (x y) (seq (do (apply (apply addDouble# y) x)))))))
-      (def add (fn ((clause (x y) (seq (do (apply (apply addDouble# y) x)))))))
+      (def + (fn ((clause (x y) (seq (do (apply (apply addDouble# x) y)))))))
+      (def add (fn ((clause (x y) (seq (do (apply (apply addDouble# x) y)))))))
       (def
          show
          (fn

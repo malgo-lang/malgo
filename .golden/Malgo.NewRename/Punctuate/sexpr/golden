@@ -1,11 +1,7 @@
 (module
    "test/testcases/malgo/Punctuate.mlg"
-   ((((((./test/testcases/malgo/Punctuate.mlg 6 1)
-          (./test/testcases/malgo/Punctuate.mlg 8 1))
-         <>
-         appendString))
-       ((((./test/testcases/malgo/Punctuate.mlg 13 1)
-            (./test/testcases/malgo/Punctuate.mlg 19 1))
+   ((((def <> appendString))
+       ((def
            show
            (fn
               ((clause
@@ -40,17 +36,14 @@
                                          (apply
                                             (apply
                                                punctuate
-                                               (seq
-                                                  (do
-                                                     (apply
-                                                        (apply
-                                                           mapList
-                                                           #Punctuate.ss_xxx)
-                                                        show))))
-                                            (apply String# (string ", "))))))
+                                               (apply String# (string ", ")))
+                                            (seq
+                                               (do
+                                                  (apply
+                                                     (apply mapList show)
+                                                     #Punctuate.ss_xxx)))))))
                                 (apply String# (string "]")))))))))))
-       ((((./test/testcases/malgo/Punctuate.mlg 19 1)
-            (./test/testcases/malgo/Punctuate.mlg 24 1))
+       ((def
            main
            (fn
               ((clause
@@ -93,39 +86,12 @@
                                  Nil))))
                      (do
                         (apply putStrLn (seq (do (apply show #Punctuate.x_xxx))))))))))))
-      ((((./test/testcases/malgo/Punctuate.mlg 5 1)
-           (./test/testcases/malgo/Punctuate.mlg 6 1))
-          <>
-          (->
-             #Punctuate.String_xxx
-             (-> #Punctuate.String_xxx #Punctuate.String_xxx)))
-         (((./test/testcases/malgo/Punctuate.mlg 12 1)
-             (./test/testcases/malgo/Punctuate.mlg 13 1))
-            show
-            (-> #Punctuate.SExpr_xxx #Punctuate.String_xxx)))
-      ((((./test/testcases/malgo/Punctuate.mlg 8 1)
-           (./test/testcases/malgo/Punctuate.mlg 12 1))
+      ((sig <> (-> String (-> String String))) (sig show (-> SExpr String)))
+      ((data
           SExpr
           ()
-          ((((./test/testcases/malgo/Punctuate.mlg 8 14)
-               (./test/testcases/malgo/Punctuate.mlg 9 12))
-              Symbol
-              (String))
-             (((./test/testcases/malgo/Punctuate.mlg 9 14)
-                 (./test/testcases/malgo/Punctuate.mlg 10 12))
-                SInt
-                (Int32))
-             (((./test/testcases/malgo/Punctuate.mlg 10 14)
-                 (./test/testcases/malgo/Punctuate.mlg 12 1))
-                SList
-                ((app List (SExpr)))))))
+          ((Symbol (String)) (SInt (Int32)) (SList ((app List (SExpr)))))))
       ()
       ()
-      ((((./test/testcases/malgo/Punctuate.mlg 1 1)
-           (./test/testcases/malgo/Punctuate.mlg 2 1))
-          "runtime/malgo/Builtin.mlg"
-          all)
-         (((./test/testcases/malgo/Punctuate.mlg 2 1)
-             (./test/testcases/malgo/Punctuate.mlg 4 1))
-            "runtime/malgo/Prelude.mlg"
-            all))))
+      ((import "runtime/malgo/Builtin.mlg" all)
+         (import "runtime/malgo/Prelude.mlg" all))))

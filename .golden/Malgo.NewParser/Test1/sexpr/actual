@@ -16,16 +16,7 @@
                    (do
                       (apply
                          (apply
-                            (apply
-                               if
-                               (fn
-                                  ((clause
-                                      ()
-                                      (seq
-                                         (do
-                                            (apply
-                                               malgo_print_string
-                                               (string "False"))))))))
+                            (apply if True)
                             (fn
                                ((clause
                                    ()
@@ -34,4 +25,9 @@
                                          (apply
                                             malgo_print_string
                                             (string "True"))))))))
-                         True)))))))))
+                         (fn
+                            ((clause
+                                ()
+                                (seq
+                                   (do
+                                      (apply malgo_print_string (string "False"))))))))))))))))

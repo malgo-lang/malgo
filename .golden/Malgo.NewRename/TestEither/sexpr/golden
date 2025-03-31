@@ -1,11 +1,7 @@
 (module
    "test/testcases/malgo/TestEither.mlg"
-   ((((((./test/testcases/malgo/TestEither.mlg 6 1)
-          (./test/testcases/malgo/TestEither.mlg 8 1))
-         id
-         (fn ((clause (#TestEither.x_xxx) (seq (do #TestEither.x_xxx)))))))
-       ((((./test/testcases/malgo/TestEither.mlg 8 1)
-            (./test/testcases/malgo/TestEither.mlg 12 1))
+   ((((def id (fn ((clause (#TestEither.x_xxx) (seq (do #TestEither.x_xxx)))))))
+       ((def
            andThen
            (fn
               ((clause
@@ -14,8 +10,7 @@
                  (clause
                     (#TestEither.f_xxx (con Right (#TestEither.x_xxx)))
                     (seq (do (apply #TestEither.f_xxx #TestEither.x_xxx))))))))
-       ((((./test/testcases/malgo/TestEither.mlg 12 1)
-            (./test/testcases/malgo/TestEither.mlg 25 1))
+       ((def
            main
            (fn
               ((clause
@@ -69,10 +64,8 @@
                                                        (apply
                                                           (apply
                                                              addInt32
-                                                             (apply
-                                                                Int32#
-                                                                (int32 1)))
-                                                          #TestEither.x_xxx)))))))))))
+                                                             #TestEither.x_xxx)
+                                                          (apply Int32# (int32 1)))))))))))))
                            (apply
                               andThen
                               (fn
@@ -124,10 +117,8 @@
                                                        (apply
                                                           (apply
                                                              addInt32
-                                                             (apply
-                                                                Int32#
-                                                                (int32 1)))
-                                                          #TestEither.x_xxx)))))))))))
+                                                             #TestEither.x_xxx)
+                                                          (apply Int32# (int32 1)))))))))))))
                            (fn
                               ((clause
                                   ((con Left ()) #TestEither.err_xxx)
@@ -144,30 +135,11 @@
                                                 toStringInt32)
                                              putStrLn)))))))))))))))
       ()
-      ((((./test/testcases/malgo/TestEither.mlg 4 1)
-           (./test/testcases/malgo/TestEither.mlg 6 1))
+      ((data
           Either
-          ((((./test/testcases/malgo/TestEither.mlg 4 13)
-               (./test/testcases/malgo/TestEither.mlg 4 15))
-              #TestEither.a_xxx)
-             (((./test/testcases/malgo/TestEither.mlg 4 15)
-                 (./test/testcases/malgo/TestEither.mlg 4 17))
-                #TestEither.b_xxx))
-          ((((./test/testcases/malgo/TestEither.mlg 4 19)
-               (./test/testcases/malgo/TestEither.mlg 4 26))
-              Left
-              (#TestEither.a_xxx))
-             (((./test/testcases/malgo/TestEither.mlg 4 28)
-                 (./test/testcases/malgo/TestEither.mlg 6 1))
-                Right
-                (#TestEither.b_xxx)))))
+          (#TestEither.a_xxx #TestEither.b_xxx)
+          ((Left (#TestEither.a_xxx)) (Right (#TestEither.b_xxx)))))
       ()
       ()
-      ((((./test/testcases/malgo/TestEither.mlg 1 1)
-           (./test/testcases/malgo/TestEither.mlg 2 1))
-          "runtime/malgo/Builtin.mlg"
-          all)
-         (((./test/testcases/malgo/TestEither.mlg 2 1)
-             (./test/testcases/malgo/TestEither.mlg 4 1))
-            "runtime/malgo/Prelude.mlg"
-            all))))
+      ((import "runtime/malgo/Builtin.mlg" all)
+         (import "runtime/malgo/Prelude.mlg" all))))

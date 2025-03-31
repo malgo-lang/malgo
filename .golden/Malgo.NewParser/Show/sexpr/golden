@@ -4,7 +4,7 @@
       (import "runtime/malgo/Prelude.mlg" all)
       (infix right 5 <>)
       (sig <> (-> String (-> String String)))
-      (def <> (fn ((clause (x y) (seq (do (apply (apply appendString y) x)))))))
+      (def <> (fn ((clause (x y) (seq (do (apply (apply appendString x) y)))))))
       (type Show (a) (record (show (-> a String))))
       (sig showInt32 (app Show (Int32)))
       (def
@@ -39,10 +39,10 @@
                                                      <>
                                                      (string "(")
                                                      (apply
-                                                        (apply show a)
-                                                        showDictA))
+                                                        (apply show showDictA)
+                                                        a))
                                                   (string ", "))
-                                               (apply (apply show b) showDictB))
+                                               (apply (apply show showDictB) b))
                                             (string ")")))))))))))))))
       (sig print (-> (app Show (a)) (-> a (tuple))))
       (def
@@ -54,7 +54,7 @@
                    (do
                       (apply
                          printString
-                         (seq (do (apply (apply show x) showDict))))))))))
+                         (seq (do (apply (apply show showDict) x))))))))))
       (def
          main
          (fn
@@ -63,5 +63,8 @@
                 (seq
                    (do
                       (apply
-                         (apply print (tuple (int32 1) (int32 2)))
-                         (seq (do (apply (apply showTuple2 showInt32) showInt32))))))))))))
+                         (apply
+                            print
+                            (seq
+                               (do (apply (apply showTuple2 showInt32) showInt32))))
+                         (tuple (int32 1) (int32 2)))))))))))

@@ -1,7 +1,6 @@
 (module
    "test/testcases/malgo/TestPolySynonym.mlg"
-   ((((((./test/testcases/malgo/TestPolySynonym.mlg 9 1)
-          (./test/testcases/malgo/TestPolySynonym.mlg 11 1))
+   ((((def
          first
          (fn
             ((clause
@@ -9,8 +8,7 @@
                     (fst #TestPolySynonym.x_xxx)
                     (snd #TestPolySynonym.__xxx)))
                 (seq (do #TestPolySynonym.x_xxx)))))))
-       ((((./test/testcases/malgo/TestPolySynonym.mlg 12 1)
-            (./test/testcases/malgo/TestPolySynonym.mlg 16 1))
+       ((def
            main
            (fn
               ((clause
@@ -23,33 +21,18 @@
                            (snd (apply String# (string "hoge")))))
                      (do
                         (opapp |> (apply first #TestPolySynonym.x_xxx) printInt32)))))))))
-      ((((./test/testcases/malgo/TestPolySynonym.mlg 8 1)
-           (./test/testcases/malgo/TestPolySynonym.mlg 9 1))
+      ((sig
           first
           (->
              (record (fst #TestPolySynonym.a_xxx) (snd #TestPolySynonym.b_xxx))
              #TestPolySynonym.a_xxx))
-         (((./test/testcases/malgo/TestPolySynonym.mlg 11 1)
-             (./test/testcases/malgo/TestPolySynonym.mlg 12 1))
-            main
-            (app Fun0 ((tuple)))))
+         (sig main (app Fun0 ((tuple)))))
       ()
-      ((((./test/testcases/malgo/TestPolySynonym.mlg 4 6)
-           (./test/testcases/malgo/TestPolySynonym.mlg 6 1))
-          Fun0
-          (#TestPolySynonym.a_xxx)
-          (-> (tuple) #TestPolySynonym.a_xxx))
-         (((./test/testcases/malgo/TestPolySynonym.mlg 6 6)
-             (./test/testcases/malgo/TestPolySynonym.mlg 8 1))
+      ((type Fun0 (#TestPolySynonym.a_xxx) (-> (tuple) #TestPolySynonym.a_xxx))
+         (type
             Pair
             (#TestPolySynonym.a_xxx #TestPolySynonym.b_xxx)
             (record (fst #TestPolySynonym.b_xxx) (snd #TestPolySynonym.a_xxx))))
       ()
-      ((((./test/testcases/malgo/TestPolySynonym.mlg 1 1)
-           (./test/testcases/malgo/TestPolySynonym.mlg 2 1))
-          "runtime/malgo/Builtin.mlg"
-          all)
-         (((./test/testcases/malgo/TestPolySynonym.mlg 2 1)
-             (./test/testcases/malgo/TestPolySynonym.mlg 4 1))
-            "runtime/malgo/Prelude.mlg"
-            all))))
+      ((import "runtime/malgo/Builtin.mlg" all)
+         (import "runtime/malgo/Prelude.mlg" all))))

@@ -1,7 +1,6 @@
 (module
    "test/testcases/malgo/TestCast.mlg"
-   ((((((./test/testcases/malgo/TestCast.mlg 10 1)
-          (./test/testcases/malgo/TestCast.mlg 13 1))
+   ((((def
          main
          (fn
             ((clause
@@ -17,52 +16,28 @@
                                   (seq
                                      (do
                                         (apply
-                                           (apply
-                                              malgo_read_vector
-                                              (seq
-                                                 (do
+                                           (apply malgo_read_vector (int64 2))
+                                           (seq
+                                              (do
+                                                 (apply
                                                     (apply
-                                                       (apply
-                                                          malgo_new_vector
-                                                          (seq
-                                                             (do
-                                                                (apply
-                                                                   malgo_unsafe_cast
-                                                                   (apply
-                                                                      Int32#
-                                                                      (int32 5))))))
-                                                       (int64 10)))))
-                                           (int64 2))))))))))))))))
+                                                       malgo_new_vector
+                                                       (int64 10))
+                                                    (seq
+                                                       (do
+                                                          (apply
+                                                             malgo_unsafe_cast
+                                                             (apply
+                                                                Int32#
+                                                                (int32 5)))))))))))))))))))))))
       ()
       ()
       ()
-      (((((./test/testcases/malgo/TestCast.mlg 6 1)
-            (./test/testcases/malgo/TestCast.mlg 8 1))
-           malgo_new_vector)
+      ((foreign
           malgo_new_vector
-          (->
-             #TestCast.Int64#_xxx
-             (->
-                (app #TestCast.Ptr#_xxx (#TestCast.Char#_xxx))
-                (app
-                   #TestCast.Ptr#_xxx
-                   ((app #TestCast.Ptr#_xxx (#TestCast.Char#_xxx)))))))
-         ((((./test/testcases/malgo/TestCast.mlg 8 1)
-              (./test/testcases/malgo/TestCast.mlg 10 1))
-             malgo_read_vector)
+          (-> Int64# (-> (app Ptr# (Char#)) (app Ptr# ((app Ptr# (Char#)))))))
+         (foreign
             malgo_read_vector
-            (->
-               #TestCast.Int64#_xxx
-               (->
-                  (app
-                     #TestCast.Ptr#_xxx
-                     ((app #TestCast.Ptr#_xxx (#TestCast.Char#_xxx))))
-                  (app #TestCast.Ptr#_xxx (#TestCast.Char#_xxx))))))
-      ((((./test/testcases/malgo/TestCast.mlg 3 1)
-           (./test/testcases/malgo/TestCast.mlg 4 1))
-          "runtime/malgo/Builtin.mlg"
-          all)
-         (((./test/testcases/malgo/TestCast.mlg 4 1)
-             (./test/testcases/malgo/TestCast.mlg 6 1))
-            "runtime/malgo/Prelude.mlg"
-            all))))
+            (-> Int64# (-> (app Ptr# ((app Ptr# (Char#)))) (app Ptr# (Char#))))))
+      ((import "runtime/malgo/Builtin.mlg" all)
+         (import "runtime/malgo/Prelude.mlg" all))))

@@ -12,7 +12,7 @@
                      (do
                         (apply
                            odd
-                           (seq (do (apply (apply subInt32 (int32 1)) n))))))))))
+                           (seq (do (apply (apply subInt32 n) (int32 1)))))))))))
       (def
          odd
          (fn
@@ -23,7 +23,7 @@
                      (do
                         (apply
                            even
-                           (seq (do (apply (apply subInt32 (int32 1)) n))))))))))
+                           (seq (do (apply (apply subInt32 n) (int32 1)))))))))))
       (def
          main
          (fn

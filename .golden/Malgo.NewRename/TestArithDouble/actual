@@ -601,12 +601,12 @@ Module
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
             , sourceLine = Pos 5
-            , sourceColumn = Pos 29
+            , sourceColumn = Pos 34
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
             , sourceLine = Pos 5
-            , sourceColumn = Pos 34
+            , sourceColumn = Pos 36
             }
            }
           )
@@ -615,12 +615,12 @@ Module
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
              , sourceLine = Pos 5
-             , sourceColumn = Pos 34
+             , sourceColumn = Pos 29
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
              , sourceLine = Pos 5
-             , sourceColumn = Pos 36
+             , sourceColumn = Pos 34
              }
             }
            )
@@ -646,44 +646,44 @@ Module
              }
             )
            )
-           ( Var
+           ( Unboxed
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
               , sourceLine = Pos 5
-              , sourceColumn = Pos 34
+              , sourceColumn = Pos 29
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
               , sourceLine = Pos 5
-              , sourceColumn = Pos 36
+              , sourceColumn = Pos 34
               }
              }
             )
-            ( Id
-             { name = "x"
-             , moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" )
-             , sort = Internal 0
-             }
-            )
+            ( Double 0.0 )
            )
           )
-          ( Unboxed
+          ( Var
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
              , sourceLine = Pos 5
-             , sourceColumn = Pos 29
+             , sourceColumn = Pos 34
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
              , sourceLine = Pos 5
-             , sourceColumn = Pos 34
+             , sourceColumn = Pos 36
              }
             }
            )
-           ( Double 0.0 )
+           ( Id
+            { name = "x"
+            , moduleName = Artifact
+             ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" )
+            , sort = Internal 0
+            }
+           )
           )
          ) :| []
         )
@@ -815,12 +815,12 @@ Module
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
             , sourceLine = Pos 10
-            , sourceColumn = Pos 30
+            , sourceColumn = Pos 32
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
             , sourceLine = Pos 10
-            , sourceColumn = Pos 32
+            , sourceColumn = Pos 33
             }
            }
           )
@@ -829,12 +829,12 @@ Module
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
              , sourceLine = Pos 10
-             , sourceColumn = Pos 32
+             , sourceColumn = Pos 30
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
              , sourceLine = Pos 10
-             , sourceColumn = Pos 33
+             , sourceColumn = Pos 32
              }
             }
            )
@@ -865,20 +865,20 @@ Module
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
               , sourceLine = Pos 10
-              , sourceColumn = Pos 32
+              , sourceColumn = Pos 30
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
               , sourceLine = Pos 10
-              , sourceColumn = Pos 33
+              , sourceColumn = Pos 32
               }
              }
             )
             ( Id
-             { name = "y"
+             { name = "x"
              , moduleName = Artifact
               ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" )
-             , sort = Internal 4
+             , sort = Internal 3
              }
             )
            )
@@ -888,20 +888,20 @@ Module
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
              , sourceLine = Pos 10
-             , sourceColumn = Pos 30
+             , sourceColumn = Pos 32
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
              , sourceLine = Pos 10
-             , sourceColumn = Pos 32
+             , sourceColumn = Pos 33
              }
             }
            )
            ( Id
-            { name = "x"
+            { name = "y"
             , moduleName = Artifact
              ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" )
-            , sort = Internal 3
+            , sort = Internal 4
             }
            )
           )
@@ -1035,12 +1035,12 @@ Module
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
             , sourceLine = Pos 15
-            , sourceColumn = Pos 30
+            , sourceColumn = Pos 32
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
             , sourceLine = Pos 15
-            , sourceColumn = Pos 32
+            , sourceColumn = Pos 33
             }
            }
           )
@@ -1049,12 +1049,12 @@ Module
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
              , sourceLine = Pos 15
-             , sourceColumn = Pos 32
+             , sourceColumn = Pos 30
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
              , sourceLine = Pos 15
-             , sourceColumn = Pos 33
+             , sourceColumn = Pos 32
              }
             }
            )
@@ -1085,20 +1085,20 @@ Module
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
               , sourceLine = Pos 15
-              , sourceColumn = Pos 32
+              , sourceColumn = Pos 30
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
               , sourceLine = Pos 15
-              , sourceColumn = Pos 33
+              , sourceColumn = Pos 32
               }
              }
             )
             ( Id
-             { name = "y"
+             { name = "x"
              , moduleName = Artifact
               ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" )
-             , sort = Internal 8
+             , sort = Internal 7
              }
             )
            )
@@ -1108,20 +1108,20 @@ Module
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
              , sourceLine = Pos 15
-             , sourceColumn = Pos 30
+             , sourceColumn = Pos 32
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
              , sourceLine = Pos 15
-             , sourceColumn = Pos 32
+             , sourceColumn = Pos 33
              }
             }
            )
            ( Id
-            { name = "x"
+            { name = "y"
             , moduleName = Artifact
              ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" )
-            , sort = Internal 7
+            , sort = Internal 8
             }
            )
           )
@@ -1255,12 +1255,12 @@ Module
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
             , sourceLine = Pos 13
-            , sourceColumn = Pos 30
+            , sourceColumn = Pos 32
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
             , sourceLine = Pos 13
-            , sourceColumn = Pos 32
+            , sourceColumn = Pos 33
             }
            }
           )
@@ -1269,12 +1269,12 @@ Module
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
              , sourceLine = Pos 13
-             , sourceColumn = Pos 32
+             , sourceColumn = Pos 30
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
              , sourceLine = Pos 13
-             , sourceColumn = Pos 33
+             , sourceColumn = Pos 32
              }
             }
            )
@@ -1305,20 +1305,20 @@ Module
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
               , sourceLine = Pos 13
-              , sourceColumn = Pos 32
+              , sourceColumn = Pos 30
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
               , sourceLine = Pos 13
-              , sourceColumn = Pos 33
+              , sourceColumn = Pos 32
               }
              }
             )
             ( Id
-             { name = "y"
+             { name = "x"
              , moduleName = Artifact
               ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" )
-             , sort = Internal 6
+             , sort = Internal 5
              }
             )
            )
@@ -1328,20 +1328,20 @@ Module
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
              , sourceLine = Pos 13
-             , sourceColumn = Pos 30
+             , sourceColumn = Pos 32
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
              , sourceLine = Pos 13
-             , sourceColumn = Pos 32
+             , sourceColumn = Pos 33
              }
             }
            )
            ( Id
-            { name = "x"
+            { name = "y"
             , moduleName = Artifact
              ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" )
-            , sort = Internal 5
+            , sort = Internal 6
             }
            )
           )
@@ -1475,12 +1475,12 @@ Module
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
             , sourceLine = Pos 8
-            , sourceColumn = Pos 30
+            , sourceColumn = Pos 32
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
             , sourceLine = Pos 8
-            , sourceColumn = Pos 32
+            , sourceColumn = Pos 33
             }
            }
           )
@@ -1489,12 +1489,12 @@ Module
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
              , sourceLine = Pos 8
-             , sourceColumn = Pos 32
+             , sourceColumn = Pos 30
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
              , sourceLine = Pos 8
-             , sourceColumn = Pos 33
+             , sourceColumn = Pos 32
              }
             }
            )
@@ -1525,20 +1525,20 @@ Module
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
               , sourceLine = Pos 8
-              , sourceColumn = Pos 32
+              , sourceColumn = Pos 30
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
               , sourceLine = Pos 8
-              , sourceColumn = Pos 33
+              , sourceColumn = Pos 32
               }
              }
             )
             ( Id
-             { name = "y"
+             { name = "x"
              , moduleName = Artifact
               ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" )
-             , sort = Internal 2
+             , sort = Internal 1
              }
             )
            )
@@ -1548,20 +1548,20 @@ Module
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
              , sourceLine = Pos 8
-             , sourceColumn = Pos 30
+             , sourceColumn = Pos 32
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
              , sourceLine = Pos 8
-             , sourceColumn = Pos 32
+             , sourceColumn = Pos 33
              }
             }
            )
            ( Id
-            { name = "x"
+            { name = "y"
             , moduleName = Artifact
              ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" )
-            , sort = Internal 1
+            , sort = Internal 2
             }
            )
           )
@@ -1637,7 +1637,7 @@ Module
          { name = "x"
          , moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" )
-         , sort = Internal 12
+         , sort = Internal 11
          }
         )
        ]
@@ -1765,7 +1765,7 @@ Module
                { name = "x"
                , moduleName = Artifact
                 ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" )
-               , sort = Internal 12
+               , sort = Internal 11
                }
               )
              )
@@ -1806,7 +1806,7 @@ Module
             { name = "x"
             , moduleName = Artifact
              ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" )
-            , sort = Internal 12
+            , sort = Internal 11
             }
            )
           )
@@ -2119,7 +2119,7 @@ Module
        }
       }
      )
-     ( TyVar
+     ( TyCon
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
@@ -2135,13 +2135,12 @@ Module
       )
       ( Id
        { name = "Double#"
-       , moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" )
-       , sort = Internal 11
+       , moduleName = ModuleName "Builtin"
+       , sort = External
        }
       )
      )
-     ( TyVar
+     ( TyCon
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/TestArithDouble.mlg"
@@ -2157,9 +2156,8 @@ Module
       )
       ( Id
        { name = "Double#"
-       , moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/TestArithDouble.mlg" )
-       , sort = Internal 11
+       , moduleName = ModuleName "Builtin"
+       , sort = External
        }
       )
      )

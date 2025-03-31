@@ -1,7 +1,6 @@
 (module
    "test/testcases/malgo/InlineFunction.mlg"
-   ((((((./test/testcases/malgo/InlineFunction.mlg 13 1)
-          (./test/testcases/malgo/InlineFunction.mlg 15 1))
+   ((((def
          fix
          (fn
             ((clause
@@ -13,8 +12,7 @@
                             #InlineFunction.f_xxx
                             (seq (do (apply fix #InlineFunction.f_xxx))))
                          #InlineFunction.x_xxx))))))))
-       ((((./test/testcases/malgo/InlineFunction.mlg 5 1)
-            (./test/testcases/malgo/InlineFunction.mlg 7 1))
+       ((def
            <=
            (fn
               ((clause
@@ -24,8 +22,7 @@
                         (apply
                            (apply leInt32 #InlineFunction.x_xxx)
                            #InlineFunction.y_xxx))))))))
-       ((((./test/testcases/malgo/InlineFunction.mlg 11 1)
-            (./test/testcases/malgo/InlineFunction.mlg 13 1))
+       ((def
            -
            (fn
               ((clause
@@ -35,8 +32,7 @@
                         (apply
                            (apply subInt32 #InlineFunction.x_xxx)
                            #InlineFunction.y_xxx))))))))
-       ((((./test/testcases/malgo/InlineFunction.mlg 8 1)
-            (./test/testcases/malgo/InlineFunction.mlg 10 1))
+       ((def
            +
            (fn
               ((clause
@@ -46,8 +42,7 @@
                         (apply
                            (apply addInt32 #InlineFunction.x_xxx)
                            #InlineFunction.y_xxx))))))))
-       ((((./test/testcases/malgo/InlineFunction.mlg 15 1)
-            (./test/testcases/malgo/InlineFunction.mlg 23 1))
+       ((def
            main
            (fn
               ((clause
@@ -123,11 +118,5 @@
       ()
       ()
       ()
-      ((((./test/testcases/malgo/InlineFunction.mlg 1 1)
-           (./test/testcases/malgo/InlineFunction.mlg 2 1))
-          "runtime/malgo/Builtin.mlg"
-          all)
-         (((./test/testcases/malgo/InlineFunction.mlg 2 1)
-             (./test/testcases/malgo/InlineFunction.mlg 4 1))
-            "runtime/malgo/Prelude.mlg"
-            all))))
+      ((import "runtime/malgo/Builtin.mlg" all)
+         (import "runtime/malgo/Prelude.mlg" all))))

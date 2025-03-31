@@ -1,35 +1,30 @@
 (module
    "test/testcases/malgo/ShowSimple.mlg"
-   ((((((./test/testcases/malgo/ShowSimple.mlg 25 1)
-          (./test/testcases/malgo/ShowSimple.mlg 31 1))
+   ((((def
          wrap
          (fn
             ((clause
                 (#ShowSimple.fn_xxx)
                 (seq (do (record (show #ShowSimple.fn_xxx)))))))))
-       ((((./test/testcases/malgo/ShowSimple.mlg 10 1)
-            (./test/testcases/malgo/ShowSimple.mlg 12 1))
+       ((def
            string#
            (fn
               ((clause
                   (#ShowSimple.x_xxx)
                   (seq (do (apply String# #ShowSimple.x_xxx))))))))
-       ((((./test/testcases/malgo/ShowSimple.mlg 22 1)
-            (./test/testcases/malgo/ShowSimple.mlg 24 1))
+       ((def
            show
            (fn
               ((clause
                   ((record (show #ShowSimple.show_xxx)))
                   (seq (do #ShowSimple.show_xxx)))))))
-       ((((./test/testcases/malgo/ShowSimple.mlg 13 1)
-            (./test/testcases/malgo/ShowSimple.mlg 15 1))
+       ((def
            putStr
            (fn
               ((clause
                   ((con String# ()) #ShowSimple.x_xxx)
                   (seq (do (apply malgo_print_string #ShowSimple.x_xxx))))))))
-       ((((./test/testcases/malgo/ShowSimple.mlg 31 1)
-            (./test/testcases/malgo/ShowSimple.mlg 32 1))
+       ((def
            main
            (fn
               ((clause
@@ -61,67 +56,25 @@
                                                                          malgo_int32_t_to_string
                                                                          #ShowSimple.x_xxx)))))))))))))
                                     (apply Int32# (int32 1)))))))))))))
-       ((((./test/testcases/malgo/ShowSimple.mlg 6 1)
-            (./test/testcases/malgo/ShowSimple.mlg 8 1))
+       ((def
            int32#
            (fn
               ((clause
                   (#ShowSimple.x_xxx)
                   (seq (do (apply Int32# #ShowSimple.x_xxx)))))))))
-      ((((./test/testcases/malgo/ShowSimple.mlg 5 1)
-           (./test/testcases/malgo/ShowSimple.mlg 6 1))
-          int32#
-          (-> Int32# Int32))
-         (((./test/testcases/malgo/ShowSimple.mlg 9 1)
-             (./test/testcases/malgo/ShowSimple.mlg 10 1))
-            string#
-            (-> String# String))
-         (((./test/testcases/malgo/ShowSimple.mlg 12 1)
-             (./test/testcases/malgo/ShowSimple.mlg 13 1))
-            putStr
-            (-> String (tuple)))
-         (((./test/testcases/malgo/ShowSimple.mlg 21 1)
-             (./test/testcases/malgo/ShowSimple.mlg 22 1))
+      ((sig int32# (-> Int32# Int32))
+         (sig string# (-> String# String))
+         (sig putStr (-> String (tuple)))
+         (sig
             show
             (-> (app Show (#ShowSimple.a_xxx)) (-> #ShowSimple.a_xxx String)))
-         (((./test/testcases/malgo/ShowSimple.mlg 24 1)
-             (./test/testcases/malgo/ShowSimple.mlg 25 1))
-            wrap
-            (-> (-> Int32 String) (app Show (Int32)))))
-      ((((./test/testcases/malgo/ShowSimple.mlg 4 6)
-           (./test/testcases/malgo/ShowSimple.mlg 5 1))
-          Int32
-          ()
-          ((((./test/testcases/malgo/ShowSimple.mlg 4 14)
-               (./test/testcases/malgo/ShowSimple.mlg 5 1))
-              Int32#
-              (Int32#))))
-         (((./test/testcases/malgo/ShowSimple.mlg 8 6)
-             (./test/testcases/malgo/ShowSimple.mlg 9 1))
-            String
-            ()
-            ((((./test/testcases/malgo/ShowSimple.mlg 8 15)
-                 (./test/testcases/malgo/ShowSimple.mlg 9 1))
-                String#
-                (String#)))))
-      ((((./test/testcases/malgo/ShowSimple.mlg 17 6)
-           (./test/testcases/malgo/ShowSimple.mlg 21 1))
+         (sig wrap (-> (-> Int32 String) (app Show (Int32)))))
+      ((data Int32 () ((Int32# (Int32#)))) (data String () ((String# (String#)))))
+      ((type
           Show
           (#ShowSimple.a_xxx)
           (record (show (-> #ShowSimple.a_xxx String)))))
-      (((((./test/testcases/malgo/ShowSimple.mlg 1 1)
-            (./test/testcases/malgo/ShowSimple.mlg 2 1))
-           malgo_print_string)
-          malgo_print_string
-          (-> String# (tuple)))
-         ((((./test/testcases/malgo/ShowSimple.mlg 2 1)
-              (./test/testcases/malgo/ShowSimple.mlg 4 1))
-             malgo_newline)
-            malgo_newline
-            (-> (tuple) (tuple)))
-         ((((./test/testcases/malgo/ShowSimple.mlg 15 1)
-              (./test/testcases/malgo/ShowSimple.mlg 17 1))
-             malgo_int32_t_to_string)
-            malgo_int32_t_to_string
-            (-> Int32# String#)))
+      ((foreign malgo_print_string (-> String# (tuple)))
+         (foreign malgo_newline (-> (tuple) (tuple)))
+         (foreign malgo_int32_t_to_string (-> Int32# String#)))
       ()))

@@ -1,7 +1,6 @@
 (module
    "test/testcases/malgo/UseModule.mlg"
-   ((((((./test/testcases/malgo/UseModule.mlg 5 1)
-          (./test/testcases/malgo/UseModule.mlg 7 1))
+   ((((def
          succ
          (fn
             ((clause
@@ -9,10 +8,9 @@
                 (seq
                    (do
                       (apply
-                         (apply addInt32 (apply Int32# (int32 1)))
-                         #UseModule.x_xxx))))))))
-       ((((./test/testcases/malgo/UseModule.mlg 7 1)
-            (./test/testcases/malgo/UseModule.mlg 11 1))
+                         (apply addInt32 #UseModule.x_xxx)
+                         (apply Int32# (int32 1))))))))))
+       ((def
            main
            (fn
               ((clause
@@ -31,15 +29,6 @@
       ()
       ()
       ()
-      ((((./test/testcases/malgo/UseModule.mlg 1 1)
-           (./test/testcases/malgo/UseModule.mlg 2 1))
-          "runtime/malgo/Builtin.mlg"
-          all)
-         (((./test/testcases/malgo/UseModule.mlg 2 1)
-             (./test/testcases/malgo/UseModule.mlg 3 1))
-            "runtime/malgo/Prelude.mlg"
-            (as Prelude))
-         (((./test/testcases/malgo/UseModule.mlg 3 1)
-             (./test/testcases/malgo/UseModule.mlg 5 1))
-            "runtime/malgo/Prelude.mlg"
-            (selected addInt32 <| <<)))))
+      ((import "runtime/malgo/Builtin.mlg" all)
+         (import "runtime/malgo/Prelude.mlg" (as Prelude))
+         (import "runtime/malgo/Prelude.mlg" (selected addInt32 <| <<)))))

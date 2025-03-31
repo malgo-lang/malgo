@@ -1,7 +1,6 @@
 (module
    "test/testcases/malgo/TestExplicitModule.mlg"
-   ((((((./test/testcases/malgo/TestExplicitModule.mlg 4 1)
-          (./test/testcases/malgo/TestExplicitModule.mlg 5 1))
+   ((((def
          main
          (fn
             ((clause
@@ -12,11 +11,5 @@
       ()
       ()
       ()
-      ((((./test/testcases/malgo/TestExplicitModule.mlg 1 1)
-           (./test/testcases/malgo/TestExplicitModule.mlg 2 1))
-          "runtime/malgo/Builtin.mlg"
-          all)
-         (((./test/testcases/malgo/TestExplicitModule.mlg 2 1)
-             (./test/testcases/malgo/TestExplicitModule.mlg 4 1))
-            "runtime/malgo/Prelude.mlg"
-            (as Prelude)))))
+      ((import "runtime/malgo/Builtin.mlg" all)
+         (import "runtime/malgo/Prelude.mlg" (as Prelude)))))

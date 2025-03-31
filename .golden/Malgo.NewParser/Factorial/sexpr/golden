@@ -3,14 +3,14 @@
    ((import "runtime/malgo/Builtin.mlg" all)
       (import "runtime/malgo/Prelude.mlg" all)
       (infix neutral 4 ==)
-      (def == (fn ((clause (x y) (seq (do (apply (apply eqInt64 y) x)))))))
+      (def == (fn ((clause (x y) (seq (do (apply (apply eqInt64 x) y)))))))
       (infix left 6 -)
-      (def - (fn ((clause (x y) (seq (do (apply (apply subInt64 y) x)))))))
+      (def - (fn ((clause (x y) (seq (do (apply (apply subInt64 x) y)))))))
       (infix left 7 *)
-      (def * (fn ((clause (x y) (seq (do (apply (apply mulInt64 y) x)))))))
+      (def * (fn ((clause (x y) (seq (do (apply (apply mulInt64 x) y)))))))
       (def
          fact
-         (fn ((clause (n) (seq (do (apply (apply factAcc (int64 1)) n)))))))
+         (fn ((clause (n) (seq (do (apply (apply factAcc n) (int64 1))))))))
       (def
          factAcc
          (fn
@@ -20,20 +20,18 @@
                    (do
                       (apply
                          (apply
-                            (apply
-                               if
-                               (fn
-                                  ((clause
-                                      ()
-                                      (seq
-                                         (do
-                                            (apply
-                                               (apply
-                                                  factAcc
-                                                  (seq (do (opapp * n acc))))
-                                               (seq (do (opapp - n (int64 1)))))))))))
+                            (apply if (seq (do (opapp == n (int64 0)))))
                             (fn ((clause () (seq (do acc))))))
-                         (seq (do (opapp == n (int64 0)))))))))))
+                         (fn
+                            ((clause
+                                ()
+                                (seq
+                                   (do
+                                      (apply
+                                         (apply
+                                            factAcc
+                                            (seq (do (opapp - n (int64 1)))))
+                                         (seq (do (opapp * n acc))))))))))))))))
       (def
          main
          (fn

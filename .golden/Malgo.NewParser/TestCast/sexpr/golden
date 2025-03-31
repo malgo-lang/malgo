@@ -24,17 +24,15 @@
                                   (seq
                                      (do
                                         (apply
-                                           (apply
-                                              malgo_read_vector
-                                              (seq
-                                                 (do
+                                           (apply malgo_read_vector (int64 2))
+                                           (seq
+                                              (do
+                                                 (apply
                                                     (apply
-                                                       (apply
-                                                          malgo_new_vector
-                                                          (seq
-                                                             (do
-                                                                (apply
-                                                                   malgo_unsafe_cast
-                                                                   (int32 5)))))
-                                                       (int64 10)))))
-                                           (int64 2))))))))))))))))
+                                                       malgo_new_vector
+                                                       (int64 10))
+                                                    (seq
+                                                       (do
+                                                          (apply
+                                                             malgo_unsafe_cast
+                                                             (int32 5))))))))))))))))))))))

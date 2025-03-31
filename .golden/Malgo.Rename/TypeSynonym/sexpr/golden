@@ -1,17 +1,14 @@
 (module
    "test/testcases/malgo/TypeSynonym.mlg"
-   ((((((./test/testcases/malgo/TypeSynonym.mlg 15 1)
-          (./test/testcases/malgo/TypeSynonym.mlg 17 1))
+   ((((def
          idOverS
          (fn ((clause (#TypeSynonym.x_xxx) (seq (do #TypeSynonym.x_xxx)))))))
-       ((((./test/testcases/malgo/TypeSynonym.mlg 9 1)
-            (./test/testcases/malgo/TypeSynonym.mlg 11 1))
+       ((def
            hello
            (tuple
               (apply String# (string "hello"))
               (apply String# (string "world")))))
-       ((((./test/testcases/malgo/TypeSynonym.mlg 18 1)
-            (./test/testcases/malgo/TypeSynonym.mlg 21 1))
+       ((def
            main
            (fn
               ((clause
@@ -31,47 +28,16 @@
                                            putStr
                                            (apply String# (string " "))))
                                      (do (apply putStrLn #TypeSynonym.w_xxx)))))))))))))))
-      ((((./test/testcases/malgo/TypeSynonym.mlg 8 1)
-           (./test/testcases/malgo/TypeSynonym.mlg 9 1))
-          hello
-          (app MyTuple (MyString)))
-         (((./test/testcases/malgo/TypeSynonym.mlg 14 1)
-             (./test/testcases/malgo/TypeSynonym.mlg 15 1))
-            idOverS
-            (-> S T))
-         (((./test/testcases/malgo/TypeSynonym.mlg 17 1)
-             (./test/testcases/malgo/TypeSynonym.mlg 18 1))
-            main
-            (-> (tuple) (tuple))))
-      ((((./test/testcases/malgo/TypeSynonym.mlg 11 6)
-           (./test/testcases/malgo/TypeSynonym.mlg 12 1))
-          T
-          ()
-          ((((./test/testcases/malgo/TypeSynonym.mlg 11 10)
-               (./test/testcases/malgo/TypeSynonym.mlg 12 1))
-              TCon
-              ()))))
-      ((((./test/testcases/malgo/TypeSynonym.mlg 4 6)
-           (./test/testcases/malgo/TypeSynonym.mlg 6 1))
+      ((sig hello (app MyTuple (MyString)))
+         (sig idOverS (-> S T))
+         (sig main (-> (tuple) (tuple))))
+      ((data T () ((TCon ()))))
+      ((type
           MyTuple
           (#TypeSynonym.a_xxx)
           (tuple #TypeSynonym.a_xxx #TypeSynonym.a_xxx))
-         (((./test/testcases/malgo/TypeSynonym.mlg 6 6)
-             (./test/testcases/malgo/TypeSynonym.mlg 8 1))
-            MyString
-            ()
-            String)
-         (((./test/testcases/malgo/TypeSynonym.mlg 12 6)
-             (./test/testcases/malgo/TypeSynonym.mlg 14 1))
-            S
-            ()
-            T))
+         (type MyString () String)
+         (type S () T))
       ()
-      ((((./test/testcases/malgo/TypeSynonym.mlg 1 1)
-           (./test/testcases/malgo/TypeSynonym.mlg 2 1))
-          "runtime/malgo/Builtin.mlg"
-          all)
-         (((./test/testcases/malgo/TypeSynonym.mlg 2 1)
-             (./test/testcases/malgo/TypeSynonym.mlg 4 1))
-            "runtime/malgo/Prelude.mlg"
-            all))))
+      ((import "runtime/malgo/Builtin.mlg" all)
+         (import "runtime/malgo/Prelude.mlg" all))))

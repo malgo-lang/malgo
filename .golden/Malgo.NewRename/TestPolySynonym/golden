@@ -250,7 +250,7 @@ Module
           { name = "x"
           , moduleName = Artifact
            ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" )
-          , sort = Internal 8
+          , sort = Internal 7
           }
          )
          ( Record
@@ -472,7 +472,7 @@ Module
               { name = "x"
               , moduleName = Artifact
                ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" )
-              , sort = Internal 8
+              , sort = Internal 7
               }
              )
             )
@@ -661,7 +661,7 @@ Module
        }
       }
      )
-     ( TyVar
+     ( TyCon
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/TestPolySynonym.mlg"
@@ -679,7 +679,7 @@ Module
        { name = "Fun0"
        , moduleName = Artifact
         ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" )
-       , sort = Internal 7
+       , sort = External
        }
       )
      )

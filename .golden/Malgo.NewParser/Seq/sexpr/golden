@@ -14,8 +14,8 @@
                      (do
                         (apply
                            toStringInt32
-                           (seq (do (apply (apply addInt32 y) x))))))))
-            (do (apply (apply addInt32 y) x))))
+                           (seq (do (apply (apply addInt32 x) y))))))))
+            (do (apply (apply addInt32 x) y))))
       (def
          main
          (fn

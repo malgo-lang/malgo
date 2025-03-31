@@ -1,7 +1,6 @@
 (module
    "test/testcases/malgo/Primitive.mlg"
-   ((((((./test/testcases/malgo/Primitive.mlg 2 1)
-          (./test/testcases/malgo/Primitive.mlg 3 1))
+   ((((def
          main
          (fn
             ((clause
@@ -17,13 +16,10 @@
                                   (seq
                                      (do
                                         (apply
-                                           (apply addInt64# (int64 2))
-                                           (int64 40))))))))))))))))
+                                           (apply addInt64# (int64 40))
+                                           (int64 2))))))))))))))))
       ()
       ()
       ()
       ()
-      ((((./test/testcases/malgo/Primitive.mlg 1 1)
-           (./test/testcases/malgo/Primitive.mlg 2 1))
-          "runtime/malgo/Builtin.mlg"
-          all))))
+      ((import "runtime/malgo/Builtin.mlg" all))))

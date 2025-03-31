@@ -1,11 +1,9 @@
 (module
    "test/testcases/malgo/Pragma.mlg"
-   ((((((./test/testcases/malgo/Pragma.mlg 15 1)
-          (./test/testcases/malgo/Pragma.mlg 17 1))
+   ((((def
          string#
          (fn ((clause (#Pragma.x_xxx) (seq (do (apply String# #Pragma.x_xxx))))))))
-       ((((./test/testcases/malgo/Pragma.mlg 9 1)
-            (./test/testcases/malgo/Pragma.mlg 14 1))
+       ((def
            putStrLn
            (fn
               ((clause
@@ -13,39 +11,16 @@
                   (seq
                      (do (apply malgo_print_string #Pragma.str_xxx))
                      (do (apply malgo_newline (tuple)))))))))
-       ((((./test/testcases/malgo/Pragma.mlg 17 1)
-            (./test/testcases/malgo/Pragma.mlg 20 1))
+       ((def
            main
            (fn
               ((clause
                   ()
                   (seq
                      (do (apply putStrLn (apply String# (string "Hello, world")))))))))))
-      ((((./test/testcases/malgo/Pragma.mlg 8 1)
-           (./test/testcases/malgo/Pragma.mlg 9 1))
-          putStrLn
-          (-> String (tuple)))
-         (((./test/testcases/malgo/Pragma.mlg 14 1)
-             (./test/testcases/malgo/Pragma.mlg 15 1))
-            string#
-            (-> String# String)))
-      ((((./test/testcases/malgo/Pragma.mlg 6 6)
-           (./test/testcases/malgo/Pragma.mlg 8 1))
-          String
-          ()
-          ((((./test/testcases/malgo/Pragma.mlg 6 15)
-               (./test/testcases/malgo/Pragma.mlg 8 1))
-              String#
-              (String#)))))
+      ((sig putStrLn (-> String (tuple))) (sig string# (-> String# String)))
+      ((data String () ((String# (String#)))))
       ()
-      (((((./test/testcases/malgo/Pragma.mlg 3 1)
-            (./test/testcases/malgo/Pragma.mlg 4 1))
-           malgo_print_string)
-          malgo_print_string
-          (-> String# (tuple)))
-         ((((./test/testcases/malgo/Pragma.mlg 4 1)
-              (./test/testcases/malgo/Pragma.mlg 6 1))
-             malgo_newline)
-            malgo_newline
-            (-> (tuple) (tuple))))
+      ((foreign malgo_print_string (-> String# (tuple)))
+         (foreign malgo_newline (-> (tuple) (tuple))))
       ()))

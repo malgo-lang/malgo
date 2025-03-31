@@ -1,15 +1,8 @@
 (module
    "test/testcases/malgo/ToplevelVariable.mlg"
-   ((((((./test/testcases/malgo/ToplevelVariable.mlg 4 1)
-          (./test/testcases/malgo/ToplevelVariable.mlg 6 1))
-         one
-         (apply Int32# (int32 1))))
-       ((((./test/testcases/malgo/ToplevelVariable.mlg 8 1)
-            (./test/testcases/malgo/ToplevelVariable.mlg 10 1))
-           constId
-           (apply const identity)))
-       ((((./test/testcases/malgo/ToplevelVariable.mlg 11 1)
-            (./test/testcases/malgo/ToplevelVariable.mlg 16 1))
+   ((((def one (apply Int32# (int32 1))))
+       ((def constId (apply const identity)))
+       ((def
            comp
            (apply
               (fn
@@ -18,12 +11,8 @@
                        ((con Just ()) #ToplevelVariable.x_xxx)
                        (seq (do Nothing)))))
               (seq (do (apply Just (tuple)))))))
-       ((((./test/testcases/malgo/ToplevelVariable.mlg 6 1)
-            (./test/testcases/malgo/ToplevelVariable.mlg 8 1))
-           addOne
-           (apply addInt32 one)))
-       ((((./test/testcases/malgo/ToplevelVariable.mlg 16 1)
-            (./test/testcases/malgo/ToplevelVariable.mlg 22 1))
+       ((def addOne (apply addInt32 one)))
+       ((def
            main
            (fn
               ((clause
@@ -51,18 +40,9 @@
                                  (apply
                                     (apply constId const)
                                     (seq (do (apply addOne one)))))))))))))))
-      ((((./test/testcases/malgo/ToplevelVariable.mlg 10 1)
-           (./test/testcases/malgo/ToplevelVariable.mlg 11 1))
-          comp
-          (app Maybe (#ToplevelVariable.a_xxx))))
+      ((sig comp (app Maybe (#ToplevelVariable.a_xxx))))
       ()
       ()
       ()
-      ((((./test/testcases/malgo/ToplevelVariable.mlg 1 1)
-           (./test/testcases/malgo/ToplevelVariable.mlg 2 1))
-          "runtime/malgo/Builtin.mlg"
-          all)
-         (((./test/testcases/malgo/ToplevelVariable.mlg 2 1)
-             (./test/testcases/malgo/ToplevelVariable.mlg 4 1))
-            "runtime/malgo/Prelude.mlg"
-            all))))
+      ((import "runtime/malgo/Builtin.mlg" all)
+         (import "runtime/malgo/Prelude.mlg" all))))

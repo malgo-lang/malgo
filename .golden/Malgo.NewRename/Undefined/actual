@@ -69,7 +69,7 @@ Module
          { name = "x"
          , moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/Undefined.mlg" )
-         , sort = Internal 2
+         , sort = Internal 0
          }
         )
        ]
@@ -208,7 +208,7 @@ Module
           { name = "x"
           , moduleName = Artifact
            ( ArtifactPath "test/testcases/malgo/Undefined.mlg" )
-          , sort = Internal 3
+          , sort = Internal 1
           }
          )
          ( Var
@@ -251,7 +251,7 @@ Module
            { name = "y"
            , moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/Undefined.mlg" )
-           , sort = Internal 4
+           , sort = Internal 2
            }
           )
           ( Apply
@@ -308,7 +308,7 @@ Module
              { name = "x"
              , moduleName = Artifact
               ( ArtifactPath "test/testcases/malgo/Undefined.mlg" )
-             , sort = Internal 3
+             , sort = Internal 1
              }
             )
            )
@@ -501,7 +501,7 @@ Module
        }
       }
      )
-     ( TyVar
+     ( TyCon
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Undefined.mlg"
@@ -518,12 +518,12 @@ Module
       ( Id
        { name = "Int32"
        , moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Undefined.mlg" )
-       , sort = Internal 0
+        ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+       , sort = External
        }
       )
      )
-     ( TyVar
+     ( TyCon
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Undefined.mlg"
@@ -540,8 +540,8 @@ Module
       ( Id
        { name = "Int32"
        , moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Undefined.mlg" )
-       , sort = Internal 0
+        ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+       , sort = External
        }
       )
      )
@@ -579,7 +579,7 @@ Module
        }
       }
      )
-     ( TyVar
+     ( TyCon
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Undefined.mlg"
@@ -596,12 +596,12 @@ Module
       ( Id
        { name = "Int32"
        , moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Undefined.mlg" )
-       , sort = Internal 1
+        ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+       , sort = External
        }
       )
      )
-     ( TyVar
+     ( TyCon
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Undefined.mlg"
@@ -618,8 +618,8 @@ Module
       ( Id
        { name = "Int32"
        , moduleName = Artifact
-        ( ArtifactPath "test/testcases/malgo/Undefined.mlg" )
-       , sort = Internal 1
+        ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+       , sort = External
        }
       )
      )

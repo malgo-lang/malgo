@@ -24,16 +24,12 @@
                                   (seq
                                      (do
                                         (apply
-                                           (apply
-                                              addInt32
-                                              (seq
-                                                 (do
-                                                    (apply
-                                                       (fn
-                                                          ((clause
-                                                              ((record
-                                                                  (a _)
-                                                                  (b b)))
-                                                              (seq (do b)))))
-                                                       x))))
-                                           (seq (do (apply f x))))))))))))))))))
+                                           (apply addInt32 (seq (do (apply f x))))
+                                           (seq
+                                              (do
+                                                 (apply
+                                                    (fn
+                                                       ((clause
+                                                           ((record (a _) (b b)))
+                                                           (seq (do b)))))
+                                                    x))))))))))))))))))
