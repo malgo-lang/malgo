@@ -8,7 +8,6 @@ import Malgo.Monad (runMalgoM)
 import Malgo.NewParser (parse)
 import Malgo.NewRename.Pass (rename)
 import Malgo.NewRename.RnEnv qualified as RnEnv
-import Malgo.NewRename.RnState (RnState (..))
 import Malgo.Prelude
 import Malgo.Refine.Pass (refine)
 import Malgo.SExpr (sShow)
