@@ -24,7 +24,7 @@ import Malgo.Interface (Interface (..), externalFromInterface)
 import Malgo.Lens
 import Malgo.Module
 import Malgo.Prelude
-import Malgo.Rename.RnEnv (Resolved, RnEnv)
+import Malgo.Rename.RnEnv (Resolved)
 import Malgo.Syntax.Extension
 
 type RecordTypeName = Text
@@ -72,7 +72,7 @@ mergeInterface interface tcEnv =
     & (typeSynonymMap %~ Map.union interface.typeSynonymMap)
     & (kindCtx %~ Map.union interface.kindCtx)
 
-genTcEnv :: (Applicative f) => RnEnv -> f TcEnv
+genTcEnv :: (Applicative f, HasResolvedTypeIdentMap rnEnv (Map Text [Qualified Id])) => rnEnv -> f TcEnv
 genTcEnv rnEnv = do
   let int32_t = fromJust $ findBuiltinType "Int32#" rnEnv
   let int64_t = fromJust $ findBuiltinType "Int64#" rnEnv
@@ -108,7 +108,9 @@ genTcEnv rnEnv = do
             ]
       }
 
-findBuiltinType :: PsId -> RnEnv -> Maybe RnId
+findBuiltinType ::
+  (HasResolvedTypeIdentMap rnEnv (Map Text [Qualified Id])) =>
+  PsId -> rnEnv -> Maybe RnId
 findBuiltinType x rnEnv = do
   ids <- map (.value) <$> view (resolvedTypeIdentMap . at x) rnEnv
   find isBuiltin ids
