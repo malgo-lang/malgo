@@ -21,12 +21,12 @@ import Malgo.Link qualified as Link
 import Malgo.Module
 import Malgo.Monad
 import Malgo.MonadUniq
-import Malgo.Parser (parseMalgo)
+import Malgo.NewParser (parse)
+import Malgo.NewRename.Pass (rename)
+import Malgo.NewRename.RnEnv qualified as RnEnv
+import Malgo.NewRename.RnState (RnState (..))
 import Malgo.Prelude
 import Malgo.Refine.Pass (refine)
-import Malgo.Rename.Pass (rename)
-import Malgo.Rename.RnEnv qualified as RnEnv
-import Malgo.Rename.RnState (RnState (..))
 import Malgo.Syntax qualified as Syntax
 import Malgo.Syntax.Extension
 import System.Exit (exitFailure)
@@ -64,7 +64,7 @@ compileToCore ::
     Workspace :> es
   ) =>
   ArtifactPath ->
-  Syntax.Module (Malgo 'Parse) ->
+  Syntax.Module (Malgo NewParse) ->
   Eff es (Program (Meta Type))
 compileToCore srcPath parsedAst = do
   let moduleName = parsedAst.moduleName
@@ -140,7 +140,7 @@ compileFromAST ::
     Workspace :> es
   ) =>
   ArtifactPath ->
-  Syntax.Module (Malgo 'Parse) ->
+  Syntax.Module (Malgo NewParse) ->
   Eff es ()
 compileFromAST srcPath parsedAst = do
   let moduleName = parsedAst.moduleName
@@ -171,9 +171,9 @@ compile srcPath = do
   pwd <- pwdPath
   srcModulePath <- parseArtifactPath pwd srcPath
   src <- load srcModulePath ".mlg"
-  parseResult <- parseMalgo srcPath (convertString @BS.ByteString src)
+  parseResult <- parse srcPath (convertString @BS.ByteString src)
   parsedAst <- case parseResult of
-    Right x -> pure x
+    Right (_, x) -> pure x
     Left err -> liftIO do
       hPutStrLn stderr $ errorBundlePretty err
       exitFailure
