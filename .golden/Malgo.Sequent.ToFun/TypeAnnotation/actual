@@ -1,17 +1,15 @@
 ((main
-   (lambda
-      ($TypeAnnotation.param_12)
-      (select
-         $TypeAnnotation.param_12
-         ((#TypeAnnotation.$__11
-            (apply
-               (invoke printString)
-               ((apply
-                  (lambda
-                     ($TypeAnnotation.param_13)
-                     (select
-                        $TypeAnnotation.param_13
-                        ((#TypeAnnotation.x_0 #TypeAnnotation.x_0))))
-                  ((apply
-                     (invoke String#)
-                     ("hoge"))))))))))))
+    (lambda
+       ($TypeAnnotation.param_xxx)
+       (select
+          $TypeAnnotation.param_xxx
+          ((#TypeAnnotation.$__xxx
+              (apply
+                 (invoke printString)
+                 ((apply
+                     (lambda
+                        ($TypeAnnotation.param_xxx)
+                        (select
+                           $TypeAnnotation.param_xxx
+                           ((#TypeAnnotation.x_xxx #TypeAnnotation.x_xxx))))
+                     ((apply (invoke String#) ("hoge"))))))))))))

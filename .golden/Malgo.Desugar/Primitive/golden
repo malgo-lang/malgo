@@ -1,28 +1,27 @@
 (()
    ((define
-      (main $Primitive.$__11)
-      (->
-         ((sum (con Tuple#)))
-         (sum (con Tuple#)))
-      (= $Primitive.d_17
-         (= $Primitive.d_15
-            (= $Primitive.d_13
-               (= $Primitive.d_12
-                  (call addInt64# 40_i64)
-                  (cast
-                     (->
-                        (Int64#)
-                        Int64#)
-                     $Primitive.d_12))
-               (= $Primitive.d_14
-                  (call $Primitive.d_13 2_i64)
-                  (cast Int64# $Primitive.d_14)))
-            (= $Primitive.d_16
-               (call toStringInt64# $Primitive.d_15)
-               (cast String# $Primitive.d_16)))
-         (= $Primitive.d_18
-            (call printString# $Primitive.d_17)
-            (cast
-               (sum (con Tuple#))
-               $Primitive.d_18)))))
+       (main $Primitive.$__xxx)
+       (-> ((sum (con Tuple#))) (sum (con Tuple#)))
+       (=
+          $Primitive.d_xxx
+          (=
+             $Primitive.d_xxx
+             (=
+                $Primitive.d_xxx
+                (=
+                   $Primitive.d_xxx
+                   (call addInt64# 40_i64)
+                   (cast (-> (Int64#) Int64#) $Primitive.d_xxx))
+                (=
+                   $Primitive.d_xxx
+                   (call $Primitive.d_xxx 2_i64)
+                   (cast Int64# $Primitive.d_xxx)))
+             (=
+                $Primitive.d_xxx
+                (call toStringInt64# $Primitive.d_xxx)
+                (cast String# $Primitive.d_xxx)))
+          (=
+             $Primitive.d_xxx
+             (call printString# $Primitive.d_xxx)
+             (cast (sum (con Tuple#)) $Primitive.d_xxx)))))
    ())

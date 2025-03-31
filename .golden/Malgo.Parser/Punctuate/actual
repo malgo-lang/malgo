@@ -78,7 +78,7 @@ Module
       }
      }
     )
-    ( TyCon
+    ( TyVar
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/Punctuate.mlg"
@@ -107,7 +107,7 @@ Module
        }
       }
      )
-     ( TyCon
+     ( TyVar
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Punctuate.mlg"
@@ -122,7 +122,7 @@ Module
        }
       ) "String"
      )
-     ( TyCon
+     ( TyVar
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Punctuate.mlg"
@@ -154,19 +154,16 @@ Module
     }
    ) "<>"
    ( Var
-    ( Qualified
-     { visibility = Implicit
-     , value = Range
-      { _start = SourcePos
-       { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-       , sourceLine = Pos 6
-       , sourceColumn = Pos 12
-       }
-      , _end = SourcePos
-       { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-       , sourceLine = Pos 8
-       , sourceColumn = Pos 1
-       }
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+      , sourceLine = Pos 6
+      , sourceColumn = Pos 12
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+      , sourceLine = Pos 8
+      , sourceColumn = Pos 1
       }
      }
     ) "appendString"
@@ -176,7 +173,7 @@ Module
     { _start = SourcePos
      { sourceName = "./test/testcases/malgo/Punctuate.mlg"
      , sourceLine = Pos 8
-     , sourceColumn = Pos 6
+     , sourceColumn = Pos 1
      }
     , _end = SourcePos
      { sourceName = "./test/testcases/malgo/Punctuate.mlg"
@@ -200,7 +197,7 @@ Module
      }
     , "Symbol"
     ,
-     [ TyCon
+     [ TyVar
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Punctuate.mlg"
@@ -231,7 +228,7 @@ Module
      }
     , "SInt"
     ,
-     [ TyCon
+     [ TyVar
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Punctuate.mlg"
@@ -276,7 +273,7 @@ Module
         }
        }
       )
-      ( TyCon
+      ( TyVar
        ( Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/Punctuate.mlg"
@@ -291,7 +288,7 @@ Module
         }
        ) "List"
       )
-      [ TyCon
+      [ TyVar
        ( Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/Punctuate.mlg"
@@ -337,7 +334,7 @@ Module
       }
      }
     )
-    ( TyCon
+    ( TyVar
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/Punctuate.mlg"
@@ -352,7 +349,7 @@ Module
       }
      ) "SExpr"
     )
-    ( TyCon
+    ( TyVar
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/Punctuate.mlg"
@@ -387,12 +384,12 @@ Module
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/Punctuate.mlg"
       , sourceLine = Pos 14
-      , sourceColumn = Pos 5
+      , sourceColumn = Pos 3
       }
      , _end = SourcePos
       { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-      , sourceLine = Pos 17
-      , sourceColumn = Pos 3
+      , sourceLine = Pos 19
+      , sourceColumn = Pos 1
       }
      }
     )
@@ -410,7 +407,7 @@ Module
        }
       }
      )
-     [ ConP
+     [ VarP
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Punctuate.mlg"
@@ -423,7 +420,7 @@ Module
         , sourceColumn = Pos 12
         }
        }
-      ) "Symbol" []
+      ) "Symbol"
      , VarP
       ( Range
        { _start = SourcePos
@@ -498,19 +495,16 @@ Module
          ( String "Symbol " )
         )
         ( Var
-         ( Qualified
-          { visibility = Implicit
-          , value = Range
-           { _start = SourcePos
-            { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-            , sourceLine = Pos 14
-            , sourceColumn = Pos 32
-            }
-           , _end = SourcePos
-            { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-            , sourceLine = Pos 14
-            , sourceColumn = Pos 35
-            }
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+           , sourceLine = Pos 14
+           , sourceColumn = Pos 32
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+           , sourceLine = Pos 14
+           , sourceColumn = Pos 35
            }
           }
          ) "str"
@@ -532,7 +526,7 @@ Module
         }
        }
       )
-      [ ConP
+      [ VarP
        ( Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/Punctuate.mlg"
@@ -545,7 +539,7 @@ Module
          , sourceColumn = Pos 10
          }
         }
-       ) "SInt" []
+       ) "SInt"
       , VarP
        ( Range
         { _start = SourcePos
@@ -624,7 +618,7 @@ Module
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/Punctuate.mlg"
             , sourceLine = Pos 15
-            , sourceColumn = Pos 28
+            , sourceColumn = Pos 42
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/Punctuate.mlg"
@@ -634,37 +628,31 @@ Module
            }
           )
           ( Var
-           ( Qualified
-            { visibility = Implicit
-            , value = Range
-             { _start = SourcePos
-              { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-              , sourceLine = Pos 15
-              , sourceColumn = Pos 28
-              }
-             , _end = SourcePos
-              { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-              , sourceLine = Pos 15
-              , sourceColumn = Pos 42
-              }
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+             , sourceLine = Pos 15
+             , sourceColumn = Pos 28
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+             , sourceLine = Pos 15
+             , sourceColumn = Pos 42
              }
             }
            ) "toStringInt32"
           )
           ( Var
-           ( Qualified
-            { visibility = Implicit
-            , value = Range
-             { _start = SourcePos
-              { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-              , sourceLine = Pos 15
-              , sourceColumn = Pos 42
-              }
-             , _end = SourcePos
-              { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-              , sourceLine = Pos 15
-              , sourceColumn = Pos 45
-              }
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+             , sourceLine = Pos 15
+             , sourceColumn = Pos 42
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+             , sourceLine = Pos 15
+             , sourceColumn = Pos 45
              }
             }
            ) "int"
@@ -687,7 +675,7 @@ Module
         }
        }
       )
-      [ ConP
+      [ VarP
        ( Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/Punctuate.mlg"
@@ -700,7 +688,7 @@ Module
          , sourceColumn = Pos 11
          }
         }
-       ) "SList" []
+       ) "SList"
       , VarP
        ( Range
         { _start = SourcePos
@@ -793,7 +781,7 @@ Module
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/Punctuate.mlg"
              , sourceLine = Pos 16
-             , sourceColumn = Pos 30
+             , sourceColumn = Pos 43
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/Punctuate.mlg"
@@ -803,19 +791,16 @@ Module
             }
            )
            ( Var
-            ( Qualified
-             { visibility = Implicit
-             , value = Range
-              { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-               , sourceLine = Pos 16
-               , sourceColumn = Pos 30
-               }
-              , _end = SourcePos
-               { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-               , sourceLine = Pos 16
-               , sourceColumn = Pos 43
-               }
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+              , sourceLine = Pos 16
+              , sourceColumn = Pos 30
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+              , sourceLine = Pos 16
+              , sourceColumn = Pos 43
               }
              }
             ) "concatString"
@@ -839,12 +824,12 @@ Module
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/Punctuate.mlg"
                , sourceLine = Pos 16
-               , sourceColumn = Pos 44
+               , sourceColumn = Pos 43
                }
               , _end = SourcePos
                { sourceName = "./test/testcases/malgo/Punctuate.mlg"
                , sourceLine = Pos 16
-               , sourceColumn = Pos 76
+               , sourceColumn = Pos 78
                }
               }
              )
@@ -853,7 +838,7 @@ Module
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/Punctuate.mlg"
                 , sourceLine = Pos 16
-                , sourceColumn = Pos 44
+                , sourceColumn = Pos 59
                 }
                , _end = SourcePos
                 { sourceName = "./test/testcases/malgo/Punctuate.mlg"
@@ -867,29 +852,26 @@ Module
                 { _start = SourcePos
                  { sourceName = "./test/testcases/malgo/Punctuate.mlg"
                  , sourceLine = Pos 16
-                 , sourceColumn = Pos 44
+                 , sourceColumn = Pos 54
                  }
                 , _end = SourcePos
                  { sourceName = "./test/testcases/malgo/Punctuate.mlg"
                  , sourceLine = Pos 16
-                 , sourceColumn = Pos 76
+                 , sourceColumn = Pos 59
                  }
                 }
                )
                ( Var
-                ( Qualified
-                 { visibility = Implicit
-                 , value = Range
-                  { _start = SourcePos
-                   { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-                   , sourceLine = Pos 16
-                   , sourceColumn = Pos 44
-                   }
-                  , _end = SourcePos
-                   { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-                   , sourceLine = Pos 16
-                   , sourceColumn = Pos 54
-                   }
+                ( Range
+                 { _start = SourcePos
+                  { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+                  , sourceLine = Pos 16
+                  , sourceColumn = Pos 44
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+                  , sourceLine = Pos 16
+                  , sourceColumn = Pos 54
                   }
                  }
                 ) "punctuate"
@@ -930,12 +912,12 @@ Module
                  { _start = SourcePos
                   { sourceName = "./test/testcases/malgo/Punctuate.mlg"
                   , sourceLine = Pos 16
-                  , sourceColumn = Pos 60
+                  , sourceColumn = Pos 59
                   }
                  , _end = SourcePos
                   { sourceName = "./test/testcases/malgo/Punctuate.mlg"
                   , sourceLine = Pos 16
-                  , sourceColumn = Pos 75
+                  , sourceColumn = Pos 76
                   }
                  }
                 )
@@ -944,7 +926,7 @@ Module
                   { _start = SourcePos
                    { sourceName = "./test/testcases/malgo/Punctuate.mlg"
                    , sourceLine = Pos 16
-                   , sourceColumn = Pos 60
+                   , sourceColumn = Pos 73
                    }
                   , _end = SourcePos
                    { sourceName = "./test/testcases/malgo/Punctuate.mlg"
@@ -958,66 +940,57 @@ Module
                    { _start = SourcePos
                     { sourceName = "./test/testcases/malgo/Punctuate.mlg"
                     , sourceLine = Pos 16
-                    , sourceColumn = Pos 60
+                    , sourceColumn = Pos 68
                     }
                    , _end = SourcePos
                     { sourceName = "./test/testcases/malgo/Punctuate.mlg"
                     , sourceLine = Pos 16
-                    , sourceColumn = Pos 75
+                    , sourceColumn = Pos 73
                     }
                    }
                   )
                   ( Var
-                   ( Qualified
-                    { visibility = Implicit
-                    , value = Range
-                     { _start = SourcePos
-                      { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-                      , sourceLine = Pos 16
-                      , sourceColumn = Pos 60
-                      }
-                     , _end = SourcePos
-                      { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-                      , sourceLine = Pos 16
-                      , sourceColumn = Pos 68
-                      }
+                   ( Range
+                    { _start = SourcePos
+                     { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+                     , sourceLine = Pos 16
+                     , sourceColumn = Pos 60
+                     }
+                    , _end = SourcePos
+                     { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+                     , sourceLine = Pos 16
+                     , sourceColumn = Pos 68
                      }
                     }
                    ) "mapList"
                   )
                   ( Var
-                   ( Qualified
-                    { visibility = Implicit
-                    , value = Range
-                     { _start = SourcePos
-                      { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-                      , sourceLine = Pos 16
-                      , sourceColumn = Pos 68
-                      }
-                     , _end = SourcePos
-                      { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-                      , sourceLine = Pos 16
-                      , sourceColumn = Pos 73
-                      }
+                   ( Range
+                    { _start = SourcePos
+                     { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+                     , sourceLine = Pos 16
+                     , sourceColumn = Pos 68
+                     }
+                    , _end = SourcePos
+                     { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+                     , sourceLine = Pos 16
+                     , sourceColumn = Pos 73
                      }
                     }
                    ) "show"
                   )
                  )
                  ( Var
-                  ( Qualified
-                   { visibility = Implicit
-                   , value = Range
-                    { _start = SourcePos
-                     { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-                     , sourceLine = Pos 16
-                     , sourceColumn = Pos 73
-                     }
-                    , _end = SourcePos
-                     { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-                     , sourceLine = Pos 16
-                     , sourceColumn = Pos 75
-                     }
+                  ( Range
+                   { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+                    , sourceLine = Pos 16
+                    , sourceColumn = Pos 73
+                    }
+                   , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+                    , sourceLine = Pos 16
+                    , sourceColumn = Pos 75
                     }
                    }
                   ) "ss"
@@ -1070,12 +1043,12 @@ Module
     ( Range
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-      , sourceLine = Pos 21
-      , sourceColumn = Pos 3
+      , sourceLine = Pos 19
+      , sourceColumn = Pos 12
       }
      , _end = SourcePos
       { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-      , sourceLine = Pos 23
+      , sourceLine = Pos 24
       , sourceColumn = Pos 1
       }
      }
@@ -1127,7 +1100,7 @@ Module
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/Punctuate.mlg"
           , sourceLine = Pos 21
-          , sourceColumn = Pos 11
+          , sourceColumn = Pos 17
           }
          , _end = SourcePos
           { sourceName = "./test/testcases/malgo/Punctuate.mlg"
@@ -1137,19 +1110,16 @@ Module
          }
         )
         ( Var
-         ( Qualified
-          { visibility = Implicit
-          , value = Range
-           { _start = SourcePos
-            { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-            , sourceLine = Pos 21
-            , sourceColumn = Pos 11
-            }
-           , _end = SourcePos
-            { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-            , sourceLine = Pos 21
-            , sourceColumn = Pos 17
-            }
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+           , sourceLine = Pos 21
+           , sourceColumn = Pos 11
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+           , sourceLine = Pos 21
+           , sourceColumn = Pos 17
            }
           }
          ) "SList"
@@ -1159,12 +1129,12 @@ Module
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/Punctuate.mlg"
            , sourceLine = Pos 21
-           , sourceColumn = Pos 17
+           , sourceColumn = Pos 18
            }
           , _end = SourcePos
            { sourceName = "./test/testcases/malgo/Punctuate.mlg"
            , sourceLine = Pos 21
-           , sourceColumn = Pos 69
+           , sourceColumn = Pos 68
            }
           }
          )
@@ -1173,7 +1143,7 @@ Module
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/Punctuate.mlg"
             , sourceLine = Pos 21
-            , sourceColumn = Pos 18
+            , sourceColumn = Pos 25
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/Punctuate.mlg"
@@ -1183,19 +1153,16 @@ Module
            }
           )
           ( Var
-           ( Qualified
-            { visibility = Implicit
-            , value = Range
-             { _start = SourcePos
-              { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-              , sourceLine = Pos 21
-              , sourceColumn = Pos 18
-              }
-             , _end = SourcePos
-              { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-              , sourceLine = Pos 21
-              , sourceColumn = Pos 25
-              }
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+             , sourceLine = Pos 21
+             , sourceColumn = Pos 18
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+             , sourceLine = Pos 21
+             , sourceColumn = Pos 25
              }
             }
            ) "Symbol"
@@ -1221,7 +1188,7 @@ Module
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/Punctuate.mlg"
             , sourceLine = Pos 21
-            , sourceColumn = Pos 30
+            , sourceColumn = Pos 36
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/Punctuate.mlg"
@@ -1231,19 +1198,16 @@ Module
            }
           )
           ( Var
-           ( Qualified
-            { visibility = Implicit
-            , value = Range
-             { _start = SourcePos
-              { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-              , sourceLine = Pos 21
-              , sourceColumn = Pos 30
-              }
-             , _end = SourcePos
-              { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-              , sourceLine = Pos 21
-              , sourceColumn = Pos 36
-              }
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+             , sourceLine = Pos 21
+             , sourceColumn = Pos 30
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+             , sourceLine = Pos 21
+             , sourceColumn = Pos 36
              }
             }
            ) "SList"
@@ -1253,12 +1217,12 @@ Module
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/Punctuate.mlg"
              , sourceLine = Pos 21
-             , sourceColumn = Pos 36
+             , sourceColumn = Pos 37
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/Punctuate.mlg"
              , sourceLine = Pos 21
-             , sourceColumn = Pos 68
+             , sourceColumn = Pos 67
              }
             }
            )
@@ -1267,7 +1231,7 @@ Module
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/Punctuate.mlg"
               , sourceLine = Pos 21
-              , sourceColumn = Pos 37
+              , sourceColumn = Pos 44
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/Punctuate.mlg"
@@ -1277,19 +1241,16 @@ Module
              }
             )
             ( Var
-             ( Qualified
-              { visibility = Implicit
-              , value = Range
-               { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-                , sourceLine = Pos 21
-                , sourceColumn = Pos 37
-                }
-               , _end = SourcePos
-                { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-                , sourceLine = Pos 21
-                , sourceColumn = Pos 44
-                }
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+               , sourceLine = Pos 21
+               , sourceColumn = Pos 37
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+               , sourceLine = Pos 21
+               , sourceColumn = Pos 44
                }
               }
              ) "Symbol"
@@ -1315,7 +1276,7 @@ Module
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/Punctuate.mlg"
               , sourceLine = Pos 21
-              , sourceColumn = Pos 49
+              , sourceColumn = Pos 55
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/Punctuate.mlg"
@@ -1325,19 +1286,16 @@ Module
              }
             )
             ( Var
-             ( Qualified
-              { visibility = Implicit
-              , value = Range
-               { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-                , sourceLine = Pos 21
-                , sourceColumn = Pos 49
-                }
-               , _end = SourcePos
-                { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-                , sourceLine = Pos 21
-                , sourceColumn = Pos 55
-                }
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+               , sourceLine = Pos 21
+               , sourceColumn = Pos 49
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+               , sourceLine = Pos 21
+               , sourceColumn = Pos 55
                }
               }
              ) "SList"
@@ -1347,12 +1305,12 @@ Module
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/Punctuate.mlg"
                , sourceLine = Pos 21
-               , sourceColumn = Pos 55
+               , sourceColumn = Pos 56
                }
               , _end = SourcePos
                { sourceName = "./test/testcases/malgo/Punctuate.mlg"
                , sourceLine = Pos 21
-               , sourceColumn = Pos 67
+               , sourceColumn = Pos 66
                }
               }
              )
@@ -1361,7 +1319,7 @@ Module
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/Punctuate.mlg"
                 , sourceLine = Pos 21
-                , sourceColumn = Pos 56
+                , sourceColumn = Pos 63
                 }
                , _end = SourcePos
                 { sourceName = "./test/testcases/malgo/Punctuate.mlg"
@@ -1371,19 +1329,16 @@ Module
                }
               )
               ( Var
-               ( Qualified
-                { visibility = Implicit
-                , value = Range
-                 { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-                  , sourceLine = Pos 21
-                  , sourceColumn = Pos 56
-                  }
-                 , _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-                  , sourceLine = Pos 21
-                  , sourceColumn = Pos 63
-                  }
+               ( Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+                 , sourceLine = Pos 21
+                 , sourceColumn = Pos 56
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+                 , sourceLine = Pos 21
+                 , sourceColumn = Pos 63
                  }
                 }
                ) "Symbol"
@@ -1430,7 +1385,7 @@ Module
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/Punctuate.mlg"
            , sourceLine = Pos 22
-           , sourceColumn = Pos 3
+           , sourceColumn = Pos 12
            }
           , _end = SourcePos
            { sourceName = "./test/testcases/malgo/Punctuate.mlg"
@@ -1440,19 +1395,16 @@ Module
           }
          )
          ( Var
-          ( Qualified
-           { visibility = Implicit
-           , value = Range
-            { _start = SourcePos
-             { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-             , sourceLine = Pos 22
-             , sourceColumn = Pos 3
-             }
-            , _end = SourcePos
-             { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-             , sourceLine = Pos 22
-             , sourceColumn = Pos 12
-             }
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+            , sourceLine = Pos 22
+            , sourceColumn = Pos 3
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+            , sourceLine = Pos 22
+            , sourceColumn = Pos 12
             }
            }
           ) "putStrLn"
@@ -1476,12 +1428,12 @@ Module
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/Punctuate.mlg"
              , sourceLine = Pos 22
-             , sourceColumn = Pos 13
+             , sourceColumn = Pos 12
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-             , sourceLine = Pos 22
-             , sourceColumn = Pos 19
+             , sourceLine = Pos 23
+             , sourceColumn = Pos 1
              }
             }
            )
@@ -1490,7 +1442,7 @@ Module
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/Punctuate.mlg"
               , sourceLine = Pos 22
-              , sourceColumn = Pos 13
+              , sourceColumn = Pos 18
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/Punctuate.mlg"
@@ -1500,37 +1452,31 @@ Module
              }
             )
             ( Var
-             ( Qualified
-              { visibility = Implicit
-              , value = Range
-               { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-                , sourceLine = Pos 22
-                , sourceColumn = Pos 13
-                }
-               , _end = SourcePos
-                { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-                , sourceLine = Pos 22
-                , sourceColumn = Pos 18
-                }
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+               , sourceLine = Pos 22
+               , sourceColumn = Pos 13
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+               , sourceLine = Pos 22
+               , sourceColumn = Pos 18
                }
               }
              ) "show"
             )
             ( Var
-             ( Qualified
-              { visibility = Implicit
-              , value = Range
-               { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-                , sourceLine = Pos 22
-                , sourceColumn = Pos 18
-                }
-               , _end = SourcePos
-                { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-                , sourceLine = Pos 22
-                , sourceColumn = Pos 19
-                }
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+               , sourceLine = Pos 22
+               , sourceColumn = Pos 18
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/Punctuate.mlg"
+               , sourceLine = Pos 22
+               , sourceColumn = Pos 19
                }
               }
              ) "x"

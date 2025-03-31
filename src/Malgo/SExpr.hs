@@ -12,10 +12,16 @@ import Malgo.Prelude
 class ToSExpr a where
   toSExpr :: a -> S.SExpr Atom
   sShow :: (ConvertibleStrings Text s) => a -> s
-  sShow = convertString . S.encodeOne (S.unconstrainedPrint atomToText & S.setIndentStrategy indentStrategy) . toSExpr
+  sShow = convertString . S.encodeOne (S.basicPrint atomToText) . toSExpr
+
+instance ToSExpr Void where
+  toSExpr = absurd
 
 instance ToSExpr Text where
   toSExpr = S.A . Symbol
+
+instance ToSExpr Int where
+  toSExpr = S.A . (\i -> Int i Nothing) . fromIntegral
 
 instance (ToSExpr a, ToSExpr b) => ToSExpr (a, b) where
   toSExpr (a, b) = S.L [toSExpr a, toSExpr b]
@@ -23,9 +29,18 @@ instance (ToSExpr a, ToSExpr b) => ToSExpr (a, b) where
 instance (ToSExpr a, ToSExpr b, ToSExpr c) => ToSExpr (a, b, c) where
   toSExpr (a, b, c) = S.L [toSExpr a, toSExpr b, toSExpr c]
 
+instance (ToSExpr a, ToSExpr b, ToSExpr c, ToSExpr d) => ToSExpr (a, b, c, d) where
+  toSExpr (a, b, c, d) = S.L [toSExpr a, toSExpr b, toSExpr c, toSExpr d]
+
 instance (ToSExpr a) => ToSExpr [a] where
   toSExpr = S.L . map toSExpr
-  sShow = convertString . S.encode (S.unconstrainedPrint atomToText & S.setIndentStrategy indentStrategy) . map toSExpr
+  sShow =
+    convertString
+      . S.encode (S.basicPrint atomToText)
+      -- ( S.unconstrainedPrint atomToText
+      --     & S.setIndentStrategy indentStrategy
+      -- )
+      . map toSExpr
 
 data Atom
   = Symbol Text
@@ -47,15 +62,3 @@ atomToText (Float n) = convertString $ show n <> "_f32"
 atomToText (Double n) = convertString $ show n <> "_f64"
 atomToText (Char c) = "'" <> convertString (showLitChar c "") <> "'"
 atomToText (String t) = "\"" <> convertString (concatMap (`showLitChar` "") (convertString @_ @String t)) <> "\""
-
-indentStrategy :: S.SExpr Atom -> S.Indent
-indentStrategy (S.A (Symbol "def")) = S.SwingAfter 4
-indentStrategy (S.A (Symbol "$")) = S.SwingAfter 2
-indentStrategy (S.A (Symbol ".")) = S.SwingAfter 2
-indentStrategy (S.A (Symbol "=")) = S.SwingAfter 2
-indentStrategy (S.A (Symbol "do")) = S.SwingAfter 2
-indentStrategy (S.A (Symbol "then")) = S.SwingAfter 2
-indentStrategy (S.A (Symbol "prim")) = S.SwingAfter 2
-indentStrategy (S.A (Symbol "invoke")) = S.SwingAfter 2
-indentStrategy (S.A (Symbol "sum")) = S.SwingAfter 2
-indentStrategy _ = S.Swing

@@ -1,0 +1,38 @@
+(module
+   "test/testcases/malgo/TestDot.mlg"
+   ((((def
+         succ
+         (fn
+            ((clause
+                ((con Int64# (#TestDot.x_xxx)))
+                (seq
+                   (do
+                      (seq
+                         (do
+                            (apply
+                               Int64#
+                               (seq
+                                  (do
+                                     (apply
+                                        (apply addInt64# #TestDot.x_xxx)
+                                        (int64 1))))))))))))))
+       ((def
+           main
+           (fn
+              ((clause
+                  ()
+                  (seq
+                     (do
+                        (apply
+                           printInt64
+                           (seq
+                              (do
+                                 (apply
+                                    (seq (do (opapp << succ succ)))
+                                    (seq (do (apply Int64# (int64 0))))))))))))))))
+      ()
+      ()
+      ()
+      ()
+      ((import "runtime/malgo/Builtin.mlg" all)
+         (import "runtime/malgo/Prelude.mlg" all))))

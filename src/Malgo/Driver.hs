@@ -1,9 +1,9 @@
 -- | Malgo.Driver is the entry point of `malgo to-ll`.
-module Malgo.Driver (compile, compileFromAST, withDump) where
+module Malgo.Driver (compile, compileFromAST, withDump, failIfError) where
 
 import Data.ByteString qualified as BS
 import Effectful
-import Effectful.Error.Static (prettyCallStack, runError)
+import Effectful.Error.Static (CallStack, prettyCallStack, runError)
 import Effectful.Reader.Static
 import Effectful.State.Static.Local
 import Malgo.Core.Eval (EvalError, defaultStderr, defaultStdin, defaultStdout, eval)
@@ -21,11 +21,12 @@ import Malgo.Link qualified as Link
 import Malgo.Module
 import Malgo.Monad
 import Malgo.MonadUniq
-import Malgo.Parser (parseMalgo)
-import Malgo.Prelude
-import Malgo.Refine.Pass (refine)
 import Malgo.Rename.Pass (rename)
 import Malgo.Rename.RnEnv qualified as RnEnv
+import Malgo.Rename.RnState (RnState (..))
+import Malgo.Parser (parse)
+import Malgo.Prelude
+import Malgo.Refine.Pass (refine)
 import Malgo.Syntax qualified as Syntax
 import Malgo.Syntax.Extension
 import System.Exit (exitFailure)
@@ -48,6 +49,11 @@ withDump isDump label m = do
     hPrint stderr $ pretty result
   pure result
 
+failIfError :: (Show e) => Either (CallStack, e) a -> a
+failIfError = \case
+  Left (callStack, err) -> error $ prettyCallStack callStack <> "\n" <> show err
+  Right x -> x
+
 -- | Compile the parsed AST to Core representation.
 compileToCore ::
   ( Reader OptimizeOption :> es,
@@ -58,7 +64,7 @@ compileToCore ::
     Workspace :> es
   ) =>
   ArtifactPath ->
-  Syntax.Module (Malgo 'Parse) ->
+  Syntax.Module (Malgo NewParse) ->
   Eff es (Program (Meta Type))
 compileToCore srcPath parsedAst = do
   let moduleName = parsedAst.moduleName
@@ -69,7 +75,8 @@ compileToCore srcPath parsedAst = do
     hPutStrLn stderr "=== PARSED ==="
     hPrint stderr $ pretty parsedAst
   rnEnv <- RnEnv.genBuiltinRnEnv
-  (renamedAst, rnState) <- withDump flags.debugMode "=== RENAME ===" $ rename rnEnv parsedAst
+  (renamedAst, rnState) <-
+    withDump flags.debugMode "=== RENAME ===" $ failIfError <$> rename rnEnv parsedAst
   (typedAst, tcEnv) <- Infer.infer rnEnv renamedAst
   _ <- withDump flags.debugMode "=== TYPE CHECK ===" $ pure typedAst
   refinedAst <- withDump flags.debugMode "=== REFINE ===" $ refine tcEnv typedAst
@@ -133,7 +140,7 @@ compileFromAST ::
     Workspace :> es
   ) =>
   ArtifactPath ->
-  Syntax.Module (Malgo 'Parse) ->
+  Syntax.Module (Malgo NewParse) ->
   Eff es ()
 compileFromAST srcPath parsedAst = do
   let moduleName = parsedAst.moduleName
@@ -154,7 +161,6 @@ compile ::
     IOE :> es,
     State (Map ModuleName Interface) :> es,
     State Uniq :> es,
-    State Pragma :> es,
     Workspace :> es
   ) =>
   FilePath ->
@@ -164,9 +170,9 @@ compile srcPath = do
   pwd <- pwdPath
   srcModulePath <- parseArtifactPath pwd srcPath
   src <- load srcModulePath ".mlg"
-  parseResult <- parseMalgo srcPath (convertString @BS.ByteString src)
+  parseResult <- parse srcPath (convertString @BS.ByteString src)
   parsedAst <- case parseResult of
-    Right x -> pure x
+    Right (_, x) -> pure x
     Left err -> liftIO do
       hPutStrLn stderr $ errorBundlePretty err
       exitFailure

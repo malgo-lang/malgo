@@ -1,0 +1,145 @@
+(module
+   "test/testcases/malgo/TestEither.mlg"
+   ((((def id (fn ((clause (#TestEither.x_xxx) (seq (do #TestEither.x_xxx)))))))
+       ((def
+           andThen
+           (fn
+              ((clause
+                  (#TestEither.__xxx (con Left (#TestEither.x_xxx)))
+                  (seq (do (apply Left #TestEither.x_xxx))))
+                 (clause
+                    (#TestEither.f_xxx (con Right (#TestEither.x_xxx)))
+                    (seq (do (apply #TestEither.f_xxx #TestEither.x_xxx))))))))
+       ((def
+           main
+           (fn
+              ((clause
+                  ()
+                  (seq
+                     (do
+                        (opapp
+                           |>
+                           (apply Right (apply Int32# (int32 1)))
+                           (fn
+                              ((clause
+                                  ((con Right ()) #TestEither.x_xxx)
+                                  (seq
+                                     (do
+                                        (apply
+                                           putStr
+                                           (seq
+                                              (do
+                                                 (apply
+                                                    toStringInt32
+                                                    #TestEither.x_xxx)))))))
+                                 (clause
+                                    (#TestEither.__xxx)
+                                    (seq
+                                       (do
+                                          (apply
+                                             putStrLn
+                                             (apply
+                                                String#
+                                                (string "unreachable"))))))))))
+                     (let
+                        #TestEither.x_xxx
+                        (apply Right (apply Int32# (int32 1))))
+                     (do
+                        (opapp
+                           |>
+                           (opapp
+                              |>
+                              #TestEither.x_xxx
+                              (apply
+                                 andThen
+                                 (fn
+                                    ((clause
+                                        (#TestEither.x_xxx)
+                                        (seq
+                                           (do
+                                              (apply
+                                                 Right
+                                                 (seq
+                                                    (do
+                                                       (apply
+                                                          (apply
+                                                             addInt32
+                                                             #TestEither.x_xxx)
+                                                          (apply Int32# (int32 1)))))))))))))
+                           (apply
+                              andThen
+                              (fn
+                                 ((clause
+                                     (#TestEither.y_xxx)
+                                     (seq
+                                        (do
+                                           (opapp
+                                              |>
+                                              (opapp
+                                                 |>
+                                                 (opapp
+                                                    |>
+                                                    #TestEither.y_xxx
+                                                    toStringInt32)
+                                                 putStr)
+                                              Right)))))))))
+                     (do
+                        (opapp
+                           |>
+                           (opapp
+                              |>
+                              (opapp
+                                 |>
+                                 #TestEither.x_xxx
+                                 (apply
+                                    andThen
+                                    (fn
+                                       ((clause
+                                           (#TestEither.__xxx)
+                                           (seq
+                                              (do
+                                                 (apply
+                                                    Left
+                                                    (apply
+                                                       String#
+                                                       (string "error"))))))))))
+                              (apply
+                                 andThen
+                                 (fn
+                                    ((clause
+                                        (#TestEither.x_xxx)
+                                        (seq
+                                           (do
+                                              (apply
+                                                 Right
+                                                 (seq
+                                                    (do
+                                                       (apply
+                                                          (apply
+                                                             addInt32
+                                                             #TestEither.x_xxx)
+                                                          (apply Int32# (int32 1)))))))))))))
+                           (fn
+                              ((clause
+                                  ((con Left ()) #TestEither.err_xxx)
+                                  (seq (do (apply putStrLn #TestEither.err_xxx))))
+                                 (clause
+                                    ((con Right ()) #TestEither.x_xxx)
+                                    (seq
+                                       (do
+                                          (opapp
+                                             |>
+                                             (opapp
+                                                |>
+                                                #TestEither.x_xxx
+                                                toStringInt32)
+                                             putStrLn)))))))))))))))
+      ()
+      ((data
+          Either
+          (#TestEither.a_xxx #TestEither.b_xxx)
+          ((Left (#TestEither.a_xxx)) (Right (#TestEither.b_xxx)))))
+      ()
+      ()
+      ((import "runtime/malgo/Builtin.mlg" all)
+         (import "runtime/malgo/Prelude.mlg" all))))

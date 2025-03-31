@@ -1,42 +1,26 @@
 ((rtob
-   (lambda
-      ($Test2.param_23)
-      (select
-         $Test2.param_23
-         (((R ())
-            (invoke B))
-            (#Test2.a_0 #Test2.a_0)))))
+    (lambda
+       ($Test2.param_xxx)
+       (select $Test2.param_xxx (((R ()) (invoke B)) (#Test2.a_xxx #Test2.a_xxx)))))
    (main
       (lambda
-         ($Test2.param_24)
+         ($Test2.param_xxx)
          (select
-            $Test2.param_24
-            ((#Test2.$__22
-               (apply
-                  (lambda
-                     ($Test2.param_25)
-                     (select
-                        $Test2.param_25
-                        (((B ())
-                           (apply
-                              (invoke malgo_print_string)
-                              ("OK")))
-                           (#Test2.__1
-                              (apply
-                                 (invoke malgo_print_string)
-                                 ("WRONG"))))))
-                  ((apply
-                     (invoke rtob)
-                     ((invoke R))))))))))
-   (R
-      (R ()))
-   (G
-      (G ()))
-   (B
-      (B ()))
+            $Test2.param_xxx
+            ((#Test2.$__xxx
+                (apply
+                   (lambda
+                      ($Test2.param_xxx)
+                      (select
+                         $Test2.param_xxx
+                         (((B ()) (apply (invoke malgo_print_string) ("OK")))
+                            (#Test2.__xxx
+                               (apply (invoke malgo_print_string) ("WRONG"))))))
+                   ((apply (invoke rtob) ((invoke R))))))))))
+   (R (R ()))
+   (G (G ()))
+   (B (B ()))
    (malgo_print_string
       (lambda
-         ($Test2.primitive_26)
-         (primitive
-            malgo_print_string
-            ($Test2.primitive_26)))))
+         ($Test2.primitive_xxx)
+         (primitive malgo_print_string ($Test2.primitive_xxx)))))

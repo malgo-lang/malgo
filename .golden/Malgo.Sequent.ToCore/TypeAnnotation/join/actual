@@ -1,52 +1,65 @@
 ((main
-   $TypeAnnotation.return_14
-   (cut
-      (lambda
-         ($TypeAnnotation.param_12 $TypeAnnotation.return_15)
-         (join
-            $TypeAnnotation.select_29
-            (select
-               (#TypeAnnotation.$__11
-                  (join
-                     $TypeAnnotation.then_28
-                     (then $TypeAnnotation.outer_19
-                        (join
-                           $TypeAnnotation.return_16
-                           (then $TypeAnnotation.inner_20
-                              (join
-                                 $TypeAnnotation.apply_27
-                                 (apply
-                                    ($TypeAnnotation.inner_20)
-                                    ($TypeAnnotation.return_15))
-                                 (cut $TypeAnnotation.outer_19 $TypeAnnotation.apply_27)))
-                           (join
-                              $TypeAnnotation.then_26
-                              (then $TypeAnnotation.outer_21
-                                 (join
-                                    $TypeAnnotation.return_17
-                                    (then $TypeAnnotation.inner_22
-                                       (join
-                                          $TypeAnnotation.apply_25
-                                          (apply
-                                             ($TypeAnnotation.inner_22)
-                                             ($TypeAnnotation.return_16))
-                                          (cut $TypeAnnotation.outer_21 $TypeAnnotation.apply_25)))
-                                    (join
-                                       $TypeAnnotation.apply_24
-                                       (apply
-                                          ("hoge")
-                                          ($TypeAnnotation.return_17))
-                                       (invoke String# $TypeAnnotation.apply_24))))
-                              (cut
-                                 (lambda
-                                    ($TypeAnnotation.param_13 $TypeAnnotation.return_18)
-                                    (join
-                                       $TypeAnnotation.select_23
-                                       (select
-                                          (#TypeAnnotation.x_0
-                                             (cut #TypeAnnotation.x_0 $TypeAnnotation.return_18)))
-                                       (cut $TypeAnnotation.param_13 $TypeAnnotation.select_23)))
-                                 $TypeAnnotation.then_26))))
-                     (invoke printString $TypeAnnotation.then_28))))
-            (cut $TypeAnnotation.param_12 $TypeAnnotation.select_29)))
-      $TypeAnnotation.return_14)))
+    $TypeAnnotation.return_xxx
+    (cut
+       (lambda
+          ($TypeAnnotation.param_xxx $TypeAnnotation.return_xxx)
+          (join
+             $TypeAnnotation.select_xxx
+             (select
+                (#TypeAnnotation.$__xxx
+                   (join
+                      $TypeAnnotation.then_xxx
+                      (then
+                         $TypeAnnotation.outer_xxx
+                         (join
+                            $TypeAnnotation.return_xxx
+                            (then
+                               $TypeAnnotation.inner_xxx
+                               (join
+                                  $TypeAnnotation.apply_xxx
+                                  (apply
+                                     ($TypeAnnotation.inner_xxx)
+                                     ($TypeAnnotation.return_xxx))
+                                  (cut
+                                     $TypeAnnotation.outer_xxx
+                                     $TypeAnnotation.apply_xxx)))
+                            (join
+                               $TypeAnnotation.then_xxx
+                               (then
+                                  $TypeAnnotation.outer_xxx
+                                  (join
+                                     $TypeAnnotation.return_xxx
+                                     (then
+                                        $TypeAnnotation.inner_xxx
+                                        (join
+                                           $TypeAnnotation.apply_xxx
+                                           (apply
+                                              ($TypeAnnotation.inner_xxx)
+                                              ($TypeAnnotation.return_xxx))
+                                           (cut
+                                              $TypeAnnotation.outer_xxx
+                                              $TypeAnnotation.apply_xxx)))
+                                     (join
+                                        $TypeAnnotation.apply_xxx
+                                        (apply
+                                           ("hoge")
+                                           ($TypeAnnotation.return_xxx))
+                                        (invoke String# $TypeAnnotation.apply_xxx))))
+                               (cut
+                                  (lambda
+                                     ($TypeAnnotation.param_xxx
+                                        $TypeAnnotation.return_xxx)
+                                     (join
+                                        $TypeAnnotation.select_xxx
+                                        (select
+                                           (#TypeAnnotation.x_xxx
+                                              (cut
+                                                 #TypeAnnotation.x_xxx
+                                                 $TypeAnnotation.return_xxx)))
+                                        (cut
+                                           $TypeAnnotation.param_xxx
+                                           $TypeAnnotation.select_xxx)))
+                                  $TypeAnnotation.then_xxx))))
+                      (invoke printString $TypeAnnotation.then_xxx))))
+             (cut $TypeAnnotation.param_xxx $TypeAnnotation.select_xxx)))
+       $TypeAnnotation.return_xxx)))

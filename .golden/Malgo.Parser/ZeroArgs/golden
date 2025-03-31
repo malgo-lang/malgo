@@ -50,7 +50,7 @@ Module
      }
     }
    ) "one"
-   ( TyCon
+   ( TyVar
     ( Range
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
@@ -84,7 +84,7 @@ Module
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
       , sourceLine = Pos 5
-      , sourceColumn = Pos 11
+      , sourceColumn = Pos 17
       }
      , _end = SourcePos
       { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
@@ -98,12 +98,12 @@ Module
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
        , sourceLine = Pos 5
-       , sourceColumn = Pos 13
+       , sourceColumn = Pos 11
        }
       , _end = SourcePos
        { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
        , sourceLine = Pos 5
-       , sourceColumn = Pos 15
+       , sourceColumn = Pos 17
        }
       }
      )
@@ -263,12 +263,12 @@ Module
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
       , sourceLine = Pos 8
-      , sourceColumn = Pos 12
+      , sourceColumn = Pos 10
       }
      , _end = SourcePos
       { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
-      , sourceLine = Pos 8
-      , sourceColumn = Pos 26
+      , sourceLine = Pos 10
+      , sourceColumn = Pos 1
       }
      }
     )
@@ -334,7 +334,7 @@ Module
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
           , sourceLine = Pos 8
-          , sourceColumn = Pos 17
+          , sourceColumn = Pos 23
           }
          , _end = SourcePos
           { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
@@ -348,12 +348,12 @@ Module
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
            , sourceLine = Pos 8
-           , sourceColumn = Pos 19
+           , sourceColumn = Pos 17
            }
           , _end = SourcePos
            { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
            , sourceLine = Pos 8
-           , sourceColumn = Pos 21
+           , sourceColumn = Pos 23
            }
           }
          )
@@ -400,19 +400,16 @@ Module
              }
             )
             ( Var
-             ( Qualified
-              { visibility = Implicit
-              , value = Range
-               { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
-                , sourceLine = Pos 8
-                , sourceColumn = Pos 19
-                }
-               , _end = SourcePos
-                { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
-                , sourceLine = Pos 8
-                , sourceColumn = Pos 21
-                }
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
+               , sourceLine = Pos 8
+               , sourceColumn = Pos 19
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
+               , sourceLine = Pos 8
+               , sourceColumn = Pos 21
                }
               }
              ) "x"
@@ -503,8 +500,8 @@ Module
     ( Range
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
-      , sourceLine = Pos 11
-      , sourceColumn = Pos 12
+      , sourceLine = Pos 13
+      , sourceColumn = Pos 3
       }
      , _end = SourcePos
       { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
@@ -517,13 +514,13 @@ Module
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
-       , sourceLine = Pos 12
-       , sourceColumn = Pos 3
+       , sourceLine = Pos 11
+       , sourceColumn = Pos 12
        }
       , _end = SourcePos
        { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
        , sourceLine = Pos 13
-       , sourceColumn = Pos 1
+       , sourceColumn = Pos 3
        }
       }
      )
@@ -574,12 +571,12 @@ Module
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
            , sourceLine = Pos 12
-           , sourceColumn = Pos 5
+           , sourceColumn = Pos 3
            }
           , _end = SourcePos
            { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
-           , sourceLine = Pos 12
-           , sourceColumn = Pos 43
+           , sourceLine = Pos 13
+           , sourceColumn = Pos 1
            }
           }
          )
@@ -630,7 +627,7 @@ Module
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
                , sourceLine = Pos 12
-               , sourceColumn = Pos 5
+               , sourceColumn = Pos 17
                }
               , _end = SourcePos
                { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
@@ -640,19 +637,16 @@ Module
               }
              )
              ( Var
-              ( Qualified
-               { visibility = Implicit
-               , value = Range
-                { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
-                 , sourceLine = Pos 12
-                 , sourceColumn = Pos 5
-                 }
-                , _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
-                 , sourceLine = Pos 12
-                 , sourceColumn = Pos 17
-                 }
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
+                , sourceLine = Pos 12
+                , sourceColumn = Pos 5
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
+                , sourceLine = Pos 12
+                , sourceColumn = Pos 17
                 }
                }
               ) "printString"
@@ -676,12 +670,12 @@ Module
                 { _start = SourcePos
                  { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
                  , sourceLine = Pos 12
-                 , sourceColumn = Pos 18
+                 , sourceColumn = Pos 17
                  }
                 , _end = SourcePos
                  { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
                  , sourceLine = Pos 12
-                 , sourceColumn = Pos 41
+                 , sourceColumn = Pos 43
                  }
                 }
                )
@@ -690,7 +684,7 @@ Module
                  { _start = SourcePos
                   { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
                   , sourceLine = Pos 12
-                  , sourceColumn = Pos 18
+                  , sourceColumn = Pos 32
                   }
                  , _end = SourcePos
                   { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
@@ -700,19 +694,16 @@ Module
                  }
                 )
                 ( Var
-                 ( Qualified
-                  { visibility = Implicit
-                  , value = Range
-                   { _start = SourcePos
-                    { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
-                    , sourceLine = Pos 12
-                    , sourceColumn = Pos 18
-                    }
-                   , _end = SourcePos
-                    { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
-                    , sourceLine = Pos 12
-                    , sourceColumn = Pos 32
-                    }
+                 ( Range
+                  { _start = SourcePos
+                   { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
+                   , sourceLine = Pos 12
+                   , sourceColumn = Pos 18
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
+                   , sourceLine = Pos 12
+                   , sourceColumn = Pos 32
                    }
                   }
                  ) "toStringInt32"
@@ -736,12 +727,12 @@ Module
                    { _start = SourcePos
                     { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
                     , sourceLine = Pos 12
-                    , sourceColumn = Pos 33
+                    , sourceColumn = Pos 32
                     }
                    , _end = SourcePos
                     { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
                     , sourceLine = Pos 12
-                    , sourceColumn = Pos 39
+                    , sourceColumn = Pos 41
                     }
                    }
                   )
@@ -750,7 +741,7 @@ Module
                     { _start = SourcePos
                      { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
                      , sourceLine = Pos 12
-                     , sourceColumn = Pos 33
+                     , sourceColumn = Pos 36
                      }
                     , _end = SourcePos
                      { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
@@ -760,37 +751,31 @@ Module
                     }
                    )
                    ( Var
-                    ( Qualified
-                     { visibility = Implicit
-                     , value = Range
-                      { _start = SourcePos
-                       { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
-                       , sourceLine = Pos 12
-                       , sourceColumn = Pos 33
-                       }
-                      , _end = SourcePos
-                       { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
-                       , sourceLine = Pos 12
-                       , sourceColumn = Pos 36
-                       }
+                    ( Range
+                     { _start = SourcePos
+                      { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
+                      , sourceLine = Pos 12
+                      , sourceColumn = Pos 33
+                      }
+                     , _end = SourcePos
+                      { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
+                      , sourceLine = Pos 12
+                      , sourceColumn = Pos 36
                       }
                      }
                     ) "id"
                    )
                    ( Var
-                    ( Qualified
-                     { visibility = Implicit
-                     , value = Range
-                      { _start = SourcePos
-                       { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
-                       , sourceLine = Pos 12
-                       , sourceColumn = Pos 36
-                       }
-                      , _end = SourcePos
-                       { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
-                       , sourceLine = Pos 12
-                       , sourceColumn = Pos 39
-                       }
+                    ( Range
+                     { _start = SourcePos
+                      { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
+                      , sourceLine = Pos 12
+                      , sourceColumn = Pos 36
+                      }
+                     , _end = SourcePos
+                      { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
+                      , sourceLine = Pos 12
+                      , sourceColumn = Pos 39
                       }
                      }
                     ) "one"

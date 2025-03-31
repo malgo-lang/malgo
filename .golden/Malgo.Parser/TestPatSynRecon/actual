@@ -69,12 +69,12 @@ Module
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
       , sourceLine = Pos 5
-      , sourceColumn = Pos 13
+      , sourceColumn = Pos 12
       }
      , _end = SourcePos
       { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-      , sourceLine = Pos 5
-      , sourceColumn = Pos 33
+      , sourceLine = Pos 7
+      , sourceColumn = Pos 1
       }
      }
     )
@@ -154,7 +154,7 @@ Module
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
           , sourceLine = Pos 5
-          , sourceColumn = Pos 20
+          , sourceColumn = Pos 32
           }
          , _end = SourcePos
           { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
@@ -168,66 +168,57 @@ Module
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
            , sourceLine = Pos 5
-           , sourceColumn = Pos 20
+           , sourceColumn = Pos 30
            }
           , _end = SourcePos
            { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
            , sourceLine = Pos 5
-           , sourceColumn = Pos 33
+           , sourceColumn = Pos 32
            }
           }
          )
          ( Var
-          ( Qualified
-           { visibility = Implicit
-           , value = Range
-            { _start = SourcePos
-             { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-             , sourceLine = Pos 5
-             , sourceColumn = Pos 20
-             }
-            , _end = SourcePos
-             { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-             , sourceLine = Pos 5
-             , sourceColumn = Pos 30
-             }
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+            , sourceLine = Pos 5
+            , sourceColumn = Pos 20
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+            , sourceLine = Pos 5
+            , sourceColumn = Pos 30
             }
            }
           ) "addInt64#"
          )
          ( Var
-          ( Qualified
-           { visibility = Implicit
-           , value = Range
-            { _start = SourcePos
-             { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-             , sourceLine = Pos 5
-             , sourceColumn = Pos 30
-             }
-            , _end = SourcePos
-             { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-             , sourceLine = Pos 5
-             , sourceColumn = Pos 32
-             }
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+            , sourceLine = Pos 5
+            , sourceColumn = Pos 30
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+            , sourceLine = Pos 5
+            , sourceColumn = Pos 32
             }
            }
           ) "x"
          )
         )
         ( Var
-         ( Qualified
-          { visibility = Implicit
-          , value = Range
-           { _start = SourcePos
-            { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-            , sourceLine = Pos 5
-            , sourceColumn = Pos 32
-            }
-           , _end = SourcePos
-            { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-            , sourceLine = Pos 5
-            , sourceColumn = Pos 33
-            }
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+           , sourceLine = Pos 5
+           , sourceColumn = Pos 32
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+           , sourceLine = Pos 5
+           , sourceColumn = Pos 33
            }
           }
          ) "y"
@@ -256,12 +247,12 @@ Module
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
       , sourceLine = Pos 8
-      , sourceColumn = Pos 5
+      , sourceColumn = Pos 3
       }
      , _end = SourcePos
       { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-      , sourceLine = Pos 11
-      , sourceColumn = Pos 3
+      , sourceLine = Pos 13
+      , sourceColumn = Pos 1
       }
      }
     )
@@ -279,7 +270,7 @@ Module
        }
       }
      )
-     [ ConP
+     [ VarP
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
@@ -292,7 +283,7 @@ Module
         , sourceColumn = Pos 10
         }
        }
-      ) "Cons" []
+      ) "Cons"
      , ConP
       ( Range
        { _start = SourcePos
@@ -384,7 +375,7 @@ Module
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
            , sourceLine = Pos 9
-           , sourceColumn = Pos 7
+           , sourceColumn = Pos 11
            }
           , _end = SourcePos
            { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
@@ -394,37 +385,31 @@ Module
           }
          )
          ( Var
-          ( Qualified
-           { visibility = Implicit
-           , value = Range
-            { _start = SourcePos
-             { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-             , sourceLine = Pos 9
-             , sourceColumn = Pos 7
-             }
-            , _end = SourcePos
-             { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-             , sourceLine = Pos 9
-             , sourceColumn = Pos 11
-             }
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+            , sourceLine = Pos 9
+            , sourceColumn = Pos 7
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+            , sourceLine = Pos 9
+            , sourceColumn = Pos 11
             }
            }
           ) "sum"
          )
          ( Var
-          ( Qualified
-           { visibility = Implicit
-           , value = Range
-            { _start = SourcePos
-             { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-             , sourceLine = Pos 9
-             , sourceColumn = Pos 11
-             }
-            , _end = SourcePos
-             { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-             , sourceLine = Pos 9
-             , sourceColumn = Pos 14
-             }
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+            , sourceLine = Pos 9
+            , sourceColumn = Pos 11
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+            , sourceLine = Pos 9
+            , sourceColumn = Pos 14
             }
            }
           ) "xs"
@@ -435,12 +420,12 @@ Module
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
            , sourceLine = Pos 9
-           , sourceColumn = Pos 18
+           , sourceColumn = Pos 17
            }
           , _end = SourcePos
            { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
            , sourceLine = Pos 9
-           , sourceColumn = Pos 47
+           , sourceColumn = Pos 48
            }
           }
          )
@@ -521,7 +506,7 @@ Module
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
                , sourceLine = Pos 9
-               , sourceColumn = Pos 32
+               , sourceColumn = Pos 39
                }
               , _end = SourcePos
                { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
@@ -531,19 +516,16 @@ Module
               }
              )
              ( Var
-              ( Qualified
-               { visibility = Implicit
-               , value = Range
-                { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                 , sourceLine = Pos 9
-                 , sourceColumn = Pos 32
-                 }
-                , _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                 , sourceLine = Pos 9
-                 , sourceColumn = Pos 39
-                 }
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                , sourceLine = Pos 9
+                , sourceColumn = Pos 32
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                , sourceLine = Pos 9
+                , sourceColumn = Pos 39
                 }
                }
               ) "Int64#"
@@ -567,12 +549,12 @@ Module
                 { _start = SourcePos
                  { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
                  , sourceLine = Pos 9
-                 , sourceColumn = Pos 40
+                 , sourceColumn = Pos 39
                  }
                 , _end = SourcePos
                  { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
                  , sourceLine = Pos 9
-                 , sourceColumn = Pos 46
+                 , sourceColumn = Pos 47
                  }
                 }
                )
@@ -591,37 +573,31 @@ Module
                  }
                 ) "+#"
                 ( Var
-                 ( Qualified
-                  { visibility = Implicit
-                  , value = Range
-                   { _start = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                    , sourceLine = Pos 9
-                    , sourceColumn = Pos 40
-                    }
-                   , _end = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                    , sourceLine = Pos 9
-                    , sourceColumn = Pos 42
-                    }
+                 ( Range
+                  { _start = SourcePos
+                   { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                   , sourceLine = Pos 9
+                   , sourceColumn = Pos 40
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                   , sourceLine = Pos 9
+                   , sourceColumn = Pos 42
                    }
                   }
                  ) "x"
                 )
                 ( Var
-                 ( Qualified
-                  { visibility = Implicit
-                  , value = Range
-                   { _start = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                    , sourceLine = Pos 9
-                    , sourceColumn = Pos 45
-                    }
-                   , _end = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                    , sourceLine = Pos 9
-                    , sourceColumn = Pos 46
-                    }
+                 ( Range
+                  { _start = SourcePos
+                   { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                   , sourceLine = Pos 9
+                   , sourceColumn = Pos 45
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                   , sourceLine = Pos 9
+                   , sourceColumn = Pos 46
                    }
                   }
                  ) "s"
@@ -651,7 +627,7 @@ Module
         }
        }
       )
-      [ ConP
+      [ VarP
        ( Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
@@ -664,7 +640,7 @@ Module
          , sourceColumn = Pos 9
          }
         }
-       ) "Nil" []
+       ) "Nil"
       ]
       ( Seq
        ( Range
@@ -699,7 +675,7 @@ Module
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
            , sourceLine = Pos 10
-           , sourceColumn = Pos 12
+           , sourceColumn = Pos 19
            }
           , _end = SourcePos
            { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
@@ -709,19 +685,16 @@ Module
           }
          )
          ( Var
-          ( Qualified
-           { visibility = Implicit
-           , value = Range
-            { _start = SourcePos
-             { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-             , sourceLine = Pos 10
-             , sourceColumn = Pos 12
-             }
-            , _end = SourcePos
-             { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-             , sourceLine = Pos 10
-             , sourceColumn = Pos 19
-             }
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+            , sourceLine = Pos 10
+            , sourceColumn = Pos 12
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+            , sourceLine = Pos 10
+            , sourceColumn = Pos 19
             }
            }
           ) "Int64#"
@@ -766,12 +739,12 @@ Module
     ( Range
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-      , sourceLine = Pos 14
-      , sourceColumn = Pos 3
+      , sourceLine = Pos 13
+      , sourceColumn = Pos 12
       }
      , _end = SourcePos
       { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-      , sourceLine = Pos 16
+      , sourceLine = Pos 17
       , sourceColumn = Pos 1
       }
      }
@@ -837,7 +810,7 @@ Module
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
            , sourceLine = Pos 14
-           , sourceColumn = Pos 3
+           , sourceColumn = Pos 7
            }
           , _end = SourcePos
            { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
@@ -847,19 +820,16 @@ Module
           }
          )
          ( Var
-          ( Qualified
-           { visibility = Implicit
-           , value = Range
-            { _start = SourcePos
-             { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-             , sourceLine = Pos 14
-             , sourceColumn = Pos 3
-             }
-            , _end = SourcePos
-             { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-             , sourceLine = Pos 14
-             , sourceColumn = Pos 7
-             }
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+            , sourceLine = Pos 14
+            , sourceColumn = Pos 3
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+            , sourceLine = Pos 14
+            , sourceColumn = Pos 7
             }
            }
           ) "sum"
@@ -883,12 +853,12 @@ Module
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
              , sourceLine = Pos 14
-             , sourceColumn = Pos 8
+             , sourceColumn = Pos 7
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-             , sourceLine = Pos 14
-             , sourceColumn = Pos 49
+             , sourceLine = Pos 15
+             , sourceColumn = Pos 5
              }
             }
            )
@@ -897,7 +867,7 @@ Module
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
               , sourceLine = Pos 14
-              , sourceColumn = Pos 8
+              , sourceColumn = Pos 26
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
@@ -911,29 +881,26 @@ Module
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
                , sourceLine = Pos 14
-               , sourceColumn = Pos 8
+               , sourceColumn = Pos 13
                }
               , _end = SourcePos
                { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
                , sourceLine = Pos 14
-               , sourceColumn = Pos 49
+               , sourceColumn = Pos 26
                }
               }
              )
              ( Var
-              ( Qualified
-               { visibility = Implicit
-               , value = Range
-                { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                 , sourceLine = Pos 14
-                 , sourceColumn = Pos 8
-                 }
-                , _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                 , sourceLine = Pos 14
-                 , sourceColumn = Pos 13
-                 }
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                , sourceLine = Pos 14
+                , sourceColumn = Pos 8
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                , sourceLine = Pos 14
+                , sourceColumn = Pos 13
                 }
                }
               ) "Cons"
@@ -957,12 +924,12 @@ Module
                 { _start = SourcePos
                  { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
                  , sourceLine = Pos 14
-                 , sourceColumn = Pos 14
+                 , sourceColumn = Pos 13
                  }
                 , _end = SourcePos
                  { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
                  , sourceLine = Pos 14
-                 , sourceColumn = Pos 24
+                 , sourceColumn = Pos 26
                  }
                 }
                )
@@ -971,7 +938,7 @@ Module
                  { _start = SourcePos
                   { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
                   , sourceLine = Pos 14
-                  , sourceColumn = Pos 14
+                  , sourceColumn = Pos 21
                   }
                  , _end = SourcePos
                   { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
@@ -981,19 +948,16 @@ Module
                  }
                 )
                 ( Var
-                 ( Qualified
-                  { visibility = Implicit
-                  , value = Range
-                   { _start = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                    , sourceLine = Pos 14
-                    , sourceColumn = Pos 14
-                    }
-                   , _end = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                    , sourceLine = Pos 14
-                    , sourceColumn = Pos 21
-                    }
+                 ( Range
+                  { _start = SourcePos
+                   { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                   , sourceLine = Pos 14
+                   , sourceColumn = Pos 14
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                   , sourceLine = Pos 14
+                   , sourceColumn = Pos 21
                    }
                   }
                  ) "Int64#"
@@ -1037,12 +1001,12 @@ Module
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
                 , sourceLine = Pos 14
-                , sourceColumn = Pos 27
+                , sourceColumn = Pos 26
                 }
                , _end = SourcePos
                 { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
                 , sourceLine = Pos 14
-                , sourceColumn = Pos 48
+                , sourceColumn = Pos 49
                 }
                }
               )
@@ -1051,7 +1015,7 @@ Module
                 { _start = SourcePos
                  { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
                  , sourceLine = Pos 14
-                 , sourceColumn = Pos 27
+                 , sourceColumn = Pos 45
                  }
                 , _end = SourcePos
                  { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
@@ -1065,29 +1029,26 @@ Module
                  { _start = SourcePos
                   { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
                   , sourceLine = Pos 14
-                  , sourceColumn = Pos 27
+                  , sourceColumn = Pos 32
                   }
                  , _end = SourcePos
                   { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
                   , sourceLine = Pos 14
-                  , sourceColumn = Pos 48
+                  , sourceColumn = Pos 45
                   }
                  }
                 )
                 ( Var
-                 ( Qualified
-                  { visibility = Implicit
-                  , value = Range
-                   { _start = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                    , sourceLine = Pos 14
-                    , sourceColumn = Pos 27
-                    }
-                   , _end = SourcePos
-                    { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                    , sourceLine = Pos 14
-                    , sourceColumn = Pos 32
-                    }
+                 ( Range
+                  { _start = SourcePos
+                   { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                   , sourceLine = Pos 14
+                   , sourceColumn = Pos 27
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                   , sourceLine = Pos 14
+                   , sourceColumn = Pos 32
                    }
                   }
                  ) "Cons"
@@ -1111,12 +1072,12 @@ Module
                    { _start = SourcePos
                     { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
                     , sourceLine = Pos 14
-                    , sourceColumn = Pos 33
+                    , sourceColumn = Pos 32
                     }
                    , _end = SourcePos
                     { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
                     , sourceLine = Pos 14
-                    , sourceColumn = Pos 43
+                    , sourceColumn = Pos 45
                     }
                    }
                   )
@@ -1125,7 +1086,7 @@ Module
                     { _start = SourcePos
                      { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
                      , sourceLine = Pos 14
-                     , sourceColumn = Pos 33
+                     , sourceColumn = Pos 40
                      }
                     , _end = SourcePos
                      { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
@@ -1135,19 +1096,16 @@ Module
                     }
                    )
                    ( Var
-                    ( Qualified
-                     { visibility = Implicit
-                     , value = Range
-                      { _start = SourcePos
-                       { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                       , sourceLine = Pos 14
-                       , sourceColumn = Pos 33
-                       }
-                      , _end = SourcePos
-                       { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                       , sourceLine = Pos 14
-                       , sourceColumn = Pos 40
-                       }
+                    ( Range
+                     { _start = SourcePos
+                      { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                      , sourceLine = Pos 14
+                      , sourceColumn = Pos 33
+                      }
+                     , _end = SourcePos
+                      { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                      , sourceLine = Pos 14
+                      , sourceColumn = Pos 40
                       }
                      }
                     ) "Int64#"
@@ -1173,19 +1131,16 @@ Module
                 )
                )
                ( Var
-                ( Qualified
-                 { visibility = Implicit
-                 , value = Range
-                  { _start = SourcePos
-                   { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                   , sourceLine = Pos 14
-                   , sourceColumn = Pos 45
-                   }
-                  , _end = SourcePos
-                   { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                   , sourceLine = Pos 14
-                   , sourceColumn = Pos 48
-                   }
+                ( Range
+                 { _start = SourcePos
+                  { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                  , sourceLine = Pos 14
+                  , sourceColumn = Pos 45
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                  , sourceLine = Pos 14
+                  , sourceColumn = Pos 48
                   }
                  }
                 ) "Nil"
@@ -1202,12 +1157,12 @@ Module
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
            , sourceLine = Pos 15
-           , sourceColumn = Pos 9
+           , sourceColumn = Pos 8
            }
           , _end = SourcePos
            { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-           , sourceLine = Pos 15
-           , sourceColumn = Pos 26
+           , sourceLine = Pos 16
+           , sourceColumn = Pos 1
            }
           }
          )
@@ -1273,7 +1228,7 @@ Module
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
                , sourceLine = Pos 15
-               , sourceColumn = Pos 14
+               , sourceColumn = Pos 25
                }
               , _end = SourcePos
                { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
@@ -1283,37 +1238,31 @@ Module
               }
              )
              ( Var
-              ( Qualified
-               { visibility = Implicit
-               , value = Range
-                { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                 , sourceLine = Pos 15
-                 , sourceColumn = Pos 14
-                 }
-                , _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                 , sourceLine = Pos 15
-                 , sourceColumn = Pos 25
-                 }
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                , sourceLine = Pos 15
+                , sourceColumn = Pos 14
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                , sourceLine = Pos 15
+                , sourceColumn = Pos 25
                 }
                }
               ) "printInt64"
              )
              ( Var
-              ( Qualified
-               { visibility = Implicit
-               , value = Range
-                { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                 , sourceLine = Pos 15
-                 , sourceColumn = Pos 25
-                 }
-                , _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-                 , sourceLine = Pos 15
-                 , sourceColumn = Pos 26
-                 }
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                , sourceLine = Pos 15
+                , sourceColumn = Pos 25
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
+                , sourceLine = Pos 15
+                , sourceColumn = Pos 26
                 }
                }
               ) "i"

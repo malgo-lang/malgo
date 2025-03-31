@@ -41,7 +41,7 @@ Module
     { _start = SourcePos
      { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
      , sourceLine = Pos 4
-     , sourceColumn = Pos 6
+     , sourceColumn = Pos 1
      }
     , _end = SourcePos
      { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
@@ -99,7 +99,7 @@ Module
     { _start = SourcePos
      { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
      , sourceLine = Pos 6
-     , sourceColumn = Pos 6
+     , sourceColumn = Pos 1
      }
     , _end = SourcePos
      { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
@@ -108,7 +108,7 @@ Module
      }
     }
    ) "MyString" []
-   ( TyCon
+   ( TyVar
     ( Range
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
@@ -151,7 +151,7 @@ Module
       }
      }
     )
-    ( TyCon
+    ( TyVar
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
@@ -166,7 +166,7 @@ Module
       }
      ) "MyTuple"
     )
-    [ TyCon
+    [ TyVar
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
@@ -247,7 +247,7 @@ Module
     { _start = SourcePos
      { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
      , sourceLine = Pos 11
-     , sourceColumn = Pos 6
+     , sourceColumn = Pos 1
      }
     , _end = SourcePos
      { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
@@ -278,7 +278,7 @@ Module
     { _start = SourcePos
      { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
      , sourceLine = Pos 12
-     , sourceColumn = Pos 6
+     , sourceColumn = Pos 1
      }
     , _end = SourcePos
      { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
@@ -287,7 +287,7 @@ Module
      }
     }
    ) "S" []
-   ( TyCon
+   ( TyVar
     ( Range
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
@@ -330,7 +330,7 @@ Module
       }
      }
     )
-    ( TyCon
+    ( TyVar
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
@@ -345,7 +345,7 @@ Module
       }
      ) "S"
     )
-    ( TyCon
+    ( TyVar
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
@@ -380,12 +380,12 @@ Module
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
       , sourceLine = Pos 15
-      , sourceColumn = Pos 17
+      , sourceColumn = Pos 15
       }
      , _end = SourcePos
       { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
-      , sourceLine = Pos 15
-      , sourceColumn = Pos 24
+      , sourceLine = Pos 17
+      , sourceColumn = Pos 1
       }
      }
     )
@@ -447,19 +447,16 @@ Module
         }
        )
        ( Var
-        ( Qualified
-         { visibility = Implicit
-         , value = Range
-          { _start = SourcePos
-           { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
-           , sourceLine = Pos 15
-           , sourceColumn = Pos 22
-           }
-          , _end = SourcePos
-           { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
-           , sourceLine = Pos 15
-           , sourceColumn = Pos 24
-           }
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
+          , sourceLine = Pos 15
+          , sourceColumn = Pos 22
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
+          , sourceLine = Pos 15
+          , sourceColumn = Pos 24
           }
          }
         ) "x"
@@ -530,12 +527,12 @@ Module
     ( Range
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
-      , sourceLine = Pos 19
-      , sourceColumn = Pos 3
+      , sourceLine = Pos 18
+      , sourceColumn = Pos 12
       }
      , _end = SourcePos
       { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
-      , sourceLine = Pos 20
+      , sourceLine = Pos 21
       , sourceColumn = Pos 1
       }
      }
@@ -597,19 +594,16 @@ Module
          }
         ) "|>"
         ( Var
-         ( Qualified
-          { visibility = Implicit
-          , value = Range
-           { _start = SourcePos
-            { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
-            , sourceLine = Pos 19
-            , sourceColumn = Pos 3
-            }
-           , _end = SourcePos
-            { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
-            , sourceLine = Pos 19
-            , sourceColumn = Pos 9
-            }
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
+           , sourceLine = Pos 19
+           , sourceColumn = Pos 3
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
+           , sourceLine = Pos 19
+           , sourceColumn = Pos 9
            }
           }
          ) "hello"
@@ -619,12 +613,12 @@ Module
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
            , sourceLine = Pos 19
-           , sourceColumn = Pos 14
+           , sourceColumn = Pos 12
            }
           , _end = SourcePos
            { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
-           , sourceLine = Pos 19
-           , sourceColumn = Pos 57
+           , sourceLine = Pos 20
+           , sourceColumn = Pos 1
            }
           }
          )
@@ -719,7 +713,7 @@ Module
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
                , sourceLine = Pos 19
-               , sourceColumn = Pos 24
+               , sourceColumn = Pos 31
                }
               , _end = SourcePos
                { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
@@ -729,37 +723,31 @@ Module
               }
              )
              ( Var
-              ( Qualified
-               { visibility = Implicit
-               , value = Range
-                { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
-                 , sourceLine = Pos 19
-                 , sourceColumn = Pos 24
-                 }
-                , _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
-                 , sourceLine = Pos 19
-                 , sourceColumn = Pos 31
-                 }
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
+                , sourceLine = Pos 19
+                , sourceColumn = Pos 24
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
+                , sourceLine = Pos 19
+                , sourceColumn = Pos 31
                 }
                }
               ) "putStr"
              )
              ( Var
-              ( Qualified
-               { visibility = Implicit
-               , value = Range
-                { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
-                 , sourceLine = Pos 19
-                 , sourceColumn = Pos 31
-                 }
-                , _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
-                 , sourceLine = Pos 19
-                 , sourceColumn = Pos 32
-                 }
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
+                , sourceLine = Pos 19
+                , sourceColumn = Pos 31
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
+                , sourceLine = Pos 19
+                , sourceColumn = Pos 32
                 }
                }
               ) "h"
@@ -784,7 +772,7 @@ Module
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
                 , sourceLine = Pos 19
-                , sourceColumn = Pos 34
+                , sourceColumn = Pos 41
                 }
                , _end = SourcePos
                 { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
@@ -794,19 +782,16 @@ Module
                }
               )
               ( Var
-               ( Qualified
-                { visibility = Implicit
-                , value = Range
-                 { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
-                  , sourceLine = Pos 19
-                  , sourceColumn = Pos 34
-                  }
-                 , _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
-                  , sourceLine = Pos 19
-                  , sourceColumn = Pos 41
-                  }
+               ( Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
+                 , sourceLine = Pos 19
+                 , sourceColumn = Pos 34
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
+                 , sourceLine = Pos 19
+                 , sourceColumn = Pos 41
                  }
                 }
                ) "putStr"
@@ -847,7 +832,7 @@ Module
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
                 , sourceLine = Pos 19
-                , sourceColumn = Pos 46
+                , sourceColumn = Pos 55
                 }
                , _end = SourcePos
                 { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
@@ -857,37 +842,31 @@ Module
                }
               )
               ( Var
-               ( Qualified
-                { visibility = Implicit
-                , value = Range
-                 { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
-                  , sourceLine = Pos 19
-                  , sourceColumn = Pos 46
-                  }
-                 , _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
-                  , sourceLine = Pos 19
-                  , sourceColumn = Pos 55
-                  }
+               ( Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
+                 , sourceLine = Pos 19
+                 , sourceColumn = Pos 46
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
+                 , sourceLine = Pos 19
+                 , sourceColumn = Pos 55
                  }
                 }
                ) "putStrLn"
               )
               ( Var
-               ( Qualified
-                { visibility = Implicit
-                , value = Range
-                 { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
-                  , sourceLine = Pos 19
-                  , sourceColumn = Pos 55
-                  }
-                 , _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
-                  , sourceLine = Pos 19
-                  , sourceColumn = Pos 57
-                  }
+               ( Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
+                 , sourceLine = Pos 19
+                 , sourceColumn = Pos 55
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
+                 , sourceLine = Pos 19
+                 , sourceColumn = Pos 57
                  }
                 }
                ) "w"

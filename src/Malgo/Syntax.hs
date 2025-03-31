@@ -40,11 +40,16 @@ where
 
 import Control.Lens (makeLenses, makePrisms, view, (^.), _2)
 import Data.Graph (flattenSCC, stronglyConnComp)
+import Data.List.NonEmpty qualified as NE
+import Data.SCargot.Repr.Basic qualified as S
 import Data.Set qualified as Set
 import Malgo.Infer.TypeRep hiding (TyApp, TyArr, TyCon, TyRecord, TyTuple, TyVar, Type, freevars)
 import Malgo.Module
 import Malgo.Prelude hiding (All)
+import Malgo.SExpr (ToSExpr (..))
+import Malgo.SExpr qualified as S
 import Malgo.Syntax.Extension
+import Prettyprinter (dquotes, parens, sep, squotes)
 
 sexpr :: [Doc ann] -> Doc ann
 sexpr = parens . sep
@@ -52,6 +57,14 @@ sexpr = parens . sep
 -- | Unboxed and boxed literal
 data Literal x = Int32 Int32 | Int64 Int64 | Float Float | Double Double | Char Char | String Text
   deriving stock (Show, Eq, Ord)
+
+instance ToSExpr (Literal x) where
+  toSExpr (Int32 i) = S.L ["int32", S.A $ S.Int (fromIntegral i) Nothing]
+  toSExpr (Int64 i) = S.L ["int64", S.A $ S.Int (fromIntegral i) Nothing]
+  toSExpr (Float f) = S.L ["float", S.A $ S.Float f]
+  toSExpr (Double d) = S.L ["double", S.A $ S.Double d]
+  toSExpr (Char c) = S.L ["char", S.A $ S.Char c]
+  toSExpr (String s) = S.L ["string", S.A $ S.String s]
 
 instance Pretty (Literal x) where
   pretty (Int32 i) = sexpr ["int32", pretty (toInteger i)]
@@ -88,6 +101,15 @@ deriving stock instance (ForallTypeX Eq x, Eq (XId x)) => Eq (Type x)
 
 deriving stock instance (ForallTypeX Show x, Show (XId x)) => Show (Type x)
 
+instance (ToSExpr (XId x)) => ToSExpr (Type x) where
+  toSExpr (TyApp _ t ts) = S.L ["app", toSExpr t, S.L $ map toSExpr ts]
+  toSExpr (TyVar _ v) = toSExpr v
+  toSExpr (TyCon _ c) = toSExpr c
+  toSExpr (TyArr _ t1 t2) = S.L ["->", toSExpr t1, toSExpr t2]
+  toSExpr (TyTuple _ ts) = S.L $ "tuple" : map toSExpr ts
+  toSExpr (TyRecord _ kvs) = S.L $ "record" : map (\(k, v) -> S.L [toSExpr k, toSExpr v]) kvs
+  toSExpr (TyBlock _ t) = S.L ["block", toSExpr t]
+
 instance (Pretty (XId x)) => Pretty (Type x) where
   pretty (TyApp _ t ts) = sexpr $ ["app", pretty t] <> map pretty ts
   pretty (TyVar _ v) = pretty v
@@ -114,6 +136,7 @@ data Expr x
   | Boxed (XBoxed x) (Literal Boxed)
   | Apply (XApply x) (Expr x) (Expr x)
   | OpApp (XOpApp x) (XId x) (Expr x) (Expr x)
+  | Project (XProject x) (Expr x) Text
   | Fn (XFn x) (NonEmpty (Clause x))
   | Tuple (XTuple x) [Expr x]
   | Record (XRecord x) [(Text, Expr x)]
@@ -126,12 +149,28 @@ deriving stock instance (ForallExpX Eq x, ForallClauseX Eq x, ForallPatX Eq x, F
 
 deriving stock instance (ForallExpX Show x, ForallClauseX Show x, ForallPatX Show x, ForallStmtX Show x, ForallTypeX Show x, Show (XId x)) => Show (Expr x)
 
+instance (ToSExpr (XId x)) => ToSExpr (Expr x) where
+  toSExpr (Var _ id) = toSExpr id
+  toSExpr (Unboxed _ l) = toSExpr l
+  toSExpr (Boxed _ l) = toSExpr l
+  toSExpr (Apply _ e1 e2) = S.L ["apply", toSExpr e1, toSExpr e2]
+  toSExpr (OpApp _ op e1 e2) = S.L ["opapp", toSExpr op, toSExpr e1, toSExpr e2]
+  toSExpr (Project _ e k) = S.L ["project", toSExpr e, S.A $ S.String k]
+  toSExpr (Fn _ cs) = S.L ["fn", S.L $ map toSExpr $ NE.toList cs]
+  toSExpr (Tuple _ es) = S.L $ "tuple" : map toSExpr es
+  toSExpr (Record _ kvs) = S.L $ "record" : map (\(k, v) -> S.L [toSExpr k, toSExpr v]) kvs
+  toSExpr (List _ es) = S.L $ "list" : map toSExpr es
+  toSExpr (Ann _ e t) = S.L ["ann", toSExpr e, toSExpr t]
+  toSExpr (Seq _ ss) = S.L $ "seq" : map toSExpr (NE.toList ss)
+  toSExpr (Parens _ e) = S.L ["parens", toSExpr e]
+
 instance (Pretty (XId x)) => Pretty (Expr x) where
   pretty (Var _ id) = pretty id
   pretty (Unboxed _ l) = sexpr ["unboxed", pretty l]
   pretty (Boxed _ l) = sexpr ["boxed", pretty l]
   pretty (Apply _ e1 e2) = sexpr ["apply", pretty e1, pretty e2]
   pretty (OpApp _ op e1 e2) = sexpr ["opapp", pretty op, pretty e1, pretty e2]
+  pretty (Project _ e k) = sexpr ["project", pretty e, pretty k]
   pretty (Fn _ cs) = sexpr ["fn", sexpr $ map pretty (toList cs)]
   pretty (Tuple _ es) = sexpr $ "tuple" : map pretty es
   pretty (Record _ kvs) = sexpr $ "record" : map (\(k, v) -> sexpr [pretty k, pretty v]) kvs
@@ -139,6 +178,21 @@ instance (Pretty (XId x)) => Pretty (Expr x) where
   pretty (Ann _ e t) = sexpr ["ann", pretty e, pretty t]
   pretty (Seq _ ss) = sexpr $ "seq" : map pretty (toList ss)
   pretty (Parens _ e) = sexpr ["parens", pretty e]
+
+instance (ForallExpX HasRange x) => HasRange (Expr x) where
+  range (Var x _) = range x
+  range (Unboxed x _) = range x
+  range (Boxed x _) = range x
+  range (Apply x _ _) = range x
+  range (OpApp x _ _ _) = range x
+  range (Project x _ _) = range x
+  range (Fn x _) = range x
+  range (Tuple x _) = range x
+  range (Record x _) = range x
+  range (List x _) = range x
+  range (Ann x _ _) = range x
+  range (Seq x _) = range x
+  range (Parens x _) = range x
 
 instance
   (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) =>
@@ -149,6 +203,7 @@ instance
   typeOf (Boxed x _) = typeOf x
   typeOf (Apply x _ _) = typeOf x
   typeOf (OpApp x _ _ _) = typeOf x
+  typeOf (Project x _ _) = typeOf x
   typeOf (Fn x _) = typeOf x
   typeOf (Tuple x _) = typeOf x
   typeOf (Record x _) = typeOf x
@@ -163,6 +218,7 @@ instance
     Boxed x b -> Boxed <$> types f x <*> types f b
     Apply x e1 e2 -> Apply <$> types f x <*> types f e1 <*> types f e2
     OpApp x op e1 e2 -> OpApp <$> types f x <*> pure op <*> types f e1 <*> types f e2
+    Project x e k -> Project <$> types f x <*> types f e <*> pure k
     Fn x cs -> Fn <$> types f x <*> traverse (types f) cs
     Tuple x es -> Tuple <$> types f x <*> traverse (types f) es
     Record x kvs -> Record <$> types f x <*> traverse (\(k, v) -> (k,) <$> types f v) kvs
@@ -177,6 +233,7 @@ freevars (Unboxed _ _) = mempty
 freevars (Boxed _ _) = mempty
 freevars (Apply _ e1 e2) = freevars e1 <> freevars e2
 freevars (OpApp _ op e1 e2) = Set.insert op $ freevars e1 <> freevars e2
+freevars (Project _ e _) = freevars e
 freevars (Fn _ cs) = foldMap freevarsClause cs
   where
     freevarsClause :: (Ord (XId x)) => Clause x -> Set (XId x)
@@ -213,6 +270,12 @@ deriving stock instance (ForallClauseX Eq x, ForallPatX Eq x, ForallExpX Eq x, F
 
 deriving stock instance (ForallClauseX Show x, ForallPatX Show x, ForallExpX Show x, ForallStmtX Show x, ForallTypeX Show x, Show (XId x)) => Show (Stmt x)
 
+instance (ToSExpr (XId x)) => (ToSExpr (Stmt x)) where
+  toSExpr (Let _ id e) = S.L ["let", toSExpr id, toSExpr e]
+  toSExpr (With _ Nothing e) = S.L ["with", toSExpr e]
+  toSExpr (With _ (Just id) e) = S.L ["with", toSExpr id, toSExpr e]
+  toSExpr (NoBind _ e) = S.L ["do", toSExpr e]
+
 instance (Pretty (XId x)) => Pretty (Stmt x) where
   pretty (Let _ var body) = sexpr ["let", pretty var, pretty body]
   pretty (With _ Nothing body) = sexpr ["with", pretty body]
@@ -243,6 +306,9 @@ deriving stock instance (ForallClauseX Show x, ForallExpX Show x, ForallPatX Sho
 instance (ForallClauseX Eq x, ForallExpX Eq x, ForallPatX Eq x, Ord (XId x), ForallPatX Ord x, ForallStmtX Ord x, ForallTypeX Ord x) => Ord (Clause x) where
   (Clause _ ps1 _) `compare` (Clause _ ps2 _) = ps1 `compare` ps2
 
+instance (ToSExpr (XId x)) => ToSExpr (Clause x) where
+  toSExpr (Clause _ pats body) = S.L ["clause", S.L $ map toSExpr pats, toSExpr body]
+
 instance (Pretty (XId x)) => Pretty (Clause x) where
   pretty (Clause _ pats body) = sexpr ["clause", sexpr $ map pretty pats, pretty body]
 
@@ -270,6 +336,15 @@ deriving stock instance (ForallPatX Eq x, Eq (XId x)) => Eq (Pat x)
 deriving stock instance (ForallPatX Show x, Show (XId x)) => Show (Pat x)
 
 deriving stock instance (ForallPatX Ord x, Ord (XId x)) => Ord (Pat x)
+
+instance (ToSExpr (XId x)) => ToSExpr (Pat x) where
+  toSExpr (VarP _ id) = toSExpr id
+  toSExpr (ConP _ id ps) = S.L ["con", toSExpr id, S.L $ map toSExpr ps]
+  toSExpr (TupleP _ ps) = S.L $ "tuple" : map toSExpr ps
+  toSExpr (RecordP _ kps) = S.L $ "record" : map (\(k, p) -> S.L [toSExpr k, toSExpr p]) kps
+  toSExpr (ListP _ ps) = S.L $ "list" : map toSExpr ps
+  toSExpr (UnboxedP _ l) = S.L ["unboxed", toSExpr l]
+  toSExpr (BoxedP _ l) = S.L ["boxed", toSExpr l]
 
 instance (Pretty (XId x)) => Pretty (Pat x) where
   pretty (VarP _ id) = pretty id
@@ -317,6 +392,25 @@ data Decl x
 deriving stock instance (ForallDeclX Eq x, Eq (XId x)) => Eq (Decl x)
 
 deriving stock instance (ForallDeclX Show x, Show (XId x)) => Show (Decl x)
+
+instance (ToSExpr (XId x)) => ToSExpr (Decl x) where
+  toSExpr (ScDef _ f e) = S.L ["def", toSExpr f, toSExpr e]
+  toSExpr (ScSig _ f t) = S.L ["sig", toSExpr f, toSExpr t]
+  toSExpr (DataDef _ t ps cons) =
+    S.L
+      [ "data",
+        toSExpr t,
+        S.L $ map (toSExpr . view _2) ps,
+        S.L $ map (\(_, c, ts) -> S.L [toSExpr c, S.L $ map toSExpr ts]) cons
+      ]
+  toSExpr (TypeSynonym _ t ps ty) = S.L ["type", toSExpr t, S.L $ map toSExpr ps, toSExpr ty]
+  toSExpr (Infix _ assoc prec op) = S.L ["infix", toSExpr assoc, S.A $ S.Int (fromIntegral prec) Nothing, toSExpr op]
+  toSExpr (Foreign _ n t) = S.L ["foreign", toSExpr n, toSExpr t]
+  toSExpr (Import _ m list) = S.L ["import", toSExpr m, toImportList list]
+    where
+      toImportList All = "all"
+      toImportList (Selected xs) = S.L $ "selected" : map toSExpr xs
+      toImportList (As m) = S.L ["as", toSExpr m]
 
 instance (Pretty (XId x)) => Pretty (Decl x) where
   pretty (ScDef x name expr) = prettyScDef (x, name, expr)
@@ -367,18 +461,30 @@ deriving stock instance (ForallDeclX Eq x, Eq (XId x), Eq (XModule x)) => Eq (Mo
 
 deriving stock instance (ForallDeclX Show x, Show (XId x), Show (XModule x)) => Show (Module x)
 
+instance (ToSExpr (XId x), ToSExpr (XModule x)) => ToSExpr (Module x) where
+  toSExpr (Module name defs) =
+    S.L ["module", toSExpr name, toSExpr defs]
+
 instance (Pretty (XId x), Pretty (XModule x)) => Pretty (Module x) where
   pretty (Module name defs) =
     sexpr ["module", pretty name, pretty defs]
 
-newtype ParsedDefinitions = ParsedDefinitions [Decl (Malgo 'Parse)]
-  deriving stock (Eq, Show)
+newtype ParsedDefinitions x = ParsedDefinitions [Decl x]
 
-instance Pretty ParsedDefinitions where
+deriving stock instance (ForallDeclX Eq x, Eq (XId x)) => Eq (ParsedDefinitions x)
+
+deriving stock instance (ForallDeclX Show x, Show (XId x)) => Show (ParsedDefinitions x)
+
+instance (ToSExpr (XId x)) => ToSExpr (ParsedDefinitions x) where
+  toSExpr (ParsedDefinitions ds) = S.L $ map toSExpr ds
+
+instance (ForallDeclX Pretty x, Pretty (XId x)) => Pretty (ParsedDefinitions x) where
   pretty (ParsedDefinitions ds) = sep $ map pretty ds
 
 -- モジュールの循環参照を防ぐため、このモジュールでtype instanceを定義する
-type instance XModule (Malgo 'Parse) = ParsedDefinitions
+type instance XModule (Malgo 'Parse) = ParsedDefinitions (Malgo Parse)
+
+type instance XModule (Malgo 'NewParse) = ParsedDefinitions (Malgo NewParse)
 
 type instance XModule (Malgo 'Rename) = BindGroup (Malgo 'Rename)
 
@@ -415,6 +521,36 @@ makeLenses ''BindGroup
 deriving stock instance (ForallDeclX Eq x, Eq (XId x)) => Eq (BindGroup x)
 
 deriving stock instance (ForallDeclX Show x, Show (XId x)) => Show (BindGroup x)
+
+instance (ToSExpr (XId x)) => ToSExpr (BindGroup x) where
+  toSExpr BindGroup {..} =
+    S.L
+      [ S.L $ map (S.L . map toSExprScDef) _scDefs,
+        S.L $ map toSExprScSig _scSigs,
+        S.L $ map toSExprDataDef _dataDefs,
+        S.L $ map toSExprTypeSynonym _typeSynonyms,
+        S.L $ map toSExprForeign _foreigns,
+        S.L $ map toSExprImport _imports
+      ]
+    where
+      toSExprScDef (_, f, e) = S.L ["def", toSExpr f, toSExpr e]
+      toSExprScSig (_, f, t) = S.L ["sig", toSExpr f, toSExpr t]
+      toSExprDataDef (_, name, ps, cons) =
+        S.L
+          [ "data",
+            toSExpr name,
+            S.L $ map (toSExpr . view _2) ps,
+            S.L $ map (\(_, c, ts) -> S.L [toSExpr c, S.L $ map toSExpr ts]) cons
+          ]
+      toSExprTypeSynonym (_, name, ps, ty) =
+        S.L ["type", toSExpr name, S.L $ map toSExpr ps, toSExpr ty]
+      toSExprForeign (_, n, t) = S.L ["foreign", toSExpr n, toSExpr t]
+      toSExprImport (_, m, list) =
+        S.L ["import", toSExpr m, toImportList list]
+        where
+          toImportList All = "all"
+          toImportList (Selected xs) = S.L $ "selected" : map toSExpr xs
+          toImportList (As m) = S.L ["as", toSExpr m]
 
 instance (Pretty (XId x)) => Pretty (BindGroup x) where
   pretty BindGroup {..} =

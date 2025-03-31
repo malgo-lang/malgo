@@ -1,43 +1,45 @@
 ((main
-   $Double.return_10
-   (cut
-      (lambda
-         ($Double.param_9 $Double.return_11)
-         (join
-            $Double.select_23
-            (select
-               (#Double.$__8
-                  (join
-                     $Double.then_22
-                     (then $Double.outer_14
-                        (join
-                           $Double.return_12
-                           (then $Double.inner_15
-                              (join
-                                 $Double.apply_21
-                                 (apply
-                                    ($Double.inner_15)
-                                    ($Double.return_11))
-                                 (cut $Double.outer_14 $Double.apply_21)))
-                           (join
-                              $Double.then_20
-                              (then $Double.outer_16
-                                 (join
-                                    $Double.return_13
-                                    (then $Double.inner_17
-                                       (join
-                                          $Double.apply_19
-                                          (apply
-                                             ($Double.inner_17)
-                                             ($Double.return_12))
-                                          (cut $Double.outer_16 $Double.apply_19)))
-                                    (join
-                                       $Double.apply_18
-                                       (apply
-                                          (3.14_f64)
-                                          ($Double.return_13))
-                                       (invoke Double# $Double.apply_18))))
-                              (invoke toStringDouble $Double.then_20))))
-                     (invoke putStr $Double.then_22))))
-            (cut $Double.param_9 $Double.select_23)))
-      $Double.return_10)))
+    $Double.return_xxx
+    (cut
+       (lambda
+          ($Double.param_xxx $Double.return_xxx)
+          (join
+             $Double.select_xxx
+             (select
+                (#Double.$__xxx
+                   (join
+                      $Double.then_xxx
+                      (then
+                         $Double.outer_xxx
+                         (join
+                            $Double.return_xxx
+                            (then
+                               $Double.inner_xxx
+                               (join
+                                  $Double.apply_xxx
+                                  (apply ($Double.inner_xxx) ($Double.return_xxx))
+                                  (cut $Double.outer_xxx $Double.apply_xxx)))
+                            (join
+                               $Double.then_xxx
+                               (then
+                                  $Double.outer_xxx
+                                  (join
+                                     $Double.return_xxx
+                                     (then
+                                        $Double.inner_xxx
+                                        (join
+                                           $Double.apply_xxx
+                                           (apply
+                                              ($Double.inner_xxx)
+                                              ($Double.return_xxx))
+                                           (cut
+                                              $Double.outer_xxx
+                                              $Double.apply_xxx)))
+                                     (join
+                                        $Double.apply_xxx
+                                        (apply (3.14_f64) ($Double.return_xxx))
+                                        (invoke Double# $Double.apply_xxx))))
+                               (invoke toStringDouble $Double.then_xxx))))
+                      (invoke putStr $Double.then_xxx))))
+             (cut $Double.param_xxx $Double.select_xxx)))
+       $Double.return_xxx)))

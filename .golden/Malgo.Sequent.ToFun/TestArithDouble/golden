@@ -1,125 +1,95 @@
 ((show
-   (lambda
-      ($TestArithDouble.param_91)
-      (select
-         $TestArithDouble.param_91
-         ((#TestArithDouble.x_9
-            (apply
-               (invoke String#)
-               ((apply
-                  (invoke toStringDouble#)
-                  (#TestArithDouble.x_9)))))))))
+    (lambda
+       ($TestArithDouble.param_xxx)
+       (select
+          $TestArithDouble.param_xxx
+          ((#TestArithDouble.x_xxx
+              (apply
+                 (invoke String#)
+                 ((apply (invoke toStringDouble#) (#TestArithDouble.x_xxx)))))))))
    (traceShowId
       (lambda
-         ($TestArithDouble.param_92)
+         ($TestArithDouble.param_xxx)
          (select
-            $TestArithDouble.param_92
-            ((#TestArithDouble.x_10
-               (apply
-                  (lambda
-                     ($TestArithDouble.tmp_93)
-                     #TestArithDouble.x_10)
-                  ((apply
-                     (invoke putStrLn)
-                     ((apply
-                        (invoke show)
-                        (#TestArithDouble.x_10)))))))))))
+            $TestArithDouble.param_xxx
+            ((#TestArithDouble.x_xxx
+                (apply
+                   (lambda ($TestArithDouble.tmp_xxx) #TestArithDouble.x_xxx)
+                   ((apply
+                       (invoke putStrLn)
+                       ((apply (invoke show) (#TestArithDouble.x_xxx)))))))))))
    (neg
       (lambda
-         ($TestArithDouble.param_94)
+         ($TestArithDouble.param_xxx)
          (select
-            $TestArithDouble.param_94
-            ((#TestArithDouble.x_0
-               (apply
-                  (apply
-                     (invoke subDouble#)
-                     (0.0_f64))
-                  (#TestArithDouble.x_0)))))))
+            $TestArithDouble.param_xxx
+            ((#TestArithDouble.x_xxx
+                (apply
+                   (apply (invoke subDouble#) (0.0_f64))
+                   (#TestArithDouble.x_xxx)))))))
    (mul
       (lambda
-         ($TestArithDouble.param_95)
+         ($TestArithDouble.param_xxx)
          (lambda
-            ($TestArithDouble.param_96)
+            ($TestArithDouble.param_xxx)
             (select
-               (tuple
-                  ($TestArithDouble.param_95 $TestArithDouble.param_96))
-               (((tuple
-                  (#TestArithDouble.x_3 #TestArithDouble.y_4))
-                  (apply
-                     (apply
-                        (invoke mulDouble#)
-                        (#TestArithDouble.x_3))
-                     (#TestArithDouble.y_4))))))))
+               (tuple ($TestArithDouble.param_xxx $TestArithDouble.param_xxx))
+               (((tuple (#TestArithDouble.x_xxx #TestArithDouble.y_xxx))
+                   (apply
+                      (apply (invoke mulDouble#) (#TestArithDouble.x_xxx))
+                      (#TestArithDouble.y_xxx))))))))
    (add
       (lambda
-         ($TestArithDouble.param_97)
+         ($TestArithDouble.param_xxx)
          (lambda
-            ($TestArithDouble.param_98)
+            ($TestArithDouble.param_xxx)
             (select
-               (tuple
-                  ($TestArithDouble.param_97 $TestArithDouble.param_98))
-               (((tuple
-                  (#TestArithDouble.x_7 #TestArithDouble.y_8))
-                  (apply
-                     (apply
-                        (invoke addDouble#)
-                        (#TestArithDouble.x_7))
-                     (#TestArithDouble.y_8))))))))
+               (tuple ($TestArithDouble.param_xxx $TestArithDouble.param_xxx))
+               (((tuple (#TestArithDouble.x_xxx #TestArithDouble.y_xxx))
+                   (apply
+                      (apply (invoke addDouble#) (#TestArithDouble.x_xxx))
+                      (#TestArithDouble.y_xxx))))))))
    (+
       (lambda
-         ($TestArithDouble.param_99)
+         ($TestArithDouble.param_xxx)
          (lambda
-            ($TestArithDouble.param_100)
+            ($TestArithDouble.param_xxx)
             (select
-               (tuple
-                  ($TestArithDouble.param_99 $TestArithDouble.param_100))
-               (((tuple
-                  (#TestArithDouble.x_5 #TestArithDouble.y_6))
-                  (apply
-                     (apply
-                        (invoke addDouble#)
-                        (#TestArithDouble.x_5))
-                     (#TestArithDouble.y_6))))))))
+               (tuple ($TestArithDouble.param_xxx $TestArithDouble.param_xxx))
+               (((tuple (#TestArithDouble.x_xxx #TestArithDouble.y_xxx))
+                   (apply
+                      (apply (invoke addDouble#) (#TestArithDouble.x_xxx))
+                      (#TestArithDouble.y_xxx))))))))
    (*
       (lambda
-         ($TestArithDouble.param_101)
+         ($TestArithDouble.param_xxx)
          (lambda
-            ($TestArithDouble.param_102)
+            ($TestArithDouble.param_xxx)
             (select
-               (tuple
-                  ($TestArithDouble.param_101 $TestArithDouble.param_102))
-               (((tuple
-                  (#TestArithDouble.x_1 #TestArithDouble.y_2))
-                  (apply
-                     (apply
-                        (invoke mulDouble#)
-                        (#TestArithDouble.x_1))
-                     (#TestArithDouble.y_2))))))))
+               (tuple ($TestArithDouble.param_xxx $TestArithDouble.param_xxx))
+               (((tuple (#TestArithDouble.x_xxx #TestArithDouble.y_xxx))
+                   (apply
+                      (apply (invoke mulDouble#) (#TestArithDouble.x_xxx))
+                      (#TestArithDouble.y_xxx))))))))
    (f
       (lambda
-         ($TestArithDouble.param_103)
+         ($TestArithDouble.param_xxx)
          (select
-            $TestArithDouble.param_103
-            ((#TestArithDouble.x_11
-               (apply
-                  (apply
-                     (invoke *)
-                     ((apply
-                        (apply
-                           (invoke +)
-                           (#TestArithDouble.x_11))
-                        (0.0_f64))))
-                  (#TestArithDouble.x_11)))))))
+            $TestArithDouble.param_xxx
+            ((#TestArithDouble.x_xxx
+                (apply
+                   (apply
+                      (invoke *)
+                      ((apply
+                          (apply (invoke +) (#TestArithDouble.x_xxx))
+                          (0.0_f64))))
+                   (#TestArithDouble.x_xxx)))))))
    (main
       (lambda
-         ($TestArithDouble.param_104)
+         ($TestArithDouble.param_xxx)
          (select
-            $TestArithDouble.param_104
-            ((#TestArithDouble.$__90
-               (apply
-                  (invoke putStrLn)
-                  ((apply
-                     (invoke show)
-                     ((apply
-                        (invoke f)
-                        (0.5_f64))))))))))))
+            $TestArithDouble.param_xxx
+            ((#TestArithDouble.$__xxx
+                (apply
+                   (invoke putStrLn)
+                   ((apply (invoke show) ((apply (invoke f) (0.5_f64))))))))))))

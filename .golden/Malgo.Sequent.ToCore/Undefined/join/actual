@@ -1,58 +1,58 @@
 ((g
-   $Undefined.return_22
-   (cut
-      (lambda
-         ($Undefined.param_20 $Undefined.return_23)
-         (join
-            $Undefined.select_30
-            (select
-               (#Undefined.x_0
-                  (invoke undefined $Undefined.return_23)))
-            (cut $Undefined.param_20 $Undefined.select_30)))
-      $Undefined.return_22))
+    $Undefined.return_xxx
+    (cut
+       (lambda
+          ($Undefined.param_xxx $Undefined.return_xxx)
+          (join
+             $Undefined.select_xxx
+             (select (#Undefined.x_xxx (invoke undefined $Undefined.return_xxx)))
+             (cut $Undefined.param_xxx $Undefined.select_xxx)))
+       $Undefined.return_xxx))
    (main
-      $Undefined.return_24
+      $Undefined.return_xxx
       (cut
          (lambda
-            ($Undefined.param_21 $Undefined.return_25)
+            ($Undefined.param_xxx $Undefined.return_xxx)
             (join
-               $Undefined.select_37
+               $Undefined.select_xxx
                (select
-                  (#Undefined.$__17
+                  (#Undefined.$__xxx
                      (join
-                        $Undefined.then_36
-                        (then #Undefined.x_1
+                        $Undefined.then_xxx
+                        (then
+                           #Undefined.x_xxx
                            (join
-                              $Undefined.then_34
-                              (then #Undefined.y_2
+                              $Undefined.then_xxx
+                              (then
+                                 #Undefined.y_xxx
                                  (join
-                                    $Undefined.then_33
-                                    (then $Undefined.outer_28
+                                    $Undefined.then_xxx
+                                    (then
+                                       $Undefined.outer_xxx
                                        (join
-                                          $Undefined.return_26
-                                          (then $Undefined.inner_29
+                                          $Undefined.return_xxx
+                                          (then
+                                             $Undefined.inner_xxx
                                              (join
-                                                $Undefined.apply_32
+                                                $Undefined.apply_xxx
                                                 (apply
-                                                   ($Undefined.inner_29)
-                                                   ($Undefined.return_25))
-                                                (cut $Undefined.outer_28 $Undefined.apply_32)))
+                                                   ($Undefined.inner_xxx)
+                                                   ($Undefined.return_xxx))
+                                                (cut
+                                                   $Undefined.outer_xxx
+                                                   $Undefined.apply_xxx)))
                                           (join
-                                             $Undefined.apply_31
+                                             $Undefined.apply_xxx
                                              (apply
                                                 ("OK")
-                                                ($Undefined.return_26))
-                                             (invoke String# $Undefined.apply_31))))
-                                    (invoke printString $Undefined.then_33)))
+                                                ($Undefined.return_xxx))
+                                             (invoke String# $Undefined.apply_xxx))))
+                                    (invoke printString $Undefined.then_xxx)))
                               (join
-                                 $Undefined.apply_35
-                                 (apply
-                                    (#Undefined.x_1)
-                                    ($Undefined.then_34))
-                                 (invoke g $Undefined.apply_35))))
-                        (invoke undefined $Undefined.then_36))))
-               (cut $Undefined.param_21 $Undefined.select_37)))
-         $Undefined.return_24))
-   (f
-      $Undefined.return_27
-      (invoke undefined $Undefined.return_27)))
+                                 $Undefined.apply_xxx
+                                 (apply (#Undefined.x_xxx) ($Undefined.then_xxx))
+                                 (invoke g $Undefined.apply_xxx))))
+                        (invoke undefined $Undefined.then_xxx))))
+               (cut $Undefined.param_xxx $Undefined.select_xxx)))
+         $Undefined.return_xxx))
+   (f $Undefined.return_xxx (invoke undefined $Undefined.return_xxx)))

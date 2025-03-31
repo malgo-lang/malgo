@@ -28,6 +28,7 @@ import Malgo.Infer.TypeRep qualified as GT
 import Malgo.Lens
 import Malgo.Prelude
 import Malgo.Syntax.Extension
+import Prettyprinter (squotes, (<+>))
 
 -- | トップレベル宣言
 data Def

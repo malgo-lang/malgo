@@ -1,34 +1,26 @@
 (()
    ((define
-      (main $Pattern.$__16)
-      (->
-         ((sum (con Tuple#)))
-         (sum (con Tuple#)))
-      (= $Pattern.d_18
-         (= $Pattern.d_17
-            (call String# "OK")
-            (cast Any# $Pattern.d_17))
-         (= $Pattern.d_19
-            (call putStrLn $Pattern.d_18)
-            (cast
-               (sum (con Tuple#))
-               $Pattern.d_19))))
+       (main $Pattern.$__xxx)
+       (-> ((sum (con Tuple#))) (sum (con Tuple#)))
+       (=
+          $Pattern.d_xxx
+          (= $Pattern.d_xxx (call String# "OK") (cast Any# $Pattern.d_xxx))
+          (=
+             $Pattern.d_xxx
+             (call putStrLn $Pattern.d_xxx)
+             (cast (sum (con Tuple#)) $Pattern.d_xxx))))
       (define
-         (isNil $Pattern.nil_20)
-         (->
-            (Any#)
-            Any#)
+         (isNil $Pattern.nil_xxx)
+         (-> (Any#) Any#)
          (match
             (cast
-               (sum (con runtime/malgo/Prelude.mlg.Nil)
+               (sum
+                  (con runtime/malgo/Prelude.mlg.Nil)
                   (con runtime/malgo/Prelude.mlg.Cons Any# Any#))
-               $Pattern.nil_20)
-            (unpack
-               (con runtime/malgo/Prelude.mlg.Nil)
-               ()
-               (direct True))
+               $Pattern.nil_xxx)
+            (unpack (con runtime/malgo/Prelude.mlg.Nil) () (direct True))
             (unpack
                (con runtime/malgo/Prelude.mlg.Cons Any# Any#)
-               ($Pattern.p_21 $Pattern.p_22)
+               ($Pattern.p_xxx $Pattern.p_xxx)
                (direct False)))))
    ())

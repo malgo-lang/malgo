@@ -1,30 +1,28 @@
 (()
    ((define
-      (main $TypeAnnotation.$__12)
-      (->
-         ((sum (con Tuple#)))
-         (sum (con Tuple#)))
-      (= $TypeAnnotation.d_19
-         (= $TypeAnnotation.d_15
-            (let
-               (($TypeAnnotation.fun_14
-                  (->
-                     (Any#)
-                     Any#)
-                  (fun
-                     ($TypeAnnotation.x_13)
-                     $TypeAnnotation.x_13)))
-               $TypeAnnotation.fun_14)
-            (= $TypeAnnotation.d_17
-               (= $TypeAnnotation.d_16
-                  (call String# "hoge")
-                  (cast Any# $TypeAnnotation.d_16))
-               (= $TypeAnnotation.d_18
-                  (call $TypeAnnotation.d_15 $TypeAnnotation.d_17)
-                  (cast Any# $TypeAnnotation.d_18))))
-         (= $TypeAnnotation.d_20
-            (call printString $TypeAnnotation.d_19)
-            (cast
-               (sum (con Tuple#))
-               $TypeAnnotation.d_20)))))
+       (main $TypeAnnotation.$__xxx)
+       (-> ((sum (con Tuple#))) (sum (con Tuple#)))
+       (=
+          $TypeAnnotation.d_xxx
+          (=
+             $TypeAnnotation.d_xxx
+             (let
+                (($TypeAnnotation.fun_xxx
+                    (-> (Any#) Any#)
+                    (fun ($TypeAnnotation.x_xxx) $TypeAnnotation.x_xxx)))
+                $TypeAnnotation.fun_xxx)
+             (=
+                $TypeAnnotation.d_xxx
+                (=
+                   $TypeAnnotation.d_xxx
+                   (call String# "hoge")
+                   (cast Any# $TypeAnnotation.d_xxx))
+                (=
+                   $TypeAnnotation.d_xxx
+                   (call $TypeAnnotation.d_xxx $TypeAnnotation.d_xxx)
+                   (cast Any# $TypeAnnotation.d_xxx))))
+          (=
+             $TypeAnnotation.d_xxx
+             (call printString $TypeAnnotation.d_xxx)
+             (cast (sum (con Tuple#)) $TypeAnnotation.d_xxx)))))
    ())

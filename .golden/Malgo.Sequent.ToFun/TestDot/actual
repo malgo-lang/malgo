@@ -1,31 +1,20 @@
 ((succ
-   (lambda
-      ($TestDot.param_30)
-      (select
-         $TestDot.param_30
-         (((Int64#
-            (#TestDot.x_0))
-            (apply
-               (invoke Int64#)
-               ((apply
-                  (apply
-                     (invoke addInt64#)
-                     (#TestDot.x_0))
-                  (1_i64)))))))))
+    (lambda
+       ($TestDot.param_xxx)
+       (select
+          $TestDot.param_xxx
+          (((Int64# (#TestDot.x_xxx))
+              (apply
+                 (invoke Int64#)
+                 ((apply (apply (invoke addInt64#) (#TestDot.x_xxx)) (1_i64)))))))))
    (main
       (lambda
-         ($TestDot.param_31)
+         ($TestDot.param_xxx)
          (select
-            $TestDot.param_31
-            ((#TestDot.$__29
-               (apply
-                  (invoke printInt64)
-                  ((apply
-                     (apply
-                        (apply
-                           (invoke .)
-                           ((invoke succ)))
-                        ((invoke succ)))
-                     ((apply
-                        (invoke Int64#)
-                        (0_i64))))))))))))
+            $TestDot.param_xxx
+            ((#TestDot.$__xxx
+                (apply
+                   (invoke printInt64)
+                   ((apply
+                       (apply (apply (invoke <<) ((invoke succ))) ((invoke succ)))
+                       ((apply (invoke Int64#) (0_i64))))))))))))

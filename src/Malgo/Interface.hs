@@ -27,9 +27,8 @@ import Malgo.Infer.TypeRep qualified as GT
 import Malgo.Lens
 import Malgo.Module
 import Malgo.Prelude
-import Malgo.Rename.RnState (RnState)
-import Malgo.Rename.RnState qualified as RnState
 import Malgo.Syntax.Extension
+import Prettyprinter (viaShow)
 
 data Interface = Interface
   { moduleName :: ModuleName,
@@ -61,9 +60,12 @@ externalFromInterface Interface {moduleName} psId =
   Id {name = psId, sort = External, moduleName}
 
 buildInterface ::
-  (HasTypeSynonymMap tcEnv (Map GT.TypeVar ([GT.TypeVar], GT.Type))) =>
+  ( HasTypeSynonymMap tcEnv (Map GT.TypeVar ([GT.TypeVar], GT.Type)),
+    HasField "dependencies" rnState (Set ModuleName),
+    HasField "infixInfo" rnState (Map Id (Assoc, Int))
+  ) =>
   ModuleName ->
-  RnState ->
+  rnState ->
   tcEnv ->
   DsState ->
   Interface

@@ -1,0 +1,38 @@
+(module
+   "test/testcases/malgo/TestPolySynonym.mlg"
+   ((((def
+         first
+         (fn
+            ((clause
+                ((record
+                    (fst #TestPolySynonym.x_xxx)
+                    (snd #TestPolySynonym.__xxx)))
+                (seq (do #TestPolySynonym.x_xxx)))))))
+       ((def
+           main
+           (fn
+              ((clause
+                  ()
+                  (seq
+                     (let
+                        #TestPolySynonym.x_xxx
+                        (record
+                           (fst (apply Int32# (int32 1)))
+                           (snd (apply String# (string "hoge")))))
+                     (do
+                        (opapp |> (apply first #TestPolySynonym.x_xxx) printInt32)))))))))
+      ((sig
+          first
+          (->
+             (record (fst #TestPolySynonym.a_xxx) (snd #TestPolySynonym.b_xxx))
+             #TestPolySynonym.a_xxx))
+         (sig main (app Fun0 ((tuple)))))
+      ()
+      ((type Fun0 (#TestPolySynonym.a_xxx) (-> (tuple) #TestPolySynonym.a_xxx))
+         (type
+            Pair
+            (#TestPolySynonym.a_xxx #TestPolySynonym.b_xxx)
+            (record (fst #TestPolySynonym.b_xxx) (snd #TestPolySynonym.a_xxx))))
+      ()
+      ((import "runtime/malgo/Builtin.mlg" all)
+         (import "runtime/malgo/Prelude.mlg" all))))

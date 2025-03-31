@@ -1,0 +1,167 @@
+(module
+   "test/testcases/malgo/ToplevelVariableNoImport.mlg"
+   ((((def
+         toStringInt32#
+         (fn
+            ((clause
+                (#ToplevelVariableNoImport.x_xxx)
+                (seq
+                   (do
+                      (apply
+                         malgo_int32_t_to_string
+                         #ToplevelVariableNoImport.x_xxx))))))))
+       ((def
+           toStringInt32
+           (fn
+              ((clause
+                  ((con Int32# ()) #ToplevelVariableNoImport.x_xxx)
+                  (seq
+                     (do
+                        (apply
+                           String#
+                           (seq
+                              (do
+                                 (apply
+                                    toStringInt32#
+                                    #ToplevelVariableNoImport.x_xxx)))))))))))
+       ((def
+           printString#
+           (fn
+              ((clause
+                  (#ToplevelVariableNoImport.x_xxx)
+                  (seq
+                     (do
+                        (apply malgo_print_string #ToplevelVariableNoImport.x_xxx))))))))
+       ((def
+           printString
+           (fn
+              ((clause
+                  ((con String# ()) #ToplevelVariableNoImport.x_xxx)
+                  (seq (do (apply printString# #ToplevelVariableNoImport.x_xxx))))))))
+       ((def
+           printInt32
+           (fn
+              ((clause
+                  (#ToplevelVariableNoImport.i_xxx)
+                  (seq
+                     (do
+                        (apply
+                           printString
+                           (seq
+                              (do
+                                 (apply
+                                    toStringInt32
+                                    #ToplevelVariableNoImport.i_xxx)))))))))))
+       ((def one (apply Int32# (int32 1))))
+       ((def
+           identity
+           (fn
+              ((clause
+                  (#ToplevelVariableNoImport.x_xxx)
+                  (seq (do #ToplevelVariableNoImport.x_xxx)))))))
+       ((def
+           const
+           (fn
+              ((clause
+                  (#ToplevelVariableNoImport.a_xxx
+                     #ToplevelVariableNoImport.__xxx)
+                  (seq (do #ToplevelVariableNoImport.a_xxx)))))))
+       ((def constId (apply const identity)))
+       ((def
+           comp
+           (apply
+              (fn
+                 ((clause ((con Nothing ())) (seq (do Nothing)))
+                    (clause
+                       ((con Just ()) #ToplevelVariableNoImport.x_xxx)
+                       (seq (do Nothing)))))
+              (seq (do (apply Just (tuple)))))))
+       ((def
+           addInt32#
+           (fn
+              ((clause
+                  (#ToplevelVariableNoImport.x_xxx
+                     #ToplevelVariableNoImport.y_xxx)
+                  (seq
+                     (do
+                        (apply
+                           (apply
+                              malgo_add_int32_t
+                              #ToplevelVariableNoImport.x_xxx)
+                           #ToplevelVariableNoImport.y_xxx))))))))
+       ((def
+           addInt32
+           (fn
+              ((clause
+                  ((con Int32# (#ToplevelVariableNoImport.x_xxx))
+                     (con Int32# (#ToplevelVariableNoImport.y_xxx)))
+                  (seq
+                     (do
+                        (apply
+                           Int32#
+                           (seq
+                              (do
+                                 (apply
+                                    (apply
+                                       addInt32#
+                                       #ToplevelVariableNoImport.x_xxx)
+                                    #ToplevelVariableNoImport.y_xxx)))))))))))
+       ((def addOne (apply addInt32 one)))
+       ((def
+           main
+           (fn
+              ((clause
+                  ()
+                  (seq
+                     (do
+                        (apply
+                           (fn
+                              ((clause
+                                  ((con Nothing ()))
+                                  (seq
+                                     (do
+                                        (apply
+                                           printString
+                                           (apply String# (string "OK"))))))
+                                 (clause
+                                    ((con Just ())
+                                       #ToplevelVariableNoImport.__xxx)
+                                    (seq (do (tuple))))))
+                           comp))
+                     (do
+                        (apply
+                           printInt32
+                           (seq
+                              (do
+                                 (apply
+                                    (apply constId const)
+                                    (seq (do (apply addOne one)))))))))))))))
+      ((sig addInt32# (-> Int32# (-> Int32# Int32#)))
+         (sig addInt32 (-> Int32 (-> Int32 Int32)))
+         (sig printString# (-> String# (tuple)))
+         (sig printString (-> String (tuple)))
+         (sig
+            identity
+            (-> #ToplevelVariableNoImport.a_xxx #ToplevelVariableNoImport.a_xxx))
+         (sig
+            const
+            (->
+               #ToplevelVariableNoImport.a_xxx
+               (->
+                  #ToplevelVariableNoImport.b_xxx
+                  #ToplevelVariableNoImport.a_xxx)))
+         (sig printInt32 (-> Int32 (tuple)))
+         (sig toStringInt32# (-> Int32# String#))
+         (sig toStringInt32 (-> Int32 String))
+         (sig comp (app Maybe (#ToplevelVariableNoImport.a_xxx))))
+      ((data Int32 () ((Int32# (Int32#))))
+         (data String () ((String# (String#))))
+         (data
+            Maybe
+            (#ToplevelVariableNoImport.a_xxx)
+            ((Nothing ()) (Just (#ToplevelVariableNoImport.a_xxx)))))
+      ()
+      ((foreign malgo_add_int32_t (-> Int32# (-> Int32# Int32#)))
+         (foreign malgo_print_string (-> String# (tuple)))
+         (foreign malgo_int32_t_to_string (-> Int32# String#)))
+      ()))

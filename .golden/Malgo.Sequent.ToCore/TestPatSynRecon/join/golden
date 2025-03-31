@@ -1,224 +1,272 @@
 ((+#
-   $TestPatSynRecon.return_89
-   (cut
-      (lambda
-         ($TestPatSynRecon.param_83 $TestPatSynRecon.return_90)
-         (cut
-            (lambda
-               ($TestPatSynRecon.param_84 $TestPatSynRecon.return_91)
-               (join
-                  $TestPatSynRecon.select_124
-                  (select
-                     ((tuple
-                        (#TestPatSynRecon.x_0 #TestPatSynRecon.y_1))
-                        (join
-                           $TestPatSynRecon.apply_122
-                           (apply
-                              (#TestPatSynRecon.y_1)
-                              ($TestPatSynRecon.return_91))
-                           (join
-                              $TestPatSynRecon.apply_123
-                              (apply
-                                 (#TestPatSynRecon.x_0)
-                                 ($TestPatSynRecon.apply_122))
-                              (invoke addInt64# $TestPatSynRecon.apply_123)))))
-                  (cut
-                     (construct
-                        tuple
-                        ($TestPatSynRecon.param_83 $TestPatSynRecon.param_84)
-                        ())
-                     $TestPatSynRecon.select_124)))
-            $TestPatSynRecon.return_90))
-      $TestPatSynRecon.return_89))
-   (sum $TestPatSynRecon.return_92
+    $TestPatSynRecon.return_xxx
+    (cut
+       (lambda
+          ($TestPatSynRecon.param_xxx $TestPatSynRecon.return_xxx)
+          (cut
+             (lambda
+                ($TestPatSynRecon.param_xxx $TestPatSynRecon.return_xxx)
+                (join
+                   $TestPatSynRecon.select_xxx
+                   (select
+                      ((tuple (#TestPatSynRecon.x_xxx #TestPatSynRecon.y_xxx))
+                         (join
+                            $TestPatSynRecon.apply_xxx
+                            (apply
+                               (#TestPatSynRecon.y_xxx)
+                               ($TestPatSynRecon.return_xxx))
+                            (join
+                               $TestPatSynRecon.apply_xxx
+                               (apply
+                                  (#TestPatSynRecon.x_xxx)
+                                  ($TestPatSynRecon.apply_xxx))
+                               (invoke addInt64# $TestPatSynRecon.apply_xxx)))))
+                   (cut
+                      (construct
+                         tuple
+                         ($TestPatSynRecon.param_xxx $TestPatSynRecon.param_xxx)
+                         ())
+                      $TestPatSynRecon.select_xxx)))
+             $TestPatSynRecon.return_xxx))
+       $TestPatSynRecon.return_xxx))
+   (sum
+      $TestPatSynRecon.return_xxx
       (cut
          (lambda
-            ($TestPatSynRecon.param_85 $TestPatSynRecon.return_93)
+            ($TestPatSynRecon.param_xxx $TestPatSynRecon.return_xxx)
             (join
-               $TestPatSynRecon.select_135
+               $TestPatSynRecon.select_xxx
                (select
                   ((Cons
-                     ((Int64#
-                        (#TestPatSynRecon.x_2))
-                        #TestPatSynRecon.xs_3))
+                      ((Int64# (#TestPatSynRecon.x_xxx)) #TestPatSynRecon.xs_xxx))
                      (join
-                        $TestPatSynRecon.then_133
-                        (then $TestPatSynRecon.outer_106
+                        $TestPatSynRecon.then_xxx
+                        (then
+                           $TestPatSynRecon.outer_xxx
                            (join
-                              $TestPatSynRecon.return_96
-                              (then $TestPatSynRecon.inner_107
+                              $TestPatSynRecon.return_xxx
+                              (then
+                                 $TestPatSynRecon.inner_xxx
                                  (join
-                                    $TestPatSynRecon.apply_131
+                                    $TestPatSynRecon.apply_xxx
                                     (apply
                                        ((lambda
-                                          ($TestPatSynRecon.param_86 $TestPatSynRecon.return_94)
-                                          (join
-                                             $TestPatSynRecon.select_130
-                                             (select
-                                                ((Int64#
-                                                   (#TestPatSynRecon.s_4))
-                                                   (join
-                                                      $TestPatSynRecon.then_129
-                                                      (then $TestPatSynRecon.outer_108
-                                                         (join
-                                                            $TestPatSynRecon.return_95
-                                                            (then $TestPatSynRecon.inner_109
-                                                               (join
-                                                                  $TestPatSynRecon.apply_128
-                                                                  (apply
-                                                                     ($TestPatSynRecon.inner_109)
-                                                                     ($TestPatSynRecon.return_94))
-                                                                  (cut $TestPatSynRecon.outer_108 $TestPatSynRecon.apply_128)))
-                                                            (join
-                                                               $TestPatSynRecon.apply_126
-                                                               (apply
-                                                                  (#TestPatSynRecon.s_4)
-                                                                  ($TestPatSynRecon.return_95))
-                                                               (join
-                                                                  $TestPatSynRecon.apply_127
-                                                                  (apply
-                                                                     (#TestPatSynRecon.x_2)
-                                                                     ($TestPatSynRecon.apply_126))
-                                                                  (invoke +# $TestPatSynRecon.apply_127)))))
-                                                      (invoke Int64# $TestPatSynRecon.then_129))))
-                                             (cut $TestPatSynRecon.param_86 $TestPatSynRecon.select_130))))
-                                       ($TestPatSynRecon.return_93))
+                                           ($TestPatSynRecon.param_xxx
+                                              $TestPatSynRecon.return_xxx)
+                                           (join
+                                              $TestPatSynRecon.select_xxx
+                                              (select
+                                                 ((Int64#
+                                                     (#TestPatSynRecon.s_xxx))
+                                                    (join
+                                                       $TestPatSynRecon.then_xxx
+                                                       (then
+                                                          $TestPatSynRecon.outer_xxx
+                                                          (join
+                                                             $TestPatSynRecon.return_xxx
+                                                             (then
+                                                                $TestPatSynRecon.inner_xxx
+                                                                (join
+                                                                   $TestPatSynRecon.apply_xxx
+                                                                   (apply
+                                                                      ($TestPatSynRecon.inner_xxx)
+                                                                      ($TestPatSynRecon.return_xxx))
+                                                                   (cut
+                                                                      $TestPatSynRecon.outer_xxx
+                                                                      $TestPatSynRecon.apply_xxx)))
+                                                             (join
+                                                                $TestPatSynRecon.apply_xxx
+                                                                (apply
+                                                                   (#TestPatSynRecon.s_xxx)
+                                                                   ($TestPatSynRecon.return_xxx))
+                                                                (join
+                                                                   $TestPatSynRecon.apply_xxx
+                                                                   (apply
+                                                                      (#TestPatSynRecon.x_xxx)
+                                                                      ($TestPatSynRecon.apply_xxx))
+                                                                   (invoke
+                                                                      +#
+                                                                      $TestPatSynRecon.apply_xxx)))))
+                                                       (invoke
+                                                          Int64#
+                                                          $TestPatSynRecon.then_xxx))))
+                                              (cut
+                                                 $TestPatSynRecon.param_xxx
+                                                 $TestPatSynRecon.select_xxx))))
+                                       ($TestPatSynRecon.return_xxx))
                                     (join
-                                       $TestPatSynRecon.apply_132
+                                       $TestPatSynRecon.apply_xxx
                                        (apply
-                                          ($TestPatSynRecon.inner_107)
-                                          ($TestPatSynRecon.apply_131))
-                                       (cut $TestPatSynRecon.outer_106 $TestPatSynRecon.apply_132))))
+                                          ($TestPatSynRecon.inner_xxx)
+                                          ($TestPatSynRecon.apply_xxx))
+                                       (cut
+                                          $TestPatSynRecon.outer_xxx
+                                          $TestPatSynRecon.apply_xxx))))
                               (join
-                                 $TestPatSynRecon.apply_125
+                                 $TestPatSynRecon.apply_xxx
                                  (apply
-                                    (#TestPatSynRecon.xs_3)
-                                    ($TestPatSynRecon.return_96))
-                                 (invoke sum $TestPatSynRecon.apply_125))))
-                        (invoke |> $TestPatSynRecon.then_133)))
+                                    (#TestPatSynRecon.xs_xxx)
+                                    ($TestPatSynRecon.return_xxx))
+                                 (invoke sum $TestPatSynRecon.apply_xxx))))
+                        (invoke |> $TestPatSynRecon.then_xxx)))
                   ((Nil ())
                      (join
-                        $TestPatSynRecon.apply_134
-                        (apply
-                           (0_i64)
-                           ($TestPatSynRecon.return_93))
-                        (invoke Int64# $TestPatSynRecon.apply_134))))
-               (cut $TestPatSynRecon.param_85 $TestPatSynRecon.select_135)))
-         $TestPatSynRecon.return_92))
+                        $TestPatSynRecon.apply_xxx
+                        (apply (0_i64) ($TestPatSynRecon.return_xxx))
+                        (invoke Int64# $TestPatSynRecon.apply_xxx))))
+               (cut $TestPatSynRecon.param_xxx $TestPatSynRecon.select_xxx)))
+         $TestPatSynRecon.return_xxx))
    (main
-      $TestPatSynRecon.return_97
+      $TestPatSynRecon.return_xxx
       (cut
          (lambda
-            ($TestPatSynRecon.param_87 $TestPatSynRecon.return_98)
+            ($TestPatSynRecon.param_xxx $TestPatSynRecon.return_xxx)
             (join
-               $TestPatSynRecon.select_153
+               $TestPatSynRecon.select_xxx
                (select
-                  (#TestPatSynRecon.$__82
+                  (#TestPatSynRecon.$__xxx
                      (join
-                        $TestPatSynRecon.then_152
-                        (then $TestPatSynRecon.outer_110
+                        $TestPatSynRecon.then_xxx
+                        (then
+                           $TestPatSynRecon.outer_xxx
                            (join
-                              $TestPatSynRecon.return_100
-                              (then $TestPatSynRecon.inner_111
+                              $TestPatSynRecon.return_xxx
+                              (then
+                                 $TestPatSynRecon.inner_xxx
                                  (join
-                                    $TestPatSynRecon.apply_150
+                                    $TestPatSynRecon.apply_xxx
                                     (apply
                                        ((lambda
-                                          ($TestPatSynRecon.param_88 $TestPatSynRecon.return_99)
-                                          (join
-                                             $TestPatSynRecon.select_149
-                                             (select
-                                                (#TestPatSynRecon.i_5
-                                                   (join
-                                                      $TestPatSynRecon.apply_148
-                                                      (apply
-                                                         (#TestPatSynRecon.i_5)
-                                                         ($TestPatSynRecon.return_99))
-                                                      (invoke printInt64 $TestPatSynRecon.apply_148))))
-                                             (cut $TestPatSynRecon.param_88 $TestPatSynRecon.select_149))))
-                                       ($TestPatSynRecon.return_98))
+                                           ($TestPatSynRecon.param_xxx
+                                              $TestPatSynRecon.return_xxx)
+                                           (join
+                                              $TestPatSynRecon.select_xxx
+                                              (select
+                                                 (#TestPatSynRecon.i_xxx
+                                                    (join
+                                                       $TestPatSynRecon.apply_xxx
+                                                       (apply
+                                                          (#TestPatSynRecon.i_xxx)
+                                                          ($TestPatSynRecon.return_xxx))
+                                                       (invoke
+                                                          printInt64
+                                                          $TestPatSynRecon.apply_xxx))))
+                                              (cut
+                                                 $TestPatSynRecon.param_xxx
+                                                 $TestPatSynRecon.select_xxx))))
+                                       ($TestPatSynRecon.return_xxx))
                                     (join
-                                       $TestPatSynRecon.apply_151
+                                       $TestPatSynRecon.apply_xxx
                                        (apply
-                                          ($TestPatSynRecon.inner_111)
-                                          ($TestPatSynRecon.apply_150))
-                                       (cut $TestPatSynRecon.outer_110 $TestPatSynRecon.apply_151))))
+                                          ($TestPatSynRecon.inner_xxx)
+                                          ($TestPatSynRecon.apply_xxx))
+                                       (cut
+                                          $TestPatSynRecon.outer_xxx
+                                          $TestPatSynRecon.apply_xxx))))
                               (join
-                                 $TestPatSynRecon.then_147
-                                 (then $TestPatSynRecon.outer_112
+                                 $TestPatSynRecon.then_xxx
+                                 (then
+                                    $TestPatSynRecon.outer_xxx
                                     (join
-                                       $TestPatSynRecon.return_101
-                                       (then $TestPatSynRecon.inner_113
+                                       $TestPatSynRecon.return_xxx
+                                       (then
+                                          $TestPatSynRecon.inner_xxx
                                           (join
-                                             $TestPatSynRecon.apply_146
+                                             $TestPatSynRecon.apply_xxx
                                              (apply
-                                                ($TestPatSynRecon.inner_113)
-                                                ($TestPatSynRecon.return_100))
-                                             (cut $TestPatSynRecon.outer_112 $TestPatSynRecon.apply_146)))
+                                                ($TestPatSynRecon.inner_xxx)
+                                                ($TestPatSynRecon.return_xxx))
+                                             (cut
+                                                $TestPatSynRecon.outer_xxx
+                                                $TestPatSynRecon.apply_xxx)))
                                        (join
-                                          $TestPatSynRecon.then_145
-                                          (then $TestPatSynRecon.outer_114
+                                          $TestPatSynRecon.then_xxx
+                                          (then
+                                             $TestPatSynRecon.outer_xxx
                                              (join
-                                                $TestPatSynRecon.return_105
-                                                (then $TestPatSynRecon.inner_115
+                                                $TestPatSynRecon.return_xxx
+                                                (then
+                                                   $TestPatSynRecon.inner_xxx
                                                    (join
-                                                      $TestPatSynRecon.then_143
-                                                      (then $TestPatSynRecon.outer_116
+                                                      $TestPatSynRecon.then_xxx
+                                                      (then
+                                                         $TestPatSynRecon.outer_xxx
                                                          (join
-                                                            $TestPatSynRecon.return_102
-                                                            (then $TestPatSynRecon.inner_117
+                                                            $TestPatSynRecon.return_xxx
+                                                            (then
+                                                               $TestPatSynRecon.inner_xxx
                                                                (join
-                                                                  $TestPatSynRecon.apply_142
+                                                                  $TestPatSynRecon.apply_xxx
                                                                   (apply
-                                                                     ($TestPatSynRecon.inner_117)
-                                                                     ($TestPatSynRecon.return_101))
-                                                                  (cut $TestPatSynRecon.outer_116 $TestPatSynRecon.apply_142)))
+                                                                     ($TestPatSynRecon.inner_xxx)
+                                                                     ($TestPatSynRecon.return_xxx))
+                                                                  (cut
+                                                                     $TestPatSynRecon.outer_xxx
+                                                                     $TestPatSynRecon.apply_xxx)))
                                                             (join
-                                                               $TestPatSynRecon.then_141
-                                                               (then $TestPatSynRecon.outer_118
+                                                               $TestPatSynRecon.then_xxx
+                                                               (then
+                                                                  $TestPatSynRecon.outer_xxx
                                                                   (join
-                                                                     $TestPatSynRecon.return_104
-                                                                     (then $TestPatSynRecon.inner_119
+                                                                     $TestPatSynRecon.return_xxx
+                                                                     (then
+                                                                        $TestPatSynRecon.inner_xxx
                                                                         (join
-                                                                           $TestPatSynRecon.then_139
-                                                                           (then $TestPatSynRecon.outer_120
+                                                                           $TestPatSynRecon.then_xxx
+                                                                           (then
+                                                                              $TestPatSynRecon.outer_xxx
                                                                               (join
-                                                                                 $TestPatSynRecon.return_103
-                                                                                 (then $TestPatSynRecon.inner_121
+                                                                                 $TestPatSynRecon.return_xxx
+                                                                                 (then
+                                                                                    $TestPatSynRecon.inner_xxx
                                                                                     (join
-                                                                                       $TestPatSynRecon.apply_138
+                                                                                       $TestPatSynRecon.apply_xxx
                                                                                        (apply
-                                                                                          ($TestPatSynRecon.inner_121)
-                                                                                          ($TestPatSynRecon.return_102))
-                                                                                       (cut $TestPatSynRecon.outer_120 $TestPatSynRecon.apply_138)))
-                                                                                 (invoke Nil $TestPatSynRecon.return_103)))
+                                                                                          ($TestPatSynRecon.inner_xxx)
+                                                                                          ($TestPatSynRecon.return_xxx))
+                                                                                       (cut
+                                                                                          $TestPatSynRecon.outer_xxx
+                                                                                          $TestPatSynRecon.apply_xxx)))
+                                                                                 (invoke
+                                                                                    Nil
+                                                                                    $TestPatSynRecon.return_xxx)))
                                                                            (join
-                                                                              $TestPatSynRecon.apply_140
+                                                                              $TestPatSynRecon.apply_xxx
                                                                               (apply
-                                                                                 ($TestPatSynRecon.inner_119)
-                                                                                 ($TestPatSynRecon.then_139))
-                                                                              (cut $TestPatSynRecon.outer_118 $TestPatSynRecon.apply_140))))
+                                                                                 ($TestPatSynRecon.inner_xxx)
+                                                                                 ($TestPatSynRecon.then_xxx))
+                                                                              (cut
+                                                                                 $TestPatSynRecon.outer_xxx
+                                                                                 $TestPatSynRecon.apply_xxx))))
                                                                      (join
-                                                                        $TestPatSynRecon.apply_137
+                                                                        $TestPatSynRecon.apply_xxx
                                                                         (apply
                                                                            (2_i64)
-                                                                           ($TestPatSynRecon.return_104))
-                                                                        (invoke Int64# $TestPatSynRecon.apply_137))))
-                                                               (invoke Cons $TestPatSynRecon.then_141))))
+                                                                           ($TestPatSynRecon.return_xxx))
+                                                                        (invoke
+                                                                           Int64#
+                                                                           $TestPatSynRecon.apply_xxx))))
+                                                               (invoke
+                                                                  Cons
+                                                                  $TestPatSynRecon.then_xxx))))
                                                       (join
-                                                         $TestPatSynRecon.apply_144
+                                                         $TestPatSynRecon.apply_xxx
                                                          (apply
-                                                            ($TestPatSynRecon.inner_115)
-                                                            ($TestPatSynRecon.then_143))
-                                                         (cut $TestPatSynRecon.outer_114 $TestPatSynRecon.apply_144))))
+                                                            ($TestPatSynRecon.inner_xxx)
+                                                            ($TestPatSynRecon.then_xxx))
+                                                         (cut
+                                                            $TestPatSynRecon.outer_xxx
+                                                            $TestPatSynRecon.apply_xxx))))
                                                 (join
-                                                   $TestPatSynRecon.apply_136
+                                                   $TestPatSynRecon.apply_xxx
                                                    (apply
                                                       (1_i64)
-                                                      ($TestPatSynRecon.return_105))
-                                                   (invoke Int64# $TestPatSynRecon.apply_136))))
-                                          (invoke Cons $TestPatSynRecon.then_145))))
-                                 (invoke sum $TestPatSynRecon.then_147))))
-                        (invoke |> $TestPatSynRecon.then_152))))
-               (cut $TestPatSynRecon.param_87 $TestPatSynRecon.select_153)))
-         $TestPatSynRecon.return_97)))
+                                                      ($TestPatSynRecon.return_xxx))
+                                                   (invoke
+                                                      Int64#
+                                                      $TestPatSynRecon.apply_xxx))))
+                                          (invoke Cons $TestPatSynRecon.then_xxx))))
+                                 (invoke sum $TestPatSynRecon.then_xxx))))
+                        (invoke |> $TestPatSynRecon.then_xxx))))
+               (cut $TestPatSynRecon.param_xxx $TestPatSynRecon.select_xxx)))
+         $TestPatSynRecon.return_xxx)))

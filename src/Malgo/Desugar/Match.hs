@@ -20,9 +20,10 @@ import Malgo.Infer.TypeRep
 import Malgo.Infer.TypeRep qualified as Malgo
 import Malgo.Module
 import Malgo.MonadUniq (Uniq)
-import Malgo.Prelude hiding (group)
+import Malgo.Prelude
 import Malgo.Syntax
 import Malgo.Syntax.Extension
+import Prettyprinter ((<+>))
 
 -- TODO: The Implementation of Functional Programming Languages
 -- を元にコメントを追加

@@ -1,0 +1,26 @@
+(module
+   "test/testcases/malgo/Pragma.mlg"
+   ((((def
+         string#
+         (fn ((clause (#Pragma.x_xxx) (seq (do (apply String# #Pragma.x_xxx))))))))
+       ((def
+           putStrLn
+           (fn
+              ((clause
+                  ((con String# (#Pragma.str_xxx)))
+                  (seq
+                     (do (apply malgo_print_string #Pragma.str_xxx))
+                     (do (apply malgo_newline (tuple)))))))))
+       ((def
+           main
+           (fn
+              ((clause
+                  ()
+                  (seq
+                     (do (apply putStrLn (apply String# (string "Hello, world")))))))))))
+      ((sig putStrLn (-> String (tuple))) (sig string# (-> String# String)))
+      ((data String () ((String# (String#)))))
+      ()
+      ((foreign malgo_print_string (-> String# (tuple)))
+         (foreign malgo_newline (-> (tuple) (tuple))))
+      ()))

@@ -1,34 +1,37 @@
 ((main
-   $Double.return_10
-   (cut
-      (lambda
-         ($Double.param_9 $Double.return_11)
-         (cut
-            $Double.param_9
-            (select
-               (#Double.$__8
-                  (invoke putStr
-                     (then $Double.outer_14
-                        (join
-                           $Double.return_12
-                           (then $Double.inner_15
-                              (cut
-                                 $Double.outer_14
-                                 (apply
-                                    ($Double.inner_15)
-                                    ($Double.return_11))))
-                           (invoke toStringDouble
-                              (then $Double.outer_16
-                                 (join
-                                    $Double.return_13
-                                    (then $Double.inner_17
-                                       (cut
-                                          $Double.outer_16
-                                          (apply
-                                             ($Double.inner_17)
-                                             ($Double.return_12))))
-                                    (invoke Double#
-                                       (apply
-                                          (3.14_f64)
-                                          ($Double.return_13)))))))))))))
-      $Double.return_10)))
+    $Double.return_xxx
+    (cut
+       (lambda
+          ($Double.param_xxx $Double.return_xxx)
+          (cut
+             $Double.param_xxx
+             (select
+                (#Double.$__xxx
+                   (invoke
+                      putStr
+                      (then
+                         $Double.outer_xxx
+                         (join
+                            $Double.return_xxx
+                            (then
+                               $Double.inner_xxx
+                               (cut
+                                  $Double.outer_xxx
+                                  (apply ($Double.inner_xxx) ($Double.return_xxx))))
+                            (invoke
+                               toStringDouble
+                               (then
+                                  $Double.outer_xxx
+                                  (join
+                                     $Double.return_xxx
+                                     (then
+                                        $Double.inner_xxx
+                                        (cut
+                                           $Double.outer_xxx
+                                           (apply
+                                              ($Double.inner_xxx)
+                                              ($Double.return_xxx))))
+                                     (invoke
+                                        Double#
+                                        (apply (3.14_f64) ($Double.return_xxx)))))))))))))
+       $Double.return_xxx)))

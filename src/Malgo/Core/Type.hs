@@ -11,6 +11,7 @@ import Data.Store.TH
 import Malgo.Id
 import Malgo.Prelude
 import Malgo.SExpr qualified as S
+import Prettyprinter (brackets, parens, sep, (<+>))
 
 {-
 Constructors  C ::= <tag n>

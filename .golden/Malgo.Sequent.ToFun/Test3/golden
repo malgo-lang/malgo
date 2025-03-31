@@ -1,66 +1,44 @@
 ((|>
-   (lambda
-      ($Test3.param_66)
-      (lambda
-         ($Test3.param_67)
-         (select
-            (tuple
-               ($Test3.param_66 $Test3.param_67))
-            (((tuple
-               (#Test3.x_3 #Test3.f_4))
-               (apply
-                  #Test3.f_4
-                  (#Test3.x_3))))))))
+    (lambda
+       ($Test3.param_xxx)
+       (lambda
+          ($Test3.param_xxx)
+          (select
+             (tuple ($Test3.param_xxx $Test3.param_xxx))
+             (((tuple (#Test3.x_xxx #Test3.f_xxx))
+                 (apply #Test3.f_xxx (#Test3.x_xxx))))))))
    (main
       (lambda
-         ($Test3.param_68)
+         ($Test3.param_xxx)
          (select
-            $Test3.param_68
-            ((#Test3.$__65
-               (apply
-                  (apply
-                     (invoke |>)
-                     ((apply
-                        (apply
-                           (invoke Cons)
-                           ((invoke A)))
-                        ((apply
-                           (apply
-                              (invoke Cons)
-                              ((invoke B)))
-                           ((invoke Nil)))))))
-                  ((lambda
-                     ($Test3.param_69)
-                     (select
-                        $Test3.param_69
-                        (((Cons
-                           ((A ())
-                              (Cons
-                                 ((B ())
-                                    (Nil ())))))
-                           (apply
-                              (invoke malgo_print_string)
-                              ("OK")))
-                           (#Test3.__5
-                              (apply
-                                 (invoke malgo_print_string)
-                                 ("WRONG")))))))))))))
-   (A
-      (A ()))
-   (B
-      (B ()))
-   (Nil
-      (Nil ()))
+            $Test3.param_xxx
+            ((#Test3.$__xxx
+                (apply
+                   (apply
+                      (invoke |>)
+                      ((apply
+                          (apply (invoke Cons) ((invoke A)))
+                          ((apply
+                              (apply (invoke Cons) ((invoke B)))
+                              ((invoke Nil)))))))
+                   ((lambda
+                       ($Test3.param_xxx)
+                       (select
+                          $Test3.param_xxx
+                          (((Cons ((A ()) (Cons ((B ()) (Nil ())))))
+                              (apply (invoke malgo_print_string) ("OK")))
+                             (#Test3.__xxx
+                                (apply (invoke malgo_print_string) ("WRONG")))))))))))))
+   (A (A ()))
+   (B (B ()))
+   (Nil (Nil ()))
    (Cons
       (lambda
-         ($Test3.constructor_70)
+         ($Test3.constructor_xxx)
          (lambda
-            ($Test3.constructor_71)
-            (Cons
-               ($Test3.constructor_70 $Test3.constructor_71)))))
+            ($Test3.constructor_xxx)
+            (Cons ($Test3.constructor_xxx $Test3.constructor_xxx)))))
    (malgo_print_string
       (lambda
-         ($Test3.primitive_72)
-         (primitive
-            malgo_print_string
-            ($Test3.primitive_72)))))
+         ($Test3.primitive_xxx)
+         (primitive malgo_print_string ($Test3.primitive_xxx)))))

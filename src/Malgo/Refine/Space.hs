@@ -9,10 +9,11 @@ import Effectful
 import Effectful.Reader.Static
 import Malgo.Id (Id)
 import Malgo.Infer.TypeRep
-import Malgo.Prelude hiding (space, subtract)
+import Malgo.Prelude hiding (subtract)
 import Malgo.Refine.RefineEnv
 import Malgo.Syntax (Pat (..))
 import Malgo.Syntax.Extension
+import Prettyprinter (braces, parens, punctuate, sep, (<+>))
 
 -- | Space of values that covered by patterns
 data Space

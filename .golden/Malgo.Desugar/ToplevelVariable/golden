@@ -1,165 +1,163 @@
 (((define
-   one
-   Any#
-   (= $ToplevelVariable.d_83
-      (= $ToplevelVariable.d_82
-         (call Int32# 1_i32)
-         (cast Any# $ToplevelVariable.d_82))
-      $ToplevelVariable.d_83))
-   (define
-      comp
-      Any#
-      (= $ToplevelVariable.d_99
-         (= $ToplevelVariable.d_92
-            (let
-               (($ToplevelVariable.fun_91
-                  (->
-                     (Any#)
-                     Any#)
-                  (fun
-                     ($ToplevelVariable.nothing_89)
-                     (match
-                        (cast
-                           (sum (con runtime/malgo/Prelude.mlg.Nothing)
-                              (con
-                                 runtime/malgo/Prelude.mlg.Just
-                                 (sum (con Tuple#))))
-                           $ToplevelVariable.nothing_89)
-                        (unpack
-                           (con runtime/malgo/Prelude.mlg.Nothing)
-                           ()
-                           (direct Nothing))
-                        (unpack
-                           (con
-                              runtime/malgo/Prelude.mlg.Just
-                              (sum (con Tuple#)))
-                           ($ToplevelVariable.p_90)
-                           (direct Nothing))))))
-               $ToplevelVariable.fun_91)
-            (= $ToplevelVariable.d_97
-               (= $ToplevelVariable.d_94
-                  (let
-                     (($ToplevelVariable.let_93
-                        (sum (con Tuple#))
-                        (pack
-                           (sum (con Tuple#))
-                           (con Tuple#))))
-                     $ToplevelVariable.let_93)
-                  (= $ToplevelVariable.cast_95
-                     (cast Any# $ToplevelVariable.d_94)
-                     (= $ToplevelVariable.d_96
-                        (call Just $ToplevelVariable.cast_95)
-                        (cast Any# $ToplevelVariable.d_96))))
-               (= $ToplevelVariable.d_98
-                  (call $ToplevelVariable.d_92 $ToplevelVariable.d_97)
-                  (cast Any# $ToplevelVariable.d_98))))
-         $ToplevelVariable.d_99)))
+     one
+     Any#
+     (=
+        $ToplevelVariable.d_xxx
+        (=
+           $ToplevelVariable.d_xxx
+           (call Int32# 1_i32)
+           (cast Any# $ToplevelVariable.d_xxx))
+        $ToplevelVariable.d_xxx))
+    (define
+       comp
+       Any#
+       (=
+          $ToplevelVariable.d_xxx
+          (=
+             $ToplevelVariable.d_xxx
+             (let
+                (($ToplevelVariable.fun_xxx
+                    (-> (Any#) Any#)
+                    (fun
+                       ($ToplevelVariable.nothing_xxx)
+                       (match
+                          (cast
+                             (sum
+                                (con runtime/malgo/Prelude.mlg.Nothing)
+                                (con
+                                   runtime/malgo/Prelude.mlg.Just
+                                   (sum (con Tuple#))))
+                             $ToplevelVariable.nothing_xxx)
+                          (unpack
+                             (con runtime/malgo/Prelude.mlg.Nothing)
+                             ()
+                             (direct Nothing))
+                          (unpack
+                             (con
+                                runtime/malgo/Prelude.mlg.Just
+                                (sum (con Tuple#)))
+                             ($ToplevelVariable.p_xxx)
+                             (direct Nothing))))))
+                $ToplevelVariable.fun_xxx)
+             (=
+                $ToplevelVariable.d_xxx
+                (=
+                   $ToplevelVariable.d_xxx
+                   (let
+                      (($ToplevelVariable.let_xxx
+                          (sum (con Tuple#))
+                          (pack (sum (con Tuple#)) (con Tuple#))))
+                      $ToplevelVariable.let_xxx)
+                   (=
+                      $ToplevelVariable.cast_xxx
+                      (cast Any# $ToplevelVariable.d_xxx)
+                      (=
+                         $ToplevelVariable.d_xxx
+                         (call Just $ToplevelVariable.cast_xxx)
+                         (cast Any# $ToplevelVariable.d_xxx))))
+                (=
+                   $ToplevelVariable.d_xxx
+                   (call $ToplevelVariable.d_xxx $ToplevelVariable.d_xxx)
+                   (cast Any# $ToplevelVariable.d_xxx))))
+          $ToplevelVariable.d_xxx)))
    ((define
-      (constId $ToplevelVariable.eta_87)
-      (->
-         (Any#)
-         (->
-            (Any#)
-            Any#))
-      (= $ToplevelVariable.d_88
-         (= $ToplevelVariable.d_86
-            (= $ToplevelVariable.cast_84
-               (cast Any# identity)
-               (= $ToplevelVariable.d_85
-                  (call const $ToplevelVariable.cast_84)
-                  (cast
-                     (->
-                        (Any#)
-                        (->
-                           (Any#)
-                           Any#))
-                     $ToplevelVariable.d_85)))
-            $ToplevelVariable.d_86)
-         (call $ToplevelVariable.d_88 $ToplevelVariable.eta_87)))
+       (constId $ToplevelVariable.eta_xxx)
+       (-> (Any#) (-> (Any#) Any#))
+       (=
+          $ToplevelVariable.d_xxx
+          (=
+             $ToplevelVariable.d_xxx
+             (=
+                $ToplevelVariable.cast_xxx
+                (cast Any# identity)
+                (=
+                   $ToplevelVariable.d_xxx
+                   (call const $ToplevelVariable.cast_xxx)
+                   (cast (-> (Any#) (-> (Any#) Any#)) $ToplevelVariable.d_xxx)))
+             $ToplevelVariable.d_xxx)
+          (call $ToplevelVariable.d_xxx $ToplevelVariable.eta_xxx)))
       (define
-         (addOne $ToplevelVariable.eta_102)
-         (->
-            (Any#)
-            Any#)
-         (= $ToplevelVariable.d_103
-            (= $ToplevelVariable.d_101
-               (= $ToplevelVariable.d_100
+         (addOne $ToplevelVariable.eta_xxx)
+         (-> (Any#) Any#)
+         (=
+            $ToplevelVariable.d_xxx
+            (=
+               $ToplevelVariable.d_xxx
+               (=
+                  $ToplevelVariable.d_xxx
                   (call addInt32 one)
-                  (cast
-                     (->
-                        (Any#)
-                        Any#)
-                     $ToplevelVariable.d_100))
-               $ToplevelVariable.d_101)
-            (call $ToplevelVariable.d_103 $ToplevelVariable.eta_102)))
+                  (cast (-> (Any#) Any#) $ToplevelVariable.d_xxx))
+               $ToplevelVariable.d_xxx)
+            (call $ToplevelVariable.d_xxx $ToplevelVariable.eta_xxx)))
       (define
-         (main $ToplevelVariable.$__104)
-         (->
-            ((sum (con Tuple#)))
-            (sum (con Tuple#)))
-         (= $ToplevelVariable.d_114
-            (= $ToplevelVariable.d_112
+         (main $ToplevelVariable.$__xxx)
+         (-> ((sum (con Tuple#))) (sum (con Tuple#)))
+         (=
+            $ToplevelVariable.d_xxx
+            (=
+               $ToplevelVariable.d_xxx
                (let
-                  (($ToplevelVariable.fun_111
-                     (->
-                        (Any#)
-                        (sum (con Tuple#)))
-                     (fun
-                        ($ToplevelVariable.nothing_105)
-                        (match
-                           (cast
-                              (sum (con runtime/malgo/Prelude.mlg.Nothing)
-                                 (con runtime/malgo/Prelude.mlg.Just Any#))
-                              $ToplevelVariable.nothing_105)
-                           (unpack
-                              (con runtime/malgo/Prelude.mlg.Nothing)
-                              ()
-                              (= $ToplevelVariable.d_107
-                                 (= $ToplevelVariable.d_106
-                                    (call String# "OK")
-                                    (cast Any# $ToplevelVariable.d_106))
-                                 (= $ToplevelVariable.d_108
-                                    (call printString $ToplevelVariable.d_107)
-                                    (cast
-                                       (sum (con Tuple#))
-                                       $ToplevelVariable.d_108))))
-                           (unpack
-                              (con runtime/malgo/Prelude.mlg.Just Any#)
-                              ($ToplevelVariable.p_109)
-                              (let
-                                 (($ToplevelVariable.let_110
-                                    (sum (con Tuple#))
-                                    (pack
-                                       (sum (con Tuple#))
-                                       (con Tuple#))))
-                                 $ToplevelVariable.let_110))))))
-                  $ToplevelVariable.fun_111)
-               (= $ToplevelVariable.d_113
-                  (call $ToplevelVariable.d_112 comp)
-                  (cast
-                     (sum (con Tuple#))
-                     $ToplevelVariable.d_113)))
-            (= $ToplevelVariable.d_121
-               (= $ToplevelVariable.d_117
-                  (= $ToplevelVariable.cast_115
+                  (($ToplevelVariable.fun_xxx
+                      (-> (Any#) (sum (con Tuple#)))
+                      (fun
+                         ($ToplevelVariable.nothing_xxx)
+                         (match
+                            (cast
+                               (sum
+                                  (con runtime/malgo/Prelude.mlg.Nothing)
+                                  (con runtime/malgo/Prelude.mlg.Just Any#))
+                               $ToplevelVariable.nothing_xxx)
+                            (unpack
+                               (con runtime/malgo/Prelude.mlg.Nothing)
+                               ()
+                               (=
+                                  $ToplevelVariable.d_xxx
+                                  (=
+                                     $ToplevelVariable.d_xxx
+                                     (call String# "OK")
+                                     (cast Any# $ToplevelVariable.d_xxx))
+                                  (=
+                                     $ToplevelVariable.d_xxx
+                                     (call printString $ToplevelVariable.d_xxx)
+                                     (cast
+                                        (sum (con Tuple#))
+                                        $ToplevelVariable.d_xxx))))
+                            (unpack
+                               (con runtime/malgo/Prelude.mlg.Just Any#)
+                               ($ToplevelVariable.p_xxx)
+                               (let
+                                  (($ToplevelVariable.let_xxx
+                                      (sum (con Tuple#))
+                                      (pack (sum (con Tuple#)) (con Tuple#))))
+                                  $ToplevelVariable.let_xxx))))))
+                  $ToplevelVariable.fun_xxx)
+               (=
+                  $ToplevelVariable.d_xxx
+                  (call $ToplevelVariable.d_xxx comp)
+                  (cast (sum (con Tuple#)) $ToplevelVariable.d_xxx)))
+            (=
+               $ToplevelVariable.d_xxx
+               (=
+                  $ToplevelVariable.d_xxx
+                  (=
+                     $ToplevelVariable.cast_xxx
                      (cast Any# const)
-                     (= $ToplevelVariable.d_116
-                        (call constId $ToplevelVariable.cast_115)
-                        (cast
-                           (->
-                              (Any#)
-                              Any#)
-                           $ToplevelVariable.d_116)))
-                  (= $ToplevelVariable.d_119
-                     (= $ToplevelVariable.d_118
+                     (=
+                        $ToplevelVariable.d_xxx
+                        (call constId $ToplevelVariable.cast_xxx)
+                        (cast (-> (Any#) Any#) $ToplevelVariable.d_xxx)))
+                  (=
+                     $ToplevelVariable.d_xxx
+                     (=
+                        $ToplevelVariable.d_xxx
                         (call addOne one)
-                        (cast Any# $ToplevelVariable.d_118))
-                     (= $ToplevelVariable.d_120
-                        (call $ToplevelVariable.d_117 $ToplevelVariable.d_119)
-                        (cast Any# $ToplevelVariable.d_120))))
-               (= $ToplevelVariable.d_122
-                  (call printInt32 $ToplevelVariable.d_121)
-                  (cast
-                     (sum (con Tuple#))
-                     $ToplevelVariable.d_122))))))
+                        (cast Any# $ToplevelVariable.d_xxx))
+                     (=
+                        $ToplevelVariable.d_xxx
+                        (call $ToplevelVariable.d_xxx $ToplevelVariable.d_xxx)
+                        (cast Any# $ToplevelVariable.d_xxx))))
+               (=
+                  $ToplevelVariable.d_xxx
+                  (call printInt32 $ToplevelVariable.d_xxx)
+                  (cast (sum (con Tuple#)) $ToplevelVariable.d_xxx))))))
    ())

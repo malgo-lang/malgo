@@ -37,6 +37,7 @@ import Effectful (Eff)
 import Effectful.State.Static.Local (State, evalState)
 import Malgo.Id
 import Malgo.Prelude
+import Prettyprinter (braces, hsep, parens, punctuate, sep, (<+>))
 
 --------------------------------
 -- Common tag representations --

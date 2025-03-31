@@ -1,9 +1,10 @@
 module Malgo.InferSpec (spec) where
 
 import Data.ByteString qualified as BS
+import Malgo.Driver (failIfError)
 import Malgo.Infer.Pass (infer)
 import Malgo.Monad (runMalgoM)
-import Malgo.Parser (parseMalgo)
+import Malgo.Parser (parse)
 import Malgo.Prelude
 import Malgo.Rename.Pass (rename)
 import Malgo.Rename.RnEnv qualified as RnEnv
@@ -28,10 +29,10 @@ driveInfer srcPath = do
   src <- convertString <$> BS.readFile srcPath
   runMalgoM flag option do
     parsed <-
-      parseMalgo srcPath src >>= \case
+      parse srcPath src >>= \case
         Left err -> error $ show err
-        Right parsed -> pure parsed
+        Right (_, parsed) -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
-    (renamed, _) <- rename rnEnv parsed
+    (renamed, _) <- failIfError <$> rename rnEnv parsed
     (typedAst, _) <- infer rnEnv renamed
     pure $ pShowCompact typedAst

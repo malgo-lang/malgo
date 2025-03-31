@@ -1,15 +1,11 @@
 ((main
-   (lambda
-      ($Primitive.param_11)
-      (select
-         $Primitive.param_11
-         ((#Primitive.$__10
-            (apply
-               (invoke printString#)
-               ((apply
-                  (invoke toStringInt64#)
-                  ((apply
-                     (apply
-                        (invoke addInt64#)
-                        (40_i64))
-                     (2_i64))))))))))))
+    (lambda
+       ($Primitive.param_xxx)
+       (select
+          $Primitive.param_xxx
+          ((#Primitive.$__xxx
+              (apply
+                 (invoke printString#)
+                 ((apply
+                     (invoke toStringInt64#)
+                     ((apply (apply (invoke addInt64#) (40_i64)) (2_i64))))))))))))

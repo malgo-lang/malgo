@@ -1,60 +1,66 @@
 ((first
-   $TestPolySynonym.return_42
-   (cut
-      (lambda
-         ($TestPolySynonym.param_40 $TestPolySynonym.return_43)
-         (cut
-            $TestPolySynonym.param_40
-            (select
-               ((expand
-                  ((fst #TestPolySynonym.x_5)
-                     (snd #TestPolySynonym.__6)))
-                  (cut #TestPolySynonym.x_5 $TestPolySynonym.return_43)))))
-      $TestPolySynonym.return_42))
+    $TestPolySynonym.return_xxx
+    (cut
+       (lambda
+          ($TestPolySynonym.param_xxx $TestPolySynonym.return_xxx)
+          (cut
+             $TestPolySynonym.param_xxx
+             (select
+                ((expand
+                    ((fst #TestPolySynonym.x_xxx) (snd #TestPolySynonym.__xxx)))
+                   (cut #TestPolySynonym.x_xxx $TestPolySynonym.return_xxx)))))
+       $TestPolySynonym.return_xxx))
    (main
-      $TestPolySynonym.return_44
+      $TestPolySynonym.return_xxx
       (cut
          (lambda
-            ($TestPolySynonym.param_41 $TestPolySynonym.return_45)
+            ($TestPolySynonym.param_xxx $TestPolySynonym.return_xxx)
             (cut
-               $TestPolySynonym.param_41
+               $TestPolySynonym.param_xxx
                (select
-                  (#TestPolySynonym.$__39
+                  (#TestPolySynonym.$__xxx
                      (cut
                         ((fst
-                           ($TestPolySynonym.return_48
-                              (invoke Int32#
-                                 (apply
-                                    (1_i32)
-                                    ($TestPolySynonym.return_48)))))
+                            ($TestPolySynonym.return_xxx
+                               (invoke
+                                  Int32#
+                                  (apply (1_i32) ($TestPolySynonym.return_xxx)))))
                            (snd
-                              ($TestPolySynonym.return_49
-                                 (invoke String#
-                                    (apply
-                                       ("hoge")
-                                       ($TestPolySynonym.return_49))))))
-                        (then #TestPolySynonym.x_7
-                           (invoke |>
-                              (then $TestPolySynonym.outer_50
+                              ($TestPolySynonym.return_xxx
+                                 (invoke
+                                    String#
+                                    (apply ("hoge") ($TestPolySynonym.return_xxx))))))
+                        (then
+                           #TestPolySynonym.x_xxx
+                           (invoke
+                              |>
+                              (then
+                                 $TestPolySynonym.outer_xxx
                                  (join
-                                    $TestPolySynonym.return_47
-                                    (then $TestPolySynonym.inner_51
+                                    $TestPolySynonym.return_xxx
+                                    (then
+                                       $TestPolySynonym.inner_xxx
                                        (cut
-                                          $TestPolySynonym.outer_50
+                                          $TestPolySynonym.outer_xxx
                                           (apply
-                                             ($TestPolySynonym.inner_51)
-                                             ((then $TestPolySynonym.outer_52
-                                                (join
-                                                   $TestPolySynonym.return_46
-                                                   (then $TestPolySynonym.inner_53
-                                                      (cut
-                                                         $TestPolySynonym.outer_52
-                                                         (apply
-                                                            ($TestPolySynonym.inner_53)
-                                                            ($TestPolySynonym.return_45))))
-                                                   (invoke printInt32 $TestPolySynonym.return_46)))))))
-                                    (invoke first
+                                             ($TestPolySynonym.inner_xxx)
+                                             ((then
+                                                 $TestPolySynonym.outer_xxx
+                                                 (join
+                                                    $TestPolySynonym.return_xxx
+                                                    (then
+                                                       $TestPolySynonym.inner_xxx
+                                                       (cut
+                                                          $TestPolySynonym.outer_xxx
+                                                          (apply
+                                                             ($TestPolySynonym.inner_xxx)
+                                                             ($TestPolySynonym.return_xxx))))
+                                                    (invoke
+                                                       printInt32
+                                                       $TestPolySynonym.return_xxx)))))))
+                                    (invoke
+                                       first
                                        (apply
-                                          (#TestPolySynonym.x_7)
-                                          ($TestPolySynonym.return_47))))))))))))
-         $TestPolySynonym.return_44)))
+                                          (#TestPolySynonym.x_xxx)
+                                          ($TestPolySynonym.return_xxx))))))))))))
+         $TestPolySynonym.return_xxx)))

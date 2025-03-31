@@ -27,6 +27,7 @@ import Malgo.MonadUniq
 import Malgo.Prelude
 import Malgo.Syntax as G
 import Malgo.Syntax.Extension as G
+import Prettyprinter (squotes, (<+>))
 
 -- | MalgoからCoreへの変換
 desugar ::

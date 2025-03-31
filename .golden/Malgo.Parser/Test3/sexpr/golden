@@ -1,0 +1,32 @@
+(module
+   "test/testcases/malgo/Test3.mlg"
+   ((data Tag () ((A ()) (B ())))
+      (data List (a) ((Nil ()) (Cons (a (app List (a))))))
+      (infix left 0 |>)
+      (sig |> (-> a (-> (-> a b) b)))
+      (def |> (fn ((clause (x f) (seq (do (apply f x)))))))
+      (foreign malgo_print_string (-> String# (tuple)))
+      (def
+         main
+         (fn
+            ((clause
+                ()
+                (seq
+                   (do
+                      (opapp
+                         |>
+                         (apply
+                            (apply Cons A)
+                            (seq (do (apply (apply Cons B) Nil))))
+                         (fn
+                            ((clause
+                                ((con Cons (A (con Cons (B Nil)))))
+                                (seq
+                                   (do (apply malgo_print_string (string "OK")))))
+                               (clause
+                                  (_)
+                                  (seq
+                                     (do
+                                        (apply
+                                           malgo_print_string
+                                           (string "WRONG"))))))))))))))))

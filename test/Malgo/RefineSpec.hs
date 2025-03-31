@@ -1,9 +1,10 @@
 module Malgo.RefineSpec (spec) where
 
 import Data.ByteString qualified as BS
+import Malgo.Driver (failIfError)
 import Malgo.Infer.Pass (infer)
 import Malgo.Monad (runMalgoM)
-import Malgo.Parser (parseMalgo)
+import Malgo.Parser (parse)
 import Malgo.Prelude
 import Malgo.Refine.Pass (refine)
 import Malgo.Rename.Pass (rename)
@@ -29,11 +30,11 @@ driveRefine srcPath = do
   src <- convertString <$> BS.readFile srcPath
   runMalgoM flag option do
     parsed <-
-      parseMalgo srcPath src >>= \case
+      parse srcPath src >>= \case
         Left err -> error $ show err
-        Right parsed -> pure parsed
+        Right (_, parsed) -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
-    (renamed, _) <- rename rnEnv parsed
+    (renamed, _) <- failIfError <$> rename rnEnv parsed
     (typed, tcEnv) <- infer rnEnv renamed
     refined <- refine tcEnv typed
     pure $ pShowCompact refined

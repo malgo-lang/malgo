@@ -1,61 +1,44 @@
 ((g
-   (lambda
-      ($RecordTest.param_50)
-      (select
-         $RecordTest.param_50
-         (((B
-            ((expand
-               ((a #RecordTest.a_3)
-                  (b #RecordTest.__4)))))
-            #RecordTest.a_3)))))
+    (lambda
+       ($RecordTest.param_xxx)
+       (select
+          $RecordTest.param_xxx
+          (((B ((expand ((a #RecordTest.a_xxx) (b #RecordTest.__xxx)))))
+              #RecordTest.a_xxx)))))
    (f
       (lambda
-         ($RecordTest.param_51)
+         ($RecordTest.param_xxx)
          (select
-            $RecordTest.param_51
-            (((expand
-               ((a #RecordTest.a_1)
-                  (b #RecordTest.__2)))
-               #RecordTest.a_1)))))
+            $RecordTest.param_xxx
+            (((expand ((a #RecordTest.a_xxx) (b #RecordTest.__xxx)))
+                #RecordTest.a_xxx)))))
    (main
       (lambda
-         ($RecordTest.param_52)
+         ($RecordTest.param_xxx)
          (select
-            $RecordTest.param_52
-            ((#RecordTest.$__49
-               (let
-                  #RecordTest.x_5
-                  (object
-                     ((a
-                        (apply
-                           (invoke Int32#)
-                           (32_i32)))
-                        (b
-                           (apply
-                              (invoke Int32#)
-                              (10_i32)))))
-                  (apply
-                     (invoke printString)
-                     ((apply
-                        (invoke toStringInt32)
-                        ((apply
-                           (apply
-                              (invoke addInt32)
+            $RecordTest.param_xxx
+            ((#RecordTest.$__xxx
+                (let
+                   #RecordTest.x_xxx
+                   (object
+                      ((a (apply (invoke Int32#) (32_i32)))
+                         (b (apply (invoke Int32#) (10_i32)))))
+                   (apply
+                      (invoke printString)
+                      ((apply
+                          (invoke toStringInt32)
+                          ((apply
+                              (apply
+                                 (invoke addInt32)
+                                 ((apply (invoke f) (#RecordTest.x_xxx))))
                               ((apply
-                                 (invoke f)
-                                 (#RecordTest.x_5))))
-                           ((apply
-                              (lambda
-                                 ($RecordTest.param_53)
-                                 (select
-                                    $RecordTest.param_53
-                                    (((expand
-                                       ((a #RecordTest.__6)
-                                          (b #RecordTest.b_7)))
-                                       #RecordTest.b_7))))
-                              (#RecordTest.x_5))))))))))))))
-   (B
-      (lambda
-         ($RecordTest.constructor_54)
-         (B
-            ($RecordTest.constructor_54)))))
+                                  (lambda
+                                     ($RecordTest.param_xxx)
+                                     (select
+                                        $RecordTest.param_xxx
+                                        (((expand
+                                             ((a #RecordTest.__xxx)
+                                                (b #RecordTest.b_xxx)))
+                                            #RecordTest.b_xxx))))
+                                  (#RecordTest.x_xxx))))))))))))))
+   (B (lambda ($RecordTest.constructor_xxx) (B ($RecordTest.constructor_xxx)))))

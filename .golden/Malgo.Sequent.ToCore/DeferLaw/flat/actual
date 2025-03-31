@@ -1,55 +1,58 @@
 ((f
-   $DeferLaw.return_25
-   (cut
-      (lambda
-         ($DeferLaw.param_22 $DeferLaw.return_26)
-         (cut
-            $DeferLaw.param_22
-            (select
-               (#DeferLaw.x_1
-                  (cut
-                     (lambda
-                        ($DeferLaw.param_23 $DeferLaw.return_27)
-                        (cut
-                           $DeferLaw.param_23
-                           (select
-                              (#DeferLaw.$__8
-                                 (cut #DeferLaw.x_1 $DeferLaw.return_27)))))
-                     (apply
-                        ((construct tuple () ()))
-                        ($DeferLaw.return_26)))))))
-      $DeferLaw.return_25))
+    $DeferLaw.return_xxx
+    (cut
+       (lambda
+          ($DeferLaw.param_xxx $DeferLaw.return_xxx)
+          (cut
+             $DeferLaw.param_xxx
+             (select
+                (#DeferLaw.x_xxx
+                   (cut
+                      (lambda
+                         ($DeferLaw.param_xxx $DeferLaw.return_xxx)
+                         (cut
+                            $DeferLaw.param_xxx
+                            (select
+                               (#DeferLaw.$__xxx
+                                  (cut #DeferLaw.x_xxx $DeferLaw.return_xxx)))))
+                      (apply ((construct tuple () ())) ($DeferLaw.return_xxx)))))))
+       $DeferLaw.return_xxx))
    (main
-      $DeferLaw.return_28
+      $DeferLaw.return_xxx
       (cut
          (lambda
-            ($DeferLaw.param_24 $DeferLaw.return_29)
+            ($DeferLaw.param_xxx $DeferLaw.return_xxx)
             (cut
-               $DeferLaw.param_24
+               $DeferLaw.param_xxx
                (select
-                  (#DeferLaw.$__21
-                     (invoke putStrLn
-                        (then $DeferLaw.outer_32
+                  (#DeferLaw.$__xxx
+                     (invoke
+                        putStrLn
+                        (then
+                           $DeferLaw.outer_xxx
                            (join
-                              $DeferLaw.return_30
-                              (then $DeferLaw.inner_33
+                              $DeferLaw.return_xxx
+                              (then
+                                 $DeferLaw.inner_xxx
                                  (cut
-                                    $DeferLaw.outer_32
+                                    $DeferLaw.outer_xxx
                                     (apply
-                                       ($DeferLaw.inner_33)
-                                       ($DeferLaw.return_29))))
-                              (invoke f
-                                 (then $DeferLaw.outer_34
+                                       ($DeferLaw.inner_xxx)
+                                       ($DeferLaw.return_xxx))))
+                              (invoke
+                                 f
+                                 (then
+                                    $DeferLaw.outer_xxx
                                     (join
-                                       $DeferLaw.return_31
-                                       (then $DeferLaw.inner_35
+                                       $DeferLaw.return_xxx
+                                       (then
+                                          $DeferLaw.inner_xxx
                                           (cut
-                                             $DeferLaw.outer_34
+                                             $DeferLaw.outer_xxx
                                              (apply
-                                                ($DeferLaw.inner_35)
-                                                ($DeferLaw.return_30))))
-                                       (invoke String#
-                                          (apply
-                                             ("Hello")
-                                             ($DeferLaw.return_31)))))))))))))
-         $DeferLaw.return_28)))
+                                                ($DeferLaw.inner_xxx)
+                                                ($DeferLaw.return_xxx))))
+                                       (invoke
+                                          String#
+                                          (apply ("Hello") ($DeferLaw.return_xxx)))))))))))))
+         $DeferLaw.return_xxx)))

@@ -1,0 +1,180 @@
+(module
+   "test/testcases/malgo/Eventually.mlg"
+   ((((def
+         step
+         (fn
+            ((clause
+                ((con Done ()) #Eventually.value_xxx)
+                (seq (do (apply Done #Eventually.value_xxx))))
+               (clause
+                  ((con NotYetDone ()) #Eventually.work_xxx)
+                  (seq (do (seq (do (apply #Eventually.work_xxx (tuple)))))))))))
+       ((def
+           return
+           (fn
+              ((clause
+                  ((record (bind #Eventually.__xxx) (return #Eventually.x_xxx)))
+                  (seq (do #Eventually.x_xxx)))))))
+       ((def
+           eventuallyBind
+           (fn
+              ((clause
+                  ((con Done (#Eventually.value_xxx)) #Eventually.k_xxx)
+                  (seq (do (apply #Eventually.k_xxx #Eventually.value_xxx))))
+                 (clause
+                    ((con NotYetDone (#Eventually.work_xxx)) #Eventually.k_xxx)
+                    (seq
+                       (do
+                          (apply
+                             NotYetDone
+                             (fn
+                                ((clause
+                                    ()
+                                    (seq
+                                       (do
+                                          (apply
+                                             (apply
+                                                eventuallyBind
+                                                (seq
+                                                   (do
+                                                      (apply
+                                                         #Eventually.work_xxx
+                                                         (tuple)))))
+                                             #Eventually.k_xxx))))))))))))))
+       ((def eventually (record (bind eventuallyBind) (return Done))))
+       ((def
+           bind
+           (fn
+              ((clause
+                  ((record (bind #Eventually.x_xxx) (return #Eventually.__xxx)))
+                  (seq (do #Eventually.x_xxx)))))))
+       ((def
+           comp
+           (apply
+              (apply
+                 (apply bind eventually)
+                 (seq
+                    (do
+                       (apply
+                          NotYetDone
+                          (fn
+                             ((clause
+                                 ()
+                                 (seq
+                                    (do
+                                       (apply
+                                          Done
+                                          (seq
+                                             (do
+                                                (apply
+                                                   printString
+                                                   (apply String# (string "1")))))))))))))))
+              (fn
+                 ((clause
+                     (#Eventually.__xxx)
+                     (seq
+                        (do
+                           (apply
+                              (apply
+                                 (apply bind eventually)
+                                 (seq
+                                    (do
+                                       (apply
+                                          NotYetDone
+                                          (fn
+                                             ((clause
+                                                 ()
+                                                 (seq
+                                                    (do
+                                                       (apply
+                                                          Done
+                                                          (seq
+                                                             (do
+                                                                (apply
+                                                                   printString
+                                                                   (apply
+                                                                      String#
+                                                                      (string "2")))))))))))))))
+                              (fn
+                                 ((clause
+                                     (#Eventually.__xxx)
+                                     (seq
+                                        (do
+                                           (apply
+                                              (apply return eventually)
+                                              (apply Int32# (int32 3)))))))))))))))))
+       ((def
+           main
+           (fn
+              ((clause
+                  ()
+                  (seq
+                     (do (opapp |> comp step))
+                     (do
+                        (opapp
+                           |>
+                           (opapp |> (opapp |> (opapp |> comp step) step) step)
+                           (fn
+                              ((clause
+                                  ((con Done ()) #Eventually.x_xxx)
+                                  (seq
+                                     (do
+                                        (apply
+                                           printString
+                                           (seq
+                                              (do
+                                                 (apply
+                                                    toStringInt32
+                                                    #Eventually.x_xxx)))))))
+                                 (clause
+                                    ((con NotYetDone ()) #Eventually.__xxx)
+                                    (seq
+                                       (do
+                                          (apply
+                                             printString
+                                             (apply String# (string "not yet")))))))))))))))))
+      ((sig
+          eventually
+          (app EventuallyBuilder (#Eventually.a_xxx #Eventually.b_xxx)))
+         (sig
+            eventuallyBind
+            (->
+               (app Eventually (#Eventually.a_xxx))
+               (->
+                  (-> #Eventually.a_xxx (app Eventually (#Eventually.b_xxx)))
+                  (app Eventually (#Eventually.b_xxx)))))
+         (sig
+            bind
+            (->
+               (app EventuallyBuilder (#Eventually.a_xxx #Eventually.b_xxx))
+               (->
+                  (app Eventually (#Eventually.a_xxx))
+                  (->
+                     (-> #Eventually.a_xxx (app Eventually (#Eventually.b_xxx)))
+                     (app Eventually (#Eventually.b_xxx))))))
+         (sig
+            return
+            (->
+               (app EventuallyBuilder (#Eventually.a_xxx #Eventually.b_xxx))
+               (-> #Eventually.a_xxx (app Eventually (#Eventually.a_xxx)))))
+         (sig comp (app Eventually (Int32)))
+         (sig main (-> (tuple) (tuple))))
+      ((data
+          Eventually
+          (#Eventually.a_xxx)
+          ((Done (#Eventually.a_xxx))
+             (NotYetDone ((-> (tuple) (app Eventually (#Eventually.a_xxx))))))))
+      ((type
+          EventuallyBuilder
+          (#Eventually.a_xxx #Eventually.b_xxx)
+          (record
+             (bind
+                (->
+                   (app Eventually (#Eventually.a_xxx))
+                   (->
+                      (-> #Eventually.a_xxx (app Eventually (#Eventually.b_xxx)))
+                      (app Eventually (#Eventually.b_xxx)))))
+             (return (-> #Eventually.a_xxx (app Eventually (#Eventually.a_xxx)))))))
+      ()
+      ((import "runtime/malgo/Builtin.mlg" all)
+         (import "runtime/malgo/Prelude.mlg" all))))

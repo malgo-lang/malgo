@@ -7,15 +7,17 @@ import GHC.Exception (CallStack, prettyCallStack)
 import Malgo.Core.Eval
 import Malgo.Core.Flat qualified as Flat
 import Malgo.Desugar.Pass (desugar)
+import Malgo.Driver (failIfError)
 import Malgo.Infer.Pass (infer)
 import Malgo.Interface (buildInterface)
 import Malgo.Link qualified as Link
 import Malgo.Monad (runMalgoM)
-import Malgo.Parser (parseMalgo)
+import Malgo.Parser (parse)
 import Malgo.Prelude
 import Malgo.Refine.Pass (refine)
 import Malgo.Rename.Pass (rename)
 import Malgo.Rename.RnEnv qualified as RnEnv
+import Malgo.Rename.RnState (RnState (..))
 import Malgo.Syntax
 import Malgo.TestUtils
 import System.Directory
@@ -48,11 +50,11 @@ driveEval srcPath = do
   src <- convertString <$> BS.readFile srcPath
   runMalgoM flag option do
     parsed <-
-      parseMalgo srcPath src >>= \case
+      parse srcPath src >>= \case
         Left err -> error $ show err
-        Right parsed -> pure parsed
+        Right (_, parsed) -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
-    (renamed, rnState) <- rename rnEnv parsed
+    (renamed, rnState) <- failIfError <$> rename rnEnv parsed
     (typed, tcEnv) <- infer rnEnv renamed
     refined <- refine tcEnv typed
     (dsState, core) <- desugar tcEnv refined

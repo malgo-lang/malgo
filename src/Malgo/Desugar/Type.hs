@@ -9,6 +9,7 @@ import Malgo.Id
 import Malgo.Infer.TypeRep
 import Malgo.Infer.TypeRep qualified as GT
 import Malgo.Prelude
+import Prettyprinter ((<+>))
 
 -- Malgoの型をCoreの型に変換する
 dsType :: (State DsState :> es) => GT.Type -> Eff es C.Type

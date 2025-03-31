@@ -18,7 +18,7 @@ import Malgo.MonadUniq (Uniq)
 import Malgo.Prelude hiding (getContents, throwError)
 import Malgo.SExpr (sShow)
 import Malgo.Sequent.Core
-import Malgo.Sequent.Fun (HasRange (..), Literal (..), Name, Pattern (..), Tag (..))
+import Malgo.Sequent.Fun (Literal (..), Name, Pattern (..), Tag (..))
 import System.IO.Streams (InputStream, OutputStream)
 import System.IO.Streams qualified as Streams
 

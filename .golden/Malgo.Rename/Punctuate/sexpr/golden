@@ -1,0 +1,97 @@
+(module
+   "test/testcases/malgo/Punctuate.mlg"
+   ((((def <> appendString))
+       ((def
+           show
+           (fn
+              ((clause
+                  ((con Symbol ()) #Punctuate.str_xxx)
+                  (seq
+                     (do
+                        (opapp
+                           <>
+                           (apply String# (string "Symbol "))
+                           #Punctuate.str_xxx))))
+                 (clause
+                    ((con SInt ()) #Punctuate.int_xxx)
+                    (seq
+                       (do
+                          (opapp
+                             <>
+                             (apply String# (string "SInt "))
+                             (apply toStringInt32 #Punctuate.int_xxx)))))
+                 (clause
+                    ((con SList ()) #Punctuate.ss_xxx)
+                    (seq
+                       (do
+                          (opapp
+                             <>
+                             (apply String# (string "SList ["))
+                             (opapp
+                                <>
+                                (apply
+                                   concatString
+                                   (seq
+                                      (do
+                                         (apply
+                                            (apply
+                                               punctuate
+                                               (apply String# (string ", ")))
+                                            (seq
+                                               (do
+                                                  (apply
+                                                     (apply mapList show)
+                                                     #Punctuate.ss_xxx)))))))
+                                (apply String# (string "]")))))))))))
+       ((def
+           main
+           (fn
+              ((clause
+                  ()
+                  (seq
+                     (let
+                        #Punctuate.x_xxx
+                        (apply
+                           SList
+                           (apply
+                              (apply
+                                 Cons
+                                 (apply Symbol (apply String# (string "x"))))
+                              (apply
+                                 (apply
+                                    Cons
+                                    (apply
+                                       SList
+                                       (apply
+                                          (apply
+                                             Cons
+                                             (apply
+                                                Symbol
+                                                (apply String# (string "y"))))
+                                          (apply
+                                             (apply
+                                                Cons
+                                                (apply
+                                                   SList
+                                                   (apply
+                                                      (apply
+                                                         Cons
+                                                         (apply
+                                                            Symbol
+                                                            (apply
+                                                               String#
+                                                               (string "z"))))
+                                                      Nil)))
+                                             Nil))))
+                                 Nil))))
+                     (do
+                        (apply putStrLn (seq (do (apply show #Punctuate.x_xxx))))))))))))
+      ((sig <> (-> String (-> String String))) (sig show (-> SExpr String)))
+      ((data
+          SExpr
+          ()
+          ((Symbol (String)) (SInt (Int32)) (SList ((app List (SExpr)))))))
+      ()
+      ()
+      ((import "runtime/malgo/Builtin.mlg" all)
+         (import "runtime/malgo/Prelude.mlg" all))))

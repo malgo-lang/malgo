@@ -20,10 +20,10 @@ import Malgo.Lens
 import Malgo.Module
 import Malgo.MonadUniq
 import Malgo.Prelude hiding (Constraint)
-import Malgo.Rename.RnEnv (RnEnv (..))
 import Malgo.Syntax hiding (Type (..))
 import Malgo.Syntax qualified as S
 import Malgo.Syntax.Extension
+import Prettyprinter (nest, squotes, vsep, (<+>))
 
 -------------------------------
 -- Lookup the value of TcEnv --
@@ -45,8 +45,17 @@ lookupType pos name =
     Nothing -> errorOn pos $ "Not in scope:" <+> squotes (pretty name)
     Just TypeDef {..} -> pure typeConstructor
 
-infer :: (State (Map ModuleName Interface) :> es, State Uniq :> es, IOE :> es, Reader Flag :> es, Workspace :> es) => RnEnv -> Module (Malgo Rename) -> Eff es (Module (Malgo Infer), TcEnv)
-infer rnEnv (Module name bg) = runReader rnEnv $ runReader name $ do
+infer ::
+  forall es rnEnv.
+  ( State (Map ModuleName Interface) :> es,
+    State Uniq :> es,
+    IOE :> es,
+    Reader Flag :> es,
+    Workspace :> es,
+    HasResolvedTypeIdentMap rnEnv (Map Text [Qualified Id])
+  ) =>
+  rnEnv -> Module (Malgo Rename) -> Eff es (Module (Malgo Infer), TcEnv)
+infer rnEnv (Module name bg) = runReader name $ do
   tcEnv <- genTcEnv rnEnv
   evalState tcEnv
     $ runTypeUnify
@@ -65,7 +74,15 @@ infer rnEnv (Module name bg) = runReader rnEnv $ runReader name $ do
       pure (Module name zonkedBg, zonkedTcEnv)
 
 tcBindGroup ::
-  (Reader ModuleName :> es, State TypeMap :> es, State TcEnv :> es, State Uniq :> es, IOE :> es, State (Map ModuleName Interface) :> es, Reader Flag :> es, Workspace :> es) =>
+  ( Reader ModuleName :> es,
+    State TypeMap :> es,
+    State TcEnv :> es,
+    State Uniq :> es,
+    IOE :> es,
+    State (Map ModuleName Interface) :> es,
+    Reader Flag :> es,
+    Workspace :> es
+  ) =>
   BindGroup (Malgo Rename) ->
   Eff es (BindGroup (Malgo Infer))
 tcBindGroup bindGroup = do

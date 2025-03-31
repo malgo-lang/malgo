@@ -19,7 +19,7 @@ import Data.Store
 import Malgo.Module
 import Malgo.Prelude
 import Malgo.SExpr hiding (Char, Double, Float, String)
-import Malgo.Sequent.Fun (HasRange (..), Literal, Name, Pattern, Tag)
+import Malgo.Sequent.Fun (Literal, Name, Pattern, Tag)
 
 data Program x = Program
   {definitions :: [(Range, Name, Name, Statement x)]}

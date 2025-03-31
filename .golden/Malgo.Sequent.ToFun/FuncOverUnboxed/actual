@@ -1,32 +1,23 @@
 ((f
-   (lambda
-      ($FuncOverUnboxed.param_22)
-      (select
-         $FuncOverUnboxed.param_22
-         ((0_i64
-            (apply
-               (invoke printString#)
-               ((apply
-                  (invoke toStringInt64#)
-                  (1_i64)))))
-            (1_i64
-               (apply
-                  (invoke printString#)
-                  ((apply
-                     (invoke toStringInt64#)
-                     (1_i64)))))
-            (#FuncOverUnboxed.__0
-               (apply
-                  (invoke printString#)
-                  ((apply
-                     (invoke toStringInt64#)
-                     (0_i64)))))))))
+    (lambda
+       ($FuncOverUnboxed.param_xxx)
+       (select
+          $FuncOverUnboxed.param_xxx
+          ((0_i64
+              (apply
+                 (invoke printString#)
+                 ((apply (invoke toStringInt64#) (1_i64)))))
+             (1_i64
+                (apply
+                   (invoke printString#)
+                   ((apply (invoke toStringInt64#) (1_i64)))))
+             (#FuncOverUnboxed.__xxx
+                (apply
+                   (invoke printString#)
+                   ((apply (invoke toStringInt64#) (0_i64)))))))))
    (main
       (lambda
-         ($FuncOverUnboxed.param_23)
+         ($FuncOverUnboxed.param_xxx)
          (select
-            $FuncOverUnboxed.param_23
-            ((#FuncOverUnboxed.$__21
-               (apply
-                  (invoke f)
-                  (0_i64))))))))
+            $FuncOverUnboxed.param_xxx
+            ((#FuncOverUnboxed.$__xxx (apply (invoke f) (0_i64))))))))

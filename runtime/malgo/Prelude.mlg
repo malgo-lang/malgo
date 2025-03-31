@@ -120,9 +120,9 @@ def isWhiteSpace =
     _ -> False
   }
 
-infixr 9 (.)
-def (.) : (b -> c) -> (a -> b) -> (a -> c)
-def (.) = {f g -> {x -> f (g x)}}
+infixr 9 (<<)
+def (<<) : (b -> c) -> (a -> b) -> (a -> c)
+def (<<) = {f g -> {x -> f (g x)}}
 
 infixl 0 (|>)
 def (|>) : a -> (a -> b) -> b

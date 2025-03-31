@@ -1,358 +1,271 @@
 (((define
-   showInt32
-   (Record#
-      (show
-         (->
-            (Any#)
-            Any#)))
-   (= $Show.d_118
-      (= $Show.d_116
-         (let
-            (($Show.fun_115
-               (->
-                  (Any#)
-                  Any#)
-               (fun
-                  ($Show.x_113)
-                  (= $Show.d_114
-                     (call toStringInt32 $Show.x_113)
-                     (cast Any# $Show.d_114)))))
-            $Show.fun_115)
-         (let
-            (($Show.record_117
-               (Record#
-                  (show
-                     (->
-                        (Any#)
-                        Any#)))
-               (record
-                  (show $Show.d_116))))
-            $Show.record_117))
-      $Show.d_118)))
+     showInt32
+     (Record# (show (-> (Any#) Any#)))
+     (=
+        $Show.d_xxx
+        (=
+           $Show.d_xxx
+           (let
+              (($Show.fun_xxx
+                  (-> (Any#) Any#)
+                  (fun
+                     ($Show.x_xxx)
+                     (=
+                        $Show.d_xxx
+                        (call toStringInt32 $Show.x_xxx)
+                        (cast Any# $Show.d_xxx)))))
+              $Show.fun_xxx)
+           (let
+              (($Show.record_xxx
+                  (Record# (show (-> (Any#) Any#)))
+                  (record (show $Show.d_xxx))))
+              $Show.record_xxx))
+        $Show.d_xxx)))
    ((define
-      ($Show.showTuple2_curry_186 $Show.showDictA_187 $Show.showDictB_188)
-      (->
-         ((Record#
-            (show
-               (->
-                  (Any#)
-                  Any#)))
-            (Record#
-               (show
-                  (->
-                     (Any#)
-                     Any#))))
-         (Record#
-            (show
-               (->
-                  ((sum (con Tuple# Any# Any#)))
-                  Any#))))
-      (= $Show.d_222
+       ($Show.showTuple2_curry_xxx $Show.showDictA_xxx $Show.showDictB_xxx)
+       (->
+          ((Record# (show (-> (Any#) Any#))) (Record# (show (-> (Any#) Any#))))
+          (Record# (show (-> ((sum (con Tuple# Any# Any#))) Any#))))
+       (=
+          $Show.d_xxx
+          (let
+             (($Show.fun_xxx
+                 (-> ((sum (con Tuple# Any# Any#))) Any#)
+                 (fun
+                    ($Show.tuple_xxx)
+                    (match
+                       $Show.tuple_xxx
+                       (unpack
+                          (con Tuple# Any# Any#)
+                          ($Show.p_xxx $Show.p_xxx)
+                          (=
+                             $Show.d_xxx
+                             (=
+                                $Show.d_xxx
+                                (=
+                                   $Show.d_xxx
+                                   (call String# "(")
+                                   (cast Any# $Show.d_xxx))
+                                (=
+                                   $Show.d_xxx
+                                   (call <> $Show.d_xxx)
+                                   (cast (-> (Any#) Any#) $Show.d_xxx)))
+                             (=
+                                $Show.d_xxx
+                                (=
+                                   $Show.d_xxx
+                                   (=
+                                      $Show.d_xxx
+                                      (=
+                                         $Show.d_xxx
+                                         (=
+                                            $Show.d_xxx
+                                            (call show $Show.showDictA_xxx)
+                                            (cast (-> (Any#) Any#) $Show.d_xxx))
+                                         (=
+                                            $Show.d_xxx
+                                            (call $Show.d_xxx $Show.p_xxx)
+                                            (cast Any# $Show.d_xxx)))
+                                      (=
+                                         $Show.d_xxx
+                                         (call <> $Show.d_xxx)
+                                         (cast (-> (Any#) Any#) $Show.d_xxx)))
+                                   (=
+                                      $Show.d_xxx
+                                      (=
+                                         $Show.d_xxx
+                                         (=
+                                            $Show.d_xxx
+                                            (=
+                                               $Show.d_xxx
+                                               (call String# ", ")
+                                               (cast Any# $Show.d_xxx))
+                                            (=
+                                               $Show.d_xxx
+                                               (call <> $Show.d_xxx)
+                                               (cast (-> (Any#) Any#) $Show.d_xxx)))
+                                         (=
+                                            $Show.d_xxx
+                                            (=
+                                               $Show.d_xxx
+                                               (=
+                                                  $Show.d_xxx
+                                                  (=
+                                                     $Show.d_xxx
+                                                     (=
+                                                        $Show.d_xxx
+                                                        (call
+                                                           show
+                                                           $Show.showDictB_xxx)
+                                                        (cast
+                                                           (-> (Any#) Any#)
+                                                           $Show.d_xxx))
+                                                     (=
+                                                        $Show.d_xxx
+                                                        (call
+                                                           $Show.d_xxx
+                                                           $Show.p_xxx)
+                                                        (cast Any# $Show.d_xxx)))
+                                                  (=
+                                                     $Show.d_xxx
+                                                     (call <> $Show.d_xxx)
+                                                     (cast
+                                                        (-> (Any#) Any#)
+                                                        $Show.d_xxx)))
+                                               (=
+                                                  $Show.d_xxx
+                                                  (=
+                                                     $Show.d_xxx
+                                                     (call String# ")")
+                                                     (cast Any# $Show.d_xxx))
+                                                  (=
+                                                     $Show.d_xxx
+                                                     (call
+                                                        $Show.d_xxx
+                                                        $Show.d_xxx)
+                                                     (cast Any# $Show.d_xxx))))
+                                            (=
+                                               $Show.d_xxx
+                                               (call $Show.d_xxx $Show.d_xxx)
+                                               (cast Any# $Show.d_xxx))))
+                                      (=
+                                         $Show.d_xxx
+                                         (call $Show.d_xxx $Show.d_xxx)
+                                         (cast Any# $Show.d_xxx))))
+                                (=
+                                   $Show.d_xxx
+                                   (call $Show.d_xxx $Show.d_xxx)
+                                   (cast Any# $Show.d_xxx)))))))))
+             $Show.fun_xxx)
+          (let
+             (($Show.record_xxx
+                 (Record# (show (-> ((sum (con Tuple# Any# Any#))) Any#)))
+                 (record (show $Show.d_xxx))))
+             $Show.record_xxx)))
+      (define
+         ($Show.<>_curry_xxx $Show.x_xxx $Show.y_xxx)
+         (-> (Any# Any#) Any#)
+         (=
+            $Show.d_xxx
+            (=
+               $Show.d_xxx
+               (call appendString $Show.x_xxx)
+               (cast (-> (Any#) Any#) $Show.d_xxx))
+            (= $Show.d_xxx (call $Show.d_xxx $Show.y_xxx) (cast Any# $Show.d_xxx))))
+      (define
+         ($Show.print_curry_xxx $Show.showDict_xxx $Show.x_xxx)
+         (-> ((Record# (show (-> (Any#) Any#))) Any#) (sum (con Tuple#)))
+         (=
+            $Show.d_xxx
+            (=
+               $Show.d_xxx
+               (=
+                  $Show.d_xxx
+                  (call show $Show.showDict_xxx)
+                  (cast (-> (Any#) Any#) $Show.d_xxx))
+               (=
+                  $Show.d_xxx
+                  (call $Show.d_xxx $Show.x_xxx)
+                  (cast Any# $Show.d_xxx)))
+            (=
+               $Show.d_xxx
+               (call printString $Show.d_xxx)
+               (cast (sum (con Tuple#)) $Show.d_xxx))))
+      (define
+         (show $Show.record_xxx)
+         (-> ((Record# (show (-> (Any#) Any#)))) (-> (Any#) Any#))
+         (match $Show.record_xxx (open ((show $Show.p_xxx)) $Show.p_xxx)))
+      (define
+         (print $Show.showDict_xxx)
+         (-> ((Record# (show (-> (Any#) Any#)))) (-> (Any#) (sum (con Tuple#))))
          (let
-            (($Show.fun_189
-               (->
-                  ((sum (con Tuple# Any# Any#)))
-                  Any#)
-               (fun
-                  ($Show.tuple_190)
-                  (match
-                     $Show.tuple_190
-                     (unpack
-                        (con Tuple# Any# Any#)
-                        ($Show.p_191 $Show.p_192)
-                        (= $Show.d_196
-                           (= $Show.d_194
-                              (= $Show.d_193
-                                 (call String# "(")
-                                 (cast Any# $Show.d_193))
-                              (= $Show.d_195
-                                 (call <> $Show.d_194)
-                                 (cast
-                                    (->
-                                       (Any#)
-                                       Any#)
-                                    $Show.d_195)))
-                           (= $Show.d_220
-                              (= $Show.d_202
-                                 (= $Show.d_200
-                                    (= $Show.d_198
-                                       (= $Show.d_197
-                                          (call show $Show.showDictA_187)
-                                          (cast
-                                             (->
-                                                (Any#)
-                                                Any#)
-                                             $Show.d_197))
-                                       (= $Show.d_199
-                                          (call $Show.d_198 $Show.p_191)
-                                          (cast Any# $Show.d_199)))
-                                    (= $Show.d_201
-                                       (call <> $Show.d_200)
-                                       (cast
-                                          (->
-                                             (Any#)
-                                             Any#)
-                                          $Show.d_201)))
-                                 (= $Show.d_218
-                                    (= $Show.d_206
-                                       (= $Show.d_204
-                                          (= $Show.d_203
-                                             (call String# ", ")
-                                             (cast Any# $Show.d_203))
-                                          (= $Show.d_205
-                                             (call <> $Show.d_204)
-                                             (cast
-                                                (->
-                                                   (Any#)
-                                                   Any#)
-                                                $Show.d_205)))
-                                       (= $Show.d_216
-                                          (= $Show.d_212
-                                             (= $Show.d_210
-                                                (= $Show.d_208
-                                                   (= $Show.d_207
-                                                      (call show $Show.showDictB_188)
-                                                      (cast
-                                                         (->
-                                                            (Any#)
-                                                            Any#)
-                                                         $Show.d_207))
-                                                   (= $Show.d_209
-                                                      (call $Show.d_208 $Show.p_192)
-                                                      (cast Any# $Show.d_209)))
-                                                (= $Show.d_211
-                                                   (call <> $Show.d_210)
-                                                   (cast
-                                                      (->
-                                                         (Any#)
-                                                         Any#)
-                                                      $Show.d_211)))
-                                             (= $Show.d_214
-                                                (= $Show.d_213
-                                                   (call String# ")")
-                                                   (cast Any# $Show.d_213))
-                                                (= $Show.d_215
-                                                   (call $Show.d_212 $Show.d_214)
-                                                   (cast Any# $Show.d_215))))
-                                          (= $Show.d_217
-                                             (call $Show.d_206 $Show.d_216)
-                                             (cast Any# $Show.d_217))))
-                                    (= $Show.d_219
-                                       (call $Show.d_202 $Show.d_218)
-                                       (cast Any# $Show.d_219))))
-                              (= $Show.d_221
-                                 (call $Show.d_196 $Show.d_220)
-                                 (cast Any# $Show.d_221)))))))))
-            $Show.fun_189)
+            (($Show.let_xxx
+                (-> (Any#) (sum (con Tuple#)))
+                (fun
+                   ($Show.x_xxx)
+                   (direct $Show.print_curry_xxx $Show.showDict_xxx $Show.x_xxx))))
+            $Show.let_xxx))
+      (define
+         (<> $Show.x_xxx)
+         (-> (Any#) (-> (Any#) Any#))
          (let
-            (($Show.record_223
-               (Record#
-                  (show
-                     (->
-                        ((sum (con Tuple# Any# Any#)))
-                        Any#)))
-               (record
-                  (show $Show.d_222))))
-            $Show.record_223)))
+            (($Show.let_xxx
+                (-> (Any#) Any#)
+                (fun
+                   ($Show.y_xxx)
+                   (direct $Show.<>_curry_xxx $Show.x_xxx $Show.y_xxx))))
+            $Show.let_xxx))
       (define
-         ($Show.<>_curry_142 $Show.x_143 $Show.y_144)
+         (showTuple2 $Show.showDictA_xxx)
          (->
-            (Any# Any#)
-            Any#)
-         (= $Show.d_146
-            (= $Show.d_145
-               (call appendString $Show.x_143)
-               (cast
-                  (->
-                     (Any#)
-                     Any#)
-                  $Show.d_145))
-            (= $Show.d_147
-               (call $Show.d_146 $Show.y_144)
-               (cast Any# $Show.d_147))))
-      (define
-         ($Show.print_curry_128 $Show.showDict_129 $Show.x_130)
-         (->
-            ((Record#
-               (show
-                  (->
-                     (Any#)
-                     Any#)))
-               Any#)
-            (sum (con Tuple#)))
-         (= $Show.d_134
-            (= $Show.d_132
-               (= $Show.d_131
-                  (call show $Show.showDict_129)
-                  (cast
-                     (->
-                        (Any#)
-                        Any#)
-                     $Show.d_131))
-               (= $Show.d_133
-                  (call $Show.d_132 $Show.x_130)
-                  (cast Any# $Show.d_133)))
-            (= $Show.d_135
-               (call printString $Show.d_134)
-               (cast
-                  (sum (con Tuple#))
-                  $Show.d_135))))
-      (define
-         (show $Show.record_119)
-         (->
-            ((Record#
-               (show
-                  (->
-                     (Any#)
-                     Any#))))
+            ((Record# (show (-> (Any#) Any#))))
             (->
-               (Any#)
-               Any#))
-         (match
-            $Show.record_119
-            (open
-               ((show $Show.p_120))
-               $Show.p_120)))
-      (define
-         (print $Show.showDict_121)
-         (->
-            ((Record#
-               (show
-                  (->
-                     (Any#)
-                     Any#))))
-            (->
-               (Any#)
-               (sum (con Tuple#))))
+               ((Record# (show (-> (Any#) Any#))))
+               (Record# (show (-> ((sum (con Tuple# Any# Any#))) Any#)))))
          (let
-            (($Show.let_136
-               (->
-                  (Any#)
-                  (sum (con Tuple#)))
-               (fun
-                  ($Show.x_122)
-                  (direct $Show.print_curry_128 $Show.showDict_121 $Show.x_122))))
-            $Show.let_136))
+            (($Show.let_xxx
+                (->
+                   ((Record# (show (-> (Any#) Any#))))
+                   (Record# (show (-> ((sum (con Tuple# Any# Any#))) Any#))))
+                (fun
+                   ($Show.showDictB_xxx)
+                   (direct
+                      $Show.showTuple2_curry_xxx
+                      $Show.showDictA_xxx
+                      $Show.showDictB_xxx))))
+            $Show.let_xxx))
       (define
-         (<> $Show.x_137)
-         (->
-            (Any#)
-            (->
-               (Any#)
-               Any#))
-         (let
-            (($Show.let_148
-               (->
-                  (Any#)
-                  Any#)
-               (fun
-                  ($Show.y_138)
-                  (direct $Show.<>_curry_142 $Show.x_137 $Show.y_138))))
-            $Show.let_148))
-      (define
-         (showTuple2 $Show.showDictA_149)
-         (->
-            ((Record#
-               (show
-                  (->
-                     (Any#)
-                     Any#))))
-            (->
-               ((Record#
-                  (show
-                     (->
-                        (Any#)
-                        Any#))))
-               (Record#
-                  (show
-                     (->
-                        ((sum (con Tuple# Any# Any#)))
-                        Any#)))))
-         (let
-            (($Show.let_224
-               (->
-                  ((Record#
-                     (show
-                        (->
-                           (Any#)
-                           Any#))))
-                  (Record#
-                     (show
-                        (->
-                           ((sum (con Tuple# Any# Any#)))
-                           Any#))))
-               (fun
-                  ($Show.showDictB_150)
-                  (direct $Show.showTuple2_curry_186 $Show.showDictA_149 $Show.showDictB_150))))
-            $Show.let_224))
-      (define
-         (main $Show.$__225)
-         (->
-            ((sum (con Tuple#)))
-            (sum (con Tuple#)))
-         (= $Show.d_232
-            (= $Show.d_229
-               (= $Show.d_227
-                  (= $Show.d_226
+         (main $Show.$__xxx)
+         (-> ((sum (con Tuple#))) (sum (con Tuple#)))
+         (=
+            $Show.d_xxx
+            (=
+               $Show.d_xxx
+               (=
+                  $Show.d_xxx
+                  (=
+                     $Show.d_xxx
                      (call showTuple2 showInt32)
                      (cast
                         (->
-                           ((Record#
-                              (show
-                                 (->
-                                    (Any#)
-                                    Any#))))
+                           ((Record# (show (-> (Any#) Any#))))
                            (Record#
-                              (show
-                                 (->
-                                    ((sum (con Tuple# Any# Any#)))
-                                    Any#))))
-                        $Show.d_226))
-                  (= $Show.d_228
-                     (call $Show.d_227 showInt32)
+                              (show (-> ((sum (con Tuple# Any# Any#))) Any#))))
+                        $Show.d_xxx))
+                  (=
+                     $Show.d_xxx
+                     (call $Show.d_xxx showInt32)
                      (cast
-                        (Record#
-                           (show
-                              (->
-                                 ((sum (con Tuple# Any# Any#)))
-                                 Any#)))
-                        $Show.d_228)))
-               (= $Show.cast_230
-                  (cast
-                     (Record#
-                        (show
-                           (->
-                              (Any#)
-                              Any#)))
-                     $Show.d_229)
-                  (= $Show.d_231
-                     (call print $Show.cast_230)
+                        (Record# (show (-> ((sum (con Tuple# Any# Any#))) Any#)))
+                        $Show.d_xxx)))
+               (=
+                  $Show.cast_xxx
+                  (cast (Record# (show (-> (Any#) Any#))) $Show.d_xxx)
+                  (=
+                     $Show.d_xxx
+                     (call print $Show.cast_xxx)
                      (cast
-                        (->
-                           ((sum (con Tuple# Any# Any#)))
-                           (sum (con Tuple#)))
-                        $Show.d_231))))
-            (= $Show.d_238
-               (= $Show.d_234
-                  (= $Show.d_233
-                     (call Int32# 1_i32)
-                     (cast Any# $Show.d_233))
-                  (= $Show.d_236
-                     (= $Show.d_235
-                        (call Int32# 2_i32)
-                        (cast Any# $Show.d_235))
+                        (-> ((sum (con Tuple# Any# Any#))) (sum (con Tuple#)))
+                        $Show.d_xxx))))
+            (=
+               $Show.d_xxx
+               (=
+                  $Show.d_xxx
+                  (= $Show.d_xxx (call Int32# 1_i32) (cast Any# $Show.d_xxx))
+                  (=
+                     $Show.d_xxx
+                     (= $Show.d_xxx (call Int32# 2_i32) (cast Any# $Show.d_xxx))
                      (let
-                        (($Show.let_237
-                           (sum (con Tuple# Any# Any#))
-                           (pack
-                              (sum (con Tuple# Any# Any#))
-                              (con Tuple# Any# Any#)
-                              $Show.d_234
-                              $Show.d_236)))
-                        $Show.let_237)))
-               (= $Show.d_239
-                  (call $Show.d_232 $Show.d_238)
-                  (cast
-                     (sum (con Tuple#))
-                     $Show.d_239))))))
+                        (($Show.let_xxx
+                            (sum (con Tuple# Any# Any#))
+                            (pack
+                               (sum (con Tuple# Any# Any#))
+                               (con Tuple# Any# Any#)
+                               $Show.d_xxx
+                               $Show.d_xxx)))
+                        $Show.let_xxx)))
+               (=
+                  $Show.d_xxx
+                  (call $Show.d_xxx $Show.d_xxx)
+                  (cast (sum (con Tuple#)) $Show.d_xxx))))))
    ())

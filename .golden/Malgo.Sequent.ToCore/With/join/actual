@@ -1,225 +1,236 @@
 ((twice
-   $With.return_91
-   (cut
-      (lambda
-         ($With.param_79 $With.return_92)
-         (join
-            $With.select_123
-            (select
-               (#With.k_6
-                  (join
-                     $With.then_122
-                     (then $With.outer_111
-                        (join
-                           $With.return_93
-                           (then $With.inner_112
-                              (join
-                                 $With.apply_121
-                                 (apply
-                                    ($With.inner_112)
-                                    ($With.return_92))
-                                 (cut $With.outer_111 $With.apply_121)))
-                           (join
-                              $With.apply_120
-                              (apply
-                                 ((construct tuple () ()))
-                                 ($With.return_93))
-                              (cut #With.k_6 $With.apply_120))))
-                     (cut
-                        (lambda
-                           ($With.tmp_80 $With.return_94)
-                           (join
-                              $With.apply_119
-                              (apply
-                                 ((construct tuple () ()))
-                                 ($With.return_94))
-                              (cut #With.k_6 $With.apply_119)))
-                        $With.then_122))))
-            (cut $With.param_79 $With.select_123)))
-      $With.return_91))
+    $With.return_xxx
+    (cut
+       (lambda
+          ($With.param_xxx $With.return_xxx)
+          (join
+             $With.select_xxx
+             (select
+                (#With.k_xxx
+                   (join
+                      $With.then_xxx
+                      (then
+                         $With.outer_xxx
+                         (join
+                            $With.return_xxx
+                            (then
+                               $With.inner_xxx
+                               (join
+                                  $With.apply_xxx
+                                  (apply ($With.inner_xxx) ($With.return_xxx))
+                                  (cut $With.outer_xxx $With.apply_xxx)))
+                            (join
+                               $With.apply_xxx
+                               (apply
+                                  ((construct tuple () ()))
+                                  ($With.return_xxx))
+                               (cut #With.k_xxx $With.apply_xxx))))
+                      (cut
+                         (lambda
+                            ($With.tmp_xxx $With.return_xxx)
+                            (join
+                               $With.apply_xxx
+                               (apply
+                                  ((construct tuple () ()))
+                                  ($With.return_xxx))
+                               (cut #With.k_xxx $With.apply_xxx)))
+                         $With.then_xxx))))
+             (cut $With.param_xxx $With.select_xxx)))
+       $With.return_xxx))
    (printAndReturn
-      $With.return_95
+      $With.return_xxx
       (cut
          (lambda
-            ($With.param_81 $With.return_96)
+            ($With.param_xxx $With.return_xxx)
             (cut
                (lambda
-                  ($With.param_82 $With.return_97)
+                  ($With.param_xxx $With.return_xxx)
                   (join
-                     $With.select_128
+                     $With.select_xxx
                      (select
-                        ((tuple
-                           (#With.str_7 #With.k_8))
+                        ((tuple (#With.str_xxx #With.k_xxx))
                            (join
-                              $With.then_127
-                              (then $With.outer_113
+                              $With.then_xxx
+                              (then
+                                 $With.outer_xxx
                                  (join
-                                    $With.return_98
-                                    (then $With.inner_114
+                                    $With.return_xxx
+                                    (then
+                                       $With.inner_xxx
                                        (join
-                                          $With.apply_126
+                                          $With.apply_xxx
                                           (apply
-                                             ($With.inner_114)
-                                             ($With.return_97))
-                                          (cut $With.outer_113 $With.apply_126)))
+                                             ($With.inner_xxx)
+                                             ($With.return_xxx))
+                                          (cut $With.outer_xxx $With.apply_xxx)))
                                     (join
-                                       $With.apply_125
-                                       (apply
-                                          (#With.str_7)
-                                          ($With.return_98))
-                                       (invoke printString $With.apply_125))))
+                                       $With.apply_xxx
+                                       (apply (#With.str_xxx) ($With.return_xxx))
+                                       (invoke printString $With.apply_xxx))))
                               (cut
                                  (lambda
-                                    ($With.tmp_83 $With.return_99)
+                                    ($With.tmp_xxx $With.return_xxx)
                                     (join
-                                       $With.apply_124
-                                       (apply
-                                          (#With.str_7)
-                                          ($With.return_99))
-                                       (cut #With.k_8 $With.apply_124)))
-                                 $With.then_127))))
+                                       $With.apply_xxx
+                                       (apply (#With.str_xxx) ($With.return_xxx))
+                                       (cut #With.k_xxx $With.apply_xxx)))
+                                 $With.then_xxx))))
                      (cut
-                        (construct
-                           tuple
-                           ($With.param_81 $With.param_82)
-                           ())
-                        $With.select_128)))
-               $With.return_96))
-         $With.return_95))
+                        (construct tuple ($With.param_xxx $With.param_xxx) ())
+                        $With.select_xxx)))
+               $With.return_xxx))
+         $With.return_xxx))
    (finally
-      $With.return_100
+      $With.return_xxx
       (cut
          (lambda
-            ($With.param_84 $With.return_101)
+            ($With.param_xxx $With.return_xxx)
             (cut
                (lambda
-                  ($With.param_85 $With.return_102)
+                  ($With.param_xxx $With.return_xxx)
                   (join
-                     $With.select_132
+                     $With.select_xxx
                      (select
-                        ((tuple
-                           (#With.finalizer_2 #With.k_3))
+                        ((tuple (#With.finalizer_xxx #With.k_xxx))
                            (join
-                              $With.then_130
-                              (then #With.x_4
+                              $With.then_xxx
+                              (then
+                                 #With.x_xxx
                                  (join
-                                    $With.apply_129
-                                    (apply
-                                       (#With.x_4)
-                                       ($With.return_102))
-                                    (cut #With.finalizer_2 $With.apply_129)))
+                                    $With.apply_xxx
+                                    (apply (#With.x_xxx) ($With.return_xxx))
+                                    (cut #With.finalizer_xxx $With.apply_xxx)))
                               (join
-                                 $With.apply_131
+                                 $With.apply_xxx
                                  (apply
                                     ((construct tuple () ()))
-                                    ($With.then_130))
-                                 (cut #With.k_3 $With.apply_131)))))
+                                    ($With.then_xxx))
+                                 (cut #With.k_xxx $With.apply_xxx)))))
                      (cut
-                        (construct
-                           tuple
-                           ($With.param_84 $With.param_85)
-                           ())
-                        $With.select_132)))
-               $With.return_101))
-         $With.return_100))
+                        (construct tuple ($With.param_xxx $With.param_xxx) ())
+                        $With.select_xxx)))
+               $With.return_xxx))
+         $With.return_xxx))
    (main
-      $With.return_103
+      $With.return_xxx
       (cut
          (lambda
-            ($With.param_86 $With.return_104)
+            ($With.param_xxx $With.return_xxx)
             (join
-               $With.select_148
+               $With.select_xxx
                (select
-                  (#With.$__78
+                  (#With.$__xxx
                      (join
-                        $With.apply_146
+                        $With.apply_xxx
                         (apply
                            ((lambda
-                              ($With.param_88 $With.return_105)
-                              (join
-                                 $With.select_145
-                                 (select
-                                    (#With.$__75
-                                       (join
-                                          $With.apply_144
-                                          (apply
-                                             ((lambda
-                                                ($With.param_89 $With.return_106)
-                                                (join
-                                                   $With.select_143
-                                                   (select
-                                                      (#With.$__72
-                                                         (join
-                                                            $With.then_142
-                                                            (then $With.outer_117
-                                                               (join
-                                                                  $With.return_108
-                                                                  (then $With.inner_118
-                                                                     (join
-                                                                        $With.apply_140
-                                                                        (apply
-                                                                           ((lambda
-                                                                              ($With.param_90 $With.return_107)
-                                                                              (join
-                                                                                 $With.select_139
-                                                                                 (select
-                                                                                    (#With.x_9
-                                                                                       (join
-                                                                                          $With.apply_138
-                                                                                          (apply
-                                                                                             (#With.x_9)
-                                                                                             ($With.return_107))
-                                                                                          (invoke printString $With.apply_138))))
-                                                                                 (cut $With.param_90 $With.select_139))))
-                                                                           ($With.return_106))
-                                                                        (join
-                                                                           $With.apply_141
-                                                                           (apply
-                                                                              ($With.inner_118)
-                                                                              ($With.apply_140))
-                                                                           (cut $With.outer_117 $With.apply_141))))
-                                                                  (join
-                                                                     $With.apply_137
-                                                                     (apply
-                                                                        ("foo")
-                                                                        ($With.return_108))
-                                                                     (invoke String# $With.apply_137))))
-                                                            (invoke printAndReturn $With.then_142))))
-                                                   (cut $With.param_89 $With.select_143))))
-                                             ($With.return_105))
-                                          (invoke twice $With.apply_144))))
-                                 (cut $With.param_88 $With.select_145))))
-                           ($With.return_104))
+                               ($With.param_xxx $With.return_xxx)
+                               (join
+                                  $With.select_xxx
+                                  (select
+                                     (#With.$__xxx
+                                        (join
+                                           $With.apply_xxx
+                                           (apply
+                                              ((lambda
+                                                  ($With.param_xxx
+                                                     $With.return_xxx)
+                                                  (join
+                                                     $With.select_xxx
+                                                     (select
+                                                        (#With.$__xxx
+                                                           (join
+                                                              $With.then_xxx
+                                                              (then
+                                                                 $With.outer_xxx
+                                                                 (join
+                                                                    $With.return_xxx
+                                                                    (then
+                                                                       $With.inner_xxx
+                                                                       (join
+                                                                          $With.apply_xxx
+                                                                          (apply
+                                                                             ((lambda
+                                                                                 ($With.param_xxx
+                                                                                    $With.return_xxx)
+                                                                                 (join
+                                                                                    $With.select_xxx
+                                                                                    (select
+                                                                                       (#With.x_xxx
+                                                                                          (join
+                                                                                             $With.apply_xxx
+                                                                                             (apply
+                                                                                                (#With.x_xxx)
+                                                                                                ($With.return_xxx))
+                                                                                             (invoke
+                                                                                                printString
+                                                                                                $With.apply_xxx))))
+                                                                                    (cut
+                                                                                       $With.param_xxx
+                                                                                       $With.select_xxx))))
+                                                                             ($With.return_xxx))
+                                                                          (join
+                                                                             $With.apply_xxx
+                                                                             (apply
+                                                                                ($With.inner_xxx)
+                                                                                ($With.apply_xxx))
+                                                                             (cut
+                                                                                $With.outer_xxx
+                                                                                $With.apply_xxx))))
+                                                                    (join
+                                                                       $With.apply_xxx
+                                                                       (apply
+                                                                          ("foo")
+                                                                          ($With.return_xxx))
+                                                                       (invoke
+                                                                          String#
+                                                                          $With.apply_xxx))))
+                                                              (invoke
+                                                                 printAndReturn
+                                                                 $With.then_xxx))))
+                                                     (cut
+                                                        $With.param_xxx
+                                                        $With.select_xxx))))
+                                              ($With.return_xxx))
+                                           (invoke twice $With.apply_xxx))))
+                                  (cut $With.param_xxx $With.select_xxx))))
+                           ($With.return_xxx))
                         (join
-                           $With.apply_147
+                           $With.apply_xxx
                            (apply
                               ((lambda
-                                 ($With.param_87 $With.return_109)
-                                 (join
-                                    $With.select_136
-                                    (select
-                                       ((tuple ())
-                                          (join
-                                             $With.then_135
-                                             (then $With.outer_115
-                                                (join
-                                                   $With.return_110
-                                                   (then $With.inner_116
-                                                      (join
-                                                         $With.apply_134
-                                                         (apply
-                                                            ($With.inner_116)
-                                                            ($With.return_109))
-                                                         (cut $With.outer_115 $With.apply_134)))
-                                                   (join
-                                                      $With.apply_133
-                                                      (apply
-                                                         ("end")
-                                                         ($With.return_110))
-                                                      (invoke String# $With.apply_133))))
-                                             (invoke printString $With.then_135))))
-                                    (cut $With.param_87 $With.select_136))))
-                              ($With.apply_146))
-                           (invoke finally $With.apply_147)))))
-               (cut $With.param_86 $With.select_148)))
-         $With.return_103)))
+                                  ($With.param_xxx $With.return_xxx)
+                                  (join
+                                     $With.select_xxx
+                                     (select
+                                        ((tuple ())
+                                           (join
+                                              $With.then_xxx
+                                              (then
+                                                 $With.outer_xxx
+                                                 (join
+                                                    $With.return_xxx
+                                                    (then
+                                                       $With.inner_xxx
+                                                       (join
+                                                          $With.apply_xxx
+                                                          (apply
+                                                             ($With.inner_xxx)
+                                                             ($With.return_xxx))
+                                                          (cut
+                                                             $With.outer_xxx
+                                                             $With.apply_xxx)))
+                                                    (join
+                                                       $With.apply_xxx
+                                                       (apply
+                                                          ("end")
+                                                          ($With.return_xxx))
+                                                       (invoke
+                                                          String#
+                                                          $With.apply_xxx))))
+                                              (invoke printString $With.then_xxx))))
+                                     (cut $With.param_xxx $With.select_xxx))))
+                              ($With.apply_xxx))
+                           (invoke finally $With.apply_xxx)))))
+               (cut $With.param_xxx $With.select_xxx)))
+         $With.return_xxx)))

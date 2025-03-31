@@ -23,6 +23,7 @@ module Malgo.Syntax.Extension
     XBoxed,
     XApply,
     XOpApp,
+    XProject,
     XFn,
     XTuple,
     XRecord,
@@ -69,15 +70,19 @@ where
 
 import Control.Lens (lens)
 import Data.Kind qualified as K
+import Data.SCargot.Repr.Basic qualified as S
 import Data.Store.TH
 import Data.Void
 import Malgo.Id
 import Malgo.Infer.TypeRep as TypeRep
 import Malgo.Module
-import Malgo.Prelude
+import Malgo.Prelude hiding (All)
+import Malgo.SExpr (ToSExpr (..))
+import Malgo.SExpr qualified as S
+import Prettyprinter ((<+>))
 
 -- | Phase and type instance
-data MalgoPhase = Parse | Rename | Infer | Refine
+data MalgoPhase = Parse | Rename | Infer | Refine | NewParse
 
 data Malgo (p :: MalgoPhase)
 
@@ -87,6 +92,7 @@ type family MalgoId (p :: MalgoPhase) where
   MalgoId 'Rename = Id
   MalgoId 'Infer = Id
   MalgoId 'Refine = Id
+  MalgoId 'NewParse = Text
 
 data Visibility
   = Explicit ModuleName -- variable that must be qualified
@@ -98,6 +104,13 @@ instance Pretty Visibility where pretty = pretty . convertString @_ @Text . show
 -- | Qualified name
 data Qualified x = Qualified {visibility :: Visibility, value :: x}
   deriving stock (Eq, Ord, Show)
+
+instance (HasRange x) => HasRange (Qualified x) where
+  range (Qualified _ v) = range v
+
+instance (ToSExpr x) => ToSExpr (Qualified x) where
+  toSExpr (Qualified Implicit v) = toSExpr v
+  toSExpr (Qualified (Explicit x) v) = S.L [toSExpr x, toSExpr v]
 
 instance (Pretty x) => Pretty (Qualified x) where
   pretty (Qualified Implicit v) = pretty v
@@ -132,6 +145,11 @@ data Boxed
 data Assoc = LeftA | RightA | NeutralA
   deriving stock (Eq, Show, Generic)
 
+instance ToSExpr Assoc where
+  toSExpr LeftA = S.A $ S.Symbol "left"
+  toSExpr RightA = S.A $ S.Symbol "right"
+  toSExpr NeutralA = S.A $ S.Symbol "neutral"
+
 instance Pretty Assoc where
   pretty LeftA = "l"
   pretty RightA = "r"
@@ -147,6 +165,7 @@ type family SimpleX (x :: MalgoPhase) where
   SimpleX 'Rename = SimpleX 'Parse
   SimpleX 'Infer = Typed (SimpleX 'Rename)
   SimpleX 'Refine = SimpleX 'Infer
+  SimpleX 'NewParse = Range
 
 type family XVar x where
   XVar (Malgo 'Parse) = Qualified (SimpleX 'Parse)
@@ -160,6 +179,7 @@ type family XUnboxed x where
 
 type family XBoxed x where
   XBoxed (Malgo 'Parse) = SimpleX 'Parse
+  XBoxed (Malgo 'NewParse) = SimpleX 'NewParse
   XBoxed (Malgo _) = Void
 
 type family XApply x where
@@ -167,9 +187,14 @@ type family XApply x where
 
 type family XOpApp x where
   XOpApp (Malgo 'Parse) = SimpleX 'Parse
+  XOpApp (Malgo NewParse) = SimpleX NewParse
   XOpApp (Malgo 'Rename) = (XOpApp (Malgo 'Parse), (Assoc, Int))
   XOpApp (Malgo 'Infer) = Typed (XOpApp (Malgo 'Rename))
   XOpApp (Malgo 'Refine) = Void
+
+type family XProject x where
+  XProject (Malgo Parse) = Void
+  XProject (Malgo x) = SimpleX x
 
 type family XFn x where
   XFn (Malgo x) = SimpleX x
@@ -182,6 +207,7 @@ type family XRecord x where
 
 type family XList x where
   XList (Malgo 'Parse) = SimpleX 'Parse
+  XList (Malgo 'NewParse) = SimpleX 'NewParse
   XList (Malgo _) = Void
 
 type family XRecordAccess x where
@@ -190,6 +216,7 @@ type family XRecordAccess x where
 type family XAnn x where
   XAnn (Malgo 'Parse) = SimpleX 'Parse
   XAnn (Malgo 'Rename) = SimpleX 'Rename
+  XAnn (Malgo 'NewParse) = SimpleX 'NewParse
   XAnn (Malgo _) = Void
 
 type family XSeq x where
@@ -197,6 +224,7 @@ type family XSeq x where
 
 type family XParens x where
   XParens (Malgo 'Parse) = SimpleX 'Parse
+  XParens (Malgo NewParse) = SimpleX NewParse
   XParens (Malgo x) = Void
 
 type ForallExpX (c :: K.Type -> Constraint) x =
@@ -206,6 +234,7 @@ type ForallExpX (c :: K.Type -> Constraint) x =
     c (XBoxed x),
     c (XApply x),
     c (XOpApp x),
+    c (XProject x),
     c (XFn x),
     c (XTuple x),
     c (XRecord x),
@@ -230,6 +259,7 @@ type family XLet x where
 
 type family XWith x where
   XWith (Malgo 'Parse) = SimpleX 'Parse
+  XWith (Malgo NewParse) = SimpleX NewParse
   XWith (Malgo _) = Void
 
 type family XNoBind x where
@@ -253,6 +283,7 @@ type family XRecordP x where
 
 type family XListP x where
   XListP (Malgo 'Parse) = SimpleX 'Parse
+  XListP (Malgo 'NewParse) = SimpleX 'NewParse
   XListP (Malgo _) = Void
 
 type family XUnboxedP x where
@@ -260,6 +291,7 @@ type family XUnboxedP x where
 
 type family XBoxedP x where
   XBoxedP (Malgo 'Parse) = SimpleX 'Parse
+  XBoxedP (Malgo NewParse) = SimpleX NewParse
   XBoxedP (Malgo _) = Void
 
 type ForallPatX (c :: K.Type -> Constraint) x = (c (XVarP x), c (XConP x), c (XTupleP x), c (XRecordP x), c (XListP x), c (XUnboxedP x), c (XBoxedP x))
@@ -273,6 +305,7 @@ type family XTyVar x where
   XTyVar (Malgo _) = SimpleX 'Parse
 
 type family XTyCon x where
+  XTyCon (Malgo NewParse) = Void
   XTyCon (Malgo _) = SimpleX 'Parse
 
 type family XTyArr x where
@@ -286,6 +319,7 @@ type family XTyRecord x where
 
 type family XTyBlock x where
   XTyBlock (Malgo 'Parse) = SimpleX 'Parse
+  XTyBlock (Malgo 'NewParse) = SimpleX 'NewParse
   XTyBlock (Malgo _) = Void
 
 type ForallTypeX (c :: K.Type -> Constraint) x =
@@ -310,6 +344,7 @@ type family XInfix x where
 
 type family XForeign x where
   XForeign (Malgo 'Parse) = SimpleX 'Parse
+  XForeign (Malgo NewParse) = SimpleX NewParse
   XForeign (Malgo 'Rename) = (XForeign (Malgo 'Parse), Text)
   XForeign (Malgo 'Infer) = Typed (XForeign (Malgo 'Rename))
   XForeign (Malgo 'Refine) = XForeign (Malgo 'Infer)
@@ -322,6 +357,11 @@ data ImportList = All | Selected [PsId] | As ModuleName
 deriving stock instance Eq ImportList
 
 deriving stock instance Show ImportList
+
+instance ToSExpr ImportList where
+  toSExpr All = S.A $ S.Symbol "all"
+  toSExpr (Selected ids) = S.L (S.A (S.Symbol "selected") : map toSExpr ids)
+  toSExpr (As moduleName) = S.L [S.A (S.Symbol "as"), toSExpr moduleName]
 
 type ForallDeclX (c :: K.Type -> Constraint) x =
   ( c (XScDef x),

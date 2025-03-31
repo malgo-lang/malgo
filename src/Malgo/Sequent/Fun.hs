@@ -74,15 +74,6 @@ data Expr
   | Invoke Range Name
   deriving stock (Show)
 
-class HasRange a where
-  range :: a -> Range
-
-instance HasRange Range where
-  range = identity
-
-instance HasRange Void where
-  range = absurd
-
 instance HasRange Expr where
   range (Var r _) = r
   range (Literal r _) = r

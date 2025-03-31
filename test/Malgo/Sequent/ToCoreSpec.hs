@@ -2,9 +2,10 @@ module Malgo.Sequent.ToCoreSpec (spec) where
 
 import Data.ByteString qualified as BS
 import Effectful.Reader.Static (runReader)
+import Malgo.Driver (failIfError)
 import Malgo.Infer.Pass (infer)
 import Malgo.Monad (runMalgoM)
-import Malgo.Parser (parseMalgo)
+import Malgo.Parser (parse)
 import Malgo.Prelude
 import Malgo.Refine.Pass (refine)
 import Malgo.Rename.Pass (rename)
@@ -53,11 +54,11 @@ driveToCore srcPath = do
   src <- convertString <$> BS.readFile srcPath
   runMalgoM flag option do
     parsed <-
-      parseMalgo srcPath src >>= \case
+      parse srcPath src >>= \case
         Left err -> error $ show err
-        Right parsed -> pure parsed
+        Right (_, parsed) -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
-    (renamed, _) <- rename rnEnv parsed
+    (renamed, _) <- failIfError <$> rename rnEnv parsed
     (typed, tcEnv) <- infer rnEnv renamed
     refined <- refine tcEnv typed
     program <- runReader refined.moduleName $ toFun refined.moduleDefinition >>= toCore
@@ -68,11 +69,11 @@ driveFlat srcPath = do
   src <- convertString <$> BS.readFile srcPath
   runMalgoM flag option do
     parsed <-
-      parseMalgo srcPath src >>= \case
+      parse srcPath src >>= \case
         Left err -> error $ show err
-        Right parsed -> pure parsed
+        Right (_, parsed) -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
-    (renamed, _) <- rename rnEnv parsed
+    (renamed, _) <- failIfError <$> rename rnEnv parsed
     (typed, tcEnv) <- infer rnEnv renamed
     refined <- refine tcEnv typed
     program <- runReader refined.moduleName $ toFun refined.moduleDefinition >>= toCore >>= flatProgram
@@ -83,11 +84,11 @@ driveJoin srcPath = do
   src <- convertString <$> BS.readFile srcPath
   runMalgoM flag option do
     parsed <-
-      parseMalgo srcPath src >>= \case
+      parse srcPath src >>= \case
         Left err -> error $ show err
-        Right parsed -> pure parsed
+        Right (_, parsed) -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
-    (renamed, _) <- rename rnEnv parsed
+    (renamed, _) <- failIfError <$> rename rnEnv parsed
     (typed, tcEnv) <- infer rnEnv renamed
     refined <- refine tcEnv typed
     program <- runReader refined.moduleName $ toFun refined.moduleDefinition >>= toCore >>= flatProgram >>= joinProgram

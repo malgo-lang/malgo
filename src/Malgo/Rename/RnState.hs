@@ -5,6 +5,7 @@ import Data.Set qualified as Set
 import Malgo.Module
 import Malgo.Prelude
 import Malgo.Syntax.Extension
+import Prettyprinter (braces, sep, (<+>))
 
 data RnState = RnState
   { infixInfo :: Map RnId (Assoc, Int),

@@ -1,13 +1,11 @@
 ((main
-   (lambda
-      ($Double.param_9)
-      (select
-         $Double.param_9
-         ((#Double.$__8
-            (apply
-               (invoke putStr)
-               ((apply
-                  (invoke toStringDouble)
-                  ((apply
-                     (invoke Double#)
-                     (3.14_f64))))))))))))
+    (lambda
+       ($Double.param_xxx)
+       (select
+          $Double.param_xxx
+          ((#Double.$__xxx
+              (apply
+                 (invoke putStr)
+                 ((apply
+                     (invoke toStringDouble)
+                     ((apply (invoke Double#) (3.14_f64))))))))))))

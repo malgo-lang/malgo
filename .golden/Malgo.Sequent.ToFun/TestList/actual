@@ -1,37 +1,25 @@
 ((main
-   (lambda
-      ($TestList.param_41)
-      (select
-         $TestList.param_41
-         ((#TestList.$__40
-            (let
-               #TestList.xs_0
-               (apply
-                  (apply
-                     (invoke Cons)
-                     ((apply
-                        (invoke Int32#)
-                        (1_i32))))
-                  ((apply
-                     (apply
-                        (invoke Cons)
+    (lambda
+       ($TestList.param_xxx)
+       (select
+          $TestList.param_xxx
+          ((#TestList.$__xxx
+              (let
+                 #TestList.xs_xxx
+                 (apply
+                    (apply (invoke Cons) ((apply (invoke Int32#) (1_i32))))
+                    ((apply
+                        (apply (invoke Cons) ((apply (invoke Int32#) (2_i32))))
                         ((apply
-                           (invoke Int32#)
-                           (2_i32))))
-                     ((apply
-                        (apply
-                           (invoke Cons)
-                           ((apply
-                              (invoke Int32#)
-                              (3_i32))))
-                        ((invoke Nil)))))))
-               (let
-                  #TestList.nil_1
-                  (invoke Nil)
-                  (apply
-                     (invoke putStrLn)
-                     ((apply
-                        (invoke toStringInt32)
-                        ((apply
-                           (invoke head)
-                           (#TestList.xs_0))))))))))))))
+                            (apply
+                               (invoke Cons)
+                               ((apply (invoke Int32#) (3_i32))))
+                            ((invoke Nil)))))))
+                 (let
+                    #TestList.nil_xxx
+                    (invoke Nil)
+                    (apply
+                       (invoke putStrLn)
+                       ((apply
+                           (invoke toStringInt32)
+                           ((apply (invoke head) (#TestList.xs_xxx))))))))))))))

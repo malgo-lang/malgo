@@ -1,67 +1,61 @@
 (()
    ((define
-      (succ $TestDot.int64#_30)
-      (->
-         (Any#)
-         Any#)
-      (match
-         (cast
-            (sum (con runtime/malgo/Builtin.mlg.Int64# Int64#))
-            $TestDot.int64#_30)
-         (unpack
-            (con runtime/malgo/Builtin.mlg.Int64# Int64#)
-            ($TestDot.p_31)
-            (= $TestDot.d_35
-               (= $TestDot.d_33
-                  (= $TestDot.d_32
-                     (call addInt64# $TestDot.p_31)
-                     (cast
-                        (->
-                           (Int64#)
-                           Int64#)
-                        $TestDot.d_32))
-                  (= $TestDot.d_34
-                     (call $TestDot.d_33 1_i64)
-                     (cast Int64# $TestDot.d_34)))
-               (= $TestDot.d_36
-                  (call Int64# $TestDot.d_35)
-                  (cast Any# $TestDot.d_36))))))
+       (succ $TestDot.int64#_xxx)
+       (-> (Any#) Any#)
+       (match
+          (cast
+             (sum (con runtime/malgo/Builtin.mlg.Int64# Int64#))
+             $TestDot.int64#_xxx)
+          (unpack
+             (con runtime/malgo/Builtin.mlg.Int64# Int64#)
+             ($TestDot.p_xxx)
+             (=
+                $TestDot.d_xxx
+                (=
+                   $TestDot.d_xxx
+                   (=
+                      $TestDot.d_xxx
+                      (call addInt64# $TestDot.p_xxx)
+                      (cast (-> (Int64#) Int64#) $TestDot.d_xxx))
+                   (=
+                      $TestDot.d_xxx
+                      (call $TestDot.d_xxx 1_i64)
+                      (cast Int64# $TestDot.d_xxx)))
+                (=
+                   $TestDot.d_xxx
+                   (call Int64# $TestDot.d_xxx)
+                   (cast Any# $TestDot.d_xxx))))))
       (define
-         (main $TestDot.$__37)
-         (->
-            ((sum (con Tuple#)))
-            (sum (con Tuple#)))
-         (= $TestDot.d_45
-            (= $TestDot.d_41
-               (= $TestDot.d_39
-                  (= $TestDot.d_38
-                     (call . succ)
+         (main $TestDot.$__xxx)
+         (-> ((sum (con Tuple#))) (sum (con Tuple#)))
+         (=
+            $TestDot.d_xxx
+            (=
+               $TestDot.d_xxx
+               (=
+                  $TestDot.d_xxx
+                  (=
+                     $TestDot.d_xxx
+                     (call << succ)
                      (cast
-                        (->
-                           ((->
-                              (Any#)
-                              Any#))
-                           (->
-                              (Any#)
-                              Any#))
-                        $TestDot.d_38))
-                  (= $TestDot.d_40
-                     (call $TestDot.d_39 succ)
-                     (cast
-                        (->
-                           (Any#)
-                           Any#)
-                        $TestDot.d_40)))
-               (= $TestDot.d_43
-                  (= $TestDot.d_42
+                        (-> ((-> (Any#) Any#)) (-> (Any#) Any#))
+                        $TestDot.d_xxx))
+                  (=
+                     $TestDot.d_xxx
+                     (call $TestDot.d_xxx succ)
+                     (cast (-> (Any#) Any#) $TestDot.d_xxx)))
+               (=
+                  $TestDot.d_xxx
+                  (=
+                     $TestDot.d_xxx
                      (call Int64# 0_i64)
-                     (cast Any# $TestDot.d_42))
-                  (= $TestDot.d_44
-                     (call $TestDot.d_41 $TestDot.d_43)
-                     (cast Any# $TestDot.d_44))))
-            (= $TestDot.d_46
-               (call printInt64 $TestDot.d_45)
-               (cast
-                  (sum (con Tuple#))
-                  $TestDot.d_46)))))
+                     (cast Any# $TestDot.d_xxx))
+                  (=
+                     $TestDot.d_xxx
+                     (call $TestDot.d_xxx $TestDot.d_xxx)
+                     (cast Any# $TestDot.d_xxx))))
+            (=
+               $TestDot.d_xxx
+               (call printInt64 $TestDot.d_xxx)
+               (cast (sum (con Tuple#)) $TestDot.d_xxx)))))
    ())

@@ -1,11 +1,9 @@
 ((main
-   (lambda
-      ($TestExplicitModule.param_7)
-      (select
-         $TestExplicitModule.param_7
-         ((#TestExplicitModule.$__6
-            (apply
-               (invoke putStrLn)
-               ((apply
-                  (invoke String#)
-                  ("Hello, world"))))))))))
+    (lambda
+       ($TestExplicitModule.param_xxx)
+       (select
+          $TestExplicitModule.param_xxx
+          ((#TestExplicitModule.$__xxx
+              (apply
+                 (invoke putStrLn)
+                 ((apply (invoke String#) ("Hello, world"))))))))))

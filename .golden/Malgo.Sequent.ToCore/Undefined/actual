@@ -1,38 +1,41 @@
 ((g
-   $Undefined.return_22
-   (cut
-      (lambda
-         ($Undefined.param_20 $Undefined.return_23)
-         (cut
-            $Undefined.param_20
-            (select
-               (#Undefined.x_0
-                  (invoke undefined $Undefined.return_23)))))
-      $Undefined.return_22))
+    $Undefined.return_xxx
+    (cut
+       (lambda
+          ($Undefined.param_xxx $Undefined.return_xxx)
+          (cut
+             $Undefined.param_xxx
+             (select (#Undefined.x_xxx (invoke undefined $Undefined.return_xxx)))))
+       $Undefined.return_xxx))
    (main
-      $Undefined.return_24
+      $Undefined.return_xxx
       (cut
          (lambda
-            ($Undefined.param_21 $Undefined.return_25)
+            ($Undefined.param_xxx $Undefined.return_xxx)
             (cut
-               $Undefined.param_21
+               $Undefined.param_xxx
                (select
-                  (#Undefined.$__17
-                     (invoke undefined
-                        (then #Undefined.x_1
-                           (invoke g
+                  (#Undefined.$__xxx
+                     (invoke
+                        undefined
+                        (then
+                           #Undefined.x_xxx
+                           (invoke
+                              g
                               (apply
-                                 (#Undefined.x_1)
-                                 ((then #Undefined.y_2
-                                    (invoke printString
-                                       (apply
-                                          ((do $Undefined.return_26
-                                             (invoke String#
-                                                (apply
-                                                   ("OK")
-                                                   ($Undefined.return_26)))))
-                                          ($Undefined.return_25)))))))))))))
-         $Undefined.return_24))
-   (f
-      $Undefined.return_27
-      (invoke undefined $Undefined.return_27)))
+                                 (#Undefined.x_xxx)
+                                 ((then
+                                     #Undefined.y_xxx
+                                     (invoke
+                                        printString
+                                        (apply
+                                           ((do
+                                               $Undefined.return_xxx
+                                               (invoke
+                                                  String#
+                                                  (apply
+                                                     ("OK")
+                                                     ($Undefined.return_xxx)))))
+                                           ($Undefined.return_xxx)))))))))))))
+         $Undefined.return_xxx))
+   (f $Undefined.return_xxx (invoke undefined $Undefined.return_xxx)))

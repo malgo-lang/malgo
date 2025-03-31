@@ -1,412 +1,505 @@
 ((fix
-   $InlineFunction.return_125
-   (cut
-      (lambda
-         ($InlineFunction.param_112 $InlineFunction.return_126)
-         (cut
-            (lambda
-               ($InlineFunction.param_113 $InlineFunction.return_127)
-               (join
-                  $InlineFunction.select_189
-                  (select
-                     ((tuple
-                        (#InlineFunction.f_6 #InlineFunction.x_7))
-                        (join
-                           $InlineFunction.then_188
-                           (then $InlineFunction.outer_157
-                              (join
-                                 $InlineFunction.return_128
-                                 (then $InlineFunction.inner_158
-                                    (join
-                                       $InlineFunction.apply_186
-                                       (apply
-                                          (#InlineFunction.x_7)
-                                          ($InlineFunction.return_127))
-                                       (join
-                                          $InlineFunction.apply_187
-                                          (apply
-                                             ($InlineFunction.inner_158)
-                                             ($InlineFunction.apply_186))
-                                          (cut $InlineFunction.outer_157 $InlineFunction.apply_187))))
-                                 (join
-                                    $InlineFunction.apply_185
-                                    (apply
-                                       (#InlineFunction.f_6)
-                                       ($InlineFunction.return_128))
-                                    (invoke fix $InlineFunction.apply_185))))
-                           (cut #InlineFunction.f_6 $InlineFunction.then_188))))
-                  (cut
-                     (construct
-                        tuple
-                        ($InlineFunction.param_112 $InlineFunction.param_113)
-                        ())
-                     $InlineFunction.select_189)))
-            $InlineFunction.return_126))
-      $InlineFunction.return_125))
+    $InlineFunction.return_xxx
+    (cut
+       (lambda
+          ($InlineFunction.param_xxx $InlineFunction.return_xxx)
+          (cut
+             (lambda
+                ($InlineFunction.param_xxx $InlineFunction.return_xxx)
+                (join
+                   $InlineFunction.select_xxx
+                   (select
+                      ((tuple (#InlineFunction.f_xxx #InlineFunction.x_xxx))
+                         (join
+                            $InlineFunction.then_xxx
+                            (then
+                               $InlineFunction.outer_xxx
+                               (join
+                                  $InlineFunction.return_xxx
+                                  (then
+                                     $InlineFunction.inner_xxx
+                                     (join
+                                        $InlineFunction.apply_xxx
+                                        (apply
+                                           (#InlineFunction.x_xxx)
+                                           ($InlineFunction.return_xxx))
+                                        (join
+                                           $InlineFunction.apply_xxx
+                                           (apply
+                                              ($InlineFunction.inner_xxx)
+                                              ($InlineFunction.apply_xxx))
+                                           (cut
+                                              $InlineFunction.outer_xxx
+                                              $InlineFunction.apply_xxx))))
+                                  (join
+                                     $InlineFunction.apply_xxx
+                                     (apply
+                                        (#InlineFunction.f_xxx)
+                                        ($InlineFunction.return_xxx))
+                                     (invoke fix $InlineFunction.apply_xxx))))
+                            (cut #InlineFunction.f_xxx $InlineFunction.then_xxx))))
+                   (cut
+                      (construct
+                         tuple
+                         ($InlineFunction.param_xxx $InlineFunction.param_xxx)
+                         ())
+                      $InlineFunction.select_xxx)))
+             $InlineFunction.return_xxx))
+       $InlineFunction.return_xxx))
    (<=
-      $InlineFunction.return_129
+      $InlineFunction.return_xxx
       (cut
          (lambda
-            ($InlineFunction.param_114 $InlineFunction.return_130)
+            ($InlineFunction.param_xxx $InlineFunction.return_xxx)
             (cut
                (lambda
-                  ($InlineFunction.param_115 $InlineFunction.return_131)
+                  ($InlineFunction.param_xxx $InlineFunction.return_xxx)
                   (join
-                     $InlineFunction.select_192
+                     $InlineFunction.select_xxx
                      (select
-                        ((tuple
-                           (#InlineFunction.x_0 #InlineFunction.y_1))
+                        ((tuple (#InlineFunction.x_xxx #InlineFunction.y_xxx))
                            (join
-                              $InlineFunction.apply_190
+                              $InlineFunction.apply_xxx
                               (apply
-                                 (#InlineFunction.y_1)
-                                 ($InlineFunction.return_131))
+                                 (#InlineFunction.y_xxx)
+                                 ($InlineFunction.return_xxx))
                               (join
-                                 $InlineFunction.apply_191
+                                 $InlineFunction.apply_xxx
                                  (apply
-                                    (#InlineFunction.x_0)
-                                    ($InlineFunction.apply_190))
-                                 (invoke leInt32 $InlineFunction.apply_191)))))
+                                    (#InlineFunction.x_xxx)
+                                    ($InlineFunction.apply_xxx))
+                                 (invoke leInt32 $InlineFunction.apply_xxx)))))
                      (cut
                         (construct
                            tuple
-                           ($InlineFunction.param_114 $InlineFunction.param_115)
+                           ($InlineFunction.param_xxx $InlineFunction.param_xxx)
                            ())
-                        $InlineFunction.select_192)))
-               $InlineFunction.return_130))
-         $InlineFunction.return_129))
+                        $InlineFunction.select_xxx)))
+               $InlineFunction.return_xxx))
+         $InlineFunction.return_xxx))
    (-
-      $InlineFunction.return_132
+      $InlineFunction.return_xxx
       (cut
          (lambda
-            ($InlineFunction.param_116 $InlineFunction.return_133)
+            ($InlineFunction.param_xxx $InlineFunction.return_xxx)
             (cut
                (lambda
-                  ($InlineFunction.param_117 $InlineFunction.return_134)
+                  ($InlineFunction.param_xxx $InlineFunction.return_xxx)
                   (join
-                     $InlineFunction.select_195
+                     $InlineFunction.select_xxx
                      (select
-                        ((tuple
-                           (#InlineFunction.x_4 #InlineFunction.y_5))
+                        ((tuple (#InlineFunction.x_xxx #InlineFunction.y_xxx))
                            (join
-                              $InlineFunction.apply_193
+                              $InlineFunction.apply_xxx
                               (apply
-                                 (#InlineFunction.y_5)
-                                 ($InlineFunction.return_134))
+                                 (#InlineFunction.y_xxx)
+                                 ($InlineFunction.return_xxx))
                               (join
-                                 $InlineFunction.apply_194
+                                 $InlineFunction.apply_xxx
                                  (apply
-                                    (#InlineFunction.x_4)
-                                    ($InlineFunction.apply_193))
-                                 (invoke subInt32 $InlineFunction.apply_194)))))
+                                    (#InlineFunction.x_xxx)
+                                    ($InlineFunction.apply_xxx))
+                                 (invoke subInt32 $InlineFunction.apply_xxx)))))
                      (cut
                         (construct
                            tuple
-                           ($InlineFunction.param_116 $InlineFunction.param_117)
+                           ($InlineFunction.param_xxx $InlineFunction.param_xxx)
                            ())
-                        $InlineFunction.select_195)))
-               $InlineFunction.return_133))
-         $InlineFunction.return_132))
+                        $InlineFunction.select_xxx)))
+               $InlineFunction.return_xxx))
+         $InlineFunction.return_xxx))
    (+
-      $InlineFunction.return_135
+      $InlineFunction.return_xxx
       (cut
          (lambda
-            ($InlineFunction.param_118 $InlineFunction.return_136)
+            ($InlineFunction.param_xxx $InlineFunction.return_xxx)
             (cut
                (lambda
-                  ($InlineFunction.param_119 $InlineFunction.return_137)
+                  ($InlineFunction.param_xxx $InlineFunction.return_xxx)
                   (join
-                     $InlineFunction.select_198
+                     $InlineFunction.select_xxx
                      (select
-                        ((tuple
-                           (#InlineFunction.x_2 #InlineFunction.y_3))
+                        ((tuple (#InlineFunction.x_xxx #InlineFunction.y_xxx))
                            (join
-                              $InlineFunction.apply_196
+                              $InlineFunction.apply_xxx
                               (apply
-                                 (#InlineFunction.y_3)
-                                 ($InlineFunction.return_137))
+                                 (#InlineFunction.y_xxx)
+                                 ($InlineFunction.return_xxx))
                               (join
-                                 $InlineFunction.apply_197
+                                 $InlineFunction.apply_xxx
                                  (apply
-                                    (#InlineFunction.x_2)
-                                    ($InlineFunction.apply_196))
-                                 (invoke addInt32 $InlineFunction.apply_197)))))
+                                    (#InlineFunction.x_xxx)
+                                    ($InlineFunction.apply_xxx))
+                                 (invoke addInt32 $InlineFunction.apply_xxx)))))
                      (cut
                         (construct
                            tuple
-                           ($InlineFunction.param_118 $InlineFunction.param_119)
+                           ($InlineFunction.param_xxx $InlineFunction.param_xxx)
                            ())
-                        $InlineFunction.select_198)))
-               $InlineFunction.return_136))
-         $InlineFunction.return_135))
+                        $InlineFunction.select_xxx)))
+               $InlineFunction.return_xxx))
+         $InlineFunction.return_xxx))
    (main
-      $InlineFunction.return_138
+      $InlineFunction.return_xxx
       (cut
          (lambda
-            ($InlineFunction.param_120 $InlineFunction.return_139)
+            ($InlineFunction.param_xxx $InlineFunction.return_xxx)
             (join
-               $InlineFunction.select_240
+               $InlineFunction.select_xxx
                (select
-                  (#InlineFunction.$__111
+                  (#InlineFunction.$__xxx
                      (join
-                        $InlineFunction.then_238
-                        (then #InlineFunction.fib_10
+                        $InlineFunction.then_xxx
+                        (then
+                           #InlineFunction.fib_xxx
                            (join
-                              $InlineFunction.then_237
-                              (then $InlineFunction.outer_175
+                              $InlineFunction.then_xxx
+                              (then
+                                 $InlineFunction.outer_xxx
                                  (join
-                                    $InlineFunction.return_141
-                                    (then $InlineFunction.inner_176
+                                    $InlineFunction.return_xxx
+                                    (then
+                                       $InlineFunction.inner_xxx
                                        (join
-                                          $InlineFunction.then_235
-                                          (then $InlineFunction.outer_177
+                                          $InlineFunction.then_xxx
+                                          (then
+                                             $InlineFunction.outer_xxx
                                              (join
-                                                $InlineFunction.return_140
-                                                (then $InlineFunction.inner_178
+                                                $InlineFunction.return_xxx
+                                                (then
+                                                   $InlineFunction.inner_xxx
                                                    (join
-                                                      $InlineFunction.apply_234
+                                                      $InlineFunction.apply_xxx
                                                       (apply
-                                                         ($InlineFunction.inner_178)
-                                                         ($InlineFunction.return_139))
-                                                      (cut $InlineFunction.outer_177 $InlineFunction.apply_234)))
-                                                (invoke putStrLn $InlineFunction.return_140)))
+                                                         ($InlineFunction.inner_xxx)
+                                                         ($InlineFunction.return_xxx))
+                                                      (cut
+                                                         $InlineFunction.outer_xxx
+                                                         $InlineFunction.apply_xxx)))
+                                                (invoke
+                                                   putStrLn
+                                                   $InlineFunction.return_xxx)))
                                           (join
-                                             $InlineFunction.apply_236
+                                             $InlineFunction.apply_xxx
                                              (apply
-                                                ($InlineFunction.inner_176)
-                                                ($InlineFunction.then_235))
-                                             (cut $InlineFunction.outer_175 $InlineFunction.apply_236))))
+                                                ($InlineFunction.inner_xxx)
+                                                ($InlineFunction.then_xxx))
+                                             (cut
+                                                $InlineFunction.outer_xxx
+                                                $InlineFunction.apply_xxx))))
                                     (join
-                                       $InlineFunction.then_233
-                                       (then $InlineFunction.outer_179
+                                       $InlineFunction.then_xxx
+                                       (then
+                                          $InlineFunction.outer_xxx
                                           (join
-                                             $InlineFunction.return_143
-                                             (then $InlineFunction.inner_180
+                                             $InlineFunction.return_xxx
+                                             (then
+                                                $InlineFunction.inner_xxx
                                                 (join
-                                                   $InlineFunction.then_231
-                                                   (then $InlineFunction.outer_181
+                                                   $InlineFunction.then_xxx
+                                                   (then
+                                                      $InlineFunction.outer_xxx
                                                       (join
-                                                         $InlineFunction.return_142
-                                                         (then $InlineFunction.inner_182
+                                                         $InlineFunction.return_xxx
+                                                         (then
+                                                            $InlineFunction.inner_xxx
                                                             (join
-                                                               $InlineFunction.apply_230
+                                                               $InlineFunction.apply_xxx
                                                                (apply
-                                                                  ($InlineFunction.inner_182)
-                                                                  ($InlineFunction.return_141))
-                                                               (cut $InlineFunction.outer_181 $InlineFunction.apply_230)))
-                                                         (invoke toStringInt32 $InlineFunction.return_142)))
+                                                                  ($InlineFunction.inner_xxx)
+                                                                  ($InlineFunction.return_xxx))
+                                                               (cut
+                                                                  $InlineFunction.outer_xxx
+                                                                  $InlineFunction.apply_xxx)))
+                                                         (invoke
+                                                            toStringInt32
+                                                            $InlineFunction.return_xxx)))
                                                    (join
-                                                      $InlineFunction.apply_232
+                                                      $InlineFunction.apply_xxx
                                                       (apply
-                                                         ($InlineFunction.inner_180)
-                                                         ($InlineFunction.then_231))
-                                                      (cut $InlineFunction.outer_179 $InlineFunction.apply_232))))
+                                                         ($InlineFunction.inner_xxx)
+                                                         ($InlineFunction.then_xxx))
+                                                      (cut
+                                                         $InlineFunction.outer_xxx
+                                                         $InlineFunction.apply_xxx))))
                                              (join
-                                                $InlineFunction.then_229
-                                                (then $InlineFunction.outer_183
+                                                $InlineFunction.then_xxx
+                                                (then
+                                                   $InlineFunction.outer_xxx
                                                    (join
-                                                      $InlineFunction.return_144
-                                                      (then $InlineFunction.inner_184
+                                                      $InlineFunction.return_xxx
+                                                      (then
+                                                         $InlineFunction.inner_xxx
                                                          (join
-                                                            $InlineFunction.apply_228
+                                                            $InlineFunction.apply_xxx
                                                             (apply
-                                                               ($InlineFunction.inner_184)
-                                                               ($InlineFunction.return_143))
-                                                            (cut $InlineFunction.outer_183 $InlineFunction.apply_228)))
+                                                               ($InlineFunction.inner_xxx)
+                                                               ($InlineFunction.return_xxx))
+                                                            (cut
+                                                               $InlineFunction.outer_xxx
+                                                               $InlineFunction.apply_xxx)))
                                                       (join
-                                                         $InlineFunction.apply_227
+                                                         $InlineFunction.apply_xxx
                                                          (apply
                                                             (5_i32)
-                                                            ($InlineFunction.return_144))
-                                                         (invoke Int32# $InlineFunction.apply_227))))
-                                                (cut #InlineFunction.fib_10 $InlineFunction.then_229))))
-                                       (invoke |> $InlineFunction.then_233))))
-                              (invoke |> $InlineFunction.then_237)))
+                                                            ($InlineFunction.return_xxx))
+                                                         (invoke
+                                                            Int32#
+                                                            $InlineFunction.apply_xxx))))
+                                                (cut
+                                                   #InlineFunction.fib_xxx
+                                                   $InlineFunction.then_xxx))))
+                                       (invoke |> $InlineFunction.then_xxx))))
+                              (invoke |> $InlineFunction.then_xxx)))
                         (join
-                           $InlineFunction.apply_239
+                           $InlineFunction.apply_xxx
                            (apply
                               ((lambda
-                                 ($InlineFunction.param_121 $InlineFunction.return_145)
-                                 (cut
-                                    (lambda
-                                       ($InlineFunction.param_122 $InlineFunction.return_146)
-                                       (join
-                                          $InlineFunction.select_226
-                                          (select
-                                             ((tuple
-                                                (#InlineFunction.f_8 #InlineFunction.n_9))
-                                                (join
-                                                   $InlineFunction.then_225
-                                                   (then $InlineFunction.outer_159
-                                                      (join
-                                                         $InlineFunction.return_155
-                                                         (then $InlineFunction.inner_160
-                                                            (join
-                                                               $InlineFunction.apply_222
-                                                               (apply
-                                                                  ((lambda
-                                                                     ($InlineFunction.param_124 $InlineFunction.return_147)
-                                                                     (join
-                                                                        $InlineFunction.select_221
-                                                                        (select
-                                                                           (#InlineFunction.$__90
-                                                                              (join
-                                                                                 $InlineFunction.then_220
-                                                                                 (then $InlineFunction.outer_161
-                                                                                    (join
-                                                                                       $InlineFunction.return_151
-                                                                                       (then $InlineFunction.inner_162
-                                                                                          (join
-                                                                                             $InlineFunction.then_218
-                                                                                             (then $InlineFunction.outer_163
-                                                                                                (join
-                                                                                                   $InlineFunction.return_148
-                                                                                                   (then $InlineFunction.inner_164
-                                                                                                      (join
-                                                                                                         $InlineFunction.apply_217
-                                                                                                         (apply
-                                                                                                            ($InlineFunction.inner_164)
-                                                                                                            ($InlineFunction.return_147))
-                                                                                                         (cut $InlineFunction.outer_163 $InlineFunction.apply_217)))
-                                                                                                   (join
-                                                                                                      $InlineFunction.then_216
-                                                                                                      (then $InlineFunction.outer_165
-                                                                                                         (join
-                                                                                                            $InlineFunction.return_149
-                                                                                                            (then $InlineFunction.inner_166
-                                                                                                               (join
-                                                                                                                  $InlineFunction.apply_215
-                                                                                                                  (apply
-                                                                                                                     ($InlineFunction.inner_166)
-                                                                                                                     ($InlineFunction.return_148))
-                                                                                                                  (cut $InlineFunction.outer_165 $InlineFunction.apply_215)))
-                                                                                                            (join
-                                                                                                               $InlineFunction.then_213
-                                                                                                               (then $InlineFunction.outer_167
-                                                                                                                  (join
-                                                                                                                     $InlineFunction.return_150
-                                                                                                                     (then $InlineFunction.inner_168
-                                                                                                                        (join
-                                                                                                                           $InlineFunction.apply_212
-                                                                                                                           (apply
-                                                                                                                              ($InlineFunction.inner_168)
-                                                                                                                              ($InlineFunction.return_149))
-                                                                                                                           (cut $InlineFunction.outer_167 $InlineFunction.apply_212)))
-                                                                                                                     (join
-                                                                                                                        $InlineFunction.apply_211
-                                                                                                                        (apply
-                                                                                                                           (2_i32)
-                                                                                                                           ($InlineFunction.return_150))
-                                                                                                                        (invoke Int32# $InlineFunction.apply_211))))
-                                                                                                               (join
-                                                                                                                  $InlineFunction.apply_214
-                                                                                                                  (apply
-                                                                                                                     (#InlineFunction.n_9)
-                                                                                                                     ($InlineFunction.then_213))
-                                                                                                                  (invoke - $InlineFunction.apply_214)))))
-                                                                                                      (cut #InlineFunction.f_8 $InlineFunction.then_216))))
-                                                                                             (join
-                                                                                                $InlineFunction.apply_219
-                                                                                                (apply
-                                                                                                   ($InlineFunction.inner_162)
-                                                                                                   ($InlineFunction.then_218))
-                                                                                                (cut $InlineFunction.outer_161 $InlineFunction.apply_219))))
-                                                                                       (join
-                                                                                          $InlineFunction.then_210
-                                                                                          (then $InlineFunction.outer_169
-                                                                                             (join
-                                                                                                $InlineFunction.return_152
-                                                                                                (then $InlineFunction.inner_170
-                                                                                                   (join
-                                                                                                      $InlineFunction.apply_209
-                                                                                                      (apply
-                                                                                                         ($InlineFunction.inner_170)
-                                                                                                         ($InlineFunction.return_151))
-                                                                                                      (cut $InlineFunction.outer_169 $InlineFunction.apply_209)))
-                                                                                                (join
-                                                                                                   $InlineFunction.then_207
-                                                                                                   (then $InlineFunction.outer_171
-                                                                                                      (join
-                                                                                                         $InlineFunction.return_153
-                                                                                                         (then $InlineFunction.inner_172
-                                                                                                            (join
-                                                                                                               $InlineFunction.apply_206
-                                                                                                               (apply
-                                                                                                                  ($InlineFunction.inner_172)
-                                                                                                                  ($InlineFunction.return_152))
-                                                                                                               (cut $InlineFunction.outer_171 $InlineFunction.apply_206)))
-                                                                                                         (join
-                                                                                                            $InlineFunction.apply_205
-                                                                                                            (apply
-                                                                                                               (1_i32)
-                                                                                                               ($InlineFunction.return_153))
-                                                                                                            (invoke Int32# $InlineFunction.apply_205))))
-                                                                                                   (join
-                                                                                                      $InlineFunction.apply_208
-                                                                                                      (apply
-                                                                                                         (#InlineFunction.n_9)
-                                                                                                         ($InlineFunction.then_207))
-                                                                                                      (invoke - $InlineFunction.apply_208)))))
-                                                                                          (cut #InlineFunction.f_8 $InlineFunction.then_210))))
-                                                                                 (invoke + $InlineFunction.then_220))))
-                                                                        (cut $InlineFunction.param_124 $InlineFunction.select_221))))
-                                                                  ($InlineFunction.return_146))
-                                                               (join
-                                                                  $InlineFunction.apply_223
-                                                                  (apply
-                                                                     ((lambda
-                                                                        ($InlineFunction.param_123 $InlineFunction.return_154)
-                                                                        (join
-                                                                           $InlineFunction.select_204
-                                                                           (select
-                                                                              (#InlineFunction.$__73
-                                                                                 (join
-                                                                                    $InlineFunction.apply_203
-                                                                                    (apply
-                                                                                       (1_i32)
-                                                                                       ($InlineFunction.return_154))
-                                                                                    (invoke Int32# $InlineFunction.apply_203))))
-                                                                           (cut $InlineFunction.param_123 $InlineFunction.select_204))))
-                                                                     ($InlineFunction.apply_222))
-                                                                  (join
-                                                                     $InlineFunction.apply_224
-                                                                     (apply
-                                                                        ($InlineFunction.inner_160)
-                                                                        ($InlineFunction.apply_223))
-                                                                     (cut $InlineFunction.outer_159 $InlineFunction.apply_224)))))
-                                                         (join
-                                                            $InlineFunction.then_201
-                                                            (then $InlineFunction.outer_173
-                                                               (join
-                                                                  $InlineFunction.return_156
-                                                                  (then $InlineFunction.inner_174
-                                                                     (join
-                                                                        $InlineFunction.apply_200
-                                                                        (apply
-                                                                           ($InlineFunction.inner_174)
-                                                                           ($InlineFunction.return_155))
-                                                                        (cut $InlineFunction.outer_173 $InlineFunction.apply_200)))
-                                                                  (join
-                                                                     $InlineFunction.apply_199
-                                                                     (apply
-                                                                        (1_i32)
-                                                                        ($InlineFunction.return_156))
-                                                                     (invoke Int32# $InlineFunction.apply_199))))
-                                                            (join
-                                                               $InlineFunction.apply_202
-                                                               (apply
-                                                                  (#InlineFunction.n_9)
-                                                                  ($InlineFunction.then_201))
-                                                               (invoke <= $InlineFunction.apply_202)))))
-                                                   (invoke if $InlineFunction.then_225))))
-                                          (cut
-                                             (construct
-                                                tuple
-                                                ($InlineFunction.param_121 $InlineFunction.param_122)
-                                                ())
-                                             $InlineFunction.select_226)))
-                                    $InlineFunction.return_145)))
-                              ($InlineFunction.then_238))
-                           (invoke fix $InlineFunction.apply_239)))))
-               (cut $InlineFunction.param_120 $InlineFunction.select_240)))
-         $InlineFunction.return_138)))
+                                  ($InlineFunction.param_xxx
+                                     $InlineFunction.return_xxx)
+                                  (cut
+                                     (lambda
+                                        ($InlineFunction.param_xxx
+                                           $InlineFunction.return_xxx)
+                                        (join
+                                           $InlineFunction.select_xxx
+                                           (select
+                                              ((tuple
+                                                  (#InlineFunction.f_xxx
+                                                     #InlineFunction.n_xxx))
+                                                 (join
+                                                    $InlineFunction.then_xxx
+                                                    (then
+                                                       $InlineFunction.outer_xxx
+                                                       (join
+                                                          $InlineFunction.return_xxx
+                                                          (then
+                                                             $InlineFunction.inner_xxx
+                                                             (join
+                                                                $InlineFunction.apply_xxx
+                                                                (apply
+                                                                   ((lambda
+                                                                       ($InlineFunction.param_xxx
+                                                                          $InlineFunction.return_xxx)
+                                                                       (join
+                                                                          $InlineFunction.select_xxx
+                                                                          (select
+                                                                             (#InlineFunction.$__xxx
+                                                                                (join
+                                                                                   $InlineFunction.then_xxx
+                                                                                   (then
+                                                                                      $InlineFunction.outer_xxx
+                                                                                      (join
+                                                                                         $InlineFunction.return_xxx
+                                                                                         (then
+                                                                                            $InlineFunction.inner_xxx
+                                                                                            (join
+                                                                                               $InlineFunction.then_xxx
+                                                                                               (then
+                                                                                                  $InlineFunction.outer_xxx
+                                                                                                  (join
+                                                                                                     $InlineFunction.return_xxx
+                                                                                                     (then
+                                                                                                        $InlineFunction.inner_xxx
+                                                                                                        (join
+                                                                                                           $InlineFunction.apply_xxx
+                                                                                                           (apply
+                                                                                                              ($InlineFunction.inner_xxx)
+                                                                                                              ($InlineFunction.return_xxx))
+                                                                                                           (cut
+                                                                                                              $InlineFunction.outer_xxx
+                                                                                                              $InlineFunction.apply_xxx)))
+                                                                                                     (join
+                                                                                                        $InlineFunction.then_xxx
+                                                                                                        (then
+                                                                                                           $InlineFunction.outer_xxx
+                                                                                                           (join
+                                                                                                              $InlineFunction.return_xxx
+                                                                                                              (then
+                                                                                                                 $InlineFunction.inner_xxx
+                                                                                                                 (join
+                                                                                                                    $InlineFunction.apply_xxx
+                                                                                                                    (apply
+                                                                                                                       ($InlineFunction.inner_xxx)
+                                                                                                                       ($InlineFunction.return_xxx))
+                                                                                                                    (cut
+                                                                                                                       $InlineFunction.outer_xxx
+                                                                                                                       $InlineFunction.apply_xxx)))
+                                                                                                              (join
+                                                                                                                 $InlineFunction.then_xxx
+                                                                                                                 (then
+                                                                                                                    $InlineFunction.outer_xxx
+                                                                                                                    (join
+                                                                                                                       $InlineFunction.return_xxx
+                                                                                                                       (then
+                                                                                                                          $InlineFunction.inner_xxx
+                                                                                                                          (join
+                                                                                                                             $InlineFunction.apply_xxx
+                                                                                                                             (apply
+                                                                                                                                ($InlineFunction.inner_xxx)
+                                                                                                                                ($InlineFunction.return_xxx))
+                                                                                                                             (cut
+                                                                                                                                $InlineFunction.outer_xxx
+                                                                                                                                $InlineFunction.apply_xxx)))
+                                                                                                                       (join
+                                                                                                                          $InlineFunction.apply_xxx
+                                                                                                                          (apply
+                                                                                                                             (2_i32)
+                                                                                                                             ($InlineFunction.return_xxx))
+                                                                                                                          (invoke
+                                                                                                                             Int32#
+                                                                                                                             $InlineFunction.apply_xxx))))
+                                                                                                                 (join
+                                                                                                                    $InlineFunction.apply_xxx
+                                                                                                                    (apply
+                                                                                                                       (#InlineFunction.n_xxx)
+                                                                                                                       ($InlineFunction.then_xxx))
+                                                                                                                    (invoke
+                                                                                                                       -
+                                                                                                                       $InlineFunction.apply_xxx)))))
+                                                                                                        (cut
+                                                                                                           #InlineFunction.f_xxx
+                                                                                                           $InlineFunction.then_xxx))))
+                                                                                               (join
+                                                                                                  $InlineFunction.apply_xxx
+                                                                                                  (apply
+                                                                                                     ($InlineFunction.inner_xxx)
+                                                                                                     ($InlineFunction.then_xxx))
+                                                                                                  (cut
+                                                                                                     $InlineFunction.outer_xxx
+                                                                                                     $InlineFunction.apply_xxx))))
+                                                                                         (join
+                                                                                            $InlineFunction.then_xxx
+                                                                                            (then
+                                                                                               $InlineFunction.outer_xxx
+                                                                                               (join
+                                                                                                  $InlineFunction.return_xxx
+                                                                                                  (then
+                                                                                                     $InlineFunction.inner_xxx
+                                                                                                     (join
+                                                                                                        $InlineFunction.apply_xxx
+                                                                                                        (apply
+                                                                                                           ($InlineFunction.inner_xxx)
+                                                                                                           ($InlineFunction.return_xxx))
+                                                                                                        (cut
+                                                                                                           $InlineFunction.outer_xxx
+                                                                                                           $InlineFunction.apply_xxx)))
+                                                                                                  (join
+                                                                                                     $InlineFunction.then_xxx
+                                                                                                     (then
+                                                                                                        $InlineFunction.outer_xxx
+                                                                                                        (join
+                                                                                                           $InlineFunction.return_xxx
+                                                                                                           (then
+                                                                                                              $InlineFunction.inner_xxx
+                                                                                                              (join
+                                                                                                                 $InlineFunction.apply_xxx
+                                                                                                                 (apply
+                                                                                                                    ($InlineFunction.inner_xxx)
+                                                                                                                    ($InlineFunction.return_xxx))
+                                                                                                                 (cut
+                                                                                                                    $InlineFunction.outer_xxx
+                                                                                                                    $InlineFunction.apply_xxx)))
+                                                                                                           (join
+                                                                                                              $InlineFunction.apply_xxx
+                                                                                                              (apply
+                                                                                                                 (1_i32)
+                                                                                                                 ($InlineFunction.return_xxx))
+                                                                                                              (invoke
+                                                                                                                 Int32#
+                                                                                                                 $InlineFunction.apply_xxx))))
+                                                                                                     (join
+                                                                                                        $InlineFunction.apply_xxx
+                                                                                                        (apply
+                                                                                                           (#InlineFunction.n_xxx)
+                                                                                                           ($InlineFunction.then_xxx))
+                                                                                                        (invoke
+                                                                                                           -
+                                                                                                           $InlineFunction.apply_xxx)))))
+                                                                                            (cut
+                                                                                               #InlineFunction.f_xxx
+                                                                                               $InlineFunction.then_xxx))))
+                                                                                   (invoke
+                                                                                      +
+                                                                                      $InlineFunction.then_xxx))))
+                                                                          (cut
+                                                                             $InlineFunction.param_xxx
+                                                                             $InlineFunction.select_xxx))))
+                                                                   ($InlineFunction.return_xxx))
+                                                                (join
+                                                                   $InlineFunction.apply_xxx
+                                                                   (apply
+                                                                      ((lambda
+                                                                          ($InlineFunction.param_xxx
+                                                                             $InlineFunction.return_xxx)
+                                                                          (join
+                                                                             $InlineFunction.select_xxx
+                                                                             (select
+                                                                                (#InlineFunction.$__xxx
+                                                                                   (join
+                                                                                      $InlineFunction.apply_xxx
+                                                                                      (apply
+                                                                                         (1_i32)
+                                                                                         ($InlineFunction.return_xxx))
+                                                                                      (invoke
+                                                                                         Int32#
+                                                                                         $InlineFunction.apply_xxx))))
+                                                                             (cut
+                                                                                $InlineFunction.param_xxx
+                                                                                $InlineFunction.select_xxx))))
+                                                                      ($InlineFunction.apply_xxx))
+                                                                   (join
+                                                                      $InlineFunction.apply_xxx
+                                                                      (apply
+                                                                         ($InlineFunction.inner_xxx)
+                                                                         ($InlineFunction.apply_xxx))
+                                                                      (cut
+                                                                         $InlineFunction.outer_xxx
+                                                                         $InlineFunction.apply_xxx)))))
+                                                          (join
+                                                             $InlineFunction.then_xxx
+                                                             (then
+                                                                $InlineFunction.outer_xxx
+                                                                (join
+                                                                   $InlineFunction.return_xxx
+                                                                   (then
+                                                                      $InlineFunction.inner_xxx
+                                                                      (join
+                                                                         $InlineFunction.apply_xxx
+                                                                         (apply
+                                                                            ($InlineFunction.inner_xxx)
+                                                                            ($InlineFunction.return_xxx))
+                                                                         (cut
+                                                                            $InlineFunction.outer_xxx
+                                                                            $InlineFunction.apply_xxx)))
+                                                                   (join
+                                                                      $InlineFunction.apply_xxx
+                                                                      (apply
+                                                                         (1_i32)
+                                                                         ($InlineFunction.return_xxx))
+                                                                      (invoke
+                                                                         Int32#
+                                                                         $InlineFunction.apply_xxx))))
+                                                             (join
+                                                                $InlineFunction.apply_xxx
+                                                                (apply
+                                                                   (#InlineFunction.n_xxx)
+                                                                   ($InlineFunction.then_xxx))
+                                                                (invoke
+                                                                   <=
+                                                                   $InlineFunction.apply_xxx)))))
+                                                    (invoke
+                                                       if
+                                                       $InlineFunction.then_xxx))))
+                                           (cut
+                                              (construct
+                                                 tuple
+                                                 ($InlineFunction.param_xxx
+                                                    $InlineFunction.param_xxx)
+                                                 ())
+                                              $InlineFunction.select_xxx)))
+                                     $InlineFunction.return_xxx)))
+                              ($InlineFunction.then_xxx))
+                           (invoke fix $InlineFunction.apply_xxx)))))
+               (cut $InlineFunction.param_xxx $InlineFunction.select_xxx)))
+         $InlineFunction.return_xxx)))

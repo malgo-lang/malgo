@@ -1,67 +1,72 @@
 (((define
-   executeWhenLoaded
-   Any#
-   (= $Seq.d_42
-      (match
-         (= $Seq.d_27
-            (call Int32# 1_i32)
-            (cast Any# $Seq.d_27))
-         (bind
-            $Seq.let_test/testcases/malgo/Seq.mlg.#x_0_28
-            Any#
-            (match
-               (= $Seq.d_29
-                  (call Int32# 2_i32)
-                  (cast Any# $Seq.d_29))
-               (bind
-                  $Seq.let_test/testcases/malgo/Seq.mlg.#y_1_30
-                  Any#
-                  (= $Seq.d_38
-                     (= $Seq.d_36
-                        (= $Seq.d_34
-                           (= $Seq.d_32
-                              (= $Seq.d_31
-                                 (call addInt32 $Seq.let_test/testcases/malgo/Seq.mlg.#x_0_28)
-                                 (cast
-                                    (->
-                                       (Any#)
-                                       Any#)
-                                    $Seq.d_31))
-                              (= $Seq.d_33
-                                 (call $Seq.d_32 $Seq.let_test/testcases/malgo/Seq.mlg.#y_1_30)
-                                 (cast Any# $Seq.d_33)))
-                           (= $Seq.d_35
-                              (call toStringInt32 $Seq.d_34)
-                              (cast Any# $Seq.d_35)))
-                        (= $Seq.d_37
-                           (call printString $Seq.d_36)
-                           (cast
-                              (sum (con Tuple#))
-                              $Seq.d_37)))
-                     (= $Seq.d_40
-                        (= $Seq.d_39
-                           (call addInt32 $Seq.let_test/testcases/malgo/Seq.mlg.#x_0_28)
-                           (cast
-                              (->
-                                 (Any#)
-                                 Any#)
-                              $Seq.d_39))
-                        (= $Seq.d_41
-                           (call $Seq.d_40 $Seq.let_test/testcases/malgo/Seq.mlg.#y_1_30)
-                           (cast Any# $Seq.d_41))))))))
-      $Seq.d_42)))
+     executeWhenLoaded
+     Any#
+     (=
+        $Seq.d_xxx
+        (match
+           (= $Seq.d_xxx (call Int32# 1_i32) (cast Any# $Seq.d_xxx))
+           (bind
+              $Seq.let_test/testcases/malgo/Seq.mlg.#x_0_xxx
+              Any#
+              (match
+                 (= $Seq.d_xxx (call Int32# 2_i32) (cast Any# $Seq.d_xxx))
+                 (bind
+                    $Seq.let_test/testcases/malgo/Seq.mlg.#y_1_xxx
+                    Any#
+                    (=
+                       $Seq.d_xxx
+                       (=
+                          $Seq.d_xxx
+                          (=
+                             $Seq.d_xxx
+                             (=
+                                $Seq.d_xxx
+                                (=
+                                   $Seq.d_xxx
+                                   (call
+                                      addInt32
+                                      $Seq.let_test/testcases/malgo/Seq.mlg.#x_0_xxx)
+                                   (cast (-> (Any#) Any#) $Seq.d_xxx))
+                                (=
+                                   $Seq.d_xxx
+                                   (call
+                                      $Seq.d_xxx
+                                      $Seq.let_test/testcases/malgo/Seq.mlg.#y_1_xxx)
+                                   (cast Any# $Seq.d_xxx)))
+                             (=
+                                $Seq.d_xxx
+                                (call toStringInt32 $Seq.d_xxx)
+                                (cast Any# $Seq.d_xxx)))
+                          (=
+                             $Seq.d_xxx
+                             (call printString $Seq.d_xxx)
+                             (cast (sum (con Tuple#)) $Seq.d_xxx)))
+                       (=
+                          $Seq.d_xxx
+                          (=
+                             $Seq.d_xxx
+                             (call
+                                addInt32
+                                $Seq.let_test/testcases/malgo/Seq.mlg.#x_0_xxx)
+                             (cast (-> (Any#) Any#) $Seq.d_xxx))
+                          (=
+                             $Seq.d_xxx
+                             (call
+                                $Seq.d_xxx
+                                $Seq.let_test/testcases/malgo/Seq.mlg.#y_1_xxx)
+                             (cast Any# $Seq.d_xxx))))))))
+        $Seq.d_xxx)))
    ((define
-      (main $Seq.$__43)
-      (->
-         ((sum (con Tuple#)))
-         (sum (con Tuple#)))
-      (= $Seq.d_45
-         (= $Seq.d_44
-            (call toStringInt32 executeWhenLoaded)
-            (cast Any# $Seq.d_44))
-         (= $Seq.d_46
-            (call printString $Seq.d_45)
-            (cast
-               (sum (con Tuple#))
-               $Seq.d_46)))))
+       (main $Seq.$__xxx)
+       (-> ((sum (con Tuple#))) (sum (con Tuple#)))
+       (=
+          $Seq.d_xxx
+          (=
+             $Seq.d_xxx
+             (call toStringInt32 executeWhenLoaded)
+             (cast Any# $Seq.d_xxx))
+          (=
+             $Seq.d_xxx
+             (call printString $Seq.d_xxx)
+             (cast (sum (con Tuple#)) $Seq.d_xxx)))))
    ())
