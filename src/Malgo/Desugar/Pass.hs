@@ -37,7 +37,7 @@ desugar ::
   Eff es (DsState, Program (Meta C.Type))
 desugar tcEnv (Module name ds) = runReader name do
   (ds', dsEnv) <- runState (makeDsState tcEnv) (dsBindGroup ds)
-  let ds'' = dsEnv._globalDefs <> ds' -- ds' needs variables defined in globalDefs
+  let ds'' = dsEnv.globalDefs <> ds' -- ds' needs variables defined in globalDefs
   let varDefs = mapMaybe (preview _VarDef) ds''
   let funDefs = mapMaybe (preview _FunDef) ds''
   let extDefs = mapMaybe (preview _ExtDef) ds''
@@ -63,7 +63,7 @@ dsImport ::
   Eff es ()
 dsImport (_, modName, _) = do
   interface <- loadInterface modName
-  modify \s@DsState {..} -> s {_nameEnv = Map.mapKeys (externalFromInterface interface) interface.coreIdentMap <> _nameEnv}
+  modify \s@DsState {..} -> s {nameEnv = Map.mapKeys (externalFromInterface interface) interface.coreIdentMap <> nameEnv}
 
 -- ScDefのグループを一つのリストにつぶしてから脱糖衣する
 dsScDefGroup ::
@@ -85,9 +85,9 @@ dsScDefs ::
 dsScDefs ds = do
   -- まず、宣言されているScDefの名前をすべて名前環境に登録する
   for_ ds $ \(_, f, _) -> do
-    Forall _ fType <- gets @DsState ((._signatureMap) >>> Map.lookup f >>> fromJust)
+    Forall _ fType <- gets @DsState ((.signatureMap) >>> Map.lookup f >>> fromJust)
     f' <- toCoreId f <$> dsType fType
-    modify \s@DsState {..} -> s {_nameEnv = Map.insert f f' _nameEnv}
+    modify \s@DsState {..} -> s {nameEnv = Map.insert f f' nameEnv}
   foldMapM dsScDef ds
 
 dsScDef ::
@@ -163,14 +163,14 @@ dsForeign (Typed typ (_, primName), name, _) = do
   retType <- dsType retType
   params <- traverse (\t -> withMeta t <$> newTemporalId "p") paramTypes'
   (ps, e) <- curryFun True name.name params $ C.RawCall primName (paramTypes' :-> retType) (map C.Var params)
-  modify \s@DsState {..} -> s {_nameEnv = Map.insert name name' _nameEnv}
+  modify \s@DsState {..} -> s {nameEnv = Map.insert name name' nameEnv}
   pure [FunDef name' ps (C.typeOf name') e, ExtDef primName (paramTypes' :-> retType)]
 
 dsDataDef :: (State DsState :> es, Reader ModuleName :> es, State Uniq :> es) => DataDef (Malgo 'Refine) -> Eff es [Def]
 dsDataDef (_, name, _, cons) =
   for cons $ \(_, conName, _) -> do
     -- lookup constructor infomations
-    vcs <- ((.valueConstructors) . fromJust) . Map.lookup name <$> gets @DsState (._typeDefMap)
+    vcs <- ((.valueConstructors) . fromJust) . Map.lookup name <$> gets @DsState (.typeDefMap)
     let Forall _ conType = fromJust $ List.lookup conName vcs
 
     -- desugar conType
@@ -188,7 +188,7 @@ dsDataDef (_, name, _, cons) =
     (ps, e) <- case ps of
       [] -> pure ([], expr)
       _ -> curryFun True conName.name ps expr
-    modify \s@DsState {..} -> s {_nameEnv = Map.insert conName conName' _nameEnv}
+    modify \s@DsState {..} -> s {nameEnv = Map.insert conName conName' nameEnv}
     pure (FunDef conName' ps (C.typeOf conName') e)
   where
     -- 引数のない値コンストラクタは、0引数のCore関数に変換される
@@ -260,7 +260,7 @@ dsStmts (NoBind _ e :| s : ss) = runDef $ do
 dsStmts (G.Let _ v e :| s : ss) = do
   e' <- dsExpr e
   v' <- withMeta (C.typeOf e') <$> newTemporalId ("let_" <> idToText v)
-  modify $ \s@DsState {..} -> s {_nameEnv = Map.insert v v' _nameEnv}
+  modify $ \s@DsState {..} -> s {nameEnv = Map.insert v v' nameEnv}
   ss' <- dsStmts (s :| ss)
   pure $ Match e' [Bind v' (C.typeOf v') ss']
 
@@ -268,7 +268,7 @@ dsStmts (G.Let _ v e :| s : ss) = do
 
 lookupName :: (State DsState :> es) => Id -> Eff es (Meta C.Type)
 lookupName name = do
-  mname' <- gets @DsState ((._nameEnv) >>> Map.lookup name)
+  mname' <- gets @DsState ((.nameEnv) >>> Map.lookup name)
   case mname' of
     Just name' -> pure name'
     Nothing -> errorDoc $ "Not in scope:" <+> squotes (pretty name)
@@ -314,7 +314,7 @@ curryFun isToplevel hint ps e = curryFun' ps []
           fun <- withMeta (C.typeOf $ Fun ps e) <$> newTemporalId (hint <> "_curry")
           ps' <- traverse (\p -> withMeta p.meta <$> newTemporalId p.id.name) ps
           e' <- alpha (Map.fromList $ zip ps $ map C.Var ps') e
-          modify \s@DsState {..} -> s {_globalDefs = FunDef fun ps' (C.typeOf fun) e' : _globalDefs}
+          modify \s@DsState {..} -> s {globalDefs = FunDef fun ps' (C.typeOf fun) e' : globalDefs}
           let body = C.CallDirect fun $ reverse $ C.Var x : as
           pure ([x], body)
         else do

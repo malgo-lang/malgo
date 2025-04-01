@@ -16,7 +16,7 @@ dsType :: (State DsState :> es) => GT.Type -> Eff es C.Type
 dsType t@GT.TyApp {} = dsTyApp [] t
 dsType (GT.TyVar _) = pure AnyT
 dsType (GT.TyCon con) = do
-  ctx <- gets @DsState (._kindCtx)
+  ctx <- gets @DsState (.kindCtx)
   case kindOf ctx con of
     GT.TYPE -> pure AnyT
     kcon -> errorDoc $ "Invalid kind:" <+> pretty con <+> ":" <+> pretty kcon
@@ -44,7 +44,7 @@ dsTyApp _ _ = pure AnyT
 -- List aのような型を、<Nil | Cons a (List a)>のような和型に展開する
 unfoldType :: (State DsState :> es) => GT.Type -> Eff es C.Type
 unfoldType t@(TyConApp (TyCon con) ts) = do
-  ctx <- gets @DsState (._kindCtx)
+  ctx <- gets @DsState (.kindCtx)
   case GT.kindOf ctx t of
     TYPE -> do
       vcs <- lookupValueConstructors con ts

@@ -79,7 +79,7 @@ match (scrutinee : restScrutinee) pat@(splitCol -> (Just heads@(head : _), tails
         tails
         ( zipWith
             ( \case
-                (VarP _ v) -> \e -> modify (\s@DsState {..} -> s {_nameEnv = Map.insert v scrutinee _nameEnv}) >> e
+                (VarP _ v) -> \e -> modify (\s@DsState {..} -> s {nameEnv = Map.insert v scrutinee nameEnv}) >> e
                 _ -> error "All elements of heads must be VarP"
             )
             heads

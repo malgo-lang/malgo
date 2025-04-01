@@ -6,6 +6,7 @@ module Malgo.Rename.RnEnv
   ( RenameError (..),
     Resolved,
     RnEnv (..),
+    constructors,
     appendRnEnv,
     addConstructors,
     isConstructor,

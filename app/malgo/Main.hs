@@ -4,7 +4,6 @@
 
 module Main (main) where
 
-import Control.Lens (makeFieldsNoPrefix)
 import Data.ByteString qualified as BS
 import Malgo.Core.Optimize (OptimizeOption (..))
 import Malgo.Core.Parser qualified as Core
@@ -24,8 +23,6 @@ data EvalOpt = ToLLOpt
     optimizeOption :: OptimizeOption,
     debugMode :: Bool
   }
-
-makeFieldsNoPrefix ''EvalOpt
 
 main :: IO ()
 main = do

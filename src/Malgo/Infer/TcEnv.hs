@@ -14,7 +14,7 @@ module Malgo.Infer.TcEnv
   )
 where
 
-import Control.Lens (At (at), makeFieldsNoPrefix, view, (%~), (^.))
+import Control.Lens (At (at), makeFieldsId, view, (%~), (^.))
 import Data.Map.Strict qualified as Map
 import Data.Maybe (fromJust)
 import Malgo.Id
@@ -30,15 +30,15 @@ import Malgo.Syntax.Extension
 type RecordTypeName = Text
 
 data TcEnv = TcEnv
-  { _signatureMap :: Map RnId (Scheme Type),
-    _typeDefMap :: Map RnId (TypeDef Type),
-    _typeSynonymMap :: Map TypeVar ([TypeVar], Type),
-    _resolvedTypeIdentMap :: Map PsId [Resolved],
-    _kindCtx :: KindCtx
+  { signatureMap :: Map RnId (Scheme Type),
+    typeDefMap :: Map RnId (TypeDef Type),
+    typeSynonymMap :: Map TypeVar ([TypeVar], Type),
+    resolvedTypeIdentMap :: Map PsId [Resolved],
+    kindCtx :: KindCtx
   }
   deriving stock (Show)
 
-makeFieldsNoPrefix ''TcEnv
+makeFieldsId ''TcEnv
 
 insertSignature :: RnId -> Scheme Type -> TcEnv -> TcEnv
 insertSignature name scheme = over signatureMap (Map.insert name scheme)
@@ -83,8 +83,8 @@ genTcEnv rnEnv = do
   let ptr_t = fromJust $ findBuiltinType "Ptr#" rnEnv
   pure
     $ TcEnv
-      { _signatureMap = mempty,
-        _typeDefMap =
+      { signatureMap = mempty,
+        typeDefMap =
           Map.fromList
             [ (int32_t, TypeDef (TyPrim Int32T) [] []),
               (int64_t, TypeDef (TyPrim Int64T) [] []),
@@ -94,9 +94,9 @@ genTcEnv rnEnv = do
               (string_t, TypeDef (TyPrim StringT) [] []),
               (ptr_t, TypeDef TyPtr [] [])
             ],
-        _typeSynonymMap = mempty,
-        _resolvedTypeIdentMap = rnEnv ^. resolvedTypeIdentMap,
-        _kindCtx =
+        typeSynonymMap = mempty,
+        resolvedTypeIdentMap = rnEnv ^. resolvedTypeIdentMap,
+        kindCtx =
           Map.fromList
             [ (int32_t, TYPE),
               (int64_t, TYPE),

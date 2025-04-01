@@ -7,6 +7,7 @@ module Malgo.Desugar.DsState
     _FunDef,
     _ExtDef,
     DsState (..),
+    globalClosures,
     HasNameEnv (..),
     HasGlobalDefs (..),
     makeDsState,
@@ -42,21 +43,21 @@ makePrisms ''Def
 -- | 'DsState' tracks the state of desugaring.
 data DsState = DsState
   { -- | Name mapping from Malgo's 'RnId' to Core's 'Id'.
-    _nameEnv :: Map RnId (Meta C.Type),
+    nameEnv :: Map RnId (Meta C.Type),
     -- | Type signatures.
-    _signatureMap :: Map RnId (GT.Scheme GT.Type),
+    signatureMap :: Map RnId (GT.Scheme GT.Type),
     -- | Type definitions.
-    _typeDefMap :: Map RnId (GT.TypeDef GT.Type),
+    typeDefMap :: Map RnId (GT.TypeDef GT.Type),
     -- | Kind context.
-    _kindCtx :: KindCtx,
+    kindCtx :: KindCtx,
     -- | Top-level definitions.
-    _globalDefs :: [Def],
+    globalDefs :: [Def],
     -- | Closure Ids for global functions.
     globalClosures :: Map (Meta C.Type) (Meta C.Type)
   }
   deriving stock (Show)
 
-makeFieldsNoPrefix ''DsState
+makeFieldsId ''DsState
 
 -- | 'makeDsStore' only takes 'TcEnv', but importing 'RnEnv' causes cyclic dependency.
 makeDsState ::
@@ -68,11 +69,11 @@ makeDsState ::
   DsState
 makeDsState tcEnv =
   DsState
-    { _nameEnv = mempty,
-      _signatureMap = tcEnv ^. signatureMap,
-      _typeDefMap = tcEnv ^. typeDefMap,
-      _kindCtx = tcEnv ^. kindCtx,
-      _globalDefs = [],
+    { nameEnv = mempty,
+      signatureMap = tcEnv ^. signatureMap,
+      typeDefMap = tcEnv ^. typeDefMap,
+      kindCtx = tcEnv ^. kindCtx,
+      globalDefs = [],
       globalClosures = mempty
     }
 
@@ -82,7 +83,7 @@ lookupValueConstructors ::
   [GT.Type] ->
   Eff es [(RnId, Scheme GT.Type)]
 lookupValueConstructors con ts = do
-  typeEnv <- gets @DsState (._typeDefMap)
+  typeEnv <- gets @DsState (.typeDefMap)
   -- _valueConstructorsがnullのとき、そのフィールドは型シノニムのものなので無視する
   case List.find (\TypeDef {..} -> typeConstructor == GT.TyCon con && not (List.null valueConstructors)) (Map.elems typeEnv) of
     Just TypeDef {..} ->

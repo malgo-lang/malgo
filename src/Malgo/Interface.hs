@@ -13,7 +13,6 @@ module Malgo.Interface
 where
 
 import Control.Lens (ifor_, (^.))
-import Control.Lens.TH
 import Data.Map.Strict qualified as Map
 import Data.Store (Store)
 import Effectful (Eff, IOE, runPureEff, (:>))
@@ -49,8 +48,6 @@ data Interface = Interface
   deriving stock (Show, Generic)
 
 instance Store Interface
-
-makeFieldsNoPrefix ''Interface
 
 instance Pretty Interface where
   pretty = viaShow
