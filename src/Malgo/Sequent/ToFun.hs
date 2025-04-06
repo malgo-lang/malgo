@@ -19,7 +19,14 @@ toFun BindGroup {..} = do
   scDefs <- foldMap (traverse fromScDef) _scDefs
   dataDefs <- concat <$> traverse fromDataDef _dataDefs
   foreigns <- traverse fromForeign _foreigns
-  pure $ Program $ scDefs <> dataDefs <> foreigns
+  dependencies <- traverse getModuleName _imports
+  pure
+    $ Program
+      { definitions = scDefs <> dataDefs <> foreigns,
+        dependencies
+      }
+  where
+    getModuleName (_, name, _) = pure name
 
 fromScDef :: (State Uniq :> es, Reader ModuleName :> es) => (Typed Range, Id, S.Expr (Malgo 'Refine)) -> Eff es (Range, Name, F.Expr)
 fromScDef (Typed {value = range}, name, expr) = do

@@ -18,7 +18,7 @@ import Data.Map qualified as Map
 import Data.SCargot.Repr.Basic qualified as S
 import Data.Store (Store)
 import Malgo.Id
-import Malgo.Module (Resource, ViaStore (..))
+import Malgo.Module (ModuleName, Resource, ViaStore (..))
 import Malgo.Prelude
 import Malgo.SExpr (ToSExpr (..))
 import Malgo.SExpr qualified as S
@@ -54,10 +54,18 @@ instance ToSExpr Literal where
   toSExpr (Char c) = S.A $ S.Char c
   toSExpr (String t) = S.A $ S.String t
 
-data Program = Program [(Range, Name, Expr)]
+data Program = Program
+  { definitions :: [(Range, Name, Expr)],
+    dependencies :: [ModuleName]
+  }
 
 instance ToSExpr Program where
-  toSExpr (Program definitions) = S.L $ map (\(_, name, body) -> toSExpr (name, body)) definitions
+  toSExpr (Program definitions dependencies) =
+    S.L
+      $ [ S.A "program",
+          S.L $ map (\(_, name, body) -> toSExpr (name, body)) definitions,
+          S.L $ map toSExpr dependencies
+        ]
 
 data Expr
   = Var Range Name

@@ -22,7 +22,9 @@ import Malgo.SExpr hiding (Char, Double, Float, String)
 import Malgo.Sequent.Fun (Literal, Name, Pattern, Tag)
 
 data Program x = Program
-  {definitions :: [(Range, Name, Name, Statement x)]}
+  { definitions :: [(Range, Name, Name, Statement x)],
+    dependencies :: [ModuleName]
+  }
 
 deriving stock instance (Show (Return x), Show (XJoin x), Show (XDo x)) => Show (Program x)
 
@@ -31,7 +33,7 @@ deriving stock instance Generic (Program x)
 deriving anyclass instance (Store (Return x), Store (XJoin x), Store (XDo x)) => Store (Program x)
 
 instance (ToSExpr (Return x)) => ToSExpr (Program x) where
-  toSExpr (Program defs) = S.L $ map (\(_, name, return, body) -> toSExpr (name, return, body)) defs
+  toSExpr (Program defs dependencies) = S.L $ map (\(_, name, return, body) -> toSExpr (name, return, body)) defs <> [S.L $ map toSExpr dependencies]
 
 deriving via (ViaStore (Program x)) instance (Store (Return x), Store (XJoin x), Store (XDo x)) => (Resource (Program x))
 

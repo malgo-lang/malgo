@@ -92,10 +92,10 @@ driveEval builtinName preludeName srcPath = do
     (renamed, _) <- failIfError <$> rename rnEnv parsed
     (typed, tcEnv) <- infer rnEnv renamed
     refined <- refine tcEnv typed
-    Program program <- runReader refined.moduleName $ toFun refined.moduleDefinition >>= toCore >>= flatProgram >>= joinProgram
+    Program {definitions = program} <- runReader refined.moduleName $ toFun refined.moduleDefinition >>= toCore >>= flatProgram >>= joinProgram
 
-    Program builtin <- load builtinName ".sqt"
-    Program prelude <- load preludeName ".sqt"
+    Program {definitions = builtin} <- load builtinName ".sqt"
+    Program {definitions = prelude} <- load preludeName ".sqt"
 
     stdin <- setupTestStdin
     (stdout, stdoutBuilder) <- setupTestStdout
@@ -111,7 +111,7 @@ driveEval builtinName preludeName srcPath = do
               stderr
             }
         $ evalProgram
-        $ Program (builtin <> prelude <> program)
+        $ Program {definitions = builtin <> prelude <> program, dependencies = []}
     case result of
       Left (_, err) -> error $ show err
       Right _ -> do

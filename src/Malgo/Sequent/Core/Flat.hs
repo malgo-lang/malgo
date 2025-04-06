@@ -19,7 +19,9 @@ import Malgo.Sequent.Fun (Name)
 
 -- | Flattens a program into a program with no nested do expressions.
 flatProgram :: (State Uniq :> es, Reader ModuleName :> es) => Program Full -> Eff es (Program Flat)
-flatProgram Program {definitions} = Program <$> traverse flatDefinition definitions
+flatProgram Program {definitions, dependencies} = do
+  definitions <- traverse flatDefinition definitions
+  pure Program {..}
 
 flatDefinition :: (State Uniq :> es, Reader ModuleName :> es) => (t1, t2, t3, Statement Full) -> Eff es (t1, t2, t3, Statement Flat)
 flatDefinition (range, name, return, statement) = (range,name,return,) <$> flatStatement statement

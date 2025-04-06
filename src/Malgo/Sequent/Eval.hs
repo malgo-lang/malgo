@@ -130,7 +130,7 @@ lookupToplevel range name = do
     Nothing -> throwError (UndefinedVariable range name)
 
 evalProgram :: (Error EvalError :> es, State Uniq :> es, Reader ModuleName :> es, Reader Handlers :> es, IOE :> es) => Program Join -> Eff es ()
-evalProgram (Program definitions) = do
+evalProgram (Program {definitions}) = do
   let toplevels = Map.fromList [(name, (return, statement)) | (_, name, return, statement) <- definitions]
   case Map.keys toplevels & find (\name -> name.name == "main") of
     Just name -> do

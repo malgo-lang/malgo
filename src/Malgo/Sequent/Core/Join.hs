@@ -15,7 +15,7 @@ import Malgo.Sequent.Fun (Name)
 joinProgram :: (State Uniq :> es, Reader ModuleName :> es) => Program Flat -> Eff es (Program Join)
 joinProgram Program {..} = do
   definitions <- traverse joinDefinition definitions
-  pure Program {definitions}
+  pure Program {definitions, dependencies}
 
 joinDefinition :: (State Uniq :> es, Reader ModuleName :> es) => (Range, Name, Name, Statement Flat) -> Eff es (Range, Name, Name, Statement Join)
 joinDefinition (range, name, return, statement) = do

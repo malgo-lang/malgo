@@ -13,7 +13,9 @@ import Malgo.Sequent.Core qualified as C
 import Malgo.Sequent.Fun
 
 toCore :: (State Uniq :> es, Reader ModuleName :> es) => Program -> Eff es (C.Program Full)
-toCore (Program definitions) = C.Program <$> traverse convertDefinition definitions
+toCore (Program {..}) = do
+  definitions <- traverse convertDefinition definitions
+  pure C.Program {definitions, dependencies}
 
 convertDefinition :: (State Uniq :> es, Reader ModuleName :> es) => (Range, Name, Expr) -> Eff es (Range, Name, Name, C.Statement Full)
 convertDefinition (range, name, body) = do
