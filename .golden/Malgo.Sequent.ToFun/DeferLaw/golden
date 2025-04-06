@@ -1,22 +1,24 @@
-((f
-    (lambda
-       ($DeferLaw.param_xxx)
-       (select
-          $DeferLaw.param_xxx
-          ((#DeferLaw.x_xxx
-              (apply
-                 (lambda
-                    ($DeferLaw.param_xxx)
-                    (select
-                       $DeferLaw.param_xxx
-                       ((#DeferLaw.$__xxx #DeferLaw.x_xxx))))
-                 ((tuple ()))))))))
-   (main
-      (lambda
-         ($DeferLaw.param_xxx)
-         (select
-            $DeferLaw.param_xxx
-            ((#DeferLaw.$__xxx
-                (apply
-                   (invoke putStrLn)
-                   ((apply (invoke f) ((apply (invoke String#) ("Hello"))))))))))))
+(program
+   ((f
+       (lambda
+          ($DeferLaw.param_xxx)
+          (select
+             $DeferLaw.param_xxx
+             ((#DeferLaw.x_xxx
+                 (apply
+                    (lambda
+                       ($DeferLaw.param_xxx)
+                       (select
+                          $DeferLaw.param_xxx
+                          ((#DeferLaw.$__xxx #DeferLaw.x_xxx))))
+                    ((tuple ()))))))))
+      (main
+         (lambda
+            ($DeferLaw.param_xxx)
+            (select
+               $DeferLaw.param_xxx
+               ((#DeferLaw.$__xxx
+                   (apply
+                      (invoke putStrLn)
+                      ((apply (invoke f) ((apply (invoke String#) ("Hello"))))))))))))
+   ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

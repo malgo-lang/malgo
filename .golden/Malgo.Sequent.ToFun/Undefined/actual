@@ -1,20 +1,22 @@
-((g
-    (lambda
-       ($Undefined.param_xxx)
-       (select $Undefined.param_xxx ((#Undefined.x_xxx (invoke undefined))))))
-   (main
-      (lambda
-         ($Undefined.param_xxx)
-         (select
-            $Undefined.param_xxx
-            ((#Undefined.$__xxx
-                (let
-                   #Undefined.x_xxx
-                   (invoke undefined)
+(program
+   ((g
+       (lambda
+          ($Undefined.param_xxx)
+          (select $Undefined.param_xxx ((#Undefined.x_xxx (invoke undefined))))))
+      (main
+         (lambda
+            ($Undefined.param_xxx)
+            (select
+               $Undefined.param_xxx
+               ((#Undefined.$__xxx
                    (let
-                      #Undefined.y_xxx
-                      (apply (invoke g) (#Undefined.x_xxx))
-                      (apply
-                         (invoke printString)
-                         ((apply (invoke String#) ("OK")))))))))))
-   (f (invoke undefined)))
+                      #Undefined.x_xxx
+                      (invoke undefined)
+                      (let
+                         #Undefined.y_xxx
+                         (apply (invoke g) (#Undefined.x_xxx))
+                         (apply
+                            (invoke printString)
+                            ((apply (invoke String#) ("OK")))))))))))
+      (f (invoke undefined)))
+   ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

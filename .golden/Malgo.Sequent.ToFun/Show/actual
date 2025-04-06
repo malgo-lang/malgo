@@ -1,93 +1,99 @@
-((showInt32
-    (object
-       ((show
-           (lambda
-              ($Show.param_xxx)
-              (select
-                 $Show.param_xxx
-                 ((#Show.x_xxx (apply (invoke toStringInt32) (#Show.x_xxx))))))))))
-   (show
-      (lambda
-         ($Show.param_xxx)
-         (select
-            $Show.param_xxx
-            (((expand ((show #Show.show_xxx))) #Show.show_xxx)))))
-   (print
-      (lambda
-         ($Show.param_xxx)
+(program
+   ((showInt32
+       (object
+          ((show
+              (lambda
+                 ($Show.param_xxx)
+                 (select
+                    $Show.param_xxx
+                    ((#Show.x_xxx (apply (invoke toStringInt32) (#Show.x_xxx))))))))))
+      (show
          (lambda
             ($Show.param_xxx)
             (select
-               (tuple ($Show.param_xxx $Show.param_xxx))
-               (((tuple (#Show.showDict_xxx #Show.x_xxx))
-                   (apply
-                      (invoke printString)
-                      ((apply
-                          (apply (invoke show) (#Show.showDict_xxx))
-                          (#Show.x_xxx))))))))))
-   (<>
-      (lambda
-         ($Show.param_xxx)
+               $Show.param_xxx
+               (((expand ((show #Show.show_xxx))) #Show.show_xxx)))))
+      (print
          (lambda
             ($Show.param_xxx)
-            (select
-               (tuple ($Show.param_xxx $Show.param_xxx))
-               (((tuple (#Show.x_xxx #Show.y_xxx))
-                   (apply
-                      (apply (invoke appendString) (#Show.x_xxx))
-                      (#Show.y_xxx))))))))
-   (showTuple2
-      (lambda
-         ($Show.param_xxx)
+            (lambda
+               ($Show.param_xxx)
+               (select
+                  (tuple ($Show.param_xxx $Show.param_xxx))
+                  (((tuple (#Show.showDict_xxx #Show.x_xxx))
+                      (apply
+                         (invoke printString)
+                         ((apply
+                             (apply (invoke show) (#Show.showDict_xxx))
+                             (#Show.x_xxx))))))))))
+      (<>
          (lambda
             ($Show.param_xxx)
-            (select
-               (tuple ($Show.param_xxx $Show.param_xxx))
-               (((tuple (#Show.showDictA_xxx #Show.showDictB_xxx))
-                   (object
-                      ((show
-                          (lambda
-                             ($Show.param_xxx)
-                             (select
-                                $Show.param_xxx
-                                (((tuple (#Show.a_xxx #Show.b_xxx))
-                                    (apply
+            (lambda
+               ($Show.param_xxx)
+               (select
+                  (tuple ($Show.param_xxx $Show.param_xxx))
+                  (((tuple (#Show.x_xxx #Show.y_xxx))
+                      (apply
+                         (apply (invoke appendString) (#Show.x_xxx))
+                         (#Show.y_xxx))))))))
+      (showTuple2
+         (lambda
+            ($Show.param_xxx)
+            (lambda
+               ($Show.param_xxx)
+               (select
+                  (tuple ($Show.param_xxx $Show.param_xxx))
+                  (((tuple (#Show.showDictA_xxx #Show.showDictB_xxx))
+                      (object
+                         ((show
+                             (lambda
+                                ($Show.param_xxx)
+                                (select
+                                   $Show.param_xxx
+                                   (((tuple (#Show.a_xxx #Show.b_xxx))
                                        (apply
-                                          (invoke <>)
-                                          ((apply (invoke String#) ("("))))
-                                       ((apply
-                                           (apply
-                                              (invoke <>)
+                                          (apply
+                                             (invoke <>)
+                                             ((apply (invoke String#) ("("))))
+                                          ((apply
+                                              (apply
+                                                 (invoke <>)
+                                                 ((apply
+                                                     (apply
+                                                        (invoke show)
+                                                        (#Show.showDictA_xxx))
+                                                     (#Show.a_xxx))))
                                               ((apply
                                                   (apply
-                                                     (invoke show)
-                                                     (#Show.showDictA_xxx))
-                                                  (#Show.a_xxx))))
-                                           ((apply
-                                               (apply
-                                                  (invoke <>)
-                                                  ((apply (invoke String#) (", "))))
-                                               ((apply
-                                                   (apply
-                                                      (invoke <>)
+                                                     (invoke <>)
+                                                     ((apply
+                                                         (invoke String#)
+                                                         (", "))))
+                                                  ((apply
+                                                      (apply
+                                                         (invoke <>)
+                                                         ((apply
+                                                             (apply
+                                                                (invoke show)
+                                                                (#Show.showDictB_xxx))
+                                                             (#Show.b_xxx))))
                                                       ((apply
-                                                          (apply
-                                                             (invoke show)
-                                                             (#Show.showDictB_xxx))
-                                                          (#Show.b_xxx))))
-                                                   ((apply (invoke String#) (")")))))))))))))))))))))))
-   (main
-      (lambda
-         ($Show.param_xxx)
-         (select
-            $Show.param_xxx
-            ((#Show.$__xxx
-                (apply
+                                                          (invoke String#)
+                                                          (")")))))))))))))))))))))))
+      (main
+         (lambda
+            ($Show.param_xxx)
+            (select
+               $Show.param_xxx
+               ((#Show.$__xxx
                    (apply
-                      (invoke print)
-                      ((apply
-                          (apply (invoke showTuple2) ((invoke showInt32)))
-                          ((invoke showInt32)))))
-                   ((tuple
-                       ((apply (invoke Int32#) (1_i32))
-                          (apply (invoke Int32#) (2_i32))))))))))))
+                      (apply
+                         (invoke print)
+                         ((apply
+                             (apply (invoke showTuple2) ((invoke showInt32)))
+                             ((invoke showInt32)))))
+                      ((tuple
+                          ((apply (invoke Int32#) (1_i32))
+                             (apply (invoke Int32#) (2_i32))))))))))))
+   ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

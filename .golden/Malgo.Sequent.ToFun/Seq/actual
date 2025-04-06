@@ -1,25 +1,29 @@
-((executeWhenLoaded
-    (let
-       #Seq.x_xxx
-       (apply (invoke Int32#) (1_i32))
+(program
+   ((executeWhenLoaded
        (let
-          #Seq.y_xxx
-          (apply (invoke Int32#) (2_i32))
-          (apply
-             (lambda
-                ($Seq.tmp_xxx)
-                (apply (apply (invoke addInt32) (#Seq.x_xxx)) (#Seq.y_xxx)))
-             ((apply
-                 (invoke printString)
-                 ((apply
-                     (invoke toStringInt32)
-                     ((apply (apply (invoke addInt32) (#Seq.x_xxx)) (#Seq.y_xxx)))))))))))
-   (main
-      (lambda
-         ($Seq.param_xxx)
-         (select
-            $Seq.param_xxx
-            ((#Seq.$__xxx
-                (apply
-                   (invoke printString)
-                   ((apply (invoke toStringInt32) ((invoke executeWhenLoaded)))))))))))
+          #Seq.x_xxx
+          (apply (invoke Int32#) (1_i32))
+          (let
+             #Seq.y_xxx
+             (apply (invoke Int32#) (2_i32))
+             (apply
+                (lambda
+                   ($Seq.tmp_xxx)
+                   (apply (apply (invoke addInt32) (#Seq.x_xxx)) (#Seq.y_xxx)))
+                ((apply
+                    (invoke printString)
+                    ((apply
+                        (invoke toStringInt32)
+                        ((apply
+                            (apply (invoke addInt32) (#Seq.x_xxx))
+                            (#Seq.y_xxx)))))))))))
+      (main
+         (lambda
+            ($Seq.param_xxx)
+            (select
+               $Seq.param_xxx
+               ((#Seq.$__xxx
+                   (apply
+                      (invoke printString)
+                      ((apply (invoke toStringInt32) ((invoke executeWhenLoaded)))))))))))
+   ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

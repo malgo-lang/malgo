@@ -1,34 +1,36 @@
-((main
-    (lambda
-       ($DataDef.param_xxx)
-       (select
-          $DataDef.param_xxx
-          ((#DataDef.$__xxx
-              (apply
-                 (lambda
-                    ($DataDef.param_xxx)
-                    (select
-                       $DataDef.param_xxx
-                       (((Int# (#DataDef.x_xxx))
-                           (apply
-                              (invoke malgo_print_string)
-                              ((apply
-                                  (invoke malgo_int64_t_to_string)
-                                  (#DataDef.x_xxx))))))))
-                 ((apply (invoke Int#) (1_i64)))))))))
-   (Int# (lambda ($DataDef.constructor_xxx) (Int# ($DataDef.constructor_xxx))))
-   (Nil (Nil ()))
-   (Cons
-      (lambda
-         ($DataDef.constructor_xxx)
+(program
+   ((main
+       (lambda
+          ($DataDef.param_xxx)
+          (select
+             $DataDef.param_xxx
+             ((#DataDef.$__xxx
+                 (apply
+                    (lambda
+                       ($DataDef.param_xxx)
+                       (select
+                          $DataDef.param_xxx
+                          (((Int# (#DataDef.x_xxx))
+                              (apply
+                                 (invoke malgo_print_string)
+                                 ((apply
+                                     (invoke malgo_int64_t_to_string)
+                                     (#DataDef.x_xxx))))))))
+                    ((apply (invoke Int#) (1_i64)))))))))
+      (Int# (lambda ($DataDef.constructor_xxx) (Int# ($DataDef.constructor_xxx))))
+      (Nil (Nil ()))
+      (Cons
          (lambda
             ($DataDef.constructor_xxx)
-            (Cons ($DataDef.constructor_xxx $DataDef.constructor_xxx)))))
-   (malgo_int64_t_to_string
-      (lambda
-         ($DataDef.primitive_xxx)
-         (primitive malgo_int64_t_to_string ($DataDef.primitive_xxx))))
-   (malgo_print_string
-      (lambda
-         ($DataDef.primitive_xxx)
-         (primitive malgo_print_string ($DataDef.primitive_xxx)))))
+            (lambda
+               ($DataDef.constructor_xxx)
+               (Cons ($DataDef.constructor_xxx $DataDef.constructor_xxx)))))
+      (malgo_int64_t_to_string
+         (lambda
+            ($DataDef.primitive_xxx)
+            (primitive malgo_int64_t_to_string ($DataDef.primitive_xxx))))
+      (malgo_print_string
+         (lambda
+            ($DataDef.primitive_xxx)
+            (primitive malgo_print_string ($DataDef.primitive_xxx)))))
+   ())

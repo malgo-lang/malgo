@@ -1,61 +1,13 @@
-((<|> (invoke Cons))
-   (f
-      (lambda
-         ($RightAssoc.param_xxx)
-         (select
-            $RightAssoc.param_xxx
-            ((#RightAssoc.n_xxx
-                (let
-                   #RightAssoc.x_xxx
-                   (apply
-                      (apply
-                         (invoke <|>)
-                         ((tuple
-                             ((invoke True)
-                                (lambda
-                                   ($RightAssoc.param_xxx)
-                                   (select
-                                      $RightAssoc.param_xxx
-                                      ((#RightAssoc.$__xxx
-                                          (apply (invoke Int32#) (1_i32))))))))))
-                      ((apply
-                          (apply
-                             (invoke <|>)
-                             ((tuple
-                                 ((invoke True)
-                                    (lambda
-                                       ($RightAssoc.param_xxx)
-                                       (select
-                                          $RightAssoc.param_xxx
-                                          ((#RightAssoc.$__xxx
-                                              (apply (invoke Int32#) (2_i32))))))))))
-                          ((apply
-                              (apply
-                                 (invoke <|>)
-                                 ((tuple
-                                     ((invoke True)
-                                        (lambda
-                                           ($RightAssoc.param_xxx)
-                                           (select
-                                              $RightAssoc.param_xxx
-                                              ((#RightAssoc.$__xxx
-                                                  (apply (invoke Int32#) (3_i32))))))))))
-                              ((apply
-                                  (apply
-                                     (invoke <|>)
-                                     ((tuple
-                                         ((invoke True)
-                                            (lambda
-                                               ($RightAssoc.param_xxx)
-                                               (select
-                                                  $RightAssoc.param_xxx
-                                                  ((#RightAssoc.$__xxx
-                                                      (apply
-                                                         (invoke Int32#)
-                                                         (4_i32))))))))))
-                                  ((invoke Nil)))))))))
+(program
+   ((<|> (invoke Cons))
+      (f
+         (lambda
+            ($RightAssoc.param_xxx)
+            (select
+               $RightAssoc.param_xxx
+               ((#RightAssoc.n_xxx
                    (let
-                      #RightAssoc.y_xxx
+                      #RightAssoc.x_xxx
                       (apply
                          (apply
                             (invoke <|>)
@@ -105,14 +57,70 @@
                                                             (invoke Int32#)
                                                             (4_i32))))))))))
                                      ((invoke Nil)))))))))
-                      #RightAssoc.y_xxx)))))))
-   (main
-      (lambda
-         ($RightAssoc.param_xxx)
-         (select
-            $RightAssoc.param_xxx
-            ((#RightAssoc.$__xxx
-                (let
-                   #RightAssoc.x_xxx
-                   (apply (invoke f) ((apply (invoke Int32#) (4_i32))))
-                   (apply (invoke printString) ((apply (invoke String#) ("OK")))))))))))
+                      (let
+                         #RightAssoc.y_xxx
+                         (apply
+                            (apply
+                               (invoke <|>)
+                               ((tuple
+                                   ((invoke True)
+                                      (lambda
+                                         ($RightAssoc.param_xxx)
+                                         (select
+                                            $RightAssoc.param_xxx
+                                            ((#RightAssoc.$__xxx
+                                                (apply (invoke Int32#) (1_i32))))))))))
+                            ((apply
+                                (apply
+                                   (invoke <|>)
+                                   ((tuple
+                                       ((invoke True)
+                                          (lambda
+                                             ($RightAssoc.param_xxx)
+                                             (select
+                                                $RightAssoc.param_xxx
+                                                ((#RightAssoc.$__xxx
+                                                    (apply
+                                                       (invoke Int32#)
+                                                       (2_i32))))))))))
+                                ((apply
+                                    (apply
+                                       (invoke <|>)
+                                       ((tuple
+                                           ((invoke True)
+                                              (lambda
+                                                 ($RightAssoc.param_xxx)
+                                                 (select
+                                                    $RightAssoc.param_xxx
+                                                    ((#RightAssoc.$__xxx
+                                                        (apply
+                                                           (invoke Int32#)
+                                                           (3_i32))))))))))
+                                    ((apply
+                                        (apply
+                                           (invoke <|>)
+                                           ((tuple
+                                               ((invoke True)
+                                                  (lambda
+                                                     ($RightAssoc.param_xxx)
+                                                     (select
+                                                        $RightAssoc.param_xxx
+                                                        ((#RightAssoc.$__xxx
+                                                            (apply
+                                                               (invoke Int32#)
+                                                               (4_i32))))))))))
+                                        ((invoke Nil)))))))))
+                         #RightAssoc.y_xxx)))))))
+      (main
+         (lambda
+            ($RightAssoc.param_xxx)
+            (select
+               $RightAssoc.param_xxx
+               ((#RightAssoc.$__xxx
+                   (let
+                      #RightAssoc.x_xxx
+                      (apply (invoke f) ((apply (invoke Int32#) (4_i32))))
+                      (apply
+                         (invoke printString)
+                         ((apply (invoke String#) ("OK")))))))))))
+   ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))
