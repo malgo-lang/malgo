@@ -1,5 +1,3 @@
-{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
-
 module Malgo.Core.Eval (eval, EvalError, defaultStdin, defaultStdout, defaultStderr) where
 
 import Control.Exception (throwIO, try)
