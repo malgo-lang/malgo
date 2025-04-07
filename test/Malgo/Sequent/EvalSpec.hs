@@ -23,8 +23,6 @@ import Malgo.Syntax (Module (..))
 import Malgo.TestUtils hiding (setupBuiltin, setupPrelude)
 import System.Directory
 import System.FilePath
-import System.IO.Streams (InputStream, OutputStream)
-import System.IO.Streams qualified as Streams
 import Test.Hspec
 
 spec :: Spec
@@ -51,7 +49,7 @@ spec = parallel do
 setupBuiltin :: IO ArtifactPath
 setupBuiltin = do
   src <- convertString <$> BS.readFile builtinPath
-  runMalgoM flag option do
+  runMalgoM flag do
     parsed <-
       parse builtinPath src >>= \case
         Left err -> error $ show err
@@ -67,7 +65,7 @@ setupBuiltin = do
 setupPrelude :: IO ArtifactPath
 setupPrelude = do
   src <- convertString <$> BS.readFile preludePath
-  runMalgoM flag option do
+  runMalgoM flag do
     parsed <-
       parse preludePath src >>= \case
         Left err -> error $ show err
@@ -83,7 +81,7 @@ setupPrelude = do
 driveEval :: ArtifactPath -> ArtifactPath -> FilePath -> IO String
 driveEval builtinName preludeName srcPath = do
   src <- convertString <$> BS.readFile srcPath
-  runMalgoM flag option do
+  runMalgoM flag do
     parsed <-
       parse srcPath src >>= \case
         Left err -> error $ show err
@@ -122,27 +120,27 @@ saveCore moduleName program = do
   modulePath <- getModulePath moduleName
   save modulePath ".sqt" program
 
-setupTestStdin :: (MonadIO m) => m (InputStream Char)
-setupTestStdin = liftIO $ Streams.fromList "Hello\n"
+setupTestStdin :: (MonadIO m) => m (IO (Maybe Char))
+setupTestStdin = liftIO do
+  ref <- newIORef "Hello\n"
+  let stdin :: IO (Maybe Char)
+      stdin = do
+        str <- readIORef ref
+        case str of
+          [] -> pure Nothing
+          (c : cs) -> do
+            writeIORef ref cs
+            pure $ Just c
+  pure stdin
 
-setupTestStdout :: (MonadIO m) => m (OutputStream Char, IORef String)
+setupTestStdout :: (MonadIO m) => m (Char -> IO (), IORef String)
 setupTestStdout = do
   builder <- newIORef ""
-  stdout <- liftIO $ Streams.makeOutputStream \case
-    Just c -> modifyIORef builder (<> [c])
-    Nothing -> pure ()
-  pure
-    ( stdout,
-      builder
-    )
+  let stdout = \c -> modifyIORef builder (<> [c])
+  pure (stdout, builder)
 
-setupTestStderr :: (MonadIO m) => m (OutputStream Char, IORef String)
+setupTestStderr :: (MonadIO m) => m (Char -> IO (), IORef String)
 setupTestStderr = do
   builder <- newIORef ""
-  stderr <- liftIO $ Streams.makeOutputStream \case
-    Just c -> modifyIORef builder (<> [c])
-    Nothing -> pure ()
-  pure
-    ( stderr,
-      builder
-    )
+  let stderr = \c -> modifyIORef builder (<> [c])
+  pure (stderr, builder)

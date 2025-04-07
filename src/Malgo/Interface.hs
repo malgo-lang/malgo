@@ -17,7 +17,6 @@ import Data.Store (Store)
 import Effectful (Eff, IOE, runPureEff, (:>))
 import Effectful.State.Static.Local (State, execState, get, modify)
 import GHC.Records (HasField)
-import Malgo.Core.Type qualified as C
 import Malgo.Id
 import Malgo.Infer.TypeRep (KindCtx, insertKind)
 import Malgo.Infer.TypeRep qualified as GT
@@ -35,8 +34,6 @@ data Interface = Interface
     -- | Used in Infer
     typeSynonymMap :: Map GT.TypeVar ([GT.TypeVar], GT.Type),
     kindCtx :: KindCtx,
-    -- | Used in Desugar
-    coreIdentMap :: Map PsId (Meta C.Type),
     -- | Used in Rename
     infixInfo :: Map PsId (Assoc, Int),
     -- | Used in Rename
@@ -58,16 +55,14 @@ buildInterface ::
     HasField "signatureMap" tcEnv (Map RnId (GT.Scheme GT.Type)),
     HasField "typeDefMap" tcEnv (Map RnId (GT.TypeDef GT.Type)),
     HasField "kindCtx" tcEnv KindCtx,
-    HasField "nameEnv" dsState (Map RnId (Meta C.Type)),
     HasField "dependencies" rnState (Set ModuleName),
     HasField "infixInfo" rnState (Map Id (Assoc, Int))
   ) =>
   ModuleName ->
   rnState ->
   tcEnv ->
-  dsState ->
   Interface
-buildInterface moduleName rnState tcEnv dsState =
+buildInterface moduleName rnState tcEnv =
   let inf =
         Interface
           { moduleName,
@@ -75,15 +70,10 @@ buildInterface moduleName rnState tcEnv dsState =
             typeDefMap = mempty,
             typeSynonymMap = mempty,
             kindCtx = mempty,
-            coreIdentMap = mempty,
             infixInfo = Map.mapKeys (\id -> id.name) rnState.infixInfo,
             dependencies = rnState.dependencies
           }
    in runPureEff $ execState inf do
-        ifor_ dsState.nameEnv $ \tcId coreId ->
-          when (tcId.sort == External && tcId.moduleName == moduleName) do
-            modify \inf@Interface {..} ->
-              inf {coreIdentMap = Map.insert tcId.name coreId coreIdentMap}
         ifor_ tcEnv.signatureMap $ \tcId scheme ->
           when (tcId.sort == External && tcId.moduleName == moduleName) do
             modify \inf@Interface {..} ->

@@ -32,9 +32,11 @@
         packageName = "malgo";
       in
       {
-        packages.${packageName} = pkgs.haskell.lib.doCheck (haskellPackages.callCabal2nix packageName self rec {
-          # Dependency overrides go here
-        });
+        packages.${packageName} = pkgs.haskell.lib.doCheck (
+          haskellPackages.callCabal2nix packageName self rec {
+            # Dependency overrides go here
+          }
+        );
 
         packages.default = self.packages.${system}.${packageName};
         defaultPackage = self.packages.${system}.default;
@@ -47,7 +49,6 @@
             haskellPackages.hpack
             nixfmt-rfc-style
             entr
-            icu
             fd
             haskellPackages.hoogle
           ];

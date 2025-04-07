@@ -19,8 +19,6 @@ import Malgo.Prelude hiding (getContents, throwError)
 import Malgo.SExpr (sShow)
 import Malgo.Sequent.Core
 import Malgo.Sequent.Fun (Literal (..), Name, Pattern (..), Tag (..))
-import System.IO.Streams (InputStream, OutputStream)
-import System.IO.Streams qualified as Streams
 
 fromConsumer :: Env -> Consumer Join -> Value
 fromConsumer env consumer = Consumer $ \value -> do
@@ -84,9 +82,9 @@ instance Show EvalError where
 type Toplevels = Map Name (Name, Statement Join)
 
 data Handlers = Handlers
-  { stdin :: InputStream Char,
-    stdout :: OutputStream Char,
-    stderr :: OutputStream Char
+  { stdin :: IO (Maybe Char),
+    stdout :: Char -> IO (),
+    stderr :: Char -> IO ()
   }
 
 data Env = Env
@@ -262,7 +260,7 @@ fetchPrimitive "malgo_print_string" = \cases
   range values -> throwError $ InvalidArguments range "malgo_print_string" values
 fetchPrimitive "malgo_newline" = \_ _ -> do
   Handlers {stdout} <- ask @Handlers
-  liftIO $ Streams.write (Just '\n') stdout
+  liftIO $ stdout '\n'
   pure $ Struct Tuple []
 fetchPrimitive "malgo_get_contents" = \_ _ -> do
   text <- getContents
@@ -275,17 +273,17 @@ fetchPrimitive name = \range values -> throwError $ PrimitiveNotImplemented rang
 getContents :: (IOE :> es, Reader Handlers :> es) => Eff es Text
 getContents = do
   Handlers {stdin} <- ask @Handlers
-  char <- liftIO $ Streams.read stdin
+  char <- liftIO stdin
   case char of
     Just char -> do
       rest <- getContents
       pure $ T.cons char rest
     Nothing -> pure ""
 
-putTextTo :: (IOE :> es) => OutputStream Char -> Text -> Eff es ()
+putTextTo :: (IOE :> es) => (Char -> IO ()) -> Text -> Eff es ()
 putTextTo stream text = do
   let string = convertString @_ @String text
-  liftIO $ traverse_ (\char -> Streams.write (Just char) stream) string
+  liftIO $ traverse_ stream string
 
 toString :: (Error EvalError :> es) => Text -> Range -> [Value] -> Eff es Value
 toString _ _ [Immediate (Int32 n)] = pure $ Immediate $ String $ Text.pack $ show n

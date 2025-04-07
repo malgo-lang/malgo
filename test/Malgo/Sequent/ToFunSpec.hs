@@ -43,7 +43,7 @@ spec = parallel do
 driveToFun :: FilePath -> IO String
 driveToFun srcPath = do
   src <- convertString <$> (BS.readFile srcPath)
-  runMalgoM flag option do
+  runMalgoM flag do
     parsed <-
       parse srcPath src >>= \case
         Left err -> error $ show err

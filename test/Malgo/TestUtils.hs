@@ -7,13 +7,11 @@ module Malgo.TestUtils
     preludePath,
     setupPrelude,
     flag,
-    option,
     golden,
   )
 where
 
 import Data.Text.Lazy as TL hiding (foldr1, words)
-import Malgo.Core.Optimize (OptimizeOption, defaultOptimizeOption)
 import Malgo.Driver qualified as Driver
 import Malgo.Monad
 import Malgo.Prelude
@@ -28,9 +26,9 @@ smallIndentNoColor =
   defaultOutputOptionsNoColor
     { outputOptionsIndentAmount = 1,
       outputOptionsStringStyle = Literal
-    -- outputOptionsCompact is problematic: https://github.com/cdepillabout/pretty-simple/issues/84
-    -- outputOptionsCompactParens = True,
-    -- outputOptionsCompact = True
+      -- outputOptionsCompact is problematic: https://github.com/cdepillabout/pretty-simple/issues/84
+      -- outputOptionsCompactParens = True,
+      -- outputOptionsCompact = True
     }
 
 pShowCompact :: (ConvertibleStrings TL.Text b, Show a) => a -> b
@@ -44,7 +42,7 @@ builtinPath = "./runtime/malgo/Builtin.mlg"
 
 setupBuiltin :: IO ()
 setupBuiltin =
-  runMalgoM flag option do
+  runMalgoM flag do
     Driver.compile builtinPath
 
 preludePath :: FilePath
@@ -52,14 +50,11 @@ preludePath = "./runtime/malgo/Prelude.mlg"
 
 setupPrelude :: IO ()
 setupPrelude =
-  runMalgoM flag option do
+  runMalgoM flag do
     Driver.compile preludePath
 
 flag :: Flag
 flag = Flag {noOptimize = False, lambdaLift = False, debugMode = False, testMode = True}
-
-option :: OptimizeOption
-option = defaultOptimizeOption
 
 golden ::
   -- | Test description

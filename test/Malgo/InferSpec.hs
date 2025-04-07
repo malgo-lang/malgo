@@ -27,7 +27,7 @@ spec = parallel do
 driveInfer :: FilePath -> IO String
 driveInfer srcPath = do
   src <- convertString <$> BS.readFile srcPath
-  runMalgoM flag option do
+  runMalgoM flag do
     parsed <-
       parse srcPath src >>= \case
         Left err -> error $ show err

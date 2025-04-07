@@ -14,9 +14,10 @@ module Malgo.Infer.TcEnv
   )
 where
 
-import Control.Lens (At (at), makeFieldsId, view, (%~), (^.))
+import Control.Lens (At (at), makeFieldsId, view, (%~))
 import Data.Map.Strict qualified as Map
 import Data.Maybe (fromJust)
+import GHC.Records (HasField)
 import Malgo.Id
 import Malgo.Infer.TypeRep hiding (insertKind)
 import Malgo.Infer.TypeRep qualified as TypeRep
@@ -72,7 +73,7 @@ mergeInterface interface tcEnv =
     & (typeSynonymMap %~ Map.union interface.typeSynonymMap)
     & (kindCtx %~ Map.union interface.kindCtx)
 
-genTcEnv :: (Applicative f, HasResolvedTypeIdentMap rnEnv (Map Text [Qualified Id])) => rnEnv -> f TcEnv
+genTcEnv :: (Applicative f, HasField "resolvedTypeIdentMap" rnEnv (Map Text [Qualified Id])) => rnEnv -> f TcEnv
 genTcEnv rnEnv = do
   let int32_t = fromJust $ findBuiltinType "Int32#" rnEnv
   let int64_t = fromJust $ findBuiltinType "Int64#" rnEnv
@@ -95,7 +96,7 @@ genTcEnv rnEnv = do
               (ptr_t, TypeDef TyPtr [] [])
             ],
         typeSynonymMap = mempty,
-        resolvedTypeIdentMap = rnEnv ^. resolvedTypeIdentMap,
+        resolvedTypeIdentMap = rnEnv.resolvedTypeIdentMap,
         kindCtx =
           Map.fromList
             [ (int32_t, TYPE),
@@ -109,10 +110,10 @@ genTcEnv rnEnv = do
       }
 
 findBuiltinType ::
-  (HasResolvedTypeIdentMap rnEnv (Map Text [Qualified Id])) =>
+  (HasField "resolvedTypeIdentMap" rnEnv (Map Text [Qualified Id])) =>
   PsId -> rnEnv -> Maybe RnId
 findBuiltinType x rnEnv = do
-  ids <- map (.value) <$> view (resolvedTypeIdentMap . at x) rnEnv
+  ids <- map (.value) <$> view (at x) rnEnv.resolvedTypeIdentMap
   find isBuiltin ids
   where
     isBuiltin :: RnId -> Bool

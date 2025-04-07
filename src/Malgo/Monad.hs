@@ -3,7 +3,6 @@ module Malgo.Monad (Flag (..), runMalgoM) where
 import Effectful (Eff, IOE, runEff)
 import Effectful.Reader.Static (Reader, runReader)
 import Effectful.State.Static.Local
-import Malgo.Core.Optimize (OptimizeOption)
 import Malgo.Interface (Interface)
 import Malgo.Module
 import Malgo.MonadUniq
@@ -11,10 +10,8 @@ import Malgo.Prelude
 
 runMalgoM ::
   Flag ->
-  OptimizeOption ->
   Eff
-    '[ Reader OptimizeOption,
-       Reader Flag,
+    '[ Reader Flag,
        State Uniq,
        State (Map ModuleName Interface),
        State Pragma,
@@ -23,9 +20,8 @@ runMalgoM ::
      ]
     b ->
   IO b
-runMalgoM flag opt e = runEff $ runWorkspaceOnPwd do
-  runReader opt e
-    & runReader flag
+runMalgoM flag e = runEff $ runWorkspaceOnPwd do
+  runReader flag e
     & evalState (Uniq 0)
     & evalState @(Map ModuleName Interface) mempty
     & evalState @Pragma mempty
