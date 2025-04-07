@@ -16,12 +16,12 @@ import Malgo.Interface
 import Malgo.Lens
 import Malgo.Module
 import Malgo.MonadUniq (Uniq)
-import Malgo.Prelude hiding (All, catchError)
+import Malgo.Prelude hiding (All, catchError, throwError)
 import Malgo.Rename.RnEnv
 import Malgo.Rename.RnState as RnState
 import Malgo.Syntax hiding (getTyVars)
 import Malgo.Syntax.Extension
-import Prettyprinter (brackets, nest, punctuate, sep, squotes, vsep, (<+>))
+import Prettyprinter (brackets, nest, squotes, vsep, (<+>))
 
 -- | Entry point of this 'Malgo.Rename.Pass'
 rename ::
@@ -363,26 +363,23 @@ mkOpApp pos2 fix2 op2 (OpApp (pos1, fix1) op1 e11 e12) e2
 mkOpApp pos fix op e1 e2 = pure $ OpApp (pos, fix) op e1 e2
 
 -- | Generate toplevel environment.
-genToplevelEnv :: (IOE :> es, Reader ModuleName :> es, State (Map ModuleName Interface) :> es, Workspace :> es) => [Decl (Malgo NewParse)] -> RnEnv -> Eff es RnEnv
+genToplevelEnv :: (IOE :> es, Reader ModuleName :> es, State (Map ModuleName Interface) :> es, Workspace :> es, Error RenameError :> es) => [Decl (Malgo NewParse)] -> RnEnv -> Eff es RnEnv
 genToplevelEnv (ds :: [Decl (Malgo NewParse)]) env = do
   execState env (traverse aux ds)
   where
     aux (ScDef pos x _) = do
       env <- gets @RnEnv (.resolvedVarIdentMap)
       when (x `elem` Map.keys env) do
-        errorOn pos $ "Duplicate name:" <+> squotes (pretty x)
+        throwError $ DuplicateName pos x
       x' <- resolveGlobalName x
       modify $ appendRnEnv resolvedVarIdentMap [(x, Qualified Implicit x')]
     aux ScSig {} = pass
     aux (DataDef pos x _ cs) = do
       env <- get @RnEnv
       when (x `elem` Map.keys env.resolvedTypeIdentMap) do
-        errorOn pos $ "Duplicate name:" <+> squotes (pretty x)
+        throwError $ DuplicateName pos x
       unless (disjoint (map (view _2) cs) (Map.keys env.resolvedVarIdentMap)) do
-        errorOn pos
-          $ "Duplicate name(s):"
-          <+> sep
-            (punctuate "," $ map (squotes . pretty) (map (view _2) cs `intersect` Map.keys env.resolvedVarIdentMap))
+        throwError $ DuplicateNames pos (map (view _2) cs `intersect` Map.keys env.resolvedVarIdentMap)
       x' <- resolveGlobalName x
       xs' <- traverse (resolveGlobalName . view _2) cs
       modify $ appendRnEnv resolvedVarIdentMap (zip (map (view _2) cs) $ map (Qualified Implicit) xs')
@@ -391,16 +388,17 @@ genToplevelEnv (ds :: [Decl (Malgo NewParse)]) env = do
     aux (TypeSynonym pos x _ _) = do
       env <- get @RnEnv
       when (x `elem` Map.keys env.resolvedTypeIdentMap) do
-        errorOn pos $ "Duplicate name:" <+> squotes (pretty x)
+        throwError $ DuplicateName pos x
       x' <- resolveGlobalName x
       modify $ appendRnEnv resolvedTypeIdentMap [(x, Qualified Implicit x')]
     aux (Foreign pos x _) = do
       env <- get @RnEnv
       when (x `elem` Map.keys env.resolvedVarIdentMap) do
-        errorOn pos $ "Duplicate name:" <+> squotes (pretty x)
+        throwError $ DuplicateName pos x
       x' <- resolveGlobalName x
       modify $ appendRnEnv resolvedVarIdentMap [(x, Qualified Implicit x')]
     aux (Import _ modName' importList) = do
+      -- If imported variables are already defined in the current module, shadow them.
       interface <- loadInterface modName'
       let varIdentAssoc =
             map

@@ -40,6 +40,8 @@ data RenameError
   | NotInScope Range PsId
   | NoSuchNameInModule Range PsId ModuleName [Resolved]
   | NotInModule Range PsId ModuleName
+  | DuplicateName Range PsId
+  | DuplicateNames Range [PsId]
 
 instance Pretty RenameError where
   pretty (NoSuchNameInScope range name names) =
@@ -73,6 +75,18 @@ instance Pretty RenameError where
           <+> squotes (pretty name)
           <+> "in"
           <+> pretty modName
+      ]
+  pretty (DuplicateName range name) =
+    vsep
+      [ pretty range <> ":",
+        "Duplicate name:"
+          <+> squotes (pretty name)
+      ]
+  pretty (DuplicateNames range names) =
+    vsep
+      [ pretty range <> ":",
+        "Duplicate names:"
+          <+> pretty names
       ]
 
 instance Show RenameError where
