@@ -33,7 +33,6 @@ import Malgo.Syntax.Extension
 import System.Exit (exitFailure)
 import System.IO (hPutChar)
 import System.IO qualified as IO
-import System.IO.Streams qualified as Streams
 import Text.Megaparsec (errorBundlePretty)
 
 -- | `withDump` is the wrapper for check `dump` flag and output dump if that flag is `True`.
@@ -134,13 +133,9 @@ compileFromAST ::
 compileFromAST srcPath parsedAst = do
   let moduleName = parsedAst.moduleName
   core <- compileToCore srcPath parsedAst
-  stdin <- liftIO $ Streams.makeInputStream $ fmap Just getChar `catch` \(_ :: IOException) -> pure Nothing
-  stdout <- liftIO $ Streams.makeOutputStream \case
-    Just c -> putChar c
-    Nothing -> pure ()
-  stderr <- liftIO $ Streams.makeOutputStream \case
-    Just c -> hPutChar IO.stderr c
-    Nothing -> pure ()
+  let stdin = fmap Just getChar `catch` \(_ :: IOException) -> pure Nothing
+  let stdout = putChar
+  let stderr = hPutChar IO.stderr
   result <-
     runError @EvalError
       $ runReader moduleName
