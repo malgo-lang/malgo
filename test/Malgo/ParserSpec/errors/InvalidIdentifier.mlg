@@ -1,0 +1,18 @@
+foreign import malgo_print_string : String# -> ()
+foreign import malgo_newline : () -> ()
+
+data String = String# String#
+
+-- `let` does not allowed as identifier
+def let : String -> ()
+def let = { (String# str) ->
+  malgo_print_string str;
+  malgo_newline ()
+}
+
+def string# : String# -> String
+def string# = { x -> String# x }
+
+def main = {
+  let "Hello, world"
+}

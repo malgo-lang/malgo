@@ -11,6 +11,9 @@ import System.FilePath (isExtensionOf, takeBaseName, (</>))
 import Test.Hspec
 import Text.Megaparsec (errorBundlePretty)
 
+errorcaseDir :: FilePath
+errorcaseDir = "test/Malgo/ParserSpec/errors"
+
 spec :: Spec
 spec = parallel do
   testcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory testcaseDir
@@ -21,6 +24,9 @@ spec = parallel do
   for_ testcases \testcase -> do
     golden (takeBaseName testcase) (driveParse (testcaseDir </> testcase))
     golden (takeBaseName testcase <> " sexpr") (driveParseSExpr (testcaseDir </> testcase))
+  errorcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory errorcaseDir
+  for_ errorcases \errorcase -> do
+    golden ("error " <> takeBaseName errorcase) (driveErrorParse (errorcaseDir </> errorcase))
 
 driveParse :: FilePath -> IO String
 driveParse srcPath = do
@@ -41,3 +47,12 @@ driveParseSExpr srcPath = do
       Left err -> error $ errorBundlePretty err
       Right (_, parsed) ->
         pure $ sShow parsed
+
+driveErrorParse :: FilePath -> IO String
+driveErrorParse srcPath = do
+  src <- convertString <$> BL.readFile srcPath
+  runMalgoM flag do
+    parsed <- parse srcPath src
+    case parsed of
+      Left err -> pure $ errorBundlePretty err
+      Right _ -> error $ "Expected error, but successfully parsed"

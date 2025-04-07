@@ -1,0 +1,40 @@
+module {..} = import "../../../runtime/malgo/Builtin.mlg"
+module {..} = import "../../../runtime/malgo/Prelude.mlg"
+
+-- `=>` is not allowed as operator
+infix 4 (=>)
+def (=>) = { x y -> leInt32 y x }
+
+infixl 6 (+)
+def (+) = { x y -> addInt32 x y }
+
+infixl 6 (-)
+def (-) = { x y -> subInt32 x y }
+
+def fib = { n ->
+  if (n => 1)
+    { 1 }
+    { fib (n - 1) + fib (n - 2) }
+}
+
+def main = {
+  fib 5 |> toStringInt32 |> putStrLn
+}
+foreign import malgo_print_string : String# -> ()
+foreign import malgo_newline : () -> ()
+
+data String = String# String#
+
+-- `let` does not allowed as identifier
+def let : String -> ()
+def let = { (String# str) ->
+  malgo_print_string str;
+  malgo_newline ()
+}
+
+def string# : String# -> String
+def string# = { x -> String# x }
+
+def main = {
+  let "Hello, world"
+}
