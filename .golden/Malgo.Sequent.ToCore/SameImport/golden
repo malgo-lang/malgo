@@ -1,0 +1,24 @@
+((main
+    $SameImport.return_xxx
+    (cut
+       (lambda
+          ($SameImport.param_xxx $SameImport.return_xxx)
+          (cut
+             $SameImport.param_xxx
+             (select
+                (#SameImport.$__xxx
+                   (invoke
+                      putStr
+                      (apply
+                         ((do
+                             $SameImport.return_xxx
+                             (invoke
+                                getContents
+                                (apply
+                                   ((construct tuple () ()))
+                                   ($SameImport.return_xxx)))))
+                         ($SameImport.return_xxx)))))))
+       $SameImport.return_xxx))
+   ("runtime/malgo/Builtin.mlg"
+      "runtime/malgo/Builtin.mlg"
+      "runtime/malgo/Prelude.mlg"))

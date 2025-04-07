@@ -1,0 +1,37 @@
+((main
+    $SameImport.return_xxx
+    (cut
+       (lambda
+          ($SameImport.param_xxx $SameImport.return_xxx)
+          (join
+             $SameImport.select_xxx
+             (select
+                (#SameImport.$__xxx
+                   (join
+                      $SameImport.then_xxx
+                      (then
+                         $SameImport.outer_xxx
+                         (join
+                            $SameImport.return_xxx
+                            (then
+                               $SameImport.inner_xxx
+                               (join
+                                  $SameImport.apply_xxx
+                                  (apply
+                                     ($SameImport.inner_xxx)
+                                     ($SameImport.return_xxx))
+                                  (cut
+                                     $SameImport.outer_xxx
+                                     $SameImport.apply_xxx)))
+                            (join
+                               $SameImport.apply_xxx
+                               (apply
+                                  ((construct tuple () ()))
+                                  ($SameImport.return_xxx))
+                               (invoke getContents $SameImport.apply_xxx))))
+                      (invoke putStr $SameImport.then_xxx))))
+             (cut $SameImport.param_xxx $SameImport.select_xxx)))
+       $SameImport.return_xxx))
+   ("runtime/malgo/Builtin.mlg"
+      "runtime/malgo/Builtin.mlg"
+      "runtime/malgo/Prelude.mlg"))
