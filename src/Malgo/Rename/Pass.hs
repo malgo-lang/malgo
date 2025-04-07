@@ -9,7 +9,7 @@ import Data.Set qualified as Set
 import Data.Text qualified as T
 import Effectful (Eff, IOE, (:>))
 import Effectful.Error.Static
-import Effectful.Reader.Static (Reader, ask, local, runReader)
+import Effectful.Reader.Static (Reader, ask, asks, local, runReader)
 import Effectful.State.Static.Local (State, execState, get, gets, modify, put, runState)
 import Malgo.Id
 import Malgo.Interface
@@ -154,8 +154,12 @@ rnExpr (OpApp pos op e1 e2) = do
   case mfixity of
     Just fixity -> mkOpApp pos fixity op' e1' e2'
     Nothing -> errorOn pos $ "No infix declaration:" <+> squotes (pretty op)
-rnExpr (Project pos (Var _ name) field) = Var pos <$> lookupQualifiedVarName pos (ModuleName name) field
-rnExpr Project {} = error "Project expression is not implemented yet"
+rnExpr (Project pos (Var _ name) field) = do
+  moduleNames <- asks @RnEnv (.moduleNames)
+  if ModuleName name `Set.member` moduleNames
+    then Var pos <$> lookupQualifiedVarName pos (ModuleName name) field
+    else Project pos <$> rnExpr (Var pos name) <*> pure field
+rnExpr (Project pos expr field) = Project pos <$> rnExpr expr <*> pure field
 rnExpr (Fn pos cs) = Fn pos <$> traverse rnClause cs
 rnExpr (Tuple pos es) = Tuple pos <$> traverse rnExpr es
 rnExpr (Record pos kvs) =
@@ -408,6 +412,9 @@ genToplevelEnv (ds :: [Decl (Malgo NewParse)]) env = do
               (exportedTypeIdentList interface)
       modify $ appendRnEnv resolvedVarIdentMap (map (resolveImport modName' importList) varIdentAssoc)
       modify $ appendRnEnv resolvedTypeIdentMap (map (resolveImport modName' importList) typeIdentAssoc)
+      case importList of
+        As moduleName -> modify \s -> s {moduleNames = Set.insert moduleName s.moduleNames}
+        _ -> pass
     aux Infix {} = pass
 
 resolveImport :: ModuleName -> ImportList -> (PsId, RnId) -> (PsId, Qualified RnId)

@@ -7,6 +7,7 @@ module Malgo.Rename.RnEnv
     Resolved,
     RnEnv (..),
     constructors,
+    moduleNames,
     appendRnEnv,
     addConstructors,
     isConstructor,
@@ -86,7 +87,8 @@ data RnEnv = RnEnv
     -- The value is the list of resolved identifiers (e.g. `foo`, `Foo.foo`, `B.bar`).
     resolvedVarIdentMap :: Map PsId [Resolved],
     resolvedTypeIdentMap :: Map PsId [Resolved],
-    constructors :: Set Id
+    constructors :: Set Id,
+    moduleNames :: Set ModuleName
   }
 
 makeFieldsId ''RnEnv
@@ -126,7 +128,8 @@ genBuiltinRnEnv = runReader (ModuleName "Builtin") do
               ("String#", [Qualified Implicit string_t]),
               ("Ptr#", [Qualified Implicit ptr_t])
             ],
-        constructors = mempty
+        constructors = mempty,
+        moduleNames = mempty
       }
 
 -- | Resolving a new (local) name
