@@ -33,6 +33,7 @@ data Interface = Interface
     typeDefMap :: Map PsId (GT.TypeDef GT.Type),
     -- | Used in Infer
     typeSynonymMap :: Map GT.TypeVar ([GT.TypeVar], GT.Type),
+    -- | Used in Infer
     kindCtx :: KindCtx,
     -- | Used in Rename
     infixInfo :: Map PsId (Assoc, Int),
