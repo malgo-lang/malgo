@@ -1,7 +1,7 @@
 -- | Name resolution and simple desugar transformation
 module Malgo.Rename.Pass (rename) where
 
-import Control.Lens (view, (^.), _2)
+import Control.Lens (view, _2)
 import Data.List (intersect)
 import Data.List.Extra (anySame, disjoint)
 import Data.Map.Strict qualified as Map
@@ -16,9 +16,9 @@ import Malgo.Interface
 import Malgo.Lens
 import Malgo.Module
 import Malgo.MonadUniq (Uniq)
+import Malgo.Prelude hiding (All, catchError)
 import Malgo.Rename.RnEnv
 import Malgo.Rename.RnState as RnState
-import Malgo.Prelude hiding (All, catchError)
 import Malgo.Syntax hiding (getTyVars)
 import Malgo.Syntax.Extension
 import Prettyprinter (brackets, nest, punctuate, sep, squotes, vsep, (<+>))
@@ -372,13 +372,13 @@ genToplevelEnv (ds :: [Decl (Malgo NewParse)]) env = do
     aux ScSig {} = pass
     aux (DataDef pos x _ cs) = do
       env <- get @RnEnv
-      when (x `elem` Map.keys (env ^. resolvedTypeIdentMap)) do
+      when (x `elem` Map.keys env.resolvedTypeIdentMap) do
         errorOn pos $ "Duplicate name:" <+> squotes (pretty x)
-      unless (disjoint (map (view _2) cs) (Map.keys (env ^. resolvedVarIdentMap))) do
+      unless (disjoint (map (view _2) cs) (Map.keys env.resolvedVarIdentMap)) do
         errorOn pos
           $ "Duplicate name(s):"
           <+> sep
-            (punctuate "," $ map (squotes . pretty) (map (view _2) cs `intersect` Map.keys (env ^. resolvedVarIdentMap)))
+            (punctuate "," $ map (squotes . pretty) (map (view _2) cs `intersect` Map.keys env.resolvedVarIdentMap))
       x' <- resolveGlobalName x
       xs' <- traverse (resolveGlobalName . view _2) cs
       modify $ appendRnEnv resolvedVarIdentMap (zip (map (view _2) cs) $ map (Qualified Implicit) xs')
@@ -386,13 +386,13 @@ genToplevelEnv (ds :: [Decl (Malgo NewParse)]) env = do
       modify $ appendRnEnv resolvedTypeIdentMap [(x, Qualified Implicit x')]
     aux (TypeSynonym pos x _ _) = do
       env <- get @RnEnv
-      when (x `elem` Map.keys (env ^. resolvedTypeIdentMap)) do
+      when (x `elem` Map.keys env.resolvedTypeIdentMap) do
         errorOn pos $ "Duplicate name:" <+> squotes (pretty x)
       x' <- resolveGlobalName x
       modify $ appendRnEnv resolvedTypeIdentMap [(x, Qualified Implicit x')]
     aux (Foreign pos x _) = do
       env <- get @RnEnv
-      when (x `elem` Map.keys (env ^. resolvedVarIdentMap)) do
+      when (x `elem` Map.keys env.resolvedVarIdentMap) do
         errorOn pos $ "Duplicate name:" <+> squotes (pretty x)
       x' <- resolveGlobalName x
       modify $ appendRnEnv resolvedVarIdentMap [(x, Qualified Implicit x')]
