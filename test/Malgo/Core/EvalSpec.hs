@@ -6,9 +6,11 @@ import Effectful.Reader.Static (runReader)
 import GHC.Exception (CallStack, prettyCallStack)
 import Malgo.Core.Eval
 import Malgo.Core.Flat qualified as Flat
+import Malgo.Desugar.DsState (DsState (..))
 import Malgo.Desugar.Pass (desugar)
 import Malgo.Driver (failIfError)
 import Malgo.Infer.Pass (infer)
+import Malgo.Infer.TcEnv (TcEnv (..))
 import Malgo.Interface (buildInterface)
 import Malgo.Link qualified as Link
 import Malgo.Monad (runMalgoM)

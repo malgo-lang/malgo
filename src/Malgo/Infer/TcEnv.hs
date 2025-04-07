@@ -3,7 +3,7 @@
 
 module Malgo.Infer.TcEnv
   ( RecordTypeName,
-    TcEnv,
+    TcEnv (..),
     genTcEnv,
     insertSignature,
     insertTypeDef,

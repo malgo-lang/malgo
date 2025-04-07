@@ -13,20 +13,22 @@ import Malgo.Core.Lint (lint)
 import Malgo.Core.Optimize (OptimizeOption, optimizeProgram)
 import Malgo.Core.Syntax (Program)
 import Malgo.Core.Type (Type)
+import Malgo.Desugar.DsState (DsState (..))
 import Malgo.Desugar.Pass (desugar)
 import Malgo.Id (Meta (..))
 import Malgo.Infer.Pass qualified as Infer
+import Malgo.Infer.TcEnv (TcEnv (..))
 import Malgo.Interface (Interface, buildInterface, loadInterface)
 import Malgo.Link qualified as Link
 import Malgo.Module
 import Malgo.Monad
 import Malgo.MonadUniq
-import Malgo.Rename.Pass (rename)
-import Malgo.Rename.RnEnv qualified as RnEnv
-import Malgo.Rename.RnState (RnState (..))
 import Malgo.Parser (parse)
 import Malgo.Prelude
 import Malgo.Refine.Pass (refine)
+import Malgo.Rename.Pass (rename)
+import Malgo.Rename.RnEnv qualified as RnEnv
+import Malgo.Rename.RnState (RnState (..))
 import Malgo.Syntax qualified as Syntax
 import Malgo.Syntax.Extension
 import System.Exit (exitFailure)
@@ -81,14 +83,14 @@ compileToCore srcPath parsedAst = do
   _ <- withDump flags.debugMode "=== TYPE CHECK ===" $ pure typedAst
   refinedAst <- withDump flags.debugMode "=== REFINE ===" $ refine tcEnv typedAst
 
-  (dsEnv, core) <- desugar tcEnv refinedAst
+  (dsState, core) <- desugar tcEnv refinedAst
 
   core <- do
     core <- runReader moduleName $ Flat.normalize core
     _ <- withDump flags.debugMode "=== DESUGAR ===" $ pure core
     save srcPath ".mo" (ViaStore core)
 
-    let inf = buildInterface moduleName rnState tcEnv dsEnv
+    let inf = buildInterface moduleName rnState tcEnv dsState
     save srcPath ".mlgi" (ViaStore inf)
 
     core <- Link.link inf core
