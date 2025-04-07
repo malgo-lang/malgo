@@ -25,7 +25,7 @@ spec = parallel do
 driveParse :: FilePath -> IO String
 driveParse srcPath = do
   src <- convertString <$> BL.readFile srcPath
-  runMalgoM flag option do
+  runMalgoM flag do
     parsed <- parse srcPath src
     case parsed of
       Left err -> error $ errorBundlePretty err
@@ -35,7 +35,7 @@ driveParse srcPath = do
 driveParseSExpr :: FilePath -> IO String
 driveParseSExpr srcPath = do
   src <- convertString <$> BL.readFile srcPath
-  runMalgoM flag option do
+  runMalgoM flag do
     parsed <- parse srcPath src
     case parsed of
       Left err -> error $ errorBundlePretty err

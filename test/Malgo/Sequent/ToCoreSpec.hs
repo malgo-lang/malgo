@@ -52,7 +52,7 @@ spec = parallel do
 driveToCore :: FilePath -> IO String
 driveToCore srcPath = do
   src <- convertString <$> BS.readFile srcPath
-  runMalgoM flag option do
+  runMalgoM flag do
     parsed <-
       parse srcPath src >>= \case
         Left err -> error $ show err
@@ -67,7 +67,7 @@ driveToCore srcPath = do
 driveFlat :: FilePath -> IO String
 driveFlat srcPath = do
   src <- convertString <$> BS.readFile srcPath
-  runMalgoM flag option do
+  runMalgoM flag do
     parsed <-
       parse srcPath src >>= \case
         Left err -> error $ show err
@@ -82,7 +82,7 @@ driveFlat srcPath = do
 driveJoin :: FilePath -> IO String
 driveJoin srcPath = do
   src <- convertString <$> BS.readFile srcPath
-  runMalgoM flag option do
+  runMalgoM flag do
     parsed <-
       parse srcPath src >>= \case
         Left err -> error $ show err

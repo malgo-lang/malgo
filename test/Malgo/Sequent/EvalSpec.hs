@@ -51,7 +51,7 @@ spec = parallel do
 setupBuiltin :: IO ArtifactPath
 setupBuiltin = do
   src <- convertString <$> BS.readFile builtinPath
-  runMalgoM flag option do
+  runMalgoM flag do
     parsed <-
       parse builtinPath src >>= \case
         Left err -> error $ show err
@@ -67,7 +67,7 @@ setupBuiltin = do
 setupPrelude :: IO ArtifactPath
 setupPrelude = do
   src <- convertString <$> BS.readFile preludePath
-  runMalgoM flag option do
+  runMalgoM flag do
     parsed <-
       parse preludePath src >>= \case
         Left err -> error $ show err
@@ -83,7 +83,7 @@ setupPrelude = do
 driveEval :: ArtifactPath -> ArtifactPath -> FilePath -> IO String
 driveEval builtinName preludeName srcPath = do
   src <- convertString <$> BS.readFile srcPath
-  runMalgoM flag option do
+  runMalgoM flag do
     parsed <-
       parse srcPath src >>= \case
         Left err -> error $ show err

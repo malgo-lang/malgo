@@ -22,20 +22,6 @@ source-repository head
 
 library
   exposed-modules:
-      Malgo.Core.Alpha
-      Malgo.Core.Eval
-      Malgo.Core.Flat
-      Malgo.Core.LambdaLift
-      Malgo.Core.Lint
-      Malgo.Core.Optimize
-      Malgo.Core.Parser
-      Malgo.Core.Syntax
-      Malgo.Core.Type
-      Malgo.Desugar.DsState
-      Malgo.Desugar.Match
-      Malgo.Desugar.Pass
-      Malgo.Desugar.Type
-      Malgo.Desugar.Unboxed
       Malgo.Driver
       Malgo.Id
       Malgo.Infer.Pass
@@ -44,7 +30,6 @@ library
       Malgo.Infer.Unify
       Malgo.Interface
       Malgo.Lens
-      Malgo.Link
       Malgo.Module
       Malgo.Monad
       Malgo.MonadUniq
@@ -187,10 +172,7 @@ test-suite malgo-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
-      Malgo.Core.EvalSpec
-      Malgo.DesugarSpec
       Malgo.InferSpec
-      Malgo.LinkSpec
       Malgo.ParserSpec
       Malgo.RefineSpec
       Malgo.RenameSpec
