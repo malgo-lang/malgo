@@ -69,7 +69,6 @@ data EvalError
   | NoMatch Range Value
   | PrimitiveNotImplemented Range Text [Value]
   | InvalidArguments Range Text [Value]
-  | MainNotFound
 
 instance Show EvalError where
   show (UndefinedVariable range name) = show $ pretty range <> ": Undefined variable: " <> pretty name
@@ -81,7 +80,6 @@ instance Show EvalError where
   show (NoMatch range value) = show $ pretty range <> ": No match for " <> pretty value
   show (PrimitiveNotImplemented range name values) = show $ pretty range <> ": Primitive " <> pretty name <> " is not implemented for " <> pretty values
   show (InvalidArguments range name values) = show $ pretty range <> ": Invalid arguments for " <> pretty name <> ": " <> pretty values
-  show MainNotFound = "Error: main function not found"
 
 type Toplevels = Map Name (Name, Statement Join)
 
@@ -145,7 +143,7 @@ evalProgram (Program {definitions}) = do
               return
               (Apply (range statement) [Construct (range statement) Tuple [] []] [finish])
               statement
-    Nothing -> throwError MainNotFound
+    Nothing -> pure () -- No main function
 
 evalStatement :: (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es, Reader Handlers :> es, IOE :> es) => Statement Join -> Eff es ()
 evalStatement (Cut producer consumer) = do

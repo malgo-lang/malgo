@@ -1,12 +1,14 @@
 -- | Malgo.Driver is the entry point of `malgo to-ll`.
 module Malgo.Driver (compile, compileFromAST, withDump, failIfError) where
 
+import Control.Exception (IOException, catch)
 import Data.ByteString qualified as BS
+import Data.Set qualified as Set
+import Data.Traversable (for)
 import Effectful
 import Effectful.Error.Static (CallStack, prettyCallStack, runError)
 import Effectful.Reader.Static
 import Effectful.State.Static.Local
-import Malgo.Core.Eval (EvalError, defaultStderr, defaultStdin, defaultStdout, eval)
 import Malgo.Core.Flat qualified as Flat
 import Malgo.Core.LambdaLift (lambdalift)
 import Malgo.Core.Lint (lint)
@@ -29,9 +31,19 @@ import Malgo.Refine.Pass (refine)
 import Malgo.Rename.Pass (rename)
 import Malgo.Rename.RnEnv qualified as RnEnv
 import Malgo.Rename.RnState (RnState (..))
+import Malgo.Sequent.Core (Join)
+import Malgo.Sequent.Core qualified as Sequent
+import Malgo.Sequent.Core.Flat (flatProgram)
+import Malgo.Sequent.Core.Join (joinProgram)
+import Malgo.Sequent.Eval (EvalError, Handlers (..), evalProgram)
+import Malgo.Sequent.ToCore (toCore)
+import Malgo.Sequent.ToFun (toFun)
 import Malgo.Syntax qualified as Syntax
 import Malgo.Syntax.Extension
 import System.Exit (exitFailure)
+import System.IO (hPutChar)
+import System.IO qualified as IO
+import System.IO.Streams qualified as Streams
 import Text.Megaparsec (errorBundlePretty)
 
 -- | `withDump` is the wrapper for check `dump` flag and output dump if that flag is `True`.
@@ -67,7 +79,7 @@ compileToCore ::
   ) =>
   ArtifactPath ->
   Syntax.Module (Malgo NewParse) ->
-  Eff es (Program (Meta Type))
+  Eff es (Sequent.Program Join)
 compileToCore srcPath parsedAst = do
   let moduleName = parsedAst.moduleName
   registerModule moduleName srcPath
@@ -83,6 +95,55 @@ compileToCore srcPath parsedAst = do
   _ <- withDump flags.debugMode "=== TYPE CHECK ===" $ pure typedAst
   refinedAst <- withDump flags.debugMode "=== REFINE ===" $ refine tcEnv typedAst
 
+  _ <- generateCore srcPath moduleName flags rnState tcEnv refinedAst
+  generateSequent srcPath moduleName rnState refinedAst
+
+generateSequent ::
+  ( IOE :> es,
+    State Uniq :> es,
+    Workspace :> es
+  ) =>
+  ArtifactPath ->
+  ModuleName ->
+  RnState ->
+  Syntax.Module (Malgo Refine) ->
+  Eff es (Sequent.Program Join)
+generateSequent srcPath moduleName rnState refinedAst = do
+  program <- runReader moduleName $ toFun refinedAst.moduleDefinition >>= toCore >>= flatProgram >>= joinProgram
+  save srcPath ".sqt" (ViaStore program)
+
+  linkSequent rnState.dependencies program
+
+linkSequent :: (Workspace :> es, IOE :> es) => Set ModuleName -> Sequent.Program Join -> Eff es (Sequent.Program Join)
+linkSequent dependencies program = do
+  deps <- for (Set.toList dependencies) \dep -> do
+    path <- getModulePath dep
+    ViaStore x <- load path ".sqt"
+    pure x
+  let program' =
+        Sequent.Program
+          { definitions =
+              program.definitions
+                <> concatMap (\Sequent.Program {definitions} -> definitions) deps,
+            dependencies = []
+          }
+  pure program'
+
+generateCore ::
+  ( Reader OptimizeOption :> es,
+    IOE :> es,
+    State (Map ModuleName Interface) :> es,
+    State Uniq :> es,
+    Workspace :> es
+  ) =>
+  ArtifactPath ->
+  ModuleName ->
+  Flag ->
+  RnState ->
+  TcEnv ->
+  Syntax.Module (Malgo Refine) ->
+  Eff es (Program (Meta Type))
+generateCore srcPath moduleName flags rnState tcEnv refinedAst = do
   (dsState, core) <- desugar tcEnv refinedAst
 
   core <- do
@@ -146,13 +207,23 @@ compileFromAST ::
   Eff es ()
 compileFromAST srcPath parsedAst = do
   let moduleName = parsedAst.moduleName
-  coreLL <- compileToCore srcPath parsedAst
-  result <- runError @EvalError $ runReader moduleName do
-    eval coreLL defaultStdin defaultStdout defaultStderr
+  core <- compileToCore srcPath parsedAst
+  stdin <- liftIO $ Streams.makeInputStream $ fmap Just getChar `catch` \(_ :: IOException) -> pure Nothing
+  stdout <- liftIO $ Streams.makeOutputStream \case
+    Just c -> putChar c
+    Nothing -> pure ()
+  stderr <- liftIO $ Streams.makeOutputStream \case
+    Just c -> hPutChar IO.stderr c
+    Nothing -> pure ()
+  result <-
+    runError @EvalError
+      $ runReader moduleName
+      $ runReader Handlers {stdin, stdout, stderr}
+      $ evalProgram core
   case result of
     Left (cs, err) -> do
       let message = prettyCallStack cs <> "\n" <> show err
-      liftIO $ hPutStrLn stderr message
+      liftIO $ hPutStrLn IO.stderr message
       liftIO exitFailure
     Right _ -> pure ()
 

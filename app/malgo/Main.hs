@@ -47,8 +47,8 @@ main = do
         Right prog -> do
           putText $ render $ pretty prog
 
-toLLOpt :: Parser EvalOpt
-toLLOpt =
+evalOpt :: Parser EvalOpt
+evalOpt =
   ( ToLLOpt
       <$> strArgument (metavar "SOURCE" <> help "Source file (relative path)" <> action "file")
       <*> switch (long "no-opt")
@@ -91,10 +91,9 @@ parseCommand = do
   where
     toLL =
       command "eval"
-        $ info (Eval <$> toLLOpt)
+        $ info (Eval <$> evalOpt)
         $ fullDesc
-        <> progDesc "Compile Malgo file (.mlg) to LLVM Textual IR (.ll)"
-        <> header "malgo to LLVM Textual IR Compiler"
+        <> progDesc "Evaluate a malgo program"
     core =
       command "core"
         $ info (Core <$> coreOpt)
