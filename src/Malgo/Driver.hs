@@ -79,7 +79,7 @@ compileToCore srcPath parsedAst = do
   rnEnv <- RnEnv.genBuiltinRnEnv
   (renamedAst, rnState) <-
     withDump flags.debugMode "=== RENAME ===" $ failIfError <$> rename rnEnv parsedAst
-  (typedAst, tcEnv) <- Infer.infer rnEnv renamedAst
+  (typedAst, tcEnv) <- failIfError <$> Infer.infer rnEnv renamedAst
   _ <- withDump flags.debugMode "=== TYPE CHECK ===" $ pure typedAst
   refinedAst <- withDump flags.debugMode "=== REFINE ===" $ refine tcEnv typedAst
 

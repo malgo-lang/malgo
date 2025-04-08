@@ -13,6 +13,9 @@ import System.Directory
 import System.FilePath
 import Test.Hspec
 
+errorcaseDir :: FilePath
+errorcaseDir = "test/Malgo/InferSpec/errors"
+
 spec :: Spec
 spec = parallel do
   runIO do
@@ -23,6 +26,9 @@ spec = parallel do
   golden "Prelude" (driveInfer preludePath)
   for_ testcases \testcase -> do
     golden (takeBaseName testcase) (driveInfer (testcaseDir </> testcase))
+  errorcases <- runIO $ filter (isExtensionOf "mlg") <$> listDirectory errorcaseDir
+  for_ errorcases \errorcase -> do
+    golden ("error " <> takeBaseName errorcase) (driveErrorInfer (errorcaseDir </> errorcase))
 
 driveInfer :: FilePath -> IO String
 driveInfer srcPath = do
@@ -34,5 +40,20 @@ driveInfer srcPath = do
         Right (_, parsed) -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
     (renamed, _) <- failIfError <$> rename rnEnv parsed
-    (typedAst, _) <- infer rnEnv renamed
+    (typedAst, _) <- failIfError <$> infer rnEnv renamed
     pure $ pShowCompact typedAst
+
+driveErrorInfer :: FilePath -> IO String
+driveErrorInfer srcPath = do
+  src <- convertString <$> BS.readFile srcPath
+  runMalgoM flag do
+    parsed <-
+      parse srcPath src >>= \case
+        Left err -> error $ show err
+        Right (_, parsed) -> pure parsed
+    rnEnv <- RnEnv.genBuiltinRnEnv
+    (renamed, _) <- failIfError <$> rename rnEnv parsed
+    result <- infer rnEnv renamed
+    case result of
+      Left (_, err) -> pure $ show err
+      Right _ -> error $ "Expected error, but successfully inferred"

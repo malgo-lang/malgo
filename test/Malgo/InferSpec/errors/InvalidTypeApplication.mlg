@@ -1,0 +1,11 @@
+data Int32 = Int32# Int32#
+
+data Maybe a = Nothing | Just a
+
+def f : { Maybe Int32 Int32 }
+def f = { Just 1 }
+
+def main = {
+  let x = Just 1;
+  x
+}

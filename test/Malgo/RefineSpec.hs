@@ -35,6 +35,6 @@ driveRefine srcPath = do
         Right (_, parsed) -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
     (renamed, _) <- failIfError <$> rename rnEnv parsed
-    (typed, tcEnv) <- infer rnEnv renamed
+    (typed, tcEnv) <- failIfError <$> infer rnEnv renamed
     refined <- refine tcEnv typed
     pure $ pShowCompact refined
