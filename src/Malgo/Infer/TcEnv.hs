@@ -1,14 +1,14 @@
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
 module Malgo.Infer.TcEnv
   ( TcEnv (..),
-    genTcEnv,
+    initTcEnv,
     insertSignature,
     insertTypeDef,
     updateTypeDef,
     insertTypeSynonym,
-    insertKind,
     mergeInterface,
   )
 where
@@ -16,10 +16,12 @@ where
 import Control.Lens (At (at), makeFieldsId, view, (%~))
 import Data.Map.Strict qualified as Map
 import Data.Maybe (fromJust)
+import Effectful (Eff, (:>))
+import Effectful.State.Static.Local (State, modify)
+import GHC.Generics (Generically (..))
 import GHC.Records (HasField)
 import Malgo.Id
 import Malgo.Infer.Kind (KindCtx)
-import Malgo.Infer.Kind qualified as Kind
 import Malgo.Infer.TypeRep
 import Malgo.Interface (Interface (..), externalFromInterface)
 import Malgo.Lens
@@ -32,10 +34,10 @@ data TcEnv = TcEnv
   { signatureMap :: Map RnId (Scheme Type),
     typeDefMap :: Map RnId (TypeDef Type),
     typeSynonymMap :: Map TypeVar ([TypeVar], Type),
-    resolvedTypeIdentMap :: Map PsId [Resolved],
-    kindCtx :: KindCtx
+    resolvedTypeIdentMap :: Map PsId [Resolved]
   }
-  deriving stock (Show)
+  deriving stock (Show, Generic)
+  deriving (Semigroup, Monoid) via Generically TcEnv
 
 makeFieldsId ''TcEnv
 
@@ -51,28 +53,26 @@ updateTypeDef name f = over typeDefMap (Map.adjust f name)
 insertTypeSynonym :: TypeVar -> ([TypeVar], Type) -> TcEnv -> TcEnv
 insertTypeSynonym name def = over typeSynonymMap (Map.insert name def)
 
-insertKind :: RnId -> Kind -> TcEnv -> TcEnv
-insertKind name kind = over kindCtx (Kind.insertKind name kind)
+mergeInterface :: (State TcEnv :> es, State KindCtx :> es) => Interface -> Eff es ()
+mergeInterface interface = do
+  modify @TcEnv \tcEnv ->
+    tcEnv
+      & ( signatureMap
+            %~ Map.union
+              ( Map.mapKeys
+                  (externalFromInterface interface)
+                  interface.signatureMap
+              )
+        )
+      & ( typeDefMap
+            %~ Map.union
+              (Map.mapKeys (externalFromInterface interface) interface.typeDefMap)
+        )
+      & (typeSynonymMap %~ Map.union interface.typeSynonymMap)
+  modify @KindCtx (Map.union interface.kindCtx)
 
-mergeInterface :: Interface -> TcEnv -> TcEnv
-mergeInterface interface tcEnv =
-  tcEnv
-    & ( signatureMap
-          %~ Map.union
-            ( Map.mapKeys
-                (externalFromInterface interface)
-                interface.signatureMap
-            )
-      )
-    & ( typeDefMap
-          %~ Map.union
-            (Map.mapKeys (externalFromInterface interface) interface.typeDefMap)
-      )
-    & (typeSynonymMap %~ Map.union interface.typeSynonymMap)
-    & (kindCtx %~ Map.union interface.kindCtx)
-
-genTcEnv :: (Applicative f, HasField "resolvedTypeIdentMap" rnEnv (Map Text [Qualified Id])) => rnEnv -> f TcEnv
-genTcEnv rnEnv = do
+initTcEnv :: (State TcEnv :> es, HasField "resolvedTypeIdentMap" rnEnv (Map Text [Qualified Id]), State KindCtx :> es) => rnEnv -> Eff es ()
+initTcEnv rnEnv = do
   let int32_t = fromJust $ findBuiltinType "Int32#" rnEnv
   let int64_t = fromJust $ findBuiltinType "Int64#" rnEnv
   let float_t = fromJust $ findBuiltinType "Float#" rnEnv
@@ -80,8 +80,8 @@ genTcEnv rnEnv = do
   let char_t = fromJust $ findBuiltinType "Char#" rnEnv
   let string_t = fromJust $ findBuiltinType "String#" rnEnv
   let ptr_t = fromJust $ findBuiltinType "Ptr#" rnEnv
-  pure
-    $ TcEnv
+  modify \tcEnv ->
+    tcEnv
       { signatureMap = mempty,
         typeDefMap =
           Map.fromList
@@ -94,18 +94,18 @@ genTcEnv rnEnv = do
               (ptr_t, TypeDef TyPtr [] [])
             ],
         typeSynonymMap = mempty,
-        resolvedTypeIdentMap = rnEnv.resolvedTypeIdentMap,
-        kindCtx =
-          Map.fromList
-            [ (int32_t, TYPE),
-              (int64_t, TYPE),
-              (float_t, TYPE),
-              (double_t, TYPE),
-              (char_t, TYPE),
-              (string_t, TYPE),
-              (ptr_t, TYPE `TyArr` TYPE)
-            ]
+        resolvedTypeIdentMap = rnEnv.resolvedTypeIdentMap
       }
+  modify @KindCtx \_ ->
+    Map.fromList
+      [ (int32_t, TYPE),
+        (int64_t, TYPE),
+        (float_t, TYPE),
+        (double_t, TYPE),
+        (char_t, TYPE),
+        (string_t, TYPE),
+        (ptr_t, TYPE `TyArr` TYPE)
+      ]
 
 findBuiltinType ::
   (HasField "resolvedTypeIdentMap" rnEnv (Map Text [Qualified Id])) =>

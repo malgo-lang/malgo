@@ -59,7 +59,7 @@ driveToCore srcPath = do
         Right (_, parsed) -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
     (renamed, _) <- failIfError <$> rename rnEnv parsed
-    (typed, tcEnv) <- failIfError <$> infer rnEnv renamed
+    (typed, tcEnv, _) <- failIfError <$> infer rnEnv renamed
     refined <- refine tcEnv typed
     program <- runReader refined.moduleName $ toFun refined.moduleDefinition >>= toCore
     pure $ sShow program
@@ -74,7 +74,7 @@ driveFlat srcPath = do
         Right (_, parsed) -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
     (renamed, _) <- failIfError <$> rename rnEnv parsed
-    (typed, tcEnv) <- failIfError <$> infer rnEnv renamed
+    (typed, tcEnv, _) <- failIfError <$> infer rnEnv renamed
     refined <- refine tcEnv typed
     program <- runReader refined.moduleName $ toFun refined.moduleDefinition >>= toCore >>= flatProgram
     pure $ sShow program
@@ -89,7 +89,7 @@ driveJoin srcPath = do
         Right (_, parsed) -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
     (renamed, _) <- failIfError <$> rename rnEnv parsed
-    (typed, tcEnv) <- failIfError <$> infer rnEnv renamed
+    (typed, tcEnv, _) <- failIfError <$> infer rnEnv renamed
     refined <- refine tcEnv typed
     program <- runReader refined.moduleName $ toFun refined.moduleDefinition >>= toCore >>= flatProgram >>= joinProgram
     pure $ sShow program

@@ -50,7 +50,7 @@ driveToFun srcPath = do
         Right (_, parsed) -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
     (renamed, _) <- failIfError <$> rename rnEnv parsed
-    (typed, tcEnv) <- failIfError <$> infer rnEnv renamed
+    (typed, tcEnv, _) <- failIfError <$> infer rnEnv renamed
     refined <- refine tcEnv typed
     program <- runReader refined.moduleName $ toFun refined.moduleDefinition
     pure $ sShow program

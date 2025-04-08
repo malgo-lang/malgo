@@ -79,11 +79,11 @@ compileToCore srcPath parsedAst = do
   rnEnv <- RnEnv.genBuiltinRnEnv
   (renamedAst, rnState) <-
     withDump flags.debugMode "=== RENAME ===" $ failIfError <$> rename rnEnv parsedAst
-  (typedAst, tcEnv) <- failIfError <$> Infer.infer rnEnv renamedAst
+  (typedAst, tcEnv, kindCtx) <- failIfError <$> Infer.infer rnEnv renamedAst
   _ <- withDump flags.debugMode "=== TYPE CHECK ===" $ pure typedAst
   refinedAst <- withDump flags.debugMode "=== REFINE ===" $ refine tcEnv typedAst
 
-  let inf = buildInterface moduleName rnState tcEnv
+  let inf = buildInterface moduleName rnState tcEnv kindCtx
   save srcPath ".mlgi" (ViaStore inf)
 
   generateSequent srcPath moduleName rnState refinedAst

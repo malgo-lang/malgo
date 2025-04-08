@@ -56,7 +56,7 @@ setupBuiltin = do
         Right (_, parsed) -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
     (renamed, _) <- failIfError <$> rename rnEnv parsed
-    (typed, tcEnv) <- failIfError <$> infer rnEnv renamed
+    (typed, tcEnv, _) <- failIfError <$> infer rnEnv renamed
     refined <- refine tcEnv typed
     program <- runReader refined.moduleName $ toFun refined.moduleDefinition >>= toCore >>= flatProgram >>= joinProgram
     saveCore refined.moduleName program
@@ -72,7 +72,7 @@ setupPrelude = do
         Right (_, parsed) -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
     (renamed, _) <- failIfError <$> rename rnEnv parsed
-    (typed, tcEnv) <- failIfError <$> infer rnEnv renamed
+    (typed, tcEnv, _) <- failIfError <$> infer rnEnv renamed
     refined <- refine tcEnv typed
     program <- runReader refined.moduleName $ toFun refined.moduleDefinition >>= toCore >>= flatProgram >>= joinProgram
     saveCore refined.moduleName program
@@ -88,7 +88,7 @@ driveEval builtinName preludeName srcPath = do
         Right (_, parsed) -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
     (renamed, _) <- failIfError <$> rename rnEnv parsed
-    (typed, tcEnv) <- failIfError <$> infer rnEnv renamed
+    (typed, tcEnv, _) <- failIfError <$> infer rnEnv renamed
     refined <- refine tcEnv typed
     Program {definitions = program} <- runReader refined.moduleName $ toFun refined.moduleDefinition >>= toCore >>= flatProgram >>= joinProgram
 

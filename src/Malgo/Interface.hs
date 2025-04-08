@@ -55,22 +55,22 @@ buildInterface ::
   ( HasField "typeSynonymMap" tcEnv (Map GT.TypeVar ([GT.TypeVar], GT.Type)),
     HasField "signatureMap" tcEnv (Map RnId (GT.Scheme GT.Type)),
     HasField "typeDefMap" tcEnv (Map RnId (GT.TypeDef GT.Type)),
-    HasField "kindCtx" tcEnv KindCtx,
     HasField "dependencies" rnState (Set ModuleName),
     HasField "infixInfo" rnState (Map Id (Assoc, Int))
   ) =>
   ModuleName ->
   rnState ->
   tcEnv ->
+  KindCtx ->
   Interface
-buildInterface moduleName rnState tcEnv =
+buildInterface moduleName rnState tcEnv kindCtx =
   let inf =
         Interface
           { moduleName,
             signatureMap = mempty,
             typeDefMap = mempty,
             typeSynonymMap = mempty,
-            kindCtx = mempty,
+            kindCtx = kindCtx,
             infixInfo = Map.mapKeys (\id -> id.name) rnState.infixInfo,
             dependencies = rnState.dependencies
           }
@@ -87,7 +87,7 @@ buildInterface moduleName rnState tcEnv =
           when (tv.sort == External && tv.moduleName == moduleName) do
             modify \inf@Interface {..} ->
               inf {typeSynonymMap = Map.insert tv (tvs, ty) typeSynonymMap}
-        ifor_ tcEnv.kindCtx $ \tv kind -> do
+        ifor_ kindCtx $ \tv kind -> do
           when (tv.sort == External && tv.moduleName == moduleName) do
             modify \inf@Interface {..} ->
               inf {kindCtx = insertKind tv kind kindCtx}

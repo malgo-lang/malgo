@@ -40,7 +40,7 @@ driveInfer srcPath = do
         Right (_, parsed) -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
     (renamed, _) <- failIfError <$> rename rnEnv parsed
-    (typedAst, _) <- failIfError <$> infer rnEnv renamed
+    (typedAst, _, _) <- failIfError <$> infer rnEnv renamed
     pure $ pShowCompact typedAst
 
 driveErrorInfer :: FilePath -> IO String
