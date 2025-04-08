@@ -26,6 +26,7 @@ import Effectful.State.Static.Local
 import GHC.Records (HasField)
 import Malgo.Id
 import Malgo.Infer.Error
+import Malgo.Infer.Kind
 import Malgo.Infer.TcEnv (TcEnv (..))
 import Malgo.Infer.TypeRep
 import Malgo.Lens (kindCtx)

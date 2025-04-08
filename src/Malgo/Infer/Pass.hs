@@ -16,7 +16,7 @@ import GHC.Records (HasField)
 import Malgo.Id
 import Malgo.Infer.Error
 import Malgo.Infer.TcEnv
-import Malgo.Infer.TypeRep hiding (insertKind)
+import Malgo.Infer.TypeRep
 import Malgo.Infer.Unify hiding (lookupVar)
 import Malgo.Interface (Interface (..), loadInterface)
 import Malgo.Lens

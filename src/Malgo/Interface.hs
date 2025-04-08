@@ -18,7 +18,7 @@ import Effectful (Eff, IOE, runPureEff, (:>))
 import Effectful.State.Static.Local (State, execState, get, modify)
 import GHC.Records (HasField)
 import Malgo.Id
-import Malgo.Infer.TypeRep (KindCtx, insertKind)
+import Malgo.Infer.Kind (KindCtx, insertKind)
 import Malgo.Infer.TypeRep qualified as GT
 import Malgo.Module
 import Malgo.Prelude

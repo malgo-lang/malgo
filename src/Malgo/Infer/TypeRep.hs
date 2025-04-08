@@ -7,12 +7,9 @@ module Malgo.Infer.TypeRep
   ( PrimT (..),
     Kind,
     TypeVar,
-    KindCtx,
-    insertKind,
     Type (..),
     MetaVar (..),
     HasType (..),
-    HasKind (..),
     Scheme (..),
     TypeDef (..),
     TypeMap,
@@ -28,7 +25,7 @@ module Malgo.Infer.TypeRep
   )
 where
 
-import Control.Lens (At (at), Traversal', mapped, (?~), (^.), _1, _2)
+import Control.Lens (At (at), Traversal', mapped, (^.), _1, _2)
 import Data.Data (Data)
 import Data.Map.Strict qualified as Map (fromList, toList)
 import Data.Set qualified as Set (singleton)
@@ -63,16 +60,6 @@ instance Pretty PrimT where
 type Kind = Type
 
 type TypeVar = Id
-
-type KindCtx = Map TypeVar Kind
-
-insertKind :: TypeVar -> Kind -> KindCtx -> KindCtx
-insertKind tv k ctx
-  | k == TYPE = ctx
-  | otherwise = ctx & at tv ?~ k
-
-askKind :: TypeVar -> KindCtx -> Kind
-askKind tv ctx = fromMaybe TYPE (ctx ^. at tv)
 
 -- | Definition of `Type`
 data Type
@@ -167,9 +154,6 @@ instance HasType MetaVar where
   typeOf = TyMeta
   types _ (MetaVar v) = pure $ MetaVar v
 
-instance HasKind MetaVar where
-  kindOf ctx MetaVar {metaVar} = askKind metaVar ctx
-
 -------------------------
 -- HasType and HasKind --
 -------------------------
@@ -179,38 +163,13 @@ class HasType a where
   typeOf :: a -> Type
   types :: Traversal' a Type
 
-class HasKind a where
-  kindOf :: KindCtx -> a -> Kind
-
-instance HasKind TypeVar where
-  kindOf ctx v = askKind v ctx
-
-instance HasKind PrimT where
-  kindOf _ _ = TYPE
-
 instance HasType Type where
   typeOf = identity
   types = identity
 
-instance HasKind Type where
-  kindOf ctx (TyApp (kindOf ctx -> TyArr _ k) _) = k
-  kindOf _ TyApp {} = error "invalid kind"
-  kindOf ctx (TyVar v) = kindOf ctx v
-  kindOf ctx (TyCon c) = kindOf ctx c
-  kindOf ctx (TyPrim p) = kindOf ctx p
-  kindOf ctx (TyArr _ t2) = kindOf ctx t2
-  kindOf _ (TyTuple n) = buildTyArr (replicate n TYPE) TYPE
-  kindOf _ (TyRecord _) = TYPE
-  kindOf _ TyPtr = TYPE `TyArr` TYPE
-  kindOf _ TYPE = TYPE -- Type :: Type
-  kindOf ctx (TyMeta tv) = kindOf ctx tv
-
 instance HasType Void where
   typeOf = absurd
   types _ = absurd
-
-instance HasKind Void where
-  kindOf _ = absurd
 
 -- | Universally quantified type
 data Scheme ty = Forall [TypeVar] ty
@@ -233,9 +192,6 @@ data TypeDef ty = TypeDef
 
 instance (Pretty ty) => Pretty (TypeDef ty) where
   pretty (TypeDef c q u) = pretty (c, q, u)
-
-instance (HasKind ty) => HasKind (TypeDef ty) where
-  kindOf ctx TypeDef {typeConstructor} = kindOf ctx typeConstructor
 
 -----------------------
 -- Unification monad --

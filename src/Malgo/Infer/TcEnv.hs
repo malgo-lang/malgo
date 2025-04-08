@@ -2,8 +2,7 @@
 {-# LANGUAGE UndecidableInstances #-}
 
 module Malgo.Infer.TcEnv
-  ( RecordTypeName,
-    TcEnv (..),
+  ( TcEnv (..),
     genTcEnv,
     insertSignature,
     insertTypeDef,
@@ -19,16 +18,15 @@ import Data.Map.Strict qualified as Map
 import Data.Maybe (fromJust)
 import GHC.Records (HasField)
 import Malgo.Id
-import Malgo.Infer.TypeRep hiding (insertKind)
-import Malgo.Infer.TypeRep qualified as TypeRep
+import Malgo.Infer.Kind (KindCtx)
+import Malgo.Infer.Kind qualified as Kind
+import Malgo.Infer.TypeRep
 import Malgo.Interface (Interface (..), externalFromInterface)
 import Malgo.Lens
 import Malgo.Module
 import Malgo.Prelude
 import Malgo.Rename.RnEnv (Resolved)
 import Malgo.Syntax.Extension
-
-type RecordTypeName = Text
 
 data TcEnv = TcEnv
   { signatureMap :: Map RnId (Scheme Type),
@@ -54,7 +52,7 @@ insertTypeSynonym :: TypeVar -> ([TypeVar], Type) -> TcEnv -> TcEnv
 insertTypeSynonym name def = over typeSynonymMap (Map.insert name def)
 
 insertKind :: RnId -> Kind -> TcEnv -> TcEnv
-insertKind name kind = over kindCtx (TypeRep.insertKind name kind)
+insertKind name kind = over kindCtx (Kind.insertKind name kind)
 
 mergeInterface :: Interface -> TcEnv -> TcEnv
 mergeInterface interface tcEnv =
