@@ -15,7 +15,7 @@ import Effectful.Writer.Static.Local
 import GHC.Records (HasField)
 import Malgo.Id
 import Malgo.Infer.Error
-import Malgo.Infer.Kind (KindCtx, insertKind)
+import Malgo.Infer.Kind (KindCtx, insertKind, kindOf)
 import Malgo.Infer.TcEnv
 import Malgo.Infer.TypeRep
 import Malgo.Infer.Unify hiding (lookupVar)
@@ -148,7 +148,7 @@ tcTypeDefinitions typeSynonyms dataDefs = do
     buildTyConKind [] = TYPE
     buildTyConKind (_ : xs) = TyArr TYPE (buildTyConKind xs)
 
-tcTypeSynonyms :: (State TcEnv :> es, IOE :> es, State Uniq :> es, Reader ModuleName :> es, Reader Flag :> es, Error InferError :> es) => [TypeSynonym (Malgo Rename)] -> Eff es [TypeSynonym (Malgo Infer)]
+tcTypeSynonyms :: (State TcEnv :> es, IOE :> es, State Uniq :> es, Reader ModuleName :> es, Reader Flag :> es, Error InferError :> es, State KindCtx :> es) => [TypeSynonym (Malgo Rename)] -> Eff es [TypeSynonym (Malgo Infer)]
 tcTypeSynonyms ds =
   for ds \(pos, name, params, typ) -> do
     lookupType pos name >>= \case
@@ -161,6 +161,9 @@ tcTypeSynonyms ds =
           params
           params'
         typ' <- transType typ
+        -- Check typ a has valid kind.
+        ctx <- get @KindCtx
+        _ <- kindOf pos ctx typ'
         modify $ insertTypeSynonym con (params', typ')
         pure (pos, name, params, tcType typ)
       _ -> error "unreachable: tcTypeSynonyms"
