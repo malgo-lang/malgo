@@ -1,8 +1,11 @@
 module Malgo.Infer.Kind (KindCtx, insertKind, askKind, HasKind (..)) where
 
 import Control.Lens (At (at), (?~), (^.))
+import Effectful (Eff, (:>))
+import Effectful.Error.Static (Error, throwError)
+import Malgo.Infer.Error
 import Malgo.Infer.TypeRep
-import Malgo.Prelude
+import Malgo.Prelude hiding (throwError)
 
 -- * Kind context
 
@@ -17,32 +20,35 @@ askKind :: TypeVar -> KindCtx -> Kind
 askKind tv ctx = fromMaybe TYPE (ctx ^. at tv)
 
 class HasKind a where
-  kindOf :: KindCtx -> a -> Kind
+  kindOf :: (Error InferError :> es) => Range -> KindCtx -> a -> Eff es Kind
 
 instance HasKind TypeVar where
-  kindOf ctx v = askKind v ctx
+  kindOf _ ctx v = pure $ askKind v ctx
 
 instance HasKind PrimT where
-  kindOf _ _ = TYPE
+  kindOf _ _ _ = pure TYPE
 
 instance HasKind Type where
-  kindOf ctx (TyApp (kindOf ctx -> TyArr _ k) _) = k
-  kindOf _ TyApp {} = error "invalid kind"
-  kindOf ctx (TyVar v) = kindOf ctx v
-  kindOf ctx (TyCon c) = kindOf ctx c
-  kindOf ctx (TyPrim p) = kindOf ctx p
-  kindOf ctx (TyArr _ t2) = kindOf ctx t2
-  kindOf _ (TyTuple n) = buildTyArr (replicate n TYPE) TYPE
-  kindOf _ (TyRecord _) = TYPE
-  kindOf _ TyPtr = TYPE `TyArr` TYPE
-  kindOf _ TYPE = TYPE -- Type :: Type
-  kindOf ctx (TyMeta tv) = kindOf ctx tv
+  kindOf range ctx (TyApp t1 t2) = do
+    kind <- kindOf range ctx t1
+    case kind of
+      TyArr _ k -> pure k
+      _ -> throwError $ InvalidTypeApplication range t1 t2
+  kindOf range ctx (TyVar v) = kindOf range ctx v
+  kindOf range ctx (TyCon c) = kindOf range ctx c
+  kindOf range ctx (TyPrim p) = kindOf range ctx p
+  kindOf range ctx (TyArr _ t2) = kindOf range ctx t2
+  kindOf _ _ (TyTuple n) = pure $ buildTyArr (replicate n TYPE) TYPE
+  kindOf _ _ (TyRecord _) = pure TYPE
+  kindOf _ _ TyPtr = pure $ TYPE `TyArr` TYPE
+  kindOf _ _ TYPE = pure TYPE -- Type :: Type
+  kindOf range ctx (TyMeta tv) = kindOf range ctx tv
 
 instance HasKind Void where
-  kindOf _ = absurd
+  kindOf _ _ = absurd
 
 instance HasKind MetaVar where
-  kindOf ctx MetaVar {metaVar} = askKind metaVar ctx
+  kindOf _ ctx MetaVar {metaVar} = pure $ askKind metaVar ctx
 
 instance (HasKind ty) => HasKind (TypeDef ty) where
-  kindOf ctx TypeDef {typeConstructor} = kindOf ctx typeConstructor
+  kindOf range ctx TypeDef {typeConstructor} = kindOf range ctx typeConstructor

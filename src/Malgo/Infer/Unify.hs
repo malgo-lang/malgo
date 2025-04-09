@@ -63,35 +63,37 @@ freshVar hint = do
   pure $ MetaVar newVar
 
 bindVar :: (IOE :> es, State TcEnv :> es, State TypeMap :> es, Reader Flag :> es, Error InferError :> es, State KindCtx :> es) => Range -> MetaVar -> Type -> Eff es ()
-bindVar x v t = do
+bindVar range v t = do
   when (occursCheck v t) do
-    throwError $ OccursCheckFailed x v t
+    throwError $ OccursCheckFailed range v t
   ctx <- get
-  solve x [(x, kindOf ctx v.metaVar :~ kindOf ctx t)]
+  vKind <- kindOf range ctx v.metaVar
+  tKind <- kindOf range ctx t
+  solve range [(range, vKind :~ tKind)]
   modify @TypeMap (Map.insert v t)
   where
     occursCheck :: MetaVar -> Type -> Bool
     occursCheck v t = Set.member v (freevars t)
 
-zonk :: (State TypeMap :> es, State TcEnv :> es, State KindCtx :> es) => Type -> Eff es Type
-zonk (TyApp t1 t2) = TyApp <$> zonk t1 <*> zonk t2
-zonk (TyVar v) = do
+zonk :: (State TypeMap :> es, State TcEnv :> es, State KindCtx :> es, Error InferError :> es) => Range -> Type -> Eff es Type
+zonk range (TyApp t1 t2) = TyApp <$> zonk range t1 <*> zonk range t2
+zonk range (TyVar v) = do
   ctx <- get
-  k <- zonk $ kindOf ctx v
+  k <- zonk range =<< kindOf range ctx v
   modify (insertKind v k)
   pure $ TyVar v
-zonk (TyCon c) = do
+zonk range (TyCon c) = do
   ctx <- get
-  k <- zonk $ kindOf ctx c
+  k <- zonk range =<< kindOf range ctx c
   modify (insertKind c k)
   pure $ TyCon c
-zonk t@TyPrim {} = pure t
-zonk (TyArr t1 t2) = TyArr <$> zonk t1 <*> zonk t2
-zonk t@TyTuple {} = pure t
-zonk (TyRecord kts) = TyRecord <$> traverse zonk kts
-zonk TyPtr = pure TyPtr
-zonk TYPE = pure TYPE
-zonk t@(TyMeta v) = fromMaybe t <$> (traverse zonk =<< lookupVar v)
+zonk _ t@TyPrim {} = pure t
+zonk range (TyArr t1 t2) = TyArr <$> zonk range t1 <*> zonk range t2
+zonk _ t@TyTuple {} = pure t
+zonk range (TyRecord kts) = TyRecord <$> traverse (zonk range) kts
+zonk _ TyPtr = pure TyPtr
+zonk _ TYPE = pure TYPE
+zonk range t@(TyMeta v) = fromMaybe t <$> (traverse (zonk range) =<< lookupVar v)
 
 -- | 'Right' (substituation, new constraints) or 'Left' (position, error message)
 type UnifyResult ann = Either InferError (Map MetaVar Type, [(Range, Constraint)])
@@ -118,9 +120,9 @@ unify x t1 t2 = Left $ UnificationError x t1 t2
 -- * Constraint solver
 
 solve :: (State TypeMap :> es, State TcEnv :> es, IOE :> es, Reader Flag :> es, Error InferError :> es, State KindCtx :> es) => Range -> [(Range, Constraint)] -> Eff es ()
-solve pos = solveLoop (5000 :: Int)
+solve range = solveLoop (5000 :: Int)
   where
-    solveLoop n _ | n <= 0 = throwError $ IterationLimitExceeded pos
+    solveLoop n _ | n <= 0 = throwError $ IterationLimitExceeded range
     solveLoop _ [] = pass
     solveLoop n ((x, t1 :~ t2) : cs) = do
       abbrEnv <- gets @TcEnv (.typeSynonymMap)
@@ -130,33 +132,33 @@ solve pos = solveLoop (5000 :: Int)
         Left err -> throwError err
         Right (binds, cs') -> do
           itraverse_ (bindVar x) binds
-          constraints <- traverse zonkConstraint (cs' <> cs)
+          constraints <- traverse (zonkConstraint range) (cs' <> cs)
           solveLoop (n - 1) constraints
-    zonkConstraint (m, x :~ y) = (m,) <$> ((:~) <$> zonk x <*> zonk y)
+    zonkConstraint range (m, x :~ y) = (m,) <$> ((:~) <$> zonk range x <*> zonk range y)
 
 generalize ::
   (State TypeMap :> es, State TcEnv :> es, IOE :> es, Reader Flag :> es, Error InferError :> es, State KindCtx :> es) =>
   Range ->
   Type ->
   Eff es (Scheme Type)
-generalize x term = do
-  zonkedTerm <- zonk term
+generalize range term = do
+  zonkedTerm <- zonk range term
   let fvs = Set.toList $ freevars zonkedTerm
   let as = map toBound fvs
-  zipWithM_ (\fv a -> bindVar x fv $ TyVar a) fvs as
-  Forall as <$> zonk zonkedTerm
+  zipWithM_ (\fv a -> bindVar range fv $ TyVar a) fvs as
+  Forall as <$> zonk range zonkedTerm
 
 generalizeMutRecs ::
   (State TypeMap :> es, State TcEnv :> es, IOE :> es, Reader Flag :> es, Error InferError :> es, State KindCtx :> es) =>
   Range ->
   [Type] ->
   Eff es ([TypeVar], [Type])
-generalizeMutRecs x terms = do
-  zonkedTerms <- traverse zonk terms
+generalizeMutRecs range terms = do
+  zonkedTerms <- traverse (zonk range) terms
   let fvs = Set.toList $ mconcat $ map freevars zonkedTerms
   let as = map toBound fvs
-  zipWithM_ (\fv a -> bindVar x fv $ TyVar a) fvs as
-  (as,) <$> traverse zonk zonkedTerms
+  zipWithM_ (\fv a -> bindVar range fv $ TyVar a) fvs as
+  (as,) <$> traverse (zonk range) zonkedTerms
 
 -- `toBound` "generates" a new bound variable from a free variable.
 -- But it's not really generating a new variable, it's just using the free variable as a bound variable.
@@ -166,10 +168,12 @@ toBound :: (HasField "metaVar" r a) => r -> a
 toBound tv = tv.metaVar
 
 instantiate :: (Reader ModuleName :> es, State Uniq :> es, State TcEnv :> es, State TypeMap :> es, IOE :> es, Reader Flag :> es, Error InferError :> es, State KindCtx :> es) => Range -> Scheme Type -> Eff es Type
-instantiate x (Forall as t) = do
+instantiate range (Forall as t) = do
   avs <- for as \a -> do
     v <- TyMeta <$> freshVar (Just a.name)
     ctx <- get
-    solve x [(x, kindOf ctx a :~ kindOf ctx v)]
+    aKind <- kindOf range ctx a
+    vKind <- kindOf range ctx v
+    solve range [(range, aKind :~ vKind)]
     pure (a, v)
   pure $ applySubst (Map.fromList avs) t

@@ -20,7 +20,6 @@ import Malgo.Infer.TcEnv
 import Malgo.Infer.TypeRep
 import Malgo.Infer.Unify hiding (lookupVar)
 import Malgo.Interface (Interface (..), loadInterface)
-import Malgo.Lens
 import Malgo.Module
 import Malgo.MonadUniq
 import Malgo.Prelude hiding (Constraint, throwError)
@@ -64,16 +63,37 @@ infer rnEnv (Module name bg) = runError @InferError $ runReader name $ do
     runTypeUnify do
       bg' <- tcBindGroup bg
       abbrEnv <- gets @TcEnv (.typeSynonymMap)
-      zonkedBg <-
-        traverseOf (scDefs . traversed . traversed . _1 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv) bg'
-          >>= traverseOf (scDefs . traversed . traversed . _3 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
-          >>= traverseOf (foreigns . traversed . _1 . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
-      zonkedTcEnv <-
-        get
-          >>= traverseOf (signatureMap . traversed . traversed . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
-          >>= traverseOf (typeDefMap . traversed . traversed . types) (zonk >=> pure . expandAllTypeSynonym abbrEnv)
+      zonkedBg <- zonkBindGroup abbrEnv bg'
+      tcEnv <- get @TcEnv
+      zonkedTcEnv <- zonkTcEnv (range name) abbrEnv tcEnv
       kindCtx <- get
       pure (Module name zonkedBg, zonkedTcEnv, kindCtx)
+  where
+    zonkBindGroup abbrEnv BindGroup {..} = do
+      _scDefs <- traverse (zonkScDefs abbrEnv) _scDefs
+      _foreigns <- traverse (zonkForeign abbrEnv) _foreigns
+      pure BindGroup {..}
+
+    zonkScDefs abbrEnv scDefs = do
+      for scDefs \(x, name, expr) -> do
+        x <- traverseOf types (zonk x.value >=> pure . expandAllTypeSynonym abbrEnv) x
+        expr <- traverseOf types (zonk x.value >=> pure . expandAllTypeSynonym abbrEnv) expr
+        pure (x, name, expr)
+
+    zonkForeign abbrEnv (Typed ty (range, raw), name, typ) = do
+      ty <- traverseOf types (zonk range >=> pure . expandAllTypeSynonym abbrEnv) ty
+      pure (Typed ty (range, raw), name, typ)
+
+    zonkTcEnv range abbrEnv TcEnv {..} = do
+      signatureMap <- traverse (zonkSignature range abbrEnv) signatureMap
+      typeDefMap <- traverse (zonkTypeDef range abbrEnv) typeDefMap
+      pure TcEnv {..}
+
+    zonkSignature range abbrEnv scheme =
+      traverseOf (traverse . types) (zonk range >=> pure . expandAllTypeSynonym abbrEnv) scheme
+
+    zonkTypeDef range abbrEnv typeDef =
+      traverseOf (traverse . types) (zonk range >=> pure . expandAllTypeSynonym abbrEnv) typeDef
 
 tcBindGroup ::
   ( Reader ModuleName :> es,

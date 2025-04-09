@@ -16,6 +16,7 @@ data InferError
   | OccursCheckFailed {range :: Range, var :: MetaVar, typ :: Type}
   | UnificationError {range :: Range, expectedType :: Type, actualType :: Type}
   | IterationLimitExceeded {range :: Range}
+  | InvalidTypeApplication {range :: Range, callee :: Type, arg :: Type}
 
 instance Pretty InferError where
   pretty NotInScope {..} =
@@ -66,6 +67,14 @@ instance Pretty InferError where
     sep
       [ pretty range <> ":",
         "Iteration limit exceeded"
+      ]
+  pretty InvalidTypeApplication {..} =
+    sep
+      [ pretty range <> ":",
+        "Invalid type application:"
+          <+> pretty callee
+          <+> "cannot be applied to"
+          <+> pretty arg
       ]
 
 instance Show InferError where

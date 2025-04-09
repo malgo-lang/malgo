@@ -45,6 +45,7 @@ import System.Directory (canonicalizePath, createDirectoryIfMissing, doesFileExi
 import System.Directory.Extra (listDirectories)
 import System.FilePath (makeRelative)
 import System.FilePath qualified as F
+import Text.Megaparsec.Pos (initialPos)
 import Text.Pretty.Simple (pShowNoColor)
 
 data ModuleName
@@ -52,6 +53,10 @@ data ModuleName
   | Artifact ArtifactPath
   deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
   deriving anyclass (Hashable, ToJSON, ToJSONKey, FromJSON, FromJSONKey, Store)
+
+instance HasRange ModuleName where
+  range (ModuleName raw) = Range (initialPos $ convertString raw) (initialPos $ convertString raw)
+  range (Artifact path) = Range (initialPos $ toFilePath path.relPath) (initialPos $ toFilePath path.relPath)
 
 instance ToSExpr ModuleName where
   toSExpr (ModuleName raw) = S.A $ S.Symbol $ raw
