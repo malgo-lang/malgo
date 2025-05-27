@@ -26,5 +26,4 @@ depends = ["build"]
 run = "cabal exec malgo-exe"
 [tasks.changelog]
 description = "Generate changelog"
-# TODO: Change the version range to v3.0.0.. when it is released
-run = "git-chglog -o CHANGELOG.md v3.0.0-wip.."
+run = "git-chglog -o CHANGELOG.md"
