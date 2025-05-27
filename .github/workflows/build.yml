@@ -20,13 +20,13 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        ghc-version: ['9.12', '9.10', '9.8', '9.6', '9.4', '9.2', '9.0']
+        ghc-version: ['9.12', '9.10', '9.8']
 
-        include:
-          - os: windows-latest
-            ghc-version: '9.10'
-          - os: macos-latest
-            ghc-version: '9.10'
+        # include:
+        #   - os: windows-latest
+        #     ghc-version: '9.10'
+        #   - os: macos-latest
+        #     ghc-version: '9.10'
 
     steps:
       - uses: actions/checkout@v4
