@@ -1,6 +1,9 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
+
+<a name="v2.0.0"></a>
+## [v2.0.0] - 2025-05-27
 ### Chore
 - update cachix-action to version 16 in GitHub Actions workflow
 - update GitHub Actions to use specific versions of actions
@@ -115,6 +118,23 @@
 - implement eval
 - **rename:** handle Project expressions in rnExpr
 - **rename:** add NewRename pass
+
+### Reverts
+- Add Windows testing job to Nix workflow
+- generate changelog
+
+### Pull Requests
+- Merge pull request [#188](https://github.com/malgo-lang/malgo/issues/188) from malgo-lang/update_flake_lock_action
+- Merge pull request [#190](https://github.com/malgo-lang/malgo/issues/190) from malgo-lang/dependabot/github_actions/DeterminateSystems/nix-installer-action-17
+- Merge pull request [#191](https://github.com/malgo-lang/malgo/issues/191) from malgo-lang/dependabot/github_actions/cachix/install-nix-action-31.3.0
+- Merge pull request [#192](https://github.com/malgo-lang/malgo/issues/192) from malgo-lang/dependabot/github_actions/DeterminateSystems/update-flake-lock-25
+- Merge pull request [#186](https://github.com/malgo-lang/malgo/issues/186) from malgo-lang/remove-old-core
+- Merge pull request [#185](https://github.com/malgo-lang/malgo/issues/185) from malgo-lang/update_flake_lock_action
+- Merge pull request [#183](https://github.com/malgo-lang/malgo/issues/183) from malgo-lang/dependabot/github_actions/cachix/install-nix-action-31
+- Merge pull request [#184](https://github.com/malgo-lang/malgo/issues/184) from malgo-lang/use-unicode-identifier
+- Merge pull request [#182](https://github.com/malgo-lang/malgo/issues/182) from malgo-lang/sequent-core
+- Merge pull request [#181](https://github.com/malgo-lang/malgo/issues/181) from malgo-lang/interpreter
+- Merge pull request [#180](https://github.com/malgo-lang/malgo/issues/180) from malgo-lang:dependabot/github_actions/orhun/git-cliff-action-4
 
 
 <a name="v1.0.0"></a>
@@ -740,7 +760,8 @@
 - Merge pull request [#1](https://github.com/malgo-lang/malgo/issues/1) from takoeight0821/rewrite
 
 
-[Unreleased]: https://github.com/malgo-lang/malgo/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/malgo-lang/malgo/compare/v2.0.0...HEAD
+[v2.0.0]: https://github.com/malgo-lang/malgo/compare/v1.0.0...v2.0.0
 [v1.0.0]: https://github.com/malgo-lang/malgo/compare/v0.3.0...v1.0.0
 [v0.3.0]: https://github.com/malgo-lang/malgo/compare/v0.2.0...v0.3.0
 [v0.2.0]: https://github.com/malgo-lang/malgo/compare/v0.1.0...v0.2.0
