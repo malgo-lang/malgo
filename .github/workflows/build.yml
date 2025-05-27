@@ -30,6 +30,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Remove cabal.project.freeze
+        run: rm -f cabal.project.freeze
 
       - name: Set up GHC ${{ matrix.ghc-version }}
         uses: haskell-actions/setup@v2
@@ -42,8 +44,8 @@ jobs:
 
       - name: Configure the build
         run: |
-          cabal configure --enable-tests --enable-benchmarks --disable-documentation --project-file=cabal.project
-          cabal build all --dry-run --project-file=cabal.project
+          cabal configure --enable-tests --enable-benchmarks --disable-documentation
+          cabal build all --dry-run
         # The last step generates dist-newstyle/cache/plan.json for the cache key.
 
       - name: Restore cached dependencies
@@ -59,7 +61,7 @@ jobs:
       - name: Install dependencies
         # If we had an exact cache hit, the dependencies will be up to date.
         if: steps.cache.outputs.cache-hit != 'true'
-        run: cabal build all --only-dependencies --project-file=cabal.project
+        run: cabal build all --only-dependencies
 
       # Cache dependencies already here, so that we do not have to rebuild them should the subsequent steps fail.
       - name: Save cached dependencies
@@ -71,17 +73,17 @@ jobs:
           key: ${{ steps.cache.outputs.cache-primary-key }}
 
       - name: Build
-        run: cabal build all --project-file=cabal.project
+        run: cabal build all
 
       - name: Run tests
-        run: cabal test all --project-file=cabal.project
+        run: cabal test all
 
       - name: Check cabal file
-        run: cabal check --project-file=cabal.project
+        run: cabal check
 
       - name: Build documentation
         run:
-          cabal haddock all --disable-documentation --project-file=cabal.project
+          cabal haddock all --disable-documentation
           # --disable-documentation disables building documentation for dependencies.
           # The package's own documentation is still built,
           # yet contains no links to the documentation of the dependencies.
