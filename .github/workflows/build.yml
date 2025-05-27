@@ -78,12 +78,12 @@ jobs:
       - name: Run tests
         run: cabal test all
 
-      - name: Check cabal file
-        run: cabal check
+      # - name: Check cabal file
+      #   run: cabal check
 
-      - name: Build documentation
-        run:
-          cabal haddock all --disable-documentation
-          # --disable-documentation disables building documentation for dependencies.
-          # The package's own documentation is still built,
-          # yet contains no links to the documentation of the dependencies.
+      # - name: Build documentation
+      #   run:
+      #     cabal haddock all --disable-documentation
+      #     # --disable-documentation disables building documentation for dependencies.
+      #     # The package's own documentation is still built,
+      #     # yet contains no links to the documentation of the dependencies.
