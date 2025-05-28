@@ -1,225 +1,785 @@
-## [](https://github.com/malgo-lang/malgo/compare/v2.0.0...v) (2025-05-28)
+<a name="unreleased"></a>
+## [Unreleased]
 
-### ⚠ BREAKING CHANGES
+### Chore
+- remove package.json and its dependencies
 
-* **build:** remove unsupported GHC versions from matrix
-* **package:** bump version to 2.0.0 and update copyright year
 
-### Miscellaneous Chores
+<a name="1.0.0"></a>
+## [1.0.0] - 2025-05-28
+### Chore
+- add package.json with dependencies for commitlint and conventional changelog
+- **mise:** update tool setup and environment configuration
 
-* **package:** bump version to 2.0.0 and update copyright year ([fefa0a1](https://github.com/malgo-lang/malgo/commit/fefa0a19dc4f9e7455e518e6b1fc340adfd76eb3))
+### Ci
+- **build:** remove cabal.project.freeze for Windows and non-Windows
+- **build:** comment out cabal check and documentation build steps
+- **build:** simplify cabal commands and remove freeze file
+- **build:** update cabal commands to ignore cabal.project.freeze
+- **build:** add GitHub Actions workflow for CI build process
 
-### Continuous Integration
 
-* **build:** remove unsupported GHC versions from matrix ([28a7348](https://github.com/malgo-lang/malgo/commit/28a7348ab8741c3c61add7b62c9c8bba35ebd9d3))
-## [2.0.0](https://github.com/malgo-lang/malgo/compare/v1.0.0...v2.0.0) (2025-05-27)
+<a name="v0.5.0"></a>
+## [v0.5.0] - 2025-05-27
+### Chore
+- update cachix-action to version 16 in GitHub Actions workflow
+- update GitHub Actions to use specific versions of actions
+- add commit message template
+- add plan.md
+- Update dependabot configuration for weekly updates
+- Update GitHub Actions versions in malgo_ci.yml
+- update README.md
+- update copilot-instructions.md for clarity and additional guidelines
+- remove update-flake-lock workflow and clean up nix.yml
+- update project dependencies and add Hoogle script
+- fix formatting in nix.yml workflow
+- emphasize the importance of preserving comments in 'GitHub Copilot comments' section
+- clarify instructions regarding comments in 'GitHub Copilot comments' section
+- **dependencies:** update lens to version 5.3.4
+- **deps:** bump cachix/install-nix-action from 31.0.0 to 31.3.0
+- **deps:** bump DeterminateSystems/update-flake-lock from 24 to 25
+- **deps:** bump DeterminateSystems/nix-installer-action from 16 to 17
+- **test:** update Fib.mlg
+- **test:** replace (.) operator with (<<)
+- **test:** add script to run tests with custom options
+- **vscode:** add Copilot commit message generation instructions
 
-### ⚠ BREAKING CHANGES
+### Ci
+- add workflow to update flake.lock automatically
+- fix malgo_ci.yml to run all test cases
 
-* **changelog:** restructure changelog for clarity and organization
-* **changelog:** add changelog configuration and template files
-* **cabal:** update dependency versions
-* **infer:** update type synonym handling with kind checks
-* **infer:** introduce Kind module and integrate into TypeRep
-* **errors:** add error cases for parser
-* **Main:** simplify EvalOpt and remove unused code
-* **Driver:** implement generateSequent and linkSequent functions
-* **Program:** add dependencies field to Program data structure
-* **Eval, Interface, Fun:** remove unused GHC options
-* **test:** remove .malgo-work directory if it exists
-* add path-based import
-* change workspace directory structure
-* remove (old) LSP server and build system
-* delete syntax for module with specified name
+### Doc
+- update coding conventions and naming guidelines
+- **copilot-instructions:** clarify naming conventions for identifiers
 
-### Features
+### Docs
+- update GitHub Copilot instructions for clarity and brevity
+- introduce new syntax for function application and field access
 
-* add path-based import ([9f357c0](https://github.com/malgo-lang/malgo/commit/9f357c0904b4d00515c4795339fcf66124e70a84))
-* add pragma support and update related tests ([8122ff3](https://github.com/malgo-lang/malgo/commit/8122ff34b63ca4ce1679cb8a0af18e6c4c2dd5cc))
-* delete syntax for module with specified name ([723393e](https://github.com/malgo-lang/malgo/commit/723393e3541bae4100c77e47d272837da0d17fd6))
-* **Driver:** implement generateSequent and linkSequent functions ([2fc4f2e](https://github.com/malgo-lang/malgo/commit/2fc4f2ecb5bab0278db8555cf3f9193a6c51175e))
-* **infer:** add error handling for invalid type applications ([1a81eac](https://github.com/malgo-lang/malgo/commit/1a81eac7016056a88ef82f5fea84790d32a5a63c))
-* **infer:** introduce Kind module and integrate into TypeRep ([5eb17b0](https://github.com/malgo-lang/malgo/commit/5eb17b0f87d5ed11558487b7a3ebc3946a955797))
-* **parser:** enhance handling of pragma ([c330f2e](https://github.com/malgo-lang/malgo/commit/c330f2edce8b8e7aed8ce111a64ec9a93eeb5702))
-* **Program:** add dependencies field to Program data structure ([f295a8f](https://github.com/malgo-lang/malgo/commit/f295a8fd405eb57ee343a4290065a43dc9ca73af))
-* remove (old) LSP server and build system ([db969c7](https://github.com/malgo-lang/malgo/commit/db969c70b191b878f202feb614e0a36836354eaf))
+### Feat
+- add pragma support and update related tests
+- **infer:** add error handling for invalid type applications
+- **parser:** enhance handling of pragma
 
-### Bug Fixes
+### Fix
+- update imports for Prettyprinter in multiple files
+- handle MainNotFound error in evalProgram and improve error reporting
+- handle Record capture correctly
+- use Map and Set instead of HashMap and HashSet
+- remove absolute path from Show instance of ArtifactPath
+- **parser:** fix unary operator parsing and type variable handling
+- **parser:** update parsing output format in NewParserSpec
+- **parser:** add '.' to reserved operators list
+- **prelude:** improve pretty printing of Range instances
+- **rename:** fix constructor pattern handling in rnClause
 
-* handle MainNotFound error in evalProgram and improve error reporting ([d8ac92a](https://github.com/malgo-lang/malgo/commit/d8ac92a7a1105af6598fecbdb0b867f9e3b75efa))
-* handle Record capture correctly ([974997d](https://github.com/malgo-lang/malgo/commit/974997d81091c99d15899dbdbfd10ce38cb13c84))
-* **Main:** simplify EvalOpt and remove unused code ([41afce9](https://github.com/malgo-lang/malgo/commit/41afce90e3a71fbbcd9973777485d8977b9359d4))
-* **parser:** add '.' to reserved operators list ([efda8a3](https://github.com/malgo-lang/malgo/commit/efda8a3e836de385779d7b401d74087175b36bed))
-* **parser:** fix unary operator parsing and type variable handling ([0f14ccb](https://github.com/malgo-lang/malgo/commit/0f14ccb9bb7a95520981ca69de9418e0829035da))
-* **parser:** update parsing output format in NewParserSpec ([fe3026a](https://github.com/malgo-lang/malgo/commit/fe3026afa3ca34fa5660e3e1db742dfcf0f0a87a))
-* **prelude:** improve pretty printing of Range instances ([80f06d4](https://github.com/malgo-lang/malgo/commit/80f06d49a3a1789e77c08cba4cd3d4dd38a2376e))
-* remove absolute path from Show instance of ArtifactPath ([785df32](https://github.com/malgo-lang/malgo/commit/785df3272faddfb1384bbc7601746e39521f202d))
-* **rename:** fix constructor pattern handling in rnClause ([a606937](https://github.com/malgo-lang/malgo/commit/a60693744b7d15ae41f38b9b450dd11fc53de401))
-* update imports for Prettyprinter in multiple files ([a984084](https://github.com/malgo-lang/malgo/commit/a984084d1db4f65b3e74269e9b2d3a6a1d0fc8d2))
-* use Map and Set instead of HashMap and HashSet ([4d009b5](https://github.com/malgo-lang/malgo/commit/4d009b5857761b8844dc9c27566dc2dd7c454d24))
+### Refactor
+- simplify conversion functions in ToFun module
+- simplify Consumer representation and evaluation logic
+- simple interface
+- exportedIdentList and exportedTypeIdentList as function
+- split meta informations in Id to wrapper type Meta
+- change Pretty instance for Malgo.Syntax
+- delete Malgo.Core and Malgo.Desugar
+- combine Malgo and Koriel modules
+- use makeFieldsId instead of makeFieldsNoPrefix
+- rename NewRename to Rename
+- new internal resource management system
+- use new resource management system in Malgo.Driver
+- update ConsumerRepr and related functions to return unit type
+- update parser and rename pass
+- update conversion functions in ToCore module for clarity and correctness
+- rename conversion functions for consistency and clarity in ToFun module
+- implement new parser
+- **Interface:** update buildInterface to use HasField
+- **driver:** rename exitIfError to failIfError for clarity
+- **flake:** remove icu package
+- **infer:** simplify access to fields in TcEnv and related modules
+- **infer:** split KindCtx from TcEnv
+- **infer:** make RnEnv polymorphic
+- **interface:** clarify kindCtx usage in Interface data type
+- **io:** remove io-streams dependency and simplify IO handling
+- **parser:** rename stripPragmas to extractPragmas for clarity
+- **parser:** replace old parser with NewParser and clean up
+- **parser:** rename NewParser with Parser
+- **range:** move HasRange to Prelude
+- **refine:** replace old parser and rename with new versions
+- **rename:** remove old RnState and RnEnv modules
+- **rename:** enhance Project expression handling
+- **sequent:** remove unused indentStrategy function
+- **sequent:** remove unused HasRange import from modules
 
-### Reverts
+### Test
+- add error case tests for Infer and Refine
+- add SameImport.mlg
+- add sexpr golden tests
+- golden tests for generated llvm IRs
+- rewrite DriverSpec as Golden Tests
+- add golden tests for malgo passes
+- **errors:** add error cases for DuplicateDef and UndefinedVariable
+- **infer:** use NewParser and NewRename
 
-* Revert "Add Windows testing job to Nix workflow" ([e43d548](https://github.com/malgo-lang/malgo/commit/e43d5482c23859fcbaf93102c55ca752722df1c5))
-* Revert "generate changelog" ([3c0443c](https://github.com/malgo-lang/malgo/commit/3c0443cdcf23a6da9ea2b88d040ed917d9620d16))
+### WIP
+- combine Malgo and Koriel
 
-### Styles
-
-* **Eval, Interface, Fun:** remove unused GHC options ([eeca0b0](https://github.com/malgo-lang/malgo/commit/eeca0b0afc8e27913892eaf035d807ba7c653fb7))
-
-### Miscellaneous Chores
-
-* **cabal:** update dependency versions ([96ed655](https://github.com/malgo-lang/malgo/commit/96ed6551776c1e9bd7d345365ae0c9ea06f28cf0))
-* **changelog:** add changelog configuration and template files ([4987760](https://github.com/malgo-lang/malgo/commit/49877609756b6e4c58b04a0fffa57aa90fafa137))
-* **changelog:** restructure changelog for clarity and organization ([1989ae5](https://github.com/malgo-lang/malgo/commit/1989ae59594681a133da1e46e6c8c295fff57c25))
-* **test:** remove .malgo-work directory if it exists ([a256f73](https://github.com/malgo-lang/malgo/commit/a256f73df89a20792820c1aa49f8724a3b9fe332))
-
-### Code Refactoring
-
-* change workspace directory structure ([ebca7ec](https://github.com/malgo-lang/malgo/commit/ebca7ecae41bf3eab6f1e0fad04de9c2f0068150))
-* **infer:** update type synonym handling with kind checks ([713137d](https://github.com/malgo-lang/malgo/commit/713137deb772fe46effab59ede6dd9503310b598))
-
-### Tests
-
-* **errors:** add error cases for parser ([1bfb6fe](https://github.com/malgo-lang/malgo/commit/1bfb6fec6b9aff8fe983de44a26232ee8fa69004))
-## [1.0.0](https://github.com/malgo-lang/malgo/compare/v0.3.0...v1.0.0) (2024-04-20)
-
-### Features
-
-* .kor -> .kor.bin ([0ae4537](https://github.com/malgo-lang/malgo/commit/0ae45370fec64bbbe3d84941e533298df7297b22))
-* `malgo build` builds each files concurrently ([1f96e7e](https://github.com/malgo-lang/malgo/commit/1f96e7e46780e95388b2b710e7f620fa0d8a743e))
-* Add `=` expression ([8f8f07a](https://github.com/malgo-lang/malgo/commit/8f8f07ae06c570a523c53eaf5c45f66aa3079572))
-* add `switch-unboxed` ([dd04fb7](https://github.com/malgo-lang/malgo/commit/dd04fb7ccf375ee4825f0e5ee75b1438344424f0))
-* Add default case to `Switch` ([d55aa08](https://github.com/malgo-lang/malgo/commit/d55aa0854ff874a3ee6671d4ec508d6673d18ba3))
-* add helper function malgo_print_tag ([1e2f39a](https://github.com/malgo-lang/malgo/commit/1e2f39a868d7c2c8e0cf08dc976ee15865cacf65))
-* Add lint rule 'all cases have same type of pattern' ([b1206fd](https://github.com/malgo-lang/malgo/commit/b1206fddce10c1112f907b838a8f7ad834702e58))
-* add new runtime ([aa0eb0f](https://github.com/malgo-lang/malgo/commit/aa0eb0ff736868ed67eb5f2d0515e5c7f1636155))
-* add rust runtime ([dd0a10d](https://github.com/malgo-lang/malgo/commit/dd0a10dc0cde078e3aabea95151732cde3634f02))
-* Annotate Koriel Program ([723819f](https://github.com/malgo-lang/malgo/commit/723819f5e89870470737c8bb99a1552f6d7a048a))
-* convert `Exact` to `SwitchUnboxed` ([e7094ec](https://github.com/malgo-lang/malgo/commit/e7094ec354ef5e47c310710874280ddd5c8ccf21))
-* convert `match` to `destruct-record` if it is possible ([3519d44](https://github.com/malgo-lang/malgo/commit/3519d44479764ab98ed618ccc281743a6925c05f))
-* convert `match` to `switch` if it is possible ([05edb0c](https://github.com/malgo-lang/malgo/commit/05edb0c2b746aa19eeddba181d4532495933eb43))
-* Generate global function's closure in global scope ([301bc23](https://github.com/malgo-lang/malgo/commit/301bc23473063cbc7defc512bb037f1dcc9c870f))
-* Generate no-optimized .kor file ([47fc781](https://github.com/malgo-lang/malgo/commit/47fc781cd4713090e5f07629ab507978d66e470a))
-* implement allocaresult ([3b0b891](https://github.com/malgo-lang/malgo/commit/3b0b8919c5659b807f4525ea0bfe3a7fcc08e3e9))
-* Implement Koriel Parser ([dd2b69b](https://github.com/malgo-lang/malgo/commit/dd2b69b4dc1ad9e4f5b9c6fd07e40fb667b70987))
-* imported module's functions are not external ([1409107](https://github.com/malgo-lang/malgo/commit/1409107054b66bc8209dc4480ca6643962d838bd))
-* improve Koriel pretty printer ([e99144f](https://github.com/malgo-lang/malgo/commit/e99144f174103f31703203e45bfa1bf42996d7e2))
-* inline gblcls ([b8e806e](https://github.com/malgo-lang/malgo/commit/b8e806e90d5740d025e8f241477b32b0e8a16e6e))
-* Koriel.Core.Flat uses `destruct` ([8484c50](https://github.com/malgo-lang/malgo/commit/8484c502ddbd1782ca0ec0668fcbf045c22700fa))
-* Match to Switch conversion ([7693df2](https://github.com/malgo-lang/malgo/commit/7693df2175cbd922050fe95283a7f594cea09487))
-* more descriptive label ([25ec138](https://github.com/malgo-lang/malgo/commit/25ec138e04c1b7d6dab0d4934878eb4ddacf56de))
-* new normalization pass ([10b3ddc](https://github.com/malgo-lang/malgo/commit/10b3ddccbe3523ce4c109eff227fc11ea8725243))
-* remove noop `destruct` ([8942072](https://github.com/malgo-lang/malgo/commit/8942072af7c2d4ac5c42ff0a99ca0d334e935cc7))
-* Replace `bind` with `=` in several places. ([9cba13a](https://github.com/malgo-lang/malgo/commit/9cba13a0933fd9f888aab46ecff7320741d67088))
-* unique string value ([9d62a80](https://github.com/malgo-lang/malgo/commit/9d62a80909dce1ebdf05cef4eedac4b1f5a78280))
-* update llvm-hs to 15 ([4a7ae93](https://github.com/malgo-lang/malgo/commit/4a7ae93f61e678448023e9ed3f9b82d201ab1c0b))
-
-### Bug Fixes
-
-* Convert `Call` to `CallDirect` if necessary. ([b5d00a9](https://github.com/malgo-lang/malgo/commit/b5d00a93a675e6401426fa3b1f8c17fcc0677e1a))
-* enable tests ([1866ffb](https://github.com/malgo-lang/malgo/commit/1866ffb2c27ab3ac20bdd6ada140a568227c4213))
-* fix 'Main' ([057aab1](https://github.com/malgo-lang/malgo/commit/057aab10c55ec540487a2745aa6e79f00accd160))
-* fix CI ([7d22bfa](https://github.com/malgo-lang/malgo/commit/7d22bfaa73555a917e2dee97a0f34a27f9c40188))
-* fix error cases filepath ([e221d33](https://github.com/malgo-lang/malgo/commit/e221d33c3de1851f53590d0db4dcf61c5264fcc9))
-* fix getClangCommand ([2629dd6](https://github.com/malgo-lang/malgo/commit/2629dd6462c90563fcec3fa0dba7daca301ed2eb))
-* fix lint ([bc638d8](https://github.com/malgo-lang/malgo/commit/bc638d88c483cf5767519ce50de7a06162c96627))
-* fix tests ([2e7d022](https://github.com/malgo-lang/malgo/commit/2e7d022d989d552458694373bbdcb5fafb2a4dca))
-* flatten switch and switch-unboxed correctly ([7f4b5cc](https://github.com/malgo-lang/malgo/commit/7f4b5cc0200d43af5b025de21d5b15915a60c353))
-* generate kor.bin ([8fc4fbc](https://github.com/malgo-lang/malgo/commit/8fc4fbce354f2d22bd8b146ba16ec9868555433b))
-* reduce lambdalifiting time ([06795f0](https://github.com/malgo-lang/malgo/commit/06795f01341fe2b5e60eebe32b818290eb5ed8a7))
-* remove 'noName' ([e322df4](https://github.com/malgo-lang/malgo/commit/e322df4cebde3985a9ec6fff2d874c01ae6b2595))
-* Update malgo.cabal ([0805f92](https://github.com/malgo-lang/malgo/commit/0805f920544e9e8ba5f471ffdad1d34f1ccab3f3))
-* use `alpha` conversion in inline expanding ([8163945](https://github.com/malgo-lang/malgo/commit/81639452a4a7e0221bba290471c76a534dc61078))
-* Use Control.Exception.assert ([8606be7](https://github.com/malgo-lang/malgo/commit/8606be706a88c25ebd5a28d1b5d4ba8bee04cf19))
-
-### Reverts
-
-* Revert "Add Statement (`Stmt`) to `Koriel.Core.Syntax`." ([b69474b](https://github.com/malgo-lang/malgo/commit/b69474b90df0ed576c3bb88ec9d8e655ed0ab3e0))
-* Revert "refactor: Simplify CodeGenEnv" ([2726397](https://github.com/malgo-lang/malgo/commit/27263972586cfa4f3161407dcebe99a232f1e79a))
-* Revert "refactor: simplify DsState" ([ab67a64](https://github.com/malgo-lang/malgo/commit/ab67a64bb6e43d2e5b85bd114de92921522696c2))
-## [0.3.0](https://github.com/malgo-lang/malgo/compare/v0.2.0...v0.3.0) (2022-11-30)
-
-### Features
-
-* `malgo build` uses JSON configuration file ([e71027b](https://github.com/malgo-lang/malgo/commit/e71027b36fc86d14b5af71829bed113d8ccca40c))
-* change default inline size ([d1f3094](https://github.com/malgo-lang/malgo/commit/d1f309444c759169431331b30aada688b62edbbf))
-* disable lambda-lifiting ([e74e0b7](https://github.com/malgo-lang/malgo/commit/e74e0b7db10d4cbc00cbb08862ba735add6b3cc4))
-* dump Core IR as JSON ([6b4419e](https://github.com/malgo-lang/malgo/commit/6b4419e0dc190ca0ae072887597a4644a8498baf))
-* more effective inline-expansion and uncurrying ([cd7ac23](https://github.com/malgo-lang/malgo/commit/cd7ac23e42e85a42ca29ba307914db60cb4d3a96))
-* simplify compile options ([190216a](https://github.com/malgo-lang/malgo/commit/190216a7da7ca720d00c986935fdc6a19f82a836))
-
-### Bug Fixes
-
-* fix concatenation of the result of pkg-config ([4842c2d](https://github.com/malgo-lang/malgo/commit/4842c2d6c67202b137929b3fd918abdbcffc0f08))
+### Wip
+- mask unique
+- add pragma
+- refactor Consumer evaluation
+- update flake.nix
+- implement eval
+- Add initial implementation of evaluation module with environment handling
+- implement new compiler
+- add vm
+- merge Malgo.Core.Syntax
+- implement eval
+- **rename:** handle Project expressions in rnExpr
+- **rename:** add NewRename pass
 
 ### Reverts
+- Add Windows testing job to Nix workflow
+- generate changelog
 
-* Revert "Move source codes and others to malgo-compiler" ([9bd8839](https://github.com/malgo-lang/malgo/commit/9bd8839d665e5c3fabe4b1f4a6e9f71ebf539de5))
-## [0.2.0](https://github.com/malgo-lang/malgo/compare/v0.1.0...v0.2.0) (2022-07-05)
+### Pull Requests
+- Merge pull request [#188](https://github.com/malgo-lang/malgo/issues/188) from malgo-lang/update_flake_lock_action
+- Merge pull request [#190](https://github.com/malgo-lang/malgo/issues/190) from malgo-lang/dependabot/github_actions/DeterminateSystems/nix-installer-action-17
+- Merge pull request [#191](https://github.com/malgo-lang/malgo/issues/191) from malgo-lang/dependabot/github_actions/cachix/install-nix-action-31.3.0
+- Merge pull request [#192](https://github.com/malgo-lang/malgo/issues/192) from malgo-lang/dependabot/github_actions/DeterminateSystems/update-flake-lock-25
+- Merge pull request [#186](https://github.com/malgo-lang/malgo/issues/186) from malgo-lang/remove-old-core
+- Merge pull request [#185](https://github.com/malgo-lang/malgo/issues/185) from malgo-lang/update_flake_lock_action
+- Merge pull request [#183](https://github.com/malgo-lang/malgo/issues/183) from malgo-lang/dependabot/github_actions/cachix/install-nix-action-31
+- Merge pull request [#184](https://github.com/malgo-lang/malgo/issues/184) from malgo-lang/use-unicode-identifier
+- Merge pull request [#182](https://github.com/malgo-lang/malgo/issues/182) from malgo-lang/sequent-core
+- Merge pull request [#181](https://github.com/malgo-lang/malgo/issues/181) from malgo-lang/interpreter
+- Merge pull request [#180](https://github.com/malgo-lang/malgo/issues/180) from malgo-lang:dependabot/github_actions/orhun/git-cliff-action-4
 
-### Features
 
-* `{ | A -> ... | B -> ... }` is also available ([fb758b3](https://github.com/malgo-lang/malgo/commit/fb758b36028f70576e032f3c26ec217103898437))
-* `{ a }` is the syntax sugar for `() -> a` ([1a64392](https://github.com/malgo-lang/malgo/commit/1a6439217bbdaccbe103a06e5fbd67b583df6547))
-* `Builtin.panic : String -> a` ([c719abf](https://github.com/malgo-lang/malgo/commit/c719abf4f2312c63672f37e0e4b9894eac17c1b0))
-* `mlgToCore` supports Level1_Int.mlg ([984189d](https://github.com/malgo-lang/malgo/commit/984189d918d1fb6482107d27ac7d2e693db00fda))
-* add --dump-refine option ([f670c96](https://github.com/malgo-lang/malgo/commit/f670c9657d3bce28ab55ee61e5c6b501572b73d4))
-* add `eqString` and `substring` ([6164f1e](https://github.com/malgo-lang/malgo/commit/6164f1ec88783792879e874f2d42c973095c0d71))
-* add some functions to Builtin.mlg and Prelude.mlg ([c7b1e7b](https://github.com/malgo-lang/malgo/commit/c7b1e7b9e72fc00910e53aef51c31e3ae405cf32))
-* boxed literal pattern ([faac1d1](https://github.com/malgo-lang/malgo/commit/faac1d19d6dd25638db86fdd976581349ed9e528))
-* check that numbers of patterns are same ([936f470](https://github.com/malgo-lang/malgo/commit/936f470c033d732078492537ced89c33f50d479e))
-* compile.sh now recognize options to malgo ([34599a7](https://github.com/malgo-lang/malgo/commit/34599a7261ea65dc4917564d7d03c269f70c3790))
-* do not generalize `let` bindings ([699cca2](https://github.com/malgo-lang/malgo/commit/699cca2498f9ddcaabf572684b3be735b24055da))
-* error on string literal pattern ([2cbd1b9](https://github.com/malgo-lang/malgo/commit/2cbd1b9c6acb6414d1c5f46b7d3bab2a849e341c))
-* Implement Refine pass for class and impl ([a2d920d](https://github.com/malgo-lang/malgo/commit/a2d920d11f99a223cddd7ef492a11c81f6708372))
-* improve readability of type errors ([ba4dc11](https://github.com/malgo-lang/malgo/commit/ba4dc111844990243d188284a3467549fda290e7))
-* inline trivial function application ([bd85ac7](https://github.com/malgo-lang/malgo/commit/bd85ac7b6ab7e7d601497573c809bf9febb0949d))
-* ProgramBuilderT ([f6c5a37](https://github.com/malgo-lang/malgo/commit/f6c5a375373be3851a3bec21c504230bc9d25f39))
-* try to run new desugar-pass always ([2baafd4](https://github.com/malgo-lang/malgo/commit/2baafd455c4cf50e262778bc73381db8d67fd53d))
-* type annotation for expressions ([456fb1a](https://github.com/malgo-lang/malgo/commit/456fb1abb2f2328e86f92a4a524f0ca3e9f43078))
-* use `;` outside `{}` ([6252fe9](https://github.com/malgo-lang/malgo/commit/6252fe9035abfebb7175f408a7da2c2a2575c1cc))
-* with statement ([7c27687](https://github.com/malgo-lang/malgo/commit/7c27687ffa0cc49446c4c00c9a59392d01476ed7))
+<a name="v0.4.0"></a>
+## [v0.4.0] - 2024-04-20
+### Chore
+- add git cliff
+- reconfigure devcontainer
+- add commitizen
+- update Dockerfile
+- fix test output
+- update stack.yaml
+- remove griff
+- remove comments
+- remove comments
+- Update Dockerfile
+- small change
+- update GHC 9.6.1
+- small change
+- small changes
+- update Dockerfile
+- update CI
+- cabal freeze
+- update Dockerfile
+- fix CI
+- pass -opaque-pointers to clang
+- fix CI
+- Use fourmole
+- diagnose 2.4.0
+- small fix on malgo.cabal
+- update ghc 9.2.7
+- update Dockerfile
+- add some comments
+- update malgo_ci.yml
+- update ghc
+- add benchmarks
+- add unliftio
+- update hls
+- don't print error messages in testError
+- mv testcases/ test/testcases/
+- Add flags for bdw-gc
+- Add cmake to dev container and update bdwgc-alloc
+- add rust
+- update cabal.project.freeze
+- add comments
+- update haskell-language-server
+- add stack.yaml
+- format flake.nix
+- don't check ListLike
+- add default.nix and shell.nix
+- update flake.nix
+- update flake.nix
+- add flake.nix
+- update CI
+- update ghc to 9.2.5
 
-### Bug Fixes
+### FIX
+- Convert `Call` to `CallDirect` if necessary.
 
-* `[]` pattern ([cc3c4b5](https://github.com/malgo-lang/malgo/commit/cc3c4b5e42dea288406ee7b0e04a608a01b44526))
-* add missing `cast` ([300d516](https://github.com/malgo-lang/malgo/commit/300d516677d460741804ee3f523476f0f21d786b))
-* add space to pPrint TyConApp ([eb14845](https://github.com/malgo-lang/malgo/commit/eb14845fa8cf4522d2534b3ba6680afcf14d1121))
-* change llvm-hs version to 9.0.1 ([04b4e1a](https://github.com/malgo-lang/malgo/commit/04b4e1a21afd64632a5528f62dd2f014d3438b69))
-* change the key of `interned` to `(Int, ModuleName)` ([ab130d2](https://github.com/malgo-lang/malgo/commit/ab130d2acc56034d658bf141c660b18f2a0ee5e7))
-* desugar groups of `ScDef` correctly ([3ccd7f7](https://github.com/malgo-lang/malgo/commit/3ccd7f7638085eae7106542a20d3b7025d32346c))
-* external global variable ([c452b4b](https://github.com/malgo-lang/malgo/commit/c452b4b1979299641db67ca498f891907c757be7))
-* fix `groupTuple` ([87915e1](https://github.com/malgo-lang/malgo/commit/87915e1a63355c45a3e41b654c12d3b9e1dfd97e))
-* fix `malgo_string_append` ([86c179a](https://github.com/malgo-lang/malgo/commit/86c179a9795500424441572724f54c22d9d892b4))
-* generate initialization of toplevel variables correctly ([0845d9c](https://github.com/malgo-lang/malgo/commit/0845d9cd57acb6029353490da56657aa7eea3209))
-* handle right-associative operators correctly ([d5654e3](https://github.com/malgo-lang/malgo/commit/d5654e3a4516db8ef4166f163b418469c0ea17d0))
-* improve performance of `checkInlineable` ([f605972](https://github.com/malgo-lang/malgo/commit/f605972c5e1af3690bb40d6035393d6fac5321eb))
-* malgo_panic returns void* ([ca9e836](https://github.com/malgo-lang/malgo/commit/ca9e836b3a5d80804fed994a6bd86716e23bd5f3))
-* missing os field ([f670e3a](https://github.com/malgo-lang/malgo/commit/f670e3ade4b03dcebbcad0424485a1c876d81f66))
-* prettyprint `bug $ Unreachable reason` ([2f78f76](https://github.com/malgo-lang/malgo/commit/2f78f7613f88fbb30dbbbeb37dac7d237e290e2a))
-* prettyprint TyVar ([43b8f24](https://github.com/malgo-lang/malgo/commit/43b8f24374e30c3dd2e5388efb682357f13630f7))
-* resolve fprintf warning ([172fb25](https://github.com/malgo-lang/malgo/commit/172fb25a6e9a1a83003a80af80aa99b478c4988a))
-* resolve the parser performance issue about `expr : type` ([b499a89](https://github.com/malgo-lang/malgo/commit/b499a897271ea32ffe55d5e15aaa0e3138479f58))
-* support `()` pattern ([23c8b18](https://github.com/malgo-lang/malgo/commit/23c8b18288013001abf26fac08cad448df64f9fb))
-* update testcases ([caf6ee5](https://github.com/malgo-lang/malgo/commit/caf6ee59ab3ab9625e87e6cd3258925264accb61))
-* use Control.Monad.Trans.Writer.CPS ([f9a5a7f](https://github.com/malgo-lang/malgo/commit/f9a5a7f410bbe5830741d88ae59567d5581ab393))
+### Feat
+- Match to Switch conversion
+- new normalization pass
+- unique string value
+- add helper function malgo_print_tag
+- inline gblcls
+- implement allocaresult
+- more descriptive label
+- Generate global function's closure in global scope
+- remove noop `destruct`
+- update llvm-hs to 15
+- `malgo build` builds each files concurrently
+- convert `Exact` to `SwitchUnboxed`
+- add `switch-unboxed`
+- convert `match` to `destruct-record` if it is possible
+- convert `match` to `switch` if it is possible
+- Add lint rule 'all cases have same type of pattern'
+- Generate no-optimized .kor file
+- Add default case to `Switch`
+- Koriel.Core.Flat uses `destruct`
+- Replace `bind` with `=` in several places.
+- Add `=` expression
+- imported module's functions are not external
+- add rust runtime
+- add new runtime
+- Annotate Koriel Program
+- Implement Koriel Parser
+- .kor -> .kor.bin
+- improve Koriel pretty printer
+
+### Fix
+- fix lint
+- flatten switch and switch-unboxed correctly
+- generate kor.bin
+- fix getClangCommand
+- fix CI
+- Use Control.Exception.assert
+- use `alpha` conversion in inline expanding
+- reduce lambdalifiting time
+- fix tests
+- enable tests
+- fix error cases filepath
+- fix 'Main'
+- Update malgo.cabal
+- remove 'noName'
+
+### Refactor
+- remove comments
+- remove allocaResult strategy
+- use shiftT
+- use shiftT
+- add comments
+- small refactoring
+- withTerminator
+- use withContT
+- use ContT
+- remove redundant bitcast
+- Simplify imports
+- INLINE plate
+- Rewrite Plated (Expr a) instance
+- Remove old codes
+- Use Plated
+- remove appCase and appProgram
+- remove 'appObj'
+- exp to expr
+- make tests more robust
+- Check if optimization preserves flat form
+- Don't optimize after lambda-lifting
+- simplify inlineFunciton
+- check term size in checkInlineable
+- rename optimization passes
+- traverse all constructors explicitly
+- Make the inline function size a constant
+- Add flatMatch
+- Add `moduleName` field to `MalgoEnv`
+- small change
+- improve internal representation
+- Replace `Switch` with `Exact`
+- use c_char
+- remove comments
+- small change
+- simplify `generalize`
+- simplify `toBound`
+- `unboundFreevars` ignores kind variables.
+- small change
+- small change
+- `HasModuleName` is a special case of `HasField`
+- `newNativeId` requires `MonadReader`
+- `newExternalId` requires `MonadReader`
+- remove `newIdOnName` and specialize `cloneId` for `Koriel.Core.Alpha`
+- remove `uniq` field
+- External and Native Id doesn't care `uniq` field
+- Ids introduced in LambdaLift respects original Id's module
+- Internal Id's postfix is now hexadecimal
+- use list
+- make type informations explicitly
+- simplify DsState
+- small change
+- simplify TypeDef
+- simplify IndexEnv
+- simplify Index
+- remove `object`
+- simplify LocalDef
+- simplifiy LambdaLIftState
+- simplify AlphaEnv and OptimizeEnv
+- Simplify CodeGenEnv
+- HasUniqSupply becomes alias of HasField
+- remove unused lens classes
+- remove unused code
+- explicit export lists
+- explicit export lists
+- explicit export lists
+- explicit export lists (Interface)
+- explicit export lists (Syntax, Monad, Link)
+- add 'insertKind' and 'askKind'
+- Flatten type representations
+- `type TypeVar = Id Kind`
+- Rename TypeVar to MetaVar
+- Remove WIP Scheme Backend
+- simplify constraints in Koriel
+- remove 'noName' and 'newNoNameId'
+- remove unused import
+- simplify constraints in Malgo.Desugar
+- simplify constraints in Malgo.Infer
+- simplify constraints in Malgo.Lsp
+- simplify constraints in Malgo.Refine
+- simplify constraints in Malgo.Rename
+
+### Test
+- Test all combinations of test options
+- Add koriel parser test
+
+### WIP
+- effectful
+- Rewrite with effectful
+- PrintLLVM
+- PrintLLVM
+- PrintLLVM
+- PrintLLVM
+- update PrintLLVM
+- Add test for PrintLLVM
+- add PrimtLLVM
+- use Plated in inlineFunciton
+- use Plated
+- Add Annotate
+
+### Wip
+- add isAllocaResult flag
+- PrintLLVM (global string)
+- add Koriel.Core.Parser
 
 ### Reverts
+- Add Statement (`Stmt`) to `Koriel.Core.Syntax`.
+- refactor: Simplify CodeGenEnv
+- refactor: simplify DsState
 
-* Revert "[WIP] makeFieldsNoPrefix Id" ([015c958](https://github.com/malgo-lang/malgo/commit/015c958cc64f68719f0591db40fa7557280571c5))
-* Revert "[WIP] Define typelevel function (type constructor), TyAbs" ([b410ecb](https://github.com/malgo-lang/malgo/commit/b410ecb3ada2f1fd65bb5a365812aa41a80186b4))
-* Revert "typedを実装" ([683a3fd](https://github.com/malgo-lang/malgo/commit/683a3fd193b7ccae61216d54d1fb055e65fc9a43))
-* Revert "delete Kind" ([f012531](https://github.com/malgo-lang/malgo/commit/f012531e435eb88229ae9f66f6dfbd8957518d1a))
-* Revert "自由変数に自分自身を含めないように変更" ([2067292](https://github.com/malgo-lang/malgo/commit/2067292d8843cf6124acaa87fb33ea414816e18d))
-* Revert "ヴァリアントをparseまで実装" ([ff58dea](https://github.com/malgo-lang/malgo/commit/ff58deae43131638a59da3de8b797ba7389f640e))
-* Revert "組み込み型を追加" ([13067fb](https://github.com/malgo-lang/malgo/commit/13067fb685c55f7fbbd7a1caee552c1b796bdc6e))
-* Revert "Preludeを自前で作成" ([c8f3ffa](https://github.com/malgo-lang/malgo/commit/c8f3ffa76521b2c57b9cbabde7a3128bb964c75a))
-* Revert "outputableを一旦合併" ([cf16626](https://github.com/malgo-lang/malgo/commit/cf1662638985ecb5a78fa84776f112ae94744ec9))
-* Revert "ランク1多相完全理解" ([fc83bee](https://github.com/malgo-lang/malgo/commit/fc83bee7b1c80d8af990ac916a572917bd7feeb4))
-* Revert "insertLetの機能を変更" ([e1e5a3e](https://github.com/malgo-lang/malgo/commit/e1e5a3ef87265e16d2f29eea8c3e47b0663ff94e))
-* Revert "設計の見直し" ([7d61afa](https://github.com/malgo-lang/malgo/commit/7d61afaa07e3b1b27e4abfb21f9af243c191ad8c))
-* Revert "カリー化した関数をデフォルトに" ([8ed41cd](https://github.com/malgo-lang/malgo/commit/8ed41cd75e43409f28d70ae752ba64d13e8c0961))
-* Revert "古いexamplesを移動" ([2559441](https://github.com/malgo-lang/malgo/commit/255944194b82d5652128497a017e7187f05e64ab))
-* Revert "一旦push" ([1ff8934](https://github.com/malgo-lang/malgo/commit/1ff8934de8fefa4f327611d1ccb76a30f347241a))
-* Revert "リファクタリング!!!!!" ([7aae9d1](https://github.com/malgo-lang/malgo/commit/7aae9d1bbc3fb8503a02db5ff04424d4f6748213))
+### Pull Requests
+- Merge pull request [#176](https://github.com/malgo-lang/malgo/issues/176) from malgo-lang:consistent-seq
+- Merge pull request [#173](https://github.com/malgo-lang/malgo/issues/173) from malgo-lang:effectful
+- Merge pull request [#172](https://github.com/malgo-lang/malgo/issues/172) from malgo-lang:prettyprinter
+- Merge pull request [#171](https://github.com/malgo-lang/malgo/issues/171) from malgo-lang:remove-unused-operator
+- Merge pull request [#170](https://github.com/malgo-lang/malgo/issues/170) from malgo-lang:call-graph
+- Merge pull request [#169](https://github.com/malgo-lang/malgo/issues/169) from malgo-lang:refactor-id
+- Merge pull request [#168](https://github.com/malgo-lang/malgo/issues/168) from malgo-lang:new-call-semantics
+- Merge pull request [#167](https://github.com/malgo-lang/malgo/issues/167) from malgo-lang/update-ghc9.6.2
+- Merge pull request [#166](https://github.com/malgo-lang/malgo/issues/166) from malgo-lang:effectful
+- Merge pull request [#165](https://github.com/malgo-lang/malgo/issues/165) from malgo-lang:fix-codesize
+- Merge pull request [#163](https://github.com/malgo-lang/malgo/issues/163) from malgo-lang:new-llvm-backend
+- Merge pull request [#162](https://github.com/malgo-lang/malgo/issues/162) from malgo-lang:detect-bottleneck
+- Merge pull request [#161](https://github.com/malgo-lang/malgo/issues/161) from malgo-lang/ghc-9.6.1
+- Merge pull request [#160](https://github.com/malgo-lang/malgo/issues/160) from malgo-lang:ghc-9.4.4
+- Merge pull request [#158](https://github.com/malgo-lang/malgo/issues/158) from malgo-lang/bench
+- Merge pull request [#157](https://github.com/malgo-lang/malgo/issues/157) from malgo-lang/flat-koriel
+- Merge pull request [#156](https://github.com/malgo-lang/malgo/issues/156) from malgo-lang:rust-runtime
+- Merge pull request [#155](https://github.com/malgo-lang/malgo/issues/155) from malgo-lang:refactor-typecheck
+- Merge pull request [#154](https://github.com/malgo-lang/malgo/issues/154) from malgo-lang:koriel-typecheck
+- Merge pull request [#153](https://github.com/malgo-lang/malgo/issues/153) from malgo-lang/koriel-parser
+- Merge pull request [#152](https://github.com/malgo-lang/malgo/issues/152) from malgo-lang/flat-typerep
+- Merge pull request [#151](https://github.com/malgo-lang/malgo/issues/151) from malgo-lang/remove-scheme
+- Merge pull request [#150](https://github.com/malgo-lang/malgo/issues/150) from malgo-lang/nix-flakes
+- Merge pull request [#149](https://github.com/malgo-lang/malgo/issues/149) from malgo-lang/simplify-constraints
+
+
+<a name="v0.3.0"></a>
+## [v0.3.0] - 2022-11-30
+### Chore
+- add .github/release.yml
+- update devcontainer.json
+- small change
+- fix Dockerfile
+- move Dockerfile
+- update Dockerfile
+- add /root/.cabal/bin to PATH
+- update Dockerfile
+- compile hls
+- Update CI
+- Delete old script
+- remove app/Main.hs
+- Delete unused scripts
+- remove unused scripts
+- move to app/malgo
+- Build on Docker
+- remove unnecessary import
+
+### Error
+- module name and source name are mismatched
+
+### Feat
+- dump Core IR as JSON
+- `malgo build` uses JSON configuration file
+- simplify compile options
+- more effective inline-expansion and uncurrying
+- disable lambda-lifiting
+- change default inline size
+
+### Fix
+- fix concatenation of the result of pkg-config
+
+### Refactor
+- split MalgoM, RnState and DsState into modules
+- remove used import
+- use DerivingAnyClass
+- remove unused LANGUAGE pragma
+- use DerivingAnyClass and DervingVia
+- remove pretty-simple
+- rename some fields of the compile option
+- remove storeInterface
+- rename _dstPath to dstPath
+- rename _srcPath to srcPath
+- rename _srcPath to srcPath
+- remove unused field
+- fix curryFun
+- newCodeGenEnv
+- rename srcName to srcPath (app/Main.hs)
+- rename srcName to srcPath
+- Use MalgoEnv in Koriel.Core.CodeGen.LLVM
+
+### Style
+- formatting
+
+### Test
+- Rewrite test scripts in Haskell
+- Rewrite test-nolift.sh in Haskell
+- Rewrite test.sh in Haskell
+- Rewrite pretest.sh in Haskell
+- add testcases/malgo/Factorial.mlg
+
+### Reverts
+- Move source codes and others to malgo-compiler
+
+### Pull Requests
+- Merge pull request [#148](https://github.com/malgo-lang/malgo/issues/148) from malgo-lang:refactor-cache
+- Merge pull request [#147](https://github.com/malgo-lang/malgo/issues/147) from malgo-lang:serialise-json
+- Merge pull request [#146](https://github.com/malgo-lang/malgo/issues/146) from malgo-lang:no-script-test
+- Merge pull request [#145](https://github.com/malgo-lang/malgo/issues/145) from malgo-lang:no-script-test
+- Merge pull request [#144](https://github.com/malgo-lang/malgo/issues/144) from malgo-lang/new-compile-command
+- Merge pull request [#143](https://github.com/malgo-lang/malgo/issues/143) from malgo-lang:refactor-codegen
+- Merge pull request [#142](https://github.com/malgo-lang/malgo/issues/142) from malgo-lang/linker
+- Merge pull request [#141](https://github.com/malgo-lang/malgo/issues/141) from malgo-lang:codegen-scheme
+- Merge pull request [#140](https://github.com/malgo-lang/malgo/issues/140) from malgo-lang:split-language-server
+- Merge pull request [#139](https://github.com/malgo-lang/malgo/issues/139) from malgo-lang:codegen-scheme
+- Merge pull request [#138](https://github.com/malgo-lang/malgo/issues/138) from malgo-lang/def-keyword
+- Merge pull request [#137](https://github.com/malgo-lang/malgo/issues/137) from malgo-lang/no-field-selectors
+- Merge pull request [#136](https://github.com/malgo-lang/malgo/issues/136) from malgo-lang:match-one
+- Merge pull request [#135](https://github.com/malgo-lang/malgo/issues/135) from malgo-lang/hash-table
+- Merge pull request [#134](https://github.com/malgo-lang/malgo/issues/134) from malgo-lang/annotated
+- Merge pull request [#133](https://github.com/malgo-lang/malgo/issues/133) from malgo-lang/bidir
+- Merge pull request [#132](https://github.com/malgo-lang/malgo/issues/132) from malgo-lang/new-unboxed-checker
+
+
+<a name="v0.2.0"></a>
+## [v0.2.0] - 2022-07-05
+### Chore
+- update stack.yaml
+- update stack.yaml
+- update malgo_ci.yml
+- remove templates
+- update README.md
+- update README.md
+- update stack.yaml
+- add scripts/bench.sh
+- 10-queen
+- add Fib.mlg and NQueen.mlg
+- update examples
+- update templates/runtime.c.mustache
+- update resolver
+- remove cabal.project.freeze
+- update hie.yaml
+- move malgo/* to root
+- remove cabal.project.freeze and use cabal in hls instead of stack
+- update malgo_ci.yml
+- update malgo_ci.yml
+- update hie.yaml
+- use stack
+- use stack
+- update hie.yaml
+- update stack.yaml
+- update cabal.project.freeze
+- add `pretty-simple` to dependencies
+
+### Doc
+- add comments
+
+### Docs
+- add comments
+- update scripts/README.md
+
+### Example
+- update List.mlg
+
+### Feat
+- add some functions to Builtin.mlg and Prelude.mlg
+- try to run new desugar-pass always
+- `mlgToCore` supports Level1_Int.mlg
+- compile.sh now recognize options to malgo
+- inline trivial function application
+- `{ a }` is the syntax sugar for `() -> a`
+- error on string literal pattern
+- check that numbers of patterns are same
+- `{ | A -> ... | B -> ... }` is also available
+- boxed literal pattern
+- improve readability of type errors
+- do not generalize `let` bindings
+- with statement
+- `Builtin.panic : String -> a`
+- ProgramBuilderT
+- use `;` outside `{}`
+- type annotation for expressions
+- add `eqString` and `substring`
+- add --dump-refine option
+- Implement Refine pass for class and impl
+
+### Fix
+- missing os field
+- external global variable
+- update testcases
+- change the key of `interned` to `(Int, ModuleName)`
+- `[]` pattern
+- improve performance of `checkInlineable`
+- use Control.Monad.Trans.Writer.CPS
+- malgo_panic returns void*
+- fix `malgo_string_append`
+- add space to pPrint TyConApp
+- prettyprint TyVar
+- support `()` pattern
+- add missing `cast`
+- handle right-associative operators correctly
+- resolve fprintf warning
+- resolve the parser performance issue about `expr : type`
+- fix `groupTuple`
+- change llvm-hs version to 9.0.1
+- generate initialization of toplevel variables correctly
+- prettyprint `bug $ Unreachable reason`
+- desugar groups of `ScDef` correctly
+
+### Refactor
+- merge `freevars*`
+- move `lookup` functions to Rename.Env
+- fix Pretty instances
+- split `tcScDefs` to some subunits
+- remove TyDArr
+- remove `class`, `impl`, `=>`
+- remove unused parameter
+- split `ExtCall` to `RawCall` and `ExtFunc`
+- `DsEnv` is superset of `TcEnv`
+- rename `Infer` to `TypeCheck`
+- add comments
+- add signatures
+- hand-written zonk
+- point-free
+- more readable paramter names
+- `TyLazy` -> `TyBlock`
+- hand-written Plated instance
+- merge `Static` and `UTerm`
+- add some comments and small changes
+- With -> Annotated
+- hlint
+- use relude
+- rename `newLocalId` and `newGlobalId` with `newInternalId` and `newExternalId`
+- refactor TcEnv
+- reduce usage of `TemplateHaskell`
+- newtype `MalgoM`
+- use `Text`
+- simplify `With`
+- new design of `With` and some minor changes
+- remove `foldMapA`
+- use `error` instead of `bug`
+- remove `asumMap` and `<<$>>`
+- `MonadCodeGen` and `runCodeGenT`
+- remove duplicate codes
+- MonadExpBuilder
+- add new ir
+- rename `defs` with `defaults`
+- rename `newLocalId` and `newGlobalId` with `newInternalId` and `newExternalId`
+- simplify `unify`
+- organize type classes
+- walkOn is Traversal
+- buildTyArr
+- TyConApp
+- minor change
+- merge `liftUnify` and `unify`
+- replace `NonEmpty (Stmt x)` with `Seq`
+- fix the behavior of UTerm.viewTyConApp
+- move Malgo/{UTerm.hs, Unify.hs} to Malgo/Infer/
+- rename `TypeCheck` to `Infer`
+- simplify AST for `impl` and `class`
+
+### Style
+- format
+
+### Test
+- `stack test` runs tests as test_malgo_parallel.sh
+- add testcase
+- add test cases
+- add test case
+- add `Spec.hs`
+- add `Punctuate`
+- add malgo-test package
+- add boxed literal pattern test
+- add test case
+- update InvalidPattern.mlg
+- add test case
+- add test cases
+- add test cases
+- add test script
+- update testcase
+- update testcase
+
+### Wip
+- disable warnings for Malgo.Core
+- Implement MlgToCore for Level6_Pair.mlg and Level7_List.mlg
+- Support Level5_ExtFunc.mlg
+- Support Level3_Func.mlg
+- implement core-to-js pass
+- disable warnings
+- mlgToCore
+- merge TypeRep
+- add Malgo.Core.MlgToCore and rename `id` to `identity`
+- add Malgo.Core.Syntax
+
+### Reverts
+- [WIP] makeFieldsNoPrefix Id
+- [WIP] Define typelevel function (type constructor), TyAbs
+
+### Pull Requests
+- Merge pull request [#130](https://github.com/malgo-lang/malgo/issues/130) from malgo-lang:refactor-test
+- Merge pull request [#129](https://github.com/malgo-lang/malgo/issues/129) from malgo-lang:datadef-bug-fix
+- Merge pull request [#125](https://github.com/malgo-lang/malgo/issues/125) from malgo-lang:document-symbols
+- Merge pull request [#126](https://github.com/malgo-lang/malgo/issues/126) from malgo-lang:parser-improve
+- Merge pull request [#124](https://github.com/malgo-lang/malgo/issues/124) from malgo-lang:temporal-id
+- Merge pull request [#123](https://github.com/malgo-lang/malgo/issues/123) from malgo-lang/lsp-opt
+- Merge pull request [#122](https://github.com/malgo-lang/malgo/issues/122) from malgo-lang/refactor-opt
+- Merge pull request [#121](https://github.com/malgo-lang/malgo/issues/121) from malgo-lang:lsp-definitions
+- Merge pull request [#120](https://github.com/malgo-lang/malgo/issues/120) from malgo-lang:improve-hover
+- Merge pull request [#119](https://github.com/malgo-lang/malgo/issues/119) from malgo-lang:language-server-hover
+- Merge pull request [#118](https://github.com/malgo-lang/malgo/issues/118) from malgo-lang:update-packages
+- Merge pull request [#117](https://github.com/malgo-lang/malgo/issues/117) from malgo-lang:lsp-server
+- Merge pull request [#116](https://github.com/malgo-lang/malgo/issues/116) from malgo-lang:refactor-fields
+- Merge pull request [#114](https://github.com/malgo-lang/malgo/issues/114) from malgo-lang/make-fields
+- Merge pull request [#113](https://github.com/malgo-lang/malgo/issues/113) from malgo-lang/remove-malgo-core
+- Merge pull request [#109](https://github.com/malgo-lang/malgo/issues/109) from malgo-lang/add-document-comments
+- Merge pull request [#108](https://github.com/malgo-lang/malgo/issues/108) from malgo-lang/test-in-haskell
+- Merge pull request [#107](https://github.com/malgo-lang/malgo/issues/107) from malgo-lang/update-prelude
+- Merge pull request [#106](https://github.com/malgo-lang/malgo/issues/106) from malgo-lang/simplify-code
+- Merge pull request [#105](https://github.com/malgo-lang/malgo/issues/105) from malgo-lang/mlg-core
+- Merge pull request [#103](https://github.com/malgo-lang/malgo/issues/103) from malgo-lang/improve-zonk
+- Merge pull request [#104](https://github.com/malgo-lang/malgo/issues/104) from malgo-lang/benchmark
+- Merge pull request [#102](https://github.com/malgo-lang/malgo/issues/102) from malgo-lang/refactor-desugar
+- Merge pull request [#101](https://github.com/malgo-lang/malgo/issues/101) from malgo-lang/simple-block
+- Merge pull request [#100](https://github.com/malgo-lang/malgo/issues/100) from malgo-lang/fix-pattern
+- Merge pull request [#99](https://github.com/malgo-lang/malgo/issues/99) from malgo-lang/boxed-pattern
+- Merge pull request [#96](https://github.com/malgo-lang/malgo/issues/96) from malgo-lang/with
+- Merge pull request [#95](https://github.com/malgo-lang/malgo/issues/95) from malgo-lang/use-relude
+- Merge pull request [#88](https://github.com/malgo-lang/malgo/issues/88) from malgo-lang/refactor-infer
+- Merge pull request [#94](https://github.com/malgo-lang/malgo/issues/94) from malgo-lang/merge_koriel_malgo
+- Merge pull request [#90](https://github.com/malgo-lang/malgo/issues/90) from malgo-lang/refactor-koriel
+- Merge pull request [#92](https://github.com/malgo-lang/malgo/issues/92) from malgo-lang/refactor-match
+- Merge pull request [#91](https://github.com/malgo-lang/malgo/issues/91) from malgo-lang/fix-match
+- Merge pull request [#87](https://github.com/malgo-lang/malgo/issues/87) from malgo-lang/sequence-expr
+- Merge pull request [#86](https://github.com/malgo-lang/malgo/issues/86) from malgo-lang/type-annotation
+- Merge pull request [#85](https://github.com/malgo-lang/malgo/issues/85) from malgo-lang/refactor-infer
+- Merge pull request [#84](https://github.com/malgo-lang/malgo/issues/84) from malgo-lang/fix-toplevel-variable
+- Merge pull request [#83](https://github.com/malgo-lang/malgo/issues/83) from malgo-lang/typecheck-infer
+- Merge pull request [#82](https://github.com/malgo-lang/malgo/issues/82) from malgo-lang/refactor-unreachable
+- Merge pull request [#79](https://github.com/malgo-lang/malgo/issues/79) from malgo-lang/eq-class
+- Merge pull request [#81](https://github.com/malgo-lang/malgo/issues/81) from malgo-lang/fix-layout
+- Merge pull request [#80](https://github.com/malgo-lang/malgo/issues/80) from malgo-lang/fix-toplevel-application
+- Merge pull request [#78](https://github.com/malgo-lang/malgo/issues/78) from malgo-lang/record-semicolon
+- Merge pull request [#77](https://github.com/malgo-lang/malgo/issues/77) from malgo-lang/toplevel-variable
+- Merge pull request [#75](https://github.com/malgo-lang/malgo/issues/75) from malgo-lang/refactor-core
+- Merge pull request [#74](https://github.com/malgo-lang/malgo/issues/74) from malgo-lang/type-as-prefix
+- Merge pull request [#73](https://github.com/malgo-lang/malgo/issues/73) from malgo-lang/qualified-type
+- Merge pull request [#72](https://github.com/malgo-lang/malgo/issues/72) from malgo-lang/space
+- Merge pull request [#71](https://github.com/malgo-lang/malgo/issues/71) from malgo-lang/unreachable
+- Merge pull request [#70](https://github.com/malgo-lang/malgo/issues/70) from malgo-lang/improve-message
+- Merge pull request [#68](https://github.com/malgo-lang/malgo/issues/68) from malgo-lang/list-syntax
+- Merge pull request [#67](https://github.com/malgo-lang/malgo/issues/67) from malgo-lang/new-runtime
+- Merge pull request [#65](https://github.com/malgo-lang/malgo/issues/65) from malgo-lang/split-testcases
+- Merge pull request [#64](https://github.com/malgo-lang/malgo/issues/64) from malgo-lang/new-module-syntax
+- Merge pull request [#63](https://github.com/malgo-lang/malgo/issues/63) from malgo-lang/refactor-typechecker
+- Merge pull request [#62](https://github.com/malgo-lang/malgo/issues/62) from malgo-lang/fix-type-checker
+- Merge pull request [#60](https://github.com/malgo-lang/malgo/issues/60) from malgo-lang/fix-multiple-parameterized-types
+- Merge pull request [#58](https://github.com/malgo-lang/malgo/issues/58) from malgo-lang/refactor-unify
+- Merge pull request [#57](https://github.com/malgo-lang/malgo/issues/57) from malgo-lang/remove_language_prefix
+- Merge pull request [#55](https://github.com/malgo-lang/malgo/issues/55) from takoeight0821/new-module-syntax
+- Merge pull request [#56](https://github.com/malgo-lang/malgo/issues/56) from takoeight0821/add_architecture_doc
+- Merge pull request [#54](https://github.com/malgo-lang/malgo/issues/54) from takoeight0821/improve-ci
+- Merge pull request [#53](https://github.com/malgo-lang/malgo/issues/53) from takoeight0821/new-driver
+- Merge pull request [#52](https://github.com/malgo-lang/malgo/issues/52) from takoeight0821/experiment-syntax
+- Merge pull request [#51](https://github.com/malgo-lang/malgo/issues/51) from takoeight0821/remove-llvm-hs-pretty
+- Merge pull request [#49](https://github.com/malgo-lang/malgo/issues/49) from takoeight0821/record-pattern
+- Merge pull request [#48](https://github.com/malgo-lang/malgo/issues/48) from takoeight0821/add-record
+- Merge pull request [#47](https://github.com/malgo-lang/malgo/issues/47) from takoeight0821/refactoring
+- Merge pull request [#46](https://github.com/malgo-lang/malgo/issues/46) from takoeight0821/better-error-message
+- Merge pull request [#45](https://github.com/malgo-lang/malgo/issues/45) from takoeight0821/fix-kind-check
+- Merge pull request [#43](https://github.com/malgo-lang/malgo/issues/43) from takoeight0821/better-code-generation
+- Merge pull request [#42](https://github.com/malgo-lang/malgo/issues/42) from takoeight0821/clean-code
+- Merge pull request [#41](https://github.com/malgo-lang/malgo/issues/41) from takoeight0821/simple-typechecker
+- Merge pull request [#40](https://github.com/malgo-lang/malgo/issues/40) from takoeight0821/type-synonym
+- Merge pull request [#39](https://github.com/malgo-lang/malgo/issues/39) from takoeight0821/refactoring
+- Merge pull request [#38](https://github.com/malgo-lang/malgo/issues/38) from takoeight0821/better-error-message
+- Merge pull request [#37](https://github.com/malgo-lang/malgo/issues/37) from takoeight0821/refactor-new-typechecker
+- Merge pull request [#36](https://github.com/malgo-lang/malgo/issues/36) from takoeight0821/fix-scheme-equiv-check
+- Merge pull request [#35](https://github.com/malgo-lang/malgo/issues/35) from takoeight0821/use-unordered-containers
+- Merge pull request [#24](https://github.com/malgo-lang/malgo/issues/24) from takoeight0821/griff-to-malgo
+- Merge pull request [#34](https://github.com/malgo-lang/malgo/issues/34) from takoeight0821/add-new-typechecker
+- Merge pull request [#32](https://github.com/malgo-lang/malgo/issues/32) from takoeight0821/new-build-system
+- Merge pull request [#31](https://github.com/malgo-lang/malgo/issues/31) from takoeight0821/ast_json
+- Merge pull request [#29](https://github.com/malgo-lang/malgo/issues/29) from takoeight0821/add-new-ir-syntax
+- Merge pull request [#27](https://github.com/malgo-lang/malgo/issues/27) from takoeight0821/add-documents
+- Merge pull request [#26](https://github.com/malgo-lang/malgo/issues/26) from takoeight0821/more-restricted-syntax
+- Merge pull request [#25](https://github.com/malgo-lang/malgo/issues/25) from takoeight0821/more-restricted-syntax
+
+
+<a name="v0.1.0"></a>
+## v0.1.0 - 2021-01-23
+### Reverts
+- typedを実装
+- delete Kind
+- 自由変数に自分自身を含めないように変更
+- ヴァリアントをparseまで実装
+- 組み込み型を追加
+- Preludeを自前で作成
+- outputableを一旦合併
+- ランク1多相完全理解
+- insertLetの機能を変更
+- 設計の見直し
+- カリー化した関数をデフォルトに
+- 古いexamplesを移動
+- 一旦push
+- リファクタリング!!!!!
+
+### Pull Requests
+- Merge pull request [#23](https://github.com/malgo-lang/malgo/issues/23) from takoeight0821/add-pointer-type
+- Merge pull request [#21](https://github.com/malgo-lang/malgo/issues/21) from takoeight0821/add_boxed_literal
+- Merge pull request [#20](https://github.com/malgo-lang/malgo/issues/20) from takoeight0821/improve-module-path
+- Merge pull request [#19](https://github.com/malgo-lang/malgo/issues/19) from takoeight0821/fix-parse-parens
+- Merge pull request [#18](https://github.com/malgo-lang/malgo/issues/18) from takoeight0821/fix-typecheck-nested-let
+- Merge pull request [#17](https://github.com/malgo-lang/malgo/issues/17) from takoeight0821/fix-module-handling
+- Merge pull request [#16](https://github.com/malgo-lang/malgo/issues/16) from takoeight0821/primitive-functions
+- Merge pull request [#15](https://github.com/malgo-lang/malgo/issues/15) from takoeight0821/add-unboxed-kind
+- Merge pull request [#4](https://github.com/malgo-lang/malgo/issues/4) from takoeight0821/myownprelude
+- Merge pull request [#3](https://github.com/malgo-lang/malgo/issues/3) from takoeight0821/lambda
+- Merge pull request [#2](https://github.com/malgo-lang/malgo/issues/2) from takoeight0821/rewrite_monad
+- Merge pull request [#1](https://github.com/malgo-lang/malgo/issues/1) from takoeight0821/rewrite
+
+
+[Unreleased]: https://github.com/malgo-lang/malgo/compare/1.0.0...HEAD
+[1.0.0]: https://github.com/malgo-lang/malgo/compare/v0.5.0...1.0.0
+[v0.5.0]: https://github.com/malgo-lang/malgo/compare/v0.4.0...v0.5.0
+[v0.4.0]: https://github.com/malgo-lang/malgo/compare/v0.3.0...v0.4.0
+[v0.3.0]: https://github.com/malgo-lang/malgo/compare/v0.2.0...v0.3.0
+[v0.2.0]: https://github.com/malgo-lang/malgo/compare/v0.1.0...v0.2.0
