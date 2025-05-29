@@ -6,112 +6,141 @@ A statically typed functional programming language.
 
 ## Requirement
 
-* [stack](https://docs.haskellstack.org/en/stable/README/)
+* [cabal-install](https://www.haskell.org/cabal/)
 
 ## Installation
 
 ### Installing Malgo
 
 ```sh
-$ git clone https://github.com/malgo-lang/malgo
-$ cd malgo
-$ stack install
-$ ./scripts/install_malgo_internal.sh
+git clone https://github.com/malgo-lang/malgo
+cd malgo
+cabal install
+```
+
+## Directory Structure
+
+A brief overview of the main directories and files:
+
+```
+app/           # CLI entry point (Main.hs)
+docs/          # Documentation and references
+examples/      # Example Malgo source files
+nix/           # Nix-related files
+runtime/       # Malgo runtime and standard library
+src/           # Main source code (Haskell)
+test/          # Test suites and testcases
+README.md      # This file
+malgo.cabal    # Cabal project file
 ```
 
 ## Usage
 
+To evaluate programs:
+
 ```sh
-$ ./scripts/compile.sh examples/malgo/Hello.mlg
-$ ./Hello
-Hello, world
+malgo eval [OPTIONS] SOURCE
 ```
+
+- `eval` — Evaluate a Malgo program.
+- `SOURCE` — Path to the source file to evaluate (required).
+
+#### Options
+- `--no-opt` — Disable optimizations during compilation.
+- `--lambdalift` — Enable lambda lifting.
+- `--debug-mode` — Enable debug mode for verbose output.
+
+#### Example
+
+```sh
+malgo eval --no-opt --debug-mode examples/malgo/Hello.mlg
+```
+
+This will evaluate `examples/malgo/Hello.mlg` with optimizations disabled and debug mode enabled.
 
 ## Examples
 
+The `examples/malgo/` directory contains a variety of example programs demonstrating Malgo's features. Here are some highlights:
+
 ### Hello, world
+File: `examples/malgo/Hello.mlg`
+```malgo
+module {..} = import "../../runtime/malgo/Builtin.mlg"
+module {..} = import "../../runtime/malgo/Prelude.mlg"
 
-```
-module Hello = {
-  module {..} = import Builtin;
-  module {..} = import Prelude;
-
-  main = {
-    putStrLn "Hello, world!"
-  };
+def main = {
+  putStrLn "Hello, world!"
 }
 ```
 
 ### Fibonacci number
+File: `examples/malgo/Fib.mlg`
+```malgo
+module {..} = import "../../runtime/malgo/Builtin.mlg"
+module {..} = import "../../runtime/malgo/Prelude.mlg"
 
-```
-module Fib = {
-  module {..} = import Builtin;
-  module {..} = import Prelude;
+infix 4 (<=)
+def (<=) = { x y -> leInt32 x y }
 
-  infix 4 (<=);
-  (<=) = { x y -> leInt32 x y };
+infixl 6 (+)
+def (+) = { x y -> addInt32 x y }
 
-  infixl 6 (+);
-  (+) = { x y -> addInt32 x y };
+infixl 6 (-)
+def (-) = { x y -> subInt32 x y }
 
-  infixl 6 (-);
-  (-) = { x y -> subInt32 x y };
+def fib = { n ->
+  if (n <= 1)
+    { 1 }
+    { fib (n - 1) + fib (n - 2) }
+}
 
-  fib = { n ->
-    if (n <= 1)
-      { 1 }
-      { fib (n - 1) + fib (n - 2) }
-  };
-
-  main = {
-    fib 5 |> toStringInt32 |> putStrLn
-  };
+def main = {
+  fib 5 |> toStringInt32 |> putStrLn
 }
 ```
 
 ### List operations
+File: `examples/malgo/List.mlg`
+```malgo
+module {..} = import "../../runtime/malgo/Builtin.mlg"
+module {..} = import "../../runtime/malgo/Prelude.mlg"
 
-```
-module List = {
-  module {..} = import Builtin;
-  module {..} = import Prelude;
+infix 4 (<=)
+def (<=) : Int32 -> Int32 -> Bool
+def (<=) = {x y -> leInt32 x y}
 
-  infix 4 (<=);
-  (<=) : Int32 -> Int32 -> Bool;
-  (<=) = {x y -> leInt32 x y};
+infixl 6 (+)
+def (+) : Int32 -> Int32 -> Int32
+def (+) = {x y -> addInt32 x y}
 
-  infixl 6 (+);
-  (+) : Int32 -> Int32 -> Int32;
-  (+) = {x y -> addInt32 x y};
+infixl 6 (-)
+def (-) : Int32 -> Int32 -> Int32
+def (-) = {x y -> subInt32 x y}
 
-  infixl 6 (-);
-  (-) : Int32 -> Int32 -> Int32;
-  (-) = {x y -> subInt32 x y};
+def map : (a -> b) -> List a -> List b
+def map =
+  { _ Nil -> Nil,
+    f (Cons x xs) -> Cons (f x) (map f xs)
+  }
 
-  map : (a -> b) -> List a -> List b;
-  map = { _ Nil -> Nil
-        | f (Cons x xs) -> Cons (f x) (map f xs)
-        };
+def sum : List Int32 -> Int32
+def sum =
+  { Nil -> 0,
+    Cons x xs -> x + sum xs
+  }
 
-  sum : List Int32 -> Int32;
-  sum = { Nil -> 0
-        | Cons x xs -> x + sum xs
-        };
+-- [0 .. n]
+def below : Int32 -> List Int32
+def below = { n ->
+  if (n <= 0)
+     { [0] }
+     { Cons n (below (n - 1)) }
+}
 
-  -- [0 .. n]
-  below : Int32 -> List Int32;
-  below = { n ->
-    if (n <= 0)
-       { [0] }
-       { Cons n (below (n - 1)) }
-  };
-
-  main = {
-      sum (map (addInt32 1) (below 10))
-        |> toStringInt32
-        |> putStrLn
-  };
+def main = {
+  sum (map (addInt32 1) (below 10))
+    |> toStringInt32
+    |> putStrLn
 }
 ```
 
@@ -119,21 +148,28 @@ module List = {
 
 https://github.com/malgo-lang/minilisp
 
-## How to Test
 
-```sh
-# full test (parallel)
-cabal test --test-show-details=streaming
-# full test (serial)
-cabal test --test-show-details=streaming --test-options='-j1'
-# usual case (all optimization enabled) only
-cabal test --test-show-details=streaming --test-options='--match "usual"'
-# no all optimization case only
-cabal test --test-show-details=streaming --test-options='--match "nono"'
-# no lambda-lift optimization case only
-cabal test --test-show-details=streaming --test-options='--match "nolift"'
-# no other optimization case only
-cabal test --test-show-details=streaming --test-options='--match "noopt"'
+## For Developers
 
-cabal exec malgo 
-```
+This project uses [mise](https://github.com/jdx/mise) for managing development tools and tasks. The `mise.toml` file defines tool versions and common development workflows.
+
+### Toolchain
+- **GHC** (via ghcup)
+- **cabal-install**
+- **hpack**
+- **Haskell Language Server (HLS)**
+- **go** (for changelog generation)
+- **watchexec** (for file watching)
+- **git-chglog** (for changelog generation)
+
+### Common Tasks
+Run these with `mise run <task>`:
+
+- `setup` — Install and set up all required tools and dependencies.
+- `setup-hls` — Build and set up Haskell Language Server for the project.
+- `build` — Build the project (`hpack && cabal build`).
+- `test` — Run the test suite. Optionally filter tests with `--option match=<pattern>`.
+- `exec` — Run the project executable (`cabal exec malgo-exe`).
+- `changelog` — Generate the changelog using `git-chglog`.
+
+See `mise.toml` for more details and customization.

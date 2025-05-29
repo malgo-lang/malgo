@@ -11,8 +11,8 @@ _.path = [
 [tasks.setup]
 description = "Setup tools"
 run = [
-    "ghcup install ghc 9.10.1",
-    "ghcup set ghc 9.10.1",
+    "ghcup install ghc 9.12.2",
+    "ghcup set ghc 9.12.2",
     "ghcup install cabal latest",
     "ghcup set cabal latest",
     "go install github.com/git-chglog/git-chglog/cmd/git-chglog@latest",
@@ -20,7 +20,7 @@ run = [
 ]
 [tasks.setup-hls]
 description = "Setup HLS"
-run = "ghcup install hls --git-ref master --ghc 9.10.1 -j 4"
+run = "ghcup compile hls -g 2.11.0.0 --ghc 9.12.2 --cabal-update"
 [tasks.build]
 description = "Build the project"
 run = "hpack && cabal build"
