@@ -6,9 +6,8 @@ module Malgo.Rename.RnEnv
   ( RenameError (..),
     Resolved,
     RnEnv (..),
-    constructors,
-    moduleNames,
-    appendRnEnv,
+    insertVarIdent,
+    insertTypeIdent,
     addConstructors,
     isConstructor,
     genBuiltinRnEnv,
@@ -20,7 +19,6 @@ module Malgo.Rename.RnEnv
   )
 where
 
-import Control.Lens (ASetter', makeFieldsId)
 import Data.Map.Strict qualified as Map
 import Data.Set qualified as Set
 import Effectful (Eff, (:>))
@@ -28,7 +26,6 @@ import Effectful.Error.Static
 import Effectful.Reader.Static (Reader, asks, runReader)
 import Effectful.State.Static.Local (State)
 import Malgo.Id
-import Malgo.Lens
 import Malgo.Module
 import Malgo.MonadUniq
 import Malgo.Prelude hiding (throwError)
@@ -105,12 +102,13 @@ data RnEnv = RnEnv
     moduleNames :: Set ModuleName
   }
 
-makeFieldsId ''RnEnv
+-- | 'insertVarIdent' resolved variable identifiers to the environment.
+insertVarIdent :: [(PsId, Resolved)] -> RnEnv -> RnEnv
+insertVarIdent newEnv RnEnv {..} = RnEnv {resolvedVarIdentMap = foldr (\(k, v) -> Map.insertWith (<>) k [v]) resolvedVarIdentMap newEnv, ..}
 
--- | Append resolved identifiers to the environment.
-appendRnEnv :: ASetter' RnEnv (Map PsId [Resolved]) -> [(PsId, Resolved)] -> RnEnv -> RnEnv
-appendRnEnv lens newEnv = over lens
-  $ \e -> foldr (\(k, v) -> Map.insertWith (<>) k [v]) e newEnv
+-- | 'insertTypeIdent' resolved type identifiers to the environment.
+insertTypeIdent :: [(PsId, Resolved)] -> RnEnv -> RnEnv
+insertTypeIdent newEnv RnEnv {..} = RnEnv {resolvedTypeIdentMap = foldr (\(k, v) -> Map.insertWith (<>) k [v]) resolvedTypeIdentMap newEnv, ..}
 
 addConstructors :: [Id] -> RnEnv -> RnEnv
 addConstructors cons env = env {constructors = Set.union (Set.fromList cons) env.constructors}

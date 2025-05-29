@@ -1,6 +1,4 @@
 {-# LANGUAGE DerivingVia #-}
-{-# LANGUAGE TemplateHaskell #-}
-{-# LANGUAGE UndecidableInstances #-}
 
 module Malgo.Infer.TcEnv
   ( TcEnv (..),
@@ -13,7 +11,6 @@ module Malgo.Infer.TcEnv
   )
 where
 
-import Control.Lens (At (at), makeFieldsId, view, (%~))
 import Data.Map.Strict qualified as Map
 import Data.Maybe (fromJust)
 import Effectful (Eff, (:>))
@@ -24,7 +21,6 @@ import Malgo.Id
 import Malgo.Infer.Kind (KindCtx)
 import Malgo.Infer.TypeRep
 import Malgo.Interface (Interface (..), externalFromInterface)
-import Malgo.Lens
 import Malgo.Module
 import Malgo.Prelude
 import Malgo.Rename.RnEnv (Resolved)
@@ -39,36 +35,31 @@ data TcEnv = TcEnv
   deriving stock (Show, Generic)
   deriving (Semigroup, Monoid) via Generically TcEnv
 
-makeFieldsId ''TcEnv
-
 insertSignature :: RnId -> Scheme Type -> TcEnv -> TcEnv
-insertSignature name scheme = over signatureMap (Map.insert name scheme)
+insertSignature name scheme TcEnv {..} =
+  TcEnv {signatureMap = Map.insert name scheme signatureMap, ..}
 
 insertTypeDef :: RnId -> TypeDef Type -> TcEnv -> TcEnv
-insertTypeDef name def = over typeDefMap (Map.insert name def)
+insertTypeDef name def TcEnv {..} =
+  TcEnv {typeDefMap = Map.insert name def typeDefMap, ..}
 
 updateTypeDef :: RnId -> (TypeDef Type -> TypeDef Type) -> TcEnv -> TcEnv
-updateTypeDef name f = over typeDefMap (Map.adjust f name)
+updateTypeDef name f TcEnv {..} =
+  TcEnv {typeDefMap = Map.adjust f name typeDefMap, ..}
 
 insertTypeSynonym :: TypeVar -> ([TypeVar], Type) -> TcEnv -> TcEnv
-insertTypeSynonym name def = over typeSynonymMap (Map.insert name def)
+insertTypeSynonym name def TcEnv {..} =
+  TcEnv {typeSynonymMap = Map.insert name def typeSynonymMap, ..}
 
 mergeInterface :: (State TcEnv :> es, State KindCtx :> es) => Interface -> Eff es ()
 mergeInterface interface = do
-  modify @TcEnv \tcEnv ->
-    tcEnv
-      & ( signatureMap
-            %~ Map.union
-              ( Map.mapKeys
-                  (externalFromInterface interface)
-                  interface.signatureMap
-              )
-        )
-      & ( typeDefMap
-            %~ Map.union
-              (Map.mapKeys (externalFromInterface interface) interface.typeDefMap)
-        )
-      & (typeSynonymMap %~ Map.union interface.typeSynonymMap)
+  modify @TcEnv \TcEnv {..} ->
+    TcEnv
+      { signatureMap = Map.union (Map.mapKeys (externalFromInterface interface) interface.signatureMap) signatureMap,
+        typeDefMap = Map.union (Map.mapKeys (externalFromInterface interface) interface.typeDefMap) typeDefMap,
+        typeSynonymMap = Map.union typeSynonymMap interface.typeSynonymMap,
+        ..
+      }
   modify @KindCtx (Map.union interface.kindCtx)
 
 initTcEnv :: (State TcEnv :> es, HasField "resolvedTypeIdentMap" rnEnv (Map Text [Qualified Id]), State KindCtx :> es) => rnEnv -> Eff es ()
@@ -111,7 +102,7 @@ findBuiltinType ::
   (HasField "resolvedTypeIdentMap" rnEnv (Map Text [Qualified Id])) =>
   PsId -> rnEnv -> Maybe RnId
 findBuiltinType x rnEnv = do
-  ids <- map (.value) <$> view (at x) rnEnv.resolvedTypeIdentMap
+  ids <- map (.value) <$> Map.lookup x rnEnv.resolvedTypeIdentMap
   find isBuiltin ids
   where
     isBuiltin :: RnId -> Bool

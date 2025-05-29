@@ -13,7 +13,6 @@ import Effectful.Reader.Static (Reader, ask, asks, local, runReader)
 import Effectful.State.Static.Local (State, execState, get, gets, modify, put, runState)
 import Malgo.Id
 import Malgo.Interface
-import Malgo.Lens
 import Malgo.Module
 import Malgo.MonadUniq (Uniq)
 import Malgo.Prelude hiding (All, catchError, throwError)
@@ -78,20 +77,20 @@ rnDecl (ScDef pos name expr) = ScDef pos <$> lookupVarName pos name <*> rnExpr e
 rnDecl (ScSig pos name typ) = do
   tyVars <- Set.toList <$> getTyVars typ
   tyVars' <- traverse resolveName tyVars
-  local (appendRnEnv resolvedTypeIdentMap (zip tyVars $ map (Qualified Implicit) tyVars'))
+  local (insertTypeIdent (zip tyVars $ map (Qualified Implicit) tyVars'))
     $ ScSig pos
     <$> lookupVarName pos name
     <*> rnType typ
 rnDecl (DataDef pos name params cs) = do
   params' <- traverse (resolveName . snd) params
-  local (appendRnEnv resolvedTypeIdentMap (zip (map snd params) (map (Qualified Implicit) params')))
+  local (insertTypeIdent (zip (map snd params) (map (Qualified Implicit) params')))
     $ DataDef pos
     <$> lookupTypeName pos name
     <*> pure (zipWith (\(range, _) p' -> (range, p')) params params')
     <*> traverse (bitraverse (lookupVarName pos) (traverse rnType)) cs
 rnDecl (TypeSynonym pos name params typ) = do
   params' <- traverse resolveName params
-  local (appendRnEnv resolvedTypeIdentMap (zip params $ map (Qualified Implicit) params'))
+  local (insertTypeIdent (zip params $ map (Qualified Implicit) params'))
     $ TypeSynonym pos
     <$> lookupTypeName pos name
     <*> pure params'
@@ -100,7 +99,7 @@ rnDecl (Infix pos assoc prec name) = Infix pos assoc prec <$> lookupVarName pos 
 rnDecl (Foreign pos name typ) = do
   tyVars <- Set.toList <$> getTyVars typ
   tyVars' <- traverse resolveName tyVars
-  local (appendRnEnv resolvedTypeIdentMap (zip tyVars $ map (Qualified Implicit) tyVars'))
+  local (insertTypeIdent (zip tyVars $ map (Qualified Implicit) tyVars'))
     $ Foreign (pos, name)
     <$> lookupVarName pos name
     <*> rnType typ
@@ -220,7 +219,7 @@ rnClause (Clause pos ps e) = do
   -- TODO: throwError に置き換える
   when (anySame $ filter (/= "_") vars) $ errorOn pos "Same variables occurs in a pattern"
   vm <- zip vars . map (Qualified Implicit) <$> traverse resolveName vars
-  local (appendRnEnv resolvedVarIdentMap vm) $ Clause pos <$> traverse rnPat ps <*> rnExpr e
+  local (insertVarIdent vm) $ Clause pos <$> traverse rnPat ps <*> rnExpr e
   where
     resolveConP :: Pat (Malgo NewParse) -> Eff es (Pat (Malgo NewParse))
     resolveConP (VarP pos name)
@@ -290,7 +289,7 @@ rnStmts (NoBind x e :| s : ss) = do
 rnStmts (Let x v e :| s : ss) = do
   e' <- rnExpr e
   v' <- resolveName v
-  local (appendRnEnv resolvedVarIdentMap [(v, Qualified Implicit v')]) do
+  local (insertVarIdent [(v, Qualified Implicit v')]) do
     s' :| ss' <- rnStmts (s :| ss)
     pure $ Let x v' e' :| s' : ss'
 rnStmts (With x (Just v) e :| s : ss) = do
@@ -372,7 +371,7 @@ genToplevelEnv (ds :: [Decl (Malgo NewParse)]) env = do
       when (x `elem` Map.keys env) do
         throwError $ DuplicateName pos x
       x' <- resolveGlobalName x
-      modify $ appendRnEnv resolvedVarIdentMap [(x, Qualified Implicit x')]
+      modify $ insertVarIdent [(x, Qualified Implicit x')]
     aux ScSig {} = pass
     aux (DataDef pos x _ cs) = do
       env <- get @RnEnv
@@ -382,21 +381,21 @@ genToplevelEnv (ds :: [Decl (Malgo NewParse)]) env = do
         throwError $ DuplicateNames pos (map (view _2) cs `intersect` Map.keys env.resolvedVarIdentMap)
       x' <- resolveGlobalName x
       xs' <- traverse (resolveGlobalName . view _2) cs
-      modify $ appendRnEnv resolvedVarIdentMap (zip (map (view _2) cs) $ map (Qualified Implicit) xs')
+      modify $ insertVarIdent (zip (map (view _2) cs) $ map (Qualified Implicit) xs')
       modify $ addConstructors xs'
-      modify $ appendRnEnv resolvedTypeIdentMap [(x, Qualified Implicit x')]
+      modify $ insertTypeIdent [(x, Qualified Implicit x')]
     aux (TypeSynonym pos x _ _) = do
       env <- get @RnEnv
       when (x `elem` Map.keys env.resolvedTypeIdentMap) do
         throwError $ DuplicateName pos x
       x' <- resolveGlobalName x
-      modify $ appendRnEnv resolvedTypeIdentMap [(x, Qualified Implicit x')]
+      modify $ insertTypeIdent [(x, Qualified Implicit x')]
     aux (Foreign pos x _) = do
       env <- get @RnEnv
       when (x `elem` Map.keys env.resolvedVarIdentMap) do
         throwError $ DuplicateName pos x
       x' <- resolveGlobalName x
-      modify $ appendRnEnv resolvedVarIdentMap [(x, Qualified Implicit x')]
+      modify $ insertVarIdent [(x, Qualified Implicit x')]
     aux (Import _ modName' importList) = do
       -- If imported variables are already defined in the current module, shadow them.
       interface <- loadInterface modName'
@@ -408,8 +407,8 @@ genToplevelEnv (ds :: [Decl (Malgo NewParse)]) env = do
             map
               (\name -> (name, externalFromInterface interface name))
               (exportedTypeIdentList interface)
-      modify $ appendRnEnv resolvedVarIdentMap (map (resolveImport modName' importList) varIdentAssoc)
-      modify $ appendRnEnv resolvedTypeIdentMap (map (resolveImport modName' importList) typeIdentAssoc)
+      modify $ insertVarIdent (map (resolveImport modName' importList) varIdentAssoc)
+      modify $ insertTypeIdent (map (resolveImport modName' importList) typeIdentAssoc)
       case importList of
         As moduleName -> modify \s -> s {moduleNames = Set.insert moduleName s.moduleNames}
         _ -> pass
