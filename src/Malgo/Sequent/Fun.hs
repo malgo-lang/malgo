@@ -62,10 +62,10 @@ data Program = Program
 instance ToSExpr Program where
   toSExpr (Program definitions dependencies) =
     S.L
-      $ [ S.A "program",
-          S.L $ map (\(_, name, body) -> toSExpr (name, body)) definitions,
-          S.L $ map toSExpr dependencies
-        ]
+      [ S.A "program",
+        S.L $ map (\(_, name, body) -> toSExpr (name, body)) definitions,
+        S.L $ map toSExpr dependencies
+      ]
 
 data Expr
   = Var Range Name

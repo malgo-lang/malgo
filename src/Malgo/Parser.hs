@@ -250,7 +250,7 @@ pOpApp = makeExprParser pApply table
             start <- getSourcePos
             op <- operator
             end <- getSourcePos
-            pure \lhs rhs -> OpApp (Range start end) op lhs rhs
+            pure $ OpApp (Range start end) op
         ]
       ]
 
@@ -479,7 +479,7 @@ pList = between (symbol "[") (symbol "]") do
   pure $ List (Range start end) elements
 
 pSeq :: Parser es (Expr (Malgo NewParse))
-pSeq = between (symbol "(") (symbol ")") $ pStmts
+pSeq = between (symbol "(") (symbol ")") pStmts
 
 -- * Patterns
 
@@ -588,8 +588,7 @@ pType = makeExprParser pTyApp table
       [ [ InfixR do
             start <- getSourcePos
             reservedOperator "->"
-            end <- getSourcePos
-            pure \lhs rhs -> TyArr (Range start end) lhs rhs
+            TyArr . Range start <$> getSourcePos
         ]
       ]
 

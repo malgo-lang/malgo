@@ -51,7 +51,7 @@ import Text.Pretty.Simple (pShowNoColor)
 data ModuleName
   = ModuleName Text
   | Artifact ArtifactPath
-  deriving stock (Eq, Show, Ord, Generic, Data, Typeable)
+  deriving stock (Eq, Show, Ord, Generic, Data)
   deriving anyclass (Hashable, ToJSON, ToJSONKey, FromJSON, FromJSONKey, Store)
 
 instance HasRange ModuleName where
@@ -59,7 +59,7 @@ instance HasRange ModuleName where
   range (Artifact path) = Range (initialPos $ toFilePath path.relPath) (initialPos $ toFilePath path.relPath)
 
 instance ToSExpr ModuleName where
-  toSExpr (ModuleName raw) = S.A $ S.Symbol $ raw
+  toSExpr (ModuleName raw) = S.A $ S.Symbol raw
   toSExpr (Artifact path) = S.A $ S.String $ convertString $ toFilePath path.relPath
 
 instance Pretty ModuleName where
@@ -164,7 +164,7 @@ data ArtifactPath = ArtifactPath
     relPath :: Path Rel File,
     targetPath :: Path Abs File
   }
-  deriving stock (Eq, Ord, Generic, Data, Typeable)
+  deriving stock (Eq, Ord, Generic, Data)
   deriving anyclass (Hashable, ToJSON, ToJSONKey, FromJSON, FromJSONKey, Store)
 
 instance Show ArtifactPath where
@@ -249,7 +249,7 @@ instance (Show a) => Resource (ViaShow a) where
   fromByteString = error "fromByteString: ViaShow cannot be deserialized"
 
 newtype Pragma = Pragma (Map ModuleName [Text])
-  deriving stock (Eq, Show, Generic, Data, Typeable)
+  deriving stock (Eq, Show, Generic, Data)
   deriving newtype (Semigroup, Monoid)
   deriving anyclass (Hashable, ToJSON, FromJSON, Store)
 

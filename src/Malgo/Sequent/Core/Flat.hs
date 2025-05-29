@@ -51,8 +51,7 @@ flatStatement (Primitive range name producers consumer) = do
       primitive <- flatStatement (Primitive range name (zeros <> [Var range var] <> rest) consumer)
       pure
         $ cut producer'
-        $ Then range var
-        $ primitive
+        $ Then range var primitive
     Nothing -> do
       producers' <- for zeros \zero -> do
         zero' <- flatProducer zero
@@ -114,8 +113,7 @@ flatConsumer (Apply range producers consumers) = do
         $ Then range outer
         $ cut producer'
         $ Then range inner
-        $ cut (Zero (Var range outer))
-        $ apply
+        $ cut (Zero (Var range outer)) apply
     Nothing -> do
       producers' <- for zeros \zero -> do
         zero' <- flatProducer zero
@@ -141,7 +139,7 @@ flatBranch (Branch range pattern statement) = do
   pure $ Branch range pattern statement
 
 split :: (State Uniq :> es, Reader ModuleName :> es) => [Producer Full] -> Eff es ([Producer Full], Maybe (Producer Full), [Producer Full])
-split producers = aux [] producers
+split = aux []
   where
     aux :: (State Uniq :> es, Reader ModuleName :> es) => [Producer Full] -> [Producer Full] -> Eff es ([Producer Full], Maybe (Producer Full), [Producer Full])
     aux acc [] = pure (reverse acc, Nothing, [])
@@ -151,9 +149,9 @@ split producers = aux [] producers
         else pure (reverse acc, Just p, ps)
 
 isValue :: Producer Full -> Bool
-isValue (Var _ _) = True
-isValue (Literal _ _) = True
+isValue Var {} = True
+isValue Literal {} = True
 isValue (Construct _ _ ps _) = all isValue ps
-isValue (Lambda _ _ _) = True
-isValue (Object _ _) = True
-isValue (Do _ _ _) = False
+isValue Lambda {} = True
+isValue Object {} = True
+isValue Do {} = False

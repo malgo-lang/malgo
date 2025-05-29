@@ -40,7 +40,7 @@ fromConstructor :: (State Uniq :> es, Reader ModuleName :> es) => (Range, Id, [T
 fromConstructor (range, name, parameters) = do
   let arity = length parameters
   parameters <- replicateM arity $ newTemporalId "constructor"
-  let lambda = foldr (\parameter -> F.Lambda range [parameter]) (F.Construct range (F.Tag $ name.name) (F.Var range <$> parameters)) parameters
+  let lambda = foldr (\parameter -> F.Lambda range [parameter]) (F.Construct range (F.Tag name.name) (F.Var range <$> parameters)) parameters
   pure (range, name, lambda)
 
 fromForeign :: (State Uniq :> es, Reader ModuleName :> es) => (Typed (Range, Text), Id, Type (Malgo Refine)) -> Eff es (Range, Name, F.Expr)

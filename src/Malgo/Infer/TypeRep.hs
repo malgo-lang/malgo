@@ -1,6 +1,5 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE PatternSynonyms #-}
-{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
 module Malgo.Infer.TypeRep
@@ -144,7 +143,7 @@ splitTyArr t = ([], t)
 
 newtype MetaVar = MetaVar {metaVar :: Id}
   deriving newtype (Eq, Ord, Show, Generic, Hashable)
-  deriving stock (Data, Typeable)
+  deriving stock (Data)
   deriving anyclass (Store)
 
 instance Pretty MetaVar where

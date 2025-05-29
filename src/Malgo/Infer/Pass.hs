@@ -89,11 +89,9 @@ infer rnEnv (Module name bg) = runError @InferError $ runReader name $ do
       typeDefMap <- traverse (zonkTypeDef range abbrEnv) typeDefMap
       pure TcEnv {..}
 
-    zonkSignature range abbrEnv scheme =
-      traverseOf (traverse . types) (zonk range >=> pure . expandAllTypeSynonym abbrEnv) scheme
+    zonkSignature range abbrEnv = traverseOf (traverse . types) (zonk range >=> pure . expandAllTypeSynonym abbrEnv)
 
-    zonkTypeDef range abbrEnv typeDef =
-      traverseOf (traverse . types) (zonk range >=> pure . expandAllTypeSynonym abbrEnv) typeDef
+    zonkTypeDef range abbrEnv = traverseOf (traverse . types) (zonk range >=> pure . expandAllTypeSynonym abbrEnv)
 
 tcBindGroup ::
   ( Reader ModuleName :> es,

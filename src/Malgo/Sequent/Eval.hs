@@ -6,7 +6,6 @@ module Malgo.Sequent.Eval (Value (..), EvalError (..), Env (..), emptyEnv, Handl
 import Data.Map qualified as Map
 import Data.Maybe (fromJust, isJust)
 import Data.Text qualified as T
-import Data.Text qualified as Text
 import Data.Traversable (for)
 import Effectful
 import Effectful.Error.Static
@@ -220,7 +219,7 @@ match (PLiteral _ literal) (Immediate literal') | literal == literal' = pure $ J
 match (Destruct _ tag patterns) (Struct tag' values) | tag == tag' = do
   bindings <- zipWithM match patterns values
   if all isJust bindings
-    then pure $ Just $ concat $ fromJust <$> bindings
+    then pure $ Just $ concatMap fromJust bindings
     else pure Nothing
 match (Expand _ patterns) (Record env fields) = local (const env) do
   let pairs = Map.intersectionWith (,) patterns fields
@@ -233,7 +232,7 @@ match (Expand _ patterns) (Record env fields) = local (const env) do
       value <- readIORef ref
       match pattern $ fromJust value
   if all isJust pairs
-    then pure $ Just $ concat $ fromJust <$> pairs
+    then pure $ Just $ concatMap fromJust pairs
     else pure Nothing
 match _ _ = pure Nothing
 
@@ -241,17 +240,17 @@ fetchPrimitive :: (Error EvalError :> es, Reader Handlers :> es, IOE :> es) => T
 fetchPrimitive "malgo_unsafe_cast" = \cases
   _ [value] -> pure value
   range values -> throwError $ InvalidArguments range "malgo_unsafe_cast" values
-fetchPrimitive name | "malgo_add_" `Text.isPrefixOf` name = binary name addValue
-fetchPrimitive name | "malgo_sub_" `Text.isPrefixOf` name = binary name subValue
-fetchPrimitive name | "malgo_mul_" `Text.isPrefixOf` name = binary name mulValue
+fetchPrimitive name | "malgo_add_" `T.isPrefixOf` name = binary name addValue
+fetchPrimitive name | "malgo_sub_" `T.isPrefixOf` name = binary name subValue
+fetchPrimitive name | "malgo_mul_" `T.isPrefixOf` name = binary name mulValue
 -- TODO: add "malgo_div_" and "malgo_mod_"
-fetchPrimitive name | "malgo_eq_" `Text.isPrefixOf` name = binary name eqValue
-fetchPrimitive name | "malgo_ne_" `Text.isPrefixOf` name = binary name neValue
-fetchPrimitive name | "malgo_lt_" `Text.isPrefixOf` name = binary name ltValue
-fetchPrimitive name | "malgo_le_" `Text.isPrefixOf` name = binary name leValue
-fetchPrimitive name | "malgo_gt_" `Text.isPrefixOf` name = binary name gtValue
-fetchPrimitive name | "malgo_ge_" `Text.isPrefixOf` name = binary name geValue
-fetchPrimitive name | "malgo_" `Text.isPrefixOf` name && "to_string" `Text.isSuffixOf` name = toString name
+fetchPrimitive name | "malgo_eq_" `T.isPrefixOf` name = binary name eqValue
+fetchPrimitive name | "malgo_ne_" `T.isPrefixOf` name = binary name neValue
+fetchPrimitive name | "malgo_lt_" `T.isPrefixOf` name = binary name ltValue
+fetchPrimitive name | "malgo_le_" `T.isPrefixOf` name = binary name leValue
+fetchPrimitive name | "malgo_gt_" `T.isPrefixOf` name = binary name gtValue
+fetchPrimitive name | "malgo_ge_" `T.isPrefixOf` name = binary name geValue
+fetchPrimitive name | "malgo_" `T.isPrefixOf` name && "to_string" `T.isSuffixOf` name = toString name
 fetchPrimitive "malgo_print_string" = \cases
   _ [Immediate (String text)] -> do
     Handlers {stdout} <- ask @Handlers
@@ -263,8 +262,7 @@ fetchPrimitive "malgo_newline" = \_ _ -> do
   liftIO $ stdout '\n'
   pure $ Struct Tuple []
 fetchPrimitive "malgo_get_contents" = \_ _ -> do
-  text <- getContents
-  pure $ Immediate $ String text
+  Immediate . String <$> getContents
 fetchPrimitive "malgo_string_append" = \cases
   _ [Immediate (String a), Immediate (String b)] -> pure $ Immediate $ String $ a <> b
   range values -> throwError $ InvalidArguments range "malgo_string_append" values
@@ -276,8 +274,7 @@ getContents = do
   char <- liftIO stdin
   case char of
     Just char -> do
-      rest <- getContents
-      pure $ T.cons char rest
+      T.cons char <$> getContents
     Nothing -> pure ""
 
 putTextTo :: (IOE :> es) => (Char -> IO ()) -> Text -> Eff es ()
@@ -286,10 +283,10 @@ putTextTo stream text = do
   liftIO $ traverse_ stream string
 
 toString :: (Error EvalError :> es) => Text -> Range -> [Value] -> Eff es Value
-toString _ _ [Immediate (Int32 n)] = pure $ Immediate $ String $ Text.pack $ show n
-toString _ _ [Immediate (Int64 n)] = pure $ Immediate $ String $ Text.pack $ show n
-toString _ _ [Immediate (Float n)] = pure $ Immediate $ String $ Text.pack $ show n
-toString _ _ [Immediate (Double n)] = pure $ Immediate $ String $ Text.pack $ show n
+toString _ _ [Immediate (Int32 n)] = pure $ Immediate $ String $ T.pack $ show n
+toString _ _ [Immediate (Int64 n)] = pure $ Immediate $ String $ T.pack $ show n
+toString _ _ [Immediate (Float n)] = pure $ Immediate $ String $ T.pack $ show n
+toString _ _ [Immediate (Double n)] = pure $ Immediate $ String $ T.pack $ show n
 toString _ _ [Immediate (String s)] = pure $ Immediate $ String s
 toString name range values = throwError $ InvalidArguments range name values
 

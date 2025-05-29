@@ -21,7 +21,7 @@ instance ToSExpr Text where
   toSExpr = S.A . Symbol
 
 instance ToSExpr Int where
-  toSExpr = S.A . (\i -> Int i Nothing) . fromIntegral
+  toSExpr = S.A . (`Int` Nothing) . fromIntegral
 
 instance (ToSExpr a, ToSExpr b) => ToSExpr (a, b) where
   toSExpr (a, b) = S.L [toSExpr a, toSExpr b]
@@ -37,9 +37,6 @@ instance (ToSExpr a) => ToSExpr [a] where
   sShow =
     convertString
       . S.encode (S.basicPrint atomToText)
-      -- ( S.unconstrainedPrint atomToText
-      --     & S.setIndentStrategy indentStrategy
-      -- )
       . map toSExpr
 
 data Atom
