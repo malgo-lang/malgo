@@ -1,67 +1,13 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
-### Chore
-- remove package.json and its dependencies
-
 
 <a name="1.0.0"></a>
 ## [1.0.0] - 2025-05-28
-### Chore
-- add package.json with dependencies for commitlint and conventional changelog
-- **mise:** update tool setup and environment configuration
-
-### Ci
-- **build:** remove cabal.project.freeze for Windows and non-Windows
-- **build:** comment out cabal check and documentation build steps
-- **build:** simplify cabal commands and remove freeze file
-- **build:** update cabal commands to ignore cabal.project.freeze
-- **build:** add GitHub Actions workflow for CI build process
-
 
 <a name="v0.5.0"></a>
 ## [v0.5.0] - 2025-05-27
-### Chore
-- update cachix-action to version 16 in GitHub Actions workflow
-- update GitHub Actions to use specific versions of actions
-- add commit message template
-- add plan.md
-- Update dependabot configuration for weekly updates
-- Update GitHub Actions versions in malgo_ci.yml
-- update README.md
-- update copilot-instructions.md for clarity and additional guidelines
-- remove update-flake-lock workflow and clean up nix.yml
-- update project dependencies and add Hoogle script
-- fix formatting in nix.yml workflow
-- emphasize the importance of preserving comments in 'GitHub Copilot comments' section
-- clarify instructions regarding comments in 'GitHub Copilot comments' section
-- **dependencies:** update lens to version 5.3.4
-- **deps:** bump cachix/install-nix-action from 31.0.0 to 31.3.0
-- **deps:** bump DeterminateSystems/update-flake-lock from 24 to 25
-- **deps:** bump DeterminateSystems/nix-installer-action from 16 to 17
-- **test:** update Fib.mlg
-- **test:** replace (.) operator with (<<)
-- **test:** add script to run tests with custom options
-- **vscode:** add Copilot commit message generation instructions
-
-### Ci
-- add workflow to update flake.lock automatically
-- fix malgo_ci.yml to run all test cases
-
-### Doc
-- update coding conventions and naming guidelines
-- **copilot-instructions:** clarify naming conventions for identifiers
-
-### Docs
-- update GitHub Copilot instructions for clarity and brevity
-- introduce new syntax for function application and field access
-
-### Feat
-- add pragma support and update related tests
-- **infer:** add error handling for invalid type applications
-- **parser:** enhance handling of pragma
-
-### Fix
+### Bug Fixes
 - update imports for Prettyprinter in multiple files
 - handle MainNotFound error in evalProgram and improve error reporting
 - handle Record capture correctly
@@ -73,7 +19,7 @@
 - **prelude:** improve pretty printing of Range instances
 - **rename:** fix constructor pattern handling in rnClause
 
-### Refactor
+### Code Refactoring
 - simplify conversion functions in ToFun module
 - simplify Consumer representation and evaluation logic
 - simple interface
@@ -109,32 +55,10 @@
 - **sequent:** remove unused indentStrategy function
 - **sequent:** remove unused HasRange import from modules
 
-### Test
-- add error case tests for Infer and Refine
-- add SameImport.mlg
-- add sexpr golden tests
-- golden tests for generated llvm IRs
-- rewrite DriverSpec as Golden Tests
-- add golden tests for malgo passes
-- **errors:** add error cases for DuplicateDef and UndefinedVariable
-- **infer:** use NewParser and NewRename
-
-### WIP
-- combine Malgo and Koriel
-
-### Wip
-- mask unique
-- add pragma
-- refactor Consumer evaluation
-- update flake.nix
-- implement eval
-- Add initial implementation of evaluation module with environment handling
-- implement new compiler
-- add vm
-- merge Malgo.Core.Syntax
-- implement eval
-- **rename:** handle Project expressions in rnExpr
-- **rename:** add NewRename pass
+### Features
+- add pragma support and update related tests
+- **infer:** add error handling for invalid type applications
+- **parser:** enhance handling of pragma
 
 ### Reverts
 - Add Windows testing job to Nix workflow
@@ -156,91 +80,7 @@
 
 <a name="v0.4.0"></a>
 ## [v0.4.0] - 2024-04-20
-### Chore
-- add git cliff
-- reconfigure devcontainer
-- add commitizen
-- update Dockerfile
-- fix test output
-- update stack.yaml
-- remove griff
-- remove comments
-- remove comments
-- Update Dockerfile
-- small change
-- update GHC 9.6.1
-- small change
-- small changes
-- update Dockerfile
-- update CI
-- cabal freeze
-- update Dockerfile
-- fix CI
-- pass -opaque-pointers to clang
-- fix CI
-- Use fourmole
-- diagnose 2.4.0
-- small fix on malgo.cabal
-- update ghc 9.2.7
-- update Dockerfile
-- add some comments
-- update malgo_ci.yml
-- update ghc
-- add benchmarks
-- add unliftio
-- update hls
-- don't print error messages in testError
-- mv testcases/ test/testcases/
-- Add flags for bdw-gc
-- Add cmake to dev container and update bdwgc-alloc
-- add rust
-- update cabal.project.freeze
-- add comments
-- update haskell-language-server
-- add stack.yaml
-- format flake.nix
-- don't check ListLike
-- add default.nix and shell.nix
-- update flake.nix
-- update flake.nix
-- add flake.nix
-- update CI
-- update ghc to 9.2.5
-
-### FIX
-- Convert `Call` to `CallDirect` if necessary.
-
-### Feat
-- Match to Switch conversion
-- new normalization pass
-- unique string value
-- add helper function malgo_print_tag
-- inline gblcls
-- implement allocaresult
-- more descriptive label
-- Generate global function's closure in global scope
-- remove noop `destruct`
-- update llvm-hs to 15
-- `malgo build` builds each files concurrently
-- convert `Exact` to `SwitchUnboxed`
-- add `switch-unboxed`
-- convert `match` to `destruct-record` if it is possible
-- convert `match` to `switch` if it is possible
-- Add lint rule 'all cases have same type of pattern'
-- Generate no-optimized .kor file
-- Add default case to `Switch`
-- Koriel.Core.Flat uses `destruct`
-- Replace `bind` with `=` in several places.
-- Add `=` expression
-- imported module's functions are not external
-- add rust runtime
-- add new runtime
-- Annotate Koriel Program
-- Implement Koriel Parser
-- .kor -> .kor.bin
-- improve Koriel pretty printer
-
-### Fix
+### Bug Fixes
 - fix lint
 - flatten switch and switch-unboxed correctly
 - generate kor.bin
@@ -256,7 +96,7 @@
 - Update malgo.cabal
 - remove 'noName'
 
-### Refactor
+### Code Refactoring
 - remove comments
 - remove allocaResult strategy
 - use shiftT
@@ -338,28 +178,35 @@
 - simplify constraints in Malgo.Refine
 - simplify constraints in Malgo.Rename
 
-### Test
-- Test all combinations of test options
-- Add koriel parser test
-
-### WIP
-- effectful
-- Rewrite with effectful
-- PrintLLVM
-- PrintLLVM
-- PrintLLVM
-- PrintLLVM
-- update PrintLLVM
-- Add test for PrintLLVM
-- add PrimtLLVM
-- use Plated in inlineFunciton
-- use Plated
-- Add Annotate
-
-### Wip
-- add isAllocaResult flag
-- PrintLLVM (global string)
-- add Koriel.Core.Parser
+### Features
+- Match to Switch conversion
+- new normalization pass
+- unique string value
+- add helper function malgo_print_tag
+- inline gblcls
+- implement allocaresult
+- more descriptive label
+- Generate global function's closure in global scope
+- remove noop `destruct`
+- update llvm-hs to 15
+- `malgo build` builds each files concurrently
+- convert `Exact` to `SwitchUnboxed`
+- add `switch-unboxed`
+- convert `match` to `destruct-record` if it is possible
+- convert `match` to `switch` if it is possible
+- Add lint rule 'all cases have same type of pattern'
+- Generate no-optimized .kor file
+- Add default case to `Switch`
+- Koriel.Core.Flat uses `destruct`
+- Replace `bind` with `=` in several places.
+- Add `=` expression
+- imported module's functions are not external
+- add rust runtime
+- add new runtime
+- Annotate Koriel Program
+- Implement Koriel Parser
+- .kor -> .kor.bin
+- improve Koriel pretty printer
 
 ### Reverts
 - Add Statement (`Stmt`) to `Koriel.Core.Syntax`.
@@ -395,40 +242,10 @@
 
 <a name="v0.3.0"></a>
 ## [v0.3.0] - 2022-11-30
-### Chore
-- add .github/release.yml
-- update devcontainer.json
-- small change
-- fix Dockerfile
-- move Dockerfile
-- update Dockerfile
-- add /root/.cabal/bin to PATH
-- update Dockerfile
-- compile hls
-- Update CI
-- Delete old script
-- remove app/Main.hs
-- Delete unused scripts
-- remove unused scripts
-- move to app/malgo
-- Build on Docker
-- remove unnecessary import
-
-### Error
-- module name and source name are mismatched
-
-### Feat
-- dump Core IR as JSON
-- `malgo build` uses JSON configuration file
-- simplify compile options
-- more effective inline-expansion and uncurrying
-- disable lambda-lifiting
-- change default inline size
-
-### Fix
+### Bug Fixes
 - fix concatenation of the result of pkg-config
 
-### Refactor
+### Code Refactoring
 - split MalgoM, RnState and DsState into modules
 - remove used import
 - use DerivingAnyClass
@@ -447,15 +264,13 @@
 - rename srcName to srcPath
 - Use MalgoEnv in Koriel.Core.CodeGen.LLVM
 
-### Style
-- formatting
-
-### Test
-- Rewrite test scripts in Haskell
-- Rewrite test-nolift.sh in Haskell
-- Rewrite test.sh in Haskell
-- Rewrite pretest.sh in Haskell
-- add testcases/malgo/Factorial.mlg
+### Features
+- dump Core IR as JSON
+- `malgo build` uses JSON configuration file
+- simplify compile options
+- more effective inline-expansion and uncurrying
+- disable lambda-lifiting
+- change default inline size
 
 ### Reverts
 - Move source codes and others to malgo-compiler
@@ -482,67 +297,7 @@
 
 <a name="v0.2.0"></a>
 ## [v0.2.0] - 2022-07-05
-### Chore
-- update stack.yaml
-- update stack.yaml
-- update malgo_ci.yml
-- remove templates
-- update README.md
-- update README.md
-- update stack.yaml
-- add scripts/bench.sh
-- 10-queen
-- add Fib.mlg and NQueen.mlg
-- update examples
-- update templates/runtime.c.mustache
-- update resolver
-- remove cabal.project.freeze
-- update hie.yaml
-- move malgo/* to root
-- remove cabal.project.freeze and use cabal in hls instead of stack
-- update malgo_ci.yml
-- update malgo_ci.yml
-- update hie.yaml
-- use stack
-- use stack
-- update hie.yaml
-- update stack.yaml
-- update cabal.project.freeze
-- add `pretty-simple` to dependencies
-
-### Doc
-- add comments
-
-### Docs
-- add comments
-- update scripts/README.md
-
-### Example
-- update List.mlg
-
-### Feat
-- add some functions to Builtin.mlg and Prelude.mlg
-- try to run new desugar-pass always
-- `mlgToCore` supports Level1_Int.mlg
-- compile.sh now recognize options to malgo
-- inline trivial function application
-- `{ a }` is the syntax sugar for `() -> a`
-- error on string literal pattern
-- check that numbers of patterns are same
-- `{ | A -> ... | B -> ... }` is also available
-- boxed literal pattern
-- improve readability of type errors
-- do not generalize `let` bindings
-- with statement
-- `Builtin.panic : String -> a`
-- ProgramBuilderT
-- use `;` outside `{}`
-- type annotation for expressions
-- add `eqString` and `substring`
-- add --dump-refine option
-- Implement Refine pass for class and impl
-
-### Fix
+### Bug Fixes
 - missing os field
 - external global variable
 - update testcases
@@ -565,7 +320,7 @@
 - prettyprint `bug $ Unreachable reason`
 - desugar groups of `ScDef` correctly
 
-### Refactor
+### Code Refactoring
 - merge `freevars*`
 - move `lookup` functions to Rename.Env
 - fix Pretty instances
@@ -617,38 +372,27 @@
 - rename `TypeCheck` to `Infer`
 - simplify AST for `impl` and `class`
 
-### Style
-- format
-
-### Test
-- `stack test` runs tests as test_malgo_parallel.sh
-- add testcase
-- add test cases
-- add test case
-- add `Spec.hs`
-- add `Punctuate`
-- add malgo-test package
-- add boxed literal pattern test
-- add test case
-- update InvalidPattern.mlg
-- add test case
-- add test cases
-- add test cases
-- add test script
-- update testcase
-- update testcase
-
-### Wip
-- disable warnings for Malgo.Core
-- Implement MlgToCore for Level6_Pair.mlg and Level7_List.mlg
-- Support Level5_ExtFunc.mlg
-- Support Level3_Func.mlg
-- implement core-to-js pass
-- disable warnings
-- mlgToCore
-- merge TypeRep
-- add Malgo.Core.MlgToCore and rename `id` to `identity`
-- add Malgo.Core.Syntax
+### Features
+- add some functions to Builtin.mlg and Prelude.mlg
+- try to run new desugar-pass always
+- `mlgToCore` supports Level1_Int.mlg
+- compile.sh now recognize options to malgo
+- inline trivial function application
+- `{ a }` is the syntax sugar for `() -> a`
+- error on string literal pattern
+- check that numbers of patterns are same
+- `{ | A -> ... | B -> ... }` is also available
+- boxed literal pattern
+- improve readability of type errors
+- do not generalize `let` bindings
+- with statement
+- `Builtin.panic : String -> a`
+- ProgramBuilderT
+- use `;` outside `{}`
+- type annotation for expressions
+- add `eqString` and `substring`
+- add --dump-refine option
+- Implement Refine pass for class and impl
 
 ### Reverts
 - [WIP] makeFieldsNoPrefix Id
