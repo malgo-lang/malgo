@@ -23,7 +23,6 @@ module Malgo.Module
   )
 where
 
-import Control.Lens (at, (?~), (^.))
 import Control.Monad.Catch
 import Data.Aeson hiding (encode)
 import Data.ByteString (ByteString)
@@ -116,13 +115,13 @@ getWorkspaceAbs = do
 registerModule :: (Workspace :> es, IOE :> es) => ModuleName -> ArtifactPath -> Eff es ()
 registerModule moduleName path = do
   Workspace WorkspaceHolder {modulePathMap} <- getStaticRep
-  modifyIORef modulePathMap $ at moduleName ?~ path
+  modifyIORef modulePathMap $ Map.insert moduleName path
 
 getModulePath :: (HasCallStack) => (Workspace :> es, IOE :> es) => ModuleName -> Eff es ArtifactPath
 getModulePath moduleName = do
   Workspace WorkspaceHolder {modulePathMap} <- getStaticRep
   modulePathMap' <- readIORef modulePathMap
-  case modulePathMap' ^. at moduleName of
+  case Map.lookup moduleName modulePathMap' of
     Just path -> pure path
     Nothing -> searchAndRegister moduleName
 

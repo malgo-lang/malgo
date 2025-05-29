@@ -1,6 +1,6 @@
 module Malgo.Infer.Kind (KindCtx, insertKind, askKind, HasKind (..)) where
 
-import Control.Lens (At (at), (?~), (^.))
+import Data.Map.Strict qualified as Map
 import Effectful (Eff, (:>))
 import Effectful.Error.Static (Error, throwError)
 import Malgo.Infer.Error
@@ -14,10 +14,10 @@ type KindCtx = Map TypeVar Kind
 insertKind :: TypeVar -> Kind -> KindCtx -> KindCtx
 insertKind tv k ctx
   | k == TYPE = ctx
-  | otherwise = ctx & at tv ?~ k
+  | otherwise = Map.insert tv k ctx
 
 askKind :: TypeVar -> KindCtx -> Kind
-askKind tv ctx = fromMaybe TYPE (ctx ^. at tv)
+askKind tv ctx = fromMaybe TYPE (Map.lookup tv ctx)
 
 class HasKind a where
   kindOf :: (Error InferError :> es) => Range -> KindCtx -> a -> Eff es Kind

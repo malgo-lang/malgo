@@ -24,9 +24,9 @@ module Malgo.Infer.TypeRep
   )
 where
 
-import Control.Lens (At (at), Traversal', mapped, (^.), _1, _2)
+import Control.Lens (Traversal', mapped, _1, _2)
 import Data.Data (Data)
-import Data.Map.Strict qualified as Map (fromList, toList)
+import Data.Map.Strict qualified as Map (fromList, lookup, toList)
 import Data.Set qualified as Set (singleton)
 import Data.Store (Store)
 import Effectful (Eff)
@@ -209,7 +209,7 @@ runTypeUnify = evalState mempty
 applySubst :: Map TypeVar Type -> Type -> Type
 applySubst subst = \case
   TyApp ty ty' -> TyApp (applySubst subst ty) (applySubst subst ty')
-  TyVar id -> fromMaybe (TyVar id) $ subst ^. at id
+  TyVar id -> fromMaybe (TyVar id) $ Map.lookup id subst
   TyCon id -> TyCon id
   TyPrim pt -> TyPrim pt
   TyArr ty ty' -> TyArr (applySubst subst ty) (applySubst subst ty')
@@ -222,14 +222,14 @@ applySubst subst = \case
 -- | expand type synonyms
 expandTypeSynonym :: Map TypeVar ([TypeVar], Type) -> Type -> Maybe Type
 expandTypeSynonym abbrEnv (TyConApp (TyCon con) ts) =
-  case abbrEnv ^. at con of
+  case Map.lookup con abbrEnv of
     Nothing -> Nothing
     Just (ps, orig) -> Just (applySubst (Map.fromList $ zip ps ts) orig)
 expandTypeSynonym _ _ = Nothing
 
 expandAllTypeSynonym :: Map TypeVar ([TypeVar], Type) -> Type -> Type
 expandAllTypeSynonym abbrEnv (TyConApp (TyCon con) ts) =
-  case abbrEnv ^. at con of
+  case Map.lookup con abbrEnv of
     Nothing -> TyConApp (TyCon con) $ map (expandAllTypeSynonym abbrEnv) ts
     Just (ps, orig) ->
       -- ネストした型シノニムを展開するため、展開直後の型をもう一度展開する
