@@ -44,7 +44,7 @@ mode: 'agent'
 
 ## ✅ Next Steps
 
-- List follow-up actions or verifications.
+- [ ] List follow-up actions or verifications.
 ```
 
 ## ⚠️ Notes
