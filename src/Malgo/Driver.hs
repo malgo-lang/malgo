@@ -4,20 +4,24 @@ module Malgo.Driver (compile, compileFromAST, withDump, failIfError) where
 import Control.Exception (IOException, catch)
 import Data.ByteString qualified as BS
 import Data.Set qualified as Set
+import Data.Text.Lazy qualified as TL
 import Data.Traversable (for)
 import Effectful
 import Effectful.Error.Static (CallStack, prettyCallStack, runError)
 import Effectful.Reader.Static
 import Effectful.State.Static.Local
-import Malgo.Infer.Pass qualified as Infer
+import Malgo.Infer.Error (InferError)
+import Malgo.Infer.Pass (InferPass (..))
 import Malgo.Infer.TcEnv (TcEnv (..))
 import Malgo.Interface (Interface, buildInterface)
 import Malgo.Module
 import Malgo.MonadUniq
-import Malgo.Parser (parse)
+import Malgo.Parser.Pass (ParserPass (..))
+import Malgo.Pass (Pass (..))
 import Malgo.Prelude
-import Malgo.Refine.Pass (refine)
-import Malgo.Rename.Pass (rename)
+import Malgo.Refine.Pass (RefinePass (..))
+import Malgo.Rename.Pass (RenamePass (..))
+import Malgo.Rename.RnEnv (RenameError)
 import Malgo.Rename.RnEnv qualified as RnEnv
 import Malgo.Rename.RnState (RnState (..))
 import Malgo.Sequent.Core (Join)
@@ -32,7 +36,7 @@ import Malgo.Syntax.Extension
 import System.Exit (exitFailure)
 import System.IO (hPutChar)
 import System.IO qualified as IO
-import Text.Megaparsec (errorBundlePretty)
+import Text.Megaparsec (ParseErrorBundle)
 
 -- | `withDump` is the wrapper for check `dump` flag and output dump if that flag is `True`.
 withDump ::
@@ -76,11 +80,12 @@ compileToCore srcPath parsedAst = do
     hPutStrLn stderr "=== PARSED ==="
     hPrint stderr $ pretty parsedAst
   rnEnv <- RnEnv.genBuiltinRnEnv
-  (renamedAst, rnState) <-
-    withDump flags.debugMode "=== RENAME ===" $ failIfError <$> rename rnEnv parsedAst
-  (typedAst, tcEnv, kindCtx) <- failIfError <$> Infer.infer rnEnv renamedAst
-  _ <- withDump flags.debugMode "=== TYPE CHECK ===" $ pure typedAst
-  refinedAst <- withDump flags.debugMode "=== REFINE ===" $ refine tcEnv typedAst
+  (renamedAst, rnState) <- withDump flags.debugMode "=== RENAME ===" do
+    failIfError <$> runError @RenameError (runPass RenamePass (parsedAst, rnEnv))
+  (typedAst, tcEnv, kindCtx) <- withDump flags.debugMode "=== TYPE CHECK ===" do
+    failIfError <$> runError @InferError (runPass InferPass (renamedAst, rnEnv))
+  refinedAst <- withDump flags.debugMode "=== REFINE ===" do
+    runPass RefinePass (typedAst, tcEnv)
 
   let inf = buildInterface moduleName rnState tcEnv kindCtx
   save srcPath ".mlgi" (ViaStore inf)
@@ -162,12 +167,7 @@ compile srcPath = do
   pwd <- pwdPath
   srcModulePath <- parseArtifactPath pwd srcPath
   src <- load srcModulePath ".mlg"
-  parseResult <- parse srcPath (convertString @BS.ByteString src)
-  parsedAst <- case parseResult of
-    Right (_, x) -> pure x
-    Left err -> liftIO do
-      hPutStrLn stderr $ errorBundlePretty err
-      exitFailure
+  (_, parsedAst) <- failIfError <$> runError @(ParseErrorBundle TL.Text Void) (runPass ParserPass (srcPath, convertString @BS.ByteString src))
   when flags.debugMode do
     hPutStrLn stderr "=== PARSE ==="
     hPrint stderr $ pretty parsedAst

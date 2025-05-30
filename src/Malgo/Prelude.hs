@@ -118,6 +118,7 @@ import Data.Int (Int32, Int64)
 import Data.Kind (Constraint)
 import Data.List (dropWhileEnd, foldl', sort, transpose)
 import Data.List.NonEmpty (NonEmpty (..))
+import Data.Map qualified as Map
 import Data.Map.Strict (Map)
 import Data.Maybe (fromMaybe, mapMaybe)
 import Data.Monoid (Alt (..))
@@ -288,3 +289,6 @@ errorOn range x = do
 warningOn :: (MonadIO m, Pretty a) => a -> Doc ann -> m ()
 warningOn range x = do
   liftIO $ hPutDoc stderr $ pretty range <> ": " <> x
+
+instance (Pretty k, Pretty v) => Pretty (Map k v) where
+  pretty m = pretty (Map.toList m)
