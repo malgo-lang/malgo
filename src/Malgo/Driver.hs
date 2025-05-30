@@ -13,7 +13,6 @@ import Malgo.Infer.Pass qualified as Infer
 import Malgo.Infer.TcEnv (TcEnv (..))
 import Malgo.Interface (Interface, buildInterface)
 import Malgo.Module
-import Malgo.Monad
 import Malgo.MonadUniq
 import Malgo.Parser (parse)
 import Malgo.Prelude

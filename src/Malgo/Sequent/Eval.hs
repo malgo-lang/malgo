@@ -1,7 +1,7 @@
 {-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Malgo.Sequent.Eval (Value (..), EvalError (..), Env (..), emptyEnv, Handlers (..), evalProgram) where
+module Malgo.Sequent.Eval (Value (..), EvalError (..), Env (..), emptyEnv, Handlers (..), evalProgram, EvalPass (..)) where
 
 import Data.Map qualified as Map
 import Data.Maybe (fromJust, isJust)
@@ -14,10 +14,20 @@ import Effectful.State.Static.Local (State)
 import Malgo.Id
 import Malgo.Module (ModuleName)
 import Malgo.MonadUniq (Uniq)
+import Malgo.Pass
 import Malgo.Prelude hiding (getContents, throwError)
 import Malgo.SExpr (sShow)
 import Malgo.Sequent.Core
 import Malgo.Sequent.Fun (Literal (..), Name, Pattern (..), Tag (..))
+
+data EvalPass = EvalPass
+
+instance Pass EvalPass where
+  type Input EvalPass = Program Join
+  type Output EvalPass = ()
+  type Effects EvalPass es = (Error EvalError :> es, State Uniq :> es, Reader ModuleName :> es, Reader Handlers :> es, IOE :> es)
+
+  runPass _ = evalProgram
 
 fromConsumer :: Env -> Consumer Join -> Value
 fromConsumer env consumer = Consumer $ \value -> do

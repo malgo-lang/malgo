@@ -1,4 +1,4 @@
-module Malgo.Sequent.Core.Join (joinProgram) where
+module Malgo.Sequent.Core.Join (joinProgram, JoinPass (..)) where
 
 import Control.Lens
 import Effectful
@@ -8,9 +8,19 @@ import Effectful.Writer.Static.Local
 import Malgo.Id
 import Malgo.Module (ModuleName)
 import Malgo.MonadUniq
+import Malgo.Pass
 import Malgo.Prelude
 import Malgo.Sequent.Core
 import Malgo.Sequent.Fun (Name)
+
+data JoinPass = JoinPass
+
+instance Pass JoinPass where
+  type Input JoinPass = Program Flat
+  type Output JoinPass = Program Join
+  type Effects JoinPass es = (State Uniq :> es, Reader ModuleName :> es, Writer (Endo (Statement Join)) :> es)
+
+  runPass _ = joinProgram
 
 joinProgram :: (State Uniq :> es, Reader ModuleName :> es) => Program Flat -> Eff es (Program Join)
 joinProgram Program {..} = do
