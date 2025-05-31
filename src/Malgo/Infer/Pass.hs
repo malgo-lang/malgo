@@ -34,17 +34,17 @@ data InferPass = InferPass
 instance Pass InferPass where
   type Input InferPass = (Module (Malgo Rename), RnEnv)
   type Output InferPass = (Module (Malgo Infer), TcEnv, KindCtx)
+  type ErrorType InferPass = InferError
   type
     Effects InferPass es =
       ( State (Map ModuleName Interface) :> es,
         State Uniq :> es,
         IOE :> es,
         Reader Flag :> es,
-        Workspace :> es,
-        Error InferError :> es
+        Workspace :> es
       )
-  runPass :: (Effects InferPass es) => InferPass -> Input InferPass -> Eff es (Output InferPass)
-  runPass _ (Module name bg, rnEnv) = runReader name $ do
+  runPassImpl :: (Effects InferPass es) => InferPass -> Input InferPass -> Eff (Error (ErrorType InferPass) : es) (Output InferPass)
+  runPassImpl _ (Module name bg, rnEnv) = runReader name $ do
     evalState @TcEnv mempty $ evalState @KindCtx mempty do
       initTcEnv rnEnv
       runTypeUnify do

@@ -18,9 +18,10 @@ data ToCorePass = ToCorePass
 instance Pass ToCorePass where
   type Input ToCorePass = Program
   type Output ToCorePass = C.Program Full
+  type ErrorType ToCorePass = Void
   type Effects ToCorePass es = (State Uniq :> es, Reader ModuleName :> es)
 
-  runPass _ = toCore
+  runPassImpl _ = toCore
 
 toCore :: (State Uniq :> es, Reader ModuleName :> es) => Program -> Eff es (C.Program Full)
 toCore (Program {..}) = do

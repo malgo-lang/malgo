@@ -28,19 +28,17 @@ data RenamePass = RenamePass
 instance Pass RenamePass where
   type Input RenamePass = (Module (Malgo NewParse), RnEnv)
   type Output RenamePass = (Module (Malgo Rename), RnState)
-
+  type ErrorType RenamePass = RenameError
   type
     Effects RenamePass es =
       ( State (Map ModuleName Interface) :> es,
         State Uniq :> es,
         IOE :> es,
         Reader Flag :> es,
-        Workspace :> es,
-        Error RenameError :> es
+        Workspace :> es
       )
 
-  runPass :: (Effects RenamePass es) => RenamePass -> Input RenamePass -> Eff es (Output RenamePass)
-  runPass _ (Module modName (ParsedDefinitions ds), builtinEnv) = do
+  runPassImpl _ (Module modName (ParsedDefinitions ds), builtinEnv) = do
     (ds', rnState) <- runState (RnState mempty Set.empty) $ runReader builtinEnv $ runReader modName $ rnDecls ds
     pure (Module modName $ makeBindGroup ds', rnState)
 

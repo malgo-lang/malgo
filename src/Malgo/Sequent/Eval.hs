@@ -23,11 +23,12 @@ import Malgo.Sequent.Fun (Literal (..), Name, Pattern (..), Tag (..))
 data EvalPass = EvalPass
 
 instance Pass EvalPass where
-  type Input EvalPass = Program Join
+  type Input EvalPass = (ModuleName, Handlers, Program Join)
   type Output EvalPass = ()
-  type Effects EvalPass es = (Error EvalError :> es, State Uniq :> es, Reader ModuleName :> es, Reader Handlers :> es, IOE :> es)
+  type ErrorType EvalPass = EvalError
+  type Effects EvalPass es = (State Uniq :> es, IOE :> es)
 
-  runPass _ = evalProgram
+  runPassImpl _ (moduleName, handlers, program) = runReader moduleName $ runReader handlers $ evalProgram program
 
 fromConsumer :: Env -> Consumer Join -> Value
 fromConsumer env consumer = Consumer $ \value -> do

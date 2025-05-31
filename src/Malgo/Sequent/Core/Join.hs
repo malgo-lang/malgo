@@ -18,9 +18,10 @@ data JoinPass = JoinPass
 instance Pass JoinPass where
   type Input JoinPass = Program Flat
   type Output JoinPass = Program Join
+  type ErrorType JoinPass = Void
   type Effects JoinPass es = (State Uniq :> es, Reader ModuleName :> es)
 
-  runPass _ = joinProgram
+  runPassImpl _ = joinProgram
 
 joinProgram :: (State Uniq :> es, Reader ModuleName :> es) => Program Flat -> Eff es (Program Join)
 joinProgram Program {..} = do

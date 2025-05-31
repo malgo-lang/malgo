@@ -24,8 +24,9 @@ data RefinePass = RefinePass
 instance Pass RefinePass where
   type Input RefinePass = (Module (Malgo Infer), TcEnv)
   type Output RefinePass = Module (Malgo Refine)
+  type ErrorType RefinePass = Void
   type Effects RefinePass es = (IOE :> es, Reader Flag :> es)
-  runPass _ (Module {..}, tcEnv) = do
+  runPassImpl _ (Module {..}, tcEnv) = do
     Module moduleName <$> runReader (buildRefineEnv tcEnv) (refineBindGroup moduleDefinition)
 
 refine :: (IOE :> es, Reader Flag :> es) => TcEnv -> Module (Malgo Infer) -> Eff es (Module (Malgo Refine))

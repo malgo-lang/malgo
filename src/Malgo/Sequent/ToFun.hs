@@ -20,9 +20,10 @@ data ToFunPass = ToFunPass
 instance Pass ToFunPass where
   type Input ToFunPass = BindGroup (Malgo 'Refine)
   type Output ToFunPass = Program
+  type ErrorType ToFunPass = Void
   type Effects ToFunPass es = (State Uniq :> es, Reader ModuleName :> es)
 
-  runPass _ = toFun
+  runPassImpl _ = toFun
 
 toFun :: (State Uniq :> es, Reader ModuleName :> es) => XModule (Malgo 'Refine) -> Eff es Program
 toFun BindGroup {..} = do

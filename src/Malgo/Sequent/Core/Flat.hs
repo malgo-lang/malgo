@@ -24,9 +24,10 @@ data FlatPass = FlatPass
 instance Pass FlatPass where
   type Input FlatPass = Program Full
   type Output FlatPass = Program Flat
+  type ErrorType FlatPass = Void
   type Effects FlatPass es = (State Uniq :> es, Reader ModuleName :> es)
 
-  runPass _ = flatProgram
+  runPassImpl _ = flatProgram
 
 -- | Flattens a program into a program with no nested do expressions.
 flatProgram :: (State Uniq :> es, Reader ModuleName :> es) => Program Full -> Eff es (Program Flat)
