@@ -1,6 +1,14 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
+### Code Refactoring
+- Use Malgo.Pass in Malgo.Driver
+- add pass management functionality
+- replace lens with direct map operations
+- **driver:** enhance error handling and add compile error type
+- **pass:** enhance error handling and streamline pass structure
+- **test:** add failIfError function for error handling
+
 
 <a name="1.0.0"></a>
 ## [1.0.0] - 2025-05-28
