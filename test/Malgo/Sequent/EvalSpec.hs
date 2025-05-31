@@ -4,7 +4,6 @@ import Data.ByteString qualified as BS
 import Effectful
 import Effectful.Error.Static (runError)
 import Effectful.Reader.Static (runReader)
-import Malgo.Driver (failIfError)
 import Malgo.Infer.Pass (infer)
 import Malgo.Module
 import Malgo.Monad (runMalgoM)

@@ -2,6 +2,7 @@
 
 module Malgo.Sequent.Core.Flat
   ( flatProgram,
+    FlatPass (..),
   )
 where
 
@@ -13,9 +14,20 @@ import Effectful.State.Static.Local (State)
 import Malgo.Id
 import Malgo.Module (ModuleName)
 import Malgo.MonadUniq
+import Malgo.Pass
 import Malgo.Prelude
 import Malgo.Sequent.Core (Branch (..), Consumer (..), Producer (..), Program (..), Rank (..), Statement (..))
 import Malgo.Sequent.Fun (Name)
+
+data FlatPass = FlatPass
+
+instance Pass FlatPass where
+  type Input FlatPass = Program Full
+  type Output FlatPass = Program Flat
+  type ErrorType FlatPass = Void
+  type Effects FlatPass es = (State Uniq :> es, Reader ModuleName :> es)
+
+  runPassImpl _ = flatProgram
 
 -- | Flattens a program into a program with no nested do expressions.
 flatProgram :: (State Uniq :> es, Reader ModuleName :> es) => Program Full -> Eff es (Program Flat)

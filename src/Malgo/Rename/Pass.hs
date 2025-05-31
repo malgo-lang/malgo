@@ -1,5 +1,5 @@
 -- | Name resolution and simple desugar transformation
-module Malgo.Rename.Pass (rename) where
+module Malgo.Rename.Pass (rename, RenamePass (..)) where
 
 import Control.Lens (view, _2)
 import Data.List (intersect)
@@ -15,12 +15,32 @@ import Malgo.Id
 import Malgo.Interface
 import Malgo.Module
 import Malgo.MonadUniq (Uniq)
+import Malgo.Pass (Pass (..))
 import Malgo.Prelude hiding (All, catchError, throwError)
 import Malgo.Rename.RnEnv
 import Malgo.Rename.RnState as RnState
 import Malgo.Syntax hiding (getTyVars)
 import Malgo.Syntax.Extension
 import Prettyprinter (brackets, nest, squotes, vsep, (<+>))
+
+data RenamePass = RenamePass
+
+instance Pass RenamePass where
+  type Input RenamePass = (Module (Malgo NewParse), RnEnv)
+  type Output RenamePass = (Module (Malgo Rename), RnState)
+  type ErrorType RenamePass = RenameError
+  type
+    Effects RenamePass es =
+      ( State (Map ModuleName Interface) :> es,
+        State Uniq :> es,
+        IOE :> es,
+        Reader Flag :> es,
+        Workspace :> es
+      )
+
+  runPassImpl _ (Module modName (ParsedDefinitions ds), builtinEnv) = do
+    (ds', rnState) <- runState (RnState mempty Set.empty) $ runReader builtinEnv $ runReader modName $ rnDecls ds
+    pure (Module modName $ makeBindGroup ds', rnState)
 
 -- | Entry point of this 'Malgo.Rename.Pass'
 rename ::

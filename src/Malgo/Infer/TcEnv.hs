@@ -35,6 +35,10 @@ data TcEnv = TcEnv
   deriving stock (Show, Generic)
   deriving (Semigroup, Monoid) via Generically TcEnv
 
+instance Pretty TcEnv where
+  -- TcEnv is a large structure, so we just print its type
+  pretty TcEnv {} = "TcEnv"
+
 insertSignature :: RnId -> Scheme Type -> TcEnv -> TcEnv
 insertSignature name scheme TcEnv {..} =
   TcEnv {signatureMap = Map.insert name scheme signatureMap, ..}

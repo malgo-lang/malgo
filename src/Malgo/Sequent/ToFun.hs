@@ -1,4 +1,4 @@
-module Malgo.Sequent.ToFun (toFun) where
+module Malgo.Sequent.ToFun (toFun, ToFunPass (..)) where
 
 import Control.Lens (traverseOf, _2)
 import Data.Map qualified as Map
@@ -9,10 +9,21 @@ import Malgo.Id
 import Malgo.Infer.TypeRep qualified as R
 import Malgo.Module
 import Malgo.MonadUniq
+import Malgo.Pass
 import Malgo.Prelude
 import Malgo.Sequent.Fun as F
 import Malgo.Syntax as S
 import Malgo.Syntax.Extension as S
+
+data ToFunPass = ToFunPass
+
+instance Pass ToFunPass where
+  type Input ToFunPass = BindGroup (Malgo 'Refine)
+  type Output ToFunPass = Program
+  type ErrorType ToFunPass = Void
+  type Effects ToFunPass es = (State Uniq :> es, Reader ModuleName :> es)
+
+  runPassImpl _ = toFun
 
 toFun :: (State Uniq :> es, Reader ModuleName :> es) => XModule (Malgo 'Refine) -> Eff es Program
 toFun BindGroup {..} = do

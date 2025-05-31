@@ -18,6 +18,7 @@ dependencies:
   - directory
   - effectful
   - effectful-core
+  - effectful-plugin
   - exceptions
   - extra
   - filepath
@@ -55,6 +56,8 @@ ghc-options:
   - -Wmissing-export-lists
 
   - -optP-Wno-nonportable-include-path
+
+  - -fplugin=Effectful.Plugin
 
 language: GHC2021
 

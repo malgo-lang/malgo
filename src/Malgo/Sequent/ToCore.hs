@@ -1,4 +1,4 @@
-module Malgo.Sequent.ToCore (toCore) where
+module Malgo.Sequent.ToCore (toCore, ToCorePass (..)) where
 
 import Data.Traversable (for)
 import Effectful
@@ -7,10 +7,21 @@ import Effectful.State.Static.Local (State)
 import Malgo.Id
 import Malgo.Module (ModuleName)
 import Malgo.MonadUniq
+import Malgo.Pass
 import Malgo.Prelude
 import Malgo.Sequent.Core (Producer (Do), Rank (..), Statement (Cut))
 import Malgo.Sequent.Core qualified as C
 import Malgo.Sequent.Fun
+
+data ToCorePass = ToCorePass
+
+instance Pass ToCorePass where
+  type Input ToCorePass = Program
+  type Output ToCorePass = C.Program Full
+  type ErrorType ToCorePass = Void
+  type Effects ToCorePass es = (State Uniq :> es, Reader ModuleName :> es)
+
+  runPassImpl _ = toCore
 
 toCore :: (State Uniq :> es, Reader ModuleName :> es) => Program -> Eff es (C.Program Full)
 toCore (Program {..}) = do
