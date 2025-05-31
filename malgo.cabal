@@ -76,7 +76,7 @@ library
       NoFieldSelectors
       TypeData
       Strict
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path -fplugin=Effectful.Plugin
   build-depends:
       Glob
     , aeson
@@ -86,6 +86,7 @@ library
     , directory
     , effectful
     , effectful-core
+    , effectful-plugin
     , exceptions
     , extra
     , filepath
@@ -134,7 +135,7 @@ executable malgo
       NoFieldSelectors
       TypeData
       Strict
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path -fplugin=Effectful.Plugin -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       Glob
     , aeson
@@ -144,6 +145,7 @@ executable malgo
     , directory
     , effectful
     , effectful-core
+    , effectful-plugin
     , exceptions
     , extra
     , filepath
@@ -202,7 +204,7 @@ test-suite malgo-test
       NoFieldSelectors
       TypeData
       Strict
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path -fplugin=Effectful.Plugin
   build-depends:
       Glob
     , aeson
@@ -212,6 +214,7 @@ test-suite malgo-test
     , directory
     , effectful
     , effectful-core
+    , effectful-plugin
     , exceptions
     , extra
     , filepath

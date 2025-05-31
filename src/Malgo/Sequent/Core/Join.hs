@@ -18,7 +18,7 @@ data JoinPass = JoinPass
 instance Pass JoinPass where
   type Input JoinPass = Program Flat
   type Output JoinPass = Program Join
-  type Effects JoinPass es = (State Uniq :> es, Reader ModuleName :> es, Writer (Endo (Statement Join)) :> es)
+  type Effects JoinPass es = (State Uniq :> es, Reader ModuleName :> es)
 
   runPass _ = joinProgram
 

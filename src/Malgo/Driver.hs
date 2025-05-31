@@ -1,3 +1,5 @@
+{-# LANGUAGE AllowAmbiguousTypes #-}
+
 -- | Malgo.Driver is the entry point of `malgo to-ll`.
 module Malgo.Driver (compile, compileFromAST, withDump, failIfError) where
 
@@ -7,10 +9,9 @@ import Data.Set qualified as Set
 import Data.Text.Lazy qualified as TL
 import Data.Traversable (for)
 import Effectful
-import Effectful.Error.Static (CallStack, prettyCallStack, runError)
+import Effectful.Error.Static (CallStack, Error, prettyCallStack, runError, runErrorNoCallStack, throwError)
 import Effectful.Reader.Static
 import Effectful.State.Static.Local
-import Malgo.Infer.Error (InferError)
 import Malgo.Infer.Pass (InferPass (..))
 import Malgo.Infer.TcEnv (TcEnv (..))
 import Malgo.Interface (Interface, buildInterface)
@@ -18,19 +19,18 @@ import Malgo.Module
 import Malgo.MonadUniq
 import Malgo.Parser.Pass (ParserPass (..))
 import Malgo.Pass (Pass (..))
-import Malgo.Prelude
+import Malgo.Prelude hiding (throwError)
 import Malgo.Refine.Pass (RefinePass (..))
 import Malgo.Rename.Pass (RenamePass (..))
-import Malgo.Rename.RnEnv (RenameError)
 import Malgo.Rename.RnEnv qualified as RnEnv
 import Malgo.Rename.RnState (RnState (..))
 import Malgo.Sequent.Core (Join)
 import Malgo.Sequent.Core qualified as Sequent
-import Malgo.Sequent.Core.Flat (flatProgram)
-import Malgo.Sequent.Core.Join (joinProgram)
+import Malgo.Sequent.Core.Flat (FlatPass (..))
+import Malgo.Sequent.Core.Join (JoinPass (..))
 import Malgo.Sequent.Eval (EvalError, Handlers (..), evalProgram)
-import Malgo.Sequent.ToCore (toCore)
-import Malgo.Sequent.ToFun (toFun)
+import Malgo.Sequent.ToCore (ToCorePass (..))
+import Malgo.Sequent.ToFun (ToFunPass (..))
 import Malgo.Syntax qualified as Syntax
 import Malgo.Syntax.Extension
 import System.Exit (exitFailure)
@@ -60,9 +60,23 @@ failIfError = \case
   Left (callStack, err) -> error $ prettyCallStack callStack <> "\n" <> show err
   Right x -> x
 
+failIfErrorEff :: (Show e, Error CompileError :> es) => Eff (Error e : es) a -> Eff es a
+failIfErrorEff m = do
+  result <- runError m
+  case result of
+    Left (callStack, error) -> throwError (CompileError {callStack, compileError = error})
+    Right x -> pure x
+
+data CompileError = forall e. (Show e) => CompileError {callStack :: CallStack, compileError :: e}
+
+instance Show CompileError where
+  show (CompileError {callStack, compileError}) =
+    prettyCallStack callStack <> "\n" <> show compileError
+
 -- | Compile the parsed AST to Core representation.
 compileToCore ::
   ( Reader Flag :> es,
+    Error CompileError :> es,
     IOE :> es,
     State (Map ModuleName Interface) :> es,
     State Uniq :> es,
@@ -81,16 +95,16 @@ compileToCore srcPath parsedAst = do
     hPrint stderr $ pretty parsedAst
   rnEnv <- RnEnv.genBuiltinRnEnv
   (renamedAst, rnState) <- withDump flags.debugMode "=== RENAME ===" do
-    failIfError <$> runError @RenameError (runPass RenamePass (parsedAst, rnEnv))
+    failIfErrorEff $ runPass RenamePass (parsedAst, rnEnv)
   (typedAst, tcEnv, kindCtx) <- withDump flags.debugMode "=== TYPE CHECK ===" do
-    failIfError <$> runError @InferError (runPass InferPass (renamedAst, rnEnv))
+    failIfErrorEff $ runPass InferPass (renamedAst, rnEnv)
   refinedAst <- withDump flags.debugMode "=== REFINE ===" do
     runPass RefinePass (typedAst, tcEnv)
 
   let inf = buildInterface moduleName rnState tcEnv kindCtx
   save srcPath ".mlgi" (ViaStore inf)
 
-  generateSequent srcPath moduleName rnState refinedAst
+  generateSequent srcPath rnState refinedAst
 
 generateSequent ::
   ( IOE :> es,
@@ -98,14 +112,16 @@ generateSequent ::
     Workspace :> es
   ) =>
   ArtifactPath ->
-  ModuleName ->
   RnState ->
   Syntax.Module (Malgo Refine) ->
   Eff es (Sequent.Program Join)
-generateSequent srcPath moduleName rnState refinedAst = do
-  program <- runReader moduleName $ toFun refinedAst.moduleDefinition >>= toCore >>= flatProgram >>= joinProgram
+generateSequent srcPath rnState Syntax.Module {..} = do
+  program <- runReader moduleName do
+    runPass ToFunPass moduleDefinition
+      >>= runPass ToCorePass
+      >>= runPass FlatPass
+      >>= runPass JoinPass
   save srcPath ".sqt" (ViaStore program)
-
   linkSequent rnState.dependencies program
 
 linkSequent :: (Workspace :> es, IOE :> es) => Set ModuleName -> Sequent.Program Join -> Eff es (Sequent.Program Join)
@@ -126,6 +142,7 @@ linkSequent dependencies program = do
 -- | Compile the parsed AST.
 compileFromAST ::
   ( Reader Flag :> es,
+    Error CompileError :> es,
     IOE :> es,
     State (Map ModuleName Interface) :> es,
     State Uniq :> es,
@@ -171,5 +188,12 @@ compile srcPath = do
   when flags.debugMode do
     hPutStrLn stderr "=== PARSE ==="
     hPrint stderr $ pretty parsedAst
-  runReader parsedAst.moduleName
-    $ compileFromAST srcModulePath parsedAst
+  result <-
+    runErrorNoCallStack
+      $ runReader parsedAst.moduleName
+      $ compileFromAST srcModulePath parsedAst
+  case result of
+    Left error -> do
+      liftIO $ hPutStrLn stderr $ "Compile error: " <> show error
+      liftIO exitFailure
+    Right () -> pure ()
