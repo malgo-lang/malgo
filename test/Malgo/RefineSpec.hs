@@ -1,7 +1,6 @@
 module Malgo.RefineSpec (spec) where
 
 import Data.ByteString qualified as BS
-import Malgo.Driver (failIfError)
 import Malgo.Infer.Pass (infer)
 import Malgo.Monad (runMalgoM)
 import Malgo.Parser (parse)

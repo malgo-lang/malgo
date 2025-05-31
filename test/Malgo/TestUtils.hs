@@ -8,10 +8,12 @@ module Malgo.TestUtils
     setupPrelude,
     flag,
     golden,
+    failIfError,
   )
 where
 
-import Data.Text.Lazy as TL hiding (foldr1, words)
+import Data.Text.Lazy as TL hiding (foldr1, show, words)
+import GHC.Stack (CallStack, prettyCallStack)
 import Malgo.Driver qualified as Driver
 import Malgo.Monad
 import Malgo.Prelude
@@ -67,3 +69,8 @@ golden description runAction = do
   it description
     $ defaultGolden (foldr1 (</>) path)
     <$> runAction
+
+failIfError :: (Show e) => Either (CallStack, e) a -> a
+failIfError = \case
+  Left (callStack, err) -> error $ "Error: " <> show err <> "\nCall stack:\n" <> prettyCallStack callStack
+  Right x -> x

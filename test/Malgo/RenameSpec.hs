@@ -1,7 +1,6 @@
 module Malgo.RenameSpec (spec) where
 
 import Data.ByteString qualified as BS
-import Malgo.Driver (failIfError)
 import Malgo.Monad (runMalgoM)
 import Malgo.Parser (parse)
 import Malgo.Prelude
