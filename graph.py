@@ -6,11 +6,11 @@ def parse_imports(input_text):
     dependencies = {}
     lines = input_text.strip().split("\n")
     for line in lines:
-        match = re.match(r"src/([\w/]+)\.hs:import\s+([\w\.]+)", line)
+        match = re.match(r"src/([\w/]+)\.hs:import\s+Malgo([\w\.]+)", line)
         if match:
             module_path, imported_module = match.groups()
             module = module_path.replace("/", ".")
-            dependencies.setdefault(module, []).append(imported_module)
+            dependencies.setdefault(module, []).append(f"Malgo{imported_module}")
     return dependencies
 
 

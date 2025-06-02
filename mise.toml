@@ -41,3 +41,9 @@ run = "cabal exec malgo-exe"
 [tasks.changelog]
 description = "Generate changelog"
 run = "git-chglog -o CHANGELOG.md"
+[tasks.graph]
+description = "Generate dependency graph"
+run = [
+    "grep '^import' src/Malgo/**/*.hs | python graph.py > dependencies.dot",
+    "dot -Tsvg dependencies.dot -o dependencies.svg",
+]
