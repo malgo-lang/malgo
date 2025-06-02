@@ -75,6 +75,9 @@ fromExpr (S.Apply Typed {value = range} f x) = do
   f <- fromExpr f
   x <- fromExpr x
   pure $ F.Apply range f [x]
+fromExpr (S.Project Typed {value = range} expr field) = do
+  expr <- fromExpr expr
+  pure $ F.Project range expr field
 fromExpr (S.Fn Typed {value = range} clauses@(head :| _)) = do
   parameters <- createParameters head
   body <- fromClauses range parameters clauses

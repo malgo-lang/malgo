@@ -73,6 +73,7 @@ refineExpr (OpApp x op e1 e2) = do
   let opType = TyArr (typeOf e1) applyType -- e1 -> e2 -> result
   let x' = Typed (typeOf x) (fst x.value)
   refineExpr $ Apply x' (Apply (x' {annotated = applyType}) (Var (x' {annotated = opType}) op) e1) e2
+refineExpr (Project x e k) = Project x <$> refineExpr e <*> pure k
 refineExpr (Fn x cs) = do
   cs' <- traverse refineClause cs
   env <- ask @RefineEnv
