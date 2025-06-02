@@ -1,0 +1,43 @@
+(program
+   ((g
+       (lambda
+          ($RecordFieldAccess.param_xxx)
+          (select
+             $RecordFieldAccess.param_xxx
+             (((B
+                  ((expand
+                      ((a #RecordFieldAccess.a_xxx) (b #RecordFieldAccess.__xxx)))))
+                 #RecordFieldAccess.a_xxx)))))
+      (f
+         (lambda
+            ($RecordFieldAccess.param_xxx)
+            (select
+               $RecordFieldAccess.param_xxx
+               (((expand
+                    ((a #RecordFieldAccess.a_xxx) (b #RecordFieldAccess.__xxx)))
+                   #RecordFieldAccess.a_xxx)))))
+      (main
+         (lambda
+            ($RecordFieldAccess.param_xxx)
+            (select
+               $RecordFieldAccess.param_xxx
+               ((#RecordFieldAccess.$__xxx
+                   (let
+                      #RecordFieldAccess.x_xxx
+                      (object
+                         ((a (apply (invoke Int32#) (32_i32)))
+                            (b (apply (invoke Int32#) (10_i32)))))
+                      (apply
+                         (invoke printString)
+                         ((apply
+                             (invoke toStringInt32)
+                             ((apply
+                                 (apply
+                                    (invoke addInt32)
+                                    ((apply (invoke f) (#RecordFieldAccess.x_xxx))))
+                                 ((project #RecordFieldAccess.x_xxx b)))))))))))))
+      (B
+         (lambda
+            ($RecordFieldAccess.constructor_xxx)
+            (B ($RecordFieldAccess.constructor_xxx)))))
+   ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

@@ -400,7 +400,7 @@ tcExpr (Apply pos f x) = do
   retType <- TyMeta <$> freshVar Nothing
   tell [(pos, typeOf f' :~ TyArr (typeOf x') retType)]
   pure $ Apply (Typed retType pos) f' x'
-tcExpr (Project {}) = error "not implemented: tcExpr Project"
+tcExpr Project {} = error "not implemented: tcExpr Project"
 tcExpr (OpApp x@(pos, _) op e1 e2) = do
   e1' <- tcExpr e1
   e2' <- tcExpr e2

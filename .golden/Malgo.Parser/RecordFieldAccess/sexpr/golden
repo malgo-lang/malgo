@@ -1,0 +1,28 @@
+(module
+   "test/testcases/malgo/RecordFieldAccess.mlg"
+   ((import "runtime/malgo/Builtin.mlg" all)
+      (import "runtime/malgo/Prelude.mlg" all)
+      (type A () (record (a Int32) (b Int32)))
+      (data B () ((B (A))))
+      (type C (a) (record (x a) (y a)))
+      (def f (fn ((clause ((record (a a) (b _))) (seq (do a))))))
+      (def g (fn ((clause (B (record (a a) (b _))) (seq (do a))))))
+      (def
+         main
+         (fn
+            ((clause
+                ()
+                (seq
+                   (let x (record (a (int32 32)) (b (int32 10))))
+                   (do
+                      (apply
+                         printString
+                         (seq
+                            (do
+                               (apply
+                                  toStringInt32
+                                  (seq
+                                     (do
+                                        (apply
+                                           (apply addInt32 (seq (do (apply f x))))
+                                           (project x "b"))))))))))))))))

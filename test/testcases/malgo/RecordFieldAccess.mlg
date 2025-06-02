@@ -1,0 +1,17 @@
+module {..} = import "../../../runtime/malgo/Builtin.mlg"
+module {..} = import "../../../runtime/malgo/Prelude.mlg"
+
+type A = { a: Int32, b: Int32 }
+
+data B = B A
+
+type C a = { x: a, y: a }
+
+def f = { { a = a, b = _ } -> a }
+
+def g = { B { a = a, b = _ } -> a }
+
+def main = {
+  let x = { a = 32, b = 10 };
+  printString (toStringInt32 (addInt32 (f x) x.b))
+}
