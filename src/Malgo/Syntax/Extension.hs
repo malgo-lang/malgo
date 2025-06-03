@@ -9,7 +9,6 @@ module Malgo.Syntax.Extension
     Visibility (..),
     Qualified (..),
     Field (..),
-    Typed (..),
     PsId,
     RnId,
     Unboxed,
@@ -68,18 +67,15 @@ module Malgo.Syntax.Extension
   )
 where
 
-import Control.Lens (lens)
 import Data.Kind qualified as K
 import Data.SCargot.Repr.Basic qualified as S
 import Data.Store.TH
 import Data.Void
 import Malgo.Id
-import Malgo.Infer.TypeRep as TypeRep
 import Malgo.Module
 import Malgo.Prelude hiding (All)
 import Malgo.SExpr (ToSExpr (..))
 import Malgo.SExpr qualified as S
-import Prettyprinter ((<+>))
 
 -- | Phase and type instance
 data MalgoPhase = Parse | Rename | Infer | Refine | NewParse
@@ -124,16 +120,6 @@ instance (Pretty x) => Pretty (Field x) where
   pretty (Field Nothing v) = pretty v
   pretty (Field (Just x) v) = pretty x <> "." <> pretty v
 
-data Typed x = Typed {annotated :: Type, value :: x}
-  deriving stock (Eq, Ord, Show)
-
-instance (Pretty x) => Pretty (Typed x) where
-  pretty (Typed t v) = pretty v <+> ":" <+> pretty t
-
-instance HasType (Typed x) where
-  typeOf (Typed t _) = t
-  types = lens (.annotated) (\x y -> x {annotated = y})
-
 type PsId = XId (Malgo 'Parse)
 
 type RnId = XId (Malgo 'Rename)
@@ -160,12 +146,17 @@ type family XId x where
 
 -- * Expr Extensions
 
-type family SimpleX (x :: MalgoPhase) where
-  SimpleX 'Parse = Range
-  SimpleX 'Rename = SimpleX 'Parse
-  SimpleX 'Infer = Typed (SimpleX 'Rename)
-  SimpleX 'Refine = SimpleX 'Infer
-  SimpleX 'NewParse = Range
+type family SimpleX (x :: MalgoPhase)
+
+type instance SimpleX 'Parse = Range
+
+type instance SimpleX 'Rename = SimpleX 'Parse
+
+-- type instance for Infer is defined in Malgo.Infer.TypeRep
+
+type instance SimpleX 'Refine = SimpleX 'Infer
+
+type instance SimpleX 'NewParse = Range
 
 type family XVar x where
   XVar (Malgo 'Parse) = Qualified (SimpleX 'Parse)
@@ -185,12 +176,17 @@ type family XBoxed x where
 type family XApply x where
   XApply (Malgo x) = SimpleX x
 
-type family XOpApp x where
-  XOpApp (Malgo 'Parse) = SimpleX 'Parse
-  XOpApp (Malgo NewParse) = SimpleX NewParse
-  XOpApp (Malgo 'Rename) = (XOpApp (Malgo 'Parse), (Assoc, Int))
-  XOpApp (Malgo 'Infer) = Typed (XOpApp (Malgo 'Rename))
-  XOpApp (Malgo 'Refine) = Void
+type family XOpApp x
+
+type instance XOpApp (Malgo 'Parse) = SimpleX 'Parse
+
+type instance XOpApp (Malgo NewParse) = SimpleX NewParse
+
+type instance XOpApp (Malgo 'Rename) = (XOpApp (Malgo 'Parse), (Assoc, Int))
+
+-- type instance for Infer is defined in Malgo.Infer.TypeRep
+
+type instance XOpApp (Malgo 'Refine) = Void
 
 type family XProject x where
   XProject (Malgo Parse) = Void
@@ -342,12 +338,17 @@ type family XTypeSynonym x where
 type family XInfix x where
   XInfix (Malgo _) = SimpleX 'Parse
 
-type family XForeign x where
-  XForeign (Malgo 'Parse) = SimpleX 'Parse
-  XForeign (Malgo NewParse) = SimpleX NewParse
-  XForeign (Malgo 'Rename) = (XForeign (Malgo 'Parse), Text)
-  XForeign (Malgo 'Infer) = Typed (XForeign (Malgo 'Rename))
-  XForeign (Malgo 'Refine) = XForeign (Malgo 'Infer)
+type family XForeign x
+
+type instance XForeign (Malgo 'Parse) = SimpleX 'Parse
+
+type instance XForeign (Malgo NewParse) = SimpleX NewParse
+
+type instance XForeign (Malgo 'Rename) = (XForeign (Malgo 'Parse), Text)
+
+-- type instance for Infer is defined in Malgo.Infer.TypeRep
+
+type instance XForeign (Malgo 'Refine) = XForeign (Malgo 'Infer)
 
 type family XImport x where
   XImport (Malgo _) = SimpleX 'Parse

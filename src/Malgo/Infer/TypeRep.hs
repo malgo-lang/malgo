@@ -1,6 +1,7 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE UndecidableInstances #-}
+{-# OPTIONS_GHC -Wno-orphans #-}
 
 module Malgo.Infer.TypeRep
   ( PrimT (..),
@@ -9,6 +10,7 @@ module Malgo.Infer.TypeRep
     Type (..),
     MetaVar (..),
     HasType (..),
+    Typed (..),
     Scheme (..),
     TypeDef (..),
     TypeMap,
@@ -24,7 +26,7 @@ module Malgo.Infer.TypeRep
   )
 where
 
-import Control.Lens (Traversal', mapped, _1, _2)
+import Control.Lens (Traversal', lens, mapped, _1, _2)
 import Data.Data (Data)
 import Data.Map.Strict qualified as Map (fromList, lookup, toList)
 import Data.Set qualified as Set (singleton)
@@ -33,6 +35,8 @@ import Effectful (Eff)
 import Effectful.State.Static.Local (State, evalState)
 import Malgo.Id
 import Malgo.Prelude
+import Malgo.Syntax hiding (Type (..))
+import Malgo.Syntax.Extension
 import Prettyprinter (braces, hsep, parens, punctuate, sep, (<+>))
 
 --------------------------------
@@ -250,3 +254,103 @@ freevars (TyRecord kts) = foldMap freevars kts
 freevars TyPtr = mempty
 freevars TYPE = mempty
 freevars (TyMeta tv) = Set.singleton tv
+
+instance HasType (Literal x) where
+  typeOf Int32 {} = TyPrim Int32T
+  typeOf Int64 {} = TyPrim Int64T
+  typeOf Float {} = TyPrim FloatT
+  typeOf Double {} = TyPrim DoubleT
+  typeOf Char {} = TyPrim CharT
+  typeOf String {} = TyPrim StringT
+  types f v = f (typeOf v) $> v
+
+instance
+  (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) =>
+  HasType (Expr x)
+  where
+  typeOf (Var x _) = typeOf x
+  typeOf (Unboxed x _) = typeOf x
+  typeOf (Boxed x _) = typeOf x
+  typeOf (Apply x _ _) = typeOf x
+  typeOf (OpApp x _ _ _) = typeOf x
+  typeOf (Project x _ _) = typeOf x
+  typeOf (Fn x _) = typeOf x
+  typeOf (Tuple x _) = typeOf x
+  typeOf (Record x _) = typeOf x
+  typeOf (List x _) = typeOf x
+  typeOf (Ann x _ _) = typeOf x
+  typeOf (Seq x _) = typeOf x
+  typeOf (Parens x _) = typeOf x
+
+  types f = \case
+    Var x v -> Var <$> types f x <*> pure v
+    Unboxed x u -> Unboxed <$> types f x <*> types f u
+    Boxed x b -> Boxed <$> types f x <*> types f b
+    Apply x e1 e2 -> Apply <$> types f x <*> types f e1 <*> types f e2
+    OpApp x op e1 e2 -> OpApp <$> types f x <*> pure op <*> types f e1 <*> types f e2
+    Project x e k -> Project <$> types f x <*> types f e <*> pure k
+    Fn x cs -> Fn <$> types f x <*> traverse (types f) cs
+    Tuple x es -> Tuple <$> types f x <*> traverse (types f) es
+    Record x kvs -> Record <$> types f x <*> traverse (\(k, v) -> (k,) <$> types f v) kvs
+    List x es -> List <$> types f x <*> traverse (types f) es
+    Ann x e t -> Ann <$> types f x <*> types f e <*> pure t
+    Seq x ss -> Seq <$> types f x <*> traverse (types f) ss
+    Parens x e -> Parens <$> types f x <*> types f e
+
+instance
+  (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) =>
+  HasType (Stmt x)
+  where
+  typeOf (Let _ _ e) = typeOf e
+  typeOf (With _ _ e) = typeOf e
+  typeOf (NoBind _ e) = typeOf e
+
+  types f = \case
+    Let x v e -> Let x v <$> types f e
+    With x v e -> With x v <$> types f e
+    NoBind x e -> NoBind x <$> types f e
+
+instance
+  (ForallClauseX HasType x, ForallPatX HasType x, ForallExpX HasType x) =>
+  HasType (Clause x)
+  where
+  typeOf (Clause x _ _) = typeOf x
+
+  types f (Clause x ps e) = Clause <$> types f x <*> traverse (types f) ps <*> types f e
+
+instance
+  (ForallPatX HasType x) =>
+  HasType (Pat x)
+  where
+  typeOf (VarP x _) = typeOf x
+  typeOf (ConP x _ _) = typeOf x
+  typeOf (TupleP x _) = typeOf x
+  typeOf (RecordP x _) = typeOf x
+  typeOf (ListP x _) = typeOf x
+  typeOf (UnboxedP x _) = typeOf x
+  typeOf (BoxedP x _) = typeOf x
+
+  types f = \case
+    VarP x v -> VarP <$> types f x <*> pure v
+    ConP x c ps -> ConP <$> types f x <*> pure c <*> traverse (types f) ps
+    TupleP x ps -> TupleP <$> types f x <*> traverse (types f) ps
+    RecordP x kps -> RecordP <$> types f x <*> traverse (bitraverse pure (types f)) kps
+    ListP x ps -> ListP <$> types f x <*> traverse (types f) ps
+    UnboxedP x u -> UnboxedP <$> types f x <*> types f u
+    BoxedP x b -> BoxedP <$> types f x <*> types f b
+
+data Typed x = Typed {annotated :: Type, value :: x}
+  deriving stock (Eq, Ord, Show)
+
+instance (Pretty x) => Pretty (Typed x) where
+  pretty (Typed t v) = pretty v <+> ":" <+> pretty t
+
+instance HasType (Typed x) where
+  typeOf (Typed t _) = t
+  types = lens (.annotated) (\x y -> x {annotated = y})
+
+type instance SimpleX 'Infer = Typed (SimpleX 'Rename)
+
+type instance XOpApp (Malgo 'Infer) = Typed (XOpApp (Malgo 'Rename))
+
+type instance XForeign (Malgo 'Infer) = Typed (XForeign (Malgo 'Rename))

@@ -2,7 +2,7 @@
 
 ## Add `forall` syntax
 
-- [ ] Move `HasType` instances in Malgo.Syntax to Malgo.Infer.TypeRep
+- [x] Move `HasType` instances in Malgo.Syntax to Malgo.Infer.TypeRep
 - [ ] Move `Malgo.Syntax.getTyVars` to Malgo.Infer.Pass
 - [ ] Introduce `Scheme` syntax type and replace `Type` with `Scheme` in `Decl`
 - [ ] Parse `forall` syntax
