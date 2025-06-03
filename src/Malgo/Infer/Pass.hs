@@ -21,10 +21,9 @@ import Malgo.Infer.TypeRep
 import Malgo.Infer.Unify hiding (lookupVar)
 import Malgo.Interface (Interface (..), loadInterface)
 import Malgo.Module
-import Malgo.MonadUniq
 import Malgo.Pass
 import Malgo.Prelude hiding (Constraint, throwError)
-import Malgo.Rename.RnEnv (RnEnv (..))
+import Malgo.Rename (RnEnv (..))
 import Malgo.Syntax hiding (Type (..))
 import Malgo.Syntax qualified as S
 import Malgo.Syntax.Extension

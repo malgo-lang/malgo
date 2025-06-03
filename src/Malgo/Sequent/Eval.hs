@@ -13,7 +13,6 @@ import Effectful.Reader.Static
 import Effectful.State.Static.Local (State)
 import Malgo.Id
 import Malgo.Module (ModuleName)
-import Malgo.MonadUniq (Uniq)
 import Malgo.Pass
 import Malgo.Prelude hiding (getContents, throwError)
 import Malgo.SExpr (sShow)

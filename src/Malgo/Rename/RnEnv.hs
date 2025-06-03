@@ -1,4 +1,3 @@
-{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE UndecidableInstances #-}
 
 -- | 'Malgo.Rename.RnEnv' contains functions which convert 'PsId' to 'RnId'.
@@ -27,7 +26,6 @@ import Effectful.Reader.Static (Reader, asks, runReader)
 import Effectful.State.Static.Local (State)
 import Malgo.Id
 import Malgo.Module
-import Malgo.MonadUniq
 import Malgo.Prelude hiding (throwError)
 import Malgo.Syntax.Extension
 import Prettyprinter (squotes, vsep, (<+>))

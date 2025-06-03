@@ -23,7 +23,7 @@ import Malgo.Infer.TypeRep
 import Malgo.Interface (Interface (..), externalFromInterface)
 import Malgo.Module
 import Malgo.Prelude
-import Malgo.Rename.RnEnv (Resolved)
+import Malgo.Rename (Resolved)
 import Malgo.Syntax.Extension
 
 data TcEnv = TcEnv
