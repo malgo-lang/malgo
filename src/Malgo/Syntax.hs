@@ -33,7 +33,6 @@ module Malgo.Syntax
     imports,
     Module (..),
     toUnboxed,
-    getTyVars,
     makeBindGroup,
   )
 where
@@ -108,15 +107,6 @@ instance (Pretty (XId x)) => Pretty (Type x) where
   pretty (TyTuple _ ts) = sexpr $ "tuple" : map pretty ts
   pretty (TyRecord _ kvs) = sexpr $ "record" : map (\(k, v) -> sexpr [pretty k, pretty v]) kvs
   pretty (TyBlock _ t) = sexpr ["block", pretty t]
-
-getTyVars :: (Ord (XId x)) => Type x -> Set (XId x)
-getTyVars (TyApp _ t ts) = getTyVars t <> mconcat (map getTyVars ts)
-getTyVars (TyVar _ v) = Set.singleton v
-getTyVars TyCon {} = mempty
-getTyVars (TyArr _ t1 t2) = getTyVars t1 <> getTyVars t2
-getTyVars (TyTuple _ ts) = mconcat $ map getTyVars ts
-getTyVars (TyRecord _ kvs) = mconcat $ map (getTyVars . snd) kvs
-getTyVars (TyBlock _ t) = getTyVars t
 
 -- * Expression
 

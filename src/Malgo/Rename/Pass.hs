@@ -18,7 +18,7 @@ import Malgo.Pass (Pass (..))
 import Malgo.Prelude hiding (All, catchError, throwError)
 import Malgo.Rename.RnEnv
 import Malgo.Rename.RnState as RnState
-import Malgo.Syntax hiding (getTyVars)
+import Malgo.Syntax
 import Malgo.Syntax.Extension
 import Prettyprinter (brackets, nest, squotes, vsep, (<+>))
 

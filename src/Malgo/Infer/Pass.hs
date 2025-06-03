@@ -536,3 +536,12 @@ tcType (S.TyCon pos c) = S.TyCon pos c
 tcType (S.TyArr pos t1 t2) = S.TyArr pos (tcType t1) (tcType t2)
 tcType (S.TyTuple pos ts) = S.TyTuple pos $ map tcType ts
 tcType (S.TyRecord pos kts) = S.TyRecord pos $ over (mapped . _2) tcType kts
+
+getTyVars :: (Ord (XId x)) => S.Type x -> Set (XId x)
+getTyVars (S.TyApp _ t ts) = getTyVars t <> mconcat (map getTyVars ts)
+getTyVars (S.TyVar _ v) = Set.singleton v
+getTyVars S.TyCon {} = mempty
+getTyVars (S.TyArr _ t1 t2) = getTyVars t1 <> getTyVars t2
+getTyVars (S.TyTuple _ ts) = mconcat $ map getTyVars ts
+getTyVars (S.TyRecord _ kvs) = mconcat $ map (getTyVars . snd) kvs
+getTyVars (S.TyBlock _ t) = getTyVars t
