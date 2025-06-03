@@ -8,7 +8,7 @@ import Data.Traversable (for)
 import Effectful
 import Effectful.Reader.Static
 import Malgo.Id (Id)
-import Malgo.Infer.TypeRep
+import Malgo.Infer
 import Malgo.Prelude hiding (subtract)
 import Malgo.Refine.RefineEnv
 import Malgo.Syntax (Pat (..))

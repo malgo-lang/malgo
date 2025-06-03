@@ -1,0 +1,160 @@
+((g
+    $RecordFieldAccess.return_xxx
+    (cut
+       (lambda
+          ($RecordFieldAccess.param_xxx $RecordFieldAccess.return_xxx)
+          (join
+             $RecordFieldAccess.select_xxx
+             (select
+                ((B
+                    ((expand
+                        ((a #RecordFieldAccess.a_xxx)
+                           (b #RecordFieldAccess.__xxx)))))
+                   (cut #RecordFieldAccess.a_xxx $RecordFieldAccess.return_xxx)))
+             (cut $RecordFieldAccess.param_xxx $RecordFieldAccess.select_xxx)))
+       $RecordFieldAccess.return_xxx))
+   (f
+      $RecordFieldAccess.return_xxx
+      (cut
+         (lambda
+            ($RecordFieldAccess.param_xxx $RecordFieldAccess.return_xxx)
+            (join
+               $RecordFieldAccess.select_xxx
+               (select
+                  ((expand
+                      ((a #RecordFieldAccess.a_xxx) (b #RecordFieldAccess.__xxx)))
+                     (cut #RecordFieldAccess.a_xxx $RecordFieldAccess.return_xxx)))
+               (cut $RecordFieldAccess.param_xxx $RecordFieldAccess.select_xxx)))
+         $RecordFieldAccess.return_xxx))
+   (main
+      $RecordFieldAccess.return_xxx
+      (cut
+         (lambda
+            ($RecordFieldAccess.param_xxx $RecordFieldAccess.return_xxx)
+            (join
+               $RecordFieldAccess.select_xxx
+               (select
+                  (#RecordFieldAccess.$__xxx
+                     (join
+                        $RecordFieldAccess.then_xxx
+                        (then
+                           #RecordFieldAccess.x_xxx
+                           (join
+                              $RecordFieldAccess.then_xxx
+                              (then
+                                 $RecordFieldAccess.outer_xxx
+                                 (join
+                                    $RecordFieldAccess.return_xxx
+                                    (then
+                                       $RecordFieldAccess.inner_xxx
+                                       (join
+                                          $RecordFieldAccess.apply_xxx
+                                          (apply
+                                             ($RecordFieldAccess.inner_xxx)
+                                             ($RecordFieldAccess.return_xxx))
+                                          (cut
+                                             $RecordFieldAccess.outer_xxx
+                                             $RecordFieldAccess.apply_xxx)))
+                                    (join
+                                       $RecordFieldAccess.then_xxx
+                                       (then
+                                          $RecordFieldAccess.outer_xxx
+                                          (join
+                                             $RecordFieldAccess.return_xxx
+                                             (then
+                                                $RecordFieldAccess.inner_xxx
+                                                (join
+                                                   $RecordFieldAccess.apply_xxx
+                                                   (apply
+                                                      ($RecordFieldAccess.inner_xxx)
+                                                      ($RecordFieldAccess.return_xxx))
+                                                   (cut
+                                                      $RecordFieldAccess.outer_xxx
+                                                      $RecordFieldAccess.apply_xxx)))
+                                             (join
+                                                $RecordFieldAccess.then_xxx
+                                                (then
+                                                   $RecordFieldAccess.outer_xxx
+                                                   (join
+                                                      $RecordFieldAccess.return_xxx
+                                                      (then
+                                                         $RecordFieldAccess.inner_xxx
+                                                         (join
+                                                            $RecordFieldAccess.then_xxx
+                                                            (then
+                                                               $RecordFieldAccess.outer_xxx
+                                                               (join
+                                                                  $RecordFieldAccess.return_xxx
+                                                                  (then
+                                                                     $RecordFieldAccess.inner_xxx
+                                                                     (join
+                                                                        $RecordFieldAccess.apply_xxx
+                                                                        (apply
+                                                                           ($RecordFieldAccess.inner_xxx)
+                                                                           ($RecordFieldAccess.return_xxx))
+                                                                        (cut
+                                                                           $RecordFieldAccess.outer_xxx
+                                                                           $RecordFieldAccess.apply_xxx)))
+                                                                  (join
+                                                                     $RecordFieldAccess.project_xxx
+                                                                     (project
+                                                                        b
+                                                                        $RecordFieldAccess.return_xxx)
+                                                                     (cut
+                                                                        #RecordFieldAccess.x_xxx
+                                                                        $RecordFieldAccess.project_xxx))))
+                                                            (join
+                                                               $RecordFieldAccess.apply_xxx
+                                                               (apply
+                                                                  ($RecordFieldAccess.inner_xxx)
+                                                                  ($RecordFieldAccess.then_xxx))
+                                                               (cut
+                                                                  $RecordFieldAccess.outer_xxx
+                                                                  $RecordFieldAccess.apply_xxx))))
+                                                      (join
+                                                         $RecordFieldAccess.apply_xxx
+                                                         (apply
+                                                            (#RecordFieldAccess.x_xxx)
+                                                            ($RecordFieldAccess.return_xxx))
+                                                         (invoke
+                                                            f
+                                                            $RecordFieldAccess.apply_xxx))))
+                                                (invoke
+                                                   addInt32
+                                                   $RecordFieldAccess.then_xxx))))
+                                       (invoke
+                                          toStringInt32
+                                          $RecordFieldAccess.then_xxx))))
+                              (invoke printString $RecordFieldAccess.then_xxx)))
+                        (cut
+                           ((a
+                               ($RecordFieldAccess.return_xxx
+                                  (join
+                                     $RecordFieldAccess.apply_xxx
+                                     (apply
+                                        (32_i32)
+                                        ($RecordFieldAccess.return_xxx))
+                                     (invoke Int32# $RecordFieldAccess.apply_xxx))))
+                              (b
+                                 ($RecordFieldAccess.return_xxx
+                                    (join
+                                       $RecordFieldAccess.apply_xxx
+                                       (apply
+                                          (10_i32)
+                                          ($RecordFieldAccess.return_xxx))
+                                       (invoke
+                                          Int32#
+                                          $RecordFieldAccess.apply_xxx)))))
+                           $RecordFieldAccess.then_xxx))))
+               (cut $RecordFieldAccess.param_xxx $RecordFieldAccess.select_xxx)))
+         $RecordFieldAccess.return_xxx))
+   (B
+      $RecordFieldAccess.return_xxx
+      (cut
+         (lambda
+            ($RecordFieldAccess.constructor_xxx $RecordFieldAccess.return_xxx)
+            (cut
+               (construct B ($RecordFieldAccess.constructor_xxx) ())
+               $RecordFieldAccess.return_xxx))
+         $RecordFieldAccess.return_xxx))
+   ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

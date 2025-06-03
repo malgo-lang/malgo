@@ -1,4 +1,3 @@
-{-# LANGUAGE TemplateHaskell #-}
 -- For use of 'undefined'
 {-# OPTIONS_GHC -Wno-deprecations #-}
 
@@ -42,7 +41,7 @@ evalOpt =
   )
     <**> helper
 
-data Command
+newtype Command
   = Eval EvalOpt
 
 parseCommand :: IO Command

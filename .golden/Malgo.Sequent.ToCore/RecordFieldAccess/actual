@@ -1,0 +1,92 @@
+((g
+    $RecordFieldAccess.return_xxx
+    (cut
+       (lambda
+          ($RecordFieldAccess.param_xxx $RecordFieldAccess.return_xxx)
+          (cut
+             $RecordFieldAccess.param_xxx
+             (select
+                ((B
+                    ((expand
+                        ((a #RecordFieldAccess.a_xxx)
+                           (b #RecordFieldAccess.__xxx)))))
+                   (cut #RecordFieldAccess.a_xxx $RecordFieldAccess.return_xxx)))))
+       $RecordFieldAccess.return_xxx))
+   (f
+      $RecordFieldAccess.return_xxx
+      (cut
+         (lambda
+            ($RecordFieldAccess.param_xxx $RecordFieldAccess.return_xxx)
+            (cut
+               $RecordFieldAccess.param_xxx
+               (select
+                  ((expand
+                      ((a #RecordFieldAccess.a_xxx) (b #RecordFieldAccess.__xxx)))
+                     (cut #RecordFieldAccess.a_xxx $RecordFieldAccess.return_xxx)))))
+         $RecordFieldAccess.return_xxx))
+   (main
+      $RecordFieldAccess.return_xxx
+      (cut
+         (lambda
+            ($RecordFieldAccess.param_xxx $RecordFieldAccess.return_xxx)
+            (cut
+               $RecordFieldAccess.param_xxx
+               (select
+                  (#RecordFieldAccess.$__xxx
+                     (cut
+                        ((a
+                            ($RecordFieldAccess.return_xxx
+                               (invoke
+                                  Int32#
+                                  (apply (32_i32) ($RecordFieldAccess.return_xxx)))))
+                           (b
+                              ($RecordFieldAccess.return_xxx
+                                 (invoke
+                                    Int32#
+                                    (apply
+                                       (10_i32)
+                                       ($RecordFieldAccess.return_xxx))))))
+                        (then
+                           #RecordFieldAccess.x_xxx
+                           (invoke
+                              printString
+                              (apply
+                                 ((do
+                                     $RecordFieldAccess.return_xxx
+                                     (invoke
+                                        toStringInt32
+                                        (apply
+                                           ((do
+                                               $RecordFieldAccess.return_xxx
+                                               (invoke
+                                                  addInt32
+                                                  (apply
+                                                     ((do
+                                                         $RecordFieldAccess.return_xxx
+                                                         (invoke
+                                                            f
+                                                            (apply
+                                                               (#RecordFieldAccess.x_xxx)
+                                                               ($RecordFieldAccess.return_xxx)))))
+                                                     ((apply
+                                                         ((do
+                                                             $RecordFieldAccess.return_xxx
+                                                             (cut
+                                                                #RecordFieldAccess.x_xxx
+                                                                (project
+                                                                   b
+                                                                   $RecordFieldAccess.return_xxx))))
+                                                         ($RecordFieldAccess.return_xxx)))))))
+                                           ($RecordFieldAccess.return_xxx)))))
+                                 ($RecordFieldAccess.return_xxx)))))))))
+         $RecordFieldAccess.return_xxx))
+   (B
+      $RecordFieldAccess.return_xxx
+      (cut
+         (lambda
+            ($RecordFieldAccess.constructor_xxx $RecordFieldAccess.return_xxx)
+            (cut
+               (construct B ($RecordFieldAccess.constructor_xxx) ())
+               $RecordFieldAccess.return_xxx))
+         $RecordFieldAccess.return_xxx))
+   ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

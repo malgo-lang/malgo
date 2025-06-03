@@ -5,7 +5,6 @@ import Effectful.Reader.Static (Reader, runReader)
 import Effectful.State.Static.Local
 import Malgo.Interface (Interface)
 import Malgo.Module
-import Malgo.MonadUniq
 import Malgo.Prelude
 
 runMalgoM ::

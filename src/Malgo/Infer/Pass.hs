@@ -21,10 +21,9 @@ import Malgo.Infer.TypeRep
 import Malgo.Infer.Unify hiding (lookupVar)
 import Malgo.Interface (Interface (..), loadInterface)
 import Malgo.Module
-import Malgo.MonadUniq
 import Malgo.Pass
 import Malgo.Prelude hiding (Constraint, throwError)
-import Malgo.Rename.RnEnv (RnEnv (..))
+import Malgo.Rename (RnEnv (..))
 import Malgo.Syntax hiding (Type (..))
 import Malgo.Syntax qualified as S
 import Malgo.Syntax.Extension
@@ -400,7 +399,7 @@ tcExpr (Apply pos f x) = do
   retType <- TyMeta <$> freshVar Nothing
   tell [(pos, typeOf f' :~ TyArr (typeOf x') retType)]
   pure $ Apply (Typed retType pos) f' x'
-tcExpr (Project {}) = error "not implemented: tcExpr Project"
+tcExpr Project {} = error "not implemented: tcExpr Project"
 tcExpr (OpApp x@(pos, _) op e1 e2) = do
   e1' <- tcExpr e1
   e2' <- tcExpr e2

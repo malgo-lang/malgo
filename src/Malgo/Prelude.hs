@@ -78,16 +78,20 @@ module Malgo.Prelude
     modifyIORef,
     writeIORef,
 
-    -- ** Flag
+    -- * Flag
     Flag (..),
 
-    -- ** Range
+    -- * Range
     Range (..),
     HasRange (..),
     HasStart (..),
     HasEnd (..),
     errorOn,
     warningOn,
+
+    -- * Uniq
+    getUniq,
+    Uniq (..),
   )
 where
 
@@ -131,6 +135,8 @@ import Data.String.Conversions
 import Data.Text (Text)
 import Data.Text.IO qualified as T
 import Data.Void
+import Effectful (Eff, (:>))
+import Effectful.State.Static.Local (State, state)
 import GHC.Exts (sortWith)
 import GHC.Generics (Generic)
 import GHC.Stack (HasCallStack)
@@ -292,3 +298,8 @@ warningOn range x = do
 
 instance (Pretty k, Pretty v) => Pretty (Map k v) where
   pretty m = pretty (Map.toList m)
+
+newtype Uniq = Uniq Int
+
+getUniq :: (State Uniq :> es) => Eff es Int
+getUniq = state $ \(Uniq u) -> (u, Uniq $ u + 1)

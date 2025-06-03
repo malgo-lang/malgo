@@ -7,9 +7,7 @@ import Data.List.NonEmpty qualified as NonEmpty
 import Data.Map.Strict qualified as Map
 import Effectful
 import Effectful.Reader.Static
-import Malgo.Infer.TcEnv
-import Malgo.Infer.TypeRep
-import Malgo.Infer.TypeRep qualified as T
+import Malgo.Infer as T
 import Malgo.Pass
 import Malgo.Prelude
 import Malgo.Refine.RefineEnv

@@ -1,0 +1,10 @@
+module { String# } = import "../../../runtime/malgo/Builtin.mlg"
+module { putStrLn } = import "../../../runtime/malgo/Prelude.mlg"
+
+def identity : forall a. a -> a
+def identity = { a -> a }
+
+def main : {()}
+def main = {
+  putStrLn (identity (String# "hello"#))
+}

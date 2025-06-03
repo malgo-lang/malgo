@@ -2,8 +2,7 @@ module Malgo.Refine.RefineEnv (RefineEnv (..), buildRefineEnv) where
 
 import Data.Map.Strict qualified as Map
 import Malgo.Id
-import Malgo.Infer.TcEnv
-import Malgo.Infer.TypeRep
+import Malgo.Infer
 import Malgo.Prelude
 
 data RefineEnv = RefineEnv

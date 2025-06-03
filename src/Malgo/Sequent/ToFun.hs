@@ -8,7 +8,6 @@ import Effectful.State.Static.Local (State)
 import Malgo.Id
 import Malgo.Infer.TypeRep qualified as R
 import Malgo.Module
-import Malgo.MonadUniq
 import Malgo.Pass
 import Malgo.Prelude
 import Malgo.Sequent.Fun as F

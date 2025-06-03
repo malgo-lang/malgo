@@ -7,7 +7,6 @@ import Effectful.State.Static.Local
 import Effectful.Writer.Static.Local
 import Malgo.Id
 import Malgo.Module (ModuleName)
-import Malgo.MonadUniq
 import Malgo.Pass
 import Malgo.Prelude
 import Malgo.Sequent.Core

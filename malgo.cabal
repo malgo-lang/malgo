@@ -24,6 +24,7 @@ library
   exposed-modules:
       Malgo.Driver
       Malgo.Id
+      Malgo.Infer
       Malgo.Infer.Error
       Malgo.Infer.Kind
       Malgo.Infer.Pass
@@ -33,14 +34,15 @@ library
       Malgo.Interface
       Malgo.Module
       Malgo.Monad
-      Malgo.MonadUniq
       Malgo.Parser
       Malgo.Parser.Pass
       Malgo.Pass
       Malgo.Prelude
+      Malgo.Refine
       Malgo.Refine.Pass
       Malgo.Refine.RefineEnv
       Malgo.Refine.Space
+      Malgo.Rename
       Malgo.Rename.Pass
       Malgo.Rename.RnEnv
       Malgo.Rename.RnState

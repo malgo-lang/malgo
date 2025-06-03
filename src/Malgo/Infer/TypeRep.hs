@@ -60,35 +60,28 @@ type Kind = Type
 
 type TypeVar = Id
 
--- | Definition of `Type`
 data Type
-  = -- type level operator
-
-    -- | application of type constructor
+  = -- | `TyApp` is an application of type constructor.
     TyApp Type Type
-  | -- | type variable (qualified by `Forall`)
+  | -- | `TyVar` is a type variable (qualified by `Forall`).
     TyVar TypeVar
-  | -- | type constructor
+  | -- | `TyCon` is a user-defined type constructor.
     TyCon TypeVar
-  | -- primitive type constructor
-
-    -- | primitive types
+  | -- | `TyPrim` is a primitive type constructor.
     TyPrim PrimT
-  | -- | function type
+  | -- | `TyArr` is a function type constructor.
     TyArr Type Type
-  | -- | tuple type
+  | -- | `TyTuple` is a tuple type constructor.
     TyTuple Int
-  | -- record type
+  | -- | `TyRecord` is a record type constructor.
+    -- It is also used for record kinds (like `forall (a : {X : b}) b. a -> b`).
     TyRecord (Map Text Type)
-  | -- | pointer type
+  | -- | `TyPtr` is a pointer type.
     TyPtr
-  | -- kind constructor
-
-    -- | star
+  | -- | `TYPE` is the basic kind of types.
+    -- Regular types are of kind `TYPE`, and type constructors are of kind `TYPE -> TYPE`.
     TYPE
-  | -- unifiable type variable
-
-    -- | type variable (not qualified)
+  | -- | `TyMeta` is a meta type variable used for unification.
     TyMeta MetaVar
   deriving stock (Eq, Ord, Show, Generic, Data)
   deriving anyclass (Hashable, Store)

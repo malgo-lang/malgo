@@ -9,18 +9,14 @@ import Effectful
 import Effectful.Error.Static (Error, runErrorNoCallStack)
 import Effectful.Reader.Static
 import Effectful.State.Static.Local
-import Malgo.Infer.Pass (InferPass (..))
-import Malgo.Infer.TcEnv (TcEnv (..))
+import Malgo.Infer
 import Malgo.Interface (Interface, buildInterface)
 import Malgo.Module
-import Malgo.MonadUniq
 import Malgo.Parser.Pass (ParserPass (..))
 import Malgo.Pass (CompileError, Pass (..))
 import Malgo.Prelude hiding (throwError)
-import Malgo.Refine.Pass (RefinePass (..))
-import Malgo.Rename.Pass (RenamePass (..))
-import Malgo.Rename.RnEnv qualified as RnEnv
-import Malgo.Rename.RnState (RnState (..))
+import Malgo.Refine
+import Malgo.Rename
 import Malgo.Sequent.Core (Join)
 import Malgo.Sequent.Core qualified as Sequent
 import Malgo.Sequent.Core.Flat (FlatPass (..))
@@ -71,7 +67,7 @@ compileToCore srcPath parsedAst = do
   when flags.debugMode $ liftIO do
     hPutStrLn stderr "=== PARSED ==="
     hPrint stderr $ pretty parsedAst
-  rnEnv <- RnEnv.genBuiltinRnEnv
+  rnEnv <- genBuiltinRnEnv
   (renamedAst, rnState) <- withDump flags.debugMode "=== RENAME ===" do
     runPass RenamePass (parsedAst, rnEnv)
   (typedAst, tcEnv, kindCtx) <- withDump flags.debugMode "=== TYPE CHECK ===" do
