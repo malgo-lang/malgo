@@ -1,24 +1,50 @@
-# Implement kind-based polymorphic record types
+# Roadmap
 
-## Add `forall` syntax
+- [ ] Update documentations.
+  - [ ] tour.md : Malgo language tour.
+  - [ ] tutorial.md : Malgo tutorial.
+  - [ ] reference.md : Malgo reference.
+  - [ ] design.md : Malgo language and compiler design.
+  - [ ] architecture.md : Malgo compiler architecture.
+- [ ] Change function application syntax to `f(x, y)(z)` instead of `f x y z`.
+  - [ ] `f(x, y)` is a syntactic sugar for `f(x)(y)`.
+- [ ] Add `forall` and `exists` quantifiers.
+  - [ ] Add Bidirectional type inference.
+  - [ ] Add new IR based on System Fω.
+- [ ] Add record polymorphism.
+  - [ ] Row polymorphism?
+  - [ ] Record kinds like SML#?
+- [ ] Add module system based on polymorphic records.
+  - [ ] F-ing modules?
+- [ ] Add copatterns.
+  - [ ] Q: How to integrate copatterns with the module system?
+- [ ] Add delimited continuations.
+- [ ] Add effects.
+  - [ ] As a library?
 
-- [x] Move `HasType` instances in Malgo.Syntax to Malgo.Infer.TypeRep
-- [x] Move `Malgo.Syntax.getTyVars` to Malgo.Infer.Pass
-- [ ] Introduce `Scheme` syntax type and replace `Type` with `Scheme` in `Decl`
-- [ ] Parse `forall` syntax
-- [ ] Resolve `Scheme` in Malgo.Rename
-- [ ] Resolve `Scheme` in Malgo.Infer
+```
+type EQ = {
+  type t
+  def eq : t -> t -> Bool
+}
 
-Do not add `Forall` to `TypeRep` or `Type`. We don't want to take care about higher-rank polymorphism yet.
+type MAP = {
+  type key
+  type map[a]
+  def empty[a] : map[a]
+  def add[a] : key -> a -> map[a] -> map[a]
+  def lookup[a] : key -> map[a] -> Maybe[a]
+}
 
-## More clear module dependencies
-
-- Modules in `Malgo.Foo.**` should not be imported from modules that are not in `Malgo.Foo.**`.
-- All exposed items should exported from `Malgo.Foo` module.
-
-## Design choices regarding positions that allow `forall`
-
-1. `forall` can only be used in the head of a type signature.
-2. Rank 2 polymorphism to support module signatures.
-
-- TODO: Read one-ml paper to understand how to implement module level polymorphism.
+def Map[Key : EQ] :> MAP where { type key = Key.t } = {
+  type key = Key.t
+  type map[a] = key -> Maybe[a]
+  def empty[a](k) = Nothing[a]
+  def lookup[a](k, m) = m(k)
+  def add[a](k, v, m)(x) =
+    match Key.eq(k, x) {
+      True -> Just[a](v),
+      False -> m(x)
+    }
+}
+```
