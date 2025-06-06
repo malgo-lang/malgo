@@ -48,6 +48,6 @@ run = "git-chglog -o CHANGELOG.md"
 [tasks.graph]
 description = "Generate dependency graph"
 run = [
-    "zsh -c 'grep '^import' src/Malgo/**/*.hs | grep -v 'Malgo.Prelude' | grep -v 'Malgo.Id' | grep -v 'Malgo.Syntax' | uniq | python graph.py > dependencies.dot'",
+    "zsh -c 'grep '^import' src/Malgo/**/*.hs | grep -v Malgo.Prelude | grep -v Malgo.Id | grep -v Malgo.SExpr | sort | uniq | python graph.py > dependencies.dot'",
     "dot -Tsvg dependencies.dot -o dependencies.svg",
 ]

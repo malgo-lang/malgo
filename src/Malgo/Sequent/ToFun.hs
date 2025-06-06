@@ -6,7 +6,8 @@ import Effectful
 import Effectful.Reader.Static (Reader)
 import Effectful.State.Static.Local (State)
 import Malgo.Id
-import Malgo.Infer.TypeRep qualified as R
+import Malgo.Infer (Typed (..))
+import Malgo.Infer qualified as R
 import Malgo.Module
 import Malgo.Pass
 import Malgo.Prelude

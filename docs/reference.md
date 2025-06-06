@@ -1,120 +1,316 @@
-# Malgo リファレンスマニュアル
+# Malgo Language Reference
 
-Malgoは、多相型、型推論、カリー化、パターンマッチなどの機能を持つ静的型付き関数プログラミング言語である。
+**Version:** June 2025
 
-## 字句
+This document describes the syntax and semantics of the Malgo programming language as currently implemented. It is based on the parser (`src/Malgo/Parser.hs`) and the test suite (`test/testcases/malgo/`). For further details, consult the parser source and test cases directly.
 
-### コメント
-`--`から行末まではコメントになる。
-`{- -}`で囲んだ部分もコメントになる。これは入れ子になってもよい。
+---
 
-### 識別子
-識別子は、正規表現`[a-zA-Z_][a-zA-Z0-9_#']*`で表現される文字列、あるいは`+-*/\%=><:;|&!#.`の一文字以上の繰り返しで表現される文字列である。
+## 1. Lexical Structure
 
-この文書では、
-* `Int32`、`Type`のように大文字から始まる識別子を**upper id**
-* `putStrLn`、`main`のように小文字から始まる識別子を**lower id**
-* `->`、`+`のように記号から構成される識別子を**operator id**
-と呼ぶ。
+### Comments
 
-### 予約語
-以下の文字列は予約語であり、識別子には使えない。
+- **Single-line:** Start with `--` and continue to end of line.
+- **Multi-line:** Enclosed in `{- ... -}`. Multi-line comments can be nested.
 
-`data, exists, forall, foreign, import, infix, infixl, infixr, let, type, module`
+### Identifiers
 
-### リテラル
+- **General:** Identifiers start with a letter or underscore, followed by letters, digits, underscores, or `#`.
+- **Lowercase identifiers:** Used for variables and functions (e.g., `myVar`, `foo_bar`).
+- **Uppercase identifiers:** Used for types, constructors, and modules (e.g., `List`, `Int32#`).
+- **Operators:** Sequences of operator characters (`+-*/\%=><:;|&!#.`), e.g., `+`, `==`, `<|`.
 
-リテラルには、末尾に`#`がつく**unboxedリテラル**と、通常の値を表す**boxedリテラル**がある。
-それぞれのリテラルの例を列挙する。
-
-* **数値リテラル**
-  * 32bit符号付き整数 : unboxed `42#`, boxed `42`
-  * 64bit符号付き整数 : unboxed `42L#`, boxed `42L`
-  * 単精度浮動小数点数 : unboxed `3.14F#`, boxed `3.14F`
-  * 倍精度浮動小数点数 : unboxed `3.14#`, boxed `3.14`
-* **文字リテラル** : unboxed `'a'#`, boxed `'a'`
-* **文字列リテラル** : unboxed `"hello"#`, boxed `"hello"`
-
-boxedリテラルは、それぞれ対応する関数の呼び出しに変換される。
-それぞれの関数の実装はruntime/malgo/Builtin.mlgに存在する。
-
-* `42` -> `int32# 42#`
-* `42L` -> `int64# 42L#`
-* `3.14F` -> `float# 3.14F#`
-* `3.14` -> `double# 3.14#`
-* `'a'` -> `char# 'a'#`
-* `"hello"` -> `string# "hello"#`
-
-## 宣言
-
-### モジュール
-
-```ebnf
-module = "module" upper_id "=" "{" decs "}" ;
-
-decs = { dec ";" } ;
-
-dec = data_dec | type_dec | infix_dec | foreign_dec | import_dec
-    | signature_dec | function_dec ;
-```
-
-モジュールは一連の型や関数宣言の並びのまとまりであり、名前空間として振る舞う。
-例えば、モジュール`List`で宣言された関数`map`と、モジュール`Set`で宣言された関数`map`は別の名前として扱われる。
-
-### 関数宣言
-
-```ebnf
-signature_dec = lower_id "::" type ;
-
-function_dec = lower_id "=" "{" { pat } "->" stmts "}"
-             | lower_id "=" "{" stmts "}" ;
-```
+### Reserved Words
 
 ```
-fib :: Int32 -> Int32;
-fib = { n -> if (n <= 1) { 1 } { fib (n - 1) + fib (n - 2) } };
+class def data exists forall foreign impl import infix infixl infixr let type module with
 ```
 
-モジュールに定義できる関数は、型`{_}`か型`_ -> _`を持つものに限られる。
-
-### データ型宣言
-
-```ebnf
-data_dec = "data" upper_id { lower_id } "=" con_defs ;
-
-con_defs = con_def "|" con_defs
-         | con_def ;
-
-con_def = upper_ident { type } ;
-```
+### Reserved Operators
 
 ```
-data List a = Nil | Cons a (List a);
-
-data Either a b = Left a | Right b;
+=> = : | -> ; . , ! #| |#
 ```
 
-### 結合性宣言
+### Literals
 
-```ebnf
-infix_dec = "infix" decimal "(" operator_id ")"
-          | "infixl" decimal "(" operator_id ")"
-          | "infixr" decimal "(" operator_id ")"
+- **Integer:** `123`, `42L`, `7l` (Int32 by default, Int64 with `L`/`l` suffix)
+- **Float/Double:** `3.14` (Double), `2.71f`/`2.71F` (Float)
+- **Char:** `'a'`, `'\n'`
+- **String:** `"hello"`
+- **Boxed/Unboxed:** Add `#` suffix for unboxed, e.g., `1#`, `"foo"#`
+
+---
+
+## 2. Modules and Imports
+
+### Module Definition
+
+Modules are defined implicitly by file structure. Explicit module declarations are not required, but can be written as:
+
+```malgo
+module {..} = import "path/to/Module.mlg"
+module MyMod = import "path/to/Module.mlg"
+module {foo, bar, (+)} = import "path/to/Module.mlg"
 ```
 
-```
-infixl 6 (+);
-(+) = { x y -> add_Int32 x y };
+### Import Declaration
+
+- **Import all:** `module {..} = import "..."`
+- **Import selected:** `module {foo, bar} = import "..."`
+- **Import with alias:** `module MyMod = import "..."`
+- **Import by module name:** `module Prelude = import "..."`
+
+---
+
+## 3. Declarations
+
+### Data Type Declaration
+
+```malgo
+data List a = Nil | Cons a (List a)
+data Int = Int# Int64#
 ```
 
-### 外部関数宣言
+### Type Synonym Declaration
 
-```ebnf
-foreign_dec = "foreign" "import" lower_ident "::" type ;
+```malgo
+type MyTuple a = (a, a)
+type MyString = String
+type S = T
 ```
 
-### インポート宣言
+### Infix Declarations
 
-```ebnf
-import_dec = "import" upper_id ;
+```malgo
+infixl 6 (-)
+infixr 2 (<|>)
+infix 4 (==)
 ```
+
+### Foreign Declarations
+
+```malgo
+foreign import malgo_print_string : String# -> ()
+foreign import malgo_int64_t_to_string : Int64# -> String#
+```
+
+### Value Signatures and Definitions
+
+```malgo
+def fact : Int64 -> Int64
+def fact = { n -> factAcc n 1L }
+
+def (==) : Int64 -> Int64 -> Bool
+def (==) = { x y -> eqInt64 x y }
+```
+
+---
+
+## 4. Expressions
+
+### Basic Expressions
+
+- **Literals:** `1`, `3.14`, `'a'`, `"foo"`
+- **Variables:** `x`, `myVar`
+- **Function application:** `f x y`, `add 1 2`
+
+### Functions and Pattern Matching
+
+```malgo
+def even = {
+  0 -> True,
+  n -> odd (subInt32 n 1),
+}
+
+def add = { x y -> x + y }
+```
+
+### Let Bindings and With Statements
+
+```malgo
+let x = 1;
+let y = 2;
+printString (toStringInt32 (addInt32 x y));
+
+with ctx = expr
+with expr
+```
+
+### Structured Data
+
+- **Records:** `{ x = 1, y = 2 }`
+- **Lists:** `[1, 2, 3]`, `[]`
+- **Tuples:** `(a, b)`, `(1, "foo")`
+
+---
+
+## 5. Patterns
+
+- **Variable pattern:** `x`
+- **Literal pattern:** `1`, `'a'`, `"foo"`
+- **Constructor pattern:** `Cons x xs`, `Int# x`
+- **Tuple pattern:** `(x, y)`
+- **Record pattern:** `{ x = x, y = y }`
+- **List pattern:** `[x, y, z]`, `[]`
+
+Example:
+
+```malgo
+{ Cons (Int64# x) xs -> ...,
+  Nil -> ... }
+```
+
+---
+
+## 6. Types
+
+- **Function type:** `a -> b`
+- **Type application:** `List Int`
+- **Tuple type:** `(Int, String)`
+- **Record type:** `{ x : Int, y : Int }`
+- **Block type:** `{ a }`
+- **Type variable:** `a`, `b`
+
+---
+
+## 7. Operator Precedence and Associativity
+
+Declare operator precedence and associativity using:
+
+```malgo
+infixl 6 (+)
+infixr 2 (<|>)
+infix 4 (==)
+```
+
+- `infixl`: left-associative
+- `infixr`: right-associative
+- `infix`: non-associative
+- Precedence: integer (higher binds tighter)
+
+---
+
+## 8. Examples
+
+### Factorial Function
+
+```malgo
+def fact = { n -> factAcc n 1L }
+def factAcc = { n acc -> if (n == 0L) { acc } { factAcc (n - 1L) (n * acc) } }
+def main = { fact 5L |> toStringInt64 |> putStrLn }
+```
+
+### Data Type and Foreign Declarations
+
+```malgo
+data Int = Int# Int64#
+foreign import malgo_int64_t_to_string : Int64# -> String#
+```
+
+### Record Construction and Manipulation
+
+```malgo
+type Point2D = { x : Int32, y : Int32 }
+def zero2D : Point2D
+def zero2D = { x = 0, y = 0 }
+def x2D : Point2D -> Int32
+def x2D = { { x = x, y = _ } -> x }
+```
+
+### Use of `with` Statements
+
+```malgo
+with ctx = expr
+with expr
+```
+
+### Pattern Matching
+
+```malgo
+def even = {
+  0 -> True,
+  n -> odd (subInt32 n 1),
+}
+```
+
+### Type Synonym Definition and Usage
+
+```malgo
+type MyTuple a = (a, a)
+def hello : MyTuple String
+def hello = ("hello", "world")
+```
+
+---
+
+For the most up-to-date syntax and semantics, refer to `src/Malgo/Parser.hs` and the test cases in `test/testcases/malgo/`.
+
+<!--
+Prompt:
+
+You are tasked with generating a comprehensive reference document (`reference.md`) for the Malgo programming language. This document must describe the **syntax** and **semantics** of Malgo as implemented in the current parser and test suite (as of June 2025).
+
+⚠️ Important:
+- **Do not include any planned or speculative syntax features** from `todo.md` or other design proposals.
+- Base your descriptions **solely on the current implementation** and the test cases.
+- Refer to supporting documentation in the `docs/` directory (e.g., `docs/syntax.md`) for additional details.
+- For the most up-to-date syntax, consult `src/Malgo/Parser.hs` and the test cases in `test/testcases/malgo/`.
+
+---
+
+### Document Structure Guidelines
+
+Your generated `reference.md` should be structured in Markdown and include the following sections:
+
+#### 1. Lexical Structure
+- **Comments:** Describe single-line comments (using `--`) and multi-line comments (using nested `{- ... -}`).
+- **Identifiers:** Specify the patterns for identifiers, including distinctions between uppercase (types, constructors, modules) and lowercase (variables, functions) identifiers.
+- **Reserved Words:** List the reserved keywords (e.g., `class`, `def`, `data`, `let`, etc.).
+- **Literals:** Provide details on integer, float/double, char, string, boxed/unboxed literals, including example forms.
+
+#### 2. Modules and Imports
+- **Module Definition:** Outline how modules are defined (e.g., syntax for module declarations).
+- **Import Declaration:** Explain the different import syntaxes (full import, selected import, aliasing) with examples.
+
+#### 3. Declarations
+- **Data Type Declaration:** Describe the syntax for defining algebraic data types.
+- **Type Synonym Declaration:** Specify how type synonyms are declared.
+- **Infix Declarations:** Explain how operators are declared with associativity and precedence.
+- **Foreign Declarations:** Detail the syntax for foreign function interfaces.
+- **Value Signatures and Definitions:** Provide examples of defining functions and values with explicit types.
+
+#### 4. Expressions
+- **Basic Expressions:** Include literal values, variables, and function applications.
+- **Functions and Pattern Matching:** Describe lambda expressions, functions defined with pattern matching, with correct examples.
+- **Let Bindings and With Statements:** Show how local bindings (`let`) and context injections (`with`) are expressed.
+- **Structured Data:** Explain the syntax for records, lists, and tuples.
+
+#### 5. Patterns
+- Define the different forms of patterns, such as variable, literal, constructor, tuple, record, and list patterns with examples.
+
+#### 6. Types
+- **Type Expressions:** Document the syntax for function types, type application, tuples, records, blocks, and type variables.
+
+#### 7. Operator Precedence and Associativity
+- Describe how operator precedence and associativity are declared (via `infix`, `infixl`, `infixr`).
+
+#### 8. Examples
+- Provide illustrative examples that cover key language constructs, such as:
+  - A factorial function implementation.
+  - Data type and foreign declarations.
+  - Record construction and manipulation.
+  - Use of `with` statements.
+  - Pattern matching examples.
+  - A type synonym definition with usage.
+
+---
+
+### Additional Output Requirements
+- Use clear, concise technical language in Markdown.
+- Ensure all syntax examples precisely reflect the **current implementation**.
+- Direct readers to the actual parser source (`src/Malgo/Parser.hs`) and testcases (`test/testcases/malgo/`) for verification and further details.
+- Target the document at readers with a background in functional programming and interest in Malgo’s concrete implementation details.
+
+✅ Your goal is to produce a clear and authoritative language reference that fully documents the **current**, implemented syntax and semantics of Malgo.
+-->

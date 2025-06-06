@@ -33,7 +33,6 @@ module Malgo.Syntax
     imports,
     Module (..),
     toUnboxed,
-    getTyVars,
     makeBindGroup,
   )
 where
@@ -43,7 +42,6 @@ import Data.Graph (flattenSCC, stronglyConnComp)
 import Data.List.NonEmpty qualified as NE
 import Data.SCargot.Repr.Basic qualified as S
 import Data.Set qualified as Set
-import Malgo.Infer.TypeRep hiding (TyApp, TyArr, TyCon, TyRecord, TyTuple, TyVar, Type, freevars)
 import Malgo.Module
 import Malgo.Prelude hiding (All)
 import Malgo.SExpr (ToSExpr (..))
@@ -73,15 +71,6 @@ instance Pretty (Literal x) where
   pretty (Double d) = sexpr ["double", pretty d]
   pretty (Char c) = sexpr ["char", squotes (pretty c)]
   pretty (String s) = sexpr ["string", dquotes (pretty s)]
-
-instance HasType (Literal x) where
-  typeOf Int32 {} = TyPrim Int32T
-  typeOf Int64 {} = TyPrim Int64T
-  typeOf Float {} = TyPrim FloatT
-  typeOf Double {} = TyPrim DoubleT
-  typeOf Char {} = TyPrim CharT
-  typeOf String {} = TyPrim StringT
-  types f v = f (typeOf v) $> v
 
 toUnboxed :: Literal Boxed -> Literal Unboxed
 toUnboxed = coerce
@@ -118,15 +107,6 @@ instance (Pretty (XId x)) => Pretty (Type x) where
   pretty (TyTuple _ ts) = sexpr $ "tuple" : map pretty ts
   pretty (TyRecord _ kvs) = sexpr $ "record" : map (\(k, v) -> sexpr [pretty k, pretty v]) kvs
   pretty (TyBlock _ t) = sexpr ["block", pretty t]
-
-getTyVars :: (Ord (XId x)) => Type x -> Set (XId x)
-getTyVars (TyApp _ t ts) = getTyVars t <> mconcat (map getTyVars ts)
-getTyVars (TyVar _ v) = Set.singleton v
-getTyVars TyCon {} = mempty
-getTyVars (TyArr _ t1 t2) = getTyVars t1 <> getTyVars t2
-getTyVars (TyTuple _ ts) = mconcat $ map getTyVars ts
-getTyVars (TyRecord _ kvs) = mconcat $ map (getTyVars . snd) kvs
-getTyVars (TyBlock _ t) = getTyVars t
 
 -- * Expression
 
@@ -194,39 +174,6 @@ instance (ForallExpX HasRange x) => HasRange (Expr x) where
   range (Seq x _) = range x
   range (Parens x _) = range x
 
-instance
-  (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) =>
-  HasType (Expr x)
-  where
-  typeOf (Var x _) = typeOf x
-  typeOf (Unboxed x _) = typeOf x
-  typeOf (Boxed x _) = typeOf x
-  typeOf (Apply x _ _) = typeOf x
-  typeOf (OpApp x _ _ _) = typeOf x
-  typeOf (Project x _ _) = typeOf x
-  typeOf (Fn x _) = typeOf x
-  typeOf (Tuple x _) = typeOf x
-  typeOf (Record x _) = typeOf x
-  typeOf (List x _) = typeOf x
-  typeOf (Ann x _ _) = typeOf x
-  typeOf (Seq x _) = typeOf x
-  typeOf (Parens x _) = typeOf x
-
-  types f = \case
-    Var x v -> Var <$> types f x <*> pure v
-    Unboxed x u -> Unboxed <$> types f x <*> types f u
-    Boxed x b -> Boxed <$> types f x <*> types f b
-    Apply x e1 e2 -> Apply <$> types f x <*> types f e1 <*> types f e2
-    OpApp x op e1 e2 -> OpApp <$> types f x <*> pure op <*> types f e1 <*> types f e2
-    Project x e k -> Project <$> types f x <*> types f e <*> pure k
-    Fn x cs -> Fn <$> types f x <*> traverse (types f) cs
-    Tuple x es -> Tuple <$> types f x <*> traverse (types f) es
-    Record x kvs -> Record <$> types f x <*> traverse (\(k, v) -> (k,) <$> types f v) kvs
-    List x es -> List <$> types f x <*> traverse (types f) es
-    Ann x e t -> Ann <$> types f x <*> types f e <*> pure t
-    Seq x ss -> Seq <$> types f x <*> traverse (types f) ss
-    Parens x e -> Parens <$> types f x <*> types f e
-
 freevars :: (Ord (XId x)) => Expr x -> Set (XId x)
 freevars (Var _ v) = Set.singleton v
 freevars (Unboxed _ _) = mempty
@@ -282,19 +229,6 @@ instance (Pretty (XId x)) => Pretty (Stmt x) where
   pretty (With _ (Just var) body) = sexpr ["with", pretty var, pretty body]
   pretty (NoBind _ body) = sexpr ["do", pretty body]
 
-instance
-  (ForallExpX HasType x, ForallClauseX HasType x, ForallPatX HasType x) =>
-  HasType (Stmt x)
-  where
-  typeOf (Let _ _ e) = typeOf e
-  typeOf (With _ _ e) = typeOf e
-  typeOf (NoBind _ e) = typeOf e
-
-  types f = \case
-    Let x v e -> Let x v <$> types f e
-    With x v e -> With x v <$> types f e
-    NoBind x e -> NoBind x <$> types f e
-
 -- * Clause
 
 data Clause x = Clause (XClause x) [Pat x] (Expr x)
@@ -311,14 +245,6 @@ instance (ToSExpr (XId x)) => ToSExpr (Clause x) where
 
 instance (Pretty (XId x)) => Pretty (Clause x) where
   pretty (Clause _ pats body) = sexpr ["clause", sexpr $ map pretty pats, pretty body]
-
-instance
-  (ForallClauseX HasType x, ForallPatX HasType x, ForallExpX HasType x) =>
-  HasType (Clause x)
-  where
-  typeOf (Clause x _ _) = typeOf x
-
-  types f (Clause x ps e) = Clause <$> types f x <*> traverse (types f) ps <*> types f e
 
 -- * Pattern
 
@@ -354,27 +280,6 @@ instance (Pretty (XId x)) => Pretty (Pat x) where
   pretty (ListP _ ps) = sexpr $ "list" : map pretty ps
   pretty (UnboxedP _ l) = sexpr ["unboxed", pretty l]
   pretty (BoxedP _ l) = sexpr ["boxed", pretty l]
-
-instance
-  (ForallPatX HasType x) =>
-  HasType (Pat x)
-  where
-  typeOf (VarP x _) = typeOf x
-  typeOf (ConP x _ _) = typeOf x
-  typeOf (TupleP x _) = typeOf x
-  typeOf (RecordP x _) = typeOf x
-  typeOf (ListP x _) = typeOf x
-  typeOf (UnboxedP x _) = typeOf x
-  typeOf (BoxedP x _) = typeOf x
-
-  types f = \case
-    VarP x v -> VarP <$> types f x <*> pure v
-    ConP x c ps -> ConP <$> types f x <*> pure c <*> traverse (types f) ps
-    TupleP x ps -> TupleP <$> types f x <*> traverse (types f) ps
-    RecordP x kps -> RecordP <$> types f x <*> traverse (bitraverse pure (types f)) kps
-    ListP x ps -> ListP <$> types f x <*> traverse (types f) ps
-    UnboxedP x u -> UnboxedP <$> types f x <*> types f u
-    BoxedP x b -> BoxedP <$> types f x <*> types f b
 
 makePrisms ''Pat
 
