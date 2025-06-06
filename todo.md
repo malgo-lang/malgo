@@ -1,9 +1,9 @@
 # Roadmap
 
 - [ ] Update documentations.
-  - [ ] tour.md : Malgo language tour.
-  - [ ] tutorial.md : Malgo tutorial.
-  - [ ] reference.md : Malgo reference.
+  - [x] tour.md : Malgo language tour.
+  - [x] tutorial.md : Malgo tutorial.
+  - [x] reference.md : Malgo reference.
   - [ ] design.md : Malgo language and compiler design.
   - [ ] architecture.md : Malgo compiler architecture.
 - [ ] Change function application syntax to `f(x, y)(z)` instead of `f x y z`.

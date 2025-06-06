@@ -1,120 +1,210 @@
-# Malgo リファレンスマニュアル
+# Malgo Language Reference
 
-Malgoは、多相型、型推論、カリー化、パターンマッチなどの機能を持つ静的型付き関数プログラミング言語である。
+This document describes the syntax and semantics of the Malgo programming language, based on the current parser implementation and test suite as of June 2025.
 
-## 字句
+## Lexical Structure
 
-### コメント
-`--`から行末まではコメントになる。
-`{- -}`で囲んだ部分もコメントになる。これは入れ子になってもよい。
+### Comments
 
-### 識別子
-識別子は、正規表現`[a-zA-Z_][a-zA-Z0-9_#']*`で表現される文字列、あるいは`+-*/\%=><:;|&!#.`の一文字以上の繰り返しで表現される文字列である。
+- Single-line: `--` to end of line
+- Multi-line: `{- ... -}` (nestable)
 
-この文書では、
-* `Int32`、`Type`のように大文字から始まる識別子を**upper id**
-* `putStrLn`、`main`のように小文字から始まる識別子を**lower id**
-* `->`、`+`のように記号から構成される識別子を**operator id**
-と呼ぶ。
+### Identifiers
 
-### 予約語
-以下の文字列は予約語であり、識別子には使えない。
+- Identifiers: `[a-zA-Z_][a-zA-Z0-9_#']*`
+- Operators: One or more of `+-*/\%=><:;|&!#.`
+- Uppercase identifiers: Types, constructors, modules (e.g., `Int32`, `List`)
+- Lowercase identifiers: Variables, functions (e.g., `main`, `putStrLn`)
 
-`data, exists, forall, foreign, import, infix, infixl, infixr, let, type, module`
+### Reserved Words
 
-### リテラル
+`class`, `def`, `data`, `exists`, `forall`, `foreign`, `impl`, `import`, `infix`, `infixl`, `infixr`, `let`, `type`, `module`, `with`
 
-リテラルには、末尾に`#`がつく**unboxedリテラル**と、通常の値を表す**boxedリテラル**がある。
-それぞれのリテラルの例を列挙する。
+### Literals
 
-* **数値リテラル**
-  * 32bit符号付き整数 : unboxed `42#`, boxed `42`
-  * 64bit符号付き整数 : unboxed `42L#`, boxed `42L`
-  * 単精度浮動小数点数 : unboxed `3.14F#`, boxed `3.14F`
-  * 倍精度浮動小数点数 : unboxed `3.14#`, boxed `3.14`
-* **文字リテラル** : unboxed `'a'#`, boxed `'a'`
-* **文字列リテラル** : unboxed `"hello"#`, boxed `"hello"`
+- Integer: `42`, `42L`, `42#`, `42L#`
+- Float/Double: `3.14`, `3.14F`, `3.14#`, `3.14F#`
+- Char: `'a'`, `'a'#`
+- String: `"hello"`, `"hello"#`
+- Boxed literals: No trailing `#` (e.g., `42`)
+- Unboxed literals: Trailing `#` (e.g., `42#`)
 
-boxedリテラルは、それぞれ対応する関数の呼び出しに変換される。
-それぞれの関数の実装はruntime/malgo/Builtin.mlgに存在する。
+## Modules and Imports
 
-* `42` -> `int32# 42#`
-* `42L` -> `int64# 42L#`
-* `3.14F` -> `float# 3.14F#`
-* `3.14` -> `double# 3.14#`
-* `'a'` -> `char# 'a'#`
-* `"hello"` -> `string# "hello"#`
-
-## 宣言
-
-### モジュール
-
-```ebnf
-module = "module" upper_id "=" "{" decs "}" ;
-
-decs = { dec ";" } ;
-
-dec = data_dec | type_dec | infix_dec | foreign_dec | import_dec
-    | signature_dec | function_dec ;
-```
-
-モジュールは一連の型や関数宣言の並びのまとまりであり、名前空間として振る舞う。
-例えば、モジュール`List`で宣言された関数`map`と、モジュール`Set`で宣言された関数`map`は別の名前として扱われる。
-
-### 関数宣言
-
-```ebnf
-signature_dec = lower_id "::" type ;
-
-function_dec = lower_id "=" "{" { pat } "->" stmts "}"
-             | lower_id "=" "{" stmts "}" ;
-```
+### Module Definition
 
 ```
-fib :: Int32 -> Int32;
-fib = { n -> if (n <= 1) { 1 } { fib (n - 1) + fib (n - 2) } };
+module = many decl
 ```
 
-モジュールに定義できる関数は、型`{_}`か型`_ -> _`を持つものに限られる。
-
-### データ型宣言
-
-```ebnf
-data_dec = "data" upper_id { lower_id } "=" con_defs ;
-
-con_defs = con_def "|" con_defs
-         | con_def ;
-
-con_def = upper_ident { type } ;
-```
+### Import Declaration
 
 ```
-data List a = Nil | Cons a (List a);
-
-data Either a b = Left a | Right b;
+module {..} = import "path/to/module.mlg"
+module {foo, bar} = import SomeModule
+module Foo = import SomeModule
 ```
 
-### 結合性宣言
+- `{..}`: Import all
+- `{foo, bar}`: Import selected
+- `Foo`: Import as alias
 
-```ebnf
-infix_dec = "infix" decimal "(" operator_id ")"
-          | "infixl" decimal "(" operator_id ")"
-          | "infixr" decimal "(" operator_id ")"
+## Declarations
+
+### Data Type Declaration
+
+```
+data List a = Nil | Cons a (List a)
 ```
 
-```
-infixl 6 (+);
-(+) = { x y -> add_Int32 x y };
-```
+### Type Synonym
 
-### 外部関数宣言
-
-```ebnf
-foreign_dec = "foreign" "import" lower_ident "::" type ;
+```
+type MyTuple a = (a, a)
+type MyString = String
 ```
 
-### インポート宣言
+### Infix Declaration
 
-```ebnf
-import_dec = "import" upper_id ;
 ```
+infixl 6 (+)
+def (+) = { x y -> addInt32 x y }
+```
+
+### Foreign Declaration
+
+```
+foreign import malgo_print_string : String# -> ()
+```
+
+### Value Signature and Definition
+
+```
+def f : Int32 -> Int32
+def f = { x -> x }
+```
+
+## Expressions
+
+### Literals, Variables, Application
+
+```
+42
+x
+f x y
+```
+
+### Function (Lambda) and Pattern Matching
+
+```
+def even = {
+  0 -> True,
+  n -> odd (subInt32 n 1),
+}
+```
+
+### Let Binding
+
+```
+let x = 1;
+let y = 2;
+addInt32 x y
+```
+
+### With Statement
+
+```
+with x = expr;
+with expr;
+```
+
+### Records
+
+```
+{ foo = 1, bar = 2 }
+```
+
+### Lists
+
+```
+[1, 2, 3]
+```
+
+### Tuples
+
+```
+(x, y)
+```
+
+## Patterns
+
+- Variable: `x`
+- Literal: `42`, `'a'`, etc.
+- Constructor: `Cons x xs`
+- Tuple: `(x, y)`
+- Record: `{ foo = x, bar = y }`
+- List: `[x, y, z]`
+
+## Types
+
+- Function: `Int32 -> Int32`
+- Type application: `Maybe Int32`
+- Tuple: `(Int32, String)`
+- Record: `{ foo: Int32, bar: String }`
+- Block: `{ Int32 }`
+- Type variable: `a`
+
+## Operator Precedence and Associativity
+
+- Declared with `infix`, `infixl`, `infixr`
+- Example: `infixr 2 (<|>)`
+
+## Example: Factorial
+
+```
+def fact = { n -> factAcc n 1L }
+def factAcc = { n acc -> if (n == 0L) { acc } { factAcc (n - 1L) (n * acc) } }
+def main = { fact 5L |> toStringInt64 |> putStrLn }
+```
+
+## Example: Data and Foreign
+
+```
+data Int = Int# Int64#
+foreign import malgo_int64_t_to_string : Int64# -> String#
+def main = { {(Int# x) -> malgo_print_string (malgo_int64_t_to_string x) } (Int# 1L#) }
+```
+
+## Example: Record
+
+```
+def r = { foo = 1, bar = 2 }
+```
+
+## Example: With
+
+```
+with x = printAndReturn "foo";
+printString x
+```
+
+## Example: Pattern Matching
+
+```
+def even = {
+  0 -> True,
+  n -> odd (subInt32 n 1),
+}
+```
+
+## Example: Type Synonym
+
+```
+type MyTuple a = (a, a)
+def hello : MyTuple String
+def hello = ("hello", "world")
+```
+
+---
+
+This document is generated from the parser and test suite. For the most up-to-date syntax, see the implementation in `src/Malgo/Parser.hs` and the testcases in `test/testcases/malgo/`.
