@@ -1,11 +1,9 @@
 # Roadmap
 
-- [ ] Update documentations.
+- [x] Update documentations.
   - [x] tour.md : Malgo language tour.
-  - [x] tutorial.md : Malgo tutorial.
   - [x] reference.md : Malgo reference.
-  - [ ] design.md : Malgo language and compiler design.
-  - [ ] architecture.md : Malgo compiler architecture.
+  - [x] architecture.md : Malgo compiler architecture.
 - [ ] Change function application syntax to `f(x, y)(z)` instead of `f x y z`.
   - [ ] `f(x, y)` is a syntactic sugar for `f(x)(y)`.
 - [ ] Add `forall` and `exists` quantifiers.

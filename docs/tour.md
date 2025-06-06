@@ -216,3 +216,25 @@ def example = {
 ---
 
 > This tour is a living document. Please contribute improvements or report issues as the language evolves.
+
+<!--
+Prompt:
+
+
+You are an experienced technical writer and language engineer with deep expertise in functional programming languages and compiler design.
+Your task is to **analyze the entire Malgo codebase**, thoroughly understand its language features and implementation details, and write a clear and comprehensive `tour.md` that introduces the language to new developers.
+
+Please follow these guidelines:
+
+1. Perform a **full-spectrum inspection** of the codebase: understand the syntax, type system, desugaring process, code generation, runtime model, and backend architecture.
+2. Write the `tour.md` as an **onboarding document** for developers new to Malgo. Use real code examples to clearly explain each language feature.
+3. When exact behavior is unclear, clearly mark assumptions as hypotheses and support them with specific code references.
+4. Feel free to use English, Japanese, pseudocode, diagrams, or Markdown to aid clarity and reader comprehension.
+5. If a previous version of `tour.md` exists, critically review and revise it to improve structure, accuracy, and educational quality.
+
+**Target readers:**
+
+* Developers familiar with functional languages (Haskell, OCaml, Rust, etc.)
+* Programmers interested in type systems and compiler internals
+* OSS contributors looking to understand and extend Malgo
+-->
