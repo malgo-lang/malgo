@@ -10,8 +10,6 @@ module Malgo.Prelude
     module Control.Lens,
     module Control.Monad,
     module Control.Monad.Extra,
-    module Control.Monad.Error.Class,
-    module Control.Monad.Except,
     module Control.Monad.IO.Class,
     module Data.Bifunctor,
     module Data.Bitraversable,
@@ -100,8 +98,6 @@ import Control.Arrow ((<<<), (>>>))
 import Control.Lens (ASetter, over, (??))
 import Control.Lens.TH
 import Control.Monad
-import Control.Monad.Error.Class
-import Control.Monad.Except (ExceptT, runExceptT)
 import Control.Monad.Extra (ifM)
 import Control.Monad.IO.Class
 import Data.Bifunctor

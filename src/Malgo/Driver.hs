@@ -6,15 +6,15 @@ import Data.ByteString qualified as BS
 import Data.Set qualified as Set
 import Data.Traversable (for)
 import Effectful
-import Effectful.Error.Static (Error, runErrorNoCallStack)
+import Effectful.Error.Static (Error)
 import Effectful.Reader.Static
 import Effectful.State.Static.Local
 import Malgo.Infer
 import Malgo.Interface (Interface, buildInterface)
 import Malgo.Module
 import Malgo.Parser.Pass (ParserPass (..))
-import Malgo.Pass (CompileError, Pass (..))
-import Malgo.Prelude hiding (throwError)
+import Malgo.Pass (CompileError, Pass (..), runCompileError)
+import Malgo.Prelude
 import Malgo.Refine
 import Malgo.Rename
 import Malgo.Sequent.Core (Join)
@@ -26,7 +26,6 @@ import Malgo.Sequent.ToCore (ToCorePass (..))
 import Malgo.Sequent.ToFun (ToFunPass (..))
 import Malgo.Syntax qualified as Syntax
 import Malgo.Syntax.Extension
-import System.Exit (exitFailure)
 import System.IO (hPutChar)
 import System.IO qualified as IO
 
@@ -149,15 +148,10 @@ compile srcPath = do
   pwd <- pwdPath
   srcModulePath <- parseArtifactPath pwd srcPath
   src <- load srcModulePath ".mlg"
-  result <- runErrorNoCallStack @CompileError do
+  runCompileError do
     (_, parsedAst) <- runPass ParserPass (srcPath, convertString @BS.ByteString src)
     when flags.debugMode do
       hPutStrLn stderr "=== PARSE ==="
       hPrint stderr $ pretty parsedAst
     runReader parsedAst.moduleName
       $ compileFromAST srcModulePath parsedAst
-  case result of
-    Left error -> do
-      liftIO $ hPutStrLn stderr $ "Compile error: " <> show error
-      liftIO exitFailure
-    Right () -> pure ()

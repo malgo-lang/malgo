@@ -1,12 +1,10 @@
 -- | Malgo.Pass provides a pass management system for the Malgo compiler.
 -- It allows for the registration and execution of various compiler passes, such as renaming, type inference, and refinement in a modular way.
-module Malgo.Pass (Pass (..), CompileError) where
+module Malgo.Pass (Pass (..), CompileError, runCompileError) where
 
-import Data.Either (Either (..))
-import Data.Kind (Constraint)
 import Effectful
-import Effectful.Error.Static (CallStack, Error, prettyCallStack, runError, throwError)
-import Prelude (Show, pure, show, (<>))
+import Effectful.Error.Static (CallStack, Error, prettyCallStack, runError, runErrorNoCallStackWith, throwError)
+import Malgo.Prelude
 
 -- | CompileError wraps any error with its call stack for uniform error handling.
 data CompileError = forall e. (Show e) => CompileError {callStack :: CallStack, compileError :: e}
@@ -14,6 +12,9 @@ data CompileError = forall e. (Show e) => CompileError {callStack :: CallStack, 
 instance Show CompileError where
   show (CompileError {callStack, compileError}) =
     prettyCallStack callStack <> "\n" <> show compileError
+
+runCompileError :: Eff (Error CompileError : es) a -> Eff es a
+runCompileError = runErrorNoCallStackWith @CompileError (error . show)
 
 -- | wrapCompileError runs an Eff computation that may throw an compile error, and wraps it as CompileError.
 wrapCompileError :: (Show e, Error CompileError :> es) => Eff (Error e : es) a -> Eff es a

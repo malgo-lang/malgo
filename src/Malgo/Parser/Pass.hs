@@ -6,7 +6,7 @@ import Effectful.Error.Static (throwError)
 import Malgo.Module (Workspace)
 import Malgo.Parser (parse)
 import Malgo.Pass
-import Malgo.Prelude hiding (throwError)
+import Malgo.Prelude
 import Malgo.Syntax (Module)
 import Malgo.Syntax.Extension (Malgo, MalgoPhase (NewParse))
 import Text.Megaparsec (ParseErrorBundle)

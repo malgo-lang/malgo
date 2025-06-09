@@ -30,7 +30,7 @@ import Malgo.Infer.Kind
 import Malgo.Infer.TcEnv (TcEnv (..))
 import Malgo.Infer.TypeRep
 import Malgo.Module
-import Malgo.Prelude hiding (Constraint, throwError)
+import Malgo.Prelude hiding (Constraint)
 import Prettyprinter ((<+>))
 
 -- * Constraint

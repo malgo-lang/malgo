@@ -26,7 +26,7 @@ import Effectful.Reader.Static (Reader, asks, runReader)
 import Effectful.State.Static.Local (State)
 import Malgo.Id
 import Malgo.Module
-import Malgo.Prelude hiding (throwError)
+import Malgo.Prelude
 import Malgo.Syntax.Extension
 import Prettyprinter (squotes, vsep, (<+>))
 

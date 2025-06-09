@@ -1,12 +1,13 @@
 module Malgo.InferSpec (spec) where
 
 import Data.ByteString qualified as BS
-import Malgo.Infer.Pass (infer)
+import Effectful.Error.Static (catchError)
+import Malgo.Infer
 import Malgo.Monad (runMalgoM)
 import Malgo.Parser (parse)
+import Malgo.Pass
 import Malgo.Prelude
-import Malgo.Rename.Pass (rename)
-import Malgo.Rename.RnEnv qualified as RnEnv
+import Malgo.Rename
 import Malgo.TestUtils
 import System.Directory
 import System.FilePath
@@ -32,27 +33,24 @@ spec = parallel do
 driveInfer :: FilePath -> IO String
 driveInfer srcPath = do
   src <- convertString <$> BS.readFile srcPath
-  runMalgoM flag do
+  runMalgoM flag $ runCompileError do
     parsed <-
       parse srcPath src >>= \case
         Left err -> error $ show err
         Right (_, parsed) -> pure parsed
-    rnEnv <- RnEnv.genBuiltinRnEnv
-    (renamed, _) <- failIfError <$> rename rnEnv parsed
-    (typedAst, _, _) <- failIfError <$> infer rnEnv renamed
+    rnEnv <- genBuiltinRnEnv
+    (renamed, _) <- runPass RenamePass (parsed, rnEnv)
+    (typedAst, _, _) <- runPass InferPass (renamed, rnEnv)
     pure $ pShowCompact typedAst
 
 driveErrorInfer :: FilePath -> IO String
 driveErrorInfer srcPath = do
   src <- convertString <$> BS.readFile srcPath
-  runMalgoM flag do
+  runMalgoM flag $ runCompileError do
     parsed <-
       parse srcPath src >>= \case
         Left err -> error $ show err
         Right (_, parsed) -> pure parsed
-    rnEnv <- RnEnv.genBuiltinRnEnv
-    (renamed, _) <- failIfError <$> rename rnEnv parsed
-    result <- infer rnEnv renamed
-    case result of
-      Left (_, err) -> pure $ show err
-      Right _ -> error $ "Expected error, but successfully inferred"
+    rnEnv <- genBuiltinRnEnv
+    (renamed, _) <- runPass RenamePass (parsed, rnEnv)
+    fmap show (runPass InferPass (renamed, rnEnv)) `catchError` \_ err -> pure $ show err

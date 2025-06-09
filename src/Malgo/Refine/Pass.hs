@@ -1,6 +1,6 @@
 -- | Malgo.Refine.Pass is the final AST-to-AST pass.
 -- This pass will remove unnecessary Parens and OpApp, and transforms Type annotation's representation to Static one.
-module Malgo.Refine.Pass (refine, RefinePass (..)) where
+module Malgo.Refine.Pass (RefinePass (..)) where
 
 import Control.Lens (_3)
 import Data.List.NonEmpty qualified as NonEmpty
@@ -26,10 +26,6 @@ instance Pass RefinePass where
   type Effects RefinePass es = (IOE :> es, Reader Flag :> es)
   runPassImpl _ (Module {..}, tcEnv) = do
     Module moduleName <$> runReader (buildRefineEnv tcEnv) (refineBindGroup moduleDefinition)
-
-refine :: (IOE :> es, Reader Flag :> es) => TcEnv -> Module (Malgo Infer) -> Eff es (Module (Malgo Refine))
-refine tcEnv Module {..} = do
-  Module moduleName <$> runReader (buildRefineEnv tcEnv) (refineBindGroup moduleDefinition)
 
 refineBindGroup :: (Reader RefineEnv :> es, IOE :> es, Reader Flag :> es) => BindGroup (Malgo Infer) -> Eff es (BindGroup (Malgo Refine))
 refineBindGroup BindGroup {..} = do

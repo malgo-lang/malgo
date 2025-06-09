@@ -4,13 +4,14 @@ import Data.ByteString qualified as BS
 import Effectful
 import Effectful.Error.Static (runError)
 import Effectful.Reader.Static (runReader)
-import Malgo.Infer.Pass (infer)
+import Malgo.Infer
 import Malgo.Module
 import Malgo.Monad (runMalgoM)
 import Malgo.Parser (parse)
+import Malgo.Pass (runCompileError, runPass)
 import Malgo.Prelude
-import Malgo.Refine.Pass (refine)
-import Malgo.Rename.Pass (rename)
+import Malgo.Refine
+import Malgo.Rename
 import Malgo.Rename.RnEnv qualified as RnEnv
 import Malgo.Sequent.Core
 import Malgo.Sequent.Core.Flat (flatProgram)
@@ -48,15 +49,15 @@ spec = parallel do
 setupBuiltin :: IO ArtifactPath
 setupBuiltin = do
   src <- convertString <$> BS.readFile builtinPath
-  runMalgoM flag do
+  runMalgoM flag $ runCompileError do
     parsed <-
       parse builtinPath src >>= \case
         Left err -> error $ show err
         Right (_, parsed) -> pure parsed
-    rnEnv <- RnEnv.genBuiltinRnEnv
-    (renamed, _) <- failIfError <$> rename rnEnv parsed
-    (typed, tcEnv, _) <- failIfError <$> infer rnEnv renamed
-    refined <- refine tcEnv typed
+    rnEnv <- genBuiltinRnEnv
+    (renamed, _) <- runPass RenamePass (parsed, rnEnv)
+    (typed, tcEnv, _) <- runPass InferPass (renamed, rnEnv)
+    refined <- runPass RefinePass (typed, tcEnv)
     program <- runReader refined.moduleName $ toFun refined.moduleDefinition >>= toCore >>= flatProgram >>= joinProgram
     saveCore refined.moduleName program
     getModulePath refined.moduleName
@@ -64,15 +65,15 @@ setupBuiltin = do
 setupPrelude :: IO ArtifactPath
 setupPrelude = do
   src <- convertString <$> BS.readFile preludePath
-  runMalgoM flag do
+  runMalgoM flag $ runCompileError do
     parsed <-
       parse preludePath src >>= \case
         Left err -> error $ show err
         Right (_, parsed) -> pure parsed
-    rnEnv <- RnEnv.genBuiltinRnEnv
-    (renamed, _) <- failIfError <$> rename rnEnv parsed
-    (typed, tcEnv, _) <- failIfError <$> infer rnEnv renamed
-    refined <- refine tcEnv typed
+    rnEnv <- genBuiltinRnEnv
+    (renamed, _) <- runPass RenamePass (parsed, rnEnv)
+    (typed, tcEnv, _) <- runPass InferPass (renamed, rnEnv)
+    refined <- runPass RefinePass (typed, tcEnv)
     program <- runReader refined.moduleName $ toFun refined.moduleDefinition >>= toCore >>= flatProgram >>= joinProgram
     saveCore refined.moduleName program
     getModulePath refined.moduleName
@@ -80,15 +81,15 @@ setupPrelude = do
 driveEval :: ArtifactPath -> ArtifactPath -> FilePath -> IO String
 driveEval builtinName preludeName srcPath = do
   src <- convertString <$> BS.readFile srcPath
-  runMalgoM flag do
+  runMalgoM flag $ runCompileError do
     parsed <-
       parse srcPath src >>= \case
         Left err -> error $ show err
         Right (_, parsed) -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
-    (renamed, _) <- failIfError <$> rename rnEnv parsed
-    (typed, tcEnv, _) <- failIfError <$> infer rnEnv renamed
-    refined <- refine tcEnv typed
+    (renamed, _) <- runPass RenamePass (parsed, rnEnv)
+    (typed, tcEnv, _) <- runPass InferPass (renamed, rnEnv)
+    refined <- runPass RefinePass (typed, tcEnv)
     Program {definitions = program} <- runReader refined.moduleName $ toFun refined.moduleDefinition >>= toCore >>= flatProgram >>= joinProgram
 
     Program {definitions = builtin} <- load builtinName ".sqt"
@@ -135,11 +136,11 @@ setupTestStdin = liftIO do
 setupTestStdout :: (MonadIO m) => m (Char -> IO (), IORef String)
 setupTestStdout = do
   builder <- newIORef ""
-  let stdout = \c -> modifyIORef builder (<> [c])
+  let stdout c = modifyIORef builder (<> [c])
   pure (stdout, builder)
 
 setupTestStderr :: (MonadIO m) => m (Char -> IO (), IORef String)
 setupTestStderr = do
   builder <- newIORef ""
-  let stderr = \c -> modifyIORef builder (<> [c])
+  let stderr c = modifyIORef builder (<> [c])
   pure (stderr, builder)

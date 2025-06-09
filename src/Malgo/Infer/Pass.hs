@@ -1,4 +1,4 @@
-module Malgo.Infer.Pass (infer, InferPass (..)) where
+module Malgo.Infer.Pass (InferPass (..)) where
 
 import Control.Lens (forOf, mapped, to, traverseOf, traversed, view, (^.), _1, _2, _3)
 import Data.List qualified as List
@@ -12,7 +12,6 @@ import Effectful.Error.Static
 import Effectful.Reader.Static
 import Effectful.State.Static.Local
 import Effectful.Writer.Static.Local
-import GHC.Records (HasField)
 import Malgo.Id
 import Malgo.Infer.Error
 import Malgo.Infer.Kind (KindCtx, insertKind, kindOf)
@@ -22,7 +21,7 @@ import Malgo.Infer.Unify hiding (lookupVar)
 import Malgo.Interface (Interface (..), loadInterface)
 import Malgo.Module
 import Malgo.Pass
-import Malgo.Prelude hiding (Constraint, throwError)
+import Malgo.Prelude hiding (Constraint)
 import Malgo.Rename (RnEnv (..))
 import Malgo.Syntax hiding (Type (..))
 import Malgo.Syntax qualified as S
@@ -98,52 +97,6 @@ lookupType pos name =
   gets @TcEnv ((.typeDefMap) >>> Map.lookup name) >>= \case
     Nothing -> throwError $ NotInScope pos name
     Just TypeDef {..} -> pure typeConstructor
-
-infer ::
-  forall es rnEnv.
-  ( State (Map ModuleName Interface) :> es,
-    State Uniq :> es,
-    IOE :> es,
-    Reader Flag :> es,
-    Workspace :> es,
-    HasField "resolvedTypeIdentMap" rnEnv (Map Text [Qualified Id])
-  ) =>
-  rnEnv -> Module (Malgo Rename) -> Eff es (Either (CallStack, InferError) (Module (Malgo Infer), TcEnv, KindCtx))
-infer rnEnv (Module name bg) = runError @InferError $ runReader name $ do
-  evalState @TcEnv mempty $ evalState @KindCtx mempty do
-    initTcEnv rnEnv
-    runTypeUnify do
-      bg' <- tcBindGroup bg
-      abbrEnv <- gets @TcEnv (.typeSynonymMap)
-      zonkedBg <- zonkBindGroup abbrEnv bg'
-      tcEnv <- get @TcEnv
-      zonkedTcEnv <- zonkTcEnv (range name) abbrEnv tcEnv
-      kindCtx <- get
-      pure (Module name zonkedBg, zonkedTcEnv, kindCtx)
-  where
-    zonkBindGroup abbrEnv BindGroup {..} = do
-      _scDefs <- traverse (zonkScDefs abbrEnv) _scDefs
-      _foreigns <- traverse (zonkForeign abbrEnv) _foreigns
-      pure BindGroup {..}
-
-    zonkScDefs abbrEnv scDefs = do
-      for scDefs \(x, name, expr) -> do
-        x <- traverseOf types (zonk x.value >=> pure . expandAllTypeSynonym abbrEnv) x
-        expr <- traverseOf types (zonk x.value >=> pure . expandAllTypeSynonym abbrEnv) expr
-        pure (x, name, expr)
-
-    zonkForeign abbrEnv (Typed ty (range, raw), name, typ) = do
-      ty <- traverseOf types (zonk range >=> pure . expandAllTypeSynonym abbrEnv) ty
-      pure (Typed ty (range, raw), name, typ)
-
-    zonkTcEnv range abbrEnv TcEnv {..} = do
-      signatureMap <- traverse (zonkSignature range abbrEnv) signatureMap
-      typeDefMap <- traverse (zonkTypeDef range abbrEnv) typeDefMap
-      pure TcEnv {..}
-
-    zonkSignature range abbrEnv = traverseOf (traverse . types) (zonk range >=> pure . expandAllTypeSynonym abbrEnv)
-
-    zonkTypeDef range abbrEnv = traverseOf (traverse . types) (zonk range >=> pure . expandAllTypeSynonym abbrEnv)
 
 tcBindGroup ::
   ( Reader ModuleName :> es,

@@ -5,7 +5,7 @@ import Effectful (Eff, (:>))
 import Effectful.Error.Static (Error, throwError)
 import Malgo.Infer.Error
 import Malgo.Infer.TypeRep
-import Malgo.Prelude hiding (throwError)
+import Malgo.Prelude
 
 -- * Kind context
 

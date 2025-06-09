@@ -2,13 +2,13 @@ module Malgo.Sequent.ToFunSpec (spec) where
 
 import Data.ByteString qualified as BS
 import Effectful.Reader.Static (runReader)
-import Malgo.Infer.Pass (infer)
+import Malgo.Infer
 import Malgo.Monad (runMalgoM)
 import Malgo.Parser (parse)
+import Malgo.Pass
 import Malgo.Prelude
-import Malgo.Refine.Pass (refine)
-import Malgo.Rename.Pass (rename)
-import Malgo.Rename.RnEnv qualified as RnEnv
+import Malgo.Refine
+import Malgo.Rename
 import Malgo.SExpr (sShow)
 import Malgo.Sequent.ToFun (toFun)
 import Malgo.Syntax (Module (..))
@@ -41,15 +41,15 @@ spec = parallel do
 
 driveToFun :: FilePath -> IO String
 driveToFun srcPath = do
-  src <- convertString <$> (BS.readFile srcPath)
-  runMalgoM flag do
+  src <- convertString <$> BS.readFile srcPath
+  runMalgoM flag $ runCompileError do
     parsed <-
       parse srcPath src >>= \case
         Left err -> error $ show err
         Right (_, parsed) -> pure parsed
-    rnEnv <- RnEnv.genBuiltinRnEnv
-    (renamed, _) <- failIfError <$> rename rnEnv parsed
-    (typed, tcEnv, _) <- failIfError <$> infer rnEnv renamed
-    refined <- refine tcEnv typed
+    rnEnv <- genBuiltinRnEnv
+    (renamed, _) <- runPass RenamePass (parsed, rnEnv)
+    (typed, tcEnv, _) <- runPass InferPass (renamed, rnEnv)
+    refined <- runPass RefinePass (typed, tcEnv)
     program <- runReader refined.moduleName $ toFun refined.moduleDefinition
     pure $ sShow program

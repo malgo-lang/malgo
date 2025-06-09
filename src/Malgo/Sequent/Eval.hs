@@ -14,7 +14,7 @@ import Effectful.State.Static.Local (State)
 import Malgo.Id
 import Malgo.Module (ModuleName)
 import Malgo.Pass
-import Malgo.Prelude hiding (getContents, throwError)
+import Malgo.Prelude hiding (getContents)
 import Malgo.SExpr (sShow)
 import Malgo.Sequent.Core
 import Malgo.Sequent.Fun (Literal (..), Name, Pattern (..), Tag (..))

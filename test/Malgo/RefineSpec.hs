@@ -1,13 +1,13 @@
 module Malgo.RefineSpec (spec) where
 
 import Data.ByteString qualified as BS
-import Malgo.Infer.Pass (infer)
+import Malgo.Infer
 import Malgo.Monad (runMalgoM)
 import Malgo.Parser (parse)
+import Malgo.Pass
 import Malgo.Prelude
-import Malgo.Refine.Pass (refine)
-import Malgo.Rename.Pass (rename)
-import Malgo.Rename.RnEnv qualified as RnEnv
+import Malgo.Refine
+import Malgo.Rename
 import Malgo.TestUtils
 import System.Directory
 import System.FilePath
@@ -27,13 +27,13 @@ spec = parallel do
 driveRefine :: FilePath -> IO String
 driveRefine srcPath = do
   src <- convertString <$> BS.readFile srcPath
-  runMalgoM flag do
+  runMalgoM flag $ runCompileError do
     parsed <-
       parse srcPath src >>= \case
         Left err -> error $ show err
         Right (_, parsed) -> pure parsed
-    rnEnv <- RnEnv.genBuiltinRnEnv
-    (renamed, _) <- failIfError <$> rename rnEnv parsed
-    (typed, tcEnv, _) <- failIfError <$> infer rnEnv renamed
-    refined <- refine tcEnv typed
+    rnEnv <- genBuiltinRnEnv
+    (renamed, _) <- runPass RenamePass (parsed, rnEnv)
+    (typed, tcEnv, _) <- runPass InferPass (renamed, rnEnv)
+    refined <- runPass RefinePass (typed, tcEnv)
     pure $ pShowCompact refined

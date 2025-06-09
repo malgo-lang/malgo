@@ -1,11 +1,12 @@
 module Malgo.RenameSpec (spec) where
 
 import Data.ByteString qualified as BS
+import Effectful.Error.Static (catchError)
 import Malgo.Monad (runMalgoM)
 import Malgo.Parser (parse)
+import Malgo.Pass (runCompileError, runPass)
 import Malgo.Prelude
-import Malgo.Rename.Pass (rename)
-import Malgo.Rename.RnEnv qualified as RnEnv
+import Malgo.Rename
 import Malgo.SExpr (sShow)
 import Malgo.TestUtils
 import System.Directory
@@ -35,37 +36,35 @@ spec = parallel do
 driveRename :: FilePath -> IO String
 driveRename srcPath = do
   src <- convertString <$> BS.readFile srcPath
-  runMalgoM flag do
+  runMalgoM flag $ runCompileError do
     parsed <-
       parse srcPath src >>= \case
         Left err -> error $ show err
         Right (_, parsed) -> pure parsed
-    rnEnv <- RnEnv.genBuiltinRnEnv
-    (renamed, _) <- failIfError <$> rename rnEnv parsed
+    rnEnv <- genBuiltinRnEnv
+    (renamed, _) <- runPass RenamePass (parsed, rnEnv)
     pure $ pShowCompact renamed
 
 driveErrorRename :: FilePath -> IO String
 driveErrorRename srcPath = do
   src <- convertString <$> BS.readFile srcPath
-  runMalgoM flag do
+  runMalgoM flag $ runCompileError do
     parsed <-
       parse srcPath src >>= \case
         Left err -> error $ show err
         Right (_, parsed) -> pure parsed
-    rnEnv <- RnEnv.genBuiltinRnEnv
-    result <- rename rnEnv parsed
-    case result of
-      Left (_, err) -> pure $ show err
-      Right _ -> error $ "Expected error, but successfully renamed"
+    rnEnv <- genBuiltinRnEnv
+    (runPass RenamePass (parsed, rnEnv) >> error "Expected error, but successfully renamed")
+      `catchError` \_ err -> pure $ show err
 
 driveRenameSExpr :: FilePath -> IO String
 driveRenameSExpr srcPath = do
   src <- convertString <$> BS.readFile srcPath
-  runMalgoM flag do
+  runMalgoM flag $ runCompileError do
     parsed <-
       parse srcPath src >>= \case
         Left err -> error $ show err
         Right (_, parsed) -> pure parsed
-    rnEnv <- RnEnv.genBuiltinRnEnv
-    (renamed, _) <- failIfError <$> rename rnEnv parsed
+    rnEnv <- genBuiltinRnEnv
+    (renamed, _) <- runPass RenamePass (parsed, rnEnv)
     pure $ sShow renamed

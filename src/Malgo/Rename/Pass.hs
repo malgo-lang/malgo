@@ -1,5 +1,5 @@
 -- | Name resolution and simple desugar transformation
-module Malgo.Rename.Pass (rename, RenamePass (..)) where
+module Malgo.Rename.Pass (RenamePass (..)) where
 
 import Control.Lens (view, _2)
 import Data.List (intersect)
@@ -15,7 +15,7 @@ import Malgo.Id
 import Malgo.Interface
 import Malgo.Module
 import Malgo.Pass (Pass (..))
-import Malgo.Prelude hiding (All, catchError, throwError)
+import Malgo.Prelude hiding (All)
 import Malgo.Rename.RnEnv
 import Malgo.Rename.RnState as RnState
 import Malgo.Syntax
@@ -40,18 +40,6 @@ instance Pass RenamePass where
   runPassImpl _ (Module modName (ParsedDefinitions ds), builtinEnv) = do
     (ds', rnState) <- runState (RnState mempty Set.empty) $ runReader builtinEnv $ runReader modName $ rnDecls ds
     pure (Module modName $ makeBindGroup ds', rnState)
-
--- | Entry point of this 'Malgo.Rename.Pass'
-rename ::
-  (State (Map ModuleName Interface) :> es, State Uniq :> es, IOE :> es, Reader Flag :> es, Workspace :> es) =>
-  RnEnv ->
-  Module (Malgo NewParse) ->
-  Eff es (Either (CallStack, RenameError) (Module (Malgo Rename), RnState))
-rename builtinEnv (Module modName (ParsedDefinitions ds)) = runError do
-  (ds', rnState) <- runState (RnState mempty Set.empty) $ runReader builtinEnv $ runReader modName $ rnDecls ds
-  pure (Module modName $ makeBindGroup ds', rnState)
-
--- renamer
 
 -- | Rename toplevel declarations
 rnDecls ::
