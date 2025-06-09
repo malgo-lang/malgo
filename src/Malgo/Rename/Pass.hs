@@ -319,7 +319,7 @@ rnStmts (With x Nothing e :| s : ss) = do
   e <- rnExpr e
   ss <- rnExpr (Fn x $ Clause x [] (Seq x $ s :| ss) :| [])
   pure $ NoBind x (Apply x e ss) :| []
-rnStmts (With x _ _ :| []) = errorOn x "`with` statement cannnot appear in the last line of the sequence expression."
+rnStmts (With x _ _ :| []) = errorOn x "`with` statement cannot appear in the last line of the sequence expression."
 
 -- | Convert infix declarations to a Map. Infix for an undefined identifier is an error.
 infixDecls :: (Reader RnEnv :> es, Error RenameError :> es) => [Decl (Malgo NewParse)] -> Eff es (Map RnId (Assoc, Int))
