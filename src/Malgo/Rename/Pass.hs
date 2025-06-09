@@ -332,7 +332,7 @@ infixDecls ds =
 -- Every OpApp in 'Malgo NewParsed' is treated as left associative.
 -- 'mkOpApp' transforms it to actual associativity.
 mkOpApp ::
-  (IOE :> es, Reader Flag :> es) =>
+  (IOE :> es, Reader Flag :> es, Error RenameError :> es) =>
   Range ->
   -- | Fixity of outer operator
   (Assoc, Int) ->
