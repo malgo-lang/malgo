@@ -13,7 +13,7 @@ def (*) = { (x, y) -> mulInt64(x, y) }
 
 def fact = { n -> factAcc({n, 1L}) }
 
-def factAcc = { {n, acc} -> if(n == 0L, { acc }, { factAcc(n - 1L, n * acc) }) }
+def factAcc = { {n, acc} -> if(n == 0L, { acc }, { factAcc({n - 1L, n * acc}) }) }
 
 def main = {
   fact(5L) |> toStringInt64 |> putStrLn

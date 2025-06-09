@@ -28,8 +28,10 @@
                                 (seq
                                    (do
                                       (apply
-                                         (apply factAcc (opapp - n (int64 1)))
-                                         (opapp * n acc))))))))))))))
+                                         factAcc
+                                         (tuple
+                                            (opapp - n (int64 1))
+                                            (opapp * n acc)))))))))))))))
       (def
          main
          (fn

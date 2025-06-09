@@ -258,17 +258,36 @@ pOpApp = makeExprParser pApply table
 -- | pApply parses an application.
 --
 -- > apply = project project* ;
+-- if c-style-apply is enabled:
+-- > apply = project
+-- >       | project "(" ")"
+-- >       | project "(" expr ("," expr)* ")" ;
 pApply :: (Features :> es) => Parser es (Expr (Malgo NewParse))
-pApply =
-  makeExprParser
-    pProject
-    [ [ Postfix $ manyUnaryOp do
-          start <- getSourcePos
-          argument <- pProject
-          end <- getSourcePos
-          pure \fn -> Apply (Range start end) fn argument
-      ]
-    ]
+pApply = do
+  cStyleApply <- lift $ hasFeature CStyleApply
+  if cStyleApply
+    then pCStyleApply
+    else
+      makeExprParser
+        pProject
+        [ [ Postfix $ manyUnaryOp do
+              start <- getSourcePos
+              argument <- pProject
+              end <- getSourcePos
+              pure \fn -> Apply (Range start end) fn argument
+          ]
+        ]
+  where
+    pCStyleApply = do
+      makeExprParser
+        pProject
+        [ [ Postfix $ manyUnaryOp do
+              start <- getSourcePos
+              args <- between (symbol "(") (symbol ")") (sepBy pExpr (symbol ","))
+              end <- getSourcePos
+              pure \fn -> foldl (Apply (Range start end)) fn args
+          ]
+        ]
 
 -- | pProject parses a projection.
 --

@@ -1,0 +1,94 @@
+(module
+   "test/testcases/malgo/CStyleApply.mlg"
+   ((((def
+         ==
+         (fn
+            ((clause
+                (#CStyleApply.x_xxx #CStyleApply.y_xxx)
+                (seq
+                   (do
+                      (apply
+                         (apply eqInt64 #CStyleApply.x_xxx)
+                         #CStyleApply.y_xxx))))))))
+       ((def
+           -
+           (fn
+              ((clause
+                  (#CStyleApply.x_xxx #CStyleApply.y_xxx)
+                  (seq
+                     (do
+                        (apply
+                           (apply subInt64 #CStyleApply.x_xxx)
+                           #CStyleApply.y_xxx))))))))
+       ((def
+           *
+           (fn
+              ((clause
+                  (#CStyleApply.x_xxx #CStyleApply.y_xxx)
+                  (seq
+                     (do
+                        (apply
+                           (apply mulInt64 #CStyleApply.x_xxx)
+                           #CStyleApply.y_xxx))))))))
+       ((def
+           factAcc
+           (fn
+              ((clause
+                  ((tuple #CStyleApply.n_xxx #CStyleApply.acc_xxx))
+                  (seq
+                     (do
+                        (apply
+                           (apply
+                              (apply
+                                 if
+                                 (opapp
+                                    ==
+                                    #CStyleApply.n_xxx
+                                    (apply Int64# (int64 0))))
+                              (fn ((clause () (seq (do #CStyleApply.acc_xxx))))))
+                           (fn
+                              ((clause
+                                  ()
+                                  (seq
+                                     (do
+                                        (apply
+                                           factAcc
+                                           (tuple
+                                              (opapp
+                                                 -
+                                                 #CStyleApply.n_xxx
+                                                 (apply Int64# (int64 1)))
+                                              (opapp
+                                                 *
+                                                 #CStyleApply.n_xxx
+                                                 #CStyleApply.acc_xxx))))))))))))))))
+       ((def
+           fact
+           (fn
+              ((clause
+                  (#CStyleApply.n_xxx)
+                  (seq
+                     (do
+                        (apply
+                           factAcc
+                           (tuple #CStyleApply.n_xxx (apply Int64# (int64 1)))))))))))
+       ((def
+           main
+           (fn
+              ((clause
+                  ()
+                  (seq
+                     (do
+                        (opapp
+                           |>
+                           (opapp
+                              |>
+                              (apply fact (apply Int64# (int64 5)))
+                              toStringInt64)
+                           putStrLn)))))))))
+      ()
+      ()
+      ()
+      ()
+      ((import "runtime/malgo/Builtin.mlg" all)
+         (import "runtime/malgo/Prelude.mlg" all))))
