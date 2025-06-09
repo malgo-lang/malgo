@@ -16,7 +16,8 @@ run = [
     "ghcup install cabal latest",
     "ghcup set cabal latest",
     "go install github.com/git-chglog/git-chglog/cmd/git-chglog@latest",
-    "cabal install hpack --ignore-project --overwrite-policy=always",
+    "cabal update",
+    "cabal install hpack --ignore-project --overwrite-policy=always"
 ]
 [tasks.setup-hls]
 description = "Setup HLS"
