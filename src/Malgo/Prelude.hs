@@ -86,7 +86,6 @@ module Malgo.Prelude
     HasRange (..),
     HasStart (..),
     HasEnd (..),
-    errorOn,
     warningOn,
 
     -- * Uniq
@@ -286,11 +285,6 @@ instance Pretty Range where
       <> pretty (unPos (sourceColumn end))
 
 makeFieldsNoPrefix ''Range
-
-errorOn :: (MonadIO m, Pretty a) => a -> Doc ann -> m b
-errorOn range x = do
-  liftIO $ hPutDoc stderr $ pretty range <> ": " <> x
-  liftIO exitFailure
 
 warningOn :: (MonadIO m, Pretty a) => a -> Doc ann -> m ()
 warningOn range x = do
