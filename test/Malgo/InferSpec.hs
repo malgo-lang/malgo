@@ -4,7 +4,7 @@ import Data.ByteString qualified as BS
 import Effectful.Error.Static (catchError)
 import Malgo.Infer
 import Malgo.Monad (runMalgoM)
-import Malgo.Parser (parse)
+import Malgo.Parser.Pass
 import Malgo.Pass
 import Malgo.Prelude
 import Malgo.Rename
@@ -34,10 +34,7 @@ driveInfer :: FilePath -> IO String
 driveInfer srcPath = do
   src <- convertString <$> BS.readFile srcPath
   runMalgoM flag $ runCompileError do
-    parsed <-
-      parse srcPath src >>= \case
-        Left err -> error $ show err
-        Right (_, parsed) -> pure parsed
+    parsed <- runPass ParserPass (srcPath, src)
     rnEnv <- genBuiltinRnEnv
     (renamed, _) <- runPass RenamePass (parsed, rnEnv)
     (typedAst, _, _) <- runPass InferPass (renamed, rnEnv)
@@ -47,10 +44,7 @@ driveErrorInfer :: FilePath -> IO String
 driveErrorInfer srcPath = do
   src <- convertString <$> BS.readFile srcPath
   runMalgoM flag $ runCompileError do
-    parsed <-
-      parse srcPath src >>= \case
-        Left err -> error $ show err
-        Right (_, parsed) -> pure parsed
+    parsed <- runPass ParserPass (srcPath, src)
     rnEnv <- genBuiltinRnEnv
     (renamed, _) <- runPass RenamePass (parsed, rnEnv)
     fmap show (runPass InferPass (renamed, rnEnv)) `catchError` \_ err -> pure $ show err

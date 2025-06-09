@@ -3,7 +3,7 @@ module Malgo.RenameSpec (spec) where
 import Data.ByteString qualified as BS
 import Effectful.Error.Static (catchError)
 import Malgo.Monad (runMalgoM)
-import Malgo.Parser (parse)
+import Malgo.Parser.Pass
 import Malgo.Pass (runCompileError, runPass)
 import Malgo.Prelude
 import Malgo.Rename
@@ -37,10 +37,7 @@ driveRename :: FilePath -> IO String
 driveRename srcPath = do
   src <- convertString <$> BS.readFile srcPath
   runMalgoM flag $ runCompileError do
-    parsed <-
-      parse srcPath src >>= \case
-        Left err -> error $ show err
-        Right (_, parsed) -> pure parsed
+    parsed <- runPass ParserPass (srcPath, src)
     rnEnv <- genBuiltinRnEnv
     (renamed, _) <- runPass RenamePass (parsed, rnEnv)
     pure $ pShowCompact renamed
@@ -49,10 +46,7 @@ driveErrorRename :: FilePath -> IO String
 driveErrorRename srcPath = do
   src <- convertString <$> BS.readFile srcPath
   runMalgoM flag $ runCompileError do
-    parsed <-
-      parse srcPath src >>= \case
-        Left err -> error $ show err
-        Right (_, parsed) -> pure parsed
+    parsed <- runPass ParserPass (srcPath, src)
     rnEnv <- genBuiltinRnEnv
     (runPass RenamePass (parsed, rnEnv) >> error "Expected error, but successfully renamed")
       `catchError` \_ err -> pure $ show err
@@ -61,10 +55,7 @@ driveRenameSExpr :: FilePath -> IO String
 driveRenameSExpr srcPath = do
   src <- convertString <$> BS.readFile srcPath
   runMalgoM flag $ runCompileError do
-    parsed <-
-      parse srcPath src >>= \case
-        Left err -> error $ show err
-        Right (_, parsed) -> pure parsed
+    parsed <- runPass ParserPass (srcPath, src)
     rnEnv <- genBuiltinRnEnv
     (renamed, _) <- runPass RenamePass (parsed, rnEnv)
     pure $ sShow renamed

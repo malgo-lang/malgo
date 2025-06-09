@@ -4,7 +4,7 @@ import Data.ByteString qualified as BS
 import Effectful.Reader.Static (runReader)
 import Malgo.Infer
 import Malgo.Monad (runMalgoM)
-import Malgo.Parser (parse)
+import Malgo.Parser.Pass
 import Malgo.Pass
 import Malgo.Prelude
 import Malgo.Refine
@@ -27,15 +27,7 @@ spec = parallel do
     setupPrelude
   testcases <- runIO do
     files <- listDirectory testcaseDir
-    let mlgFiles = filter (isExtensionOf "mlg") files
-    -- Filter out files that start with "-- backend: core"
-    -- These files are for the core backend and are not supported by the sequent backend
-    filterM
-      ( \file -> do
-          contents <- BS.readFile (testcaseDir </> file)
-          pure $ not $ "#backend core" `BS.isPrefixOf` contents
-      )
-      mlgFiles
+    pure $ filter (isExtensionOf "mlg") files
 
   golden "Builtin" (driveToCore builtinPath)
   golden "Builtin flat" (driveFlat builtinPath)
@@ -52,10 +44,7 @@ driveToCore :: FilePath -> IO String
 driveToCore srcPath = do
   src <- convertString <$> BS.readFile srcPath
   runMalgoM flag $ runCompileError do
-    parsed <-
-      parse srcPath src >>= \case
-        Left err -> error $ show err
-        Right (_, parsed) -> pure parsed
+    parsed <- runPass ParserPass (srcPath, src)
     rnEnv <- genBuiltinRnEnv
     (renamed, _) <- runPass RenamePass (parsed, rnEnv)
     (typed, tcEnv, _) <- runPass InferPass (renamed, rnEnv)
@@ -67,10 +56,7 @@ driveFlat :: FilePath -> IO String
 driveFlat srcPath = do
   src <- convertString <$> BS.readFile srcPath
   runMalgoM flag $ runCompileError do
-    parsed <-
-      parse srcPath src >>= \case
-        Left err -> error $ show err
-        Right (_, parsed) -> pure parsed
+    parsed <- runPass ParserPass (srcPath, src)
     rnEnv <- genBuiltinRnEnv
     (renamed, _) <- runPass RenamePass (parsed, rnEnv)
     (typed, tcEnv, _) <- runPass InferPass (renamed, rnEnv)
@@ -82,10 +68,7 @@ driveJoin :: FilePath -> IO String
 driveJoin srcPath = do
   src <- convertString <$> BS.readFile srcPath
   runMalgoM flag $ runCompileError do
-    parsed <-
-      parse srcPath src >>= \case
-        Left err -> error $ show err
-        Right (_, parsed) -> pure parsed
+    parsed <- runPass ParserPass (srcPath, src)
     rnEnv <- genBuiltinRnEnv
     (renamed, _) <- runPass RenamePass (parsed, rnEnv)
     (typed, tcEnv, _) <- runPass InferPass (renamed, rnEnv)

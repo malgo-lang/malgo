@@ -8,6 +8,7 @@ import Malgo.Infer
 import Malgo.Module
 import Malgo.Monad (runMalgoM)
 import Malgo.Parser (parse)
+import Malgo.Parser.Pass
 import Malgo.Pass (runCompileError, runPass)
 import Malgo.Prelude
 import Malgo.Refine
@@ -33,15 +34,7 @@ spec = parallel do
     pure (builtin, prelude)
   testcases <- runIO do
     files <- listDirectory testcaseDir
-    let mlgFiles = filter (isExtensionOf "mlg") files
-    -- Filter out files that start with "-- backend: core"
-    -- These files are for the core backend and are not supported by the sequent backend
-    filterM
-      ( \file -> do
-          contents <- BS.readFile (testcaseDir </> file)
-          pure $ not $ "#backend core" `BS.isPrefixOf` contents
-      )
-      mlgFiles
+    pure $ filter (isExtensionOf "mlg") files
 
   for_ testcases \testcase -> do
     golden (takeBaseName testcase) (driveEval builtin prelude (testcaseDir </> testcase))
@@ -50,10 +43,7 @@ setupBuiltin :: IO ArtifactPath
 setupBuiltin = do
   src <- convertString <$> BS.readFile builtinPath
   runMalgoM flag $ runCompileError do
-    parsed <-
-      parse builtinPath src >>= \case
-        Left err -> error $ show err
-        Right (_, parsed) -> pure parsed
+    parsed <- runPass ParserPass (builtinPath, src)
     rnEnv <- genBuiltinRnEnv
     (renamed, _) <- runPass RenamePass (parsed, rnEnv)
     (typed, tcEnv, _) <- runPass InferPass (renamed, rnEnv)
@@ -66,10 +56,7 @@ setupPrelude :: IO ArtifactPath
 setupPrelude = do
   src <- convertString <$> BS.readFile preludePath
   runMalgoM flag $ runCompileError do
-    parsed <-
-      parse preludePath src >>= \case
-        Left err -> error $ show err
-        Right (_, parsed) -> pure parsed
+    parsed <- runPass ParserPass (preludePath, src)
     rnEnv <- genBuiltinRnEnv
     (renamed, _) <- runPass RenamePass (parsed, rnEnv)
     (typed, tcEnv, _) <- runPass InferPass (renamed, rnEnv)
@@ -85,7 +72,7 @@ driveEval builtinName preludeName srcPath = do
     parsed <-
       parse srcPath src >>= \case
         Left err -> error $ show err
-        Right (_, parsed) -> pure parsed
+        Right parsed -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
     (renamed, _) <- runPass RenamePass (parsed, rnEnv)
     (typed, tcEnv, _) <- runPass InferPass (renamed, rnEnv)

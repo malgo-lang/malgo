@@ -35,7 +35,7 @@ driveParse srcPath = do
     parsed <- parse srcPath src
     case parsed of
       Left err -> error $ errorBundlePretty err
-      Right (_, parsed) ->
+      Right parsed ->
         pure $ pShowCompact parsed
 
 driveParseSExpr :: FilePath -> IO String
@@ -45,7 +45,7 @@ driveParseSExpr srcPath = do
     parsed <- parse srcPath src
     case parsed of
       Left err -> error $ errorBundlePretty err
-      Right (_, parsed) ->
+      Right parsed ->
         pure $ sShow parsed
 
 driveErrorParse :: FilePath -> IO String
@@ -55,4 +55,4 @@ driveErrorParse srcPath = do
     parsed <- parse srcPath src
     case parsed of
       Left err -> pure $ errorBundlePretty err
-      Right _ -> error $ "Expected error, but successfully parsed"
+      Right _ -> error "Expected error, but successfully parsed"
