@@ -7,9 +7,11 @@ import Data.List.NonEmpty qualified as NonEmpty
 import Data.Map.Strict qualified as Map
 import Effectful
 import Effectful.Reader.Static
+import Effectful.Error.Static (Error, throwError)
 import Malgo.Infer as T
 import Malgo.Pass
 import Malgo.Prelude
+import Malgo.Refine.Error
 import Malgo.Refine.RefineEnv
 import Malgo.Refine.Space qualified as Space
 import Malgo.Syntax hiding (TyArr, Type)
@@ -22,16 +24,16 @@ data RefinePass = RefinePass
 instance Pass RefinePass where
   type Input RefinePass = (Module (Malgo Infer), TcEnv)
   type Output RefinePass = Module (Malgo Refine)
-  type ErrorType RefinePass = Void
-  type Effects RefinePass es = (IOE :> es, Reader Flag :> es)
+  type ErrorType RefinePass = RefineError
+  type Effects RefinePass es = (IOE :> es, Reader Flag :> es, Error RefineError :> es)
   runPassImpl _ (Module {..}, tcEnv) = do
     Module moduleName <$> runReader (buildRefineEnv tcEnv) (refineBindGroup moduleDefinition)
 
-refine :: (IOE :> es, Reader Flag :> es) => TcEnv -> Module (Malgo Infer) -> Eff es (Module (Malgo Refine))
+refine :: (IOE :> es, Reader Flag :> es, Error RefineError :> es) => TcEnv -> Module (Malgo Infer) -> Eff es (Module (Malgo Refine))
 refine tcEnv Module {..} = do
   Module moduleName <$> runReader (buildRefineEnv tcEnv) (refineBindGroup moduleDefinition)
 
-refineBindGroup :: (Reader RefineEnv :> es, IOE :> es, Reader Flag :> es) => BindGroup (Malgo Infer) -> Eff es (BindGroup (Malgo Refine))
+refineBindGroup :: (Reader RefineEnv :> es, IOE :> es, Reader Flag :> es, Error RefineError :> es) => BindGroup (Malgo Infer) -> Eff es (BindGroup (Malgo Refine))
 refineBindGroup BindGroup {..} = do
   _scDefs <- traverse (traverse refineScDef) _scDefs
   _scSigs <- traverse refineScSig _scSigs
@@ -41,10 +43,10 @@ refineBindGroup BindGroup {..} = do
   _imports <- traverse refineImport _imports
   pure BindGroup {..}
 
-refineScDef :: (Reader RefineEnv :> es, IOE :> es, Reader Flag :> es) => ScDef (Malgo Infer) -> Eff es (ScDef (Malgo Refine))
+refineScDef :: (Reader RefineEnv :> es, IOE :> es, Reader Flag :> es, Error RefineError :> es) => ScDef (Malgo Infer) -> Eff es (ScDef (Malgo Refine))
 refineScDef (x, name, expr) = (x,name,) <$> refineExpr expr
 
-refineExpr :: (Reader RefineEnv :> es, IOE :> es, Reader Flag :> es) => Expr (Malgo Infer) -> Eff es (Expr (Malgo Refine))
+refineExpr :: (Reader RefineEnv :> es, IOE :> es, Reader Flag :> es, Error RefineError :> es) => Expr (Malgo Infer) -> Eff es (Expr (Malgo Refine))
 refineExpr (Var x v) = do
   vScheme <- asks @RefineEnv ((.signatureMap) >>> Map.lookup v)
   case vScheme of
@@ -54,7 +56,7 @@ refineExpr (Var x v) = do
       checkValidInstantiation originalType instantiatedType
   pure $ Var x v
   where
-    checkValidInstantiation (T.TyVar v) (TyPrim p) = errorOn x.value $ "Invalid instantiation:" <+> "'" <> pretty v <> "'" <+> "can't be instantiated with" <+> pretty p
+    checkValidInstantiation (T.TyVar v) (TyPrim p) = throwError $ InvalidInstantiation x.value v (TyPrim p)
     checkValidInstantiation (T.TyVar _) _ = pass
     checkValidInstantiation (T.TyApp t1 t2) (T.TyApp t1' t2') = checkValidInstantiation t1 t1' >> checkValidInstantiation t2 t2'
     checkValidInstantiation (T.TyArr t1 t2) (T.TyArr t1' t2') = checkValidInstantiation t1 t1' >> checkValidInstantiation t2 t2'
@@ -62,7 +64,7 @@ refineExpr (Var x v) = do
     checkValidInstantiation TyPtr TyPtr = pass
     checkValidInstantiation t1 t2
       | t1 == t2 = pass
-      | otherwise = errorOn x.value $ "Type mismatch:" <+> pretty t1 <+> "and" <+> pretty t2 <+> "are not the same"
+      | otherwise = throwError $ TypeMismatch x.value t1 t2
 refineExpr (Unboxed x u) = pure $ Unboxed x u
 refineExpr (Apply x e1 e2) = Apply x <$> refineExpr e1 <*> refineExpr e2
 refineExpr (OpApp x op e1 e2) = do
@@ -80,10 +82,8 @@ refineExpr (Fn x cs) = do
   let patSpaces = map (Space.normalize . Space.buildUnion) $ transpose $ NonEmpty.toList $ fmap (clauseSpace env) cs'
   exhaustive <- fmap Space.normalize <$> zipWithM Space.subtract typeSpaces patSpaces
   isEmptys <- traverse Space.equalEmpty exhaustive
-  when (any not isEmptys)
-    $ errorOn x.value
-    $ "Pattern is not exhaustive:"
-    <+> pretty exhaustive
+  when (any not isEmptys) $
+    throwError $ NonExhaustivePatterns x.value exhaustive
   pure $ Fn x cs'
   where
     clauseSpace env (Clause _ ps _) = map (Space.space env) ps
@@ -91,10 +91,10 @@ refineExpr (Tuple x es) = Tuple x <$> traverse refineExpr es
 refineExpr (Record x kvs) = Record x <$> traverse (\(k, v) -> (k,) <$> refineExpr v) kvs
 refineExpr (Seq x ss) = Seq x <$> traverse refineStmt ss
 
-refineClause :: (Reader RefineEnv :> es, IOE :> es, Reader Flag :> es) => Clause (Malgo Infer) -> Eff es (Clause (Malgo Refine))
+refineClause :: (Reader RefineEnv :> es, IOE :> es, Reader Flag :> es, Error RefineError :> es) => Clause (Malgo Infer) -> Eff es (Clause (Malgo Refine))
 refineClause (Clause x ps e) = Clause x <$> traverse refinePat ps <*> refineExpr e
 
-refineStmt :: (Reader RefineEnv :> es, IOE :> es, Reader Flag :> es) => Stmt (Malgo Infer) -> Eff es (Stmt (Malgo Refine))
+refineStmt :: (Reader RefineEnv :> es, IOE :> es, Reader Flag :> es, Error RefineError :> es) => Stmt (Malgo Infer) -> Eff es (Stmt (Malgo Refine))
 refineStmt (Let x v e) = Let x v <$> refineExpr e
 refineStmt (NoBind x e) = NoBind x <$> refineExpr e
 

@@ -28,7 +28,7 @@ import Malgo.Id
 import Malgo.Module
 import Malgo.Prelude hiding (throwError)
 import Malgo.Syntax.Extension
-import Prettyprinter (squotes, vsep, (<+>))
+import Prettyprinter (squotes, vsep, nest, brackets, (<+>))
 
 data RenameError
   = NoSuchNameInScope Range PsId [Resolved]
@@ -37,6 +37,11 @@ data RenameError
   | NotInModule Range PsId ModuleName
   | DuplicateName Range PsId
   | DuplicateNames Range [PsId]
+  | MissingInfixDecl Range PsId
+  | IllegalStringLiteralPattern Range
+  | NonTerminalWith Range
+  | PrecedenceParsingError Range RnId (Assoc, Int) RnId (Assoc, Int)
+  | DuplicatePatternVariables Range
 
 instance Pretty RenameError where
   pretty (NoSuchNameInScope range name names) =
@@ -82,6 +87,40 @@ instance Pretty RenameError where
       [ pretty range <> ":",
         "Duplicate names:"
           <+> pretty names
+      ]
+  pretty (MissingInfixDecl range op) =
+    vsep
+      [ pretty range <> ":",
+        "No infix declaration:" <+> squotes (pretty op)
+      ]
+  pretty (IllegalStringLiteralPattern range) =
+    vsep
+      [ pretty range <> ":",
+        "String literal pattern is not supported"
+      ]
+  pretty (NonTerminalWith range) =
+    vsep
+      [ pretty range <> ":",
+        "`with` statement cannnot appear in the last line of the sequence expression."
+      ]
+  pretty (PrecedenceParsingError range op1 fix1 op2 fix2) =
+    vsep
+      [ pretty range <> ":",
+        "Precedence parsing error:",
+        nest 2 (
+          "cannot mix"
+            <+> squotes (pretty op1)
+            <+> brackets (pretty fix1)
+            <+> "and"
+            <+> squotes (pretty op2)
+            <+> brackets (pretty fix2)
+            <+> "in the same infix expression"
+        )
+      ]
+  pretty (DuplicatePatternVariables range) =
+    vsep
+      [ pretty range <> ":",
+        "Same variables occurs in a pattern"
       ]
 
 instance Show RenameError where

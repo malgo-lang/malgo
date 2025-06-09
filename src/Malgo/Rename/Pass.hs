@@ -20,7 +20,6 @@ import Malgo.Rename.RnEnv
 import Malgo.Rename.RnState as RnState
 import Malgo.Syntax
 import Malgo.Syntax.Extension
-import Prettyprinter (brackets, nest, squotes, vsep, (<+>))
 
 data RenamePass = RenamePass
 
@@ -171,7 +170,7 @@ rnExpr (OpApp pos op e1 e2) = do
   mfixity <- Map.lookup op' <$> gets @RnState (.infixInfo)
   case mfixity of
     Just fixity -> mkOpApp pos fixity op' e1' e2'
-    Nothing -> errorOn pos $ "No infix declaration:" <+> squotes (pretty op)
+    Nothing -> throwError $ MissingInfixDecl pos op
 rnExpr (Project pos (Var _ name) field) = do
   moduleNames <- asks @RnEnv (.moduleNames)
   if ModuleName name `Set.member` moduleNames
@@ -235,8 +234,7 @@ rnClause (Clause pos ps e) = do
   ps <- traverse resolveConP ps
   let vars = concatMap patVars ps
   -- パターンが束縛する変数に重複がないことを確認する
-  -- TODO: throwError に置き換える
-  when (anySame $ filter (/= "_") vars) $ errorOn pos "Same variables occurs in a pattern"
+  when (anySame $ filter (/= "_") vars) $ throwError $ DuplicatePatternVariables pos
   vm <- zip vars . map (Qualified Implicit) <$> traverse resolveName vars
   local (insertVarIdent vm) $ Clause pos <$> traverse rnPat ps <*> rnExpr e
   where
@@ -277,8 +275,8 @@ rnPat (ListP pos xs) = buildListP <$> lookupVarName pos "Nil" <*> lookupVarName 
   where
     buildListP nilName _ [] = ConP pos nilName []
     buildListP nilName consName (x : xs) = ConP pos consName [x, buildListP nilName consName xs]
-rnPat (UnboxedP pos (String _)) = errorOn pos "String literal pattern is not supported"
-rnPat (BoxedP pos (String _)) = errorOn pos "String literal pattern is not supported"
+rnPat (UnboxedP pos (String _)) = throwError $ IllegalStringLiteralPattern pos
+rnPat (BoxedP pos (String _)) = throwError $ IllegalStringLiteralPattern pos
 rnPat (UnboxedP pos x) = pure $ UnboxedP pos x
 rnPat (BoxedP pos x) = ConP pos <$> lookupBox pos x <*> pure [UnboxedP pos (coerce x)]
 
@@ -319,7 +317,7 @@ rnStmts (With x Nothing e :| s : ss) = do
   e <- rnExpr e
   ss <- rnExpr (Fn x $ Clause x [] (Seq x $ s :| ss) :| [])
   pure $ NoBind x (Apply x e ss) :| []
-rnStmts (With x _ _ :| []) = errorOn x "`with` statement cannnot appear in the last line of the sequence expression."
+rnStmts (With x _ _ :| []) = throwError $ NonTerminalWith x
 
 -- | Convert infix declarations to a Map. Infix for an undefined identifier is an error.
 infixDecls :: (Reader RnEnv :> es, Error RenameError :> es) => [Decl (Malgo NewParse)] -> Eff es (Map RnId (Assoc, Int))
@@ -348,20 +346,7 @@ mkOpApp ::
 -- (e11 op1 e12) op2 e2
 mkOpApp pos2 fix2 op2 (OpApp (pos1, fix1) op1 e11 e12) e2
   | nofix_error =
-      errorOn pos1
-        $ vsep
-          [ "Precedence parsing error:",
-            nest
-              2
-              ( "cannot mix"
-                  <+> squotes (pretty op1)
-                  <+> brackets (pretty fix1)
-                  <+> "and"
-                  <+> squotes (pretty op2)
-                  <+> brackets (pretty fix2)
-                  <+> "in the same infix expression"
-              )
-          ]
+      throwError $ PrecedenceParsingError pos1 op1 fix1 op2 fix2
   | associate_right = do
       e' <- mkOpApp pos2 fix2 op2 e12 e2
       pure $ OpApp (pos1, fix1) op1 e11 e'
