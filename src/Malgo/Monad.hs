@@ -3,6 +3,7 @@ module Malgo.Monad (Flag (..), runMalgoM) where
 import Effectful (Eff, IOE, runEff)
 import Effectful.Reader.Static (Reader, runReader)
 import Effectful.State.Static.Local
+import Malgo.Features
 import Malgo.Interface (Interface)
 import Malgo.Module
 import Malgo.Prelude
@@ -13,6 +14,7 @@ runMalgoM ::
     '[ Reader Flag,
        State Uniq,
        State (Map ModuleName Interface),
+       Features,
        State Pragma,
        Workspace,
        IOE
@@ -23,4 +25,5 @@ runMalgoM flag e = runEff $ runWorkspaceOnPwd do
   runReader flag e
     & evalState (Uniq 0)
     & evalState @(Map ModuleName Interface) mempty
+    & runFeatures mempty
     & evalState @Pragma mempty

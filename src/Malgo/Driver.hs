@@ -9,6 +9,7 @@ import Effectful
 import Effectful.Error.Static (Error)
 import Effectful.Reader.Static
 import Effectful.State.Static.Local
+import Malgo.Features
 import Malgo.Infer
 import Malgo.Interface (Interface, buildInterface)
 import Malgo.Module
@@ -139,7 +140,8 @@ compile ::
     IOE :> es,
     State (Map ModuleName Interface) :> es,
     State Uniq :> es,
-    Workspace :> es
+    Workspace :> es,
+    Features :> es
   ) =>
   FilePath ->
   Eff es ()
@@ -149,7 +151,7 @@ compile srcPath = do
   srcModulePath <- parseArtifactPath pwd srcPath
   src <- load srcModulePath ".mlg"
   runCompileError do
-    (_, parsedAst) <- runPass ParserPass (srcPath, convertString @BS.ByteString src)
+    parsedAst <- runPass ParserPass (srcPath, convertString @BS.ByteString src)
     when flags.debugMode do
       hPutStrLn stderr "=== PARSE ==="
       hPrint stderr $ pretty parsedAst

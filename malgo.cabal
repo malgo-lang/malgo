@@ -23,6 +23,7 @@ source-repository head
 library
   exposed-modules:
       Malgo.Driver
+      Malgo.Features
       Malgo.Id
       Malgo.Infer
       Malgo.Infer.Error
@@ -177,6 +178,7 @@ test-suite malgo-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      Malgo.FeaturesSpec
       Malgo.InferSpec
       Malgo.ParserSpec
       Malgo.RefineSpec
