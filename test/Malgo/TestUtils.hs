@@ -12,7 +12,7 @@ module Malgo.TestUtils
   )
 where
 
-import Data.Text.Lazy as TL hiding (foldr1, words)
+import Data.Text.Lazy as TL hiding (foldr1, words, show)
 import GHC.Stack (CallStack, prettyCallStack)
 import Malgo.Driver qualified as Driver
 import Malgo.Monad
