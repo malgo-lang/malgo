@@ -78,7 +78,7 @@ import Malgo.SExpr (ToSExpr (..))
 import Malgo.SExpr qualified as S
 
 -- | Phase and type instance
-data MalgoPhase = Parse | Rename | Infer | Refine | NewParse
+data MalgoPhase = Parse | Rename | Closure | Infer | Refine | NewParse
 
 data Malgo (p :: MalgoPhase)
 
@@ -86,6 +86,7 @@ data Malgo (p :: MalgoPhase)
 type family MalgoId (p :: MalgoPhase) where
   MalgoId 'Parse = Text
   MalgoId 'Rename = Id
+  MalgoId 'Closure = Id
   MalgoId 'Infer = Id
   MalgoId 'Refine = Id
   MalgoId 'NewParse = Text
@@ -151,6 +152,8 @@ type family SimpleX (x :: MalgoPhase)
 type instance SimpleX 'Parse = Range
 
 type instance SimpleX 'Rename = SimpleX 'Parse
+
+type instance SimpleX 'Closure = SimpleX 'Rename
 
 -- type instance for Infer is defined in Malgo.Infer.TypeRep
 
