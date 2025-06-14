@@ -4,7 +4,7 @@ import Data.ByteString qualified as BS
 import Effectful.Error.Static (catchError)
 import Malgo.Monad (runMalgoM)
 import Malgo.Parser.Pass
-import Malgo.Pass (runCompileError, runPass)
+import Malgo.Pass
 import Malgo.Prelude
 import Malgo.Rename
 import Malgo.SExpr (sShow)
@@ -48,8 +48,8 @@ driveErrorRename srcPath = do
   runMalgoM flag $ runCompileError do
     parsed <- runPass ParserPass (srcPath, src)
     rnEnv <- genBuiltinRnEnv
-    (runPass RenamePass (parsed, rnEnv) >> error "Expected error, but successfully renamed")
-      `catchError` \_ err -> pure $ show err
+    fmap show (runPass RenamePass (parsed, rnEnv))
+      `catchError` \_ CompileError {compileError} -> pure $ show compileError
 
 driveRenameSExpr :: FilePath -> IO String
 driveRenameSExpr srcPath = do

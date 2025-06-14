@@ -47,4 +47,4 @@ driveErrorInfer srcPath = do
     parsed <- runPass ParserPass (srcPath, src)
     rnEnv <- genBuiltinRnEnv
     (renamed, _) <- runPass RenamePass (parsed, rnEnv)
-    fmap show (runPass InferPass (renamed, rnEnv)) `catchError` \_ err -> pure $ show err
+    fmap show (runPass InferPass (renamed, rnEnv)) `catchError` \_ CompileError {compileError} -> pure $ show compileError

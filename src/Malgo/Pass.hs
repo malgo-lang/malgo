@@ -1,6 +1,6 @@
 -- | Malgo.Pass provides a pass management system for the Malgo compiler.
 -- It allows for the registration and execution of various compiler passes, such as renaming, type inference, and refinement in a modular way.
-module Malgo.Pass (Pass (..), CompileError, runCompileError) where
+module Malgo.Pass (Pass (..), CompileError (..), runCompileError) where
 
 import Effectful
 import Effectful.Error.Static (CallStack, Error, prettyCallStack, runError, runErrorNoCallStackWith, throwError)
