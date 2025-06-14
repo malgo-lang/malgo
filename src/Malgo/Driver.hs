@@ -18,6 +18,7 @@ import Malgo.Pass (CompileError, Pass (..), runCompileError)
 import Malgo.Prelude
 import Malgo.Refine
 import Malgo.Rename
+import Malgo.Closure (ClosurePass (..))
 import Malgo.Sequent.Core (Join)
 import Malgo.Sequent.Core qualified as Sequent
 import Malgo.Sequent.Core.Flat (FlatPass (..))
@@ -70,8 +71,10 @@ compileToCore srcPath parsedAst = do
   rnEnv <- genBuiltinRnEnv
   (renamedAst, rnState) <- withDump flags.debugMode "=== RENAME ===" do
     runPass RenamePass (parsedAst, rnEnv)
+  closedAst <- withDump flags.debugMode "=== CLOSURE ===" do
+    runPass ClosurePass renamedAst
   (typedAst, tcEnv, kindCtx) <- withDump flags.debugMode "=== TYPE CHECK ===" do
-    runPass InferPass (renamedAst, rnEnv)
+    runPass InferPass (closedAst, rnEnv)
   refinedAst <- withDump flags.debugMode "=== REFINE ===" do
     runPass RefinePass (typedAst, tcEnv)
 

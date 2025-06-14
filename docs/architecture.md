@@ -32,9 +32,9 @@ Malgo’s source tree is organized by compiler phases and core abstractions:
 ```
 source file
    ↓
-ParserPass → RenamePass → InferPass → RefinePass
-   ↓           ↓             ↓           ↓
- AST    →  Renamed AST  → Typed AST → Refined AST
+ParserPass → RenamePass → ClosurePass → InferPass → RefinePass
+   ↓           ↓            ↓             ↓           ↓           ↓
+ AST    →  Renamed AST  → Closed AST → Typed AST → Refined AST
    ↓
 ToFunPass → ToCorePass → FlatPass → JoinPass
    ↓           ↓           ↓         ↓
@@ -57,15 +57,19 @@ EvalPass (Interpreter)
 
    - Resolves names, desugars, produces `Module (Malgo Rename)`.
 
-3. **Type Inference** (`InferPass`):
+3. **Closure Conversion** (`ClosurePass`):
+
+   - (Placeholder) converts functions to closures, produces `Module (Malgo Closure)`.
+
+4. **Type Inference** (`InferPass`):
 
    - Infers types/kinds, annotates AST, produces `Module (Malgo Infer)`.
 
-4. **Refinement** (`RefinePass`):
+5. **Refinement** (`RefinePass`):
 
    - Cleans up AST, removes syntactic sugar, produces `Module (Malgo Refine)`.
 
-5. **IR Lowering**:
+6. **IR Lowering**:
 
    - **ToFunPass**: Lowers refined AST to a functional IR (`Sequent.Fun.Program`).
    - **ToCorePass**: Converts Fun IR to a sequent-style Core IR (`Sequent.Core.Program Full`).
@@ -184,6 +188,9 @@ ParserPass
   │
   ▼
 RenamePass
+  │
+  ▼
+ClosurePass
   │
   ▼
 InferPass

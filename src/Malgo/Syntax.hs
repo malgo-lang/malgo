@@ -393,6 +393,8 @@ type instance XModule (Malgo 'NewParse) = ParsedDefinitions (Malgo NewParse)
 
 type instance XModule (Malgo 'Rename) = BindGroup (Malgo 'Rename)
 
+type instance XModule (Malgo 'Closure) = BindGroup (Malgo 'Closure)
+
 type instance XModule (Malgo 'Infer) = BindGroup (Malgo 'Infer)
 
 type instance XModule (Malgo 'Refine) = BindGroup (Malgo 'Refine)
