@@ -11,7 +11,7 @@ import Malgo.SExpr (sShow)
 import Malgo.Sequent.Core.Flat (flatProgram)
 import Malgo.Sequent.Core.Join (joinProgram)
 import Malgo.Sequent.ToCore (toCore)
-import Malgo.Sequent.ToFun2 (toFun)
+import Malgo.Sequent.ToFun (toFun)
 import Malgo.Syntax (Module (..))
 import Malgo.TestUtils
 import System.Directory

@@ -16,7 +16,6 @@ import Malgo.Module
 import Malgo.Parser.Pass (ParserPass (..))
 import Malgo.Pass (CompileError, Pass (..), runCompileError)
 import Malgo.Prelude
-import Malgo.Refine
 import Malgo.Rename
 import Malgo.Sequent.Core (Join)
 import Malgo.Sequent.Core qualified as Sequent
@@ -70,15 +69,13 @@ compileToCore srcPath parsedAst = do
   rnEnv <- genBuiltinRnEnv
   (renamedAst, rnState) <- withDump flags.debugMode "=== RENAME ===" do
     runPass RenamePass (parsedAst, rnEnv)
-  (typedAst, tcEnv, kindCtx) <- withDump flags.debugMode "=== TYPE CHECK ===" do
+  (_, tcEnv, kindCtx) <- withDump flags.debugMode "=== TYPE CHECK ===" do
     runPass InferPass (renamedAst, rnEnv)
-  refinedAst <- withDump flags.debugMode "=== REFINE ===" do
-    runPass RefinePass (typedAst, tcEnv)
 
   let inf = buildInterface moduleName rnState tcEnv kindCtx
   save srcPath ".mlgi" (ViaStore inf)
 
-  generateSequent srcPath rnState refinedAst
+  generateSequent srcPath rnState renamedAst
 
 generateSequent ::
   ( IOE :> es,
@@ -88,7 +85,7 @@ generateSequent ::
   ) =>
   ArtifactPath ->
   RnState ->
-  Syntax.Module (Malgo Refine) ->
+  Syntax.Module (Malgo Rename) ->
   Eff es (Sequent.Program Join)
 generateSequent srcPath rnState Syntax.Module {..} = do
   program <- runReader moduleName do
