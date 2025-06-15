@@ -11,13 +11,13 @@
            (fn
               ((clause ((con Nil ())) (seq (do Nothing)))
                  (clause
-                    ((con Cons ()) #Null.p_xxx #Null.__xxx)
+                    ((con Cons (#Null.p_xxx #Null.__xxx)))
                     (seq (do (apply Just #Null.p_xxx))))))))
        ((def
            isNothing
            (fn
               ((clause ((con Nothing ())) (seq (do True)))
-                 (clause ((con Just ()) #Null.__xxx) (seq (do False)))))))
+                 (clause ((con Just (#Null.__xxx))) (seq (do False)))))))
        ((def
            null
            (fn

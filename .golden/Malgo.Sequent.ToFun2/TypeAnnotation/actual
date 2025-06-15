@@ -1,0 +1,15 @@
+(program
+   ((main
+       (select
+          (tuple ())
+          (((tuple ())
+              (apply
+                 (invoke printString)
+                 ((apply
+                     (lambda
+                        ($TypeAnnotation.param_xxx)
+                        (select
+                           $TypeAnnotation.param_xxx
+                           ((#TypeAnnotation.x_xxx #TypeAnnotation.x_xxx))))
+                     ((apply (invoke String#) ("hoge")))))))))))
+   ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

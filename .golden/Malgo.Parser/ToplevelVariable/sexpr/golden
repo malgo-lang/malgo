@@ -11,7 +11,7 @@
          (apply
             (fn
                ((clause (Nothing) (seq (do Nothing)))
-                  (clause (Just x) (seq (do Nothing)))))
+                  (clause ((con Just (x))) (seq (do Nothing)))))
             (seq (do (apply Just (tuple))))))
       (def
          main
@@ -25,7 +25,7 @@
                             ((clause
                                 (Nothing)
                                 (seq (do (apply printString (string "OK")))))
-                               (clause (Just _) (seq (do (tuple))))))
+                               (clause ((con Just (_))) (seq (do (tuple))))))
                          comp))
                    (do
                       (apply

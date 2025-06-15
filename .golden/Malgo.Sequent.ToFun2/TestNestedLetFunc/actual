@@ -1,0 +1,23 @@
+(program
+   ((main
+       (select
+          (tuple ())
+          (((tuple ())
+              (let
+                 #TestNestedLetFunc.f_xxx
+                 (select
+                    (tuple ())
+                    (((tuple ())
+                        (apply
+                           (lambda
+                              ($TestNestedLetFunc.param_xxx)
+                              (select
+                                 $TestNestedLetFunc.param_xxx
+                                 ((#TestNestedLetFunc.a_xxx (tuple ())))))
+                           ((tuple ()))))))
+                 (apply (invoke malgo_print_string) ("PASS")))))))
+      (malgo_print_string
+         (lambda
+            ($TestNestedLetFunc.primitive_xxx)
+            (primitive malgo_print_string ($TestNestedLetFunc.primitive_xxx)))))
+   ())

@@ -22,7 +22,7 @@
            putStr
            (fn
               ((clause
-                  ((con String# ()) #ShowSimple.x_xxx)
+                  ((con String# (#ShowSimple.x_xxx)))
                   (seq (do (apply malgo_print_string #ShowSimple.x_xxx))))))))
        ((def
            main
@@ -44,8 +44,9 @@
                                                 wrap
                                                 (fn
                                                    ((clause
-                                                       ((con Int32# ())
-                                                          #ShowSimple.x_xxx)
+                                                       ((con
+                                                           Int32#
+                                                           (#ShowSimple.x_xxx)))
                                                        (seq
                                                           (do
                                                              (apply

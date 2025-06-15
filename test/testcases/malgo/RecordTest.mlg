@@ -9,7 +9,7 @@ type C a = { x: a, y: a }
 
 def f = { { a = a, b = _ } -> a }
 
-def g = { B { a = a, b = _ } -> a }
+def g = { (B { a = a, b = _ }) -> a }
 
 def main = {
   let x = { a = 32, b = 10 };

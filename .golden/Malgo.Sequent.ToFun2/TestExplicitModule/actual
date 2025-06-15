@@ -1,0 +1,9 @@
+(program
+   ((main
+       (select
+          (tuple ())
+          (((tuple ())
+              (apply
+                 (invoke putStrLn)
+                 ((apply (invoke String#) ("Hello, world")))))))))
+   ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

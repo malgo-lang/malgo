@@ -5,7 +5,7 @@
            show
            (fn
               ((clause
-                  ((con Symbol ()) #Punctuate.str_xxx)
+                  ((con Symbol (#Punctuate.str_xxx)))
                   (seq
                      (do
                         (opapp
@@ -13,7 +13,7 @@
                            (apply String# (string "Symbol "))
                            #Punctuate.str_xxx))))
                  (clause
-                    ((con SInt ()) #Punctuate.int_xxx)
+                    ((con SInt (#Punctuate.int_xxx)))
                     (seq
                        (do
                           (opapp
@@ -21,7 +21,7 @@
                              (apply String# (string "SInt "))
                              (apply toStringInt32 #Punctuate.int_xxx)))))
                  (clause
-                    ((con SList ()) #Punctuate.ss_xxx)
+                    ((con SList (#Punctuate.ss_xxx)))
                     (seq
                        (do
                           (opapp

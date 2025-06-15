@@ -1,0 +1,35 @@
+(program
+   ((if
+       (lambda
+          ($Test1.param_xxx)
+          (lambda
+             ($Test1.param_xxx)
+             (lambda
+                ($Test1.param_xxx)
+                (select
+                   (tuple ($Test1.param_xxx $Test1.param_xxx $Test1.param_xxx))
+                   (((tuple ((True ()) #Test1.t_xxx #Test1.__xxx))
+                       (apply #Test1.t_xxx ((tuple ()))))
+                      ((tuple ((False ()) #Test1.__xxx #Test1.f_xxx))
+                         (apply #Test1.f_xxx ((tuple ()))))))))))
+      (main
+         (select
+            (tuple ())
+            (((tuple ())
+                (apply
+                   (apply
+                      (apply (invoke if) ((invoke True)))
+                      ((select
+                          (tuple ())
+                          (((tuple ())
+                              (apply (invoke malgo_print_string) ("True")))))))
+                   ((select
+                       (tuple ())
+                       (((tuple ()) (apply (invoke malgo_print_string) ("False")))))))))))
+      (True (True ()))
+      (False (False ()))
+      (malgo_print_string
+         (lambda
+            ($Test1.primitive_xxx)
+            (primitive malgo_print_string ($Test1.primitive_xxx)))))
+   ())

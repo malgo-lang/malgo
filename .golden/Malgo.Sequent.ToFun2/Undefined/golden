@@ -1,0 +1,20 @@
+(program
+   ((g
+       (lambda
+          ($Undefined.param_xxx)
+          (select $Undefined.param_xxx ((#Undefined.x_xxx (invoke undefined))))))
+      (main
+         (select
+            (tuple ())
+            (((tuple ())
+                (let
+                   #Undefined.x_xxx
+                   (invoke undefined)
+                   (let
+                      #Undefined.y_xxx
+                      (apply (invoke g) (#Undefined.x_xxx))
+                      (apply
+                         (invoke printString)
+                         ((apply (invoke String#) ("OK"))))))))))
+      (f (invoke undefined)))
+   ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

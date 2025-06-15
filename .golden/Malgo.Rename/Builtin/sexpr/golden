@@ -11,7 +11,7 @@
            toStringInt64
            (fn
               ((clause
-                  ((con Int64# ()) #Builtin.x_xxx)
+                  ((con Int64# (#Builtin.x_xxx)))
                   (seq
                      (do
                         (apply
@@ -27,7 +27,7 @@
            toStringInt32
            (fn
               ((clause
-                  ((con Int32# ()) #Builtin.x_xxx)
+                  ((con Int32# (#Builtin.x_xxx)))
                   (seq
                      (do
                         (apply
@@ -43,7 +43,7 @@
            toStringFloat
            (fn
               ((clause
-                  ((con Float# ()) #Builtin.x_xxx)
+                  ((con Float# (#Builtin.x_xxx)))
                   (seq
                      (do
                         (apply
@@ -59,7 +59,7 @@
            toStringDouble
            (fn
               ((clause
-                  ((con Double# ()) #Builtin.x_xxx)
+                  ((con Double# (#Builtin.x_xxx)))
                   (seq
                      (do
                         (apply
@@ -75,7 +75,7 @@
            toStringChar
            (fn
               ((clause
-                  ((con Char# ()) #Builtin.x_xxx)
+                  ((con Char# (#Builtin.x_xxx)))
                   (seq
                      (do
                         (apply
@@ -219,7 +219,7 @@
            sqrtFloat
            (fn
               ((clause
-                  ((con Float# ()) #Builtin.x_xxx)
+                  ((con Float# (#Builtin.x_xxx)))
                   (seq
                      (do
                         (apply
@@ -232,7 +232,7 @@
            sqrtDouble
            (fn
               ((clause
-                  ((con Double# ()) #Builtin.x_xxx)
+                  ((con Double# (#Builtin.x_xxx)))
                   (seq
                      (do
                         (apply
@@ -248,7 +248,7 @@
            printString
            (fn
               ((clause
-                  ((con String# ()) #Builtin.x_xxx)
+                  ((con String# (#Builtin.x_xxx)))
                   (seq (do (apply printString# #Builtin.x_xxx))))))))
        ((def
            printChar#
@@ -260,13 +260,13 @@
            printChar
            (fn
               ((clause
-                  ((con Char# ()) #Builtin.x_xxx)
+                  ((con Char# (#Builtin.x_xxx)))
                   (seq (do (apply printChar# #Builtin.x_xxx))))))))
        ((def
            panic
            (fn
               ((clause
-                  ((con String# ()) #Builtin.message_xxx)
+                  ((con String# (#Builtin.message_xxx)))
                   (seq (do (apply malgo_panic #Builtin.message_xxx))))))))
        ((def
            ordChar#
@@ -600,7 +600,7 @@
            isUpper
            (fn
               ((clause
-                  ((con Char# ()) #Builtin.x_xxx)
+                  ((con Char# (#Builtin.x_xxx)))
                   (seq
                      (do
                         (apply isTrue# (seq (do (apply isUpper# #Builtin.x_xxx)))))))))))
@@ -866,7 +866,7 @@
            isLower
            (fn
               ((clause
-                  ((con Char# ()) #Builtin.x_xxx)
+                  ((con Char# (#Builtin.x_xxx)))
                   (seq
                      (do
                         (apply isTrue# (seq (do (apply isLower# #Builtin.x_xxx)))))))))))
@@ -880,7 +880,7 @@
            isDigit
            (fn
               ((clause
-                  ((con Char# ()) #Builtin.x_xxx)
+                  ((con Char# (#Builtin.x_xxx)))
                   (seq
                      (do
                         (apply isTrue# (seq (do (apply isDigit# #Builtin.x_xxx)))))))))))
@@ -894,7 +894,7 @@
            isAlphanum
            (fn
               ((clause
-                  ((con Char# ()) #Builtin.x_xxx)
+                  ((con Char# (#Builtin.x_xxx)))
                   (seq
                      (do
                         (apply

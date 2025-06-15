@@ -45,9 +45,9 @@
       (def
          step
          (fn
-            ((clause (Done value) (seq (do (apply Done value))))
+            ((clause ((con Done (value))) (seq (do (apply Done value))))
                (clause
-                  (NotYetDone work)
+                  ((con NotYetDone (work)))
                   (seq (do (seq (do (apply work (tuple))))))))))
       (sig
          bind
@@ -124,13 +124,13 @@
                          (opapp |> (opapp |> (opapp |> comp step) step) step)
                          (fn
                             ((clause
-                                (Done x)
+                                ((con Done (x)))
                                 (seq
                                    (do
                                       (apply
                                          printString
                                          (seq (do (apply toStringInt32 x)))))))
                                (clause
-                                  (NotYetDone _)
+                                  ((con NotYetDone (_)))
                                   (seq
                                      (do (apply printString (string "not yet"))))))))))))))))

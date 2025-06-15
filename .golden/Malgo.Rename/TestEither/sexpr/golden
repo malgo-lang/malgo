@@ -22,7 +22,7 @@
                            (apply Right (apply Int32# (int32 1)))
                            (fn
                               ((clause
-                                  ((con Right ()) #TestEither.x_xxx)
+                                  ((con Right (#TestEither.x_xxx)))
                                   (seq
                                      (do
                                         (apply
@@ -121,10 +121,10 @@
                                                           (apply Int32# (int32 1)))))))))))))
                            (fn
                               ((clause
-                                  ((con Left ()) #TestEither.err_xxx)
+                                  ((con Left (#TestEither.err_xxx)))
                                   (seq (do (apply putStrLn #TestEither.err_xxx))))
                                  (clause
-                                    ((con Right ()) #TestEither.x_xxx)
+                                    ((con Right (#TestEither.x_xxx)))
                                     (seq
                                        (do
                                           (opapp

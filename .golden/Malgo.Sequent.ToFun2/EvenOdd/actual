@@ -1,0 +1,44 @@
+(program
+   ((even
+       (lambda
+          ($EvenOdd.param_xxx)
+          (select
+             $EvenOdd.param_xxx
+             (((Int32# (0_i32)) (invoke True))
+                (#EvenOdd.n_xxx
+                   (apply
+                      (invoke odd)
+                      ((apply
+                          (apply (invoke subInt32) (#EvenOdd.n_xxx))
+                          ((apply (invoke Int32#) (1_i32)))))))))))
+      (odd
+         (lambda
+            ($EvenOdd.param_xxx)
+            (select
+               $EvenOdd.param_xxx
+               (((Int32# (0_i32)) (invoke False))
+                  (#EvenOdd.n_xxx
+                     (apply
+                        (invoke even)
+                        ((apply
+                            (apply (invoke subInt32) (#EvenOdd.n_xxx))
+                            ((apply (invoke Int32#) (1_i32)))))))))))
+      (main
+         (select
+            (tuple ())
+            (((tuple ())
+                (apply
+                   (lambda
+                      ($EvenOdd.param_xxx)
+                      (select
+                         $EvenOdd.param_xxx
+                         (((False ())
+                             (apply
+                                (invoke putStrLn)
+                                ((apply (invoke String#) ("False")))))
+                            ((True ())
+                               (apply
+                                  (invoke putStrLn)
+                                  ((apply (invoke String#) ("True"))))))))
+                   ((apply (invoke even) ((apply (invoke Int32#) (10_i32)))))))))))
+   ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

@@ -1,0 +1,13 @@
+(program
+   ((main
+       (select
+          (tuple ())
+          (((tuple ())
+              (apply (invoke putStrLn) ((apply (invoke String#) ("OK"))))))))
+      (isNil
+         (lambda
+            ($Pattern.param_xxx)
+            (select
+               $Pattern.param_xxx
+               (((Nil ()) (invoke True)) (#Pattern.__xxx (invoke False)))))))
+   ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

@@ -10,7 +10,7 @@
            tail
            (fn
               ((clause
-                  ((con Cons ()) #Prelude.__xxx #Prelude.xs_xxx)
+                  ((con Cons (#Prelude.__xxx #Prelude.xs_xxx)))
                   (seq (do #Prelude.xs_xxx)))
                  (clause (#Prelude.__xxx) (seq (do (apply exitFailure (tuple)))))))))
        ((def
@@ -97,7 +97,7 @@
            (fn
               ((clause ((con Nil ())) (seq (do (apply String# (string "")))))
                  (clause
-                    ((con Cons ()) #Prelude.c_xxx #Prelude.cs_xxx)
+                    ((con Cons (#Prelude.c_xxx #Prelude.cs_xxx)))
                     (seq
                        (do
                           (apply
@@ -106,10 +106,10 @@
        ((def
            isWhiteSpace
            (fn
-              ((clause ((con Char# ()) (unboxed (char ' '))) (seq (do True)))
-                 (clause ((con Char# ()) (unboxed (char '\n'))) (seq (do True)))
-                 (clause ((con Char# ()) (unboxed (char '\r'))) (seq (do True)))
-                 (clause ((con Char# ()) (unboxed (char '\t'))) (seq (do True)))
+              ((clause ((con Char# ((unboxed (char ' '))))) (seq (do True)))
+                 (clause ((con Char# ((unboxed (char '\n'))))) (seq (do True)))
+                 (clause ((con Char# ((unboxed (char '\r'))))) (seq (do True)))
+                 (clause ((con Char# ((unboxed (char '\t'))))) (seq (do True)))
                  (clause (#Prelude.__xxx) (seq (do False)))))))
        ((def
            if
@@ -199,7 +199,7 @@
            head
            (fn
               ((clause
-                  ((con Cons ()) #Prelude.x_xxx #Prelude.__xxx)
+                  ((con Cons (#Prelude.x_xxx #Prelude.__xxx)))
                   (seq (do #Prelude.x_xxx)))
                  (clause (#Prelude.__xxx) (seq (do (apply exitFailure (tuple)))))))))
        ((def
@@ -240,21 +240,21 @@
                   ((con Nil ()))
                   (seq (do (apply panic (apply String# (string "no branch"))))))
                  (clause
-                    ((con Cons ())
-                       (tuple (con True ()) #Prelude.x_xxx)
-                       #Prelude.__xxx)
+                    ((con
+                        Cons
+                        ((tuple (con True ()) #Prelude.x_xxx) #Prelude.__xxx)))
                     (seq (do (apply #Prelude.x_xxx (tuple)))))
                  (clause
-                    ((con Cons ())
-                       (tuple (con False ()) #Prelude.__xxx)
-                       #Prelude.xs_xxx)
+                    ((con
+                        Cons
+                        ((tuple (con False ()) #Prelude.__xxx) #Prelude.xs_xxx)))
                     (seq (do (apply cond #Prelude.xs_xxx))))))))
        ((def
            concatString
            (fn
               ((clause ((con Nil ())) (seq (do (apply String# (string "")))))
                  (clause
-                    ((con Cons ()) #Prelude.x_xxx #Prelude.xs_xxx)
+                    ((con Cons (#Prelude.x_xxx #Prelude.xs_xxx)))
                     (seq
                        (do
                           (apply
@@ -282,7 +282,7 @@
                                   ((con Nothing ()))
                                   (seq (do #Prelude.str_xxx)))
                                  (clause
-                                    ((con Just ()) #Prelude.c_xxx)
+                                    ((con Just (#Prelude.c_xxx)))
                                     (seq
                                        (do
                                           (apply
@@ -328,7 +328,7 @@
                                   ((con Nothing ()))
                                   (seq (do #Prelude.str_xxx)))
                                  (clause
-                                    ((con Just ()) #Prelude.c_xxx)
+                                    ((con Just (#Prelude.c_xxx)))
                                     (seq
                                        (do
                                           (apply

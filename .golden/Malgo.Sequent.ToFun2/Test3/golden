@@ -1,0 +1,44 @@
+(program
+   ((|>
+       (lambda
+          ($Test3.param_xxx)
+          (lambda
+             ($Test3.param_xxx)
+             (select
+                (tuple ($Test3.param_xxx $Test3.param_xxx))
+                (((tuple (#Test3.x_xxx #Test3.f_xxx))
+                    (apply #Test3.f_xxx (#Test3.x_xxx))))))))
+      (main
+         (select
+            (tuple ())
+            (((tuple ())
+                (apply
+                   (apply
+                      |>
+                      ((apply
+                          (apply (invoke Cons) ((invoke A)))
+                          ((apply
+                              (apply (invoke Cons) ((invoke B)))
+                              ((invoke Nil)))))))
+                   ((lambda
+                       ($Test3.param_xxx)
+                       (select
+                          $Test3.param_xxx
+                          (((Cons ((A ()) (Cons ((B ()) (Nil ())))))
+                              (apply (invoke malgo_print_string) ("OK")))
+                             (#Test3.__xxx
+                                (apply (invoke malgo_print_string) ("WRONG"))))))))))))
+      (A (A ()))
+      (B (B ()))
+      (Nil (Nil ()))
+      (Cons
+         (lambda
+            ($Test3.constructor_xxx)
+            (lambda
+               ($Test3.constructor_xxx)
+               (Cons ($Test3.constructor_xxx $Test3.constructor_xxx)))))
+      (malgo_print_string
+         (lambda
+            ($Test3.primitive_xxx)
+            (primitive malgo_print_string ($Test3.primitive_xxx)))))
+   ())

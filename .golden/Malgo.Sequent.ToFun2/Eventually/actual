@@ -1,0 +1,136 @@
+(program
+   ((step
+       (lambda
+          ($Eventually.param_xxx)
+          (select
+             $Eventually.param_xxx
+             (((Done (#Eventually.value_xxx))
+                 (apply (invoke Done) (#Eventually.value_xxx)))
+                ((NotYetDone (#Eventually.work_xxx))
+                   (apply #Eventually.work_xxx ((tuple ()))))))))
+      (return
+         (lambda
+            ($Eventually.param_xxx)
+            (select
+               $Eventually.param_xxx
+               (((expand ((bind #Eventually.__xxx) (return #Eventually.x_xxx)))
+                   #Eventually.x_xxx)))))
+      (eventuallyBind
+         (lambda
+            ($Eventually.param_xxx)
+            (lambda
+               ($Eventually.param_xxx)
+               (select
+                  (tuple ($Eventually.param_xxx $Eventually.param_xxx))
+                  (((tuple ((Done (#Eventually.value_xxx)) #Eventually.k_xxx))
+                      (apply #Eventually.k_xxx (#Eventually.value_xxx)))
+                     ((tuple
+                         ((NotYetDone (#Eventually.work_xxx)) #Eventually.k_xxx))
+                        (apply
+                           (invoke NotYetDone)
+                           ((select
+                               (tuple ())
+                               (((tuple ())
+                                   (apply
+                                      (apply
+                                         (invoke eventuallyBind)
+                                         ((apply
+                                             #Eventually.work_xxx
+                                             ((tuple ())))))
+                                      (#Eventually.k_xxx)))))))))))))
+      (eventually
+         (object ((bind (invoke eventuallyBind)) (return (invoke Done)))))
+      (bind
+         (lambda
+            ($Eventually.param_xxx)
+            (select
+               $Eventually.param_xxx
+               (((expand ((bind #Eventually.x_xxx) (return #Eventually.__xxx)))
+                   #Eventually.x_xxx)))))
+      (comp
+         (apply
+            (apply
+               (apply (invoke bind) ((invoke eventually)))
+               ((apply
+                   (invoke NotYetDone)
+                   ((select
+                       (tuple ())
+                       (((tuple ())
+                           (apply
+                              (invoke Done)
+                              ((apply
+                                  (invoke printString)
+                                  ((apply (invoke String#) ("1")))))))))))))
+            ((lambda
+                ($Eventually.param_xxx)
+                (select
+                   $Eventually.param_xxx
+                   ((#Eventually.__xxx
+                       (apply
+                          (apply
+                             (apply (invoke bind) ((invoke eventually)))
+                             ((apply
+                                 (invoke NotYetDone)
+                                 ((select
+                                     (tuple ())
+                                     (((tuple ())
+                                         (apply
+                                            (invoke Done)
+                                            ((apply
+                                                (invoke printString)
+                                                ((apply (invoke String#) ("2")))))))))))))
+                          ((lambda
+                              ($Eventually.param_xxx)
+                              (select
+                                 $Eventually.param_xxx
+                                 ((#Eventually.__xxx
+                                     (apply
+                                        (apply
+                                           (invoke return)
+                                           ((invoke eventually)))
+                                        ((apply (invoke Int32#) (3_i32)))))))))))))))))
+      (main
+         (select
+            (tuple ())
+            (((tuple ())
+                (apply
+                   (lambda
+                      ($Eventually.tmp_xxx)
+                      (apply
+                         (apply
+                            |>
+                            ((apply
+                                (apply
+                                   |>
+                                   ((apply
+                                       (apply
+                                          |>
+                                          ((apply
+                                              (apply |> ((invoke comp)))
+                                              ((invoke step)))))
+                                       ((invoke step)))))
+                                ((invoke step)))))
+                         ((lambda
+                             ($Eventually.param_xxx)
+                             (select
+                                $Eventually.param_xxx
+                                (((Done (#Eventually.x_xxx))
+                                    (apply
+                                       (invoke printString)
+                                       ((apply
+                                           (invoke toStringInt32)
+                                           (#Eventually.x_xxx)))))
+                                   ((NotYetDone (#Eventually.__xxx))
+                                      (apply
+                                         (invoke printString)
+                                         ((apply (invoke String#) ("not yet")))))))))))
+                   ((apply (apply |> ((invoke comp))) ((invoke step)))))))))
+      (Done
+         (lambda
+            ($Eventually.constructor_xxx)
+            (Done ($Eventually.constructor_xxx))))
+      (NotYetDone
+         (lambda
+            ($Eventually.constructor_xxx)
+            (NotYetDone ($Eventually.constructor_xxx)))))
+   ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

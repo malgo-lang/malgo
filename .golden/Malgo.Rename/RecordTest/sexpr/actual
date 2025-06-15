@@ -4,7 +4,7 @@
          g
          (fn
             ((clause
-                ((con B ()) (record (a #RecordTest.a_xxx) (b #RecordTest.__xxx)))
+                ((con B ((record (a #RecordTest.a_xxx) (b #RecordTest.__xxx)))))
                 (seq (do #RecordTest.a_xxx)))))))
        ((def
            f

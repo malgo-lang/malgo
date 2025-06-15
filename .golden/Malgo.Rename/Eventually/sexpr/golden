@@ -4,10 +4,10 @@
          step
          (fn
             ((clause
-                ((con Done ()) #Eventually.value_xxx)
+                ((con Done (#Eventually.value_xxx)))
                 (seq (do (apply Done #Eventually.value_xxx))))
                (clause
-                  ((con NotYetDone ()) #Eventually.work_xxx)
+                  ((con NotYetDone (#Eventually.work_xxx)))
                   (seq (do (seq (do (apply #Eventually.work_xxx (tuple)))))))))))
        ((def
            return
@@ -116,7 +116,7 @@
                            (opapp |> (opapp |> (opapp |> comp step) step) step)
                            (fn
                               ((clause
-                                  ((con Done ()) #Eventually.x_xxx)
+                                  ((con Done (#Eventually.x_xxx)))
                                   (seq
                                      (do
                                         (apply
@@ -127,7 +127,7 @@
                                                     toStringInt32
                                                     #Eventually.x_xxx)))))))
                                  (clause
-                                    ((con NotYetDone ()) #Eventually.__xxx)
+                                    ((con NotYetDone (#Eventually.__xxx)))
                                     (seq
                                        (do
                                           (apply

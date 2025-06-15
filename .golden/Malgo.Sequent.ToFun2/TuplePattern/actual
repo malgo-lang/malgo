@@ -1,0 +1,21 @@
+(program
+   ((main
+       (select
+          (tuple ())
+          (((tuple ())
+              (apply
+                 (apply |> ((tuple ((invoke A) (invoke B)))))
+                 ((lambda
+                     ($TuplePattern.param_xxx)
+                     (select
+                        $TuplePattern.param_xxx
+                        (((tuple ((A ()) #TuplePattern.rest_xxx))
+                            (apply
+                               (invoke printString)
+                               ((apply (invoke String#) ("A")))))
+                           ((tuple ((B ()) #TuplePattern.rest_xxx)) (tuple ()))
+                           ((tuple ((C ()) #TuplePattern.rest_xxx)) (tuple ())))))))))))
+      (A (A ()))
+      (B (B ()))
+      (C (C ())))
+   ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

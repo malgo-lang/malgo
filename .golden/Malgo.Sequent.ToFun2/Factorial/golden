@@ -1,0 +1,87 @@
+(program
+   ((==
+       (lambda
+          ($Factorial.param_xxx)
+          (lambda
+             ($Factorial.param_xxx)
+             (select
+                (tuple ($Factorial.param_xxx $Factorial.param_xxx))
+                (((tuple (#Factorial.x_xxx #Factorial.y_xxx))
+                    (apply
+                       (apply (invoke eqInt64) (#Factorial.x_xxx))
+                       (#Factorial.y_xxx))))))))
+      (-
+         (lambda
+            ($Factorial.param_xxx)
+            (lambda
+               ($Factorial.param_xxx)
+               (select
+                  (tuple ($Factorial.param_xxx $Factorial.param_xxx))
+                  (((tuple (#Factorial.x_xxx #Factorial.y_xxx))
+                      (apply
+                         (apply (invoke subInt64) (#Factorial.x_xxx))
+                         (#Factorial.y_xxx))))))))
+      (*
+         (lambda
+            ($Factorial.param_xxx)
+            (lambda
+               ($Factorial.param_xxx)
+               (select
+                  (tuple ($Factorial.param_xxx $Factorial.param_xxx))
+                  (((tuple (#Factorial.x_xxx #Factorial.y_xxx))
+                      (apply
+                         (apply (invoke mulInt64) (#Factorial.x_xxx))
+                         (#Factorial.y_xxx))))))))
+      (factAcc
+         (lambda
+            ($Factorial.param_xxx)
+            (lambda
+               ($Factorial.param_xxx)
+               (select
+                  (tuple ($Factorial.param_xxx $Factorial.param_xxx))
+                  (((tuple (#Factorial.n_xxx #Factorial.acc_xxx))
+                      (apply
+                         (apply
+                            (apply
+                               (invoke if)
+                               ((apply
+                                   (apply == (#Factorial.n_xxx))
+                                   ((apply (invoke Int64#) (0_i64))))))
+                            ((select (tuple ()) (((tuple ()) #Factorial.acc_xxx)))))
+                         ((select
+                             (tuple ())
+                             (((tuple ())
+                                 (apply
+                                    (apply
+                                       (invoke factAcc)
+                                       ((apply
+                                           (apply - (#Factorial.n_xxx))
+                                           ((apply (invoke Int64#) (1_i64))))))
+                                    ((apply
+                                        (apply * (#Factorial.n_xxx))
+                                        (#Factorial.acc_xxx)))))))))))))))
+      (fact
+         (lambda
+            ($Factorial.param_xxx)
+            (select
+               $Factorial.param_xxx
+               ((#Factorial.n_xxx
+                   (apply
+                      (apply (invoke factAcc) (#Factorial.n_xxx))
+                      ((apply (invoke Int64#) (1_i64)))))))))
+      (main
+         (select
+            (tuple ())
+            (((tuple ())
+                (apply
+                   (apply
+                      |>
+                      ((apply
+                          (apply
+                             |>
+                             ((apply
+                                 (invoke fact)
+                                 ((apply (invoke Int64#) (5_i64))))))
+                          ((invoke toStringInt64)))))
+                   ((invoke putStrLn))))))))
+   ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

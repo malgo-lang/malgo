@@ -21,7 +21,7 @@
                          (apply Right (int32 1))
                          (fn
                             ((clause
-                                (Right x)
+                                ((con Right (x)))
                                 (seq
                                    (do
                                       (apply
@@ -95,9 +95,11 @@
                                                         (apply addInt32 x)
                                                         (int32 1))))))))))))
                          (fn
-                            ((clause (Left err) (seq (do (apply putStrLn err))))
+                            ((clause
+                                ((con Left (err)))
+                                (seq (do (apply putStrLn err))))
                                (clause
-                                  (Right x)
+                                  ((con Right (x)))
                                   (seq
                                      (do
                                         (opapp

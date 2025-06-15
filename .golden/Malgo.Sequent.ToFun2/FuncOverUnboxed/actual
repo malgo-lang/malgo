@@ -1,0 +1,20 @@
+(program
+   ((f
+       (lambda
+          ($FuncOverUnboxed.param_xxx)
+          (select
+             $FuncOverUnboxed.param_xxx
+             ((0_i64
+                 (apply
+                    (invoke printString#)
+                    ((apply (invoke toStringInt64#) (1_i64)))))
+                (1_i64
+                   (apply
+                      (invoke printString#)
+                      ((apply (invoke toStringInt64#) (1_i64)))))
+                (#FuncOverUnboxed.__xxx
+                   (apply
+                      (invoke printString#)
+                      ((apply (invoke toStringInt64#) (0_i64)))))))))
+      (main (select (tuple ()) (((tuple ()) (apply (invoke f) (0_i64)))))))
+   ("runtime/malgo/Builtin.mlg"))

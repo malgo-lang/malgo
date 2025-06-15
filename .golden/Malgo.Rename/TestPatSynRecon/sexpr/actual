@@ -14,9 +14,10 @@
            sum
            (fn
               ((clause
-                  ((con Cons ())
-                     (con Int64# (#TestPatSynRecon.x_xxx))
-                     #TestPatSynRecon.xs_xxx)
+                  ((con
+                      Cons
+                      ((con Int64# (#TestPatSynRecon.x_xxx))
+                         #TestPatSynRecon.xs_xxx)))
                   (seq
                      (do
                         (opapp

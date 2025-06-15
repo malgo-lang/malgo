@@ -1,0 +1,44 @@
+(program
+   ((g
+       (lambda
+          ($RecordTest.param_xxx)
+          (select
+             $RecordTest.param_xxx
+             (((B ((expand ((a #RecordTest.a_xxx) (b #RecordTest.__xxx)))))
+                 #RecordTest.a_xxx)))))
+      (f
+         (lambda
+            ($RecordTest.param_xxx)
+            (select
+               $RecordTest.param_xxx
+               (((expand ((a #RecordTest.a_xxx) (b #RecordTest.__xxx)))
+                   #RecordTest.a_xxx)))))
+      (main
+         (select
+            (tuple ())
+            (((tuple ())
+                (let
+                   #RecordTest.x_xxx
+                   (object
+                      ((a (apply (invoke Int32#) (32_i32)))
+                         (b (apply (invoke Int32#) (10_i32)))))
+                   (apply
+                      (invoke printString)
+                      ((apply
+                          (invoke toStringInt32)
+                          ((apply
+                              (apply
+                                 (invoke addInt32)
+                                 ((apply (invoke f) (#RecordTest.x_xxx))))
+                              ((apply
+                                  (lambda
+                                     ($RecordTest.param_xxx)
+                                     (select
+                                        $RecordTest.param_xxx
+                                        (((expand
+                                             ((a #RecordTest.__xxx)
+                                                (b #RecordTest.b_xxx)))
+                                            #RecordTest.b_xxx))))
+                                  (#RecordTest.x_xxx)))))))))))))
+      (B (lambda ($RecordTest.constructor_xxx) (B ($RecordTest.constructor_xxx)))))
+   ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

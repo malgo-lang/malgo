@@ -149,7 +149,8 @@ compile srcPath = do
   flags <- ask @Flag
   pwd <- pwdPath
   srcModulePath <- parseArtifactPath pwd srcPath
-  src <- load srcModulePath ".mlg"
+  -- src <- load srcModulePath ".mlg"
+  src <- liftIO $ BS.readFile srcPath -- Read raw source file instead of .malgo-works file
   runCompileError do
     parsedAst <- runPass ParserPass (srcPath, convertString @BS.ByteString src)
     when flags.debugMode do

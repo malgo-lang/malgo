@@ -8,7 +8,7 @@
               (fn
                  ((clause ((con Nothing ())) (seq (do Nothing)))
                     (clause
-                       ((con Just ()) #ToplevelVariable.x_xxx)
+                       ((con Just (#ToplevelVariable.x_xxx)))
                        (seq (do Nothing)))))
               (seq (do (apply Just (tuple)))))))
        ((def addOne (apply addInt32 one)))
@@ -29,7 +29,7 @@
                                            printString
                                            (apply String# (string "OK"))))))
                                  (clause
-                                    ((con Just ()) #ToplevelVariable.__xxx)
+                                    ((con Just (#ToplevelVariable.__xxx)))
                                     (seq (do (tuple))))))
                            comp))
                      (do

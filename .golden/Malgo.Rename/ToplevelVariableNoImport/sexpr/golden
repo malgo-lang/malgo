@@ -14,7 +14,7 @@
            toStringInt32
            (fn
               ((clause
-                  ((con Int32# ()) #ToplevelVariableNoImport.x_xxx)
+                  ((con Int32# (#ToplevelVariableNoImport.x_xxx)))
                   (seq
                      (do
                         (apply
@@ -36,7 +36,7 @@
            printString
            (fn
               ((clause
-                  ((con String# ()) #ToplevelVariableNoImport.x_xxx)
+                  ((con String# (#ToplevelVariableNoImport.x_xxx)))
                   (seq (do (apply printString# #ToplevelVariableNoImport.x_xxx))))))))
        ((def
            printInt32
@@ -73,7 +73,7 @@
               (fn
                  ((clause ((con Nothing ())) (seq (do Nothing)))
                     (clause
-                       ((con Just ()) #ToplevelVariableNoImport.x_xxx)
+                       ((con Just (#ToplevelVariableNoImport.x_xxx)))
                        (seq (do Nothing)))))
               (seq (do (apply Just (tuple)))))))
        ((def
@@ -124,8 +124,7 @@
                                            printString
                                            (apply String# (string "OK"))))))
                                  (clause
-                                    ((con Just ())
-                                       #ToplevelVariableNoImport.__xxx)
+                                    ((con Just (#ToplevelVariableNoImport.__xxx)))
                                     (seq (do (tuple))))))
                            comp))
                      (do

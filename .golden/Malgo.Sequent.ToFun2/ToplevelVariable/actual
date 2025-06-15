@@ -1,0 +1,37 @@
+(program
+   ((one (apply (invoke Int32#) (1_i32)))
+      (constId (apply (invoke const) ((invoke identity))))
+      (comp
+         (apply
+            (lambda
+               ($ToplevelVariable.param_xxx)
+               (select
+                  $ToplevelVariable.param_xxx
+                  (((Nothing ()) (invoke Nothing))
+                     ((Just (#ToplevelVariable.x_xxx)) (invoke Nothing)))))
+            ((apply (invoke Just) ((tuple ()))))))
+      (addOne (apply (invoke addInt32) ((invoke one))))
+      (main
+         (select
+            (tuple ())
+            (((tuple ())
+                (apply
+                   (lambda
+                      ($ToplevelVariable.tmp_xxx)
+                      (apply
+                         (invoke printInt32)
+                         ((apply
+                             (apply (invoke constId) ((invoke const)))
+                             ((apply (invoke addOne) ((invoke one))))))))
+                   ((apply
+                       (lambda
+                          ($ToplevelVariable.param_xxx)
+                          (select
+                             $ToplevelVariable.param_xxx
+                             (((Nothing ())
+                                 (apply
+                                    (invoke printString)
+                                    ((apply (invoke String#) ("OK")))))
+                                ((Just (#ToplevelVariable.__xxx)) (tuple ())))))
+                       ((invoke comp))))))))))
+   ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))
