@@ -1,39 +1,39 @@
 (program
    ((even
        (lambda
-          ($EvenOdd.param_xxx)
+          ($EvenOdd.param_3)
           (select
-             $EvenOdd.param_xxx
+             $EvenOdd.param_3
              (((Int32# (0_i32)) (invoke True))
-                (#EvenOdd.n_xxx
+                (#EvenOdd.n_0
                    (apply
                       (invoke odd)
                       ((apply
-                          (apply (invoke subInt32) (#EvenOdd.n_xxx))
+                          (apply (invoke subInt32) (#EvenOdd.n_0))
                           ((apply (invoke Int32#) (1_i32)))))))))))
       (odd
          (lambda
-            ($EvenOdd.param_xxx)
+            ($EvenOdd.param_4)
             (select
-               $EvenOdd.param_xxx
+               $EvenOdd.param_4
                (((Int32# (0_i32)) (invoke False))
-                  (#EvenOdd.n_xxx
+                  (#EvenOdd.n_1
                      (apply
                         (invoke even)
                         ((apply
-                            (apply (invoke subInt32) (#EvenOdd.n_xxx))
+                            (apply (invoke subInt32) (#EvenOdd.n_1))
                             ((apply (invoke Int32#) (1_i32)))))))))))
       (main
          (lambda
-            ($EvenOdd.param_xxx)
+            ($EvenOdd.param_5)
             (select
-               $EvenOdd.param_xxx
-               ((#EvenOdd.$__xxx
+               $EvenOdd.param_5
+               ((#EvenOdd.$__2
                    (apply
                       (lambda
-                         ($EvenOdd.param_xxx)
+                         ($EvenOdd.param_6)
                          (select
-                            $EvenOdd.param_xxx
+                            $EvenOdd.param_6
                             (((False ())
                                 (apply
                                    (invoke putStrLn)

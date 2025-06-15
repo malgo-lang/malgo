@@ -1,15 +1,15 @@
 (program
    ((main
        (lambda
-          ($Pattern.param_xxx)
+          ($Pattern.param_2)
           (select
-             $Pattern.param_xxx
-             ((#Pattern.$__xxx
+             $Pattern.param_2
+             ((#Pattern.$__1
                  (apply (invoke putStrLn) ((apply (invoke String#) ("OK")))))))))
       (isNil
          (lambda
-            ($Pattern.param_xxx)
+            ($Pattern.param_3)
             (select
-               $Pattern.param_xxx
-               (((Nil ()) (invoke True)) (#Pattern.__xxx (invoke False)))))))
+               $Pattern.param_3
+               (((Nil ()) (invoke True)) (#Pattern.__0 (invoke False)))))))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

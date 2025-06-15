@@ -4,26 +4,23 @@
          f
          (fn
             ((clause
-                (#DeferLaw.x_xxx)
+                (#DeferLaw.x_1)
                 (seq
                    (do
                       (apply
-                         (fn
-                            ((clause
-                                (#DeferLaw.$__xxx)
-                                (seq (do #DeferLaw.x_xxx)))))
+                         (fn ((clause (#DeferLaw.$__2) (seq (do #DeferLaw.x_1)))))
                          (tuple)))))))))
        ((def
            main
            (fn
               ((clause
-                  (#DeferLaw.$__xxx)
+                  (#DeferLaw.$__3)
                   (seq
                      (do
                         (apply
                            putStrLn
                            (seq (do (apply f (apply String# (string "Hello"))))))))))))))
-      ((sig f (-> #DeferLaw.a_xxx #DeferLaw.a_xxx)))
+      ((sig f (-> #DeferLaw.a_0 #DeferLaw.a_0)))
       ()
       ()
       ()

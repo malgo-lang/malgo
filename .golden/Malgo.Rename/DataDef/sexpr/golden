@@ -4,13 +4,13 @@
          main
          (fn
             ((clause
-                (#DataDef.$__xxx)
+                (#DataDef.$__2)
                 (seq
                    (do
                       (apply
                          (fn
                             ((clause
-                                ((con Int# (#DataDef.x_xxx)))
+                                ((con Int# (#DataDef.x_1)))
                                 (seq
                                    (do
                                       (apply
@@ -19,14 +19,14 @@
                                             (do
                                                (apply
                                                   malgo_int64_t_to_string
-                                                  #DataDef.x_xxx)))))))))
+                                                  #DataDef.x_1)))))))))
                          (seq (do (apply Int# (int64 1)))))))))))))
       ()
       ((data Int () ((Int# (Int64#))))
          (data
             List
-            (#DataDef.a_xxx)
-            ((Nil ()) (Cons (#DataDef.a_xxx (app List (#DataDef.a_xxx)))))))
+            (#DataDef.a_0)
+            ((Nil ()) (Cons (#DataDef.a_0 (app List (#DataDef.a_0)))))))
       ()
       ((foreign malgo_int64_t_to_string (-> Int64# String#))
          (foreign malgo_print_string (-> String# (tuple))))

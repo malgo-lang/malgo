@@ -1,46 +1,44 @@
 ((main
-    $Double.return_xxx
+    $Double.return_2
     (cut
        (lambda
-          ($Double.param_xxx $Double.return_xxx)
+          ($Double.param_1 $Double.return_3)
           (join
-             $Double.select_xxx
+             $Double.select_15
              (select
-                (#Double.$__xxx
+                (#Double.$__0
                    (join
-                      $Double.then_xxx
+                      $Double.then_14
                       (then
-                         $Double.outer_xxx
+                         $Double.outer_6
                          (join
-                            $Double.return_xxx
+                            $Double.return_4
                             (then
-                               $Double.inner_xxx
+                               $Double.inner_7
                                (join
-                                  $Double.apply_xxx
-                                  (apply ($Double.inner_xxx) ($Double.return_xxx))
-                                  (cut $Double.outer_xxx $Double.apply_xxx)))
+                                  $Double.apply_13
+                                  (apply ($Double.inner_7) ($Double.return_3))
+                                  (cut $Double.outer_6 $Double.apply_13)))
                             (join
-                               $Double.then_xxx
+                               $Double.then_12
                                (then
-                                  $Double.outer_xxx
+                                  $Double.outer_8
                                   (join
-                                     $Double.return_xxx
+                                     $Double.return_5
                                      (then
-                                        $Double.inner_xxx
+                                        $Double.inner_9
                                         (join
-                                           $Double.apply_xxx
+                                           $Double.apply_11
                                            (apply
-                                              ($Double.inner_xxx)
-                                              ($Double.return_xxx))
-                                           (cut
-                                              $Double.outer_xxx
-                                              $Double.apply_xxx)))
+                                              ($Double.inner_9)
+                                              ($Double.return_4))
+                                           (cut $Double.outer_8 $Double.apply_11)))
                                      (join
-                                        $Double.apply_xxx
-                                        (apply (3.14_f64) ($Double.return_xxx))
-                                        (invoke Double# $Double.apply_xxx))))
-                               (invoke toStringDouble $Double.then_xxx))))
-                      (invoke putStr $Double.then_xxx))))
-             (cut $Double.param_xxx $Double.select_xxx)))
-       $Double.return_xxx))
+                                        $Double.apply_10
+                                        (apply (3.14_f64) ($Double.return_5))
+                                        (invoke Double# $Double.apply_10))))
+                               (invoke toStringDouble $Double.then_12))))
+                      (invoke putStr $Double.then_14))))
+             (cut $Double.param_1 $Double.select_15)))
+       $Double.return_2))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

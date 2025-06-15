@@ -5,7 +5,7 @@
          (fn
             ((clause ((con Int32# ((unboxed (int32 0))))) (seq (do True)))
                (clause
-                  (#EvenOdd.n_xxx)
+                  (#EvenOdd.n_0)
                   (seq
                      (do
                         (apply
@@ -13,14 +13,14 @@
                            (seq
                               (do
                                  (apply
-                                    (apply subInt32 #EvenOdd.n_xxx)
+                                    (apply subInt32 #EvenOdd.n_0)
                                     (apply Int32# (int32 1))))))))))))
         (def
            odd
            (fn
               ((clause ((con Int32# ((unboxed (int32 0))))) (seq (do False)))
                  (clause
-                    (#EvenOdd.n_xxx)
+                    (#EvenOdd.n_1)
                     (seq
                        (do
                           (apply
@@ -28,13 +28,13 @@
                              (seq
                                 (do
                                    (apply
-                                      (apply subInt32 #EvenOdd.n_xxx)
+                                      (apply subInt32 #EvenOdd.n_1)
                                       (apply Int32# (int32 1)))))))))))))
        ((def
            main
            (fn
               ((clause
-                  (#EvenOdd.$__xxx)
+                  (#EvenOdd.$__2)
                   (seq
                      (do
                         (apply

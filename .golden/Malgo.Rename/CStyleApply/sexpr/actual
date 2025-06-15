@@ -4,37 +4,30 @@
          ==
          (fn
             ((clause
-                (#CStyleApply.x_xxx #CStyleApply.y_xxx)
+                (#CStyleApply.x_0 #CStyleApply.y_1)
                 (seq
-                   (do
-                      (apply
-                         (apply eqInt64 #CStyleApply.x_xxx)
-                         #CStyleApply.y_xxx))))))))
+                   (do (apply (apply eqInt64 #CStyleApply.x_0) #CStyleApply.y_1))))))))
        ((def
            -
            (fn
               ((clause
-                  (#CStyleApply.x_xxx #CStyleApply.y_xxx)
+                  (#CStyleApply.x_2 #CStyleApply.y_3)
                   (seq
                      (do
-                        (apply
-                           (apply subInt64 #CStyleApply.x_xxx)
-                           #CStyleApply.y_xxx))))))))
+                        (apply (apply subInt64 #CStyleApply.x_2) #CStyleApply.y_3))))))))
        ((def
            *
            (fn
               ((clause
-                  (#CStyleApply.x_xxx #CStyleApply.y_xxx)
+                  (#CStyleApply.x_4 #CStyleApply.y_5)
                   (seq
                      (do
-                        (apply
-                           (apply mulInt64 #CStyleApply.x_xxx)
-                           #CStyleApply.y_xxx))))))))
+                        (apply (apply mulInt64 #CStyleApply.x_4) #CStyleApply.y_5))))))))
        ((def
            factAcc
            (fn
               ((clause
-                  ((tuple #CStyleApply.n_xxx #CStyleApply.acc_xxx))
+                  ((tuple #CStyleApply.n_7 #CStyleApply.acc_8))
                   (seq
                      (do
                         (apply
@@ -43,15 +36,15 @@
                                  if
                                  (opapp
                                     ==
-                                    #CStyleApply.n_xxx
+                                    #CStyleApply.n_7
                                     (apply Int64# (int64 0))))
                               (fn
                                  ((clause
-                                     (#CStyleApply.$__xxx)
-                                     (seq (do #CStyleApply.acc_xxx))))))
+                                     (#CStyleApply.$__9)
+                                     (seq (do #CStyleApply.acc_8))))))
                            (fn
                               ((clause
-                                  (#CStyleApply.$__xxx)
+                                  (#CStyleApply.$__10)
                                   (seq
                                      (do
                                         (apply
@@ -59,27 +52,27 @@
                                            (tuple
                                               (opapp
                                                  -
-                                                 #CStyleApply.n_xxx
+                                                 #CStyleApply.n_7
                                                  (apply Int64# (int64 1)))
                                               (opapp
                                                  *
-                                                 #CStyleApply.n_xxx
-                                                 #CStyleApply.acc_xxx))))))))))))))))
+                                                 #CStyleApply.n_7
+                                                 #CStyleApply.acc_8))))))))))))))))
        ((def
            fact
            (fn
               ((clause
-                  (#CStyleApply.n_xxx)
+                  (#CStyleApply.n_6)
                   (seq
                      (do
                         (apply
                            factAcc
-                           (tuple #CStyleApply.n_xxx (apply Int64# (int64 1)))))))))))
+                           (tuple #CStyleApply.n_6 (apply Int64# (int64 1)))))))))))
        ((def
            main
            (fn
               ((clause
-                  (#CStyleApply.$__xxx)
+                  (#CStyleApply.$__11)
                   (seq
                      (do
                         (opapp

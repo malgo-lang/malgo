@@ -5,101 +5,101 @@
            toStringInt64#
            (fn
               ((clause
-                  (#Builtin.x_xxx)
-                  (seq (do (apply malgo_int64_t_to_string #Builtin.x_xxx))))))))
+                  (#Builtin.x_257)
+                  (seq (do (apply malgo_int64_t_to_string #Builtin.x_257))))))))
        ((def
            toStringInt64
            (fn
               ((clause
-                  ((con Int64# (#Builtin.x_xxx)))
+                  ((con Int64# (#Builtin.x_258)))
                   (seq
                      (do
                         (apply
                            String#
-                           (seq (do (apply toStringInt64# #Builtin.x_xxx)))))))))))
+                           (seq (do (apply toStringInt64# #Builtin.x_258)))))))))))
        ((def
            toStringInt32#
            (fn
               ((clause
-                  (#Builtin.x_xxx)
-                  (seq (do (apply malgo_int32_t_to_string #Builtin.x_xxx))))))))
+                  (#Builtin.x_255)
+                  (seq (do (apply malgo_int32_t_to_string #Builtin.x_255))))))))
        ((def
            toStringInt32
            (fn
               ((clause
-                  ((con Int32# (#Builtin.x_xxx)))
+                  ((con Int32# (#Builtin.x_256)))
                   (seq
                      (do
                         (apply
                            String#
-                           (seq (do (apply toStringInt32# #Builtin.x_xxx)))))))))))
+                           (seq (do (apply toStringInt32# #Builtin.x_256)))))))))))
        ((def
            toStringFloat#
            (fn
               ((clause
-                  (#Builtin.x_xxx)
-                  (seq (do (apply malgo_float_to_string #Builtin.x_xxx))))))))
+                  (#Builtin.x_259)
+                  (seq (do (apply malgo_float_to_string #Builtin.x_259))))))))
        ((def
            toStringFloat
            (fn
               ((clause
-                  ((con Float# (#Builtin.x_xxx)))
+                  ((con Float# (#Builtin.x_260)))
                   (seq
                      (do
                         (apply
                            String#
-                           (seq (do (apply toStringFloat# #Builtin.x_xxx)))))))))))
+                           (seq (do (apply toStringFloat# #Builtin.x_260)))))))))))
        ((def
            toStringDouble#
            (fn
               ((clause
-                  (#Builtin.x_xxx)
-                  (seq (do (apply malgo_double_to_string #Builtin.x_xxx))))))))
+                  (#Builtin.x_261)
+                  (seq (do (apply malgo_double_to_string #Builtin.x_261))))))))
        ((def
            toStringDouble
            (fn
               ((clause
-                  ((con Double# (#Builtin.x_xxx)))
+                  ((con Double# (#Builtin.x_262)))
                   (seq
                      (do
                         (apply
                            String#
-                           (seq (do (apply toStringDouble# #Builtin.x_xxx)))))))))))
+                           (seq (do (apply toStringDouble# #Builtin.x_262)))))))))))
        ((def
            toStringChar#
            (fn
               ((clause
-                  (#Builtin.x_xxx)
-                  (seq (do (apply malgo_char_to_string #Builtin.x_xxx))))))))
+                  (#Builtin.x_263)
+                  (seq (do (apply malgo_char_to_string #Builtin.x_263))))))))
        ((def
            toStringChar
            (fn
               ((clause
-                  ((con Char# (#Builtin.x_xxx)))
+                  ((con Char# (#Builtin.x_264)))
                   (seq
                      (do
                         (apply
                            String#
-                           (seq (do (apply toStringChar# #Builtin.x_xxx)))))))))))
+                           (seq (do (apply toStringChar# #Builtin.x_264)))))))))))
        ((def
            substring#
            (fn
               ((clause
-                  (#Builtin.str_xxx #Builtin.start_xxx #Builtin.end_xxx)
+                  (#Builtin.str_249 #Builtin.start_250 #Builtin.end_251)
                   (seq
                      (do
                         (apply
                            (apply
-                              (apply malgo_substring #Builtin.str_xxx)
-                              #Builtin.start_xxx)
-                           #Builtin.end_xxx))))))))
+                              (apply malgo_substring #Builtin.str_249)
+                              #Builtin.start_250)
+                           #Builtin.end_251))))))))
        ((def
            substring
            (fn
               ((clause
-                  ((con String# (#Builtin.str_xxx))
-                     (con Int64# (#Builtin.start_xxx))
-                     (con Int64# (#Builtin.end_xxx)))
+                  ((con String# (#Builtin.str_252))
+                     (con Int64# (#Builtin.start_253))
+                     (con Int64# (#Builtin.end_254)))
                   (seq
                      (do
                         (apply
@@ -108,24 +108,24 @@
                               (do
                                  (apply
                                     (apply
-                                       (apply substring# #Builtin.str_xxx)
-                                       #Builtin.start_xxx)
-                                    #Builtin.end_xxx)))))))))))
+                                       (apply substring# #Builtin.str_252)
+                                       #Builtin.start_253)
+                                    #Builtin.end_254)))))))))))
        ((def
            subInt64#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_32 #Builtin.y_33)
                   (seq
                      (do
                         (apply
-                           (apply malgo_sub_int64_t #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_sub_int64_t #Builtin.x_32)
+                           #Builtin.y_33))))))))
        ((def
            subInt64
            (fn
               ((clause
-                  ((con Int64# (#Builtin.x_xxx)) (con Int64# (#Builtin.y_xxx)))
+                  ((con Int64# (#Builtin.x_34)) (con Int64# (#Builtin.y_35)))
                   (seq
                      (do
                         (apply
@@ -133,23 +133,23 @@
                            (seq
                               (do
                                  (apply
-                                    (apply subInt64# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply subInt64# #Builtin.x_34)
+                                    #Builtin.y_35)))))))))))
        ((def
            subInt32#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_16 #Builtin.y_17)
                   (seq
                      (do
                         (apply
-                           (apply malgo_sub_int32_t #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_sub_int32_t #Builtin.x_16)
+                           #Builtin.y_17))))))))
        ((def
            subInt32
            (fn
               ((clause
-                  ((con Int32# (#Builtin.x_xxx)) (con Int32# (#Builtin.y_xxx)))
+                  ((con Int32# (#Builtin.x_18)) (con Int32# (#Builtin.y_19)))
                   (seq
                      (do
                         (apply
@@ -157,23 +157,23 @@
                            (seq
                               (do
                                  (apply
-                                    (apply subInt32# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply subInt32# #Builtin.x_18)
+                                    #Builtin.y_19)))))))))))
        ((def
            subFloat#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_48 #Builtin.y_49)
                   (seq
                      (do
                         (apply
-                           (apply malgo_sub_float #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_sub_float #Builtin.x_48)
+                           #Builtin.y_49))))))))
        ((def
            subFloat
            (fn
               ((clause
-                  ((con Float# (#Builtin.x_xxx)) (con Float# (#Builtin.y_xxx)))
+                  ((con Float# (#Builtin.x_50)) (con Float# (#Builtin.y_51)))
                   (seq
                      (do
                         (apply
@@ -181,23 +181,23 @@
                            (seq
                               (do
                                  (apply
-                                    (apply subFloat# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply subFloat# #Builtin.x_50)
+                                    #Builtin.y_51)))))))))))
        ((def
            subDouble#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_64 #Builtin.y_65)
                   (seq
                      (do
                         (apply
-                           (apply malgo_sub_double #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_sub_double #Builtin.x_64)
+                           #Builtin.y_65))))))))
        ((def
            subDouble
            (fn
               ((clause
-                  ((con Double# (#Builtin.x_xxx)) (con Double# (#Builtin.y_xxx)))
+                  ((con Double# (#Builtin.x_66)) (con Double# (#Builtin.y_67)))
                   (seq
                      (do
                         (apply
@@ -205,85 +205,81 @@
                            (seq
                               (do
                                  (apply
-                                    (apply subDouble# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply subDouble# #Builtin.x_66)
+                                    #Builtin.y_67)))))))))))
        ((def
            string#
-           (fn
-              ((clause (#Builtin.x_xxx) (seq (do (apply String# #Builtin.x_xxx))))))))
+           (fn ((clause (#Builtin.x_5) (seq (do (apply String# #Builtin.x_5))))))))
        ((def
            sqrtFloat#
-           (fn
-              ((clause (#Builtin.x_xxx) (seq (do (apply sqrtf #Builtin.x_xxx))))))))
+           (fn ((clause (#Builtin.x_76) (seq (do (apply sqrtf #Builtin.x_76))))))))
        ((def
            sqrtFloat
            (fn
               ((clause
-                  ((con Float# (#Builtin.x_xxx)))
+                  ((con Float# (#Builtin.x_77)))
                   (seq
                      (do
-                        (apply
-                           Float#
-                           (seq (do (apply sqrtFloat# #Builtin.x_xxx)))))))))))
+                        (apply Float# (seq (do (apply sqrtFloat# #Builtin.x_77)))))))))))
        ((def
            sqrtDouble#
-           (fn ((clause (#Builtin.x_xxx) (seq (do (apply sqrt #Builtin.x_xxx))))))))
+           (fn ((clause (#Builtin.x_78) (seq (do (apply sqrt #Builtin.x_78))))))))
        ((def
            sqrtDouble
            (fn
               ((clause
-                  ((con Double# (#Builtin.x_xxx)))
+                  ((con Double# (#Builtin.x_79)))
                   (seq
                      (do
                         (apply
                            Double#
-                           (seq (do (apply sqrtDouble# #Builtin.x_xxx)))))))))))
+                           (seq (do (apply sqrtDouble# #Builtin.x_79)))))))))))
        ((def
            printString#
            (fn
               ((clause
-                  (#Builtin.x_xxx)
-                  (seq (do (apply malgo_print_string #Builtin.x_xxx))))))))
+                  (#Builtin.x_271)
+                  (seq (do (apply malgo_print_string #Builtin.x_271))))))))
        ((def
            printString
            (fn
               ((clause
-                  ((con String# (#Builtin.x_xxx)))
-                  (seq (do (apply printString# #Builtin.x_xxx))))))))
+                  ((con String# (#Builtin.x_272)))
+                  (seq (do (apply printString# #Builtin.x_272))))))))
        ((def
            printChar#
            (fn
               ((clause
-                  (#Builtin.x_xxx)
-                  (seq (do (apply malgo_print_char #Builtin.x_xxx))))))))
+                  (#Builtin.x_269)
+                  (seq (do (apply malgo_print_char #Builtin.x_269))))))))
        ((def
            printChar
            (fn
               ((clause
-                  ((con Char# (#Builtin.x_xxx)))
-                  (seq (do (apply printChar# #Builtin.x_xxx))))))))
+                  ((con Char# (#Builtin.x_270)))
+                  (seq (do (apply printChar# #Builtin.x_270))))))))
        ((def
            panic
            (fn
               ((clause
-                  ((con String# (#Builtin.message_xxx)))
-                  (seq (do (apply malgo_panic #Builtin.message_xxx))))))))
+                  ((con String# (#Builtin.message_8)))
+                  (seq (do (apply malgo_panic #Builtin.message_8))))))))
        ((def
            ordChar#
            (fn
               ((clause
-                  (#Builtin.x_xxx)
-                  (seq (do (apply malgo_char_ord #Builtin.x_xxx))))))))
+                  (#Builtin.x_225)
+                  (seq (do (apply malgo_char_ord #Builtin.x_225))))))))
        ((def
            ordChar
            (fn
               ((clause
-                  ((con Char# (#Builtin.chr_xxx)))
+                  ((con Char# (#Builtin.chr_226)))
                   (seq
                      (do
                         (apply
                            Int32#
-                           (seq (do (apply ordChar# #Builtin.chr_xxx)))))))))))
+                           (seq (do (apply ordChar# #Builtin.chr_226)))))))))))
        ((def
            not
            (fn
@@ -292,82 +288,82 @@
        ((def
            newline
            (fn
-              ((clause (#Builtin.__xxx) (seq (do (apply malgo_newline (tuple)))))))))
+              ((clause (#Builtin.__268) (seq (do (apply malgo_newline (tuple)))))))))
        ((def
            neString#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_205 #Builtin.y_206)
                   (seq
                      (do
                         (apply
-                           (apply malgo_ne_string #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_ne_string #Builtin.x_205)
+                           #Builtin.y_206))))))))
        ((def
            neInt64#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_109 #Builtin.y_110)
                   (seq
                      (do
                         (apply
-                           (apply malgo_ne_int64_t #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_ne_int64_t #Builtin.x_109)
+                           #Builtin.y_110))))))))
        ((def
            neInt32#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_85 #Builtin.y_86)
                   (seq
                      (do
                         (apply
-                           (apply malgo_ne_int32_t #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_ne_int32_t #Builtin.x_85)
+                           #Builtin.y_86))))))))
        ((def
            neFloat#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_133 #Builtin.y_134)
                   (seq
                      (do
                         (apply
-                           (apply malgo_ne_float #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_ne_float #Builtin.x_133)
+                           #Builtin.y_134))))))))
        ((def
            neDouble#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_157 #Builtin.y_158)
                   (seq
                      (do
                         (apply
-                           (apply malgo_ne_double #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_ne_double #Builtin.x_157)
+                           #Builtin.y_158))))))))
        ((def
            neChar#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_181 #Builtin.y_182)
                   (seq
                      (do
                         (apply
-                           (apply malgo_ne_char #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_ne_char #Builtin.x_181)
+                           #Builtin.y_182))))))))
        ((def
            mulInt64#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_36 #Builtin.y_37)
                   (seq
                      (do
                         (apply
-                           (apply malgo_mul_int64_t #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_mul_int64_t #Builtin.x_36)
+                           #Builtin.y_37))))))))
        ((def
            mulInt64
            (fn
               ((clause
-                  ((con Int64# (#Builtin.x_xxx)) (con Int64# (#Builtin.y_xxx)))
+                  ((con Int64# (#Builtin.x_38)) (con Int64# (#Builtin.y_39)))
                   (seq
                      (do
                         (apply
@@ -375,23 +371,23 @@
                            (seq
                               (do
                                  (apply
-                                    (apply mulInt64# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply mulInt64# #Builtin.x_38)
+                                    #Builtin.y_39)))))))))))
        ((def
            mulInt32#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_20 #Builtin.y_21)
                   (seq
                      (do
                         (apply
-                           (apply malgo_mul_int32_t #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_mul_int32_t #Builtin.x_20)
+                           #Builtin.y_21))))))))
        ((def
            mulInt32
            (fn
               ((clause
-                  ((con Int32# (#Builtin.x_xxx)) (con Int32# (#Builtin.y_xxx)))
+                  ((con Int32# (#Builtin.x_22)) (con Int32# (#Builtin.y_23)))
                   (seq
                      (do
                         (apply
@@ -399,23 +395,23 @@
                            (seq
                               (do
                                  (apply
-                                    (apply mulInt32# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply mulInt32# #Builtin.x_22)
+                                    #Builtin.y_23)))))))))))
        ((def
            mulFloat#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_52 #Builtin.y_53)
                   (seq
                      (do
                         (apply
-                           (apply malgo_mul_float #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_mul_float #Builtin.x_52)
+                           #Builtin.y_53))))))))
        ((def
            mulFloat
            (fn
               ((clause
-                  ((con Float# (#Builtin.x_xxx)) (con Float# (#Builtin.y_xxx)))
+                  ((con Float# (#Builtin.x_54)) (con Float# (#Builtin.y_55)))
                   (seq
                      (do
                         (apply
@@ -423,23 +419,23 @@
                            (seq
                               (do
                                  (apply
-                                    (apply mulFloat# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply mulFloat# #Builtin.x_54)
+                                    #Builtin.y_55)))))))))))
        ((def
            mulDouble#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_68 #Builtin.y_69)
                   (seq
                      (do
                         (apply
-                           (apply malgo_mul_double #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_mul_double #Builtin.x_68)
+                           #Builtin.y_69))))))))
        ((def
            mulDouble
            (fn
               ((clause
-                  ((con Double# (#Builtin.x_xxx)) (con Double# (#Builtin.y_xxx)))
+                  ((con Double# (#Builtin.x_70)) (con Double# (#Builtin.y_71)))
                   (seq
                      (do
                         (apply
@@ -447,168 +443,168 @@
                            (seq
                               (do
                                  (apply
-                                    (apply mulDouble# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply mulDouble# #Builtin.x_70)
+                                    #Builtin.y_71)))))))))))
        ((def
            ltString#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_209 #Builtin.y_210)
                   (seq
                      (do
                         (apply
-                           (apply malgo_lt_string #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_lt_string #Builtin.x_209)
+                           #Builtin.y_210))))))))
        ((def
            ltInt64#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_113 #Builtin.y_114)
                   (seq
                      (do
                         (apply
-                           (apply malgo_lt_int64_t #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_lt_int64_t #Builtin.x_113)
+                           #Builtin.y_114))))))))
        ((def
            ltInt32#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_89 #Builtin.y_90)
                   (seq
                      (do
                         (apply
-                           (apply malgo_lt_int32_t #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_lt_int32_t #Builtin.x_89)
+                           #Builtin.y_90))))))))
        ((def
            ltFloat#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_137 #Builtin.y_138)
                   (seq
                      (do
                         (apply
-                           (apply malgo_lt_float #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_lt_float #Builtin.x_137)
+                           #Builtin.y_138))))))))
        ((def
            ltDouble#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_161 #Builtin.y_162)
                   (seq
                      (do
                         (apply
-                           (apply malgo_lt_double #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_lt_double #Builtin.x_161)
+                           #Builtin.y_162))))))))
        ((def
            ltChar#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_185 #Builtin.y_186)
                   (seq
                      (do
                         (apply
-                           (apply malgo_lt_char #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_lt_char #Builtin.x_185)
+                           #Builtin.y_186))))))))
        ((def
            lengthString#
            (fn
               ((clause
-                  (#Builtin.x_xxx)
-                  (seq (do (apply malgo_string_length #Builtin.x_xxx))))))))
+                  (#Builtin.x_235)
+                  (seq (do (apply malgo_string_length #Builtin.x_235))))))))
        ((def
            lengthString
            (fn
               ((clause
-                  ((con String# (#Builtin.str_xxx)))
+                  ((con String# (#Builtin.str_236)))
                   (seq
                      (do
                         (apply
                            Int64#
-                           (seq (do (apply lengthString# #Builtin.str_xxx)))))))))))
+                           (seq (do (apply lengthString# #Builtin.str_236)))))))))))
        ((def
            leString#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_217 #Builtin.y_218)
                   (seq
                      (do
                         (apply
-                           (apply malgo_le_string #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_le_string #Builtin.x_217)
+                           #Builtin.y_218))))))))
        ((def
            leInt64#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_121 #Builtin.y_122)
                   (seq
                      (do
                         (apply
-                           (apply malgo_le_int64_t #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_le_int64_t #Builtin.x_121)
+                           #Builtin.y_122))))))))
        ((def
            leInt32#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_97 #Builtin.y_98)
                   (seq
                      (do
                         (apply
-                           (apply malgo_le_int32_t #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_le_int32_t #Builtin.x_97)
+                           #Builtin.y_98))))))))
        ((def
            leFloat#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_145 #Builtin.y_146)
                   (seq
                      (do
                         (apply
-                           (apply malgo_le_float #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_le_float #Builtin.x_145)
+                           #Builtin.y_146))))))))
        ((def
            leDouble#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_169 #Builtin.y_170)
                   (seq
                      (do
                         (apply
-                           (apply malgo_le_double #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_le_double #Builtin.x_169)
+                           #Builtin.y_170))))))))
        ((def
            leChar#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_193 #Builtin.y_194)
                   (seq
                      (do
                         (apply
-                           (apply malgo_le_char #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_le_char #Builtin.x_193)
+                           #Builtin.y_194))))))))
        ((def
            isUpper#
            (fn
               ((clause
-                  (#Builtin.x_xxx)
-                  (seq (do (apply malgo_is_upper #Builtin.x_xxx))))))))
+                  (#Builtin.x_231)
+                  (seq (do (apply malgo_is_upper #Builtin.x_231))))))))
        ((def
            isTrue#
            (fn
               ((clause ((unboxed (int32 1))) (seq (do True)))
-                 (clause (#Builtin.__xxx) (seq (do False)))))))
+                 (clause (#Builtin.__80) (seq (do False)))))))
        ((def
            isUpper
            (fn
               ((clause
-                  ((con Char# (#Builtin.x_xxx)))
+                  ((con Char# (#Builtin.x_232)))
                   (seq
                      (do
-                        (apply isTrue# (seq (do (apply isUpper# #Builtin.x_xxx)))))))))))
+                        (apply isTrue# (seq (do (apply isUpper# #Builtin.x_232)))))))))))
        ((def
            leChar
            (fn
               ((clause
-                  ((con Char# (#Builtin.x_xxx)) (con Char# (#Builtin.y_xxx)))
+                  ((con Char# (#Builtin.x_195)) (con Char# (#Builtin.y_196)))
                   (seq
                      (do
                         (apply
@@ -616,13 +612,13 @@
                            (seq
                               (do
                                  (apply
-                                    (apply leChar# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply leChar# #Builtin.x_195)
+                                    #Builtin.y_196)))))))))))
        ((def
            leDouble
            (fn
               ((clause
-                  ((con Double# (#Builtin.x_xxx)) (con Double# (#Builtin.y_xxx)))
+                  ((con Double# (#Builtin.x_171)) (con Double# (#Builtin.y_172)))
                   (seq
                      (do
                         (apply
@@ -630,13 +626,13 @@
                            (seq
                               (do
                                  (apply
-                                    (apply leDouble# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply leDouble# #Builtin.x_171)
+                                    #Builtin.y_172)))))))))))
        ((def
            leFloat
            (fn
               ((clause
-                  ((con Float# (#Builtin.x_xxx)) (con Float# (#Builtin.y_xxx)))
+                  ((con Float# (#Builtin.x_147)) (con Float# (#Builtin.y_148)))
                   (seq
                      (do
                         (apply
@@ -644,13 +640,13 @@
                            (seq
                               (do
                                  (apply
-                                    (apply leFloat# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply leFloat# #Builtin.x_147)
+                                    #Builtin.y_148)))))))))))
        ((def
            leInt32
            (fn
               ((clause
-                  ((con Int32# (#Builtin.x_xxx)) (con Int32# (#Builtin.y_xxx)))
+                  ((con Int32# (#Builtin.x_99)) (con Int32# (#Builtin.y_100)))
                   (seq
                      (do
                         (apply
@@ -658,13 +654,13 @@
                            (seq
                               (do
                                  (apply
-                                    (apply leInt32# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply leInt32# #Builtin.x_99)
+                                    #Builtin.y_100)))))))))))
        ((def
            leInt64
            (fn
               ((clause
-                  ((con Int64# (#Builtin.x_xxx)) (con Int64# (#Builtin.y_xxx)))
+                  ((con Int64# (#Builtin.x_123)) (con Int64# (#Builtin.y_124)))
                   (seq
                      (do
                         (apply
@@ -672,13 +668,13 @@
                            (seq
                               (do
                                  (apply
-                                    (apply leInt64# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply leInt64# #Builtin.x_123)
+                                    #Builtin.y_124)))))))))))
        ((def
            leString
            (fn
               ((clause
-                  ((con String# (#Builtin.x_xxx)) (con String# (#Builtin.y_xxx)))
+                  ((con String# (#Builtin.x_219)) (con String# (#Builtin.y_220)))
                   (seq
                      (do
                         (apply
@@ -686,13 +682,13 @@
                            (seq
                               (do
                                  (apply
-                                    (apply leString# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply leString# #Builtin.x_219)
+                                    #Builtin.y_220)))))))))))
        ((def
            ltChar
            (fn
               ((clause
-                  ((con Char# (#Builtin.x_xxx)) (con Char# (#Builtin.y_xxx)))
+                  ((con Char# (#Builtin.x_187)) (con Char# (#Builtin.y_188)))
                   (seq
                      (do
                         (apply
@@ -700,13 +696,13 @@
                            (seq
                               (do
                                  (apply
-                                    (apply ltChar# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply ltChar# #Builtin.x_187)
+                                    #Builtin.y_188)))))))))))
        ((def
            ltDouble
            (fn
               ((clause
-                  ((con Double# (#Builtin.x_xxx)) (con Double# (#Builtin.y_xxx)))
+                  ((con Double# (#Builtin.x_163)) (con Double# (#Builtin.y_164)))
                   (seq
                      (do
                         (apply
@@ -714,13 +710,13 @@
                            (seq
                               (do
                                  (apply
-                                    (apply ltDouble# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply ltDouble# #Builtin.x_163)
+                                    #Builtin.y_164)))))))))))
        ((def
            ltFloat
            (fn
               ((clause
-                  ((con Float# (#Builtin.x_xxx)) (con Float# (#Builtin.y_xxx)))
+                  ((con Float# (#Builtin.x_139)) (con Float# (#Builtin.y_140)))
                   (seq
                      (do
                         (apply
@@ -728,13 +724,13 @@
                            (seq
                               (do
                                  (apply
-                                    (apply ltFloat# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply ltFloat# #Builtin.x_139)
+                                    #Builtin.y_140)))))))))))
        ((def
            ltInt32
            (fn
               ((clause
-                  ((con Int32# (#Builtin.x_xxx)) (con Int32# (#Builtin.y_xxx)))
+                  ((con Int32# (#Builtin.x_91)) (con Int32# (#Builtin.y_92)))
                   (seq
                      (do
                         (apply
@@ -742,13 +738,13 @@
                            (seq
                               (do
                                  (apply
-                                    (apply ltInt32# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply ltInt32# #Builtin.x_91)
+                                    #Builtin.y_92)))))))))))
        ((def
            ltInt64
            (fn
               ((clause
-                  ((con Int64# (#Builtin.x_xxx)) (con Int64# (#Builtin.y_xxx)))
+                  ((con Int64# (#Builtin.x_115)) (con Int64# (#Builtin.y_116)))
                   (seq
                      (do
                         (apply
@@ -756,13 +752,13 @@
                            (seq
                               (do
                                  (apply
-                                    (apply ltInt64# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply ltInt64# #Builtin.x_115)
+                                    #Builtin.y_116)))))))))))
        ((def
            ltString
            (fn
               ((clause
-                  ((con String# (#Builtin.x_xxx)) (con String# (#Builtin.y_xxx)))
+                  ((con String# (#Builtin.x_211)) (con String# (#Builtin.y_212)))
                   (seq
                      (do
                         (apply
@@ -770,13 +766,13 @@
                            (seq
                               (do
                                  (apply
-                                    (apply ltString# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply ltString# #Builtin.x_211)
+                                    #Builtin.y_212)))))))))))
        ((def
            neChar
            (fn
               ((clause
-                  ((con Char# (#Builtin.x_xxx)) (con Char# (#Builtin.y_xxx)))
+                  ((con Char# (#Builtin.x_183)) (con Char# (#Builtin.y_184)))
                   (seq
                      (do
                         (apply
@@ -784,13 +780,13 @@
                            (seq
                               (do
                                  (apply
-                                    (apply neChar# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply neChar# #Builtin.x_183)
+                                    #Builtin.y_184)))))))))))
        ((def
            neDouble
            (fn
               ((clause
-                  ((con Double# (#Builtin.x_xxx)) (con Double# (#Builtin.y_xxx)))
+                  ((con Double# (#Builtin.x_159)) (con Double# (#Builtin.y_160)))
                   (seq
                      (do
                         (apply
@@ -798,13 +794,13 @@
                            (seq
                               (do
                                  (apply
-                                    (apply neDouble# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply neDouble# #Builtin.x_159)
+                                    #Builtin.y_160)))))))))))
        ((def
            neFloat
            (fn
               ((clause
-                  ((con Float# (#Builtin.x_xxx)) (con Float# (#Builtin.y_xxx)))
+                  ((con Float# (#Builtin.x_135)) (con Float# (#Builtin.y_136)))
                   (seq
                      (do
                         (apply
@@ -812,13 +808,13 @@
                            (seq
                               (do
                                  (apply
-                                    (apply neFloat# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply neFloat# #Builtin.x_135)
+                                    #Builtin.y_136)))))))))))
        ((def
            neInt32
            (fn
               ((clause
-                  ((con Int32# (#Builtin.x_xxx)) (con Int32# (#Builtin.y_xxx)))
+                  ((con Int32# (#Builtin.x_87)) (con Int32# (#Builtin.y_88)))
                   (seq
                      (do
                         (apply
@@ -826,13 +822,13 @@
                            (seq
                               (do
                                  (apply
-                                    (apply neInt32# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply neInt32# #Builtin.x_87)
+                                    #Builtin.y_88)))))))))))
        ((def
            neInt64
            (fn
               ((clause
-                  ((con Int64# (#Builtin.x_xxx)) (con Int64# (#Builtin.y_xxx)))
+                  ((con Int64# (#Builtin.x_111)) (con Int64# (#Builtin.y_112)))
                   (seq
                      (do
                         (apply
@@ -840,13 +836,13 @@
                            (seq
                               (do
                                  (apply
-                                    (apply neInt64# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply neInt64# #Builtin.x_111)
+                                    #Builtin.y_112)))))))))))
        ((def
            neString
            (fn
               ((clause
-                  ((con String# (#Builtin.x_xxx)) (con String# (#Builtin.y_xxx)))
+                  ((con String# (#Builtin.x_207)) (con String# (#Builtin.y_208)))
                   (seq
                      (do
                         (apply
@@ -854,75 +850,73 @@
                            (seq
                               (do
                                  (apply
-                                    (apply neString# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply neString# #Builtin.x_207)
+                                    #Builtin.y_208)))))))))))
        ((def
            isLower#
            (fn
               ((clause
-                  (#Builtin.x_xxx)
-                  (seq (do (apply malgo_is_lower #Builtin.x_xxx))))))))
+                  (#Builtin.x_229)
+                  (seq (do (apply malgo_is_lower #Builtin.x_229))))))))
        ((def
            isLower
            (fn
               ((clause
-                  ((con Char# (#Builtin.x_xxx)))
+                  ((con Char# (#Builtin.x_230)))
                   (seq
                      (do
-                        (apply isTrue# (seq (do (apply isLower# #Builtin.x_xxx)))))))))))
+                        (apply isTrue# (seq (do (apply isLower# #Builtin.x_230)))))))))))
        ((def
            isDigit#
            (fn
               ((clause
-                  (#Builtin.x_xxx)
-                  (seq (do (apply malgo_is_digit #Builtin.x_xxx))))))))
+                  (#Builtin.x_227)
+                  (seq (do (apply malgo_is_digit #Builtin.x_227))))))))
        ((def
            isDigit
            (fn
               ((clause
-                  ((con Char# (#Builtin.x_xxx)))
+                  ((con Char# (#Builtin.x_228)))
                   (seq
                      (do
-                        (apply isTrue# (seq (do (apply isDigit# #Builtin.x_xxx)))))))))))
+                        (apply isTrue# (seq (do (apply isDigit# #Builtin.x_228)))))))))))
        ((def
            isAlphanum#
            (fn
               ((clause
-                  (#Builtin.x_xxx)
-                  (seq (do (apply malgo_is_alphanum #Builtin.x_xxx))))))))
+                  (#Builtin.x_233)
+                  (seq (do (apply malgo_is_alphanum #Builtin.x_233))))))))
        ((def
            isAlphanum
            (fn
               ((clause
-                  ((con Char# (#Builtin.x_xxx)))
+                  ((con Char# (#Builtin.x_234)))
                   (seq
                      (do
                         (apply
                            isTrue#
-                           (seq (do (apply isAlphanum# #Builtin.x_xxx)))))))))))
+                           (seq (do (apply isAlphanum# #Builtin.x_234)))))))))))
        ((def
            int64#
-           (fn
-              ((clause (#Builtin.x_xxx) (seq (do (apply Int64# #Builtin.x_xxx))))))))
+           (fn ((clause (#Builtin.x_1) (seq (do (apply Int64# #Builtin.x_1))))))))
        ((def
            int32#
-           (fn
-              ((clause (#Builtin.x_xxx) (seq (do (apply Int32# #Builtin.x_xxx))))))))
+           (fn ((clause (#Builtin.x_0) (seq (do (apply Int32# #Builtin.x_0))))))))
        ((def
            gtString#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_213 #Builtin.y_214)
                   (seq
                      (do
                         (apply
-                           (apply malgo_gt_string #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_gt_string #Builtin.x_213)
+                           #Builtin.y_214))))))))
        ((def
            gtString
            (fn
               ((clause
-                  ((con String# (#Builtin.x_xxx)) (con String# (#Builtin.y_xxx)))
+                  ((con String# (#Builtin.x_215)) (con String# (#Builtin.y_216)))
                   (seq
                      (do
                         (apply
@@ -930,23 +924,23 @@
                            (seq
                               (do
                                  (apply
-                                    (apply gtString# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply gtString# #Builtin.x_215)
+                                    #Builtin.y_216)))))))))))
        ((def
            gtInt64#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_117 #Builtin.y_118)
                   (seq
                      (do
                         (apply
-                           (apply malgo_gt_int64_t #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_gt_int64_t #Builtin.x_117)
+                           #Builtin.y_118))))))))
        ((def
            gtInt64
            (fn
               ((clause
-                  ((con Int64# (#Builtin.x_xxx)) (con Int64# (#Builtin.y_xxx)))
+                  ((con Int64# (#Builtin.x_119)) (con Int64# (#Builtin.y_120)))
                   (seq
                      (do
                         (apply
@@ -954,23 +948,23 @@
                            (seq
                               (do
                                  (apply
-                                    (apply gtInt64# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply gtInt64# #Builtin.x_119)
+                                    #Builtin.y_120)))))))))))
        ((def
            gtInt32#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_93 #Builtin.y_94)
                   (seq
                      (do
                         (apply
-                           (apply malgo_gt_int32_t #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_gt_int32_t #Builtin.x_93)
+                           #Builtin.y_94))))))))
        ((def
            gtInt32
            (fn
               ((clause
-                  ((con Int32# (#Builtin.x_xxx)) (con Int32# (#Builtin.y_xxx)))
+                  ((con Int32# (#Builtin.x_95)) (con Int32# (#Builtin.y_96)))
                   (seq
                      (do
                         (apply
@@ -978,23 +972,23 @@
                            (seq
                               (do
                                  (apply
-                                    (apply gtInt32# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply gtInt32# #Builtin.x_95)
+                                    #Builtin.y_96)))))))))))
        ((def
            gtFloat#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_141 #Builtin.y_142)
                   (seq
                      (do
                         (apply
-                           (apply malgo_gt_float #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_gt_float #Builtin.x_141)
+                           #Builtin.y_142))))))))
        ((def
            gtFloat
            (fn
               ((clause
-                  ((con Float# (#Builtin.x_xxx)) (con Float# (#Builtin.y_xxx)))
+                  ((con Float# (#Builtin.x_143)) (con Float# (#Builtin.y_144)))
                   (seq
                      (do
                         (apply
@@ -1002,23 +996,23 @@
                            (seq
                               (do
                                  (apply
-                                    (apply gtFloat# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply gtFloat# #Builtin.x_143)
+                                    #Builtin.y_144)))))))))))
        ((def
            gtDouble#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_165 #Builtin.y_166)
                   (seq
                      (do
                         (apply
-                           (apply malgo_gt_double #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_gt_double #Builtin.x_165)
+                           #Builtin.y_166))))))))
        ((def
            gtDouble
            (fn
               ((clause
-                  ((con Double# (#Builtin.x_xxx)) (con Double# (#Builtin.y_xxx)))
+                  ((con Double# (#Builtin.x_167)) (con Double# (#Builtin.y_168)))
                   (seq
                      (do
                         (apply
@@ -1026,23 +1020,23 @@
                            (seq
                               (do
                                  (apply
-                                    (apply gtDouble# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply gtDouble# #Builtin.x_167)
+                                    #Builtin.y_168)))))))))))
        ((def
            gtChar#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_189 #Builtin.y_190)
                   (seq
                      (do
                         (apply
-                           (apply malgo_gt_char #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_gt_char #Builtin.x_189)
+                           #Builtin.y_190))))))))
        ((def
            gtChar
            (fn
               ((clause
-                  ((con Char# (#Builtin.x_xxx)) (con Char# (#Builtin.y_xxx)))
+                  ((con Char# (#Builtin.x_191)) (con Char# (#Builtin.y_192)))
                   (seq
                      (do
                         (apply
@@ -1050,13 +1044,13 @@
                            (seq
                               (do
                                  (apply
-                                    (apply gtChar# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply gtChar# #Builtin.x_191)
+                                    #Builtin.y_192)))))))))))
        ((def
            getContents
            (fn
               ((clause
-                  (#Builtin.__xxx)
+                  (#Builtin.__275)
                   (seq
                      (do
                         (apply
@@ -1066,24 +1060,24 @@
            getChar
            (fn
               ((clause
-                  (#Builtin.__xxx)
+                  (#Builtin.__274)
                   (seq
                      (do (apply Char# (seq (do (apply malgo_get_char (tuple))))))))))))
        ((def
            geString#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_221 #Builtin.y_222)
                   (seq
                      (do
                         (apply
-                           (apply malgo_ge_string #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_ge_string #Builtin.x_221)
+                           #Builtin.y_222))))))))
        ((def
            geString
            (fn
               ((clause
-                  ((con String# (#Builtin.x_xxx)) (con String# (#Builtin.y_xxx)))
+                  ((con String# (#Builtin.x_223)) (con String# (#Builtin.y_224)))
                   (seq
                      (do
                         (apply
@@ -1091,23 +1085,23 @@
                            (seq
                               (do
                                  (apply
-                                    (apply geString# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply geString# #Builtin.x_223)
+                                    #Builtin.y_224)))))))))))
        ((def
            geInt64#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_125 #Builtin.y_126)
                   (seq
                      (do
                         (apply
-                           (apply malgo_ge_int64_t #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_ge_int64_t #Builtin.x_125)
+                           #Builtin.y_126))))))))
        ((def
            geInt64
            (fn
               ((clause
-                  ((con Int64# (#Builtin.x_xxx)) (con Int64# (#Builtin.y_xxx)))
+                  ((con Int64# (#Builtin.x_127)) (con Int64# (#Builtin.y_128)))
                   (seq
                      (do
                         (apply
@@ -1115,23 +1109,23 @@
                            (seq
                               (do
                                  (apply
-                                    (apply geInt64# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply geInt64# #Builtin.x_127)
+                                    #Builtin.y_128)))))))))))
        ((def
            geInt32#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_101 #Builtin.y_102)
                   (seq
                      (do
                         (apply
-                           (apply malgo_ge_int32_t #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_ge_int32_t #Builtin.x_101)
+                           #Builtin.y_102))))))))
        ((def
            geInt32
            (fn
               ((clause
-                  ((con Int32# (#Builtin.x_xxx)) (con Int32# (#Builtin.y_xxx)))
+                  ((con Int32# (#Builtin.x_103)) (con Int32# (#Builtin.y_104)))
                   (seq
                      (do
                         (apply
@@ -1139,23 +1133,23 @@
                            (seq
                               (do
                                  (apply
-                                    (apply geInt32# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply geInt32# #Builtin.x_103)
+                                    #Builtin.y_104)))))))))))
        ((def
            geFloat#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_149 #Builtin.y_150)
                   (seq
                      (do
                         (apply
-                           (apply malgo_ge_float #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_ge_float #Builtin.x_149)
+                           #Builtin.y_150))))))))
        ((def
            geFloat
            (fn
               ((clause
-                  ((con Float# (#Builtin.x_xxx)) (con Float# (#Builtin.y_xxx)))
+                  ((con Float# (#Builtin.x_151)) (con Float# (#Builtin.y_152)))
                   (seq
                      (do
                         (apply
@@ -1163,23 +1157,23 @@
                            (seq
                               (do
                                  (apply
-                                    (apply geFloat# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply geFloat# #Builtin.x_151)
+                                    #Builtin.y_152)))))))))))
        ((def
            geDouble#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_173 #Builtin.y_174)
                   (seq
                      (do
                         (apply
-                           (apply malgo_ge_double #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_ge_double #Builtin.x_173)
+                           #Builtin.y_174))))))))
        ((def
            geDouble
            (fn
               ((clause
-                  ((con Double# (#Builtin.x_xxx)) (con Double# (#Builtin.y_xxx)))
+                  ((con Double# (#Builtin.x_175)) (con Double# (#Builtin.y_176)))
                   (seq
                      (do
                         (apply
@@ -1187,23 +1181,23 @@
                            (seq
                               (do
                                  (apply
-                                    (apply geDouble# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply geDouble# #Builtin.x_175)
+                                    #Builtin.y_176)))))))))))
        ((def
            geChar#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_197 #Builtin.y_198)
                   (seq
                      (do
                         (apply
-                           (apply malgo_ge_char #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_ge_char #Builtin.x_197)
+                           #Builtin.y_198))))))))
        ((def
            geChar
            (fn
               ((clause
-                  ((con Char# (#Builtin.x_xxx)) (con Char# (#Builtin.y_xxx)))
+                  ((con Char# (#Builtin.x_199)) (con Char# (#Builtin.y_200)))
                   (seq
                      (do
                         (apply
@@ -1211,36 +1205,35 @@
                            (seq
                               (do
                                  (apply
-                                    (apply geChar# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply geChar# #Builtin.x_199)
+                                    #Builtin.y_200)))))))))))
        ((def
            flush
-           (fn ((clause (#Builtin.__xxx) (seq (do (apply malgo_flush (tuple)))))))))
+           (fn ((clause (#Builtin.__273) (seq (do (apply malgo_flush (tuple)))))))))
        ((def
            float#
-           (fn
-              ((clause (#Builtin.x_xxx) (seq (do (apply Float# #Builtin.x_xxx))))))))
+           (fn ((clause (#Builtin.x_2) (seq (do (apply Float# #Builtin.x_2))))))))
        ((def
            exitFailure
            (fn
               ((clause
-                  (#Builtin.__xxx)
+                  (#Builtin.__267)
                   (seq (do (apply malgo_exit_failure (tuple)))))))))
        ((def
            eqString#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_201 #Builtin.y_202)
                   (seq
                      (do
                         (apply
-                           (apply malgo_eq_string #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_eq_string #Builtin.x_201)
+                           #Builtin.y_202))))))))
        ((def
            eqString
            (fn
               ((clause
-                  ((con String# (#Builtin.x_xxx)) (con String# (#Builtin.y_xxx)))
+                  ((con String# (#Builtin.x_203)) (con String# (#Builtin.y_204)))
                   (seq
                      (do
                         (apply
@@ -1248,23 +1241,23 @@
                            (seq
                               (do
                                  (apply
-                                    (apply eqString# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply eqString# #Builtin.x_203)
+                                    #Builtin.y_204)))))))))))
        ((def
            eqInt64#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_105 #Builtin.y_106)
                   (seq
                      (do
                         (apply
-                           (apply malgo_eq_int64_t #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_eq_int64_t #Builtin.x_105)
+                           #Builtin.y_106))))))))
        ((def
            eqInt64
            (fn
               ((clause
-                  ((con Int64# (#Builtin.x_xxx)) (con Int64# (#Builtin.y_xxx)))
+                  ((con Int64# (#Builtin.x_107)) (con Int64# (#Builtin.y_108)))
                   (seq
                      (do
                         (apply
@@ -1272,23 +1265,23 @@
                            (seq
                               (do
                                  (apply
-                                    (apply eqInt64# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply eqInt64# #Builtin.x_107)
+                                    #Builtin.y_108)))))))))))
        ((def
            eqInt32#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_81 #Builtin.y_82)
                   (seq
                      (do
                         (apply
-                           (apply malgo_eq_int32_t #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_eq_int32_t #Builtin.x_81)
+                           #Builtin.y_82))))))))
        ((def
            eqInt32
            (fn
               ((clause
-                  ((con Int32# (#Builtin.x_xxx)) (con Int32# (#Builtin.y_xxx)))
+                  ((con Int32# (#Builtin.x_83)) (con Int32# (#Builtin.y_84)))
                   (seq
                      (do
                         (apply
@@ -1296,23 +1289,23 @@
                            (seq
                               (do
                                  (apply
-                                    (apply eqInt32# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply eqInt32# #Builtin.x_83)
+                                    #Builtin.y_84)))))))))))
        ((def
            eqFloat#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_129 #Builtin.y_130)
                   (seq
                      (do
                         (apply
-                           (apply malgo_eq_float #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_eq_float #Builtin.x_129)
+                           #Builtin.y_130))))))))
        ((def
            eqFloat
            (fn
               ((clause
-                  ((con Float# (#Builtin.x_xxx)) (con Float# (#Builtin.y_xxx)))
+                  ((con Float# (#Builtin.x_131)) (con Float# (#Builtin.y_132)))
                   (seq
                      (do
                         (apply
@@ -1320,23 +1313,23 @@
                            (seq
                               (do
                                  (apply
-                                    (apply eqFloat# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply eqFloat# #Builtin.x_131)
+                                    #Builtin.y_132)))))))))))
        ((def
            eqDouble#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_153 #Builtin.y_154)
                   (seq
                      (do
                         (apply
-                           (apply malgo_eq_double #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_eq_double #Builtin.x_153)
+                           #Builtin.y_154))))))))
        ((def
            eqDouble
            (fn
               ((clause
-                  ((con Double# (#Builtin.x_xxx)) (con Double# (#Builtin.y_xxx)))
+                  ((con Double# (#Builtin.x_155)) (con Double# (#Builtin.y_156)))
                   (seq
                      (do
                         (apply
@@ -1344,23 +1337,23 @@
                            (seq
                               (do
                                  (apply
-                                    (apply eqDouble# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply eqDouble# #Builtin.x_155)
+                                    #Builtin.y_156)))))))))))
        ((def
            eqChar#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_177 #Builtin.y_178)
                   (seq
                      (do
                         (apply
-                           (apply malgo_eq_char #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_eq_char #Builtin.x_177)
+                           #Builtin.y_178))))))))
        ((def
            eqChar
            (fn
               ((clause
-                  ((con Char# (#Builtin.x_xxx)) (con Char# (#Builtin.y_xxx)))
+                  ((con Char# (#Builtin.x_179)) (con Char# (#Builtin.y_180)))
                   (seq
                      (do
                         (apply
@@ -1368,27 +1361,26 @@
                            (seq
                               (do
                                  (apply
-                                    (apply eqChar# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply eqChar# #Builtin.x_179)
+                                    #Builtin.y_180)))))))))))
        ((def
            double#
-           (fn
-              ((clause (#Builtin.x_xxx) (seq (do (apply Double# #Builtin.x_xxx))))))))
+           (fn ((clause (#Builtin.x_3) (seq (do (apply Double# #Builtin.x_3))))))))
        ((def
            divInt64#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_40 #Builtin.y_41)
                   (seq
                      (do
                         (apply
-                           (apply malgo_div_int64_t #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_div_int64_t #Builtin.x_40)
+                           #Builtin.y_41))))))))
        ((def
            divInt64
            (fn
               ((clause
-                  ((con Int64# (#Builtin.x_xxx)) (con Int64# (#Builtin.y_xxx)))
+                  ((con Int64# (#Builtin.x_42)) (con Int64# (#Builtin.y_43)))
                   (seq
                      (do
                         (apply
@@ -1396,23 +1388,23 @@
                            (seq
                               (do
                                  (apply
-                                    (apply divInt64# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply divInt64# #Builtin.x_42)
+                                    #Builtin.y_43)))))))))))
        ((def
            divInt32#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_24 #Builtin.y_25)
                   (seq
                      (do
                         (apply
-                           (apply malgo_div_int32_t #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_div_int32_t #Builtin.x_24)
+                           #Builtin.y_25))))))))
        ((def
            divInt32
            (fn
               ((clause
-                  ((con Int32# (#Builtin.x_xxx)) (con Int32# (#Builtin.y_xxx)))
+                  ((con Int32# (#Builtin.x_26)) (con Int32# (#Builtin.y_27)))
                   (seq
                      (do
                         (apply
@@ -1420,23 +1412,23 @@
                            (seq
                               (do
                                  (apply
-                                    (apply divInt32# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply divInt32# #Builtin.x_26)
+                                    #Builtin.y_27)))))))))))
        ((def
            divFloat#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_56 #Builtin.y_57)
                   (seq
                      (do
                         (apply
-                           (apply malgo_div_float #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_div_float #Builtin.x_56)
+                           #Builtin.y_57))))))))
        ((def
            divFloat
            (fn
               ((clause
-                  ((con Float# (#Builtin.x_xxx)) (con Float# (#Builtin.y_xxx)))
+                  ((con Float# (#Builtin.x_58)) (con Float# (#Builtin.y_59)))
                   (seq
                      (do
                         (apply
@@ -1444,23 +1436,23 @@
                            (seq
                               (do
                                  (apply
-                                    (apply divFloat# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply divFloat# #Builtin.x_58)
+                                    #Builtin.y_59)))))))))))
        ((def
            divDouble#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_72 #Builtin.y_73)
                   (seq
                      (do
                         (apply
-                           (apply malgo_div_double #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_div_double #Builtin.x_72)
+                           #Builtin.y_73))))))))
        ((def
            divDouble
            (fn
               ((clause
-                  ((con Double# (#Builtin.x_xxx)) (con Double# (#Builtin.y_xxx)))
+                  ((con Double# (#Builtin.x_74)) (con Double# (#Builtin.y_75)))
                   (seq
                      (do
                         (apply
@@ -1468,23 +1460,23 @@
                            (seq
                               (do
                                  (apply
-                                    (apply divDouble# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply divDouble# #Builtin.x_74)
+                                    #Builtin.y_75)))))))))))
        ((def
            consString#
            (fn
               ((clause
-                  (#Builtin.c_xxx #Builtin.cs_xxx)
+                  (#Builtin.c_241 #Builtin.cs_242)
                   (seq
                      (do
                         (apply
-                           (apply malgo_string_cons #Builtin.c_xxx)
-                           #Builtin.cs_xxx))))))))
+                           (apply malgo_string_cons #Builtin.c_241)
+                           #Builtin.cs_242))))))))
        ((def
            consString
            (fn
               ((clause
-                  ((con Char# (#Builtin.c_xxx)) (con String# (#Builtin.cs_xxx)))
+                  ((con Char# (#Builtin.c_243)) (con String# (#Builtin.cs_244)))
                   (seq
                      (do
                         (apply
@@ -1492,27 +1484,26 @@
                            (seq
                               (do
                                  (apply
-                                    (apply consString# #Builtin.c_xxx)
-                                    #Builtin.cs_xxx)))))))))))
+                                    (apply consString# #Builtin.c_243)
+                                    #Builtin.cs_244)))))))))))
        ((def
            char#
-           (fn
-              ((clause (#Builtin.x_xxx) (seq (do (apply Char# #Builtin.x_xxx))))))))
+           (fn ((clause (#Builtin.x_4) (seq (do (apply Char# #Builtin.x_4))))))))
        ((def
            atString#
            (fn
               ((clause
-                  (#Builtin.i_xxx #Builtin.x_xxx)
+                  (#Builtin.i_237 #Builtin.x_238)
                   (seq
                      (do
                         (apply
-                           (apply malgo_string_at #Builtin.i_xxx)
-                           #Builtin.x_xxx))))))))
+                           (apply malgo_string_at #Builtin.i_237)
+                           #Builtin.x_238))))))))
        ((def
            atString
            (fn
               ((clause
-                  ((con Int64# (#Builtin.i_xxx)) (con String# (#Builtin.x_xxx)))
+                  ((con Int64# (#Builtin.i_239)) (con String# (#Builtin.x_240)))
                   (seq
                      (do
                         (apply
@@ -1520,23 +1511,23 @@
                            (seq
                               (do
                                  (apply
-                                    (apply atString# #Builtin.i_xxx)
-                                    #Builtin.x_xxx)))))))))))
+                                    (apply atString# #Builtin.i_239)
+                                    #Builtin.x_240)))))))))))
        ((def
            appendString#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_245 #Builtin.y_246)
                   (seq
                      (do
                         (apply
-                           (apply malgo_string_append #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_string_append #Builtin.x_245)
+                           #Builtin.y_246))))))))
        ((def
            appendString
            (fn
               ((clause
-                  ((con String# (#Builtin.x_xxx)) (con String# (#Builtin.y_xxx)))
+                  ((con String# (#Builtin.x_247)) (con String# (#Builtin.y_248)))
                   (seq
                      (do
                         (apply
@@ -1544,23 +1535,23 @@
                            (seq
                               (do
                                  (apply
-                                    (apply appendString# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply appendString# #Builtin.x_247)
+                                    #Builtin.y_248)))))))))))
        ((def
            addInt64#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_28 #Builtin.y_29)
                   (seq
                      (do
                         (apply
-                           (apply malgo_add_int64_t #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_add_int64_t #Builtin.x_28)
+                           #Builtin.y_29))))))))
        ((def
            addInt64
            (fn
               ((clause
-                  ((con Int64# (#Builtin.x_xxx)) (con Int64# (#Builtin.y_xxx)))
+                  ((con Int64# (#Builtin.x_30)) (con Int64# (#Builtin.y_31)))
                   (seq
                      (do
                         (apply
@@ -1568,23 +1559,23 @@
                            (seq
                               (do
                                  (apply
-                                    (apply addInt64# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply addInt64# #Builtin.x_30)
+                                    #Builtin.y_31)))))))))))
        ((def
            addInt32#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_12 #Builtin.y_13)
                   (seq
                      (do
                         (apply
-                           (apply malgo_add_int32_t #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_add_int32_t #Builtin.x_12)
+                           #Builtin.y_13))))))))
        ((def
            addInt32
            (fn
               ((clause
-                  ((con Int32# (#Builtin.x_xxx)) (con Int32# (#Builtin.y_xxx)))
+                  ((con Int32# (#Builtin.x_14)) (con Int32# (#Builtin.y_15)))
                   (seq
                      (do
                         (apply
@@ -1592,23 +1583,23 @@
                            (seq
                               (do
                                  (apply
-                                    (apply addInt32# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply addInt32# #Builtin.x_14)
+                                    #Builtin.y_15)))))))))))
        ((def
            addFloat#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_44 #Builtin.y_45)
                   (seq
                      (do
                         (apply
-                           (apply malgo_add_float #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_add_float #Builtin.x_44)
+                           #Builtin.y_45))))))))
        ((def
            addFloat
            (fn
               ((clause
-                  ((con Float# (#Builtin.x_xxx)) (con Float# (#Builtin.y_xxx)))
+                  ((con Float# (#Builtin.x_46)) (con Float# (#Builtin.y_47)))
                   (seq
                      (do
                         (apply
@@ -1616,23 +1607,23 @@
                            (seq
                               (do
                                  (apply
-                                    (apply addFloat# #Builtin.x_xxx)
-                                    #Builtin.y_xxx)))))))))))
+                                    (apply addFloat# #Builtin.x_46)
+                                    #Builtin.y_47)))))))))))
        ((def
            addDouble#
            (fn
               ((clause
-                  (#Builtin.x_xxx #Builtin.y_xxx)
+                  (#Builtin.x_60 #Builtin.y_61)
                   (seq
                      (do
                         (apply
-                           (apply malgo_add_double #Builtin.x_xxx)
-                           #Builtin.y_xxx))))))))
+                           (apply malgo_add_double #Builtin.x_60)
+                           #Builtin.y_61))))))))
        ((def
            addDouble
            (fn
               ((clause
-                  ((con Double# (#Builtin.x_xxx)) (con Double# (#Builtin.y_xxx)))
+                  ((con Double# (#Builtin.x_62)) (con Double# (#Builtin.y_63)))
                   (seq
                      (do
                         (apply
@@ -1640,16 +1631,16 @@
                            (seq
                               (do
                                  (apply
-                                    (apply addDouble# #Builtin.x_xxx)
-                                    #Builtin.y_xxx))))))))))))
+                                    (apply addDouble# #Builtin.x_62)
+                                    #Builtin.y_63))))))))))))
       ((sig int32# (-> Int32# Int32))
          (sig int64# (-> Int64# Int64))
          (sig float# (-> Float# Float))
          (sig double# (-> Double# Double))
          (sig char# (-> Char# Char))
          (sig string# (-> String# String))
-         (sig panic (-> String #Builtin.a_xxx))
-         (sig undefined #Builtin.a_xxx)
+         (sig panic (-> String #Builtin.a_7))
+         (sig undefined #Builtin.a_11)
          (sig addInt32# (-> Int32# (-> Int32# Int32#)))
          (sig addInt32 (-> Int32 (-> Int32 Int32)))
          (sig subInt32# (-> Int32# (-> Int32# Int32#)))
@@ -1790,7 +1781,7 @@
          (sig toStringDouble (-> Double String))
          (sig toStringChar# (-> Char# String#))
          (sig toStringChar (-> Char String))
-         (sig exitFailure (-> (tuple) #Builtin.a_xxx))
+         (sig exitFailure (-> (tuple) #Builtin.a_266))
          (sig printChar# (-> Char# (tuple)))
          (sig printChar (-> Char (tuple)))
          (sig printString# (-> String# (tuple)))
@@ -1803,8 +1794,8 @@
          (data String () ((String# (String#))))
          (data Bool () ((False ()) (True ()))))
       ()
-      ((foreign malgo_panic (-> String# #Builtin.a_xxx))
-         (foreign malgo_unsafe_cast (-> #Builtin.a_xxx #Builtin.b_xxx))
+      ((foreign malgo_panic (-> String# #Builtin.a_6))
+         (foreign malgo_unsafe_cast (-> #Builtin.a_9 #Builtin.b_10))
          (foreign malgo_add_int32_t (-> Int32# (-> Int32# Int32#)))
          (foreign malgo_sub_int32_t (-> Int32# (-> Int32# Int32#)))
          (foreign malgo_mul_int32_t (-> Int32# (-> Int32# Int32#)))
@@ -1874,7 +1865,7 @@
          (foreign malgo_float_to_string (-> Float# String#))
          (foreign malgo_double_to_string (-> Double# String#))
          (foreign malgo_char_to_string (-> Char# String#))
-         (foreign malgo_exit_failure (-> (tuple) #Builtin.a_xxx))
+         (foreign malgo_exit_failure (-> (tuple) #Builtin.a_265))
          (foreign malgo_newline (-> (tuple) (tuple)))
          (foreign malgo_print_char (-> Char# (tuple)))
          (foreign malgo_print_string (-> String# (tuple)))

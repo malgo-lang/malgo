@@ -4,16 +4,16 @@
          if
          (fn
             ((clause
-                ((con True ()) #Test1.t_xxx #Test1.__xxx)
-                (seq (do (apply #Test1.t_xxx (tuple)))))
+                ((con True ()) #Test1.t_0 #Test1.__1)
+                (seq (do (apply #Test1.t_0 (tuple)))))
                (clause
-                  ((con False ()) #Test1.__xxx #Test1.f_xxx)
-                  (seq (do (apply #Test1.f_xxx (tuple)))))))))
+                  ((con False ()) #Test1.__2 #Test1.f_3)
+                  (seq (do (apply #Test1.f_3 (tuple)))))))))
        ((def
            main
            (fn
               ((clause
-                  (#Test1.$__xxx)
+                  (#Test1.$__6)
                   (seq
                      (do
                         (apply
@@ -21,7 +21,7 @@
                               (apply if True)
                               (fn
                                  ((clause
-                                     (#Test1.$__xxx)
+                                     (#Test1.$__4)
                                      (seq
                                         (do
                                            (apply
@@ -29,7 +29,7 @@
                                               (string "True"))))))))
                            (fn
                               ((clause
-                                  (#Test1.$__xxx)
+                                  (#Test1.$__5)
                                   (seq
                                      (do
                                         (apply

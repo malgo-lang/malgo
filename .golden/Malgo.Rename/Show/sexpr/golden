@@ -5,45 +5,40 @@
          (record
             (show
                (fn
-                  ((clause
-                      (#Show.x_xxx)
-                      (seq (do (apply toStringInt32 #Show.x_xxx))))))))))
+                  ((clause (#Show.x_3) (seq (do (apply toStringInt32 #Show.x_3))))))))))
        ((def
            show
-           (fn
-              ((clause ((record (show #Show.show_xxx))) (seq (do #Show.show_xxx)))))))
+           (fn ((clause ((record (show #Show.show_5))) (seq (do #Show.show_5)))))))
        ((def
            print
            (fn
               ((clause
-                  (#Show.showDict_xxx #Show.x_xxx)
+                  (#Show.showDict_13 #Show.x_14)
                   (seq
                      (do
                         (apply
                            printString
                            (seq
                               (do
-                                 (apply
-                                    (apply show #Show.showDict_xxx)
-                                    #Show.x_xxx)))))))))))
+                                 (apply (apply show #Show.showDict_13) #Show.x_14)))))))))))
        ((def
            <>
            (fn
               ((clause
-                  (#Show.x_xxx #Show.y_xxx)
-                  (seq (do (apply (apply appendString #Show.x_xxx) #Show.y_xxx))))))))
+                  (#Show.x_0 #Show.y_1)
+                  (seq (do (apply (apply appendString #Show.x_0) #Show.y_1))))))))
        ((def
            showTuple2
            (fn
               ((clause
-                  (#Show.showDictA_xxx #Show.showDictB_xxx)
+                  (#Show.showDictA_8 #Show.showDictB_9)
                   (seq
                      (do
                         (record
                            (show
                               (fn
                                  ((clause
-                                     ((tuple #Show.a_xxx #Show.b_xxx))
+                                     ((tuple #Show.a_10 #Show.b_11))
                                      (seq
                                         (do
                                            (opapp
@@ -52,10 +47,8 @@
                                               (opapp
                                                  <>
                                                  (apply
-                                                    (apply
-                                                       show
-                                                       #Show.showDictA_xxx)
-                                                    #Show.a_xxx)
+                                                    (apply show #Show.showDictA_8)
+                                                    #Show.a_10)
                                                  (opapp
                                                     <>
                                                     (apply String# (string ", "))
@@ -64,8 +57,8 @@
                                                        (apply
                                                           (apply
                                                              show
-                                                             #Show.showDictB_xxx)
-                                                          #Show.b_xxx)
+                                                             #Show.showDictB_9)
+                                                          #Show.b_11)
                                                        (apply
                                                           String#
                                                           (string ")"))))))))))))))))))))
@@ -73,7 +66,7 @@
            main
            (fn
               ((clause
-                  (#Show.$__xxx)
+                  (#Show.$__15)
                   (seq
                      (do
                         (apply
@@ -87,17 +80,17 @@
                               (apply Int32# (int32 2))))))))))))
       ((sig <> (-> String (-> String String)))
          (sig showInt32 (app Show (Int32)))
-         (sig show (-> (app Show (#Show.a_xxx)) (-> #Show.a_xxx String)))
+         (sig show (-> (app Show (#Show.a_4)) (-> #Show.a_4 String)))
          (sig
             showTuple2
             (->
-               (app Show (#Show.a_xxx))
+               (app Show (#Show.a_6))
                (->
-                  (app Show (#Show.b_xxx))
-                  (app Show ((tuple #Show.a_xxx #Show.b_xxx))))))
-         (sig print (-> (app Show (#Show.a_xxx)) (-> #Show.a_xxx (tuple)))))
+                  (app Show (#Show.b_7))
+                  (app Show ((tuple #Show.a_6 #Show.b_7))))))
+         (sig print (-> (app Show (#Show.a_12)) (-> #Show.a_12 (tuple)))))
       ()
-      ((type Show (#Show.a_xxx) (record (show (-> #Show.a_xxx String)))))
+      ((type Show (#Show.a_2) (record (show (-> #Show.a_2 String)))))
       ()
       ((import "runtime/malgo/Builtin.mlg" all)
          (import "runtime/malgo/Prelude.mlg" all))))

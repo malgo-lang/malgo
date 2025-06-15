@@ -18,7 +18,7 @@
                            printString#
                            (seq (do (apply toStringInt64# (int64 1))))))))
                (clause
-                  (#FuncOverUnboxed.__xxx)
+                  (#FuncOverUnboxed.__0)
                   (seq
                      (do
                         (apply
@@ -26,8 +26,7 @@
                            (seq (do (apply toStringInt64# (int64 0))))))))))))
        ((def
            main
-           (fn
-              ((clause (#FuncOverUnboxed.$__xxx) (seq (do (apply f (int64 0))))))))))
+           (fn ((clause (#FuncOverUnboxed.$__1) (seq (do (apply f (int64 0))))))))))
       ()
       ()
       ()

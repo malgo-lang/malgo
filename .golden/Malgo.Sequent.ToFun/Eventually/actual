@@ -1,54 +1,53 @@
 (program
    ((step
        (lambda
-          ($Eventually.param_xxx)
+          ($Eventually.param_29)
           (select
-             $Eventually.param_xxx
-             (((Done (#Eventually.value_xxx))
-                 (apply (invoke Done) (#Eventually.value_xxx)))
-                ((NotYetDone (#Eventually.work_xxx))
-                   (apply #Eventually.work_xxx ((tuple ()))))))))
+             $Eventually.param_29
+             (((Done (#Eventually.value_12))
+                 (apply (invoke Done) (#Eventually.value_12)))
+                ((NotYetDone (#Eventually.work_13))
+                   (apply #Eventually.work_13 ((tuple ()))))))))
       (return
          (lambda
-            ($Eventually.param_xxx)
+            ($Eventually.param_30)
             (select
-               $Eventually.param_xxx
-               (((expand ((bind #Eventually.__xxx) (return #Eventually.x_xxx)))
-                   #Eventually.x_xxx)))))
+               $Eventually.param_30
+               (((expand ((bind #Eventually.__20) (return #Eventually.x_21)))
+                   #Eventually.x_21)))))
       (eventuallyBind
          (lambda
-            ($Eventually.param_xxx)
+            ($Eventually.param_31)
             (lambda
-               ($Eventually.param_xxx)
+               ($Eventually.param_32)
                (select
-                  (tuple ($Eventually.param_xxx $Eventually.param_xxx))
-                  (((tuple ((Done (#Eventually.value_xxx)) #Eventually.k_xxx))
-                      (apply #Eventually.k_xxx (#Eventually.value_xxx)))
-                     ((tuple
-                         ((NotYetDone (#Eventually.work_xxx)) #Eventually.k_xxx))
+                  (tuple ($Eventually.param_31 $Eventually.param_32))
+                  (((tuple ((Done (#Eventually.value_7)) #Eventually.k_8))
+                      (apply #Eventually.k_8 (#Eventually.value_7)))
+                     ((tuple ((NotYetDone (#Eventually.work_9)) #Eventually.k_10))
                         (apply
                            (invoke NotYetDone)
                            ((lambda
-                               ($Eventually.param_xxx)
+                               ($Eventually.param_33)
                                (select
-                                  $Eventually.param_xxx
-                                  ((#Eventually.$__xxx
+                                  $Eventually.param_33
+                                  ((#Eventually.$__11
                                       (apply
                                          (apply
                                             (invoke eventuallyBind)
                                             ((apply
-                                                #Eventually.work_xxx
+                                                #Eventually.work_9
                                                 ((tuple ())))))
-                                         (#Eventually.k_xxx))))))))))))))
+                                         (#Eventually.k_10))))))))))))))
       (eventually
          (object ((bind (invoke eventuallyBind)) (return (invoke Done)))))
       (bind
          (lambda
-            ($Eventually.param_xxx)
+            ($Eventually.param_34)
             (select
-               $Eventually.param_xxx
-               (((expand ((bind #Eventually.x_xxx) (return #Eventually.__xxx)))
-                   #Eventually.x_xxx)))))
+               $Eventually.param_34
+               (((expand ((bind #Eventually.x_16) (return #Eventually.__17)))
+                   #Eventually.x_16)))))
       (comp
          (apply
             (apply
@@ -56,40 +55,40 @@
                ((apply
                    (invoke NotYetDone)
                    ((lambda
-                       ($Eventually.param_xxx)
+                       ($Eventually.param_35)
                        (select
-                          $Eventually.param_xxx
-                          ((#Eventually.$__xxx
+                          $Eventually.param_35
+                          ((#Eventually.$__22
                               (apply
                                  (invoke Done)
                                  ((apply
                                      (invoke printString)
                                      ((apply (invoke String#) ("1"))))))))))))))
             ((lambda
-                ($Eventually.param_xxx)
+                ($Eventually.param_36)
                 (select
-                   $Eventually.param_xxx
-                   ((#Eventually.__xxx
+                   $Eventually.param_36
+                   ((#Eventually.__23
                        (apply
                           (apply
                              (apply (invoke bind) ((invoke eventually)))
                              ((apply
                                  (invoke NotYetDone)
                                  ((lambda
-                                     ($Eventually.param_xxx)
+                                     ($Eventually.param_37)
                                      (select
-                                        $Eventually.param_xxx
-                                        ((#Eventually.$__xxx
+                                        $Eventually.param_37
+                                        ((#Eventually.$__24
                                             (apply
                                                (invoke Done)
                                                ((apply
                                                    (invoke printString)
                                                    ((apply (invoke String#) ("2"))))))))))))))
                           ((lambda
-                              ($Eventually.param_xxx)
+                              ($Eventually.param_38)
                               (select
-                                 $Eventually.param_xxx
-                                 ((#Eventually.__xxx
+                                 $Eventually.param_38
+                                 ((#Eventually.__25
                                      (apply
                                         (apply
                                            (invoke return)
@@ -97,13 +96,13 @@
                                         ((apply (invoke Int32#) (3_i32)))))))))))))))))
       (main
          (lambda
-            ($Eventually.param_xxx)
+            ($Eventually.param_39)
             (select
-               $Eventually.param_xxx
-               ((#Eventually.$__xxx
+               $Eventually.param_39
+               ((#Eventually.$__28
                    (apply
                       (lambda
-                         ($Eventually.tmp_xxx)
+                         ($Eventually.tmp_40)
                          (apply
                             (apply
                                (invoke |>)
@@ -121,26 +120,24 @@
                                           ((invoke step)))))
                                    ((invoke step)))))
                             ((lambda
-                                ($Eventually.param_xxx)
+                                ($Eventually.param_41)
                                 (select
-                                   $Eventually.param_xxx
-                                   (((Done (#Eventually.x_xxx))
+                                   $Eventually.param_41
+                                   (((Done (#Eventually.x_26))
                                        (apply
                                           (invoke printString)
                                           ((apply
                                               (invoke toStringInt32)
-                                              (#Eventually.x_xxx)))))
-                                      ((NotYetDone (#Eventually.__xxx))
+                                              (#Eventually.x_26)))))
+                                      ((NotYetDone (#Eventually.__27))
                                          (apply
                                             (invoke printString)
                                             ((apply (invoke String#) ("not yet")))))))))))
                       ((apply (apply (invoke |>) ((invoke comp))) ((invoke step))))))))))
       (Done
-         (lambda
-            ($Eventually.constructor_xxx)
-            (Done ($Eventually.constructor_xxx))))
+         (lambda ($Eventually.constructor_42) (Done ($Eventually.constructor_42))))
       (NotYetDone
          (lambda
-            ($Eventually.constructor_xxx)
-            (NotYetDone ($Eventually.constructor_xxx)))))
+            ($Eventually.constructor_43)
+            (NotYetDone ($Eventually.constructor_43)))))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

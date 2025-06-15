@@ -4,7 +4,7 @@
          main
          (fn
             ((clause
-                (#TuplePattern.$__xxx)
+                (#TuplePattern.$__3)
                 (seq
                    (do
                       (opapp
@@ -12,17 +12,17 @@
                          (tuple A B)
                          (fn
                             ((clause
-                                ((tuple (con A ()) #TuplePattern.rest_xxx))
+                                ((tuple (con A ()) #TuplePattern.rest_0))
                                 (seq
                                    (do
                                       (apply
                                          printString
                                          (apply String# (string "A"))))))
                                (clause
-                                  ((tuple (con B ()) #TuplePattern.rest_xxx))
+                                  ((tuple (con B ()) #TuplePattern.rest_1))
                                   (seq (do (tuple))))
                                (clause
-                                  ((tuple (con C ()) #TuplePattern.rest_xxx))
+                                  ((tuple (con C ()) #TuplePattern.rest_2))
                                   (seq (do (tuple)))))))))))))))
       ((sig main (-> (tuple) (tuple))))
       ((data T () ((A ()) (B ()) (C ()))))

@@ -1,39 +1,37 @@
 (program
    ((idOverS
        (lambda
-          ($TypeSynonym.param_xxx)
-          (select
-             $TypeSynonym.param_xxx
-             ((#TypeSynonym.x_xxx #TypeSynonym.x_xxx)))))
+          ($TypeSynonym.param_5)
+          (select $TypeSynonym.param_5 ((#TypeSynonym.x_1 #TypeSynonym.x_1)))))
       (hello
          (tuple
             ((apply (invoke String#) ("hello"))
                (apply (invoke String#) ("world")))))
       (main
          (lambda
-            ($TypeSynonym.param_xxx)
+            ($TypeSynonym.param_6)
             (select
-               $TypeSynonym.param_xxx
-               ((#TypeSynonym.$__xxx
+               $TypeSynonym.param_6
+               ((#TypeSynonym.$__4
                    (apply
                       (apply (invoke |>) ((invoke hello)))
                       ((lambda
-                          ($TypeSynonym.param_xxx)
+                          ($TypeSynonym.param_7)
                           (select
-                             $TypeSynonym.param_xxx
-                             (((tuple (#TypeSynonym.h_xxx #TypeSynonym.w_xxx))
+                             $TypeSynonym.param_7
+                             (((tuple (#TypeSynonym.h_2 #TypeSynonym.w_3))
                                  (apply
                                     (lambda
-                                       ($TypeSynonym.tmp_xxx)
+                                       ($TypeSynonym.tmp_8)
                                        (apply
                                           (lambda
-                                             ($TypeSynonym.tmp_xxx)
+                                             ($TypeSynonym.tmp_9)
                                              (apply
                                                 (invoke putStrLn)
-                                                (#TypeSynonym.w_xxx)))
+                                                (#TypeSynonym.w_3)))
                                           ((apply
                                               (invoke putStr)
                                               ((apply (invoke String#) (" ")))))))
-                                    ((apply (invoke putStr) (#TypeSynonym.h_xxx)))))))))))))))
+                                    ((apply (invoke putStr) (#TypeSynonym.h_2)))))))))))))))
       (TCon (TCon ())))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

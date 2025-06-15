@@ -4,17 +4,17 @@
          succ
          (fn
             ((clause
-                (#UseModule.x_xxx)
+                (#UseModule.x_0)
                 (seq
                    (do
                       (apply
-                         (apply addInt32 #UseModule.x_xxx)
+                         (apply addInt32 #UseModule.x_0)
                          (apply Int32# (int32 1))))))))))
        ((def
            main
            (fn
               ((clause
-                  (#UseModule.$__xxx)
+                  (#UseModule.$__1)
                   (seq
                      (do
                         (apply putStrLn (apply String# (string "Hello, world!"))))

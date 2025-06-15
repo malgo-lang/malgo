@@ -4,7 +4,7 @@
          main
          (fn
             ((clause
-                (#NestedMatch.$__xxx)
+                (#NestedMatch.$__1)
                 (seq
                    (do
                       (apply
@@ -39,5 +39,5 @@
          (data Bool2 () ((False2 ()) (True2 ()))))
       ()
       ((foreign malgo_print_string (-> String# (tuple)))
-         (foreign malgo_exit_failure (-> (tuple) #NestedMatch.a_xxx)))
+         (foreign malgo_exit_failure (-> (tuple) #NestedMatch.a_0)))
       ()))

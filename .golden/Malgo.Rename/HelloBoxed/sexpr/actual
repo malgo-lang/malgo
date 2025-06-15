@@ -3,22 +3,20 @@
    ((((def
          string#
          (fn
-            ((clause
-                (#HelloBoxed.x_xxx)
-                (seq (do (apply String# #HelloBoxed.x_xxx))))))))
+            ((clause (#HelloBoxed.x_1) (seq (do (apply String# #HelloBoxed.x_1))))))))
        ((def
            putStrLn
            (fn
               ((clause
-                  ((con String# (#HelloBoxed.str_xxx)))
+                  ((con String# (#HelloBoxed.str_0)))
                   (seq
-                     (do (apply malgo_print_string #HelloBoxed.str_xxx))
+                     (do (apply malgo_print_string #HelloBoxed.str_0))
                      (do (apply malgo_newline (tuple)))))))))
        ((def
            main
            (fn
               ((clause
-                  (#HelloBoxed.$__xxx)
+                  (#HelloBoxed.$__2)
                   (seq
                      (do (apply putStrLn (apply String# (string "Hello, world")))))))))))
       ((sig putStrLn (-> String (tuple))) (sig string# (-> String# String)))

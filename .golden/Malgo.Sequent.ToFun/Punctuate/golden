@@ -2,18 +2,18 @@
    ((<> (invoke appendString))
       (show
          (lambda
-            ($Punctuate.param_xxx)
+            ($Punctuate.param_5)
             (select
-               $Punctuate.param_xxx
-               (((Symbol (#Punctuate.str_xxx))
+               $Punctuate.param_5
+               (((Symbol (#Punctuate.str_0))
                    (apply
                       (apply (invoke <>) ((apply (invoke String#) ("Symbol "))))
-                      (#Punctuate.str_xxx)))
-                  ((SInt (#Punctuate.int_xxx))
+                      (#Punctuate.str_0)))
+                  ((SInt (#Punctuate.int_1))
                      (apply
                         (apply (invoke <>) ((apply (invoke String#) ("SInt "))))
-                        ((apply (invoke toStringInt32) (#Punctuate.int_xxx)))))
-                  ((SList (#Punctuate.ss_xxx))
+                        ((apply (invoke toStringInt32) (#Punctuate.int_1)))))
+                  ((SList (#Punctuate.ss_2))
                      (apply
                         (apply (invoke <>) ((apply (invoke String#) ("SList ["))))
                         ((apply
@@ -29,16 +29,16 @@
                                            (apply
                                               (invoke mapList)
                                               ((invoke show)))
-                                           (#Punctuate.ss_xxx))))))))
+                                           (#Punctuate.ss_2))))))))
                             ((apply (invoke String#) ("]")))))))))))
       (main
          (lambda
-            ($Punctuate.param_xxx)
+            ($Punctuate.param_6)
             (select
-               $Punctuate.param_xxx
-               ((#Punctuate.$__xxx
+               $Punctuate.param_6
+               ((#Punctuate.$__4
                    (let
-                      #Punctuate.x_xxx
+                      #Punctuate.x_3
                       (apply
                          (invoke SList)
                          ((apply
@@ -77,15 +77,10 @@
                                  ((invoke Nil)))))))
                       (apply
                          (invoke putStrLn)
-                         ((apply (invoke show) (#Punctuate.x_xxx))))))))))
+                         ((apply (invoke show) (#Punctuate.x_3))))))))))
       (Symbol
-         (lambda
-            ($Punctuate.constructor_xxx)
-            (Symbol ($Punctuate.constructor_xxx))))
-      (SInt
-         (lambda ($Punctuate.constructor_xxx) (SInt ($Punctuate.constructor_xxx))))
+         (lambda ($Punctuate.constructor_7) (Symbol ($Punctuate.constructor_7))))
+      (SInt (lambda ($Punctuate.constructor_8) (SInt ($Punctuate.constructor_8))))
       (SList
-         (lambda
-            ($Punctuate.constructor_xxx)
-            (SList ($Punctuate.constructor_xxx)))))
+         (lambda ($Punctuate.constructor_9) (SList ($Punctuate.constructor_9)))))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

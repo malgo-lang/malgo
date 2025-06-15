@@ -1,71 +1,69 @@
 ((executeWhenLoaded
-    $Seq.return_xxx
+    $Seq.return_5
     (invoke
        Int32#
        (apply
           (1_i32)
           ((then
-              #Seq.x_xxx
+              #Seq.x_0
               (invoke
                  Int32#
                  (apply
                     (2_i32)
                     ((then
-                        #Seq.y_xxx
+                        #Seq.y_1
                         (cut
                            (lambda
-                              ($Seq.tmp_xxx $Seq.return_xxx)
+                              ($Seq.tmp_3 $Seq.return_9)
                               (invoke
                                  addInt32
                                  (apply
-                                    (#Seq.x_xxx)
-                                    ((apply (#Seq.y_xxx) ($Seq.return_xxx))))))
+                                    (#Seq.x_0)
+                                    ((apply (#Seq.y_1) ($Seq.return_9))))))
                            (apply
                               ((do
-                                  $Seq.return_xxx
+                                  $Seq.return_6
                                   (invoke
                                      printString
                                      (apply
                                         ((do
-                                            $Seq.return_xxx
+                                            $Seq.return_7
                                             (invoke
                                                toStringInt32
                                                (apply
                                                   ((do
-                                                      $Seq.return_xxx
+                                                      $Seq.return_8
                                                       (invoke
                                                          addInt32
                                                          (apply
-                                                            (#Seq.x_xxx)
+                                                            (#Seq.x_0)
                                                             ((apply
-                                                                (#Seq.y_xxx)
-                                                                ($Seq.return_xxx)))))))
-                                                  ($Seq.return_xxx)))))
-                                        ($Seq.return_xxx)))))
-                              ($Seq.return_xxx))))))))))))
+                                                                (#Seq.y_1)
+                                                                ($Seq.return_8)))))))
+                                                  ($Seq.return_7)))))
+                                        ($Seq.return_6)))))
+                              ($Seq.return_5))))))))))))
    (main
-      $Seq.return_xxx
+      $Seq.return_10
       (cut
          (lambda
-            ($Seq.param_xxx $Seq.return_xxx)
+            ($Seq.param_4 $Seq.return_11)
             (cut
-               $Seq.param_xxx
+               $Seq.param_4
                (select
-                  (#Seq.$__xxx
+                  (#Seq.$__2
                      (invoke
                         printString
                         (apply
                            ((do
-                               $Seq.return_xxx
+                               $Seq.return_12
                                (invoke
                                   toStringInt32
                                   (apply
                                      ((do
-                                         $Seq.return_xxx
-                                         (invoke
-                                            executeWhenLoaded
-                                            $Seq.return_xxx)))
-                                     ($Seq.return_xxx)))))
-                           ($Seq.return_xxx)))))))
-         $Seq.return_xxx))
+                                         $Seq.return_13
+                                         (invoke executeWhenLoaded $Seq.return_13)))
+                                     ($Seq.return_12)))))
+                           ($Seq.return_11)))))))
+         $Seq.return_10))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

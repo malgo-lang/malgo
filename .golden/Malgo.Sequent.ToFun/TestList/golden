@@ -1,12 +1,12 @@
 (program
    ((main
        (lambda
-          ($TestList.param_xxx)
+          ($TestList.param_3)
           (select
-             $TestList.param_xxx
-             ((#TestList.$__xxx
+             $TestList.param_3
+             ((#TestList.$__2
                  (let
-                    #TestList.xs_xxx
+                    #TestList.xs_0
                     (apply
                        (apply (invoke Cons) ((apply (invoke Int32#) (1_i32))))
                        ((apply
@@ -17,11 +17,11 @@
                                   ((apply (invoke Int32#) (3_i32))))
                                ((invoke Nil)))))))
                     (let
-                       #TestList.nil_xxx
+                       #TestList.nil_1
                        (invoke Nil)
                        (apply
                           (invoke putStrLn)
                           ((apply
                               (invoke toStringInt32)
-                              ((apply (invoke head) (#TestList.xs_xxx))))))))))))))
+                              ((apply (invoke head) (#TestList.xs_0))))))))))))))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

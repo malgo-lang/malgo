@@ -1,8 +1,6 @@
 (module
    "test/testcases/malgo/TypeSynonym.mlg"
-   ((((def
-         idOverS
-         (fn ((clause (#TypeSynonym.x_xxx) (seq (do #TypeSynonym.x_xxx)))))))
+   ((((def idOverS (fn ((clause (#TypeSynonym.x_1) (seq (do #TypeSynonym.x_1)))))))
        ((def
            hello
            (tuple
@@ -12,7 +10,7 @@
            main
            (fn
               ((clause
-                  (#TypeSynonym.$__xxx)
+                  (#TypeSynonym.$__4)
                   (seq
                      (do
                         (opapp
@@ -20,22 +18,19 @@
                            hello
                            (fn
                               ((clause
-                                  ((tuple #TypeSynonym.h_xxx #TypeSynonym.w_xxx))
+                                  ((tuple #TypeSynonym.h_2 #TypeSynonym.w_3))
                                   (seq
-                                     (do (apply putStr #TypeSynonym.h_xxx))
+                                     (do (apply putStr #TypeSynonym.h_2))
                                      (do
                                         (apply
                                            putStr
                                            (apply String# (string " "))))
-                                     (do (apply putStrLn #TypeSynonym.w_xxx)))))))))))))))
+                                     (do (apply putStrLn #TypeSynonym.w_3)))))))))))))))
       ((sig hello (app MyTuple (MyString)))
          (sig idOverS (-> S T))
          (sig main (-> (tuple) (tuple))))
       ((data T () ((TCon ()))))
-      ((type
-          MyTuple
-          (#TypeSynonym.a_xxx)
-          (tuple #TypeSynonym.a_xxx #TypeSynonym.a_xxx))
+      ((type MyTuple (#TypeSynonym.a_0) (tuple #TypeSynonym.a_0 #TypeSynonym.a_0))
          (type MyString () String)
          (type S () T))
       ()

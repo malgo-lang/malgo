@@ -1,22 +1,22 @@
 (program
    ((main
        (lambda
-          ($TuplePattern.param_xxx)
+          ($TuplePattern.param_4)
           (select
-             $TuplePattern.param_xxx
-             ((#TuplePattern.$__xxx
+             $TuplePattern.param_4
+             ((#TuplePattern.$__3
                  (apply
                     (apply (invoke |>) ((tuple ((invoke A) (invoke B)))))
                     ((lambda
-                        ($TuplePattern.param_xxx)
+                        ($TuplePattern.param_5)
                         (select
-                           $TuplePattern.param_xxx
-                           (((tuple ((A ()) #TuplePattern.rest_xxx))
+                           $TuplePattern.param_5
+                           (((tuple ((A ()) #TuplePattern.rest_0))
                                (apply
                                   (invoke printString)
                                   ((apply (invoke String#) ("A")))))
-                              ((tuple ((B ()) #TuplePattern.rest_xxx)) (tuple ()))
-                              ((tuple ((C ()) #TuplePattern.rest_xxx)) (tuple ()))))))))))))
+                              ((tuple ((B ()) #TuplePattern.rest_1)) (tuple ()))
+                              ((tuple ((C ()) #TuplePattern.rest_2)) (tuple ()))))))))))))
       (A (A ()))
       (B (B ()))
       (C (C ())))

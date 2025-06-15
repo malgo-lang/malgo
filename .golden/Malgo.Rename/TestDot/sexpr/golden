@@ -4,7 +4,7 @@
          succ
          (fn
             ((clause
-                ((con Int64# (#TestDot.x_xxx)))
+                ((con Int64# (#TestDot.x_0)))
                 (seq
                    (do
                       (seq
@@ -14,13 +14,13 @@
                                (seq
                                   (do
                                      (apply
-                                        (apply addInt64# #TestDot.x_xxx)
+                                        (apply addInt64# #TestDot.x_0)
                                         (int64 1))))))))))))))
        ((def
            main
            (fn
               ((clause
-                  (#TestDot.$__xxx)
+                  (#TestDot.$__1)
                   (seq
                      (do
                         (apply

@@ -1,20 +1,20 @@
 (program
    ((g
        (lambda
-          ($Undefined.param_xxx)
-          (select $Undefined.param_xxx ((#Undefined.x_xxx (invoke undefined))))))
+          ($Undefined.param_4)
+          (select $Undefined.param_4 ((#Undefined.x_0 (invoke undefined))))))
       (main
          (lambda
-            ($Undefined.param_xxx)
+            ($Undefined.param_5)
             (select
-               $Undefined.param_xxx
-               ((#Undefined.$__xxx
+               $Undefined.param_5
+               ((#Undefined.$__3
                    (let
-                      #Undefined.x_xxx
+                      #Undefined.x_1
                       (invoke undefined)
                       (let
-                         #Undefined.y_xxx
-                         (apply (invoke g) (#Undefined.x_xxx))
+                         #Undefined.y_2
+                         (apply (invoke g) (#Undefined.x_1))
                          (apply
                             (invoke printString)
                             ((apply (invoke String#) ("OK")))))))))))

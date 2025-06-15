@@ -1,20 +1,20 @@
 (module
    "test/testcases/malgo/TestEither.mlg"
-   ((((def id (fn ((clause (#TestEither.x_xxx) (seq (do #TestEither.x_xxx)))))))
+   ((((def id (fn ((clause (#TestEither.x_2) (seq (do #TestEither.x_2)))))))
        ((def
            andThen
            (fn
               ((clause
-                  (#TestEither.__xxx (con Left (#TestEither.x_xxx)))
-                  (seq (do (apply Left #TestEither.x_xxx))))
+                  (#TestEither.__3 (con Left (#TestEither.x_4)))
+                  (seq (do (apply Left #TestEither.x_4))))
                  (clause
-                    (#TestEither.f_xxx (con Right (#TestEither.x_xxx)))
-                    (seq (do (apply #TestEither.f_xxx #TestEither.x_xxx))))))))
+                    (#TestEither.f_5 (con Right (#TestEither.x_6)))
+                    (seq (do (apply #TestEither.f_5 #TestEither.x_6))))))))
        ((def
            main
            (fn
               ((clause
-                  (#TestEither.$__xxx)
+                  (#TestEither.$__16)
                   (seq
                      (do
                         (opapp
@@ -22,7 +22,7 @@
                            (apply Right (apply Int32# (int32 1)))
                            (fn
                               ((clause
-                                  ((con Right (#TestEither.x_xxx)))
+                                  ((con Right (#TestEither.x_7)))
                                   (seq
                                      (do
                                         (apply
@@ -31,9 +31,9 @@
                                               (do
                                                  (apply
                                                     toStringInt32
-                                                    #TestEither.x_xxx)))))))
+                                                    #TestEither.x_7)))))))
                                  (clause
-                                    (#TestEither.__xxx)
+                                    (#TestEither.__8)
                                     (seq
                                        (do
                                           (apply
@@ -41,20 +41,18 @@
                                              (apply
                                                 String#
                                                 (string "unreachable"))))))))))
-                     (let
-                        #TestEither.x_xxx
-                        (apply Right (apply Int32# (int32 1))))
+                     (let #TestEither.x_9 (apply Right (apply Int32# (int32 1))))
                      (do
                         (opapp
                            |>
                            (opapp
                               |>
-                              #TestEither.x_xxx
+                              #TestEither.x_9
                               (apply
                                  andThen
                                  (fn
                                     ((clause
-                                        (#TestEither.x_xxx)
+                                        (#TestEither.x_10)
                                         (seq
                                            (do
                                               (apply
@@ -64,13 +62,13 @@
                                                        (apply
                                                           (apply
                                                              addInt32
-                                                             #TestEither.x_xxx)
+                                                             #TestEither.x_10)
                                                           (apply Int32# (int32 1)))))))))))))
                            (apply
                               andThen
                               (fn
                                  ((clause
-                                     (#TestEither.y_xxx)
+                                     (#TestEither.y_11)
                                      (seq
                                         (do
                                            (opapp
@@ -79,7 +77,7 @@
                                                  |>
                                                  (opapp
                                                     |>
-                                                    #TestEither.y_xxx
+                                                    #TestEither.y_11
                                                     toStringInt32)
                                                  putStr)
                                               Right)))))))))
@@ -90,12 +88,12 @@
                               |>
                               (opapp
                                  |>
-                                 #TestEither.x_xxx
+                                 #TestEither.x_9
                                  (apply
                                     andThen
                                     (fn
                                        ((clause
-                                           (#TestEither.__xxx)
+                                           (#TestEither.__12)
                                            (seq
                                               (do
                                                  (apply
@@ -107,7 +105,7 @@
                                  andThen
                                  (fn
                                     ((clause
-                                        (#TestEither.x_xxx)
+                                        (#TestEither.x_13)
                                         (seq
                                            (do
                                               (apply
@@ -117,28 +115,28 @@
                                                        (apply
                                                           (apply
                                                              addInt32
-                                                             #TestEither.x_xxx)
+                                                             #TestEither.x_13)
                                                           (apply Int32# (int32 1)))))))))))))
                            (fn
                               ((clause
-                                  ((con Left (#TestEither.err_xxx)))
-                                  (seq (do (apply putStrLn #TestEither.err_xxx))))
+                                  ((con Left (#TestEither.err_14)))
+                                  (seq (do (apply putStrLn #TestEither.err_14))))
                                  (clause
-                                    ((con Right (#TestEither.x_xxx)))
+                                    ((con Right (#TestEither.x_15)))
                                     (seq
                                        (do
                                           (opapp
                                              |>
                                              (opapp
                                                 |>
-                                                #TestEither.x_xxx
+                                                #TestEither.x_15
                                                 toStringInt32)
                                              putStrLn)))))))))))))))
       ()
       ((data
           Either
-          (#TestEither.a_xxx #TestEither.b_xxx)
-          ((Left (#TestEither.a_xxx)) (Right (#TestEither.b_xxx)))))
+          (#TestEither.a_0 #TestEither.b_1)
+          ((Left (#TestEither.a_0)) (Right (#TestEither.b_1)))))
       ()
       ()
       ((import "runtime/malgo/Builtin.mlg" all)

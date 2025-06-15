@@ -1,23 +1,21 @@
 (program
    ((f
        (lambda
-          ($DeferLaw.param_xxx)
+          ($DeferLaw.param_4)
           (select
-             $DeferLaw.param_xxx
-             ((#DeferLaw.x_xxx
+             $DeferLaw.param_4
+             ((#DeferLaw.x_1
                  (apply
                     (lambda
-                       ($DeferLaw.param_xxx)
-                       (select
-                          $DeferLaw.param_xxx
-                          ((#DeferLaw.$__xxx #DeferLaw.x_xxx))))
+                       ($DeferLaw.param_5)
+                       (select $DeferLaw.param_5 ((#DeferLaw.$__2 #DeferLaw.x_1))))
                     ((tuple ()))))))))
       (main
          (lambda
-            ($DeferLaw.param_xxx)
+            ($DeferLaw.param_6)
             (select
-               $DeferLaw.param_xxx
-               ((#DeferLaw.$__xxx
+               $DeferLaw.param_6
+               ((#DeferLaw.$__3
                    (apply
                       (invoke putStrLn)
                       ((apply (invoke f) ((apply (invoke String#) ("Hello"))))))))))))
