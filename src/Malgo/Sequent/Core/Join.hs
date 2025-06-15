@@ -1,6 +1,8 @@
 module Malgo.Sequent.Core.Join (joinProgram, JoinPass (..)) where
 
 import Control.Lens
+import Data.Set qualified as Set
+import Debug.Trace (traceM)
 import Effectful
 import Effectful.Reader.Static (Reader)
 import Effectful.State.Static.Local
@@ -43,6 +45,8 @@ joinStatement (Cut producer consumer) = do
 joinStatement (Join range name consumer statement) = do
   statement <- runJoin $ joinStatement statement
   consumer <- joinConsumer' consumer
+  let fvs = freevarsConsumer consumer
+  traceM $ "joinStatement: " <> show range <> " " <> show name <> " " <> show (fmap pretty $ Set.toList fvs)
   pure $ Join range name consumer statement
 joinStatement (Primitive range name producers return) = do
   producers <- traverse joinProducer producers

@@ -10,11 +10,18 @@ module Malgo.Sequent.Core
     Statement (..),
     Branch (..),
     Return,
+    freevars,
+    freevarsProducer,
+    freevarsConsumer,
+    freevarsStatement,
+    freevarsBranch,
+    freevarsPattern,
   )
 where
 
 import Data.Map qualified as Map
 import Data.SCargot.Repr.Basic qualified as S
+import Data.Set qualified as Set
 import Data.Store
 import Malgo.Module
 import Malgo.Prelude
@@ -153,3 +160,50 @@ deriving via (ViaStore (Branch x)) instance (Store (Return x), Store (XJoin x), 
 
 instance (ToSExpr (Return x)) => ToSExpr (Branch x) where
   toSExpr (Branch _ pattern statement) = S.L [toSExpr pattern, toSExpr statement]
+
+-- | Get free variables from Join rank Core types
+freevars :: Program Join -> Set Name
+freevars (Program definitions _) = mconcat $ map freevarsDef definitions
+  where
+    freevarsDef :: (Range, Name, Name, Statement Join) -> Set Name
+    freevarsDef (_, funcName, returnName, statement) =
+      Set.delete funcName $ Set.delete returnName $ freevarsStatement statement
+
+freevarsProducer :: Producer Join -> Set Name
+freevarsProducer (Var _ name) = Set.singleton name
+freevarsProducer (Literal _ _) = mempty
+freevarsProducer (Construct _ _ producers returns) =
+  mconcat (map freevarsProducer producers) <> mconcat (map Set.singleton returns)
+freevarsProducer (Lambda _ names statement) =
+  Set.difference (freevarsStatement statement) (Set.fromList names)
+freevarsProducer (Object _ fields) =
+  mconcat $ map (\(name, statement) -> Set.delete name $ freevarsStatement statement) $ Map.elems fields
+
+-- Do constructor is not available for Join rank (XDo Join = Void)
+
+freevarsConsumer :: Consumer Join -> Set Name
+freevarsConsumer (Label _ name) = Set.singleton name
+freevarsConsumer (Apply _ producers returns) =
+  mconcat (map freevarsProducer producers) <> mconcat (map Set.singleton returns)
+freevarsConsumer (Project _ _ returnValue) = Set.singleton returnValue
+freevarsConsumer (Then _ name statement) =
+  Set.delete name $ freevarsStatement statement
+freevarsConsumer (Finish _) = mempty
+freevarsConsumer (Select _ branches) = mconcat $ map freevarsBranch branches
+
+freevarsStatement :: Statement Join -> Set Name
+freevarsStatement (Cut producer returnValue) =
+  freevarsProducer producer <> Set.singleton returnValue
+freevarsStatement (Join _ name consumer statement) =
+  Set.delete name $ freevarsConsumer consumer <> freevarsStatement statement
+freevarsStatement (Primitive _ _ producers returnValue) =
+  mconcat (map freevarsProducer producers) <> Set.singleton returnValue
+freevarsStatement (Invoke _ name returnValue) =
+  Set.singleton name <> Set.singleton returnValue
+
+freevarsBranch :: Branch Join -> Set Name
+freevarsBranch (Branch _ pattern statement) =
+  Set.difference (freevarsStatement statement) (freevarsPattern pattern)
+
+freevarsPattern :: Pattern -> Set Name
+freevarsPattern = mempty -- Pattern variables are bound, not free
