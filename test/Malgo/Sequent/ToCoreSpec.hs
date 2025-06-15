@@ -2,18 +2,16 @@ module Malgo.Sequent.ToCoreSpec (spec) where
 
 import Data.ByteString qualified as BS
 import Effectful.Reader.Static (runReader)
-import Malgo.Infer
 import Malgo.Monad (runMalgoM)
 import Malgo.Parser.Pass
 import Malgo.Pass
 import Malgo.Prelude
-import Malgo.Refine
 import Malgo.Rename
 import Malgo.SExpr (sShow)
 import Malgo.Sequent.Core.Flat (flatProgram)
 import Malgo.Sequent.Core.Join (joinProgram)
 import Malgo.Sequent.ToCore (toCore)
-import Malgo.Sequent.ToFun (toFun)
+import Malgo.Sequent.ToFun2 (toFun)
 import Malgo.Syntax (Module (..))
 import Malgo.TestUtils
 import System.Directory
@@ -47,9 +45,7 @@ driveToCore srcPath = do
     parsed <- runPass ParserPass (srcPath, src)
     rnEnv <- genBuiltinRnEnv
     (renamed, _) <- runPass RenamePass (parsed, rnEnv)
-    (typed, tcEnv, _) <- runPass InferPass (renamed, rnEnv)
-    refined <- runPass RefinePass (typed, tcEnv)
-    program <- runReader refined.moduleName $ toFun refined.moduleDefinition >>= toCore
+    program <- runReader renamed.moduleName $ toFun renamed.moduleDefinition >>= toCore
     pure $ sShow program
 
 driveFlat :: FilePath -> IO String
@@ -59,9 +55,7 @@ driveFlat srcPath = do
     parsed <- runPass ParserPass (srcPath, src)
     rnEnv <- genBuiltinRnEnv
     (renamed, _) <- runPass RenamePass (parsed, rnEnv)
-    (typed, tcEnv, _) <- runPass InferPass (renamed, rnEnv)
-    refined <- runPass RefinePass (typed, tcEnv)
-    program <- runReader refined.moduleName $ toFun refined.moduleDefinition >>= toCore >>= flatProgram
+    program <- runReader renamed.moduleName $ toFun renamed.moduleDefinition >>= toCore >>= flatProgram
     pure $ sShow program
 
 driveJoin :: FilePath -> IO String
@@ -71,7 +65,5 @@ driveJoin srcPath = do
     parsed <- runPass ParserPass (srcPath, src)
     rnEnv <- genBuiltinRnEnv
     (renamed, _) <- runPass RenamePass (parsed, rnEnv)
-    (typed, tcEnv, _) <- runPass InferPass (renamed, rnEnv)
-    refined <- runPass RefinePass (typed, tcEnv)
-    program <- runReader refined.moduleName $ toFun refined.moduleDefinition >>= toCore >>= flatProgram >>= joinProgram
+    program <- runReader renamed.moduleName $ toFun renamed.moduleDefinition >>= toCore >>= flatProgram >>= joinProgram
     pure $ sShow program

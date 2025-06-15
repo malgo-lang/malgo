@@ -4,14 +4,12 @@ import Data.ByteString qualified as BS
 import Effectful
 import Effectful.Error.Static (runError)
 import Effectful.Reader.Static (runReader)
-import Malgo.Infer
 import Malgo.Module
 import Malgo.Monad (runMalgoM)
 import Malgo.Parser (parse)
 import Malgo.Parser.Pass
 import Malgo.Pass (runCompileError, runPass)
 import Malgo.Prelude
-import Malgo.Refine
 import Malgo.Rename
 import Malgo.Rename.RnEnv qualified as RnEnv
 import Malgo.Sequent.Core
@@ -19,7 +17,7 @@ import Malgo.Sequent.Core.Flat (flatProgram)
 import Malgo.Sequent.Core.Join (joinProgram)
 import Malgo.Sequent.Eval (EvalError, Handlers (..), evalProgram)
 import Malgo.Sequent.ToCore (toCore)
-import Malgo.Sequent.ToFun (toFun)
+import Malgo.Sequent.ToFun2 (toFun)
 import Malgo.Syntax (Module (..))
 import Malgo.TestUtils hiding (setupBuiltin, setupPrelude)
 import System.Directory
@@ -46,11 +44,9 @@ setupBuiltin = do
     parsed <- runPass ParserPass (builtinPath, src)
     rnEnv <- genBuiltinRnEnv
     (renamed, _) <- runPass RenamePass (parsed, rnEnv)
-    (typed, tcEnv, _) <- runPass InferPass (renamed, rnEnv)
-    refined <- runPass RefinePass (typed, tcEnv)
-    program <- runReader refined.moduleName $ toFun refined.moduleDefinition >>= toCore >>= flatProgram >>= joinProgram
-    saveCore refined.moduleName program
-    getModulePath refined.moduleName
+    program <- runReader renamed.moduleName $ toFun renamed.moduleDefinition >>= toCore >>= flatProgram >>= joinProgram
+    saveCore renamed.moduleName program
+    getModulePath renamed.moduleName
 
 setupPrelude :: IO ArtifactPath
 setupPrelude = do
@@ -59,11 +55,9 @@ setupPrelude = do
     parsed <- runPass ParserPass (preludePath, src)
     rnEnv <- genBuiltinRnEnv
     (renamed, _) <- runPass RenamePass (parsed, rnEnv)
-    (typed, tcEnv, _) <- runPass InferPass (renamed, rnEnv)
-    refined <- runPass RefinePass (typed, tcEnv)
-    program <- runReader refined.moduleName $ toFun refined.moduleDefinition >>= toCore >>= flatProgram >>= joinProgram
-    saveCore refined.moduleName program
-    getModulePath refined.moduleName
+    program <- runReader renamed.moduleName $ toFun renamed.moduleDefinition >>= toCore >>= flatProgram >>= joinProgram
+    saveCore renamed.moduleName program
+    getModulePath renamed.moduleName
 
 driveEval :: ArtifactPath -> ArtifactPath -> FilePath -> IO String
 driveEval builtinName preludeName srcPath = do
@@ -75,9 +69,7 @@ driveEval builtinName preludeName srcPath = do
         Right parsed -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
     (renamed, _) <- runPass RenamePass (parsed, rnEnv)
-    (typed, tcEnv, _) <- runPass InferPass (renamed, rnEnv)
-    refined <- runPass RefinePass (typed, tcEnv)
-    Program {definitions = program} <- runReader refined.moduleName $ toFun refined.moduleDefinition >>= toCore >>= flatProgram >>= joinProgram
+    Program {definitions = program} <- runReader renamed.moduleName $ toFun renamed.moduleDefinition >>= toCore >>= flatProgram >>= joinProgram
 
     Program {definitions = builtin} <- load builtinName ".sqt"
     Program {definitions = prelude} <- load preludeName ".sqt"
@@ -88,7 +80,7 @@ driveEval builtinName preludeName srcPath = do
 
     result <-
       runError @EvalError
-        $ runReader refined.moduleName
+        $ runReader renamed.moduleName
         $ runReader
           Handlers
             { stdin,
