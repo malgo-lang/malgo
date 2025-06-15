@@ -45,10 +45,13 @@
                                     ==
                                     #CStyleApply.n_xxx
                                     (apply Int64# (int64 0))))
-                              (fn ((clause () (seq (do #CStyleApply.acc_xxx))))))
+                              (fn
+                                 ((clause
+                                     (#CStyleApply.$__xxx)
+                                     (seq (do #CStyleApply.acc_xxx))))))
                            (fn
                               ((clause
-                                  ()
+                                  (#CStyleApply.$__xxx)
                                   (seq
                                      (do
                                         (apply
@@ -76,7 +79,7 @@
            main
            (fn
               ((clause
-                  ()
+                  (#CStyleApply.$__xxx)
                   (seq
                      (do
                         (opapp

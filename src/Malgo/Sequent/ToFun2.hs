@@ -74,7 +74,7 @@ fromExpr (S.Apply range f x) = do
   x <- fromExpr x
   pure $ F.Apply range f [x]
 fromExpr (S.OpApp (range, _) op x y) = do
-  let f = F.Var range op
+  let f = if idIsExternal op then F.Invoke range op else F.Var range op
   x <- fromExpr x
   y <- fromExpr y
   pure $ F.Apply range (F.Apply range f [x]) [y]

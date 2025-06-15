@@ -7,18 +7,18 @@
                $Punctuate.param_xxx
                (((Symbol (#Punctuate.str_xxx))
                    (apply
-                      (apply <> ((apply (invoke String#) ("Symbol "))))
+                      (apply (invoke <>) ((apply (invoke String#) ("Symbol "))))
                       (#Punctuate.str_xxx)))
                   ((SInt (#Punctuate.int_xxx))
                      (apply
-                        (apply <> ((apply (invoke String#) ("SInt "))))
+                        (apply (invoke <>) ((apply (invoke String#) ("SInt "))))
                         ((apply (invoke toStringInt32) (#Punctuate.int_xxx)))))
                   ((SList (#Punctuate.ss_xxx))
                      (apply
-                        (apply <> ((apply (invoke String#) ("SList ["))))
+                        (apply (invoke <>) ((apply (invoke String#) ("SList ["))))
                         ((apply
                             (apply
-                               <>
+                               (invoke <>)
                                ((apply
                                    (invoke concatString)
                                    ((apply
@@ -32,50 +32,52 @@
                                            (#Punctuate.ss_xxx))))))))
                             ((apply (invoke String#) ("]")))))))))))
       (main
-         (select
-            (tuple ())
-            (((tuple ())
-                (let
-                   #Punctuate.x_xxx
-                   (apply
-                      (invoke SList)
-                      ((apply
-                          (apply
-                             (invoke Cons)
+         (lambda
+            ($Punctuate.param_xxx)
+            (select
+               $Punctuate.param_xxx
+               ((#Punctuate.$__xxx
+                   (let
+                      #Punctuate.x_xxx
+                      (apply
+                         (invoke SList)
+                         ((apply
+                             (apply
+                                (invoke Cons)
+                                ((apply
+                                    (invoke Symbol)
+                                    ((apply (invoke String#) ("x"))))))
                              ((apply
-                                 (invoke Symbol)
-                                 ((apply (invoke String#) ("x"))))))
-                          ((apply
-                              (apply
-                                 (invoke Cons)
-                                 ((apply
-                                     (invoke SList)
-                                     ((apply
-                                         (apply
-                                            (invoke Cons)
+                                 (apply
+                                    (invoke Cons)
+                                    ((apply
+                                        (invoke SList)
+                                        ((apply
+                                            (apply
+                                               (invoke Cons)
+                                               ((apply
+                                                   (invoke Symbol)
+                                                   ((apply (invoke String#) ("y"))))))
                                             ((apply
-                                                (invoke Symbol)
-                                                ((apply (invoke String#) ("y"))))))
-                                         ((apply
-                                             (apply
-                                                (invoke Cons)
-                                                ((apply
-                                                    (invoke SList)
-                                                    ((apply
-                                                        (apply
-                                                           (invoke Cons)
-                                                           ((apply
-                                                               (invoke Symbol)
-                                                               ((apply
-                                                                   (invoke
-                                                                      String#)
-                                                                   ("z"))))))
-                                                        ((invoke Nil)))))))
-                                             ((invoke Nil)))))))))
-                              ((invoke Nil)))))))
-                   (apply
-                      (invoke putStrLn)
-                      ((apply (invoke show) (#Punctuate.x_xxx)))))))))
+                                                (apply
+                                                   (invoke Cons)
+                                                   ((apply
+                                                       (invoke SList)
+                                                       ((apply
+                                                           (apply
+                                                              (invoke Cons)
+                                                              ((apply
+                                                                  (invoke Symbol)
+                                                                  ((apply
+                                                                      (invoke
+                                                                         String#)
+                                                                      ("z"))))))
+                                                           ((invoke Nil)))))))
+                                                ((invoke Nil)))))))))
+                                 ((invoke Nil)))))))
+                      (apply
+                         (invoke putStrLn)
+                         ((apply (invoke show) (#Punctuate.x_xxx))))))))))
       (Symbol
          (lambda
             ($Punctuate.constructor_xxx)

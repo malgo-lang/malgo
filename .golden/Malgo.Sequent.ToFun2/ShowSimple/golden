@@ -25,27 +25,30 @@
                (((String# (#ShowSimple.x_xxx))
                    (apply (invoke malgo_print_string) (#ShowSimple.x_xxx)))))))
       (main
-         (select
-            (tuple ())
-            (((tuple ())
-                (apply
-                   (invoke putStr)
-                   ((apply
-                       (apply
-                          (invoke show)
-                          ((apply
-                              (invoke wrap)
-                              ((lambda
-                                  ($ShowSimple.param_xxx)
-                                  (select
-                                     $ShowSimple.param_xxx
-                                     (((Int32# (#ShowSimple.x_xxx))
-                                         (apply
-                                            (invoke String#)
-                                            ((apply
-                                                (invoke malgo_int32_t_to_string)
-                                                (#ShowSimple.x_xxx))))))))))))
-                       ((apply (invoke Int32#) (1_i32))))))))))
+         (lambda
+            ($ShowSimple.param_xxx)
+            (select
+               $ShowSimple.param_xxx
+               ((#ShowSimple.$__xxx
+                   (apply
+                      (invoke putStr)
+                      ((apply
+                          (apply
+                             (invoke show)
+                             ((apply
+                                 (invoke wrap)
+                                 ((lambda
+                                     ($ShowSimple.param_xxx)
+                                     (select
+                                        $ShowSimple.param_xxx
+                                        (((Int32# (#ShowSimple.x_xxx))
+                                            (apply
+                                               (invoke String#)
+                                               ((apply
+                                                   (invoke
+                                                      malgo_int32_t_to_string)
+                                                   (#ShowSimple.x_xxx))))))))))))
+                          ((apply (invoke Int32#) (1_i32)))))))))))
       (int32#
          (lambda
             ($ShowSimple.param_xxx)

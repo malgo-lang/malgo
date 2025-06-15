@@ -9,19 +9,23 @@
                 (((tuple (#Test0.x_xxx #Test0.f_xxx))
                     (apply #Test0.f_xxx (#Test0.x_xxx))))))))
       (main
-         (select
-            (tuple ())
-            (((tuple ())
-                (apply
-                   (apply |> ((apply (invoke Int64#) (1_i64))))
-                   ((lambda
-                       ($Test0.param_xxx)
-                       (select
-                          $Test0.param_xxx
-                          (((Int64# (#Test0.i_xxx))
-                              (apply
-                                 (invoke printString#)
-                                 ((apply (invoke toStringInt64#) (#Test0.i_xxx))))))))))))))
+         (lambda
+            ($Test0.param_xxx)
+            (select
+               $Test0.param_xxx
+               ((#Test0.$__xxx
+                   (apply
+                      (apply (invoke |>) ((apply (invoke Int64#) (1_i64))))
+                      ((lambda
+                          ($Test0.param_xxx)
+                          (select
+                             $Test0.param_xxx
+                             (((Int64# (#Test0.i_xxx))
+                                 (apply
+                                    (invoke printString#)
+                                    ((apply
+                                        (invoke toStringInt64#)
+                                        (#Test0.i_xxx)))))))))))))))
       (+#
          (lambda
             ($Test0.param_xxx)

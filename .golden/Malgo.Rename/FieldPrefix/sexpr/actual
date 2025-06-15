@@ -36,7 +36,9 @@
                         (apply
                            printString
                            (seq (do (apply toStringInt32 #FieldPrefix.y_xxx)))))))))))
-       ((def main (fn ((clause () (seq (do (apply print2D zero2D)))))))))
+       ((def
+           main
+           (fn ((clause (#FieldPrefix.$__xxx) (seq (do (apply print2D zero2D)))))))))
       ((sig x2D (-> Point2D Int32))
          (sig y2D (-> Point2D Int32))
          (sig zero2D Point2D)

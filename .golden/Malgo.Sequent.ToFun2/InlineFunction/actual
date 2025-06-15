@@ -46,69 +46,82 @@
                          (apply (invoke addInt32) (#InlineFunction.x_xxx))
                          (#InlineFunction.y_xxx))))))))
       (main
-         (select
-            (tuple ())
-            (((tuple ())
-                (let
-                   #InlineFunction.fib_xxx
-                   (apply
-                      (invoke fix)
-                      ((lambda
-                          ($InlineFunction.param_xxx)
-                          (lambda
+         (lambda
+            ($InlineFunction.param_xxx)
+            (select
+               $InlineFunction.param_xxx
+               ((#InlineFunction.$__xxx
+                   (let
+                      #InlineFunction.fib_xxx
+                      (apply
+                         (invoke fix)
+                         ((lambda
                              ($InlineFunction.param_xxx)
-                             (select
-                                (tuple
-                                   ($InlineFunction.param_xxx
-                                      $InlineFunction.param_xxx))
-                                (((tuple
-                                     (#InlineFunction.f_xxx #InlineFunction.n_xxx))
-                                    (apply
+                             (lambda
+                                ($InlineFunction.param_xxx)
+                                (select
+                                   (tuple
+                                      ($InlineFunction.param_xxx
+                                         $InlineFunction.param_xxx))
+                                   (((tuple
+                                        (#InlineFunction.f_xxx
+                                           #InlineFunction.n_xxx))
                                        (apply
                                           (apply
-                                             (invoke if)
-                                             ((apply
-                                                 (apply
-                                                    <=
-                                                    (#InlineFunction.n_xxx))
-                                                 ((apply (invoke Int32#) (1_i32))))))
-                                          ((select
-                                              (tuple ())
-                                              (((tuple ())
-                                                  (apply (invoke Int32#) (1_i32)))))))
-                                       ((select
-                                           (tuple ())
-                                           (((tuple ())
-                                               (apply
-                                                  (apply
-                                                     +
-                                                     ((apply
-                                                         #InlineFunction.f_xxx
-                                                         ((apply
-                                                             (apply
-                                                                -
-                                                                (#InlineFunction.n_xxx))
-                                                             ((apply
-                                                                 (invoke Int32#)
-                                                                 (1_i32))))))))
-                                                  ((apply
-                                                      #InlineFunction.f_xxx
-                                                      ((apply
-                                                          (apply
-                                                             -
-                                                             (#InlineFunction.n_xxx))
-                                                          ((apply
-                                                              (invoke Int32#)
-                                                              (2_i32))))))))))))))))))))
-                   (apply
+                                             (apply
+                                                (invoke if)
+                                                ((apply
+                                                    (apply
+                                                       (invoke <=)
+                                                       (#InlineFunction.n_xxx))
+                                                    ((apply
+                                                        (invoke Int32#)
+                                                        (1_i32))))))
+                                             ((lambda
+                                                 ($InlineFunction.param_xxx)
+                                                 (select
+                                                    $InlineFunction.param_xxx
+                                                    ((#InlineFunction.$__xxx
+                                                        (apply
+                                                           (invoke Int32#)
+                                                           (1_i32))))))))
+                                          ((lambda
+                                              ($InlineFunction.param_xxx)
+                                              (select
+                                                 $InlineFunction.param_xxx
+                                                 ((#InlineFunction.$__xxx
+                                                     (apply
+                                                        (apply
+                                                           (invoke +)
+                                                           ((apply
+                                                               #InlineFunction.f_xxx
+                                                               ((apply
+                                                                   (apply
+                                                                      (invoke -)
+                                                                      (#InlineFunction.n_xxx))
+                                                                   ((apply
+                                                                       (invoke
+                                                                          Int32#)
+                                                                       (1_i32))))))))
+                                                        ((apply
+                                                            #InlineFunction.f_xxx
+                                                            ((apply
+                                                                (apply
+                                                                   (invoke -)
+                                                                   (#InlineFunction.n_xxx))
+                                                                ((apply
+                                                                    (invoke
+                                                                       Int32#)
+                                                                    (2_i32)))))))))))))))))))))
                       (apply
-                         |>
-                         ((apply
-                             (apply
-                                |>
-                                ((apply
-                                    #InlineFunction.fib_xxx
-                                    ((apply (invoke Int32#) (5_i32))))))
-                             ((invoke toStringInt32)))))
-                      ((invoke putStrLn)))))))))
+                         (apply
+                            (invoke |>)
+                            ((apply
+                                (apply
+                                   (invoke |>)
+                                   ((apply
+                                       #InlineFunction.fib_xxx
+                                       ((apply (invoke Int32#) (5_i32))))))
+                                ((invoke toStringInt32)))))
+                         ((invoke putStrLn))))))))))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

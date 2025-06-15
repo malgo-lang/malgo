@@ -114,29 +114,31 @@
                              (#ToplevelVariableNoImport.y_xxx))))))))))
       (addOne (apply (invoke addInt32) ((invoke one))))
       (main
-         (select
-            (tuple ())
-            (((tuple ())
-                (apply
-                   (lambda
-                      ($ToplevelVariableNoImport.tmp_xxx)
-                      (apply
-                         (invoke printInt32)
-                         ((apply
-                             (apply (invoke constId) ((invoke const)))
-                             ((apply (invoke addOne) ((invoke one))))))))
-                   ((apply
-                       (lambda
-                          ($ToplevelVariableNoImport.param_xxx)
-                          (select
-                             $ToplevelVariableNoImport.param_xxx
-                             (((Nothing ())
-                                 (apply
-                                    (invoke printString)
-                                    ((apply (invoke String#) ("OK")))))
-                                ((Just (#ToplevelVariableNoImport.__xxx))
-                                   (tuple ())))))
-                       ((invoke comp)))))))))
+         (lambda
+            ($ToplevelVariableNoImport.param_xxx)
+            (select
+               $ToplevelVariableNoImport.param_xxx
+               ((#ToplevelVariableNoImport.$__xxx
+                   (apply
+                      (lambda
+                         ($ToplevelVariableNoImport.tmp_xxx)
+                         (apply
+                            (invoke printInt32)
+                            ((apply
+                                (apply (invoke constId) ((invoke const)))
+                                ((apply (invoke addOne) ((invoke one))))))))
+                      ((apply
+                          (lambda
+                             ($ToplevelVariableNoImport.param_xxx)
+                             (select
+                                $ToplevelVariableNoImport.param_xxx
+                                (((Nothing ())
+                                    (apply
+                                       (invoke printString)
+                                       ((apply (invoke String#) ("OK")))))
+                                   ((Just (#ToplevelVariableNoImport.__xxx))
+                                      (tuple ())))))
+                          ((invoke comp))))))))))
       (Int32#
          (lambda
             ($ToplevelVariableNoImport.constructor_xxx)

@@ -2,7 +2,9 @@
    "test/testcases/malgo/ZeroArgs.mlg"
    ((((def
          one
-         (apply (fn ((clause () (seq (do (apply Int32# (int32 1))))))) (tuple))))
+         (apply
+            (fn ((clause (#ZeroArgs.$__xxx) (seq (do (apply Int32# (int32 1)))))))
+            (tuple))))
        ((def
            id
            (fn
@@ -11,19 +13,22 @@
                   (seq
                      (do
                         (apply
-                           (fn ((clause () (seq (do #ZeroArgs.x_xxx)))))
+                           (fn
+                              ((clause
+                                  (#ZeroArgs.$__xxx)
+                                  (seq (do #ZeroArgs.x_xxx)))))
                            (tuple)))))))))
        ((def
            main
            (apply
               (fn
                  ((clause
-                     ()
+                     (#ZeroArgs.$__xxx)
                      (seq
                         (do
                            (fn
                               ((clause
-                                  ()
+                                  (#ZeroArgs.$__xxx)
                                   (seq
                                      (do
                                         (apply

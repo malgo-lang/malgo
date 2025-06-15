@@ -1,21 +1,25 @@
 (program
    ((main
-       (select
-          (tuple ())
-          (((tuple ())
-              (let
-                 #TestNestedLetFunc.f_xxx
-                 (select
-                    (tuple ())
-                    (((tuple ())
-                        (apply
-                           (lambda
-                              ($TestNestedLetFunc.param_xxx)
-                              (select
-                                 $TestNestedLetFunc.param_xxx
-                                 ((#TestNestedLetFunc.a_xxx (tuple ())))))
-                           ((tuple ()))))))
-                 (apply (invoke malgo_print_string) ("PASS")))))))
+       (lambda
+          ($TestNestedLetFunc.param_xxx)
+          (select
+             $TestNestedLetFunc.param_xxx
+             ((#TestNestedLetFunc.$__xxx
+                 (let
+                    #TestNestedLetFunc.f_xxx
+                    (lambda
+                       ($TestNestedLetFunc.param_xxx)
+                       (select
+                          $TestNestedLetFunc.param_xxx
+                          ((#TestNestedLetFunc.$__xxx
+                              (apply
+                                 (lambda
+                                    ($TestNestedLetFunc.param_xxx)
+                                    (select
+                                       $TestNestedLetFunc.param_xxx
+                                       ((#TestNestedLetFunc.a_xxx (tuple ())))))
+                                 ((tuple ())))))))
+                    (apply (invoke malgo_print_string) ("PASS"))))))))
       (malgo_print_string
          (lambda
             ($TestNestedLetFunc.primitive_xxx)

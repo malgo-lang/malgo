@@ -142,15 +142,25 @@
                             ((apply
                                 (apply (invoke eqString) (#Prelude.str_xxx))
                                 ((apply (invoke String#) (""))))))
-                         ((select (tuple ()) (((tuple ()) #Prelude.str_xxx)))))
-                      ((select
-                          (tuple ())
-                          (((tuple ())
-                              (apply
+                         ((lambda
+                             ($Prelude.param_xxx)
+                             (select
+                                $Prelude.param_xxx
+                                ((#Prelude.$__xxx #Prelude.str_xxx))))))
+                      ((lambda
+                          ($Prelude.param_xxx)
+                          (select
+                             $Prelude.param_xxx
+                             ((#Prelude.$__xxx
                                  (apply
-                                    (apply (invoke substring) (#Prelude.str_xxx))
-                                    ((apply (invoke Int64#) (1_i64))))
-                                 ((apply (invoke lengthString) (#Prelude.str_xxx))))))))))))))
+                                    (apply
+                                       (apply
+                                          (invoke substring)
+                                          (#Prelude.str_xxx))
+                                       ((apply (invoke Int64#) (1_i64))))
+                                    ((apply
+                                        (invoke lengthString)
+                                        (#Prelude.str_xxx)))))))))))))))
       (unless
          (lambda
             ($Prelude.param_xxx)
@@ -165,9 +175,11 @@
                          (apply
                             (apply
                                (apply (invoke if) (#Prelude.c_xxx))
-                               ((select
-                                   (tuple ())
-                                   (((tuple ()) #Prelude.tValue_xxx)))))
+                               ((lambda
+                                   ($Prelude.param_xxx)
+                                   (select
+                                      $Prelude.param_xxx
+                                      ((#Prelude.$__xxx #Prelude.tValue_xxx))))))
                             (#Prelude.f_xxx)))))))))
       (identity
          (lambda
@@ -186,17 +198,23 @@
                             ((apply
                                 (apply (invoke eqString) (#Prelude.str_xxx))
                                 ((apply (invoke String#) (""))))))
-                         ((select (tuple ()) (((tuple ()) (invoke Nothing))))))
-                      ((select
-                          (tuple ())
-                          (((tuple ())
-                              (apply
-                                 (invoke Just)
-                                 ((apply
-                                     (apply
-                                        (invoke atString)
-                                        ((apply (invoke Int64#) (0_i64))))
-                                     (#Prelude.str_xxx))))))))))))))
+                         ((lambda
+                             ($Prelude.param_xxx)
+                             (select
+                                $Prelude.param_xxx
+                                ((#Prelude.$__xxx (invoke Nothing)))))))
+                      ((lambda
+                          ($Prelude.param_xxx)
+                          (select
+                             $Prelude.param_xxx
+                             ((#Prelude.$__xxx
+                                 (apply
+                                    (invoke Just)
+                                    ((apply
+                                        (apply
+                                           (invoke atString)
+                                           ((apply (invoke Int64#) (0_i64))))
+                                        (#Prelude.str_xxx)))))))))))))))
       (head
          (lambda
             ($Prelude.param_xxx)
@@ -296,19 +314,25 @@
                                                ((apply
                                                    #Prelude.pred_xxx
                                                    (#Prelude.c_xxx))))
-                                            ((select
-                                                (tuple ())
-                                                (((tuple ())
-                                                    (apply
+                                            ((lambda
+                                                ($Prelude.param_xxx)
+                                                (select
+                                                   $Prelude.param_xxx
+                                                   ((#Prelude.$__xxx
                                                        (apply
-                                                          (invoke dropWhileString)
-                                                          (#Prelude.pred_xxx))
-                                                       ((apply
-                                                           (invoke tailString)
-                                                           (#Prelude.str_xxx)))))))))
-                                         ((select
-                                             (tuple ())
-                                             (((tuple ()) #Prelude.str_xxx)))))))))))))))))
+                                                          (apply
+                                                             (invoke
+                                                                dropWhileString)
+                                                             (#Prelude.pred_xxx))
+                                                          ((apply
+                                                              (invoke tailString)
+                                                              (#Prelude.str_xxx))))))))))
+                                         ((lambda
+                                             ($Prelude.param_xxx)
+                                             (select
+                                                $Prelude.param_xxx
+                                                ((#Prelude.$__xxx
+                                                    #Prelude.str_xxx))))))))))))))))))
       (takeWhileString
          (lambda
             ($Prelude.param_xxx)
@@ -334,25 +358,30 @@
                                                ((apply
                                                    #Prelude.pred_xxx
                                                    (#Prelude.c_xxx))))
-                                            ((select
-                                                (tuple ())
-                                                (((tuple ())
-                                                    (apply
+                                            ((lambda
+                                                ($Prelude.param_xxx)
+                                                (select
+                                                   $Prelude.param_xxx
+                                                   ((#Prelude.$__xxx
                                                        (apply
-                                                          (invoke consString)
-                                                          (#Prelude.c_xxx))
-                                                       ((apply
-                                                           (apply
-                                                              (invoke
-                                                                 takeWhileString)
-                                                              (#Prelude.pred_xxx))
-                                                           ((apply
-                                                               (invoke tailString)
-                                                               (#Prelude.str_xxx)))))))))))
-                                         ((select
-                                             (tuple ())
-                                             (((tuple ())
-                                                 (apply (invoke String#) ("")))))))))))))))))))
+                                                          (apply
+                                                             (invoke consString)
+                                                             (#Prelude.c_xxx))
+                                                          ((apply
+                                                              (apply
+                                                                 (invoke
+                                                                    takeWhileString)
+                                                                 (#Prelude.pred_xxx))
+                                                              ((apply
+                                                                  (invoke
+                                                                     tailString)
+                                                                  (#Prelude.str_xxx))))))))))))
+                                         ((lambda
+                                             ($Prelude.param_xxx)
+                                             (select
+                                                $Prelude.param_xxx
+                                                ((#Prelude.$__xxx
+                                                    (apply (invoke String#) (""))))))))))))))))))))
       (<|
          (lambda
             ($Prelude.param_xxx)

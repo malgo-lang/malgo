@@ -1,20 +1,22 @@
 (program
    ((main
-       (select
-          (tuple ())
-          (((tuple ())
-              (apply
-                 (lambda
-                    ($HelloImport.tmp_xxx)
-                    (apply
-                       (apply |> ((invoke putStrLn)))
-                       ((lambda
-                           ($HelloImport.param_xxx)
-                           (select
-                              $HelloImport.param_xxx
-                              ((#HelloImport.f_xxx
-                                  (apply
-                                     #HelloImport.f_xxx
-                                     ((apply (invoke String#) (" world")))))))))))
-                 ((apply (invoke putStr) ((apply (invoke String#) ("hello")))))))))))
+       (lambda
+          ($HelloImport.param_xxx)
+          (select
+             $HelloImport.param_xxx
+             ((#HelloImport.$__xxx
+                 (apply
+                    (lambda
+                       ($HelloImport.tmp_xxx)
+                       (apply
+                          (apply (invoke |>) ((invoke putStrLn)))
+                          ((lambda
+                              ($HelloImport.param_xxx)
+                              (select
+                                 $HelloImport.param_xxx
+                                 ((#HelloImport.f_xxx
+                                     (apply
+                                        #HelloImport.f_xxx
+                                        ((apply (invoke String#) (" world")))))))))))
+                    ((apply (invoke putStr) ((apply (invoke String#) ("hello"))))))))))))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

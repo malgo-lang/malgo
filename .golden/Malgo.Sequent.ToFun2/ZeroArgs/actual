@@ -1,7 +1,11 @@
 (program
    ((one
        (apply
-          (select (tuple ()) (((tuple ()) (apply (invoke Int32#) (1_i32)))))
+          (lambda
+             ($ZeroArgs.param_xxx)
+             (select
+                $ZeroArgs.param_xxx
+                ((#ZeroArgs.$__xxx (apply (invoke Int32#) (1_i32))))))
           ((tuple ()))))
       (id
          (lambda
@@ -10,20 +14,28 @@
                $ZeroArgs.param_xxx
                ((#ZeroArgs.x_xxx
                    (apply
-                      (select (tuple ()) (((tuple ()) #ZeroArgs.x_xxx)))
+                      (lambda
+                         ($ZeroArgs.param_xxx)
+                         (select
+                            $ZeroArgs.param_xxx
+                            ((#ZeroArgs.$__xxx #ZeroArgs.x_xxx))))
                       ((tuple ()))))))))
       (main
          (apply
-            (select
-               (tuple ())
-               (((tuple ())
-                   (select
-                      (tuple ())
-                      (((tuple ())
-                          (apply
-                             (invoke printString)
-                             ((apply
-                                 (invoke toStringInt32)
-                                 ((apply (invoke id) ((invoke one)))))))))))))
+            (lambda
+               ($ZeroArgs.param_xxx)
+               (select
+                  $ZeroArgs.param_xxx
+                  ((#ZeroArgs.$__xxx
+                      (lambda
+                         ($ZeroArgs.param_xxx)
+                         (select
+                            $ZeroArgs.param_xxx
+                            ((#ZeroArgs.$__xxx
+                                (apply
+                                   (invoke printString)
+                                   ((apply
+                                       (invoke toStringInt32)
+                                       ((apply (invoke id) ((invoke one)))))))))))))))
             ((tuple ())))))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

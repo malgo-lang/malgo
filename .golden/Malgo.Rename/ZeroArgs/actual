@@ -64,7 +64,29 @@ Module
           , sourceColumn = Pos 15
           }
          }
-        ) []
+        )
+        [ VarP
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
+           , sourceLine = Pos 5
+           , sourceColumn = Pos 13
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
+           , sourceLine = Pos 5
+           , sourceColumn = Pos 15
+           }
+          }
+         )
+         ( Id
+          { name = "$_"
+          , moduleName = Artifact
+           ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" )
+          , sort = Internal 0
+          }
+         )
+        ]
         ( Seq
          ( Range
           { _start = SourcePos
@@ -233,7 +255,7 @@ Module
          { name = "x"
          , moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" )
-         , sort = Internal 1
+         , sort = Internal 2
          }
         )
        ]
@@ -306,7 +328,29 @@ Module
               , sourceColumn = Pos 21
               }
              }
-            ) []
+            )
+            [ VarP
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
+               , sourceLine = Pos 8
+               , sourceColumn = Pos 19
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
+               , sourceLine = Pos 8
+               , sourceColumn = Pos 21
+               }
+              }
+             )
+             ( Id
+              { name = "$_"
+              , moduleName = Artifact
+               ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" )
+              , sort = Internal 3
+              }
+             )
+            ]
             ( Seq
              ( Range
               { _start = SourcePos
@@ -353,7 +397,7 @@ Module
                 { name = "x"
                 , moduleName = Artifact
                  ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" )
-                , sort = Internal 1
+                , sort = Internal 2
                 }
                )
               ) :| []
@@ -443,7 +487,29 @@ Module
           , sourceColumn = Pos 1
           }
          }
-        ) []
+        )
+        [ VarP
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
+           , sourceLine = Pos 12
+           , sourceColumn = Pos 3
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
+           , sourceLine = Pos 13
+           , sourceColumn = Pos 1
+           }
+          }
+         )
+         ( Id
+          { name = "$_"
+          , moduleName = Artifact
+           ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" )
+          , sort = Internal 5
+          }
+         )
+        ]
         ( Seq
          ( Range
           { _start = SourcePos
@@ -499,7 +565,29 @@ Module
               , sourceColumn = Pos 43
               }
              }
-            ) []
+            )
+            [ VarP
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
+               , sourceLine = Pos 12
+               , sourceColumn = Pos 5
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/ZeroArgs.mlg"
+               , sourceLine = Pos 12
+               , sourceColumn = Pos 43
+               }
+              }
+             )
+             ( Id
+              { name = "$_"
+              , moduleName = Artifact
+               ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" )
+              , sort = Internal 4
+              }
+             )
+            ]
             ( Seq
              ( Range
               { _start = SourcePos
@@ -840,7 +928,7 @@ Module
        { name = "a"
        , moduleName = Artifact
         ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" )
-       , sort = Internal 0
+       , sort = Internal 1
        }
       )
      )
@@ -862,7 +950,7 @@ Module
        { name = "a"
        , moduleName = Artifact
         ( ArtifactPath "test/testcases/malgo/ZeroArgs.mlg" )
-       , sort = Internal 0
+       , sort = Internal 1
        }
       )
      )

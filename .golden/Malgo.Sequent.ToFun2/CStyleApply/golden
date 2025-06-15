@@ -43,21 +43,31 @@
                          (apply
                             (invoke if)
                             ((apply
-                                (apply == (#CStyleApply.n_xxx))
+                                (apply (invoke ==) (#CStyleApply.n_xxx))
                                 ((apply (invoke Int64#) (0_i64))))))
-                         ((select (tuple ()) (((tuple ()) #CStyleApply.acc_xxx)))))
-                      ((select
-                          (tuple ())
-                          (((tuple ())
-                              (apply
-                                 (invoke factAcc)
-                                 ((tuple
-                                     ((apply
-                                         (apply - (#CStyleApply.n_xxx))
-                                         ((apply (invoke Int64#) (1_i64))))
-                                        (apply
-                                           (apply * (#CStyleApply.n_xxx))
-                                           (#CStyleApply.acc_xxx))))))))))))))))
+                         ((lambda
+                             ($CStyleApply.param_xxx)
+                             (select
+                                $CStyleApply.param_xxx
+                                ((#CStyleApply.$__xxx #CStyleApply.acc_xxx))))))
+                      ((lambda
+                          ($CStyleApply.param_xxx)
+                          (select
+                             $CStyleApply.param_xxx
+                             ((#CStyleApply.$__xxx
+                                 (apply
+                                    (invoke factAcc)
+                                    ((tuple
+                                        ((apply
+                                            (apply
+                                               (invoke -)
+                                               (#CStyleApply.n_xxx))
+                                            ((apply (invoke Int64#) (1_i64))))
+                                           (apply
+                                              (apply
+                                                 (invoke *)
+                                                 (#CStyleApply.n_xxx))
+                                              (#CStyleApply.acc_xxx)))))))))))))))))
       (fact
          (lambda
             ($CStyleApply.param_xxx)
@@ -69,18 +79,20 @@
                       ((tuple
                           (#CStyleApply.n_xxx (apply (invoke Int64#) (1_i64)))))))))))
       (main
-         (select
-            (tuple ())
-            (((tuple ())
-                (apply
+         (lambda
+            ($CStyleApply.param_xxx)
+            (select
+               $CStyleApply.param_xxx
+               ((#CStyleApply.$__xxx
                    (apply
-                      |>
-                      ((apply
-                          (apply
-                             |>
-                             ((apply
-                                 (invoke fact)
-                                 ((apply (invoke Int64#) (5_i64))))))
-                          ((invoke toStringInt64)))))
-                   ((invoke putStrLn))))))))
+                      (apply
+                         (invoke |>)
+                         ((apply
+                             (apply
+                                (invoke |>)
+                                ((apply
+                                    (invoke fact)
+                                    ((apply (invoke Int64#) (5_i64))))))
+                             ((invoke toStringInt64)))))
+                      ((invoke putStrLn)))))))))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

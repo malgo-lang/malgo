@@ -14,7 +14,9 @@
                            (tuple
                               True
                               (fn
-                                 ((clause () (seq (do (apply Int32# (int32 1))))))))
+                                 ((clause
+                                     (#RightAssoc.$__xxx)
+                                     (seq (do (apply Int32# (int32 1))))))))
                            (seq
                               (do
                                  (opapp
@@ -23,7 +25,7 @@
                                        True
                                        (fn
                                           ((clause
-                                              ()
+                                              (#RightAssoc.$__xxx)
                                               (seq (do (apply Int32# (int32 2))))))))
                                     (seq
                                        (do
@@ -33,7 +35,7 @@
                                                 True
                                                 (fn
                                                    ((clause
-                                                       ()
+                                                       (#RightAssoc.$__xxx)
                                                        (seq
                                                           (do
                                                              (apply
@@ -47,7 +49,7 @@
                                                          True
                                                          (fn
                                                             ((clause
-                                                                ()
+                                                                (#RightAssoc.$__xxx)
                                                                 (seq
                                                                    (do
                                                                       (apply
@@ -61,14 +63,16 @@
                            (tuple
                               True
                               (fn
-                                 ((clause () (seq (do (apply Int32# (int32 1))))))))
+                                 ((clause
+                                     (#RightAssoc.$__xxx)
+                                     (seq (do (apply Int32# (int32 1))))))))
                            (opapp
                               <|>
                               (tuple
                                  True
                                  (fn
                                     ((clause
-                                        ()
+                                        (#RightAssoc.$__xxx)
                                         (seq (do (apply Int32# (int32 2))))))))
                               (opapp
                                  <|>
@@ -76,7 +80,7 @@
                                     True
                                     (fn
                                        ((clause
-                                           ()
+                                           (#RightAssoc.$__xxx)
                                            (seq (do (apply Int32# (int32 3))))))))
                                  (opapp
                                     <|>
@@ -84,7 +88,7 @@
                                        True
                                        (fn
                                           ((clause
-                                              ()
+                                              (#RightAssoc.$__xxx)
                                               (seq (do (apply Int32# (int32 4))))))))
                                     Nil)))))
                      (do #RightAssoc.y_xxx)))))))
@@ -92,7 +96,7 @@
            main
            (fn
               ((clause
-                  ()
+                  (#RightAssoc.$__xxx)
                   (seq
                      (let #RightAssoc.x_xxx (apply f (apply Int32# (int32 4))))
                      (do (apply printString (apply String# (string "OK")))))))))))

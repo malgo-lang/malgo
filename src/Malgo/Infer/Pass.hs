@@ -360,11 +360,11 @@ tcExpr (OpApp x@(pos, _) op e1 e2) = do
   retType <- TyMeta <$> freshVar Nothing
   tell [(pos, opType :~ TyArr (typeOf e1') (TyArr (typeOf e2') retType))]
   pure $ OpApp (Typed retType x) op e1' e2'
-tcExpr (Fn pos (Clause x [] e :| _)) = do
-  e' <- tcExpr e
-  hole <- newInternalId "$_"
-  modify $ insertSignature hole (Forall [] (TyTuple 0))
-  pure $ Fn (Typed (TyArr (TyTuple 0) (typeOf e')) pos) (Clause (Typed (TyArr (TyTuple 0) (typeOf e')) x) [VarP (Typed (TyTuple 0) pos) hole] e' :| [])
+-- tcExpr (Fn pos (Clause x [] e :| _)) = do
+--   e' <- tcExpr e
+--   hole <- newInternalId "$_"
+--   modify $ insertSignature hole (Forall [] (TyTuple 0))
+--   pure $ Fn (Typed (TyArr (TyTuple 0) (typeOf e')) pos) (Clause (Typed (TyArr (TyTuple 0) (typeOf e')) x) [VarP (Typed (TyTuple 0) pos) hole] e' :| [])
 tcExpr (Fn pos cs) = do
   (c' :| cs') <- traverse tcClause cs
   -- パターンの数がすべての節で同じかを検査

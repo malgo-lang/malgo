@@ -10,28 +10,30 @@
             ((apply (invoke String#) ("hello"))
                (apply (invoke String#) ("world")))))
       (main
-         (select
-            (tuple ())
-            (((tuple ())
-                (apply
-                   (apply |> ((invoke hello)))
-                   ((lambda
-                       ($TypeSynonym.param_xxx)
-                       (select
-                          $TypeSynonym.param_xxx
-                          (((tuple (#TypeSynonym.h_xxx #TypeSynonym.w_xxx))
-                              (apply
-                                 (lambda
-                                    ($TypeSynonym.tmp_xxx)
-                                    (apply
-                                       (lambda
-                                          ($TypeSynonym.tmp_xxx)
-                                          (apply
-                                             (invoke putStrLn)
-                                             (#TypeSynonym.w_xxx)))
-                                       ((apply
-                                           (invoke putStr)
-                                           ((apply (invoke String#) (" ")))))))
-                                 ((apply (invoke putStr) (#TypeSynonym.h_xxx))))))))))))))
+         (lambda
+            ($TypeSynonym.param_xxx)
+            (select
+               $TypeSynonym.param_xxx
+               ((#TypeSynonym.$__xxx
+                   (apply
+                      (apply (invoke |>) ((invoke hello)))
+                      ((lambda
+                          ($TypeSynonym.param_xxx)
+                          (select
+                             $TypeSynonym.param_xxx
+                             (((tuple (#TypeSynonym.h_xxx #TypeSynonym.w_xxx))
+                                 (apply
+                                    (lambda
+                                       ($TypeSynonym.tmp_xxx)
+                                       (apply
+                                          (lambda
+                                             ($TypeSynonym.tmp_xxx)
+                                             (apply
+                                                (invoke putStrLn)
+                                                (#TypeSynonym.w_xxx)))
+                                          ((apply
+                                              (invoke putStr)
+                                              ((apply (invoke String#) (" ")))))))
+                                    ((apply (invoke putStr) (#TypeSynonym.h_xxx)))))))))))))))
       (TCon (TCon ())))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

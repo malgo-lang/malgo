@@ -1,20 +1,22 @@
 (program
    ((main
-       (select
-          (tuple ())
-          (((tuple ())
-              (apply
-                 (lambda
-                    ($DataDef.param_xxx)
-                    (select
-                       $DataDef.param_xxx
-                       (((Int# (#DataDef.x_xxx))
-                           (apply
-                              (invoke malgo_print_string)
-                              ((apply
-                                  (invoke malgo_int64_t_to_string)
-                                  (#DataDef.x_xxx))))))))
-                 ((apply (invoke Int#) (1_i64))))))))
+       (lambda
+          ($DataDef.param_xxx)
+          (select
+             $DataDef.param_xxx
+             ((#DataDef.$__xxx
+                 (apply
+                    (lambda
+                       ($DataDef.param_xxx)
+                       (select
+                          $DataDef.param_xxx
+                          (((Int# (#DataDef.x_xxx))
+                              (apply
+                                 (invoke malgo_print_string)
+                                 ((apply
+                                     (invoke malgo_int64_t_to_string)
+                                     (#DataDef.x_xxx))))))))
+                    ((apply (invoke Int#) (1_i64)))))))))
       (Int# (lambda ($DataDef.constructor_xxx) (Int# ($DataDef.constructor_xxx))))
       (Nil (Nil ()))
       (Cons

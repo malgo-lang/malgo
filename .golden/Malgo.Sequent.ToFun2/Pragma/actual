@@ -17,12 +17,14 @@
                          (apply (invoke malgo_newline) ((tuple ()))))
                       ((apply (invoke malgo_print_string) (#Pragma.str_xxx)))))))))
       (main
-         (select
-            (tuple ())
-            (((tuple ())
-                (apply
-                   (invoke putStrLn)
-                   ((apply (invoke String#) ("Hello, world"))))))))
+         (lambda
+            ($Pragma.param_xxx)
+            (select
+               $Pragma.param_xxx
+               ((#Pragma.$__xxx
+                   (apply
+                      (invoke putStrLn)
+                      ((apply (invoke String#) ("Hello, world")))))))))
       (String#
          (lambda ($Pragma.constructor_xxx) (String# ($Pragma.constructor_xxx))))
       (malgo_print_string

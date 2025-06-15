@@ -2222,7 +2222,15 @@ Module
     [
      ( Typed
       { annotated = TyArr
-       ( TyTuple 0 )
+       ( TyVar
+        ( Id
+         { name = "t"
+         , moduleName = Artifact
+          ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" )
+         , sort = Internal 56
+         }
+        )
+       )
        ( TyTuple 0 )
       , value = Range
        { _start = SourcePos
@@ -2246,7 +2254,15 @@ Module
      , Fn
       ( Typed
        { annotated = TyArr
-        ( TyTuple 0 )
+        ( TyVar
+         ( Id
+          { name = "t"
+          , moduleName = Artifact
+           ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" )
+          , sort = Internal 56
+          }
+         )
+        )
         ( TyTuple 0 )
        , value = Range
         { _start = SourcePos
@@ -2265,7 +2281,15 @@ Module
       ( Clause
        ( Typed
         { annotated = TyArr
-         ( TyTuple 0 )
+         ( TyVar
+          ( Id
+           { name = "t"
+           , moduleName = Artifact
+            ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" )
+           , sort = Internal 56
+           }
+          )
+         )
          ( TyTuple 0 )
         , value = Range
          { _start = SourcePos
@@ -2283,16 +2307,23 @@ Module
        )
        [ VarP
         ( Typed
-         { annotated = TyTuple 0
+         { annotated = TyVar
+          ( Id
+           { name = "t"
+           , moduleName = Artifact
+            ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" )
+           , sort = Internal 56
+           }
+          )
          , value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-           , sourceLine = Pos 19
-           , sourceColumn = Pos 12
+           , sourceLine = Pos 21
+           , sourceColumn = Pos 3
            }
           , _end = SourcePos
            { sourceName = "./test/testcases/malgo/Punctuate.mlg"
-           , sourceLine = Pos 24
+           , sourceLine = Pos 23
            , sourceColumn = Pos 1
            }
           }
@@ -2302,7 +2333,7 @@ Module
          { name = "$_"
          , moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" )
-         , sort = Internal 112
+         , sort = Internal 4
          }
         )
        ]

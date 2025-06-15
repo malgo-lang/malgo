@@ -34,38 +34,47 @@
                          (apply #With.k_xxx ((tuple ())))
                          (apply #With.finalizer_xxx (#With.x_xxx)))))))))
       (main
-         (select
-            (tuple ())
-            (((tuple ())
-                (apply
+         (lambda
+            ($With.param_xxx)
+            (select
+               $With.param_xxx
+               ((#With.$__xxx
                    (apply
-                      (invoke finally)
+                      (apply
+                         (invoke finally)
+                         ((lambda
+                             ($With.param_xxx)
+                             (select
+                                $With.param_xxx
+                                (((tuple ())
+                                    (apply
+                                       (invoke printString)
+                                       ((apply (invoke String#) ("end"))))))))))
                       ((lambda
                           ($With.param_xxx)
                           (select
                              $With.param_xxx
-                             (((tuple ())
+                             ((#With.$__xxx
                                  (apply
-                                    (invoke printString)
-                                    ((apply (invoke String#) ("end"))))))))))
-                   ((select
-                       (tuple ())
-                       (((tuple ())
-                           (apply
-                              (invoke twice)
-                              ((select
-                                  (tuple ())
-                                  (((tuple ())
-                                      (apply
-                                         (apply
-                                            (invoke printAndReturn)
-                                            ((apply (invoke String#) ("foo"))))
-                                         ((lambda
-                                             ($With.param_xxx)
-                                             (select
-                                                $With.param_xxx
-                                                ((#With.x_xxx
-                                                    (apply
-                                                       (invoke printString)
-                                                       (#With.x_xxx)))))))))))))))))))))))
+                                    (invoke twice)
+                                    ((lambda
+                                        ($With.param_xxx)
+                                        (select
+                                           $With.param_xxx
+                                           ((#With.$__xxx
+                                               (apply
+                                                  (apply
+                                                     (invoke printAndReturn)
+                                                     ((apply
+                                                         (invoke String#)
+                                                         ("foo"))))
+                                                  ((lambda
+                                                      ($With.param_xxx)
+                                                      (select
+                                                         $With.param_xxx
+                                                         ((#With.x_xxx
+                                                             (apply
+                                                                (invoke
+                                                                   printString)
+                                                                (#With.x_xxx))))))))))))))))))))))))))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

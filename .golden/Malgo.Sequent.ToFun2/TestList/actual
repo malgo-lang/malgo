@@ -1,25 +1,27 @@
 (program
    ((main
-       (select
-          (tuple ())
-          (((tuple ())
-              (let
-                 #TestList.xs_xxx
-                 (apply
-                    (apply (invoke Cons) ((apply (invoke Int32#) (1_i32))))
-                    ((apply
-                        (apply (invoke Cons) ((apply (invoke Int32#) (2_i32))))
-                        ((apply
-                            (apply
-                               (invoke Cons)
-                               ((apply (invoke Int32#) (3_i32))))
-                            ((invoke Nil)))))))
+       (lambda
+          ($TestList.param_xxx)
+          (select
+             $TestList.param_xxx
+             ((#TestList.$__xxx
                  (let
-                    #TestList.nil_xxx
-                    (invoke Nil)
+                    #TestList.xs_xxx
                     (apply
-                       (invoke putStrLn)
+                       (apply (invoke Cons) ((apply (invoke Int32#) (1_i32))))
                        ((apply
-                           (invoke toStringInt32)
-                           ((apply (invoke head) (#TestList.xs_xxx)))))))))))))
+                           (apply (invoke Cons) ((apply (invoke Int32#) (2_i32))))
+                           ((apply
+                               (apply
+                                  (invoke Cons)
+                                  ((apply (invoke Int32#) (3_i32))))
+                               ((invoke Nil)))))))
+                    (let
+                       #TestList.nil_xxx
+                       (invoke Nil)
+                       (apply
+                          (invoke putStrLn)
+                          ((apply
+                              (invoke toStringInt32)
+                              ((apply (invoke head) (#TestList.xs_xxx))))))))))))))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

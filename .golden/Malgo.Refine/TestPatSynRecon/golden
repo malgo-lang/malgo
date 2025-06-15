@@ -1433,7 +1433,15 @@ Module
     [
      ( Typed
       { annotated = TyArr
-       ( TyTuple 0 )
+       ( TyVar
+        ( Id
+         { name = "t"
+         , moduleName = Artifact
+          ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" )
+         , sort = Internal 54
+         }
+        )
+       )
        ( TyTuple 0 )
       , value = Range
        { _start = SourcePos
@@ -1457,7 +1465,15 @@ Module
      , Fn
       ( Typed
        { annotated = TyArr
-        ( TyTuple 0 )
+        ( TyVar
+         ( Id
+          { name = "t"
+          , moduleName = Artifact
+           ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" )
+          , sort = Internal 54
+          }
+         )
+        )
         ( TyTuple 0 )
        , value = Range
         { _start = SourcePos
@@ -1476,7 +1492,15 @@ Module
       ( Clause
        ( Typed
         { annotated = TyArr
-         ( TyTuple 0 )
+         ( TyVar
+          ( Id
+           { name = "t"
+           , moduleName = Artifact
+            ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" )
+           , sort = Internal 54
+           }
+          )
+         )
          ( TyTuple 0 )
         , value = Range
          { _start = SourcePos
@@ -1494,16 +1518,23 @@ Module
        )
        [ VarP
         ( Typed
-         { annotated = TyTuple 0
+         { annotated = TyVar
+          ( Id
+           { name = "t"
+           , moduleName = Artifact
+            ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" )
+           , sort = Internal 54
+           }
+          )
          , value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-           , sourceLine = Pos 13
-           , sourceColumn = Pos 12
+           , sourceLine = Pos 14
+           , sourceColumn = Pos 3
            }
           , _end = SourcePos
            { sourceName = "./test/testcases/malgo/TestPatSynRecon.mlg"
-           , sourceLine = Pos 17
+           , sourceLine = Pos 16
            , sourceColumn = Pos 1
            }
           }
@@ -1513,7 +1544,7 @@ Module
          { name = "$_"
          , moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/TestPatSynRecon.mlg" )
-         , sort = Internal 82
+         , sort = Internal 6
          }
         )
        ]

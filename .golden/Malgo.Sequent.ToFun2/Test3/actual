@@ -9,25 +9,27 @@
                 (((tuple (#Test3.x_xxx #Test3.f_xxx))
                     (apply #Test3.f_xxx (#Test3.x_xxx))))))))
       (main
-         (select
-            (tuple ())
-            (((tuple ())
-                (apply
+         (lambda
+            ($Test3.param_xxx)
+            (select
+               $Test3.param_xxx
+               ((#Test3.$__xxx
                    (apply
-                      |>
-                      ((apply
-                          (apply (invoke Cons) ((invoke A)))
-                          ((apply
-                              (apply (invoke Cons) ((invoke B)))
-                              ((invoke Nil)))))))
-                   ((lambda
-                       ($Test3.param_xxx)
-                       (select
-                          $Test3.param_xxx
-                          (((Cons ((A ()) (Cons ((B ()) (Nil ())))))
-                              (apply (invoke malgo_print_string) ("OK")))
-                             (#Test3.__xxx
-                                (apply (invoke malgo_print_string) ("WRONG"))))))))))))
+                      (apply
+                         (invoke |>)
+                         ((apply
+                             (apply (invoke Cons) ((invoke A)))
+                             ((apply
+                                 (apply (invoke Cons) ((invoke B)))
+                                 ((invoke Nil)))))))
+                      ((lambda
+                          ($Test3.param_xxx)
+                          (select
+                             $Test3.param_xxx
+                             (((Cons ((A ()) (Cons ((B ()) (Nil ())))))
+                                 (apply (invoke malgo_print_string) ("OK")))
+                                (#Test3.__xxx
+                                   (apply (invoke malgo_print_string) ("WRONG")))))))))))))
       (A (A ()))
       (B (B ()))
       (Nil (Nil ()))

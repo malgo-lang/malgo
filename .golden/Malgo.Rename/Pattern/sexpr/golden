@@ -3,7 +3,9 @@
    ((((def
          main
          (fn
-            ((clause () (seq (do (apply putStrLn (apply String# (string "OK"))))))))))
+            ((clause
+                (#Pattern.$__xxx)
+                (seq (do (apply putStrLn (apply String# (string "OK"))))))))))
        ((def
            isNil
            (fn

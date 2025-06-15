@@ -9,34 +9,38 @@
                 (((tuple (#TestLet.x_xxx #TestLet.f_xxx))
                     (apply #TestLet.f_xxx (#TestLet.x_xxx))))))))
       (main
-         (select
-            (tuple ())
-            (((tuple ())
-                (let
-                   #TestLet.x_xxx
-                   (apply (apply (invoke addInt32#) (1_i32)) (2_i32))
-                   (apply
-                      (lambda
-                         ($TestLet.tmp_xxx)
-                         (let
-                            #TestLet.x_xxx
-                            (apply
-                               (invoke Int32#)
-                               ((apply (apply (invoke addInt32#) (1_i32)) (2_i32))))
+         (lambda
+            ($TestLet.param_xxx)
+            (select
+               $TestLet.param_xxx
+               ((#TestLet.$__xxx
+                   (let
+                      #TestLet.x_xxx
+                      (apply (apply (invoke addInt32#) (1_i32)) (2_i32))
+                      (apply
+                         (lambda
+                            ($TestLet.tmp_xxx)
                             (let
-                               #TestLet.printInt32_xxx
-                               (lambda
-                                  ($TestLet.param_xxx)
-                                  (select
-                                     $TestLet.param_xxx
-                                     (((Int32# (#TestLet.x_xxx))
-                                         (apply
-                                            (invoke printString#)
-                                            ((apply
-                                                (invoke toStringInt32#)
-                                                (#TestLet.x_xxx))))))))
-                               (apply #TestLet.printInt32_xxx (#TestLet.x_xxx)))))
-                      ((apply
-                          (invoke printString#)
-                          ((apply (invoke toStringInt32#) (#TestLet.x_xxx))))))))))))
+                               #TestLet.x_xxx
+                               (apply
+                                  (invoke Int32#)
+                                  ((apply
+                                      (apply (invoke addInt32#) (1_i32))
+                                      (2_i32))))
+                               (let
+                                  #TestLet.printInt32_xxx
+                                  (lambda
+                                     ($TestLet.param_xxx)
+                                     (select
+                                        $TestLet.param_xxx
+                                        (((Int32# (#TestLet.x_xxx))
+                                            (apply
+                                               (invoke printString#)
+                                               ((apply
+                                                   (invoke toStringInt32#)
+                                                   (#TestLet.x_xxx))))))))
+                                  (apply #TestLet.printInt32_xxx (#TestLet.x_xxx)))))
+                         ((apply
+                             (invoke printString#)
+                             ((apply (invoke toStringInt32#) (#TestLet.x_xxx)))))))))))))
    ("runtime/malgo/Builtin.mlg"))

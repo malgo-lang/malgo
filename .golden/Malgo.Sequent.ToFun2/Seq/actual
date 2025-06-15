@@ -18,10 +18,12 @@
                             (apply (invoke addInt32) (#Seq.x_xxx))
                             (#Seq.y_xxx)))))))))))
       (main
-         (select
-            (tuple ())
-            (((tuple ())
-                (apply
-                   (invoke printString)
-                   ((apply (invoke toStringInt32) ((invoke executeWhenLoaded))))))))))
+         (lambda
+            ($Seq.param_xxx)
+            (select
+               $Seq.param_xxx
+               ((#Seq.$__xxx
+                   (apply
+                      (invoke printString)
+                      ((apply (invoke toStringInt32) ((invoke executeWhenLoaded)))))))))))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

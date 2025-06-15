@@ -40,10 +40,13 @@
                                           ==
                                           #Factorial.n_xxx
                                           (apply Int64# (int64 0))))))
-                              (fn ((clause () (seq (do #Factorial.acc_xxx))))))
+                              (fn
+                                 ((clause
+                                     (#Factorial.$__xxx)
+                                     (seq (do #Factorial.acc_xxx))))))
                            (fn
                               ((clause
-                                  ()
+                                  (#Factorial.$__xxx)
                                   (seq
                                      (do
                                         (apply
@@ -75,7 +78,7 @@
            main
            (fn
               ((clause
-                  ()
+                  (#Factorial.$__xxx)
                   (seq
                      (do
                         (opapp

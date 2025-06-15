@@ -9,12 +9,16 @@
                     (invoke Int64#)
                     ((apply (apply (invoke addInt64#) (#TestDot.x_xxx)) (1_i64)))))))))
       (main
-         (select
-            (tuple ())
-            (((tuple ())
-                (apply
-                   (invoke printInt64)
-                   ((apply
-                       (apply (apply << ((invoke succ))) ((invoke succ)))
-                       ((apply (invoke Int64#) (0_i64)))))))))))
+         (lambda
+            ($TestDot.param_xxx)
+            (select
+               $TestDot.param_xxx
+               ((#TestDot.$__xxx
+                   (apply
+                      (invoke printInt64)
+                      ((apply
+                          (apply
+                             (apply (invoke <<) ((invoke succ)))
+                             ((invoke succ)))
+                          ((apply (invoke Int64#) (0_i64))))))))))))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

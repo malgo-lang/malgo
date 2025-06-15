@@ -8,15 +8,19 @@
                   ((fst #TestPolySynonym.x_xxx) (snd #TestPolySynonym.__xxx)))
                  #TestPolySynonym.x_xxx)))))
       (main
-         (select
-            (tuple ())
-            (((tuple ())
-                (let
-                   #TestPolySynonym.x_xxx
-                   (object
-                      ((fst (apply (invoke Int32#) (1_i32)))
-                         (snd (apply (invoke String#) ("hoge")))))
-                   (apply
-                      (apply |> ((apply (invoke first) (#TestPolySynonym.x_xxx))))
-                      ((invoke printInt32)))))))))
+         (lambda
+            ($TestPolySynonym.param_xxx)
+            (select
+               $TestPolySynonym.param_xxx
+               ((#TestPolySynonym.$__xxx
+                   (let
+                      #TestPolySynonym.x_xxx
+                      (object
+                         ((fst (apply (invoke Int32#) (1_i32)))
+                            (snd (apply (invoke String#) ("hoge")))))
+                      (apply
+                         (apply
+                            (invoke |>)
+                            ((apply (invoke first) (#TestPolySynonym.x_xxx))))
+                         ((invoke printInt32))))))))))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

@@ -686,7 +686,15 @@ Module
     [
      ( Typed
       { annotated = TyArr
-       ( TyTuple 0 )
+       ( TyVar
+        ( Id
+         { name = "t"
+         , moduleName = Artifact
+          ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" )
+         , sort = Internal 21
+         }
+        )
+       )
        ( TyTuple 0 )
       , value = Range
        { _start = SourcePos
@@ -710,7 +718,15 @@ Module
      , Fn
       ( Typed
        { annotated = TyArr
-        ( TyTuple 0 )
+        ( TyVar
+         ( Id
+          { name = "t"
+          , moduleName = Artifact
+           ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" )
+          , sort = Internal 21
+          }
+         )
+        )
         ( TyTuple 0 )
        , value = Range
         { _start = SourcePos
@@ -729,7 +745,15 @@ Module
       ( Clause
        ( Typed
         { annotated = TyArr
-         ( TyTuple 0 )
+         ( TyVar
+          ( Id
+           { name = "t"
+           , moduleName = Artifact
+            ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" )
+           , sort = Internal 21
+           }
+          )
+         )
          ( TyTuple 0 )
         , value = Range
          { _start = SourcePos
@@ -747,16 +771,23 @@ Module
        )
        [ VarP
         ( Typed
-         { annotated = TyTuple 0
+         { annotated = TyVar
+          ( Id
+           { name = "t"
+           , moduleName = Artifact
+            ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" )
+           , sort = Internal 21
+           }
+          )
          , value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
-           , sourceLine = Pos 9
-           , sourceColumn = Pos 12
+           , sourceLine = Pos 10
+           , sourceColumn = Pos 3
            }
           , _end = SourcePos
            { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
-           , sourceLine = Pos 12
+           , sourceLine = Pos 11
            , sourceColumn = Pos 1
            }
           }
@@ -766,7 +797,7 @@ Module
          { name = "$_"
          , moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" )
-         , sort = Internal 21
+         , sort = Internal 1
          }
         )
        ]

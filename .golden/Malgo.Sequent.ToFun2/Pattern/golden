@@ -1,9 +1,11 @@
 (program
    ((main
-       (select
-          (tuple ())
-          (((tuple ())
-              (apply (invoke putStrLn) ((apply (invoke String#) ("OK"))))))))
+       (lambda
+          ($Pattern.param_xxx)
+          (select
+             $Pattern.param_xxx
+             ((#Pattern.$__xxx
+                 (apply (invoke putStrLn) ((apply (invoke String#) ("OK")))))))))
       (isNil
          (lambda
             ($Pattern.param_xxx)

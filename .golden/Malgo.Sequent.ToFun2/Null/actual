@@ -33,26 +33,31 @@
                       (invoke isNothing)
                       ((apply (invoke mHead) (#Null.as_xxx)))))))))
       (main
-         (select
-            (tuple ())
-            (((tuple ())
-                (apply
+         (lambda
+            ($Null.param_xxx)
+            (select
+               $Null.param_xxx
+               ((#Null.$__xxx
                    (apply
-                      |>
-                      ((apply
-                          (invoke null)
-                          ((apply
-                              (apply (invoke Cons) ((invoke True)))
-                              ((apply
-                                  (apply (invoke Cons) ((invoke True)))
-                                  ((invoke Nil)))))))))
-                   ((lambda
-                       ($Null.param_xxx)
-                       (select
-                          $Null.param_xxx
-                          (((False ()) (apply (invoke malgo_print_string) ("OK")))
-                             ((True ())
-                                (apply (invoke malgo_exit_failure) ((tuple ())))))))))))))
+                      (apply
+                         (invoke |>)
+                         ((apply
+                             (invoke null)
+                             ((apply
+                                 (apply (invoke Cons) ((invoke True)))
+                                 ((apply
+                                     (apply (invoke Cons) ((invoke True)))
+                                     ((invoke Nil)))))))))
+                      ((lambda
+                          ($Null.param_xxx)
+                          (select
+                             $Null.param_xxx
+                             (((False ())
+                                 (apply (invoke malgo_print_string) ("OK")))
+                                ((True ())
+                                   (apply
+                                      (invoke malgo_exit_failure)
+                                      ((tuple ()))))))))))))))
       (Nothing (Nothing ()))
       (Just (lambda ($Null.constructor_xxx) (Just ($Null.constructor_xxx))))
       (False (False ()))

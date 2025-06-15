@@ -1,7 +1,11 @@
 (program
    ((main
-       (select
-          (tuple ())
-          (((tuple ())
-              (apply (invoke putStr) ((apply (invoke getContents) ((tuple ()))))))))))
+       (lambda
+          ($Echo.param_xxx)
+          (select
+             $Echo.param_xxx
+             ((#Echo.$__xxx
+                 (apply
+                    (invoke putStr)
+                    ((apply (invoke getContents) ((tuple ())))))))))))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

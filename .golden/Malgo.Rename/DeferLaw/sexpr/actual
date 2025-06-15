@@ -8,13 +8,16 @@
                 (seq
                    (do
                       (apply
-                         (fn ((clause () (seq (do #DeferLaw.x_xxx)))))
+                         (fn
+                            ((clause
+                                (#DeferLaw.$__xxx)
+                                (seq (do #DeferLaw.x_xxx)))))
                          (tuple)))))))))
        ((def
            main
            (fn
               ((clause
-                  ()
+                  (#DeferLaw.$__xxx)
                   (seq
                      (do
                         (apply

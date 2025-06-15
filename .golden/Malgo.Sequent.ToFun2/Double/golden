@@ -1,11 +1,13 @@
 (program
    ((main
-       (select
-          (tuple ())
-          (((tuple ())
-              (apply
-                 (invoke putStr)
-                 ((apply
-                     (invoke toStringDouble)
-                     ((apply (invoke Double#) (3.14_f64)))))))))))
+       (lambda
+          ($Double.param_xxx)
+          (select
+             $Double.param_xxx
+             ((#Double.$__xxx
+                 (apply
+                    (invoke putStr)
+                    ((apply
+                        (invoke toStringDouble)
+                        ((apply (invoke Double#) (3.14_f64))))))))))))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

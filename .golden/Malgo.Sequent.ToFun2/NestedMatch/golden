@@ -1,31 +1,33 @@
 (program
    ((main
-       (select
-          (tuple ())
-          (((tuple ())
-              (apply
-                 (lambda
-                    ($NestedMatch.param_xxx)
-                    (select
-                       $NestedMatch.param_xxx
-                       (((True ()) (apply (invoke malgo_print_string) ("OK")))
-                          ((False ())
-                             (apply (invoke malgo_exit_failure) ((tuple ())))))))
-                 ((apply
-                     (lambda
-                        ($NestedMatch.param_xxx)
-                        (select
-                           $NestedMatch.param_xxx
-                           (((True1 ()) (invoke False))
-                              ((False1 ()) (invoke True)))))
-                     ((apply
-                         (lambda
-                            ($NestedMatch.param_xxx)
-                            (select
-                               $NestedMatch.param_xxx
-                               (((True2 ()) (invoke False1))
-                                  ((False2 ()) (invoke True1)))))
-                         ((invoke True2)))))))))))
+       (lambda
+          ($NestedMatch.param_xxx)
+          (select
+             $NestedMatch.param_xxx
+             ((#NestedMatch.$__xxx
+                 (apply
+                    (lambda
+                       ($NestedMatch.param_xxx)
+                       (select
+                          $NestedMatch.param_xxx
+                          (((True ()) (apply (invoke malgo_print_string) ("OK")))
+                             ((False ())
+                                (apply (invoke malgo_exit_failure) ((tuple ())))))))
+                    ((apply
+                        (lambda
+                           ($NestedMatch.param_xxx)
+                           (select
+                              $NestedMatch.param_xxx
+                              (((True1 ()) (invoke False))
+                                 ((False1 ()) (invoke True)))))
+                        ((apply
+                            (lambda
+                               ($NestedMatch.param_xxx)
+                               (select
+                                  $NestedMatch.param_xxx
+                                  (((True2 ()) (invoke False1))
+                                     ((False2 ()) (invoke True1)))))
+                            ((invoke True2))))))))))))
       (False (False ()))
       (True (True ()))
       (False1 (False1 ()))

@@ -6,18 +6,20 @@
              $Test2.param_xxx
              (((R ()) (invoke B)) (#Test2.a_xxx #Test2.a_xxx)))))
       (main
-         (select
-            (tuple ())
-            (((tuple ())
-                (apply
-                   (lambda
-                      ($Test2.param_xxx)
-                      (select
-                         $Test2.param_xxx
-                         (((B ()) (apply (invoke malgo_print_string) ("OK")))
-                            (#Test2.__xxx
-                               (apply (invoke malgo_print_string) ("WRONG"))))))
-                   ((apply (invoke rtob) ((invoke R)))))))))
+         (lambda
+            ($Test2.param_xxx)
+            (select
+               $Test2.param_xxx
+               ((#Test2.$__xxx
+                   (apply
+                      (lambda
+                         ($Test2.param_xxx)
+                         (select
+                            $Test2.param_xxx
+                            (((B ()) (apply (invoke malgo_print_string) ("OK")))
+                               (#Test2.__xxx
+                                  (apply (invoke malgo_print_string) ("WRONG"))))))
+                      ((apply (invoke rtob) ((invoke R))))))))))
       (R (R ()))
       (G (G ()))
       (B (B ()))

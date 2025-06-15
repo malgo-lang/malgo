@@ -14,7 +14,7 @@
            main
            (fn
               ((clause
-                  ()
+                  (#UseModule.$__xxx)
                   (seq
                      (do
                         (apply putStrLn (apply String# (string "Hello, world!"))))

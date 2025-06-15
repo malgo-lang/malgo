@@ -6,13 +6,19 @@
              $DeferLaw.param_xxx
              ((#DeferLaw.x_xxx
                  (apply
-                    (select (tuple ()) (((tuple ()) #DeferLaw.x_xxx)))
+                    (lambda
+                       ($DeferLaw.param_xxx)
+                       (select
+                          $DeferLaw.param_xxx
+                          ((#DeferLaw.$__xxx #DeferLaw.x_xxx))))
                     ((tuple ()))))))))
       (main
-         (select
-            (tuple ())
-            (((tuple ())
-                (apply
-                   (invoke putStrLn)
-                   ((apply (invoke f) ((apply (invoke String#) ("Hello")))))))))))
+         (lambda
+            ($DeferLaw.param_xxx)
+            (select
+               $DeferLaw.param_xxx
+               ((#DeferLaw.$__xxx
+                   (apply
+                      (invoke putStrLn)
+                      ((apply (invoke f) ((apply (invoke String#) ("Hello"))))))))))))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

@@ -28,7 +28,7 @@
            main
            (fn
               ((clause
-                  ()
+                  (#With.$__xxx)
                   (seq
                      (do
                         (apply
@@ -44,14 +44,14 @@
                                               (apply String# (string "end")))))))))
                            (fn
                               ((clause
-                                  ()
+                                  (#With.$__xxx)
                                   (seq
                                      (do
                                         (apply
                                            twice
                                            (fn
                                               ((clause
-                                                  ()
+                                                  (#With.$__xxx)
                                                   (seq
                                                      (do
                                                         (apply

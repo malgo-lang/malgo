@@ -12,7 +12,7 @@ Module
          { name = "t"
          , moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/Test0.mlg" )
-         , sort = Internal 16
+         , sort = Internal 17
          }
         )
        )
@@ -23,7 +23,7 @@ Module
            { name = "t"
            , moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/Test0.mlg" )
-           , sort = Internal 16
+           , sort = Internal 17
            }
           )
          )
@@ -32,7 +32,7 @@ Module
            { name = "t"
            , moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/Test0.mlg" )
-           , sort = Internal 20
+           , sort = Internal 21
            }
           )
          )
@@ -42,7 +42,7 @@ Module
           { name = "t"
           , moduleName = Artifact
            ( ArtifactPath "test/testcases/malgo/Test0.mlg" )
-          , sort = Internal 20
+          , sort = Internal 21
           }
          )
         )
@@ -74,7 +74,7 @@ Module
           { name = "t"
           , moduleName = Artifact
            ( ArtifactPath "test/testcases/malgo/Test0.mlg" )
-          , sort = Internal 16
+          , sort = Internal 17
           }
          )
         )
@@ -85,7 +85,7 @@ Module
             { name = "t"
             , moduleName = Artifact
              ( ArtifactPath "test/testcases/malgo/Test0.mlg" )
-            , sort = Internal 16
+            , sort = Internal 17
             }
            )
           )
@@ -94,7 +94,7 @@ Module
             { name = "t"
             , moduleName = Artifact
              ( ArtifactPath "test/testcases/malgo/Test0.mlg" )
-            , sort = Internal 20
+            , sort = Internal 21
             }
            )
           )
@@ -104,7 +104,7 @@ Module
            { name = "t"
            , moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/Test0.mlg" )
-           , sort = Internal 20
+           , sort = Internal 21
            }
           )
          )
@@ -131,7 +131,7 @@ Module
            { name = "t"
            , moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/Test0.mlg" )
-           , sort = Internal 16
+           , sort = Internal 17
            }
           )
          )
@@ -142,7 +142,7 @@ Module
              { name = "t"
              , moduleName = Artifact
               ( ArtifactPath "test/testcases/malgo/Test0.mlg" )
-             , sort = Internal 16
+             , sort = Internal 17
              }
             )
            )
@@ -151,7 +151,7 @@ Module
              { name = "t"
              , moduleName = Artifact
               ( ArtifactPath "test/testcases/malgo/Test0.mlg" )
-             , sort = Internal 20
+             , sort = Internal 21
              }
             )
            )
@@ -161,7 +161,7 @@ Module
             { name = "t"
             , moduleName = Artifact
              ( ArtifactPath "test/testcases/malgo/Test0.mlg" )
-            , sort = Internal 20
+            , sort = Internal 21
             }
            )
           )
@@ -187,7 +187,7 @@ Module
            { name = "t"
            , moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/Test0.mlg" )
-           , sort = Internal 16
+           , sort = Internal 17
            }
           )
          , value = Range
@@ -219,7 +219,7 @@ Module
             { name = "t"
             , moduleName = Artifact
              ( ArtifactPath "test/testcases/malgo/Test0.mlg" )
-            , sort = Internal 16
+            , sort = Internal 17
             }
            )
           )
@@ -228,7 +228,7 @@ Module
             { name = "t"
             , moduleName = Artifact
              ( ArtifactPath "test/testcases/malgo/Test0.mlg" )
-            , sort = Internal 20
+            , sort = Internal 21
             }
            )
           )
@@ -261,7 +261,7 @@ Module
            { name = "t"
            , moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/Test0.mlg" )
-           , sort = Internal 20
+           , sort = Internal 21
            }
           )
          , value = Range
@@ -299,7 +299,7 @@ Module
              { name = "t"
              , moduleName = Artifact
               ( ArtifactPath "test/testcases/malgo/Test0.mlg" )
-             , sort = Internal 20
+             , sort = Internal 21
              }
             )
            , value = Range
@@ -324,7 +324,7 @@ Module
                { name = "t"
                , moduleName = Artifact
                 ( ArtifactPath "test/testcases/malgo/Test0.mlg" )
-               , sort = Internal 16
+               , sort = Internal 17
                }
               )
              )
@@ -333,7 +333,7 @@ Module
                { name = "t"
                , moduleName = Artifact
                 ( ArtifactPath "test/testcases/malgo/Test0.mlg" )
-               , sort = Internal 20
+               , sort = Internal 21
                }
               )
              )
@@ -366,7 +366,7 @@ Module
               { name = "t"
               , moduleName = Artifact
                ( ArtifactPath "test/testcases/malgo/Test0.mlg" )
-              , sort = Internal 16
+              , sort = Internal 17
               }
              )
             , value = Range
@@ -401,7 +401,15 @@ Module
     [
      ( Typed
       { annotated = TyArr
-       ( TyTuple 0 )
+       ( TyVar
+        ( Id
+         { name = "t"
+         , moduleName = Artifact
+          ( ArtifactPath "test/testcases/malgo/Test0.mlg" )
+         , sort = Internal 27
+         }
+        )
+       )
        ( TyTuple 0 )
       , value = Range
        { _start = SourcePos
@@ -425,7 +433,15 @@ Module
      , Fn
       ( Typed
        { annotated = TyArr
-        ( TyTuple 0 )
+        ( TyVar
+         ( Id
+          { name = "t"
+          , moduleName = Artifact
+           ( ArtifactPath "test/testcases/malgo/Test0.mlg" )
+          , sort = Internal 27
+          }
+         )
+        )
         ( TyTuple 0 )
        , value = Range
         { _start = SourcePos
@@ -444,7 +460,15 @@ Module
       ( Clause
        ( Typed
         { annotated = TyArr
-         ( TyTuple 0 )
+         ( TyVar
+          ( Id
+           { name = "t"
+           , moduleName = Artifact
+            ( ArtifactPath "test/testcases/malgo/Test0.mlg" )
+           , sort = Internal 27
+           }
+          )
+         )
          ( TyTuple 0 )
         , value = Range
          { _start = SourcePos
@@ -462,17 +486,24 @@ Module
        )
        [ VarP
         ( Typed
-         { annotated = TyTuple 0
+         { annotated = TyVar
+          ( Id
+           { name = "t"
+           , moduleName = Artifact
+            ( ArtifactPath "test/testcases/malgo/Test0.mlg" )
+           , sort = Internal 27
+           }
+          )
          , value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/Test0.mlg"
            , sourceLine = Pos 10
-           , sourceColumn = Pos 12
+           , sourceColumn = Pos 14
            }
           , _end = SourcePos
            { sourceName = "./test/testcases/malgo/Test0.mlg"
-           , sourceLine = Pos 11
-           , sourceColumn = Pos 1
+           , sourceLine = Pos 10
+           , sourceColumn = Pos 76
            }
           }
          }
@@ -481,7 +512,7 @@ Module
          { name = "$_"
          , moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/Test0.mlg" )
-         , sort = Internal 41
+         , sort = Internal 7
          }
         )
        ]

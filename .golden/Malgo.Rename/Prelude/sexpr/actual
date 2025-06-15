@@ -136,10 +136,13 @@
                                        (apply
                                           (apply eqString #Prelude.str_xxx)
                                           (apply String# (string ""))))))
-                              (fn ((clause () (seq (do #Prelude.str_xxx))))))
+                              (fn
+                                 ((clause
+                                     (#Prelude.$__xxx)
+                                     (seq (do #Prelude.str_xxx))))))
                            (fn
                               ((clause
-                                  ()
+                                  (#Prelude.$__xxx)
                                   (seq
                                      (do
                                         (apply
@@ -161,7 +164,10 @@
                         (apply
                            (apply
                               (apply if #Prelude.c_xxx)
-                              (fn ((clause () (seq (do #Prelude.tValue_xxx))))))
+                              (fn
+                                 ((clause
+                                     (#Prelude.$__xxx)
+                                     (seq (do #Prelude.tValue_xxx))))))
                            #Prelude.f_xxx))))))))
        ((def identity (fn ((clause (#Prelude.x_xxx) (seq (do #Prelude.x_xxx)))))))
        ((def
@@ -180,10 +186,10 @@
                                        (apply
                                           (apply eqString #Prelude.str_xxx)
                                           (apply String# (string ""))))))
-                              (fn ((clause () (seq (do Nothing))))))
+                              (fn ((clause (#Prelude.$__xxx) (seq (do Nothing))))))
                            (fn
                               ((clause
-                                  ()
+                                  (#Prelude.$__xxx)
                                   (seq
                                      (do
                                         (apply
@@ -296,7 +302,7 @@
                                                             #Prelude.c_xxx))))
                                                 (fn
                                                    ((clause
-                                                       ()
+                                                       (#Prelude.$__xxx)
                                                        (seq
                                                           (do
                                                              (apply
@@ -310,7 +316,7 @@
                                                                          #Prelude.str_xxx))))))))))
                                              (fn
                                                 ((clause
-                                                    ()
+                                                    (#Prelude.$__xxx)
                                                     (seq (do #Prelude.str_xxx)))))))))))))))))))
        ((def
            takeWhileString
@@ -342,7 +348,7 @@
                                                             #Prelude.c_xxx))))
                                                 (fn
                                                    ((clause
-                                                       ()
+                                                       (#Prelude.$__xxx)
                                                        (seq
                                                           (do
                                                              (apply
@@ -362,7 +368,7 @@
                                                                                   #Prelude.str_xxx)))))))))))))
                                              (fn
                                                 ((clause
-                                                    ()
+                                                    (#Prelude.$__xxx)
                                                     (seq
                                                        (do
                                                           (apply

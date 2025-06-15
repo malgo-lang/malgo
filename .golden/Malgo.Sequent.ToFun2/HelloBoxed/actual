@@ -17,12 +17,14 @@
                          (apply (invoke malgo_newline) ((tuple ()))))
                       ((apply (invoke malgo_print_string) (#HelloBoxed.str_xxx)))))))))
       (main
-         (select
-            (tuple ())
-            (((tuple ())
-                (apply
-                   (invoke putStrLn)
-                   ((apply (invoke String#) ("Hello, world"))))))))
+         (lambda
+            ($HelloBoxed.param_xxx)
+            (select
+               $HelloBoxed.param_xxx
+               ((#HelloBoxed.$__xxx
+                   (apply
+                      (invoke putStrLn)
+                      ((apply (invoke String#) ("Hello, world")))))))))
       (String#
          (lambda
             ($HelloBoxed.constructor_xxx)

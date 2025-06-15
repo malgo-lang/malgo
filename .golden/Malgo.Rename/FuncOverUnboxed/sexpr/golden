@@ -24,7 +24,10 @@
                         (apply
                            printString#
                            (seq (do (apply toStringInt64# (int64 0))))))))))))
-       ((def main (fn ((clause () (seq (do (apply f (int64 0))))))))))
+       ((def
+           main
+           (fn
+              ((clause (#FuncOverUnboxed.$__xxx) (seq (do (apply f (int64 0))))))))))
       ()
       ()
       ()
