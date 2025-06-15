@@ -4,7 +4,7 @@ module {..} = import "../../../runtime/malgo/Prelude.mlg"
 data T = A | B | C
 
 def main : { () }
-def main = { 
+def main = {
   (A, B)
     |> { (A, rest) -> printString "A",
          (B, rest) -> (),

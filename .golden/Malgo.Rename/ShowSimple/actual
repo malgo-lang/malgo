@@ -495,7 +495,7 @@ Module
         , _end = SourcePos
          { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
          , sourceLine = Pos 13
-         , sourceColumn = Pos 50
+         , sourceColumn = Pos 52
          }
         }
        )
@@ -504,28 +504,7 @@ Module
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
           , sourceLine = Pos 13
-          , sourceColumn = Pos 16
-          }
-         , _end = SourcePos
-          { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
-          , sourceLine = Pos 13
-          , sourceColumn = Pos 24
-          }
-         }
-        )
-        ( Id
-         { name = "String#"
-         , moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/ShowSimple.mlg" )
-         , sort = External
-         }
-        ) []
-       , VarP
-        ( Range
-         { _start = SourcePos
-          { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
-          , sourceLine = Pos 13
-          , sourceColumn = Pos 24
+          , sourceColumn = Pos 17
           }
          , _end = SourcePos
           { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
@@ -535,24 +514,46 @@ Module
          }
         )
         ( Id
-         { name = "x"
+         { name = "String#"
          , moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/ShowSimple.mlg" )
-         , sort = Internal 2
+         , sort = External
          }
         )
+        [ VarP
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
+           , sourceLine = Pos 13
+           , sourceColumn = Pos 25
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
+           , sourceLine = Pos 13
+           , sourceColumn = Pos 26
+           }
+          }
+         )
+         ( Id
+          { name = "x"
+          , moduleName = Artifact
+           ( ArtifactPath "test/testcases/malgo/ShowSimple.mlg" )
+          , sort = Internal 2
+          }
+         )
+        ]
        ]
        ( Seq
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
           , sourceLine = Pos 13
-          , sourceColumn = Pos 29
+          , sourceColumn = Pos 31
           }
          , _end = SourcePos
           { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
           , sourceLine = Pos 13
-          , sourceColumn = Pos 50
+          , sourceColumn = Pos 52
           }
          }
         )
@@ -561,12 +562,12 @@ Module
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
            , sourceLine = Pos 13
-           , sourceColumn = Pos 29
+           , sourceColumn = Pos 31
            }
           , _end = SourcePos
            { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
            , sourceLine = Pos 13
-           , sourceColumn = Pos 50
+           , sourceColumn = Pos 52
            }
           }
          )
@@ -575,12 +576,12 @@ Module
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
             , sourceLine = Pos 13
-            , sourceColumn = Pos 48
+            , sourceColumn = Pos 50
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
             , sourceLine = Pos 13
-            , sourceColumn = Pos 50
+            , sourceColumn = Pos 52
             }
            }
           )
@@ -589,12 +590,12 @@ Module
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
              , sourceLine = Pos 13
-             , sourceColumn = Pos 29
+             , sourceColumn = Pos 31
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
              , sourceLine = Pos 13
-             , sourceColumn = Pos 48
+             , sourceColumn = Pos 50
              }
             }
            )
@@ -611,12 +612,12 @@ Module
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
              , sourceLine = Pos 13
-             , sourceColumn = Pos 48
+             , sourceColumn = Pos 50
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
              , sourceLine = Pos 13
-             , sourceColumn = Pos 50
+             , sourceColumn = Pos 52
              }
             }
            )
@@ -678,10 +679,32 @@ Module
         , _end = SourcePos
          { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
          , sourceLine = Pos 31
-         , sourceColumn = Pos 89
+         , sourceColumn = Pos 91
          }
         }
-       ) []
+       )
+       [ VarP
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
+          , sourceLine = Pos 31
+          , sourceColumn = Pos 14
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
+          , sourceLine = Pos 31
+          , sourceColumn = Pos 91
+          }
+         }
+        )
+        ( Id
+         { name = "$_"
+         , moduleName = Artifact
+          ( ArtifactPath "test/testcases/malgo/ShowSimple.mlg" )
+         , sort = Internal 8
+         }
+        )
+       ]
        ( Seq
         ( Range
          { _start = SourcePos
@@ -692,7 +715,7 @@ Module
          , _end = SourcePos
           { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
           , sourceLine = Pos 31
-          , sourceColumn = Pos 89
+          , sourceColumn = Pos 91
           }
          }
         )
@@ -706,7 +729,7 @@ Module
           , _end = SourcePos
            { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
            , sourceLine = Pos 31
-           , sourceColumn = Pos 89
+           , sourceColumn = Pos 91
            }
           }
          )
@@ -720,7 +743,7 @@ Module
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
             , sourceLine = Pos 31
-            , sourceColumn = Pos 89
+            , sourceColumn = Pos 91
             }
            }
           )
@@ -756,7 +779,7 @@ Module
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
              , sourceLine = Pos 31
-             , sourceColumn = Pos 89
+             , sourceColumn = Pos 91
              }
             }
            )
@@ -770,7 +793,7 @@ Module
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
               , sourceLine = Pos 31
-              , sourceColumn = Pos 89
+              , sourceColumn = Pos 91
               }
              }
             )
@@ -779,12 +802,12 @@ Module
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
                , sourceLine = Pos 31
-               , sourceColumn = Pos 86
+               , sourceColumn = Pos 88
                }
               , _end = SourcePos
                { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
                , sourceLine = Pos 31
-               , sourceColumn = Pos 87
+               , sourceColumn = Pos 89
                }
               }
              )
@@ -798,7 +821,7 @@ Module
                , _end = SourcePos
                 { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
                 , sourceLine = Pos 31
-                , sourceColumn = Pos 86
+                , sourceColumn = Pos 88
                 }
                }
               )
@@ -834,7 +857,7 @@ Module
                 , _end = SourcePos
                  { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
                  , sourceLine = Pos 31
-                 , sourceColumn = Pos 86
+                 , sourceColumn = Pos 88
                  }
                 }
                )
@@ -848,7 +871,7 @@ Module
                  , _end = SourcePos
                   { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
                   , sourceLine = Pos 31
-                  , sourceColumn = Pos 86
+                  , sourceColumn = Pos 88
                   }
                  }
                 )
@@ -862,7 +885,7 @@ Module
                   , _end = SourcePos
                    { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
                    , sourceLine = Pos 31
-                   , sourceColumn = Pos 84
+                   , sourceColumn = Pos 86
                    }
                   }
                  )
@@ -898,7 +921,7 @@ Module
                    , _end = SourcePos
                     { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
                     , sourceLine = Pos 31
-                    , sourceColumn = Pos 84
+                    , sourceColumn = Pos 86
                     }
                    }
                   )
@@ -912,7 +935,7 @@ Module
                     , _end = SourcePos
                      { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
                      , sourceLine = Pos 31
-                     , sourceColumn = Pos 83
+                     , sourceColumn = Pos 85
                      }
                     }
                    )
@@ -921,28 +944,7 @@ Module
                      { _start = SourcePos
                       { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
                       , sourceLine = Pos 31
-                      , sourceColumn = Pos 35
-                      }
-                     , _end = SourcePos
-                      { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
-                      , sourceLine = Pos 31
-                      , sourceColumn = Pos 42
-                      }
-                     }
-                    )
-                    ( Id
-                     { name = "Int32#"
-                     , moduleName = Artifact
-                      ( ArtifactPath "test/testcases/malgo/ShowSimple.mlg" )
-                     , sort = External
-                     }
-                    ) []
-                   , VarP
-                    ( Range
-                     { _start = SourcePos
-                      { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
-                      , sourceLine = Pos 31
-                      , sourceColumn = Pos 42
+                      , sourceColumn = Pos 36
                       }
                      , _end = SourcePos
                       { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
@@ -952,24 +954,46 @@ Module
                      }
                     )
                     ( Id
-                     { name = "x"
+                     { name = "Int32#"
                      , moduleName = Artifact
                       ( ArtifactPath "test/testcases/malgo/ShowSimple.mlg" )
-                     , sort = Internal 7
+                     , sort = External
                      }
                     )
+                    [ VarP
+                     ( Range
+                      { _start = SourcePos
+                       { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
+                       , sourceLine = Pos 31
+                       , sourceColumn = Pos 43
+                       }
+                      , _end = SourcePos
+                       { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
+                       , sourceLine = Pos 31
+                       , sourceColumn = Pos 44
+                       }
+                      }
+                     )
+                     ( Id
+                      { name = "x"
+                      , moduleName = Artifact
+                       ( ArtifactPath "test/testcases/malgo/ShowSimple.mlg" )
+                      , sort = Internal 7
+                      }
+                     )
+                    ]
                    ]
                    ( Seq
                     ( Range
                      { _start = SourcePos
                       { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
                       , sourceLine = Pos 31
-                      , sourceColumn = Pos 47
+                      , sourceColumn = Pos 49
                       }
                      , _end = SourcePos
                       { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
                       , sourceLine = Pos 31
-                      , sourceColumn = Pos 83
+                      , sourceColumn = Pos 85
                       }
                      }
                     )
@@ -978,12 +1002,12 @@ Module
                       { _start = SourcePos
                        { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
                        , sourceLine = Pos 31
-                       , sourceColumn = Pos 47
+                       , sourceColumn = Pos 49
                        }
                       , _end = SourcePos
                        { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
                        , sourceLine = Pos 31
-                       , sourceColumn = Pos 83
+                       , sourceColumn = Pos 85
                        }
                       }
                      )
@@ -992,12 +1016,12 @@ Module
                        { _start = SourcePos
                         { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
                         , sourceLine = Pos 31
-                        , sourceColumn = Pos 55
+                        , sourceColumn = Pos 57
                         }
                        , _end = SourcePos
                         { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
                         , sourceLine = Pos 31
-                        , sourceColumn = Pos 83
+                        , sourceColumn = Pos 85
                         }
                        }
                       )
@@ -1006,12 +1030,12 @@ Module
                         { _start = SourcePos
                          { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
                          , sourceLine = Pos 31
-                         , sourceColumn = Pos 47
+                         , sourceColumn = Pos 49
                          }
                         , _end = SourcePos
                          { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
                          , sourceLine = Pos 31
-                         , sourceColumn = Pos 55
+                         , sourceColumn = Pos 57
                          }
                         }
                        )
@@ -1028,12 +1052,12 @@ Module
                         { _start = SourcePos
                          { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
                          , sourceLine = Pos 31
-                         , sourceColumn = Pos 55
+                         , sourceColumn = Pos 57
                          }
                         , _end = SourcePos
                          { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
                          , sourceLine = Pos 31
-                         , sourceColumn = Pos 83
+                         , sourceColumn = Pos 85
                          }
                         }
                        )
@@ -1042,12 +1066,12 @@ Module
                          { _start = SourcePos
                           { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
                           , sourceLine = Pos 31
-                          , sourceColumn = Pos 55
+                          , sourceColumn = Pos 57
                           }
                          , _end = SourcePos
                           { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
                           , sourceLine = Pos 31
-                          , sourceColumn = Pos 83
+                          , sourceColumn = Pos 85
                           }
                          }
                         )
@@ -1056,12 +1080,12 @@ Module
                           { _start = SourcePos
                            { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
                            , sourceLine = Pos 31
-                           , sourceColumn = Pos 80
+                           , sourceColumn = Pos 82
                            }
                           , _end = SourcePos
                            { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
                            , sourceLine = Pos 31
-                           , sourceColumn = Pos 81
+                           , sourceColumn = Pos 83
                            }
                           }
                          )
@@ -1070,12 +1094,12 @@ Module
                            { _start = SourcePos
                             { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
                             , sourceLine = Pos 31
-                            , sourceColumn = Pos 56
+                            , sourceColumn = Pos 58
                             }
                            , _end = SourcePos
                             { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
                             , sourceLine = Pos 31
-                            , sourceColumn = Pos 80
+                            , sourceColumn = Pos 82
                             }
                            }
                           )
@@ -1092,12 +1116,12 @@ Module
                            { _start = SourcePos
                             { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
                             , sourceLine = Pos 31
-                            , sourceColumn = Pos 80
+                            , sourceColumn = Pos 82
                             }
                            , _end = SourcePos
                             { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
                             , sourceLine = Pos 31
-                            , sourceColumn = Pos 81
+                            , sourceColumn = Pos 83
                             }
                            }
                           )
@@ -1126,12 +1150,12 @@ Module
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
                 , sourceLine = Pos 31
-                , sourceColumn = Pos 86
+                , sourceColumn = Pos 88
                 }
                , _end = SourcePos
                 { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
                 , sourceLine = Pos 31
-                , sourceColumn = Pos 87
+                , sourceColumn = Pos 89
                 }
                }
               )
@@ -1140,12 +1164,12 @@ Module
                 { _start = SourcePos
                  { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
                  , sourceLine = Pos 31
-                 , sourceColumn = Pos 86
+                 , sourceColumn = Pos 88
                  }
                 , _end = SourcePos
                  { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
                  , sourceLine = Pos 31
-                 , sourceColumn = Pos 87
+                 , sourceColumn = Pos 89
                  }
                 }
                )
@@ -1162,12 +1186,12 @@ Module
                 { _start = SourcePos
                  { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
                  , sourceLine = Pos 31
-                 , sourceColumn = Pos 86
+                 , sourceColumn = Pos 88
                  }
                 , _end = SourcePos
                  { sourceName = "./test/testcases/malgo/ShowSimple.mlg"
                  , sourceLine = Pos 31
-                 , sourceColumn = Pos 87
+                 , sourceColumn = Pos 89
                  }
                 }
                )

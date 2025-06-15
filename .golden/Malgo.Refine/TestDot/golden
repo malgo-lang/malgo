@@ -456,7 +456,15 @@ Module
     [
      ( Typed
       { annotated = TyArr
-       ( TyTuple 0 )
+       ( TyVar
+        ( Id
+         { name = "t"
+         , moduleName = Artifact
+          ( ArtifactPath "test/testcases/malgo/TestDot.mlg" )
+         , sort = Internal 17
+         }
+        )
+       )
        ( TyTuple 0 )
       , value = Range
        { _start = SourcePos
@@ -480,7 +488,15 @@ Module
      , Fn
       ( Typed
        { annotated = TyArr
-        ( TyTuple 0 )
+        ( TyVar
+         ( Id
+          { name = "t"
+          , moduleName = Artifact
+           ( ArtifactPath "test/testcases/malgo/TestDot.mlg" )
+          , sort = Internal 17
+          }
+         )
+        )
         ( TyTuple 0 )
        , value = Range
         { _start = SourcePos
@@ -499,7 +515,15 @@ Module
       ( Clause
        ( Typed
         { annotated = TyArr
-         ( TyTuple 0 )
+         ( TyVar
+          ( Id
+           { name = "t"
+           , moduleName = Artifact
+            ( ArtifactPath "test/testcases/malgo/TestDot.mlg" )
+           , sort = Internal 17
+           }
+          )
+         )
          ( TyTuple 0 )
         , value = Range
          { _start = SourcePos
@@ -517,17 +541,24 @@ Module
        )
        [ VarP
         ( Typed
-         { annotated = TyTuple 0
+         { annotated = TyVar
+          ( Id
+           { name = "t"
+           , moduleName = Artifact
+            ( ArtifactPath "test/testcases/malgo/TestDot.mlg" )
+           , sort = Internal 17
+           }
+          )
          , value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/TestDot.mlg"
            , sourceLine = Pos 6
-           , sourceColumn = Pos 12
+           , sourceColumn = Pos 14
            }
           , _end = SourcePos
            { sourceName = "./test/testcases/malgo/TestDot.mlg"
-           , sourceLine = Pos 7
-           , sourceColumn = Pos 1
+           , sourceLine = Pos 6
+           , sourceColumn = Pos 55
            }
           }
          }
@@ -536,7 +567,7 @@ Module
          { name = "$_"
          , moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/TestDot.mlg" )
-         , sort = Internal 29
+         , sort = Internal 1
          }
         )
        ]

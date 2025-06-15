@@ -4,20 +4,20 @@
          main
          (fn
             ((clause
-                ()
+                (#TestNestedLetFunc.$__4)
                 (seq
                    (let
-                      #TestNestedLetFunc.f_xxx
+                      #TestNestedLetFunc.f_3
                       (fn
                          ((clause
-                             ()
+                             (#TestNestedLetFunc.$__2)
                              (seq
                                 (let
-                                   #TestNestedLetFunc.y_xxx
+                                   #TestNestedLetFunc.y_1
                                    (apply
                                       (fn
                                          ((clause
-                                             (#TestNestedLetFunc.a_xxx)
+                                             (#TestNestedLetFunc.a_0)
                                              (seq (do (tuple))))))
                                       (tuple))))))))
                    (do (apply malgo_print_string (string "PASS"))))))))))

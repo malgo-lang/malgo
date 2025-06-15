@@ -4,22 +4,22 @@
       (comp
          (apply
             (lambda
-               ($ToplevelVariable.param_xxx)
+               ($ToplevelVariable.param_4)
                (select
-                  $ToplevelVariable.param_xxx
+                  $ToplevelVariable.param_4
                   (((Nothing ()) (invoke Nothing))
-                     ((Just (#ToplevelVariable.x_xxx)) (invoke Nothing)))))
+                     ((Just (#ToplevelVariable.x_1)) (invoke Nothing)))))
             ((apply (invoke Just) ((tuple ()))))))
       (addOne (apply (invoke addInt32) ((invoke one))))
       (main
          (lambda
-            ($ToplevelVariable.param_xxx)
+            ($ToplevelVariable.param_5)
             (select
-               $ToplevelVariable.param_xxx
-               ((#ToplevelVariable.$__xxx
+               $ToplevelVariable.param_5
+               ((#ToplevelVariable.$__3
                    (apply
                       (lambda
-                         ($ToplevelVariable.tmp_xxx)
+                         ($ToplevelVariable.tmp_6)
                          (apply
                             (invoke printInt32)
                             ((apply
@@ -27,13 +27,13 @@
                                 ((apply (invoke addOne) ((invoke one))))))))
                       ((apply
                           (lambda
-                             ($ToplevelVariable.param_xxx)
+                             ($ToplevelVariable.param_7)
                              (select
-                                $ToplevelVariable.param_xxx
+                                $ToplevelVariable.param_7
                                 (((Nothing ())
                                     (apply
                                        (invoke printString)
                                        ((apply (invoke String#) ("OK")))))
-                                   ((Just (#ToplevelVariable.__xxx)) (tuple ())))))
+                                   ((Just (#ToplevelVariable.__2)) (tuple ())))))
                           ((invoke comp)))))))))))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

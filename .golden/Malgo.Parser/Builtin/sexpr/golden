@@ -23,7 +23,10 @@
       (sig panic (-> String a))
       (def
          panic
-         (fn ((clause (String# message) (seq (do (apply malgo_panic message)))))))
+         (fn
+            ((clause
+                ((con String# (message)))
+                (seq (do (apply malgo_panic message)))))))
       (foreign malgo_unsafe_cast (-> a b))
       (sig undefined a)
       (def undefined (apply malgo_unsafe_cast (tuple)))
@@ -231,7 +234,7 @@
          sqrtFloat
          (fn
             ((clause
-                (Float# x)
+                ((con Float# (x)))
                 (seq (do (apply Float# (seq (do (apply sqrtFloat# x))))))))))
       (foreign sqrt (-> Double# Double#))
       (sig sqrtDouble# (-> Double# Double#))
@@ -241,7 +244,7 @@
          sqrtDouble
          (fn
             ((clause
-                (Double# x)
+                ((con Double# (x)))
                 (seq (do (apply Double# (seq (do (apply sqrtDouble# x))))))))))
       (sig isTrue# (-> Int32# Bool))
       (def
@@ -715,7 +718,7 @@
          isDigit
          (fn
             ((clause
-                (Char# x)
+                ((con Char# (x)))
                 (seq (do (apply isTrue# (seq (do (apply isDigit# x))))))))))
       (foreign malgo_is_lower (-> Char# Int32#))
       (sig isLower# (-> Char# Int32#))
@@ -725,7 +728,7 @@
          isLower
          (fn
             ((clause
-                (Char# x)
+                ((con Char# (x)))
                 (seq (do (apply isTrue# (seq (do (apply isLower# x))))))))))
       (foreign malgo_is_upper (-> Char# Int32#))
       (sig isUpper# (-> Char# Int32#))
@@ -735,7 +738,7 @@
          isUpper
          (fn
             ((clause
-                (Char# x)
+                ((con Char# (x)))
                 (seq (do (apply isTrue# (seq (do (apply isUpper# x))))))))))
       (foreign malgo_is_alphanum (-> Char# Int32#))
       (sig isAlphanum# (-> Char# Int32#))
@@ -745,7 +748,7 @@
          isAlphanum
          (fn
             ((clause
-                (Char# x)
+                ((con Char# (x)))
                 (seq (do (apply isTrue# (seq (do (apply isAlphanum# x))))))))))
       (foreign malgo_string_length (-> String# Int64#))
       (sig lengthString# (-> String# Int64#))
@@ -829,7 +832,7 @@
          toStringInt32
          (fn
             ((clause
-                (Int32# x)
+                ((con Int32# (x)))
                 (seq (do (apply String# (seq (do (apply toStringInt32# x))))))))))
       (foreign malgo_int64_t_to_string (-> Int64# String#))
       (sig toStringInt64# (-> Int64# String#))
@@ -841,7 +844,7 @@
          toStringInt64
          (fn
             ((clause
-                (Int64# x)
+                ((con Int64# (x)))
                 (seq (do (apply String# (seq (do (apply toStringInt64# x))))))))))
       (foreign malgo_float_to_string (-> Float# String#))
       (sig toStringFloat# (-> Float# String#))
@@ -853,7 +856,7 @@
          toStringFloat
          (fn
             ((clause
-                (Float# x)
+                ((con Float# (x)))
                 (seq (do (apply String# (seq (do (apply toStringFloat# x))))))))))
       (foreign malgo_double_to_string (-> Double# String#))
       (sig toStringDouble# (-> Double# String#))
@@ -865,7 +868,7 @@
          toStringDouble
          (fn
             ((clause
-                (Double# x)
+                ((con Double# (x)))
                 (seq (do (apply String# (seq (do (apply toStringDouble# x))))))))))
       (foreign malgo_char_to_string (-> Char# String#))
       (sig toStringChar# (-> Char# String#))
@@ -877,7 +880,7 @@
          toStringChar
          (fn
             ((clause
-                (Char# x)
+                ((con Char# (x)))
                 (seq (do (apply String# (seq (do (apply toStringChar# x))))))))))
       (foreign malgo_exit_failure (-> (tuple) a))
       (sig exitFailure (-> (tuple) a))
@@ -890,7 +893,9 @@
       (sig printChar# (-> Char# (tuple)))
       (def printChar# (fn ((clause (x) (seq (do (apply malgo_print_char x)))))))
       (sig printChar (-> Char (tuple)))
-      (def printChar (fn ((clause (Char# x) (seq (do (apply printChar# x)))))))
+      (def
+         printChar
+         (fn ((clause ((con Char# (x))) (seq (do (apply printChar# x)))))))
       (foreign malgo_print_string (-> String# (tuple)))
       (sig printString# (-> String# (tuple)))
       (def
@@ -899,7 +904,7 @@
       (sig printString (-> String (tuple)))
       (def
          printString
-         (fn ((clause (String# x) (seq (do (apply printString# x)))))))
+         (fn ((clause ((con String# (x))) (seq (do (apply printString# x)))))))
       (foreign malgo_flush (-> (tuple) (tuple)))
       (def flush (fn ((clause (_) (seq (do (apply malgo_flush (tuple))))))))
       (foreign malgo_get_char (-> (tuple) Char#))

@@ -4,14 +4,12 @@
          rtob
          (fn
             ((clause ((con R ())) (seq (do B)))
-               (clause
-                  (#Test6.__xxx)
-                  (seq (do (apply malgo_exit_failure (tuple)))))))))
+               (clause (#Test6.__1) (seq (do (apply malgo_exit_failure (tuple)))))))))
        ((def
            main
            (fn
               ((clause
-                  ()
+                  (#Test6.$__3)
                   (seq
                      (do
                         (apply
@@ -21,7 +19,7 @@
                                   (seq
                                      (do (apply malgo_print_string (string "OK")))))
                                  (clause
-                                    (#Test6.__xxx)
+                                    (#Test6.__2)
                                     (seq
                                        (do
                                           (apply
@@ -31,6 +29,6 @@
       ()
       ((data RGB () ((R ()) (G ()) (B ()))))
       ()
-      ((foreign malgo_exit_failure (-> (tuple) #Test6.a_xxx))
+      ((foreign malgo_exit_failure (-> (tuple) #Test6.a_0))
          (foreign malgo_print_string (-> String# (tuple))))
       ()))

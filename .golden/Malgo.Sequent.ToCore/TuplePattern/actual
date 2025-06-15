@@ -1,54 +1,53 @@
 ((main
-    $TuplePattern.return_xxx
+    $TuplePattern.return_6
     (cut
        (lambda
-          ($TuplePattern.param_xxx $TuplePattern.return_xxx)
+          ($TuplePattern.param_4 $TuplePattern.return_7)
           (cut
-             $TuplePattern.param_xxx
+             $TuplePattern.param_4
              (select
-                (#TuplePattern.$__xxx
+                (#TuplePattern.$__3
                    (invoke
                       |>
                       (apply
                          ((construct
                              tuple
                              ((do
-                                 $TuplePattern.return_xxx
-                                 (invoke A $TuplePattern.return_xxx))
+                                 $TuplePattern.return_10
+                                 (invoke A $TuplePattern.return_10))
                                 (do
-                                   $TuplePattern.return_xxx
-                                   (invoke B $TuplePattern.return_xxx)))
+                                   $TuplePattern.return_11
+                                   (invoke B $TuplePattern.return_11)))
                              ()))
                          ((apply
                              ((lambda
-                                 ($TuplePattern.param_xxx
-                                    $TuplePattern.return_xxx)
+                                 ($TuplePattern.param_5 $TuplePattern.return_8)
                                  (cut
-                                    $TuplePattern.param_xxx
+                                    $TuplePattern.param_5
                                     (select
-                                       ((tuple ((A ()) #TuplePattern.rest_xxx))
+                                       ((tuple ((A ()) #TuplePattern.rest_0))
                                           (invoke
                                              printString
                                              (apply
                                                 ((do
-                                                    $TuplePattern.return_xxx
+                                                    $TuplePattern.return_9
                                                     (invoke
                                                        String#
                                                        (apply
                                                           ("A")
-                                                          ($TuplePattern.return_xxx)))))
-                                                ($TuplePattern.return_xxx))))
-                                       ((tuple ((B ()) #TuplePattern.rest_xxx))
+                                                          ($TuplePattern.return_9)))))
+                                                ($TuplePattern.return_8))))
+                                       ((tuple ((B ()) #TuplePattern.rest_1))
                                           (cut
                                              (construct tuple () ())
-                                             $TuplePattern.return_xxx))
-                                       ((tuple ((C ()) #TuplePattern.rest_xxx))
+                                             $TuplePattern.return_8))
+                                       ((tuple ((C ()) #TuplePattern.rest_2))
                                           (cut
                                              (construct tuple () ())
-                                             $TuplePattern.return_xxx))))))
-                             ($TuplePattern.return_xxx)))))))))
-       $TuplePattern.return_xxx))
-   (A $TuplePattern.return_xxx (cut (construct A () ()) $TuplePattern.return_xxx))
-   (B $TuplePattern.return_xxx (cut (construct B () ()) $TuplePattern.return_xxx))
-   (C $TuplePattern.return_xxx (cut (construct C () ()) $TuplePattern.return_xxx))
+                                             $TuplePattern.return_8))))))
+                             ($TuplePattern.return_7)))))))))
+       $TuplePattern.return_6))
+   (A $TuplePattern.return_12 (cut (construct A () ()) $TuplePattern.return_12))
+   (B $TuplePattern.return_13 (cut (construct B () ()) $TuplePattern.return_13))
+   (C $TuplePattern.return_14 (cut (construct C () ()) $TuplePattern.return_14))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

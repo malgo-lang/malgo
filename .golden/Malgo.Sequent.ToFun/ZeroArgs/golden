@@ -2,36 +2,36 @@
    ((one
        (apply
           (lambda
-             ($ZeroArgs.param_xxx)
+             ($ZeroArgs.param_6)
              (select
-                $ZeroArgs.param_xxx
-                ((#ZeroArgs.$__xxx (apply (invoke Int32#) (1_i32))))))
+                $ZeroArgs.param_6
+                ((#ZeroArgs.$__0 (apply (invoke Int32#) (1_i32))))))
           ((tuple ()))))
       (id
          (lambda
-            ($ZeroArgs.param_xxx)
+            ($ZeroArgs.param_7)
             (select
-               $ZeroArgs.param_xxx
-               ((#ZeroArgs.x_xxx
+               $ZeroArgs.param_7
+               ((#ZeroArgs.x_2
                    (apply
                       (lambda
-                         ($ZeroArgs.param_xxx)
+                         ($ZeroArgs.param_8)
                          (select
-                            $ZeroArgs.param_xxx
-                            ((#ZeroArgs.$__xxx #ZeroArgs.x_xxx))))
+                            $ZeroArgs.param_8
+                            ((#ZeroArgs.$__3 #ZeroArgs.x_2))))
                       ((tuple ()))))))))
       (main
          (apply
             (lambda
-               ($ZeroArgs.param_xxx)
+               ($ZeroArgs.param_9)
                (select
-                  $ZeroArgs.param_xxx
-                  ((#ZeroArgs.$__xxx
+                  $ZeroArgs.param_9
+                  ((#ZeroArgs.$__5
                       (lambda
-                         ($ZeroArgs.param_xxx)
+                         ($ZeroArgs.param_10)
                          (select
-                            $ZeroArgs.param_xxx
-                            ((#ZeroArgs.$__xxx
+                            $ZeroArgs.param_10
+                            ((#ZeroArgs.$__4
                                 (apply
                                    (invoke printString)
                                    ((apply

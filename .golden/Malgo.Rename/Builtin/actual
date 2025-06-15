@@ -282,7 +282,7 @@ Module
         , _end = SourcePos
          { sourceName = "./runtime/malgo/Builtin.mlg"
          , sourceLine = Pos 449
-         , sourceColumn = Pos 62
+         , sourceColumn = Pos 64
          }
         }
        )
@@ -291,28 +291,7 @@ Module
          { _start = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 449
-          , sourceColumn = Pos 23
-          }
-         , _end = SourcePos
-          { sourceName = "./runtime/malgo/Builtin.mlg"
-          , sourceLine = Pos 449
-          , sourceColumn = Pos 30
-          }
-         }
-        )
-        ( Id
-         { name = "Int64#"
-         , moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-         , sort = External
-         }
-        ) []
-       , VarP
-        ( Range
-         { _start = SourcePos
-          { sourceName = "./runtime/malgo/Builtin.mlg"
-          , sourceLine = Pos 449
-          , sourceColumn = Pos 30
+          , sourceColumn = Pos 24
           }
          , _end = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
@@ -322,24 +301,46 @@ Module
          }
         )
         ( Id
-         { name = "x"
+         { name = "Int64#"
          , moduleName = Artifact
           ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-         , sort = Internal 258
+         , sort = External
          }
         )
+        [ VarP
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./runtime/malgo/Builtin.mlg"
+           , sourceLine = Pos 449
+           , sourceColumn = Pos 31
+           }
+          , _end = SourcePos
+           { sourceName = "./runtime/malgo/Builtin.mlg"
+           , sourceLine = Pos 449
+           , sourceColumn = Pos 32
+           }
+          }
+         )
+         ( Id
+          { name = "x"
+          , moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+          , sort = Internal 258
+          }
+         )
+        ]
        ]
        ( Seq
         ( Range
          { _start = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 449
-          , sourceColumn = Pos 35
+          , sourceColumn = Pos 37
           }
          , _end = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 449
-          , sourceColumn = Pos 62
+          , sourceColumn = Pos 64
           }
          }
         )
@@ -348,12 +349,12 @@ Module
           { _start = SourcePos
            { sourceName = "./runtime/malgo/Builtin.mlg"
            , sourceLine = Pos 449
-           , sourceColumn = Pos 35
+           , sourceColumn = Pos 37
            }
           , _end = SourcePos
            { sourceName = "./runtime/malgo/Builtin.mlg"
            , sourceLine = Pos 449
-           , sourceColumn = Pos 62
+           , sourceColumn = Pos 64
            }
           }
          )
@@ -362,12 +363,12 @@ Module
            { _start = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
             , sourceLine = Pos 449
-            , sourceColumn = Pos 43
+            , sourceColumn = Pos 45
             }
            , _end = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
             , sourceLine = Pos 449
-            , sourceColumn = Pos 62
+            , sourceColumn = Pos 64
             }
            }
           )
@@ -376,12 +377,12 @@ Module
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 449
-             , sourceColumn = Pos 35
+             , sourceColumn = Pos 37
              }
             , _end = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 449
-             , sourceColumn = Pos 43
+             , sourceColumn = Pos 45
              }
             }
            )
@@ -398,12 +399,12 @@ Module
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 449
-             , sourceColumn = Pos 43
+             , sourceColumn = Pos 45
              }
             , _end = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 449
-             , sourceColumn = Pos 62
+             , sourceColumn = Pos 64
              }
             }
            )
@@ -412,12 +413,12 @@ Module
              { _start = SourcePos
               { sourceName = "./runtime/malgo/Builtin.mlg"
               , sourceLine = Pos 449
-              , sourceColumn = Pos 43
+              , sourceColumn = Pos 45
               }
              , _end = SourcePos
               { sourceName = "./runtime/malgo/Builtin.mlg"
               , sourceLine = Pos 449
-              , sourceColumn = Pos 62
+              , sourceColumn = Pos 64
               }
              }
             )
@@ -426,12 +427,12 @@ Module
               { _start = SourcePos
                { sourceName = "./runtime/malgo/Builtin.mlg"
                , sourceLine = Pos 449
-               , sourceColumn = Pos 59
+               , sourceColumn = Pos 61
                }
               , _end = SourcePos
                { sourceName = "./runtime/malgo/Builtin.mlg"
                , sourceLine = Pos 449
-               , sourceColumn = Pos 60
+               , sourceColumn = Pos 62
                }
               }
              )
@@ -440,12 +441,12 @@ Module
                { _start = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 449
-                , sourceColumn = Pos 44
+                , sourceColumn = Pos 46
                 }
                , _end = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 449
-                , sourceColumn = Pos 59
+                , sourceColumn = Pos 61
                 }
                }
               )
@@ -462,12 +463,12 @@ Module
                { _start = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 449
-                , sourceColumn = Pos 59
+                , sourceColumn = Pos 61
                 }
                , _end = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 449
-                , sourceColumn = Pos 60
+                , sourceColumn = Pos 62
                 }
                }
               )
@@ -694,7 +695,7 @@ Module
         , _end = SourcePos
          { sourceName = "./runtime/malgo/Builtin.mlg"
          , sourceLine = Pos 443
-         , sourceColumn = Pos 62
+         , sourceColumn = Pos 64
          }
         }
        )
@@ -703,28 +704,7 @@ Module
          { _start = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 443
-          , sourceColumn = Pos 23
-          }
-         , _end = SourcePos
-          { sourceName = "./runtime/malgo/Builtin.mlg"
-          , sourceLine = Pos 443
-          , sourceColumn = Pos 30
-          }
-         }
-        )
-        ( Id
-         { name = "Int32#"
-         , moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-         , sort = External
-         }
-        ) []
-       , VarP
-        ( Range
-         { _start = SourcePos
-          { sourceName = "./runtime/malgo/Builtin.mlg"
-          , sourceLine = Pos 443
-          , sourceColumn = Pos 30
+          , sourceColumn = Pos 24
           }
          , _end = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
@@ -734,24 +714,46 @@ Module
          }
         )
         ( Id
-         { name = "x"
+         { name = "Int32#"
          , moduleName = Artifact
           ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-         , sort = Internal 256
+         , sort = External
          }
         )
+        [ VarP
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./runtime/malgo/Builtin.mlg"
+           , sourceLine = Pos 443
+           , sourceColumn = Pos 31
+           }
+          , _end = SourcePos
+           { sourceName = "./runtime/malgo/Builtin.mlg"
+           , sourceLine = Pos 443
+           , sourceColumn = Pos 32
+           }
+          }
+         )
+         ( Id
+          { name = "x"
+          , moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+          , sort = Internal 256
+          }
+         )
+        ]
        ]
        ( Seq
         ( Range
          { _start = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 443
-          , sourceColumn = Pos 35
+          , sourceColumn = Pos 37
           }
          , _end = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 443
-          , sourceColumn = Pos 62
+          , sourceColumn = Pos 64
           }
          }
         )
@@ -760,12 +762,12 @@ Module
           { _start = SourcePos
            { sourceName = "./runtime/malgo/Builtin.mlg"
            , sourceLine = Pos 443
-           , sourceColumn = Pos 35
+           , sourceColumn = Pos 37
            }
           , _end = SourcePos
            { sourceName = "./runtime/malgo/Builtin.mlg"
            , sourceLine = Pos 443
-           , sourceColumn = Pos 62
+           , sourceColumn = Pos 64
            }
           }
          )
@@ -774,12 +776,12 @@ Module
            { _start = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
             , sourceLine = Pos 443
-            , sourceColumn = Pos 43
+            , sourceColumn = Pos 45
             }
            , _end = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
             , sourceLine = Pos 443
-            , sourceColumn = Pos 62
+            , sourceColumn = Pos 64
             }
            }
           )
@@ -788,12 +790,12 @@ Module
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 443
-             , sourceColumn = Pos 35
+             , sourceColumn = Pos 37
              }
             , _end = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 443
-             , sourceColumn = Pos 43
+             , sourceColumn = Pos 45
              }
             }
            )
@@ -810,12 +812,12 @@ Module
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 443
-             , sourceColumn = Pos 43
+             , sourceColumn = Pos 45
              }
             , _end = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 443
-             , sourceColumn = Pos 62
+             , sourceColumn = Pos 64
              }
             }
            )
@@ -824,12 +826,12 @@ Module
              { _start = SourcePos
               { sourceName = "./runtime/malgo/Builtin.mlg"
               , sourceLine = Pos 443
-              , sourceColumn = Pos 43
+              , sourceColumn = Pos 45
               }
              , _end = SourcePos
               { sourceName = "./runtime/malgo/Builtin.mlg"
               , sourceLine = Pos 443
-              , sourceColumn = Pos 62
+              , sourceColumn = Pos 64
               }
              }
             )
@@ -838,12 +840,12 @@ Module
               { _start = SourcePos
                { sourceName = "./runtime/malgo/Builtin.mlg"
                , sourceLine = Pos 443
-               , sourceColumn = Pos 59
+               , sourceColumn = Pos 61
                }
               , _end = SourcePos
                { sourceName = "./runtime/malgo/Builtin.mlg"
                , sourceLine = Pos 443
-               , sourceColumn = Pos 60
+               , sourceColumn = Pos 62
                }
               }
              )
@@ -852,12 +854,12 @@ Module
                { _start = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 443
-                , sourceColumn = Pos 44
+                , sourceColumn = Pos 46
                 }
                , _end = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 443
-                , sourceColumn = Pos 59
+                , sourceColumn = Pos 61
                 }
                }
               )
@@ -874,12 +876,12 @@ Module
                { _start = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 443
-                , sourceColumn = Pos 59
+                , sourceColumn = Pos 61
                 }
                , _end = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 443
-                , sourceColumn = Pos 60
+                , sourceColumn = Pos 62
                 }
                }
               )
@@ -1106,7 +1108,7 @@ Module
         , _end = SourcePos
          { sourceName = "./runtime/malgo/Builtin.mlg"
          , sourceLine = Pos 455
-         , sourceColumn = Pos 62
+         , sourceColumn = Pos 64
          }
         }
        )
@@ -1115,28 +1117,7 @@ Module
          { _start = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 455
-          , sourceColumn = Pos 23
-          }
-         , _end = SourcePos
-          { sourceName = "./runtime/malgo/Builtin.mlg"
-          , sourceLine = Pos 455
-          , sourceColumn = Pos 30
-          }
-         }
-        )
-        ( Id
-         { name = "Float#"
-         , moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-         , sort = External
-         }
-        ) []
-       , VarP
-        ( Range
-         { _start = SourcePos
-          { sourceName = "./runtime/malgo/Builtin.mlg"
-          , sourceLine = Pos 455
-          , sourceColumn = Pos 30
+          , sourceColumn = Pos 24
           }
          , _end = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
@@ -1146,24 +1127,46 @@ Module
          }
         )
         ( Id
-         { name = "x"
+         { name = "Float#"
          , moduleName = Artifact
           ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-         , sort = Internal 260
+         , sort = External
          }
         )
+        [ VarP
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./runtime/malgo/Builtin.mlg"
+           , sourceLine = Pos 455
+           , sourceColumn = Pos 31
+           }
+          , _end = SourcePos
+           { sourceName = "./runtime/malgo/Builtin.mlg"
+           , sourceLine = Pos 455
+           , sourceColumn = Pos 32
+           }
+          }
+         )
+         ( Id
+          { name = "x"
+          , moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+          , sort = Internal 260
+          }
+         )
+        ]
        ]
        ( Seq
         ( Range
          { _start = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 455
-          , sourceColumn = Pos 35
+          , sourceColumn = Pos 37
           }
          , _end = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 455
-          , sourceColumn = Pos 62
+          , sourceColumn = Pos 64
           }
          }
         )
@@ -1172,12 +1175,12 @@ Module
           { _start = SourcePos
            { sourceName = "./runtime/malgo/Builtin.mlg"
            , sourceLine = Pos 455
-           , sourceColumn = Pos 35
+           , sourceColumn = Pos 37
            }
           , _end = SourcePos
            { sourceName = "./runtime/malgo/Builtin.mlg"
            , sourceLine = Pos 455
-           , sourceColumn = Pos 62
+           , sourceColumn = Pos 64
            }
           }
          )
@@ -1186,12 +1189,12 @@ Module
            { _start = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
             , sourceLine = Pos 455
-            , sourceColumn = Pos 43
+            , sourceColumn = Pos 45
             }
            , _end = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
             , sourceLine = Pos 455
-            , sourceColumn = Pos 62
+            , sourceColumn = Pos 64
             }
            }
           )
@@ -1200,12 +1203,12 @@ Module
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 455
-             , sourceColumn = Pos 35
+             , sourceColumn = Pos 37
              }
             , _end = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 455
-             , sourceColumn = Pos 43
+             , sourceColumn = Pos 45
              }
             }
            )
@@ -1222,12 +1225,12 @@ Module
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 455
-             , sourceColumn = Pos 43
+             , sourceColumn = Pos 45
              }
             , _end = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 455
-             , sourceColumn = Pos 62
+             , sourceColumn = Pos 64
              }
             }
            )
@@ -1236,12 +1239,12 @@ Module
              { _start = SourcePos
               { sourceName = "./runtime/malgo/Builtin.mlg"
               , sourceLine = Pos 455
-              , sourceColumn = Pos 43
+              , sourceColumn = Pos 45
               }
              , _end = SourcePos
               { sourceName = "./runtime/malgo/Builtin.mlg"
               , sourceLine = Pos 455
-              , sourceColumn = Pos 62
+              , sourceColumn = Pos 64
               }
              }
             )
@@ -1250,12 +1253,12 @@ Module
               { _start = SourcePos
                { sourceName = "./runtime/malgo/Builtin.mlg"
                , sourceLine = Pos 455
-               , sourceColumn = Pos 59
+               , sourceColumn = Pos 61
                }
               , _end = SourcePos
                { sourceName = "./runtime/malgo/Builtin.mlg"
                , sourceLine = Pos 455
-               , sourceColumn = Pos 60
+               , sourceColumn = Pos 62
                }
               }
              )
@@ -1264,12 +1267,12 @@ Module
                { _start = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 455
-                , sourceColumn = Pos 44
+                , sourceColumn = Pos 46
                 }
                , _end = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 455
-                , sourceColumn = Pos 59
+                , sourceColumn = Pos 61
                 }
                }
               )
@@ -1286,12 +1289,12 @@ Module
                { _start = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 455
-                , sourceColumn = Pos 59
+                , sourceColumn = Pos 61
                 }
                , _end = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 455
-                , sourceColumn = Pos 60
+                , sourceColumn = Pos 62
                 }
                }
               )
@@ -1518,7 +1521,7 @@ Module
         , _end = SourcePos
          { sourceName = "./runtime/malgo/Builtin.mlg"
          , sourceLine = Pos 461
-         , sourceColumn = Pos 65
+         , sourceColumn = Pos 67
          }
         }
        )
@@ -1527,28 +1530,7 @@ Module
          { _start = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 461
-          , sourceColumn = Pos 24
-          }
-         , _end = SourcePos
-          { sourceName = "./runtime/malgo/Builtin.mlg"
-          , sourceLine = Pos 461
-          , sourceColumn = Pos 32
-          }
-         }
-        )
-        ( Id
-         { name = "Double#"
-         , moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-         , sort = External
-         }
-        ) []
-       , VarP
-        ( Range
-         { _start = SourcePos
-          { sourceName = "./runtime/malgo/Builtin.mlg"
-          , sourceLine = Pos 461
-          , sourceColumn = Pos 32
+          , sourceColumn = Pos 25
           }
          , _end = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
@@ -1558,24 +1540,46 @@ Module
          }
         )
         ( Id
-         { name = "x"
+         { name = "Double#"
          , moduleName = Artifact
           ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-         , sort = Internal 262
+         , sort = External
          }
         )
+        [ VarP
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./runtime/malgo/Builtin.mlg"
+           , sourceLine = Pos 461
+           , sourceColumn = Pos 33
+           }
+          , _end = SourcePos
+           { sourceName = "./runtime/malgo/Builtin.mlg"
+           , sourceLine = Pos 461
+           , sourceColumn = Pos 34
+           }
+          }
+         )
+         ( Id
+          { name = "x"
+          , moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+          , sort = Internal 262
+          }
+         )
+        ]
        ]
        ( Seq
         ( Range
          { _start = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 461
-          , sourceColumn = Pos 37
+          , sourceColumn = Pos 39
           }
          , _end = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 461
-          , sourceColumn = Pos 65
+          , sourceColumn = Pos 67
           }
          }
         )
@@ -1584,12 +1588,12 @@ Module
           { _start = SourcePos
            { sourceName = "./runtime/malgo/Builtin.mlg"
            , sourceLine = Pos 461
-           , sourceColumn = Pos 37
+           , sourceColumn = Pos 39
            }
           , _end = SourcePos
            { sourceName = "./runtime/malgo/Builtin.mlg"
            , sourceLine = Pos 461
-           , sourceColumn = Pos 65
+           , sourceColumn = Pos 67
            }
           }
          )
@@ -1598,12 +1602,12 @@ Module
            { _start = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
             , sourceLine = Pos 461
-            , sourceColumn = Pos 45
+            , sourceColumn = Pos 47
             }
            , _end = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
             , sourceLine = Pos 461
-            , sourceColumn = Pos 65
+            , sourceColumn = Pos 67
             }
            }
           )
@@ -1612,12 +1616,12 @@ Module
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 461
-             , sourceColumn = Pos 37
+             , sourceColumn = Pos 39
              }
             , _end = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 461
-             , sourceColumn = Pos 45
+             , sourceColumn = Pos 47
              }
             }
            )
@@ -1634,12 +1638,12 @@ Module
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 461
-             , sourceColumn = Pos 45
+             , sourceColumn = Pos 47
              }
             , _end = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 461
-             , sourceColumn = Pos 65
+             , sourceColumn = Pos 67
              }
             }
            )
@@ -1648,12 +1652,12 @@ Module
              { _start = SourcePos
               { sourceName = "./runtime/malgo/Builtin.mlg"
               , sourceLine = Pos 461
-              , sourceColumn = Pos 45
+              , sourceColumn = Pos 47
               }
              , _end = SourcePos
               { sourceName = "./runtime/malgo/Builtin.mlg"
               , sourceLine = Pos 461
-              , sourceColumn = Pos 65
+              , sourceColumn = Pos 67
               }
              }
             )
@@ -1662,12 +1666,12 @@ Module
               { _start = SourcePos
                { sourceName = "./runtime/malgo/Builtin.mlg"
                , sourceLine = Pos 461
-               , sourceColumn = Pos 62
+               , sourceColumn = Pos 64
                }
               , _end = SourcePos
                { sourceName = "./runtime/malgo/Builtin.mlg"
                , sourceLine = Pos 461
-               , sourceColumn = Pos 63
+               , sourceColumn = Pos 65
                }
               }
              )
@@ -1676,12 +1680,12 @@ Module
                { _start = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 461
-                , sourceColumn = Pos 46
+                , sourceColumn = Pos 48
                 }
                , _end = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 461
-                , sourceColumn = Pos 62
+                , sourceColumn = Pos 64
                 }
                }
               )
@@ -1698,12 +1702,12 @@ Module
                { _start = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 461
-                , sourceColumn = Pos 62
+                , sourceColumn = Pos 64
                 }
                , _end = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 461
-                , sourceColumn = Pos 63
+                , sourceColumn = Pos 65
                 }
                }
               )
@@ -1930,7 +1934,7 @@ Module
         , _end = SourcePos
          { sourceName = "./runtime/malgo/Builtin.mlg"
          , sourceLine = Pos 467
-         , sourceColumn = Pos 59
+         , sourceColumn = Pos 61
          }
         }
        )
@@ -1939,28 +1943,7 @@ Module
          { _start = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 467
-          , sourceColumn = Pos 22
-          }
-         , _end = SourcePos
-          { sourceName = "./runtime/malgo/Builtin.mlg"
-          , sourceLine = Pos 467
-          , sourceColumn = Pos 28
-          }
-         }
-        )
-        ( Id
-         { name = "Char#"
-         , moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-         , sort = External
-         }
-        ) []
-       , VarP
-        ( Range
-         { _start = SourcePos
-          { sourceName = "./runtime/malgo/Builtin.mlg"
-          , sourceLine = Pos 467
-          , sourceColumn = Pos 28
+          , sourceColumn = Pos 23
           }
          , _end = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
@@ -1970,24 +1953,46 @@ Module
          }
         )
         ( Id
-         { name = "x"
+         { name = "Char#"
          , moduleName = Artifact
           ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-         , sort = Internal 264
+         , sort = External
          }
         )
+        [ VarP
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./runtime/malgo/Builtin.mlg"
+           , sourceLine = Pos 467
+           , sourceColumn = Pos 29
+           }
+          , _end = SourcePos
+           { sourceName = "./runtime/malgo/Builtin.mlg"
+           , sourceLine = Pos 467
+           , sourceColumn = Pos 30
+           }
+          }
+         )
+         ( Id
+          { name = "x"
+          , moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+          , sort = Internal 264
+          }
+         )
+        ]
        ]
        ( Seq
         ( Range
          { _start = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 467
-          , sourceColumn = Pos 33
+          , sourceColumn = Pos 35
           }
          , _end = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 467
-          , sourceColumn = Pos 59
+          , sourceColumn = Pos 61
           }
          }
         )
@@ -1996,12 +2001,12 @@ Module
           { _start = SourcePos
            { sourceName = "./runtime/malgo/Builtin.mlg"
            , sourceLine = Pos 467
-           , sourceColumn = Pos 33
+           , sourceColumn = Pos 35
            }
           , _end = SourcePos
            { sourceName = "./runtime/malgo/Builtin.mlg"
            , sourceLine = Pos 467
-           , sourceColumn = Pos 59
+           , sourceColumn = Pos 61
            }
           }
          )
@@ -2010,12 +2015,12 @@ Module
            { _start = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
             , sourceLine = Pos 467
-            , sourceColumn = Pos 41
+            , sourceColumn = Pos 43
             }
            , _end = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
             , sourceLine = Pos 467
-            , sourceColumn = Pos 59
+            , sourceColumn = Pos 61
             }
            }
           )
@@ -2024,12 +2029,12 @@ Module
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 467
-             , sourceColumn = Pos 33
+             , sourceColumn = Pos 35
              }
             , _end = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 467
-             , sourceColumn = Pos 41
+             , sourceColumn = Pos 43
              }
             }
            )
@@ -2046,12 +2051,12 @@ Module
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 467
-             , sourceColumn = Pos 41
+             , sourceColumn = Pos 43
              }
             , _end = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 467
-             , sourceColumn = Pos 59
+             , sourceColumn = Pos 61
              }
             }
            )
@@ -2060,12 +2065,12 @@ Module
              { _start = SourcePos
               { sourceName = "./runtime/malgo/Builtin.mlg"
               , sourceLine = Pos 467
-              , sourceColumn = Pos 41
+              , sourceColumn = Pos 43
               }
              , _end = SourcePos
               { sourceName = "./runtime/malgo/Builtin.mlg"
               , sourceLine = Pos 467
-              , sourceColumn = Pos 59
+              , sourceColumn = Pos 61
               }
              }
             )
@@ -2074,12 +2079,12 @@ Module
               { _start = SourcePos
                { sourceName = "./runtime/malgo/Builtin.mlg"
                , sourceLine = Pos 467
-               , sourceColumn = Pos 56
+               , sourceColumn = Pos 58
                }
               , _end = SourcePos
                { sourceName = "./runtime/malgo/Builtin.mlg"
                , sourceLine = Pos 467
-               , sourceColumn = Pos 57
+               , sourceColumn = Pos 59
                }
               }
              )
@@ -2088,12 +2093,12 @@ Module
                { _start = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 467
-                , sourceColumn = Pos 42
+                , sourceColumn = Pos 44
                 }
                , _end = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 467
-                , sourceColumn = Pos 56
+                , sourceColumn = Pos 58
                 }
                }
               )
@@ -2110,12 +2115,12 @@ Module
                { _start = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 467
-                , sourceColumn = Pos 56
+                , sourceColumn = Pos 58
                 }
                , _end = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 467
-                , sourceColumn = Pos 57
+                , sourceColumn = Pos 59
                 }
                }
               )
@@ -5397,7 +5402,7 @@ Module
         , _end = SourcePos
          { sourceName = "./runtime/malgo/Builtin.mlg"
          , sourceLine = Pos 141
-         , sourceColumn = Pos 53
+         , sourceColumn = Pos 55
          }
         }
        )
@@ -5406,28 +5411,7 @@ Module
          { _start = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 141
-          , sourceColumn = Pos 19
-          }
-         , _end = SourcePos
-          { sourceName = "./runtime/malgo/Builtin.mlg"
-          , sourceLine = Pos 141
-          , sourceColumn = Pos 26
-          }
-         }
-        )
-        ( Id
-         { name = "Float#"
-         , moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-         , sort = External
-         }
-        ) []
-       , VarP
-        ( Range
-         { _start = SourcePos
-          { sourceName = "./runtime/malgo/Builtin.mlg"
-          , sourceLine = Pos 141
-          , sourceColumn = Pos 26
+          , sourceColumn = Pos 20
           }
          , _end = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
@@ -5437,24 +5421,46 @@ Module
          }
         )
         ( Id
-         { name = "x"
+         { name = "Float#"
          , moduleName = Artifact
           ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-         , sort = Internal 77
+         , sort = External
          }
         )
+        [ VarP
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./runtime/malgo/Builtin.mlg"
+           , sourceLine = Pos 141
+           , sourceColumn = Pos 27
+           }
+          , _end = SourcePos
+           { sourceName = "./runtime/malgo/Builtin.mlg"
+           , sourceLine = Pos 141
+           , sourceColumn = Pos 28
+           }
+          }
+         )
+         ( Id
+          { name = "x"
+          , moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+          , sort = Internal 77
+          }
+         )
+        ]
        ]
        ( Seq
         ( Range
          { _start = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 141
-          , sourceColumn = Pos 31
+          , sourceColumn = Pos 33
           }
          , _end = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 141
-          , sourceColumn = Pos 53
+          , sourceColumn = Pos 55
           }
          }
         )
@@ -5463,12 +5469,12 @@ Module
           { _start = SourcePos
            { sourceName = "./runtime/malgo/Builtin.mlg"
            , sourceLine = Pos 141
-           , sourceColumn = Pos 31
+           , sourceColumn = Pos 33
            }
           , _end = SourcePos
            { sourceName = "./runtime/malgo/Builtin.mlg"
            , sourceLine = Pos 141
-           , sourceColumn = Pos 53
+           , sourceColumn = Pos 55
            }
           }
          )
@@ -5477,12 +5483,12 @@ Module
            { _start = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
             , sourceLine = Pos 141
-            , sourceColumn = Pos 38
+            , sourceColumn = Pos 40
             }
            , _end = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
             , sourceLine = Pos 141
-            , sourceColumn = Pos 53
+            , sourceColumn = Pos 55
             }
            }
           )
@@ -5491,12 +5497,12 @@ Module
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 141
-             , sourceColumn = Pos 31
+             , sourceColumn = Pos 33
              }
             , _end = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 141
-             , sourceColumn = Pos 38
+             , sourceColumn = Pos 40
              }
             }
            )
@@ -5513,12 +5519,12 @@ Module
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 141
-             , sourceColumn = Pos 38
+             , sourceColumn = Pos 40
              }
             , _end = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 141
-             , sourceColumn = Pos 53
+             , sourceColumn = Pos 55
              }
             }
            )
@@ -5527,12 +5533,12 @@ Module
              { _start = SourcePos
               { sourceName = "./runtime/malgo/Builtin.mlg"
               , sourceLine = Pos 141
-              , sourceColumn = Pos 38
+              , sourceColumn = Pos 40
               }
              , _end = SourcePos
               { sourceName = "./runtime/malgo/Builtin.mlg"
               , sourceLine = Pos 141
-              , sourceColumn = Pos 53
+              , sourceColumn = Pos 55
               }
              }
             )
@@ -5541,12 +5547,12 @@ Module
               { _start = SourcePos
                { sourceName = "./runtime/malgo/Builtin.mlg"
                , sourceLine = Pos 141
-               , sourceColumn = Pos 50
+               , sourceColumn = Pos 52
                }
               , _end = SourcePos
                { sourceName = "./runtime/malgo/Builtin.mlg"
                , sourceLine = Pos 141
-               , sourceColumn = Pos 51
+               , sourceColumn = Pos 53
                }
               }
              )
@@ -5555,12 +5561,12 @@ Module
                { _start = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 141
-                , sourceColumn = Pos 39
+                , sourceColumn = Pos 41
                 }
                , _end = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 141
-                , sourceColumn = Pos 50
+                , sourceColumn = Pos 52
                 }
                }
               )
@@ -5577,12 +5583,12 @@ Module
                { _start = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 141
-                , sourceColumn = Pos 50
+                , sourceColumn = Pos 52
                 }
                , _end = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 141
-                , sourceColumn = Pos 51
+                , sourceColumn = Pos 53
                 }
                }
               )
@@ -5809,7 +5815,7 @@ Module
         , _end = SourcePos
          { sourceName = "./runtime/malgo/Builtin.mlg"
          , sourceLine = Pos 147
-         , sourceColumn = Pos 57
+         , sourceColumn = Pos 59
          }
         }
        )
@@ -5818,28 +5824,7 @@ Module
          { _start = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 147
-          , sourceColumn = Pos 20
-          }
-         , _end = SourcePos
-          { sourceName = "./runtime/malgo/Builtin.mlg"
-          , sourceLine = Pos 147
-          , sourceColumn = Pos 28
-          }
-         }
-        )
-        ( Id
-         { name = "Double#"
-         , moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-         , sort = External
-         }
-        ) []
-       , VarP
-        ( Range
-         { _start = SourcePos
-          { sourceName = "./runtime/malgo/Builtin.mlg"
-          , sourceLine = Pos 147
-          , sourceColumn = Pos 28
+          , sourceColumn = Pos 21
           }
          , _end = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
@@ -5849,24 +5834,46 @@ Module
          }
         )
         ( Id
-         { name = "x"
+         { name = "Double#"
          , moduleName = Artifact
           ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-         , sort = Internal 79
+         , sort = External
          }
         )
+        [ VarP
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./runtime/malgo/Builtin.mlg"
+           , sourceLine = Pos 147
+           , sourceColumn = Pos 29
+           }
+          , _end = SourcePos
+           { sourceName = "./runtime/malgo/Builtin.mlg"
+           , sourceLine = Pos 147
+           , sourceColumn = Pos 30
+           }
+          }
+         )
+         ( Id
+          { name = "x"
+          , moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+          , sort = Internal 79
+          }
+         )
+        ]
        ]
        ( Seq
         ( Range
          { _start = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 147
-          , sourceColumn = Pos 33
+          , sourceColumn = Pos 35
           }
          , _end = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 147
-          , sourceColumn = Pos 57
+          , sourceColumn = Pos 59
           }
          }
         )
@@ -5875,12 +5882,12 @@ Module
           { _start = SourcePos
            { sourceName = "./runtime/malgo/Builtin.mlg"
            , sourceLine = Pos 147
-           , sourceColumn = Pos 33
+           , sourceColumn = Pos 35
            }
           , _end = SourcePos
            { sourceName = "./runtime/malgo/Builtin.mlg"
            , sourceLine = Pos 147
-           , sourceColumn = Pos 57
+           , sourceColumn = Pos 59
            }
           }
          )
@@ -5889,12 +5896,12 @@ Module
            { _start = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
             , sourceLine = Pos 147
-            , sourceColumn = Pos 41
+            , sourceColumn = Pos 43
             }
            , _end = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
             , sourceLine = Pos 147
-            , sourceColumn = Pos 57
+            , sourceColumn = Pos 59
             }
            }
           )
@@ -5903,12 +5910,12 @@ Module
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 147
-             , sourceColumn = Pos 33
+             , sourceColumn = Pos 35
              }
             , _end = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 147
-             , sourceColumn = Pos 41
+             , sourceColumn = Pos 43
              }
             }
            )
@@ -5925,12 +5932,12 @@ Module
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 147
-             , sourceColumn = Pos 41
+             , sourceColumn = Pos 43
              }
             , _end = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 147
-             , sourceColumn = Pos 57
+             , sourceColumn = Pos 59
              }
             }
            )
@@ -5939,12 +5946,12 @@ Module
              { _start = SourcePos
               { sourceName = "./runtime/malgo/Builtin.mlg"
               , sourceLine = Pos 147
-              , sourceColumn = Pos 41
+              , sourceColumn = Pos 43
               }
              , _end = SourcePos
               { sourceName = "./runtime/malgo/Builtin.mlg"
               , sourceLine = Pos 147
-              , sourceColumn = Pos 57
+              , sourceColumn = Pos 59
               }
              }
             )
@@ -5953,12 +5960,12 @@ Module
               { _start = SourcePos
                { sourceName = "./runtime/malgo/Builtin.mlg"
                , sourceLine = Pos 147
-               , sourceColumn = Pos 54
+               , sourceColumn = Pos 56
                }
               , _end = SourcePos
                { sourceName = "./runtime/malgo/Builtin.mlg"
                , sourceLine = Pos 147
-               , sourceColumn = Pos 55
+               , sourceColumn = Pos 57
                }
               }
              )
@@ -5967,12 +5974,12 @@ Module
                { _start = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 147
-                , sourceColumn = Pos 42
+                , sourceColumn = Pos 44
                 }
                , _end = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 147
-                , sourceColumn = Pos 54
+                , sourceColumn = Pos 56
                 }
                }
               )
@@ -5989,12 +5996,12 @@ Module
                { _start = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 147
-                , sourceColumn = Pos 54
+                , sourceColumn = Pos 56
                 }
                , _end = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 147
-                , sourceColumn = Pos 55
+                , sourceColumn = Pos 57
                 }
                }
               )
@@ -6221,7 +6228,7 @@ Module
         , _end = SourcePos
          { sourceName = "./runtime/malgo/Builtin.mlg"
          , sourceLine = Pos 488
-         , sourceColumn = Pos 49
+         , sourceColumn = Pos 51
          }
         }
        )
@@ -6230,28 +6237,7 @@ Module
          { _start = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 488
-          , sourceColumn = Pos 21
-          }
-         , _end = SourcePos
-          { sourceName = "./runtime/malgo/Builtin.mlg"
-          , sourceLine = Pos 488
-          , sourceColumn = Pos 29
-          }
-         }
-        )
-        ( Id
-         { name = "String#"
-         , moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-         , sort = External
-         }
-        ) []
-       , VarP
-        ( Range
-         { _start = SourcePos
-          { sourceName = "./runtime/malgo/Builtin.mlg"
-          , sourceLine = Pos 488
-          , sourceColumn = Pos 29
+          , sourceColumn = Pos 22
           }
          , _end = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
@@ -6261,24 +6247,46 @@ Module
          }
         )
         ( Id
-         { name = "x"
+         { name = "String#"
          , moduleName = Artifact
           ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-         , sort = Internal 272
+         , sort = External
          }
         )
+        [ VarP
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./runtime/malgo/Builtin.mlg"
+           , sourceLine = Pos 488
+           , sourceColumn = Pos 30
+           }
+          , _end = SourcePos
+           { sourceName = "./runtime/malgo/Builtin.mlg"
+           , sourceLine = Pos 488
+           , sourceColumn = Pos 31
+           }
+          }
+         )
+         ( Id
+          { name = "x"
+          , moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+          , sort = Internal 272
+          }
+         )
+        ]
        ]
        ( Seq
         ( Range
          { _start = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 488
-          , sourceColumn = Pos 34
+          , sourceColumn = Pos 36
           }
          , _end = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 488
-          , sourceColumn = Pos 49
+          , sourceColumn = Pos 51
           }
          }
         )
@@ -6287,12 +6295,12 @@ Module
           { _start = SourcePos
            { sourceName = "./runtime/malgo/Builtin.mlg"
            , sourceLine = Pos 488
-           , sourceColumn = Pos 34
+           , sourceColumn = Pos 36
            }
           , _end = SourcePos
            { sourceName = "./runtime/malgo/Builtin.mlg"
            , sourceLine = Pos 488
-           , sourceColumn = Pos 49
+           , sourceColumn = Pos 51
            }
           }
          )
@@ -6301,12 +6309,12 @@ Module
            { _start = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
             , sourceLine = Pos 488
-            , sourceColumn = Pos 47
+            , sourceColumn = Pos 49
             }
            , _end = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
             , sourceLine = Pos 488
-            , sourceColumn = Pos 49
+            , sourceColumn = Pos 51
             }
            }
           )
@@ -6315,12 +6323,12 @@ Module
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 488
-             , sourceColumn = Pos 34
+             , sourceColumn = Pos 36
              }
             , _end = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 488
-             , sourceColumn = Pos 47
+             , sourceColumn = Pos 49
              }
             }
            )
@@ -6337,12 +6345,12 @@ Module
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 488
-             , sourceColumn = Pos 47
+             , sourceColumn = Pos 49
              }
             , _end = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 488
-             , sourceColumn = Pos 49
+             , sourceColumn = Pos 51
              }
             }
            )
@@ -6566,7 +6574,7 @@ Module
         , _end = SourcePos
          { sourceName = "./runtime/malgo/Builtin.mlg"
          , sourceLine = Pos 482
-         , sourceColumn = Pos 43
+         , sourceColumn = Pos 45
          }
         }
        )
@@ -6575,28 +6583,7 @@ Module
          { _start = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 482
-          , sourceColumn = Pos 19
-          }
-         , _end = SourcePos
-          { sourceName = "./runtime/malgo/Builtin.mlg"
-          , sourceLine = Pos 482
-          , sourceColumn = Pos 25
-          }
-         }
-        )
-        ( Id
-         { name = "Char#"
-         , moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-         , sort = External
-         }
-        ) []
-       , VarP
-        ( Range
-         { _start = SourcePos
-          { sourceName = "./runtime/malgo/Builtin.mlg"
-          , sourceLine = Pos 482
-          , sourceColumn = Pos 25
+          , sourceColumn = Pos 20
           }
          , _end = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
@@ -6606,24 +6593,46 @@ Module
          }
         )
         ( Id
-         { name = "x"
+         { name = "Char#"
          , moduleName = Artifact
           ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-         , sort = Internal 270
+         , sort = External
          }
         )
+        [ VarP
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./runtime/malgo/Builtin.mlg"
+           , sourceLine = Pos 482
+           , sourceColumn = Pos 26
+           }
+          , _end = SourcePos
+           { sourceName = "./runtime/malgo/Builtin.mlg"
+           , sourceLine = Pos 482
+           , sourceColumn = Pos 27
+           }
+          }
+         )
+         ( Id
+          { name = "x"
+          , moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+          , sort = Internal 270
+          }
+         )
+        ]
        ]
        ( Seq
         ( Range
          { _start = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 482
-          , sourceColumn = Pos 30
+          , sourceColumn = Pos 32
           }
          , _end = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 482
-          , sourceColumn = Pos 43
+          , sourceColumn = Pos 45
           }
          }
         )
@@ -6632,12 +6641,12 @@ Module
           { _start = SourcePos
            { sourceName = "./runtime/malgo/Builtin.mlg"
            , sourceLine = Pos 482
-           , sourceColumn = Pos 30
+           , sourceColumn = Pos 32
            }
           , _end = SourcePos
            { sourceName = "./runtime/malgo/Builtin.mlg"
            , sourceLine = Pos 482
-           , sourceColumn = Pos 43
+           , sourceColumn = Pos 45
            }
           }
          )
@@ -6646,12 +6655,12 @@ Module
            { _start = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
             , sourceLine = Pos 482
-            , sourceColumn = Pos 41
+            , sourceColumn = Pos 43
             }
            , _end = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
             , sourceLine = Pos 482
-            , sourceColumn = Pos 43
+            , sourceColumn = Pos 45
             }
            }
           )
@@ -6660,12 +6669,12 @@ Module
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 482
-             , sourceColumn = Pos 30
+             , sourceColumn = Pos 32
              }
             , _end = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 482
-             , sourceColumn = Pos 41
+             , sourceColumn = Pos 43
              }
             }
            )
@@ -6682,12 +6691,12 @@ Module
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 482
-             , sourceColumn = Pos 41
+             , sourceColumn = Pos 43
              }
             , _end = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 482
-             , sourceColumn = Pos 43
+             , sourceColumn = Pos 45
              }
             }
            )
@@ -6749,7 +6758,7 @@ Module
         , _end = SourcePos
          { sourceName = "./runtime/malgo/Builtin.mlg"
          , sourceLine = Pos 32
-         , sourceColumn = Pos 54
+         , sourceColumn = Pos 56
          }
         }
        )
@@ -6758,28 +6767,7 @@ Module
          { _start = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 32
-          , sourceColumn = Pos 15
-          }
-         , _end = SourcePos
-          { sourceName = "./runtime/malgo/Builtin.mlg"
-          , sourceLine = Pos 32
-          , sourceColumn = Pos 23
-          }
-         }
-        )
-        ( Id
-         { name = "String#"
-         , moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-         , sort = External
-         }
-        ) []
-       , VarP
-        ( Range
-         { _start = SourcePos
-          { sourceName = "./runtime/malgo/Builtin.mlg"
-          , sourceLine = Pos 32
-          , sourceColumn = Pos 23
+          , sourceColumn = Pos 16
           }
          , _end = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
@@ -6789,24 +6777,46 @@ Module
          }
         )
         ( Id
-         { name = "message"
+         { name = "String#"
          , moduleName = Artifact
           ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-         , sort = Internal 8
+         , sort = External
          }
         )
+        [ VarP
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./runtime/malgo/Builtin.mlg"
+           , sourceLine = Pos 32
+           , sourceColumn = Pos 24
+           }
+          , _end = SourcePos
+           { sourceName = "./runtime/malgo/Builtin.mlg"
+           , sourceLine = Pos 32
+           , sourceColumn = Pos 31
+           }
+          }
+         )
+         ( Id
+          { name = "message"
+          , moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+          , sort = Internal 8
+          }
+         )
+        ]
        ]
        ( Seq
         ( Range
          { _start = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 32
-          , sourceColumn = Pos 34
+          , sourceColumn = Pos 36
           }
          , _end = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 32
-          , sourceColumn = Pos 54
+          , sourceColumn = Pos 56
           }
          }
         )
@@ -6815,12 +6825,12 @@ Module
           { _start = SourcePos
            { sourceName = "./runtime/malgo/Builtin.mlg"
            , sourceLine = Pos 32
-           , sourceColumn = Pos 34
+           , sourceColumn = Pos 36
            }
           , _end = SourcePos
            { sourceName = "./runtime/malgo/Builtin.mlg"
            , sourceLine = Pos 32
-           , sourceColumn = Pos 54
+           , sourceColumn = Pos 56
            }
           }
          )
@@ -6829,12 +6839,12 @@ Module
            { _start = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
             , sourceLine = Pos 32
-            , sourceColumn = Pos 46
+            , sourceColumn = Pos 48
             }
            , _end = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
             , sourceLine = Pos 32
-            , sourceColumn = Pos 54
+            , sourceColumn = Pos 56
             }
            }
           )
@@ -6843,12 +6853,12 @@ Module
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 32
-             , sourceColumn = Pos 34
+             , sourceColumn = Pos 36
              }
             , _end = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 32
-             , sourceColumn = Pos 46
+             , sourceColumn = Pos 48
              }
             }
            )
@@ -6865,12 +6875,12 @@ Module
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 32
-             , sourceColumn = Pos 46
+             , sourceColumn = Pos 48
              }
             , _end = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 32
-             , sourceColumn = Pos 54
+             , sourceColumn = Pos 56
              }
             }
            )
@@ -14661,7 +14671,7 @@ Module
         , _end = SourcePos
          { sourceName = "./runtime/malgo/Builtin.mlg"
          , sourceLine = Pos 400
-         , sourceColumn = Pos 49
+         , sourceColumn = Pos 51
          }
         }
        )
@@ -14670,28 +14680,7 @@ Module
          { _start = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 400
-          , sourceColumn = Pos 17
-          }
-         , _end = SourcePos
-          { sourceName = "./runtime/malgo/Builtin.mlg"
-          , sourceLine = Pos 400
-          , sourceColumn = Pos 23
-          }
-         }
-        )
-        ( Id
-         { name = "Char#"
-         , moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-         , sort = External
-         }
-        ) []
-       , VarP
-        ( Range
-         { _start = SourcePos
-          { sourceName = "./runtime/malgo/Builtin.mlg"
-          , sourceLine = Pos 400
-          , sourceColumn = Pos 23
+          , sourceColumn = Pos 18
           }
          , _end = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
@@ -14701,24 +14690,46 @@ Module
          }
         )
         ( Id
-         { name = "x"
+         { name = "Char#"
          , moduleName = Artifact
           ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-         , sort = Internal 232
+         , sort = External
          }
         )
+        [ VarP
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./runtime/malgo/Builtin.mlg"
+           , sourceLine = Pos 400
+           , sourceColumn = Pos 24
+           }
+          , _end = SourcePos
+           { sourceName = "./runtime/malgo/Builtin.mlg"
+           , sourceLine = Pos 400
+           , sourceColumn = Pos 25
+           }
+          }
+         )
+         ( Id
+          { name = "x"
+          , moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+          , sort = Internal 232
+          }
+         )
+        ]
        ]
        ( Seq
         ( Range
          { _start = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 400
-          , sourceColumn = Pos 28
+          , sourceColumn = Pos 30
           }
          , _end = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 400
-          , sourceColumn = Pos 49
+          , sourceColumn = Pos 51
           }
          }
         )
@@ -14727,12 +14738,12 @@ Module
           { _start = SourcePos
            { sourceName = "./runtime/malgo/Builtin.mlg"
            , sourceLine = Pos 400
-           , sourceColumn = Pos 28
+           , sourceColumn = Pos 30
            }
           , _end = SourcePos
            { sourceName = "./runtime/malgo/Builtin.mlg"
            , sourceLine = Pos 400
-           , sourceColumn = Pos 49
+           , sourceColumn = Pos 51
            }
           }
          )
@@ -14741,12 +14752,12 @@ Module
            { _start = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
             , sourceLine = Pos 400
-            , sourceColumn = Pos 36
+            , sourceColumn = Pos 38
             }
            , _end = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
             , sourceLine = Pos 400
-            , sourceColumn = Pos 49
+            , sourceColumn = Pos 51
             }
            }
           )
@@ -14755,12 +14766,12 @@ Module
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 400
-             , sourceColumn = Pos 28
+             , sourceColumn = Pos 30
              }
             , _end = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 400
-             , sourceColumn = Pos 36
+             , sourceColumn = Pos 38
              }
             }
            )
@@ -14777,12 +14788,12 @@ Module
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 400
-             , sourceColumn = Pos 36
+             , sourceColumn = Pos 38
              }
             , _end = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 400
-             , sourceColumn = Pos 49
+             , sourceColumn = Pos 51
              }
             }
            )
@@ -14791,12 +14802,12 @@ Module
              { _start = SourcePos
               { sourceName = "./runtime/malgo/Builtin.mlg"
               , sourceLine = Pos 400
-              , sourceColumn = Pos 36
+              , sourceColumn = Pos 38
               }
              , _end = SourcePos
               { sourceName = "./runtime/malgo/Builtin.mlg"
               , sourceLine = Pos 400
-              , sourceColumn = Pos 49
+              , sourceColumn = Pos 51
               }
              }
             )
@@ -14805,12 +14816,12 @@ Module
               { _start = SourcePos
                { sourceName = "./runtime/malgo/Builtin.mlg"
                , sourceLine = Pos 400
-               , sourceColumn = Pos 46
+               , sourceColumn = Pos 48
                }
               , _end = SourcePos
                { sourceName = "./runtime/malgo/Builtin.mlg"
                , sourceLine = Pos 400
-               , sourceColumn = Pos 47
+               , sourceColumn = Pos 49
                }
               }
              )
@@ -14819,12 +14830,12 @@ Module
                { _start = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 400
-                , sourceColumn = Pos 37
+                , sourceColumn = Pos 39
                 }
                , _end = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 400
-                , sourceColumn = Pos 46
+                , sourceColumn = Pos 48
                 }
                }
               )
@@ -14841,12 +14852,12 @@ Module
                { _start = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 400
-                , sourceColumn = Pos 46
+                , sourceColumn = Pos 48
                 }
                , _end = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 400
-                , sourceColumn = Pos 47
+                , sourceColumn = Pos 49
                 }
                }
               )
@@ -21031,7 +21042,7 @@ Module
         , _end = SourcePos
          { sourceName = "./runtime/malgo/Builtin.mlg"
          , sourceLine = Pos 394
-         , sourceColumn = Pos 49
+         , sourceColumn = Pos 51
          }
         }
        )
@@ -21040,28 +21051,7 @@ Module
          { _start = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 394
-          , sourceColumn = Pos 17
-          }
-         , _end = SourcePos
-          { sourceName = "./runtime/malgo/Builtin.mlg"
-          , sourceLine = Pos 394
-          , sourceColumn = Pos 23
-          }
-         }
-        )
-        ( Id
-         { name = "Char#"
-         , moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-         , sort = External
-         }
-        ) []
-       , VarP
-        ( Range
-         { _start = SourcePos
-          { sourceName = "./runtime/malgo/Builtin.mlg"
-          , sourceLine = Pos 394
-          , sourceColumn = Pos 23
+          , sourceColumn = Pos 18
           }
          , _end = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
@@ -21071,24 +21061,46 @@ Module
          }
         )
         ( Id
-         { name = "x"
+         { name = "Char#"
          , moduleName = Artifact
           ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-         , sort = Internal 230
+         , sort = External
          }
         )
+        [ VarP
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./runtime/malgo/Builtin.mlg"
+           , sourceLine = Pos 394
+           , sourceColumn = Pos 24
+           }
+          , _end = SourcePos
+           { sourceName = "./runtime/malgo/Builtin.mlg"
+           , sourceLine = Pos 394
+           , sourceColumn = Pos 25
+           }
+          }
+         )
+         ( Id
+          { name = "x"
+          , moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+          , sort = Internal 230
+          }
+         )
+        ]
        ]
        ( Seq
         ( Range
          { _start = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 394
-          , sourceColumn = Pos 28
+          , sourceColumn = Pos 30
           }
          , _end = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 394
-          , sourceColumn = Pos 49
+          , sourceColumn = Pos 51
           }
          }
         )
@@ -21097,12 +21109,12 @@ Module
           { _start = SourcePos
            { sourceName = "./runtime/malgo/Builtin.mlg"
            , sourceLine = Pos 394
-           , sourceColumn = Pos 28
+           , sourceColumn = Pos 30
            }
           , _end = SourcePos
            { sourceName = "./runtime/malgo/Builtin.mlg"
            , sourceLine = Pos 394
-           , sourceColumn = Pos 49
+           , sourceColumn = Pos 51
            }
           }
          )
@@ -21111,12 +21123,12 @@ Module
            { _start = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
             , sourceLine = Pos 394
-            , sourceColumn = Pos 36
+            , sourceColumn = Pos 38
             }
            , _end = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
             , sourceLine = Pos 394
-            , sourceColumn = Pos 49
+            , sourceColumn = Pos 51
             }
            }
           )
@@ -21125,12 +21137,12 @@ Module
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 394
-             , sourceColumn = Pos 28
+             , sourceColumn = Pos 30
              }
             , _end = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 394
-             , sourceColumn = Pos 36
+             , sourceColumn = Pos 38
              }
             }
            )
@@ -21147,12 +21159,12 @@ Module
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 394
-             , sourceColumn = Pos 36
+             , sourceColumn = Pos 38
              }
             , _end = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 394
-             , sourceColumn = Pos 49
+             , sourceColumn = Pos 51
              }
             }
            )
@@ -21161,12 +21173,12 @@ Module
              { _start = SourcePos
               { sourceName = "./runtime/malgo/Builtin.mlg"
               , sourceLine = Pos 394
-              , sourceColumn = Pos 36
+              , sourceColumn = Pos 38
               }
              , _end = SourcePos
               { sourceName = "./runtime/malgo/Builtin.mlg"
               , sourceLine = Pos 394
-              , sourceColumn = Pos 49
+              , sourceColumn = Pos 51
               }
              }
             )
@@ -21175,12 +21187,12 @@ Module
               { _start = SourcePos
                { sourceName = "./runtime/malgo/Builtin.mlg"
                , sourceLine = Pos 394
-               , sourceColumn = Pos 46
+               , sourceColumn = Pos 48
                }
               , _end = SourcePos
                { sourceName = "./runtime/malgo/Builtin.mlg"
                , sourceLine = Pos 394
-               , sourceColumn = Pos 47
+               , sourceColumn = Pos 49
                }
               }
              )
@@ -21189,12 +21201,12 @@ Module
                { _start = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 394
-                , sourceColumn = Pos 37
+                , sourceColumn = Pos 39
                 }
                , _end = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 394
-                , sourceColumn = Pos 46
+                , sourceColumn = Pos 48
                 }
                }
               )
@@ -21211,12 +21223,12 @@ Module
                { _start = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 394
-                , sourceColumn = Pos 46
+                , sourceColumn = Pos 48
                 }
                , _end = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 394
-                , sourceColumn = Pos 47
+                , sourceColumn = Pos 49
                 }
                }
               )
@@ -21443,7 +21455,7 @@ Module
         , _end = SourcePos
          { sourceName = "./runtime/malgo/Builtin.mlg"
          , sourceLine = Pos 388
-         , sourceColumn = Pos 49
+         , sourceColumn = Pos 51
          }
         }
        )
@@ -21452,28 +21464,7 @@ Module
          { _start = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 388
-          , sourceColumn = Pos 17
-          }
-         , _end = SourcePos
-          { sourceName = "./runtime/malgo/Builtin.mlg"
-          , sourceLine = Pos 388
-          , sourceColumn = Pos 23
-          }
-         }
-        )
-        ( Id
-         { name = "Char#"
-         , moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-         , sort = External
-         }
-        ) []
-       , VarP
-        ( Range
-         { _start = SourcePos
-          { sourceName = "./runtime/malgo/Builtin.mlg"
-          , sourceLine = Pos 388
-          , sourceColumn = Pos 23
+          , sourceColumn = Pos 18
           }
          , _end = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
@@ -21483,24 +21474,46 @@ Module
          }
         )
         ( Id
-         { name = "x"
+         { name = "Char#"
          , moduleName = Artifact
           ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-         , sort = Internal 228
+         , sort = External
          }
         )
+        [ VarP
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./runtime/malgo/Builtin.mlg"
+           , sourceLine = Pos 388
+           , sourceColumn = Pos 24
+           }
+          , _end = SourcePos
+           { sourceName = "./runtime/malgo/Builtin.mlg"
+           , sourceLine = Pos 388
+           , sourceColumn = Pos 25
+           }
+          }
+         )
+         ( Id
+          { name = "x"
+          , moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+          , sort = Internal 228
+          }
+         )
+        ]
        ]
        ( Seq
         ( Range
          { _start = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 388
-          , sourceColumn = Pos 28
+          , sourceColumn = Pos 30
           }
          , _end = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 388
-          , sourceColumn = Pos 49
+          , sourceColumn = Pos 51
           }
          }
         )
@@ -21509,12 +21522,12 @@ Module
           { _start = SourcePos
            { sourceName = "./runtime/malgo/Builtin.mlg"
            , sourceLine = Pos 388
-           , sourceColumn = Pos 28
+           , sourceColumn = Pos 30
            }
           , _end = SourcePos
            { sourceName = "./runtime/malgo/Builtin.mlg"
            , sourceLine = Pos 388
-           , sourceColumn = Pos 49
+           , sourceColumn = Pos 51
            }
           }
          )
@@ -21523,12 +21536,12 @@ Module
            { _start = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
             , sourceLine = Pos 388
-            , sourceColumn = Pos 36
+            , sourceColumn = Pos 38
             }
            , _end = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
             , sourceLine = Pos 388
-            , sourceColumn = Pos 49
+            , sourceColumn = Pos 51
             }
            }
           )
@@ -21537,12 +21550,12 @@ Module
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 388
-             , sourceColumn = Pos 28
+             , sourceColumn = Pos 30
              }
             , _end = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 388
-             , sourceColumn = Pos 36
+             , sourceColumn = Pos 38
              }
             }
            )
@@ -21559,12 +21572,12 @@ Module
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 388
-             , sourceColumn = Pos 36
+             , sourceColumn = Pos 38
              }
             , _end = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 388
-             , sourceColumn = Pos 49
+             , sourceColumn = Pos 51
              }
             }
            )
@@ -21573,12 +21586,12 @@ Module
              { _start = SourcePos
               { sourceName = "./runtime/malgo/Builtin.mlg"
               , sourceLine = Pos 388
-              , sourceColumn = Pos 36
+              , sourceColumn = Pos 38
               }
              , _end = SourcePos
               { sourceName = "./runtime/malgo/Builtin.mlg"
               , sourceLine = Pos 388
-              , sourceColumn = Pos 49
+              , sourceColumn = Pos 51
               }
              }
             )
@@ -21587,12 +21600,12 @@ Module
               { _start = SourcePos
                { sourceName = "./runtime/malgo/Builtin.mlg"
                , sourceLine = Pos 388
-               , sourceColumn = Pos 46
+               , sourceColumn = Pos 48
                }
               , _end = SourcePos
                { sourceName = "./runtime/malgo/Builtin.mlg"
                , sourceLine = Pos 388
-               , sourceColumn = Pos 47
+               , sourceColumn = Pos 49
                }
               }
              )
@@ -21601,12 +21614,12 @@ Module
                { _start = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 388
-                , sourceColumn = Pos 37
+                , sourceColumn = Pos 39
                 }
                , _end = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 388
-                , sourceColumn = Pos 46
+                , sourceColumn = Pos 48
                 }
                }
               )
@@ -21623,12 +21636,12 @@ Module
                { _start = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 388
-                , sourceColumn = Pos 46
+                , sourceColumn = Pos 48
                 }
                , _end = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 388
-                , sourceColumn = Pos 47
+                , sourceColumn = Pos 49
                 }
                }
               )
@@ -21855,7 +21868,7 @@ Module
         , _end = SourcePos
          { sourceName = "./runtime/malgo/Builtin.mlg"
          , sourceLine = Pos 406
-         , sourceColumn = Pos 55
+         , sourceColumn = Pos 57
          }
         }
        )
@@ -21864,28 +21877,7 @@ Module
          { _start = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 406
-          , sourceColumn = Pos 20
-          }
-         , _end = SourcePos
-          { sourceName = "./runtime/malgo/Builtin.mlg"
-          , sourceLine = Pos 406
-          , sourceColumn = Pos 26
-          }
-         }
-        )
-        ( Id
-         { name = "Char#"
-         , moduleName = Artifact
-          ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-         , sort = External
-         }
-        ) []
-       , VarP
-        ( Range
-         { _start = SourcePos
-          { sourceName = "./runtime/malgo/Builtin.mlg"
-          , sourceLine = Pos 406
-          , sourceColumn = Pos 26
+          , sourceColumn = Pos 21
           }
          , _end = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
@@ -21895,24 +21887,46 @@ Module
          }
         )
         ( Id
-         { name = "x"
+         { name = "Char#"
          , moduleName = Artifact
           ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-         , sort = Internal 234
+         , sort = External
          }
         )
+        [ VarP
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./runtime/malgo/Builtin.mlg"
+           , sourceLine = Pos 406
+           , sourceColumn = Pos 27
+           }
+          , _end = SourcePos
+           { sourceName = "./runtime/malgo/Builtin.mlg"
+           , sourceLine = Pos 406
+           , sourceColumn = Pos 28
+           }
+          }
+         )
+         ( Id
+          { name = "x"
+          , moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+          , sort = Internal 234
+          }
+         )
+        ]
        ]
        ( Seq
         ( Range
          { _start = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 406
-          , sourceColumn = Pos 31
+          , sourceColumn = Pos 33
           }
          , _end = SourcePos
           { sourceName = "./runtime/malgo/Builtin.mlg"
           , sourceLine = Pos 406
-          , sourceColumn = Pos 55
+          , sourceColumn = Pos 57
           }
          }
         )
@@ -21921,12 +21935,12 @@ Module
           { _start = SourcePos
            { sourceName = "./runtime/malgo/Builtin.mlg"
            , sourceLine = Pos 406
-           , sourceColumn = Pos 31
+           , sourceColumn = Pos 33
            }
           , _end = SourcePos
            { sourceName = "./runtime/malgo/Builtin.mlg"
            , sourceLine = Pos 406
-           , sourceColumn = Pos 55
+           , sourceColumn = Pos 57
            }
           }
          )
@@ -21935,12 +21949,12 @@ Module
            { _start = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
             , sourceLine = Pos 406
-            , sourceColumn = Pos 39
+            , sourceColumn = Pos 41
             }
            , _end = SourcePos
             { sourceName = "./runtime/malgo/Builtin.mlg"
             , sourceLine = Pos 406
-            , sourceColumn = Pos 55
+            , sourceColumn = Pos 57
             }
            }
           )
@@ -21949,12 +21963,12 @@ Module
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 406
-             , sourceColumn = Pos 31
+             , sourceColumn = Pos 33
              }
             , _end = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 406
-             , sourceColumn = Pos 39
+             , sourceColumn = Pos 41
              }
             }
            )
@@ -21971,12 +21985,12 @@ Module
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 406
-             , sourceColumn = Pos 39
+             , sourceColumn = Pos 41
              }
             , _end = SourcePos
              { sourceName = "./runtime/malgo/Builtin.mlg"
              , sourceLine = Pos 406
-             , sourceColumn = Pos 55
+             , sourceColumn = Pos 57
              }
             }
            )
@@ -21985,12 +21999,12 @@ Module
              { _start = SourcePos
               { sourceName = "./runtime/malgo/Builtin.mlg"
               , sourceLine = Pos 406
-              , sourceColumn = Pos 39
+              , sourceColumn = Pos 41
               }
              , _end = SourcePos
               { sourceName = "./runtime/malgo/Builtin.mlg"
               , sourceLine = Pos 406
-              , sourceColumn = Pos 55
+              , sourceColumn = Pos 57
               }
              }
             )
@@ -21999,12 +22013,12 @@ Module
               { _start = SourcePos
                { sourceName = "./runtime/malgo/Builtin.mlg"
                , sourceLine = Pos 406
-               , sourceColumn = Pos 52
+               , sourceColumn = Pos 54
                }
               , _end = SourcePos
                { sourceName = "./runtime/malgo/Builtin.mlg"
                , sourceLine = Pos 406
-               , sourceColumn = Pos 53
+               , sourceColumn = Pos 55
                }
               }
              )
@@ -22013,12 +22027,12 @@ Module
                { _start = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 406
-                , sourceColumn = Pos 40
+                , sourceColumn = Pos 42
                 }
                , _end = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 406
-                , sourceColumn = Pos 52
+                , sourceColumn = Pos 54
                 }
                }
               )
@@ -22035,12 +22049,12 @@ Module
                { _start = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 406
-                , sourceColumn = Pos 52
+                , sourceColumn = Pos 54
                 }
                , _end = SourcePos
                 { sourceName = "./runtime/malgo/Builtin.mlg"
                 , sourceLine = Pos 406
-                , sourceColumn = Pos 53
+                , sourceColumn = Pos 55
                 }
                }
               )

@@ -12,7 +12,7 @@ Module
          { name = "runtime/malgo/Prelude.mlg.#a_19"
          , moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-         , sort = Internal 10
+         , sort = Internal 19
          }
         )
        )
@@ -32,7 +32,7 @@ Module
            { name = "runtime/malgo/Prelude.mlg.#a_19"
            , moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-           , sort = Internal 10
+           , sort = Internal 19
            }
           )
          )
@@ -52,7 +52,7 @@ Module
            { name = "runtime/malgo/Prelude.mlg.#a_19"
            , moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-           , sort = Internal 10
+           , sort = Internal 19
            }
           )
          )
@@ -85,7 +85,7 @@ Module
           { name = "runtime/malgo/Prelude.mlg.#a_19"
           , moduleName = Artifact
            ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-          , sort = Internal 10
+          , sort = Internal 19
           }
          )
         )
@@ -105,7 +105,7 @@ Module
             { name = "runtime/malgo/Prelude.mlg.#a_19"
             , moduleName = Artifact
              ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-            , sort = Internal 10
+            , sort = Internal 19
             }
            )
           )
@@ -125,7 +125,7 @@ Module
             { name = "runtime/malgo/Prelude.mlg.#a_19"
             , moduleName = Artifact
              ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-            , sort = Internal 10
+            , sort = Internal 19
             }
            )
           )
@@ -163,7 +163,7 @@ Module
          { name = "t"
          , moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-         , sort = Internal 14
+         , sort = Internal 23
          }
         )
        )
@@ -191,7 +191,15 @@ Module
           )
          )
          ( TyArr
-          ( TyTuple 0 )
+          ( TyVar
+           ( Id
+            { name = "t"
+            , moduleName = Artifact
+             ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+            , sort = Internal 71
+            }
+           )
+          )
           ( TyCon
            ( Id
             { name = "Int32"
@@ -231,7 +239,7 @@ Module
           { name = "t"
           , moduleName = Artifact
            ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-          , sort = Internal 14
+          , sort = Internal 23
           }
          )
         )
@@ -259,7 +267,15 @@ Module
            )
           )
           ( TyArr
-           ( TyTuple 0 )
+           ( TyVar
+            ( Id
+             { name = "t"
+             , moduleName = Artifact
+              ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+             , sort = Internal 71
+             }
+            )
+           )
            ( TyCon
             ( Id
              { name = "Int32"
@@ -294,7 +310,7 @@ Module
            { name = "t"
            , moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-           , sort = Internal 14
+           , sort = Internal 23
            }
           )
          )
@@ -322,7 +338,15 @@ Module
             )
            )
            ( TyArr
-            ( TyTuple 0 )
+            ( TyVar
+             ( Id
+              { name = "t"
+              , moduleName = Artifact
+               ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+              , sort = Internal 71
+              }
+             )
+            )
             ( TyCon
              ( Id
               { name = "Int32"
@@ -356,7 +380,7 @@ Module
            { name = "t"
            , moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-           , sort = Internal 14
+           , sort = Internal 23
            }
           )
          , value = Range
@@ -407,7 +431,15 @@ Module
             )
            )
            ( TyArr
-            ( TyTuple 0 )
+            ( TyVar
+             ( Id
+              { name = "t"
+              , moduleName = Artifact
+               ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+              , sort = Internal 71
+              }
+             )
+            )
             ( TyCon
              ( Id
               { name = "Int32"
@@ -451,7 +483,7 @@ Module
           { name = "x"
           , moduleName = Artifact
            ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-          , sort = Internal 2
+          , sort = Internal 6
           }
          )
          ( Apply
@@ -480,7 +512,15 @@ Module
               )
              )
              ( TyArr
-              ( TyTuple 0 )
+              ( TyMeta
+               ( Id
+                { name = "t"
+                , moduleName = Artifact
+                 ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                , sort = Internal 37
+                }
+               )
+              )
               ( TyCon
                ( Id
                 { name = "Int32"
@@ -533,7 +573,15 @@ Module
                 )
                )
                ( TyArr
-                ( TyTuple 0 )
+                ( TyMeta
+                 ( Id
+                  { name = "t"
+                  , moduleName = Artifact
+                   ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                  , sort = Internal 37
+                  }
+                 )
+                )
                 ( TyCon
                  ( Id
                   { name = "Int32"
@@ -570,7 +618,15 @@ Module
                 )
                )
                ( TyArr
-                ( TyTuple 0 )
+                ( TyMeta
+                 ( Id
+                  { name = "t"
+                  , moduleName = Artifact
+                   ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                  , sort = Internal 37
+                  }
+                 )
+                )
                 ( TyCon
                  ( Id
                   { name = "Int32"
@@ -614,7 +670,15 @@ Module
                 )
                )
                ( TyArr
-                ( TyTuple 0 )
+                ( TyMeta
+                 ( Id
+                  { name = "t"
+                  , moduleName = Artifact
+                   ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                  , sort = Internal 37
+                  }
+                 )
+                )
                 ( TyCon
                  ( Id
                   { name = "Int32"
@@ -651,7 +715,15 @@ Module
                   )
                  )
                  ( TyArr
-                  ( TyTuple 0 )
+                  ( TyMeta
+                   ( Id
+                    { name = "t"
+                    , moduleName = Artifact
+                     ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                    , sort = Internal 37
+                    }
+                   )
+                  )
                   ( TyCon
                    ( Id
                     { name = "Int32"
@@ -688,7 +760,15 @@ Module
                   )
                  )
                  ( TyArr
-                  ( TyTuple 0 )
+                  ( TyMeta
+                   ( Id
+                    { name = "t"
+                    , moduleName = Artifact
+                     ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                    , sort = Internal 37
+                    }
+                   )
+                  )
                   ( TyCon
                    ( Id
                     { name = "Int32"
@@ -740,7 +820,15 @@ Module
                )
               )
               ( TyArr
-               ( TyTuple 0 )
+               ( TyMeta
+                ( Id
+                 { name = "t"
+                 , moduleName = Artifact
+                  ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                 , sort = Internal 37
+                 }
+                )
+               )
                ( TyCon
                 ( Id
                  { name = "Int32"
@@ -799,7 +887,15 @@ Module
             , Fn
              ( Typed
               { annotated = TyArr
-               ( TyTuple 0 )
+               ( TyMeta
+                ( Id
+                 { name = "t"
+                 , moduleName = Artifact
+                  ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                 , sort = Internal 37
+                 }
+                )
+               )
                ( TyCon
                 ( Id
                  { name = "Int32"
@@ -826,7 +922,15 @@ Module
              ( Clause
               ( Typed
                { annotated = TyArr
-                ( TyTuple 0 )
+                ( TyMeta
+                 ( Id
+                  { name = "t"
+                  , moduleName = Artifact
+                   ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                  , sort = Internal 37
+                  }
+                 )
+                )
                 ( TyCon
                  ( Id
                   { name = "Int32"
@@ -852,17 +956,24 @@ Module
               )
               [ VarP
                ( Typed
-                { annotated = TyTuple 0
+                { annotated = TyMeta
+                 ( Id
+                  { name = "t"
+                  , moduleName = Artifact
+                   ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                  , sort = Internal 37
+                  }
+                 )
                 , value = Range
                  { _start = SourcePos
                   { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
                   , sourceLine = Pos 12
-                  , sourceColumn = Pos 18
+                  , sourceColumn = Pos 20
                   }
                  , _end = SourcePos
                   { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
                   , sourceLine = Pos 12
-                  , sourceColumn = Pos 23
+                  , sourceColumn = Pos 22
                   }
                  }
                 }
@@ -871,7 +982,7 @@ Module
                 { name = "$_"
                 , moduleName = Artifact
                  ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-                , sort = Internal 17
+                , sort = Internal 2
                 }
                )
               ]
@@ -1023,7 +1134,15 @@ Module
                )
               )
               ( TyArr
-               ( TyTuple 0 )
+               ( TyMeta
+                ( Id
+                 { name = "t"
+                 , moduleName = Artifact
+                  ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                 , sort = Internal 37
+                 }
+                )
+               )
                ( TyCon
                 ( Id
                  { name = "Int32"
@@ -1089,7 +1208,15 @@ Module
                  )
                 )
                 ( TyArr
-                 ( TyTuple 0 )
+                 ( TyMeta
+                  ( Id
+                   { name = "t"
+                   , moduleName = Artifact
+                    ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                   , sort = Internal 37
+                   }
+                  )
+                 )
                  ( TyCon
                   ( Id
                    { name = "Int32"
@@ -1142,7 +1269,15 @@ Module
                    )
                   )
                   ( TyArr
-                   ( TyTuple 0 )
+                   ( TyMeta
+                    ( Id
+                     { name = "t"
+                     , moduleName = Artifact
+                      ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                     , sort = Internal 37
+                     }
+                    )
+                   )
                    ( TyCon
                     ( Id
                      { name = "Int32"
@@ -1179,7 +1314,15 @@ Module
                    )
                   )
                   ( TyArr
-                   ( TyTuple 0 )
+                   ( TyMeta
+                    ( Id
+                     { name = "t"
+                     , moduleName = Artifact
+                      ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                     , sort = Internal 37
+                     }
+                    )
+                   )
                    ( TyCon
                     ( Id
                      { name = "Int32"
@@ -1223,7 +1366,15 @@ Module
                    )
                   )
                   ( TyArr
-                   ( TyTuple 0 )
+                   ( TyMeta
+                    ( Id
+                     { name = "t"
+                     , moduleName = Artifact
+                      ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                     , sort = Internal 37
+                     }
+                    )
+                   )
                    ( TyCon
                     ( Id
                      { name = "Int32"
@@ -1260,7 +1411,15 @@ Module
                      )
                     )
                     ( TyArr
-                     ( TyTuple 0 )
+                     ( TyMeta
+                      ( Id
+                       { name = "t"
+                       , moduleName = Artifact
+                        ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                       , sort = Internal 37
+                       }
+                      )
+                     )
                      ( TyCon
                       ( Id
                        { name = "Int32"
@@ -1297,7 +1456,15 @@ Module
                      )
                     )
                     ( TyArr
-                     ( TyTuple 0 )
+                     ( TyMeta
+                      ( Id
+                       { name = "t"
+                       , moduleName = Artifact
+                        ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                       , sort = Internal 37
+                       }
+                      )
+                     )
                      ( TyCon
                       ( Id
                        { name = "Int32"
@@ -1349,7 +1516,15 @@ Module
                   )
                  )
                  ( TyArr
-                  ( TyTuple 0 )
+                  ( TyMeta
+                   ( Id
+                    { name = "t"
+                    , moduleName = Artifact
+                     ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                    , sort = Internal 37
+                    }
+                   )
+                  )
                   ( TyCon
                    ( Id
                     { name = "Int32"
@@ -1408,7 +1583,15 @@ Module
                , Fn
                 ( Typed
                  { annotated = TyArr
-                  ( TyTuple 0 )
+                  ( TyMeta
+                   ( Id
+                    { name = "t"
+                    , moduleName = Artifact
+                     ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                    , sort = Internal 37
+                    }
+                   )
+                  )
                   ( TyCon
                    ( Id
                     { name = "Int32"
@@ -1435,7 +1618,15 @@ Module
                 ( Clause
                  ( Typed
                   { annotated = TyArr
-                   ( TyTuple 0 )
+                   ( TyMeta
+                    ( Id
+                     { name = "t"
+                     , moduleName = Artifact
+                      ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                     , sort = Internal 37
+                     }
+                    )
+                   )
                    ( TyCon
                     ( Id
                      { name = "Int32"
@@ -1461,17 +1652,24 @@ Module
                  )
                  [ VarP
                   ( Typed
-                   { annotated = TyTuple 0
+                   { annotated = TyMeta
+                    ( Id
+                     { name = "t"
+                     , moduleName = Artifact
+                      ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                     , sort = Internal 37
+                     }
+                    )
                    , value = Range
                     { _start = SourcePos
                      { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
                      , sourceLine = Pos 13
-                     , sourceColumn = Pos 24
+                     , sourceColumn = Pos 26
                      }
                     , _end = SourcePos
                      { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
                      , sourceLine = Pos 13
-                     , sourceColumn = Pos 29
+                     , sourceColumn = Pos 28
                      }
                     }
                    }
@@ -1480,7 +1678,7 @@ Module
                    { name = "$_"
                    , moduleName = Artifact
                     ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-                   , sort = Internal 20
+                   , sort = Internal 3
                    }
                   )
                  ]
@@ -1632,7 +1830,15 @@ Module
                   )
                  )
                  ( TyArr
-                  ( TyTuple 0 )
+                  ( TyMeta
+                   ( Id
+                    { name = "t"
+                    , moduleName = Artifact
+                     ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                    , sort = Internal 37
+                    }
+                   )
+                  )
                   ( TyCon
                    ( Id
                     { name = "Int32"
@@ -1698,7 +1904,15 @@ Module
                     )
                    )
                    ( TyArr
-                    ( TyTuple 0 )
+                    ( TyMeta
+                     ( Id
+                      { name = "t"
+                      , moduleName = Artifact
+                       ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                      , sort = Internal 37
+                      }
+                     )
+                    )
                     ( TyCon
                      ( Id
                       { name = "Int32"
@@ -1751,7 +1965,15 @@ Module
                       )
                      )
                      ( TyArr
-                      ( TyTuple 0 )
+                      ( TyMeta
+                       ( Id
+                        { name = "t"
+                        , moduleName = Artifact
+                         ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                        , sort = Internal 37
+                        }
+                       )
+                      )
                       ( TyCon
                        ( Id
                         { name = "Int32"
@@ -1788,7 +2010,15 @@ Module
                       )
                      )
                      ( TyArr
-                      ( TyTuple 0 )
+                      ( TyMeta
+                       ( Id
+                        { name = "t"
+                        , moduleName = Artifact
+                         ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                        , sort = Internal 37
+                        }
+                       )
+                      )
                       ( TyCon
                        ( Id
                         { name = "Int32"
@@ -1832,7 +2062,15 @@ Module
                       )
                      )
                      ( TyArr
-                      ( TyTuple 0 )
+                      ( TyMeta
+                       ( Id
+                        { name = "t"
+                        , moduleName = Artifact
+                         ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                        , sort = Internal 37
+                        }
+                       )
+                      )
                       ( TyCon
                        ( Id
                         { name = "Int32"
@@ -1869,7 +2107,15 @@ Module
                         )
                        )
                        ( TyArr
-                        ( TyTuple 0 )
+                        ( TyMeta
+                         ( Id
+                          { name = "t"
+                          , moduleName = Artifact
+                           ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                          , sort = Internal 37
+                          }
+                         )
+                        )
                         ( TyCon
                          ( Id
                           { name = "Int32"
@@ -1906,7 +2152,15 @@ Module
                         )
                        )
                        ( TyArr
-                        ( TyTuple 0 )
+                        ( TyMeta
+                         ( Id
+                          { name = "t"
+                          , moduleName = Artifact
+                           ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                          , sort = Internal 37
+                          }
+                         )
+                        )
                         ( TyCon
                          ( Id
                           { name = "Int32"
@@ -1958,7 +2212,15 @@ Module
                      )
                     )
                     ( TyArr
-                     ( TyTuple 0 )
+                     ( TyMeta
+                      ( Id
+                       { name = "t"
+                       , moduleName = Artifact
+                        ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                       , sort = Internal 37
+                       }
+                      )
+                     )
                      ( TyCon
                       ( Id
                        { name = "Int32"
@@ -2017,7 +2279,15 @@ Module
                   , Fn
                    ( Typed
                     { annotated = TyArr
-                     ( TyTuple 0 )
+                     ( TyMeta
+                      ( Id
+                       { name = "t"
+                       , moduleName = Artifact
+                        ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                       , sort = Internal 37
+                       }
+                      )
+                     )
                      ( TyCon
                       ( Id
                        { name = "Int32"
@@ -2044,7 +2314,15 @@ Module
                    ( Clause
                     ( Typed
                      { annotated = TyArr
-                      ( TyTuple 0 )
+                      ( TyMeta
+                       ( Id
+                        { name = "t"
+                        , moduleName = Artifact
+                         ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                        , sort = Internal 37
+                        }
+                       )
+                      )
                       ( TyCon
                        ( Id
                         { name = "Int32"
@@ -2070,17 +2348,24 @@ Module
                     )
                     [ VarP
                      ( Typed
-                      { annotated = TyTuple 0
+                      { annotated = TyMeta
+                       ( Id
+                        { name = "t"
+                        , moduleName = Artifact
+                         ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                        , sort = Internal 37
+                        }
+                       )
                       , value = Range
                        { _start = SourcePos
                         { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
                         , sourceLine = Pos 14
-                        , sourceColumn = Pos 29
+                        , sourceColumn = Pos 31
                         }
                        , _end = SourcePos
                         { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
                         , sourceLine = Pos 14
-                        , sourceColumn = Pos 34
+                        , sourceColumn = Pos 33
                         }
                        }
                       }
@@ -2089,7 +2374,7 @@ Module
                       { name = "$_"
                       , moduleName = Artifact
                        ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-                      , sort = Internal 23
+                      , sort = Internal 4
                       }
                      )
                     ]
@@ -2241,7 +2526,15 @@ Module
                      )
                     )
                     ( TyArr
-                     ( TyTuple 0 )
+                     ( TyMeta
+                      ( Id
+                       { name = "t"
+                       , moduleName = Artifact
+                        ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                       , sort = Internal 37
+                       }
+                      )
+                     )
                      ( TyCon
                       ( Id
                        { name = "Int32"
@@ -2307,7 +2600,15 @@ Module
                        )
                       )
                       ( TyArr
-                       ( TyTuple 0 )
+                       ( TyMeta
+                        ( Id
+                         { name = "t"
+                         , moduleName = Artifact
+                          ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                         , sort = Internal 37
+                         }
+                        )
+                       )
                        ( TyCon
                         ( Id
                          { name = "Int32"
@@ -2360,7 +2661,15 @@ Module
                          )
                         )
                         ( TyArr
-                         ( TyTuple 0 )
+                         ( TyMeta
+                          ( Id
+                           { name = "t"
+                           , moduleName = Artifact
+                            ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                           , sort = Internal 37
+                           }
+                          )
+                         )
                          ( TyCon
                           ( Id
                            { name = "Int32"
@@ -2397,7 +2706,15 @@ Module
                          )
                         )
                         ( TyArr
-                         ( TyTuple 0 )
+                         ( TyMeta
+                          ( Id
+                           { name = "t"
+                           , moduleName = Artifact
+                            ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                           , sort = Internal 37
+                           }
+                          )
+                         )
                          ( TyCon
                           ( Id
                            { name = "Int32"
@@ -2441,7 +2758,15 @@ Module
                          )
                         )
                         ( TyArr
-                         ( TyTuple 0 )
+                         ( TyMeta
+                          ( Id
+                           { name = "t"
+                           , moduleName = Artifact
+                            ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                           , sort = Internal 37
+                           }
+                          )
+                         )
                          ( TyCon
                           ( Id
                            { name = "Int32"
@@ -2478,7 +2803,15 @@ Module
                            )
                           )
                           ( TyArr
-                           ( TyTuple 0 )
+                           ( TyMeta
+                            ( Id
+                             { name = "t"
+                             , moduleName = Artifact
+                              ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                             , sort = Internal 37
+                             }
+                            )
+                           )
                            ( TyCon
                             ( Id
                              { name = "Int32"
@@ -2515,7 +2848,15 @@ Module
                            )
                           )
                           ( TyArr
-                           ( TyTuple 0 )
+                           ( TyMeta
+                            ( Id
+                             { name = "t"
+                             , moduleName = Artifact
+                              ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                             , sort = Internal 37
+                             }
+                            )
+                           )
                            ( TyCon
                             ( Id
                              { name = "Int32"
@@ -2567,7 +2908,15 @@ Module
                         )
                        )
                        ( TyArr
-                        ( TyTuple 0 )
+                        ( TyMeta
+                         ( Id
+                          { name = "t"
+                          , moduleName = Artifact
+                           ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                          , sort = Internal 37
+                          }
+                         )
+                        )
                         ( TyCon
                          ( Id
                           { name = "Int32"
@@ -2626,7 +2975,15 @@ Module
                      , Fn
                       ( Typed
                        { annotated = TyArr
-                        ( TyTuple 0 )
+                        ( TyMeta
+                         ( Id
+                          { name = "t"
+                          , moduleName = Artifact
+                           ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                          , sort = Internal 37
+                          }
+                         )
+                        )
                         ( TyCon
                          ( Id
                           { name = "Int32"
@@ -2653,7 +3010,15 @@ Module
                       ( Clause
                        ( Typed
                         { annotated = TyArr
-                         ( TyTuple 0 )
+                         ( TyMeta
+                          ( Id
+                           { name = "t"
+                           , moduleName = Artifact
+                            ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                           , sort = Internal 37
+                           }
+                          )
+                         )
                          ( TyCon
                           ( Id
                            { name = "Int32"
@@ -2679,17 +3044,24 @@ Module
                        )
                        [ VarP
                         ( Typed
-                         { annotated = TyTuple 0
+                         { annotated = TyMeta
+                          ( Id
+                           { name = "t"
+                           , moduleName = Artifact
+                            ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                           , sort = Internal 37
+                           }
+                          )
                          , value = Range
                           { _start = SourcePos
                            { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
                            , sourceLine = Pos 15
-                           , sourceColumn = Pos 34
+                           , sourceColumn = Pos 36
                            }
                           , _end = SourcePos
                            { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
                            , sourceLine = Pos 15
-                           , sourceColumn = Pos 39
+                           , sourceColumn = Pos 38
                            }
                           }
                          }
@@ -2698,7 +3070,7 @@ Module
                          { name = "$_"
                          , moduleName = Artifact
                           ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-                         , sort = Internal 26
+                         , sort = Internal 5
                          }
                         )
                        ]
@@ -2850,7 +3222,15 @@ Module
                         )
                        )
                        ( TyArr
-                        ( TyTuple 0 )
+                        ( TyMeta
+                         ( Id
+                          { name = "t"
+                          , moduleName = Artifact
+                           ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                          , sort = Internal 37
+                          }
+                         )
+                        )
                         ( TyCon
                          ( Id
                           { name = "Int32"
@@ -2912,7 +3292,7 @@ Module
            { name = "y"
            , moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-           , sort = Internal 3
+           , sort = Internal 11
            }
           )
           ( Apply
@@ -2941,7 +3321,15 @@ Module
                )
               )
               ( TyArr
-               ( TyTuple 0 )
+               ( TyVar
+                ( Id
+                 { name = "t"
+                 , moduleName = Artifact
+                  ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                 , sort = Internal 71
+                 }
+                )
+               )
                ( TyCon
                 ( Id
                  { name = "Int32"
@@ -2994,7 +3382,15 @@ Module
                  )
                 )
                 ( TyArr
-                 ( TyTuple 0 )
+                 ( TyVar
+                  ( Id
+                   { name = "t"
+                   , moduleName = Artifact
+                    ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                   , sort = Internal 71
+                   }
+                  )
+                 )
                  ( TyCon
                   ( Id
                    { name = "Int32"
@@ -3031,7 +3427,15 @@ Module
                  )
                 )
                 ( TyArr
-                 ( TyTuple 0 )
+                 ( TyVar
+                  ( Id
+                   { name = "t"
+                   , moduleName = Artifact
+                    ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                   , sort = Internal 71
+                   }
+                  )
+                 )
                  ( TyCon
                   ( Id
                    { name = "Int32"
@@ -3075,7 +3479,15 @@ Module
                  )
                 )
                 ( TyArr
-                 ( TyTuple 0 )
+                 ( TyVar
+                  ( Id
+                   { name = "t"
+                   , moduleName = Artifact
+                    ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                   , sort = Internal 71
+                   }
+                  )
+                 )
                  ( TyCon
                   ( Id
                    { name = "Int32"
@@ -3112,7 +3524,15 @@ Module
                    )
                   )
                   ( TyArr
-                   ( TyTuple 0 )
+                   ( TyVar
+                    ( Id
+                     { name = "t"
+                     , moduleName = Artifact
+                      ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                     , sort = Internal 71
+                     }
+                    )
+                   )
                    ( TyCon
                     ( Id
                      { name = "Int32"
@@ -3149,7 +3569,15 @@ Module
                    )
                   )
                   ( TyArr
-                   ( TyTuple 0 )
+                   ( TyVar
+                    ( Id
+                     { name = "t"
+                     , moduleName = Artifact
+                      ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                     , sort = Internal 71
+                     }
+                    )
+                   )
                    ( TyCon
                     ( Id
                      { name = "Int32"
@@ -3201,7 +3629,15 @@ Module
                 )
                )
                ( TyArr
-                ( TyTuple 0 )
+                ( TyVar
+                 ( Id
+                  { name = "t"
+                  , moduleName = Artifact
+                   ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                  , sort = Internal 71
+                  }
+                 )
+                )
                 ( TyCon
                  ( Id
                   { name = "Int32"
@@ -3260,7 +3696,15 @@ Module
              , Fn
               ( Typed
                { annotated = TyArr
-                ( TyTuple 0 )
+                ( TyVar
+                 ( Id
+                  { name = "t"
+                  , moduleName = Artifact
+                   ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                  , sort = Internal 71
+                  }
+                 )
+                )
                 ( TyCon
                  ( Id
                   { name = "Int32"
@@ -3287,7 +3731,15 @@ Module
               ( Clause
                ( Typed
                 { annotated = TyArr
-                 ( TyTuple 0 )
+                 ( TyVar
+                  ( Id
+                   { name = "t"
+                   , moduleName = Artifact
+                    ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                   , sort = Internal 71
+                   }
+                  )
+                 )
                  ( TyCon
                   ( Id
                    { name = "Int32"
@@ -3313,17 +3765,24 @@ Module
                )
                [ VarP
                 ( Typed
-                 { annotated = TyTuple 0
+                 { annotated = TyVar
+                  ( Id
+                   { name = "t"
+                   , moduleName = Artifact
+                    ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                   , sort = Internal 71
+                   }
+                  )
                  , value = Range
                   { _start = SourcePos
                    { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
                    , sourceLine = Pos 19
-                   , sourceColumn = Pos 18
+                   , sourceColumn = Pos 20
                    }
                   , _end = SourcePos
                    { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
                    , sourceLine = Pos 19
-                   , sourceColumn = Pos 23
+                   , sourceColumn = Pos 22
                    }
                   }
                  }
@@ -3332,7 +3791,7 @@ Module
                  { name = "$_"
                  , moduleName = Artifact
                   ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-                 , sort = Internal 47
+                 , sort = Internal 7
                  }
                 )
                ]
@@ -3484,7 +3943,15 @@ Module
                 )
                )
                ( TyArr
-                ( TyTuple 0 )
+                ( TyVar
+                 ( Id
+                  { name = "t"
+                  , moduleName = Artifact
+                   ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                  , sort = Internal 71
+                  }
+                 )
+                )
                 ( TyCon
                  ( Id
                   { name = "Int32"
@@ -3537,7 +4004,15 @@ Module
                   )
                  )
                  ( TyArr
-                  ( TyTuple 0 )
+                  ( TyVar
+                   ( Id
+                    { name = "t"
+                    , moduleName = Artifact
+                     ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                    , sort = Internal 71
+                    }
+                   )
+                  )
                   ( TyCon
                    ( Id
                     { name = "Int32"
@@ -3574,7 +4049,15 @@ Module
                   )
                  )
                  ( TyArr
-                  ( TyTuple 0 )
+                  ( TyVar
+                   ( Id
+                    { name = "t"
+                    , moduleName = Artifact
+                     ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                    , sort = Internal 71
+                    }
+                   )
+                  )
                   ( TyCon
                    ( Id
                     { name = "Int32"
@@ -3618,7 +4101,15 @@ Module
                   )
                  )
                  ( TyArr
-                  ( TyTuple 0 )
+                  ( TyVar
+                   ( Id
+                    { name = "t"
+                    , moduleName = Artifact
+                     ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                    , sort = Internal 71
+                    }
+                   )
+                  )
                   ( TyCon
                    ( Id
                     { name = "Int32"
@@ -3655,7 +4146,15 @@ Module
                     )
                    )
                    ( TyArr
-                    ( TyTuple 0 )
+                    ( TyVar
+                     ( Id
+                      { name = "t"
+                      , moduleName = Artifact
+                       ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                      , sort = Internal 71
+                      }
+                     )
+                    )
                     ( TyCon
                      ( Id
                       { name = "Int32"
@@ -3692,7 +4191,15 @@ Module
                     )
                    )
                    ( TyArr
-                    ( TyTuple 0 )
+                    ( TyVar
+                     ( Id
+                      { name = "t"
+                      , moduleName = Artifact
+                       ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                      , sort = Internal 71
+                      }
+                     )
+                    )
                     ( TyCon
                      ( Id
                       { name = "Int32"
@@ -3744,7 +4251,15 @@ Module
                  )
                 )
                 ( TyArr
-                 ( TyTuple 0 )
+                 ( TyVar
+                  ( Id
+                   { name = "t"
+                   , moduleName = Artifact
+                    ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                   , sort = Internal 71
+                   }
+                  )
+                 )
                  ( TyCon
                   ( Id
                    { name = "Int32"
@@ -3803,7 +4318,15 @@ Module
               , Fn
                ( Typed
                 { annotated = TyArr
-                 ( TyTuple 0 )
+                 ( TyVar
+                  ( Id
+                   { name = "t"
+                   , moduleName = Artifact
+                    ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                   , sort = Internal 71
+                   }
+                  )
+                 )
                  ( TyCon
                   ( Id
                    { name = "Int32"
@@ -3830,7 +4353,15 @@ Module
                ( Clause
                 ( Typed
                  { annotated = TyArr
-                  ( TyTuple 0 )
+                  ( TyVar
+                   ( Id
+                    { name = "t"
+                    , moduleName = Artifact
+                     ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                    , sort = Internal 71
+                    }
+                   )
+                  )
                   ( TyCon
                    ( Id
                     { name = "Int32"
@@ -3856,17 +4387,24 @@ Module
                 )
                 [ VarP
                  ( Typed
-                  { annotated = TyTuple 0
+                  { annotated = TyVar
+                   ( Id
+                    { name = "t"
+                    , moduleName = Artifact
+                     ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                    , sort = Internal 71
+                    }
+                   )
                   , value = Range
                    { _start = SourcePos
                     { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
                     , sourceLine = Pos 20
-                    , sourceColumn = Pos 23
+                    , sourceColumn = Pos 25
                     }
                    , _end = SourcePos
                     { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
                     , sourceLine = Pos 20
-                    , sourceColumn = Pos 28
+                    , sourceColumn = Pos 27
                     }
                    }
                   }
@@ -3875,7 +4413,7 @@ Module
                   { name = "$_"
                   , moduleName = Artifact
                    ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-                  , sort = Internal 50
+                  , sort = Internal 8
                   }
                  )
                 ]
@@ -4027,7 +4565,15 @@ Module
                  )
                 )
                 ( TyArr
-                 ( TyTuple 0 )
+                 ( TyVar
+                  ( Id
+                   { name = "t"
+                   , moduleName = Artifact
+                    ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                   , sort = Internal 71
+                   }
+                  )
+                 )
                  ( TyCon
                   ( Id
                    { name = "Int32"
@@ -4080,7 +4626,15 @@ Module
                    )
                   )
                   ( TyArr
-                   ( TyTuple 0 )
+                   ( TyVar
+                    ( Id
+                     { name = "t"
+                     , moduleName = Artifact
+                      ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                     , sort = Internal 71
+                     }
+                    )
+                   )
                    ( TyCon
                     ( Id
                      { name = "Int32"
@@ -4117,7 +4671,15 @@ Module
                    )
                   )
                   ( TyArr
-                   ( TyTuple 0 )
+                   ( TyVar
+                    ( Id
+                     { name = "t"
+                     , moduleName = Artifact
+                      ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                     , sort = Internal 71
+                     }
+                    )
+                   )
                    ( TyCon
                     ( Id
                      { name = "Int32"
@@ -4161,7 +4723,15 @@ Module
                    )
                   )
                   ( TyArr
-                   ( TyTuple 0 )
+                   ( TyVar
+                    ( Id
+                     { name = "t"
+                     , moduleName = Artifact
+                      ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                     , sort = Internal 71
+                     }
+                    )
+                   )
                    ( TyCon
                     ( Id
                      { name = "Int32"
@@ -4198,7 +4768,15 @@ Module
                      )
                     )
                     ( TyArr
-                     ( TyTuple 0 )
+                     ( TyVar
+                      ( Id
+                       { name = "t"
+                       , moduleName = Artifact
+                        ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                       , sort = Internal 71
+                       }
+                      )
+                     )
                      ( TyCon
                       ( Id
                        { name = "Int32"
@@ -4235,7 +4813,15 @@ Module
                      )
                     )
                     ( TyArr
-                     ( TyTuple 0 )
+                     ( TyVar
+                      ( Id
+                       { name = "t"
+                       , moduleName = Artifact
+                        ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                       , sort = Internal 71
+                       }
+                      )
+                     )
                      ( TyCon
                       ( Id
                        { name = "Int32"
@@ -4287,7 +4873,15 @@ Module
                   )
                  )
                  ( TyArr
-                  ( TyTuple 0 )
+                  ( TyVar
+                   ( Id
+                    { name = "t"
+                    , moduleName = Artifact
+                     ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                    , sort = Internal 71
+                    }
+                   )
+                  )
                   ( TyCon
                    ( Id
                     { name = "Int32"
@@ -4346,7 +4940,15 @@ Module
                , Fn
                 ( Typed
                  { annotated = TyArr
-                  ( TyTuple 0 )
+                  ( TyVar
+                   ( Id
+                    { name = "t"
+                    , moduleName = Artifact
+                     ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                    , sort = Internal 71
+                    }
+                   )
+                  )
                   ( TyCon
                    ( Id
                     { name = "Int32"
@@ -4373,7 +4975,15 @@ Module
                 ( Clause
                  ( Typed
                   { annotated = TyArr
-                   ( TyTuple 0 )
+                   ( TyVar
+                    ( Id
+                     { name = "t"
+                     , moduleName = Artifact
+                      ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                     , sort = Internal 71
+                     }
+                    )
+                   )
                    ( TyCon
                     ( Id
                      { name = "Int32"
@@ -4399,17 +5009,24 @@ Module
                  )
                  [ VarP
                   ( Typed
-                   { annotated = TyTuple 0
+                   { annotated = TyVar
+                    ( Id
+                     { name = "t"
+                     , moduleName = Artifact
+                      ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                     , sort = Internal 71
+                     }
+                    )
                    , value = Range
                     { _start = SourcePos
                      { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
                      , sourceLine = Pos 21
-                     , sourceColumn = Pos 28
+                     , sourceColumn = Pos 30
                      }
                     , _end = SourcePos
                      { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
                      , sourceLine = Pos 21
-                     , sourceColumn = Pos 33
+                     , sourceColumn = Pos 32
                      }
                     }
                    }
@@ -4418,7 +5035,7 @@ Module
                    { name = "$_"
                    , moduleName = Artifact
                     ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-                   , sort = Internal 53
+                   , sort = Internal 9
                    }
                   )
                  ]
@@ -4570,7 +5187,15 @@ Module
                   )
                  )
                  ( TyArr
-                  ( TyTuple 0 )
+                  ( TyVar
+                   ( Id
+                    { name = "t"
+                    , moduleName = Artifact
+                     ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                    , sort = Internal 71
+                    }
+                   )
+                  )
                   ( TyCon
                    ( Id
                     { name = "Int32"
@@ -4623,7 +5248,15 @@ Module
                     )
                    )
                    ( TyArr
-                    ( TyTuple 0 )
+                    ( TyVar
+                     ( Id
+                      { name = "t"
+                      , moduleName = Artifact
+                       ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                      , sort = Internal 71
+                      }
+                     )
+                    )
                     ( TyCon
                      ( Id
                       { name = "Int32"
@@ -4660,7 +5293,15 @@ Module
                     )
                    )
                    ( TyArr
-                    ( TyTuple 0 )
+                    ( TyVar
+                     ( Id
+                      { name = "t"
+                      , moduleName = Artifact
+                       ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                      , sort = Internal 71
+                      }
+                     )
+                    )
                     ( TyCon
                      ( Id
                       { name = "Int32"
@@ -4704,7 +5345,15 @@ Module
                     )
                    )
                    ( TyArr
-                    ( TyTuple 0 )
+                    ( TyVar
+                     ( Id
+                      { name = "t"
+                      , moduleName = Artifact
+                       ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                      , sort = Internal 71
+                      }
+                     )
+                    )
                     ( TyCon
                      ( Id
                       { name = "Int32"
@@ -4741,7 +5390,15 @@ Module
                       )
                      )
                      ( TyArr
-                      ( TyTuple 0 )
+                      ( TyVar
+                       ( Id
+                        { name = "t"
+                        , moduleName = Artifact
+                         ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                        , sort = Internal 71
+                        }
+                       )
+                      )
                       ( TyCon
                        ( Id
                         { name = "Int32"
@@ -4778,7 +5435,15 @@ Module
                       )
                      )
                      ( TyArr
-                      ( TyTuple 0 )
+                      ( TyVar
+                       ( Id
+                        { name = "t"
+                        , moduleName = Artifact
+                         ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                        , sort = Internal 71
+                        }
+                       )
+                      )
                       ( TyCon
                        ( Id
                         { name = "Int32"
@@ -4830,7 +5495,15 @@ Module
                    )
                   )
                   ( TyArr
-                   ( TyTuple 0 )
+                   ( TyVar
+                    ( Id
+                     { name = "t"
+                     , moduleName = Artifact
+                      ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                     , sort = Internal 71
+                     }
+                    )
+                   )
                    ( TyCon
                     ( Id
                      { name = "Int32"
@@ -4889,7 +5562,15 @@ Module
                 , Fn
                  ( Typed
                   { annotated = TyArr
-                   ( TyTuple 0 )
+                   ( TyVar
+                    ( Id
+                     { name = "t"
+                     , moduleName = Artifact
+                      ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                     , sort = Internal 71
+                     }
+                    )
+                   )
                    ( TyCon
                     ( Id
                      { name = "Int32"
@@ -4916,7 +5597,15 @@ Module
                  ( Clause
                   ( Typed
                    { annotated = TyArr
-                    ( TyTuple 0 )
+                    ( TyVar
+                     ( Id
+                      { name = "t"
+                      , moduleName = Artifact
+                       ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                      , sort = Internal 71
+                      }
+                     )
+                    )
                     ( TyCon
                      ( Id
                       { name = "Int32"
@@ -4942,17 +5631,24 @@ Module
                   )
                   [ VarP
                    ( Typed
-                    { annotated = TyTuple 0
+                    { annotated = TyVar
+                     ( Id
+                      { name = "t"
+                      , moduleName = Artifact
+                       ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                      , sort = Internal 71
+                      }
+                     )
                     , value = Range
                      { _start = SourcePos
                       { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
                       , sourceLine = Pos 22
-                      , sourceColumn = Pos 33
+                      , sourceColumn = Pos 35
                       }
                      , _end = SourcePos
                       { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
                       , sourceLine = Pos 22
-                      , sourceColumn = Pos 38
+                      , sourceColumn = Pos 37
                       }
                      }
                     }
@@ -4961,7 +5657,7 @@ Module
                     { name = "$_"
                     , moduleName = Artifact
                      ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-                    , sort = Internal 56
+                    , sort = Internal 10
                     }
                    )
                   ]
@@ -5113,7 +5809,15 @@ Module
                    )
                   )
                   ( TyArr
-                   ( TyTuple 0 )
+                   ( TyVar
+                    ( Id
+                     { name = "t"
+                     , moduleName = Artifact
+                      ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                     , sort = Internal 71
+                     }
+                    )
+                   )
                    ( TyCon
                     ( Id
                      { name = "Int32"
@@ -5191,7 +5895,15 @@ Module
                )
               )
               ( TyArr
-               ( TyTuple 0 )
+               ( TyVar
+                ( Id
+                 { name = "t"
+                 , moduleName = Artifact
+                  ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                 , sort = Internal 71
+                 }
+                )
+               )
                ( TyCon
                 ( Id
                  { name = "Int32"
@@ -5221,7 +5933,7 @@ Module
             { name = "y"
             , moduleName = Artifact
              ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-            , sort = Internal 3
+            , sort = Internal 11
             }
            )
           )
@@ -5300,12 +6012,12 @@ Module
          , value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-           , sourceLine = Pos 35
-           , sourceColumn = Pos 12
+           , sourceLine = Pos 36
+           , sourceColumn = Pos 3
            }
           , _end = SourcePos
            { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
-           , sourceLine = Pos 39
+           , sourceLine = Pos 38
            , sourceColumn = Pos 1
            }
           }
@@ -5315,7 +6027,7 @@ Module
          { name = "$_"
          , moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-         , sort = Internal 85
+         , sort = Internal 13
          }
         )
        ]
@@ -5354,7 +6066,7 @@ Module
           { name = "x"
           , moduleName = Artifact
            ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-          , sort = Internal 4
+          , sort = Internal 12
           }
          )
          ( Apply
@@ -5383,7 +6095,15 @@ Module
               )
              )
              ( TyArr
-              ( TyTuple 0 )
+              ( TyMeta
+               ( Id
+                { name = "t"
+                , moduleName = Artifact
+                 ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                , sort = Internal 97
+                }
+               )
+              )
               ( TyCon
                ( Id
                 { name = "Int32"
@@ -5445,7 +6165,15 @@ Module
                 )
                )
                ( TyArr
-                ( TyTuple 0 )
+                ( TyMeta
+                 ( Id
+                  { name = "t"
+                  , moduleName = Artifact
+                   ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
+                  , sort = Internal 97
+                  }
+                 )
+                )
                 ( TyCon
                  ( Id
                   { name = "Int32"

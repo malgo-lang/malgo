@@ -1,37 +1,37 @@
 ((main
-    $TypeAnnotation.return_xxx
+    $TypeAnnotation.return_4
     (cut
        (lambda
-          ($TypeAnnotation.param_xxx $TypeAnnotation.return_xxx)
+          ($TypeAnnotation.param_2 $TypeAnnotation.return_5)
           (cut
-             $TypeAnnotation.param_xxx
+             $TypeAnnotation.param_2
              (select
-                (#TypeAnnotation.$__xxx
+                (#TypeAnnotation.$__1
                    (invoke
                       printString
                       (apply
                          ((do
-                             $TypeAnnotation.return_xxx
+                             $TypeAnnotation.return_6
                              (cut
                                 (lambda
-                                   ($TypeAnnotation.param_xxx
-                                      $TypeAnnotation.return_xxx)
+                                   ($TypeAnnotation.param_3
+                                      $TypeAnnotation.return_8)
                                    (cut
-                                      $TypeAnnotation.param_xxx
+                                      $TypeAnnotation.param_3
                                       (select
-                                         (#TypeAnnotation.x_xxx
+                                         (#TypeAnnotation.x_0
                                             (cut
-                                               #TypeAnnotation.x_xxx
-                                               $TypeAnnotation.return_xxx)))))
+                                               #TypeAnnotation.x_0
+                                               $TypeAnnotation.return_8)))))
                                 (apply
                                    ((do
-                                       $TypeAnnotation.return_xxx
+                                       $TypeAnnotation.return_7
                                        (invoke
                                           String#
                                           (apply
                                              ("hoge")
-                                             ($TypeAnnotation.return_xxx)))))
-                                   ($TypeAnnotation.return_xxx)))))
-                         ($TypeAnnotation.return_xxx)))))))
-       $TypeAnnotation.return_xxx))
+                                             ($TypeAnnotation.return_7)))))
+                                   ($TypeAnnotation.return_6)))))
+                         ($TypeAnnotation.return_5)))))))
+       $TypeAnnotation.return_4))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

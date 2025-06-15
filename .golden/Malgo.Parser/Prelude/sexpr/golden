@@ -17,13 +17,13 @@
       (def
          head
          (fn
-            ((clause (Cons x _) (seq (do x)))
+            ((clause ((con Cons (x _))) (seq (do x)))
                (clause (_) (seq (do (apply exitFailure (tuple))))))))
       (sig tail (-> (app List (a)) (app List (a))))
       (def
          tail
          (fn
-            ((clause (Cons _ xs) (seq (do xs)))
+            ((clause ((con Cons (_ xs))) (seq (do xs)))
                (clause (_) (seq (do (apply exitFailure (tuple))))))))
       (sig foldl (-> (-> a (-> b a)) (-> a (-> (app List (b)) a))))
       (def
@@ -57,7 +57,7 @@
          (fn
             ((clause (Nil) (seq (do (string ""))))
                (clause
-                  (Cons c cs)
+                  ((con Cons (c cs)))
                   (seq
                      (do
                         (apply
@@ -123,7 +123,7 @@
                          (fn
                             ((clause (Nothing) (seq (do str)))
                                (clause
-                                  (Just c)
+                                  ((con Just (c)))
                                   (seq
                                      (do
                                         (apply
@@ -161,7 +161,7 @@
                          (fn
                             ((clause (Nothing) (seq (do str)))
                                (clause
-                                  (Just c)
+                                  ((con Just (c)))
                                   (seq
                                      (do
                                         (apply
@@ -188,7 +188,7 @@
          (fn
             ((clause (Nil) (seq (do (string ""))))
                (clause
-                  (Cons x xs)
+                  ((con Cons (x xs)))
                   (seq
                      (do
                         (apply
@@ -217,10 +217,10 @@
       (def
          isWhiteSpace
          (fn
-            ((clause (Char# (unboxed (char ' '))) (seq (do True)))
-               (clause (Char# (unboxed (char '\n'))) (seq (do True)))
-               (clause (Char# (unboxed (char '\r'))) (seq (do True)))
-               (clause (Char# (unboxed (char '\t'))) (seq (do True)))
+            ((clause ((con Char# ((unboxed (char ' '))))) (seq (do True)))
+               (clause ((con Char# ((unboxed (char '\n'))))) (seq (do True)))
+               (clause ((con Char# ((unboxed (char '\r'))))) (seq (do True)))
+               (clause ((con Char# ((unboxed (char '\t'))))) (seq (do True)))
                (clause (_) (seq (do False))))))
       (infix right 9 <<)
       (sig << (-> (-> b c) (-> (-> a b) (-> a c))))
@@ -261,8 +261,12 @@
          cond
          (fn
             ((clause (Nil) (seq (do (apply panic (string "no branch")))))
-               (clause (Cons (tuple True x) _) (seq (do (apply x (tuple)))))
-               (clause (Cons (tuple False _) xs) (seq (do (apply cond xs)))))))
+               (clause
+                  ((con Cons ((tuple True x) _)))
+                  (seq (do (apply x (tuple)))))
+               (clause
+                  ((con Cons ((tuple False _) xs)))
+                  (seq (do (apply cond xs)))))))
       (sig putStr (-> String (tuple)))
       (def putStr (fn ((clause (str) (seq (do (apply printString str)))))))
       (sig putStrLn (-> String (tuple)))

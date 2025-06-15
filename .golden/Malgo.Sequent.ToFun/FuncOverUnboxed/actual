@@ -1,9 +1,9 @@
 (program
    ((f
        (lambda
-          ($FuncOverUnboxed.param_xxx)
+          ($FuncOverUnboxed.param_2)
           (select
-             $FuncOverUnboxed.param_xxx
+             $FuncOverUnboxed.param_2
              ((0_i64
                  (apply
                     (invoke printString#)
@@ -12,14 +12,14 @@
                    (apply
                       (invoke printString#)
                       ((apply (invoke toStringInt64#) (1_i64)))))
-                (#FuncOverUnboxed.__xxx
+                (#FuncOverUnboxed.__0
                    (apply
                       (invoke printString#)
                       ((apply (invoke toStringInt64#) (0_i64)))))))))
       (main
          (lambda
-            ($FuncOverUnboxed.param_xxx)
+            ($FuncOverUnboxed.param_3)
             (select
-               $FuncOverUnboxed.param_xxx
-               ((#FuncOverUnboxed.$__xxx (apply (invoke f) (0_i64))))))))
+               $FuncOverUnboxed.param_3
+               ((#FuncOverUnboxed.$__1 (apply (invoke f) (0_i64))))))))
    ("runtime/malgo/Builtin.mlg"))

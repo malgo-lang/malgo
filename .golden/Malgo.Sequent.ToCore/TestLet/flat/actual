@@ -1,29 +1,29 @@
 ((|>
-    $TestLet.return_xxx
+    $TestLet.return_14
     (cut
        (lambda
-          ($TestLet.param_xxx $TestLet.return_xxx)
+          ($TestLet.param_9 $TestLet.return_15)
           (cut
              (lambda
-                ($TestLet.param_xxx $TestLet.return_xxx)
+                ($TestLet.param_10 $TestLet.return_16)
                 (cut
-                   (construct tuple ($TestLet.param_xxx $TestLet.param_xxx) ())
+                   (construct tuple ($TestLet.param_9 $TestLet.param_10) ())
                    (select
-                      ((tuple (#TestLet.x_xxx #TestLet.f_xxx))
+                      ((tuple (#TestLet.x_2 #TestLet.f_3))
                          (cut
-                            #TestLet.f_xxx
-                            (apply (#TestLet.x_xxx) ($TestLet.return_xxx)))))))
-             $TestLet.return_xxx))
-       $TestLet.return_xxx))
+                            #TestLet.f_3
+                            (apply (#TestLet.x_2) ($TestLet.return_16)))))))
+             $TestLet.return_15))
+       $TestLet.return_14))
    (main
-      $TestLet.return_xxx
+      $TestLet.return_17
       (cut
          (lambda
-            ($TestLet.param_xxx $TestLet.return_xxx)
+            ($TestLet.param_11 $TestLet.return_18)
             (cut
-               $TestLet.param_xxx
+               $TestLet.param_11
                (select
-                  (#TestLet.$__xxx
+                  (#TestLet.$__8
                      (invoke
                         addInt32#
                         (apply
@@ -31,93 +31,93 @@
                            ((apply
                                (2_i32)
                                ((then
-                                   #TestLet.x_xxx
+                                   #TestLet.x_4
                                    (cut
                                       (lambda
-                                         ($TestLet.tmp_xxx $TestLet.return_xxx)
+                                         ($TestLet.tmp_12 $TestLet.return_21)
                                          (invoke
                                             Int32#
                                             (then
-                                               $TestLet.outer_xxx
+                                               $TestLet.outer_25
                                                (join
-                                                  $TestLet.return_xxx
+                                                  $TestLet.return_24
                                                   (then
-                                                     $TestLet.inner_xxx
+                                                     $TestLet.inner_26
                                                      (cut
-                                                        $TestLet.outer_xxx
+                                                        $TestLet.outer_25
                                                         (apply
-                                                           ($TestLet.inner_xxx)
+                                                           ($TestLet.inner_26)
                                                            ((then
-                                                               #TestLet.x_xxx
+                                                               #TestLet.x_5
                                                                (cut
                                                                   (lambda
-                                                                     ($TestLet.param_xxx
-                                                                        $TestLet.return_xxx)
+                                                                     ($TestLet.param_13
+                                                                        $TestLet.return_22)
                                                                      (cut
-                                                                        $TestLet.param_xxx
+                                                                        $TestLet.param_13
                                                                         (select
                                                                            ((Int32#
-                                                                               (#TestLet.x_xxx))
+                                                                               (#TestLet.x_6))
                                                                               (invoke
                                                                                  printString#
                                                                                  (then
-                                                                                    $TestLet.outer_xxx
+                                                                                    $TestLet.outer_27
                                                                                     (join
-                                                                                       $TestLet.return_xxx
+                                                                                       $TestLet.return_23
                                                                                        (then
-                                                                                          $TestLet.inner_xxx
+                                                                                          $TestLet.inner_28
                                                                                           (cut
-                                                                                             $TestLet.outer_xxx
+                                                                                             $TestLet.outer_27
                                                                                              (apply
-                                                                                                ($TestLet.inner_xxx)
-                                                                                                ($TestLet.return_xxx))))
+                                                                                                ($TestLet.inner_28)
+                                                                                                ($TestLet.return_22))))
                                                                                        (invoke
                                                                                           toStringInt32#
                                                                                           (apply
-                                                                                             (#TestLet.x_xxx)
-                                                                                             ($TestLet.return_xxx))))))))))
+                                                                                             (#TestLet.x_6)
+                                                                                             ($TestLet.return_23))))))))))
                                                                   (then
-                                                                     #TestLet.printInt32_xxx
+                                                                     #TestLet.printInt32_7
                                                                      (cut
-                                                                        #TestLet.printInt32_xxx
+                                                                        #TestLet.printInt32_7
                                                                         (apply
-                                                                           (#TestLet.x_xxx)
-                                                                           ($TestLet.return_xxx))))))))))
+                                                                           (#TestLet.x_5)
+                                                                           ($TestLet.return_21))))))))))
                                                   (invoke
                                                      addInt32#
                                                      (apply
                                                         (1_i32)
                                                         ((apply
                                                             (2_i32)
-                                                            ($TestLet.return_xxx)))))))))
+                                                            ($TestLet.return_24)))))))))
                                       (then
-                                         $TestLet.outer_xxx
+                                         $TestLet.outer_29
                                          (join
-                                            $TestLet.return_xxx
+                                            $TestLet.return_19
                                             (then
-                                               $TestLet.inner_xxx
+                                               $TestLet.inner_30
                                                (cut
-                                                  $TestLet.outer_xxx
+                                                  $TestLet.outer_29
                                                   (apply
-                                                     ($TestLet.inner_xxx)
-                                                     ($TestLet.return_xxx))))
+                                                     ($TestLet.inner_30)
+                                                     ($TestLet.return_18))))
                                             (invoke
                                                printString#
                                                (then
-                                                  $TestLet.outer_xxx
+                                                  $TestLet.outer_31
                                                   (join
-                                                     $TestLet.return_xxx
+                                                     $TestLet.return_20
                                                      (then
-                                                        $TestLet.inner_xxx
+                                                        $TestLet.inner_32
                                                         (cut
-                                                           $TestLet.outer_xxx
+                                                           $TestLet.outer_31
                                                            (apply
-                                                              ($TestLet.inner_xxx)
-                                                              ($TestLet.return_xxx))))
+                                                              ($TestLet.inner_32)
+                                                              ($TestLet.return_19))))
                                                      (invoke
                                                         toStringInt32#
                                                         (apply
-                                                           (#TestLet.x_xxx)
-                                                           ($TestLet.return_xxx)))))))))))))))))))
-         $TestLet.return_xxx))
+                                                           (#TestLet.x_4)
+                                                           ($TestLet.return_20)))))))))))))))))))
+         $TestLet.return_17))
    ("runtime/malgo/Builtin.mlg"))

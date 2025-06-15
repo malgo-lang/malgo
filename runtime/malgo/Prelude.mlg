@@ -28,13 +28,13 @@ data List a = Nil | Cons a (List a)
 
 def head : List a -> a
 def head =
-  { Cons x _ -> x,
+  { (Cons x _) -> x,
     _ -> exitFailure (),
   }
 
 def tail : List a -> List a
 def tail =
-  { Cons _ xs -> xs,
+  { (Cons _ xs) -> xs,
     _ -> exitFailure (),
   }
 
@@ -56,7 +56,7 @@ def mapList =
 def listToString : List Char -> String
 def listToString =
   { Nil -> "",
-    Cons c cs -> consString c (listToString cs)
+    (Cons c cs) -> consString c (listToString cs)
   }
 
 -- get the first character of string
@@ -79,7 +79,7 @@ def tailString = { str ->
 def takeWhileString = { pred str ->
   case (headString str) {
     Nothing -> str,
-    Just c ->
+    (Just c) ->
       if (pred c)
         { consString c (takeWhileString pred (tailString str)) }
         { "" }
@@ -90,7 +90,7 @@ def takeWhileString = { pred str ->
 def dropWhileString = { pred str ->
   case (headString str) {
     Nothing -> str,
-    Just c ->
+    (Just c) ->
       if (pred c)
         { dropWhileString pred (tailString str) }
         { str }
@@ -100,7 +100,7 @@ def dropWhileString = { pred str ->
 def concatString : List String -> String
 def concatString =
   { Nil -> "",
-    Cons x xs -> appendString x (concatString xs)
+    (Cons x xs) -> appendString x (concatString xs)
   }
 
 def punctuate : a -> List a -> List a
@@ -113,10 +113,10 @@ def punctuate =
 -- check that `x` is a whitespace
 def isWhiteSpace : Char -> Bool
 def isWhiteSpace =
-  { Char# ' '# -> True,
-    Char# '\n'# -> True,
-    Char# '\r'# -> True,
-    Char# '\t'# -> True,
+  { (Char# ' '#) -> True,
+    (Char# '\n'#) -> True,
+    (Char# '\r'#) -> True,
+    (Char# '\t'#) -> True,
     _ -> False
   }
 
@@ -145,8 +145,8 @@ def unless = { c tValue f -> if c {tValue} f }
 def cond : List (Bool, {a}) -> a
 def cond =
   { Nil -> panic "no branch",
-    Cons (True, x) _ -> x (),
-    Cons (False, _) xs -> cond xs
+    (Cons (True, x) _) -> x (),
+    (Cons (False, _) xs) -> cond xs
   }
 
 def putStr : String -> ()

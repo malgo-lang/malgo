@@ -1,22 +1,20 @@
 ((main
-    $Echo.return_xxx
+    $Echo.return_2
     (cut
        (lambda
-          ($Echo.param_xxx $Echo.return_xxx)
+          ($Echo.param_1 $Echo.return_3)
           (cut
-             $Echo.param_xxx
+             $Echo.param_1
              (select
-                (#Echo.$__xxx
+                (#Echo.$__0
                    (invoke
                       putStr
                       (apply
                          ((do
-                             $Echo.return_xxx
+                             $Echo.return_4
                              (invoke
                                 getContents
-                                (apply
-                                   ((construct tuple () ()))
-                                   ($Echo.return_xxx)))))
-                         ($Echo.return_xxx)))))))
-       $Echo.return_xxx))
+                                (apply ((construct tuple () ())) ($Echo.return_4)))))
+                         ($Echo.return_3)))))))
+       $Echo.return_2))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

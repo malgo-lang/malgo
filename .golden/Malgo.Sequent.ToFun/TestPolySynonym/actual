@@ -1,26 +1,25 @@
 (program
    ((first
        (lambda
-          ($TestPolySynonym.param_xxx)
+          ($TestPolySynonym.param_9)
           (select
-             $TestPolySynonym.param_xxx
-             (((expand
-                  ((fst #TestPolySynonym.x_xxx) (snd #TestPolySynonym.__xxx)))
-                 #TestPolySynonym.x_xxx)))))
+             $TestPolySynonym.param_9
+             (((expand ((fst #TestPolySynonym.x_5) (snd #TestPolySynonym.__6)))
+                 #TestPolySynonym.x_5)))))
       (main
          (lambda
-            ($TestPolySynonym.param_xxx)
+            ($TestPolySynonym.param_10)
             (select
-               $TestPolySynonym.param_xxx
-               ((#TestPolySynonym.$__xxx
+               $TestPolySynonym.param_10
+               ((#TestPolySynonym.$__8
                    (let
-                      #TestPolySynonym.x_xxx
+                      #TestPolySynonym.x_7
                       (object
                          ((fst (apply (invoke Int32#) (1_i32)))
                             (snd (apply (invoke String#) ("hoge")))))
                       (apply
                          (apply
                             (invoke |>)
-                            ((apply (invoke first) (#TestPolySynonym.x_xxx))))
+                            ((apply (invoke first) (#TestPolySynonym.x_7))))
                          ((invoke printInt32))))))))))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

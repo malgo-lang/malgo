@@ -1,24 +1,24 @@
 (program
    ((rtob
        (lambda
-          ($Test6.param_xxx)
+          ($Test6.param_4)
           (select
-             $Test6.param_xxx
+             $Test6.param_4
              (((R ()) (invoke B))
-                (#Test6.__xxx (apply (invoke malgo_exit_failure) ((tuple ()))))))))
+                (#Test6.__1 (apply (invoke malgo_exit_failure) ((tuple ()))))))))
       (main
          (lambda
-            ($Test6.param_xxx)
+            ($Test6.param_5)
             (select
-               $Test6.param_xxx
-               ((#Test6.$__xxx
+               $Test6.param_5
+               ((#Test6.$__3
                    (apply
                       (lambda
-                         ($Test6.param_xxx)
+                         ($Test6.param_6)
                          (select
-                            $Test6.param_xxx
+                            $Test6.param_6
                             (((B ()) (apply (invoke malgo_print_string) ("OK")))
-                               (#Test6.__xxx
+                               (#Test6.__2
                                   (apply (invoke malgo_print_string) ("WRONG"))))))
                       ((apply (invoke rtob) ((invoke R))))))))))
       (R (R ()))
@@ -26,10 +26,10 @@
       (B (B ()))
       (malgo_exit_failure
          (lambda
-            ($Test6.primitive_xxx)
-            (primitive malgo_exit_failure ($Test6.primitive_xxx))))
+            ($Test6.primitive_7)
+            (primitive malgo_exit_failure ($Test6.primitive_7))))
       (malgo_print_string
          (lambda
-            ($Test6.primitive_xxx)
-            (primitive malgo_print_string ($Test6.primitive_xxx)))))
+            ($Test6.primitive_8)
+            (primitive malgo_print_string ($Test6.primitive_8)))))
    ())

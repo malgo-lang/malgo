@@ -13,12 +13,14 @@
       (def
          show
          (fn
-            ((clause (Symbol str) (seq (do (opapp <> (string "Symbol ") str))))
+            ((clause
+                ((con Symbol (str)))
+                (seq (do (opapp <> (string "Symbol ") str))))
                (clause
-                  (SInt int)
+                  ((con SInt (int)))
                   (seq (do (opapp <> (string "SInt ") (apply toStringInt32 int)))))
                (clause
-                  (SList ss)
+                  ((con SList (ss)))
                   (seq
                      (do
                         (opapp

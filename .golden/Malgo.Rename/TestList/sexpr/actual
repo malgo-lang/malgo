@@ -4,16 +4,16 @@
          main
          (fn
             ((clause
-                ()
+                (#TestList.$__2)
                 (seq
                    (let
-                      #TestList.xs_xxx
+                      #TestList.xs_0
                       (apply
                          (apply Cons (apply Int32# (int32 1)))
                          (apply
                             (apply Cons (apply Int32# (int32 2)))
                             (apply (apply Cons (apply Int32# (int32 3))) Nil))))
-                   (let #TestList.nil_xxx Nil)
+                   (let #TestList.nil_1 Nil)
                    (do
                       (apply
                          putStrLn
@@ -21,7 +21,7 @@
                             (do
                                (apply
                                   toStringInt32
-                                  (seq (do (apply head #TestList.xs_xxx)))))))))))))))
+                                  (seq (do (apply head #TestList.xs_0)))))))))))))))
       ()
       ()
       ()

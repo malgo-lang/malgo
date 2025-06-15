@@ -47,7 +47,7 @@ Module
         , _end = SourcePos
          { sourceName = "./test/testcases/malgo/Eventually.mlg"
          , sourceLine = Pos 25
-         , sourceColumn = Pos 29
+         , sourceColumn = Pos 31
          }
         }
        )
@@ -56,28 +56,7 @@ Module
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/Eventually.mlg"
           , sourceLine = Pos 25
-          , sourceColumn = Pos 5
-          }
-         , _end = SourcePos
-          { sourceName = "./test/testcases/malgo/Eventually.mlg"
-          , sourceLine = Pos 25
-          , sourceColumn = Pos 10
-          }
-         }
-        )
-        ( Id
-         { name = "Done"
-         , moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
-         , sort = External
-         }
-        ) []
-       , VarP
-        ( Range
-         { _start = SourcePos
-          { sourceName = "./test/testcases/malgo/Eventually.mlg"
-          , sourceLine = Pos 25
-          , sourceColumn = Pos 10
+          , sourceColumn = Pos 6
           }
          , _end = SourcePos
           { sourceName = "./test/testcases/malgo/Eventually.mlg"
@@ -87,24 +66,46 @@ Module
          }
         )
         ( Id
-         { name = "value"
+         { name = "Done"
          , moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
-         , sort = Internal 11
+         , sort = External
          }
         )
+        [ VarP
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/Eventually.mlg"
+           , sourceLine = Pos 25
+           , sourceColumn = Pos 11
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/Eventually.mlg"
+           , sourceLine = Pos 25
+           , sourceColumn = Pos 16
+           }
+          }
+         )
+         ( Id
+          { name = "value"
+          , moduleName = Artifact
+           ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
+          , sort = Internal 12
+          }
+         )
+        ]
        ]
        ( Seq
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/Eventually.mlg"
           , sourceLine = Pos 25
-          , sourceColumn = Pos 19
+          , sourceColumn = Pos 21
           }
          , _end = SourcePos
           { sourceName = "./test/testcases/malgo/Eventually.mlg"
           , sourceLine = Pos 25
-          , sourceColumn = Pos 29
+          , sourceColumn = Pos 31
           }
          }
         )
@@ -113,12 +114,12 @@ Module
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/Eventually.mlg"
            , sourceLine = Pos 25
-           , sourceColumn = Pos 19
+           , sourceColumn = Pos 21
            }
           , _end = SourcePos
            { sourceName = "./test/testcases/malgo/Eventually.mlg"
            , sourceLine = Pos 25
-           , sourceColumn = Pos 29
+           , sourceColumn = Pos 31
            }
           }
          )
@@ -127,12 +128,12 @@ Module
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/Eventually.mlg"
             , sourceLine = Pos 25
-            , sourceColumn = Pos 24
+            , sourceColumn = Pos 26
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/Eventually.mlg"
             , sourceLine = Pos 25
-            , sourceColumn = Pos 29
+            , sourceColumn = Pos 31
             }
            }
           )
@@ -141,12 +142,12 @@ Module
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/Eventually.mlg"
              , sourceLine = Pos 25
-             , sourceColumn = Pos 19
+             , sourceColumn = Pos 21
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/Eventually.mlg"
              , sourceLine = Pos 25
-             , sourceColumn = Pos 24
+             , sourceColumn = Pos 26
              }
             }
            )
@@ -163,12 +164,12 @@ Module
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/Eventually.mlg"
              , sourceLine = Pos 25
-             , sourceColumn = Pos 24
+             , sourceColumn = Pos 26
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/Eventually.mlg"
              , sourceLine = Pos 25
-             , sourceColumn = Pos 29
+             , sourceColumn = Pos 31
              }
             }
            )
@@ -176,7 +177,7 @@ Module
             { name = "value"
             , moduleName = Artifact
              ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
-            , sort = Internal 11
+            , sort = Internal 12
             }
            )
           )
@@ -202,28 +203,7 @@ Module
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/Eventually.mlg"
            , sourceLine = Pos 26
-           , sourceColumn = Pos 5
-           }
-          , _end = SourcePos
-           { sourceName = "./test/testcases/malgo/Eventually.mlg"
-           , sourceLine = Pos 26
-           , sourceColumn = Pos 16
-           }
-          }
-         )
-         ( Id
-          { name = "NotYetDone"
-          , moduleName = Artifact
-           ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
-          , sort = External
-          }
-         ) []
-        , VarP
-         ( Range
-          { _start = SourcePos
-           { sourceName = "./test/testcases/malgo/Eventually.mlg"
-           , sourceLine = Pos 26
-           , sourceColumn = Pos 16
+           , sourceColumn = Pos 6
            }
           , _end = SourcePos
            { sourceName = "./test/testcases/malgo/Eventually.mlg"
@@ -233,19 +213,41 @@ Module
           }
          )
          ( Id
-          { name = "work"
+          { name = "NotYetDone"
           , moduleName = Artifact
            ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
-          , sort = Internal 12
+          , sort = External
           }
          )
+         [ VarP
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/Eventually.mlg"
+            , sourceLine = Pos 26
+            , sourceColumn = Pos 17
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/Eventually.mlg"
+            , sourceLine = Pos 26
+            , sourceColumn = Pos 21
+            }
+           }
+          )
+          ( Id
+           { name = "work"
+           , moduleName = Artifact
+            ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
+           , sort = Internal 13
+           }
+          )
+         ]
         ]
         ( Seq
          ( Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/Eventually.mlg"
            , sourceLine = Pos 26
-           , sourceColumn = Pos 24
+           , sourceColumn = Pos 26
            }
           , _end = SourcePos
            { sourceName = "./test/testcases/malgo/Eventually.mlg"
@@ -259,7 +261,7 @@ Module
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/Eventually.mlg"
             , sourceLine = Pos 26
-            , sourceColumn = Pos 24
+            , sourceColumn = Pos 26
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/Eventually.mlg"
@@ -273,7 +275,7 @@ Module
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/Eventually.mlg"
              , sourceLine = Pos 26
-             , sourceColumn = Pos 24
+             , sourceColumn = Pos 26
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/Eventually.mlg"
@@ -287,7 +289,7 @@ Module
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/Eventually.mlg"
               , sourceLine = Pos 26
-              , sourceColumn = Pos 24
+              , sourceColumn = Pos 26
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/Eventually.mlg"
@@ -301,12 +303,12 @@ Module
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/Eventually.mlg"
                , sourceLine = Pos 26
-               , sourceColumn = Pos 30
+               , sourceColumn = Pos 32
                }
               , _end = SourcePos
                { sourceName = "./test/testcases/malgo/Eventually.mlg"
                , sourceLine = Pos 26
-               , sourceColumn = Pos 32
+               , sourceColumn = Pos 34
                }
               }
              )
@@ -315,12 +317,12 @@ Module
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/Eventually.mlg"
                 , sourceLine = Pos 26
-                , sourceColumn = Pos 25
+                , sourceColumn = Pos 27
                 }
                , _end = SourcePos
                 { sourceName = "./test/testcases/malgo/Eventually.mlg"
                 , sourceLine = Pos 26
-                , sourceColumn = Pos 30
+                , sourceColumn = Pos 32
                 }
                }
               )
@@ -328,7 +330,7 @@ Module
                { name = "work"
                , moduleName = Artifact
                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
-               , sort = Internal 12
+               , sort = Internal 13
                }
               )
              )
@@ -337,12 +339,12 @@ Module
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/Eventually.mlg"
                 , sourceLine = Pos 26
-                , sourceColumn = Pos 30
+                , sourceColumn = Pos 32
                 }
                , _end = SourcePos
                 { sourceName = "./test/testcases/malgo/Eventually.mlg"
                 , sourceLine = Pos 26
-                , sourceColumn = Pos 32
+                , sourceColumn = Pos 34
                 }
                }
               ) []
@@ -438,7 +440,7 @@ Module
            { name = "_"
            , moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
-           , sort = Internal 19
+           , sort = Internal 20
            }
           )
          )
@@ -462,7 +464,7 @@ Module
            { name = "x"
            , moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
-           , sort = Internal 20
+           , sort = Internal 21
            }
           )
          )
@@ -514,7 +516,7 @@ Module
            { name = "x"
            , moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
-           , sort = Internal 20
+           , sort = Internal 21
            }
           )
          ) :| []
@@ -895,7 +897,29 @@ Module
                , sourceColumn = Pos 68
                }
               }
-             ) []
+             )
+             [ VarP
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/Eventually.mlg"
+                , sourceLine = Pos 21
+                , sourceColumn = Pos 41
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/Eventually.mlg"
+                , sourceLine = Pos 21
+                , sourceColumn = Pos 68
+                }
+               }
+              )
+              ( Id
+               { name = "$_"
+               , moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
+               , sort = Internal 11
+               }
+              )
+             ]
              ( Seq
               ( Range
                { _start = SourcePos
@@ -1258,7 +1282,7 @@ Module
            { name = "x"
            , moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
-           , sort = Internal 15
+           , sort = Internal 16
            }
           )
          )
@@ -1282,7 +1306,7 @@ Module
            { name = "_"
            , moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
-           , sort = Internal 16
+           , sort = Internal 17
            }
           )
          )
@@ -1334,7 +1358,7 @@ Module
            { name = "x"
            , moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
-           , sort = Internal 15
+           , sort = Internal 16
            }
           )
          ) :| []
@@ -1541,7 +1565,29 @@ Module
               , sourceColumn = Pos 56
               }
              }
-            ) []
+            )
+            [ VarP
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/Eventually.mlg"
+               , sourceLine = Pos 37
+               , sourceColumn = Pos 33
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/Eventually.mlg"
+               , sourceLine = Pos 37
+               , sourceColumn = Pos 56
+               }
+              }
+             )
+             ( Id
+              { name = "$_"
+              , moduleName = Artifact
+               ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
+              , sort = Internal 22
+              }
+             )
+            ]
             ( Seq
              ( Range
               { _start = SourcePos
@@ -1781,7 +1827,7 @@ Module
           { name = "_"
           , moduleName = Artifact
            ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
-          , sort = Internal 21
+          , sort = Internal 23
           }
          )
         ]
@@ -1991,7 +2037,29 @@ Module
                    , sourceColumn = Pos 58
                    }
                   }
-                 ) []
+                 )
+                 [ VarP
+                  ( Range
+                   { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/Eventually.mlg"
+                    , sourceLine = Pos 38
+                    , sourceColumn = Pos 35
+                    }
+                   , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/Eventually.mlg"
+                    , sourceLine = Pos 38
+                    , sourceColumn = Pos 58
+                    }
+                   }
+                  )
+                  ( Id
+                   { name = "$_"
+                   , moduleName = Artifact
+                    ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
+                   , sort = Internal 24
+                   }
+                  )
+                 ]
                  ( Seq
                   ( Range
                    { _start = SourcePos
@@ -2231,7 +2299,7 @@ Module
                { name = "_"
                , moduleName = Artifact
                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
-               , sort = Internal 22
+               , sort = Internal 25
                }
               )
              ]
@@ -2448,7 +2516,29 @@ Module
          , sourceColumn = Pos 1
          }
         }
-       ) []
+       )
+       [ VarP
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/Eventually.mlg"
+          , sourceLine = Pos 43
+          , sourceColumn = Pos 3
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/Eventually.mlg"
+          , sourceLine = Pos 47
+          , sourceColumn = Pos 1
+          }
+         }
+        )
+        ( Id
+         { name = "$_"
+         , moduleName = Artifact
+          ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
+         , sort = Internal 28
+         }
+        )
+       ]
        ( Seq
         ( Range
          { _start = SourcePos
@@ -2776,7 +2866,7 @@ Module
               , _end = SourcePos
                { sourceName = "./test/testcases/malgo/Eventually.mlg"
                , sourceLine = Pos 45
-               , sourceColumn = Pos 49
+               , sourceColumn = Pos 51
                }
               }
              )
@@ -2785,28 +2875,7 @@ Module
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/Eventually.mlg"
                 , sourceLine = Pos 45
-                , sourceColumn = Pos 10
-                }
-               , _end = SourcePos
-                { sourceName = "./test/testcases/malgo/Eventually.mlg"
-                , sourceLine = Pos 45
-                , sourceColumn = Pos 15
-                }
-               }
-              )
-              ( Id
-               { name = "Done"
-               , moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
-               , sort = External
-               }
-              ) []
-             , VarP
-              ( Range
-               { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/Eventually.mlg"
-                , sourceLine = Pos 45
-                , sourceColumn = Pos 15
+                , sourceColumn = Pos 11
                 }
                , _end = SourcePos
                 { sourceName = "./test/testcases/malgo/Eventually.mlg"
@@ -2816,24 +2885,46 @@ Module
                }
               )
               ( Id
-               { name = "x"
+               { name = "Done"
                , moduleName = Artifact
                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
-               , sort = Internal 23
+               , sort = External
                }
               )
+              [ VarP
+               ( Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/Eventually.mlg"
+                 , sourceLine = Pos 45
+                 , sourceColumn = Pos 16
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/Eventually.mlg"
+                 , sourceLine = Pos 45
+                 , sourceColumn = Pos 17
+                 }
+                }
+               )
+               ( Id
+                { name = "x"
+                , moduleName = Artifact
+                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
+                , sort = Internal 26
+                }
+               )
+              ]
              ]
              ( Seq
               ( Range
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/Eventually.mlg"
                 , sourceLine = Pos 45
-                , sourceColumn = Pos 20
+                , sourceColumn = Pos 22
                 }
                , _end = SourcePos
                 { sourceName = "./test/testcases/malgo/Eventually.mlg"
                 , sourceLine = Pos 45
-                , sourceColumn = Pos 49
+                , sourceColumn = Pos 51
                 }
                }
               )
@@ -2842,12 +2933,12 @@ Module
                 { _start = SourcePos
                  { sourceName = "./test/testcases/malgo/Eventually.mlg"
                  , sourceLine = Pos 45
-                 , sourceColumn = Pos 20
+                 , sourceColumn = Pos 22
                  }
                 , _end = SourcePos
                  { sourceName = "./test/testcases/malgo/Eventually.mlg"
                  , sourceLine = Pos 45
-                 , sourceColumn = Pos 49
+                 , sourceColumn = Pos 51
                  }
                 }
                )
@@ -2856,12 +2947,12 @@ Module
                  { _start = SourcePos
                   { sourceName = "./test/testcases/malgo/Eventually.mlg"
                   , sourceLine = Pos 45
-                  , sourceColumn = Pos 32
+                  , sourceColumn = Pos 34
                   }
                  , _end = SourcePos
                   { sourceName = "./test/testcases/malgo/Eventually.mlg"
                   , sourceLine = Pos 45
-                  , sourceColumn = Pos 49
+                  , sourceColumn = Pos 51
                   }
                  }
                 )
@@ -2870,12 +2961,12 @@ Module
                   { _start = SourcePos
                    { sourceName = "./test/testcases/malgo/Eventually.mlg"
                    , sourceLine = Pos 45
-                   , sourceColumn = Pos 20
+                   , sourceColumn = Pos 22
                    }
                   , _end = SourcePos
                    { sourceName = "./test/testcases/malgo/Eventually.mlg"
                    , sourceLine = Pos 45
-                   , sourceColumn = Pos 32
+                   , sourceColumn = Pos 34
                    }
                   }
                  )
@@ -2892,12 +2983,12 @@ Module
                   { _start = SourcePos
                    { sourceName = "./test/testcases/malgo/Eventually.mlg"
                    , sourceLine = Pos 45
-                   , sourceColumn = Pos 32
+                   , sourceColumn = Pos 34
                    }
                   , _end = SourcePos
                    { sourceName = "./test/testcases/malgo/Eventually.mlg"
                    , sourceLine = Pos 45
-                   , sourceColumn = Pos 49
+                   , sourceColumn = Pos 51
                    }
                   }
                  )
@@ -2906,12 +2997,12 @@ Module
                    { _start = SourcePos
                     { sourceName = "./test/testcases/malgo/Eventually.mlg"
                     , sourceLine = Pos 45
-                    , sourceColumn = Pos 32
+                    , sourceColumn = Pos 34
                     }
                    , _end = SourcePos
                     { sourceName = "./test/testcases/malgo/Eventually.mlg"
                     , sourceLine = Pos 45
-                    , sourceColumn = Pos 49
+                    , sourceColumn = Pos 51
                     }
                    }
                   )
@@ -2920,12 +3011,12 @@ Module
                     { _start = SourcePos
                      { sourceName = "./test/testcases/malgo/Eventually.mlg"
                      , sourceLine = Pos 45
-                     , sourceColumn = Pos 47
+                     , sourceColumn = Pos 49
                      }
                     , _end = SourcePos
                      { sourceName = "./test/testcases/malgo/Eventually.mlg"
                      , sourceLine = Pos 45
-                     , sourceColumn = Pos 48
+                     , sourceColumn = Pos 50
                      }
                     }
                    )
@@ -2934,12 +3025,12 @@ Module
                      { _start = SourcePos
                       { sourceName = "./test/testcases/malgo/Eventually.mlg"
                       , sourceLine = Pos 45
-                      , sourceColumn = Pos 33
+                      , sourceColumn = Pos 35
                       }
                      , _end = SourcePos
                       { sourceName = "./test/testcases/malgo/Eventually.mlg"
                       , sourceLine = Pos 45
-                      , sourceColumn = Pos 47
+                      , sourceColumn = Pos 49
                       }
                      }
                     )
@@ -2956,12 +3047,12 @@ Module
                      { _start = SourcePos
                       { sourceName = "./test/testcases/malgo/Eventually.mlg"
                       , sourceLine = Pos 45
-                      , sourceColumn = Pos 47
+                      , sourceColumn = Pos 49
                       }
                      , _end = SourcePos
                       { sourceName = "./test/testcases/malgo/Eventually.mlg"
                       , sourceLine = Pos 45
-                      , sourceColumn = Pos 48
+                      , sourceColumn = Pos 50
                       }
                      }
                     )
@@ -2969,7 +3060,7 @@ Module
                      { name = "x"
                      , moduleName = Artifact
                       ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
-                     , sort = Internal 23
+                     , sort = Internal 26
                      }
                     )
                    )
@@ -2989,7 +3080,7 @@ Module
                , _end = SourcePos
                 { sourceName = "./test/testcases/malgo/Eventually.mlg"
                 , sourceLine = Pos 46
-                , sourceColumn = Pos 48
+                , sourceColumn = Pos 50
                 }
                }
               )
@@ -2998,28 +3089,7 @@ Module
                 { _start = SourcePos
                  { sourceName = "./test/testcases/malgo/Eventually.mlg"
                  , sourceLine = Pos 46
-                 , sourceColumn = Pos 10
-                 }
-                , _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/Eventually.mlg"
-                 , sourceLine = Pos 46
-                 , sourceColumn = Pos 21
-                 }
-                }
-               )
-               ( Id
-                { name = "NotYetDone"
-                , moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
-                , sort = External
-                }
-               ) []
-              , VarP
-               ( Range
-                { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/Eventually.mlg"
-                 , sourceLine = Pos 46
-                 , sourceColumn = Pos 21
+                 , sourceColumn = Pos 11
                  }
                 , _end = SourcePos
                  { sourceName = "./test/testcases/malgo/Eventually.mlg"
@@ -3029,24 +3099,46 @@ Module
                 }
                )
                ( Id
-                { name = "_"
+                { name = "NotYetDone"
                 , moduleName = Artifact
                  ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
-                , sort = Internal 24
+                , sort = External
                 }
                )
+               [ VarP
+                ( Range
+                 { _start = SourcePos
+                  { sourceName = "./test/testcases/malgo/Eventually.mlg"
+                  , sourceLine = Pos 46
+                  , sourceColumn = Pos 22
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/Eventually.mlg"
+                  , sourceLine = Pos 46
+                  , sourceColumn = Pos 23
+                  }
+                 }
+                )
+                ( Id
+                 { name = "_"
+                 , moduleName = Artifact
+                  ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
+                 , sort = Internal 27
+                 }
+                )
+               ]
               ]
               ( Seq
                ( Range
                 { _start = SourcePos
                  { sourceName = "./test/testcases/malgo/Eventually.mlg"
                  , sourceLine = Pos 46
-                 , sourceColumn = Pos 26
+                 , sourceColumn = Pos 28
                  }
                 , _end = SourcePos
                  { sourceName = "./test/testcases/malgo/Eventually.mlg"
                  , sourceLine = Pos 46
-                 , sourceColumn = Pos 48
+                 , sourceColumn = Pos 50
                  }
                 }
                )
@@ -3055,12 +3147,12 @@ Module
                  { _start = SourcePos
                   { sourceName = "./test/testcases/malgo/Eventually.mlg"
                   , sourceLine = Pos 46
-                  , sourceColumn = Pos 26
+                  , sourceColumn = Pos 28
                   }
                  , _end = SourcePos
                   { sourceName = "./test/testcases/malgo/Eventually.mlg"
                   , sourceLine = Pos 46
-                  , sourceColumn = Pos 48
+                  , sourceColumn = Pos 50
                   }
                  }
                 )
@@ -3069,12 +3161,12 @@ Module
                   { _start = SourcePos
                    { sourceName = "./test/testcases/malgo/Eventually.mlg"
                    , sourceLine = Pos 46
-                   , sourceColumn = Pos 38
+                   , sourceColumn = Pos 40
                    }
                   , _end = SourcePos
                    { sourceName = "./test/testcases/malgo/Eventually.mlg"
                    , sourceLine = Pos 46
-                   , sourceColumn = Pos 48
+                   , sourceColumn = Pos 50
                    }
                   }
                  )
@@ -3083,12 +3175,12 @@ Module
                    { _start = SourcePos
                     { sourceName = "./test/testcases/malgo/Eventually.mlg"
                     , sourceLine = Pos 46
-                    , sourceColumn = Pos 26
+                    , sourceColumn = Pos 28
                     }
                    , _end = SourcePos
                     { sourceName = "./test/testcases/malgo/Eventually.mlg"
                     , sourceLine = Pos 46
-                    , sourceColumn = Pos 38
+                    , sourceColumn = Pos 40
                     }
                    }
                   )
@@ -3105,12 +3197,12 @@ Module
                    { _start = SourcePos
                     { sourceName = "./test/testcases/malgo/Eventually.mlg"
                     , sourceLine = Pos 46
-                    , sourceColumn = Pos 38
+                    , sourceColumn = Pos 40
                     }
                    , _end = SourcePos
                     { sourceName = "./test/testcases/malgo/Eventually.mlg"
                     , sourceLine = Pos 46
-                    , sourceColumn = Pos 48
+                    , sourceColumn = Pos 50
                     }
                    }
                   )
@@ -3119,12 +3211,12 @@ Module
                     { _start = SourcePos
                      { sourceName = "./test/testcases/malgo/Eventually.mlg"
                      , sourceLine = Pos 46
-                     , sourceColumn = Pos 38
+                     , sourceColumn = Pos 40
                      }
                     , _end = SourcePos
                      { sourceName = "./test/testcases/malgo/Eventually.mlg"
                      , sourceLine = Pos 46
-                     , sourceColumn = Pos 48
+                     , sourceColumn = Pos 50
                      }
                     }
                    )
@@ -3141,12 +3233,12 @@ Module
                     { _start = SourcePos
                      { sourceName = "./test/testcases/malgo/Eventually.mlg"
                      , sourceLine = Pos 46
-                     , sourceColumn = Pos 38
+                     , sourceColumn = Pos 40
                      }
                     , _end = SourcePos
                      { sourceName = "./test/testcases/malgo/Eventually.mlg"
                      , sourceLine = Pos 46
-                     , sourceColumn = Pos 48
+                     , sourceColumn = Pos 50
                      }
                     }
                    )
@@ -3617,7 +3709,7 @@ Module
         { name = "a"
         , moduleName = Artifact
          ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
-        , sort = Internal 13
+        , sort = Internal 14
         }
        )
       , TyVar
@@ -3638,7 +3730,7 @@ Module
         { name = "b"
         , moduleName = Artifact
          ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
-        , sort = Internal 14
+        , sort = Internal 15
         }
        )
       ]
@@ -3711,7 +3803,7 @@ Module
          { name = "a"
          , moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
-         , sort = Internal 13
+         , sort = Internal 14
          }
         )
        ]
@@ -3762,7 +3854,7 @@ Module
           { name = "a"
           , moduleName = Artifact
            ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
-          , sort = Internal 13
+          , sort = Internal 14
           }
          )
         )
@@ -3820,7 +3912,7 @@ Module
            { name = "b"
            , moduleName = Artifact
             ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
-           , sort = Internal 14
+           , sort = Internal 15
            }
           )
          ]
@@ -3880,7 +3972,7 @@ Module
           { name = "b"
           , moduleName = Artifact
            ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
-          , sort = Internal 14
+          , sort = Internal 15
           }
          )
         ]
@@ -3975,7 +4067,7 @@ Module
         { name = "a"
         , moduleName = Artifact
          ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
-        , sort = Internal 17
+        , sort = Internal 18
         }
        )
       , TyVar
@@ -3996,7 +4088,7 @@ Module
         { name = "b"
         , moduleName = Artifact
          ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
-        , sort = Internal 18
+        , sort = Internal 19
         }
        )
       ]
@@ -4033,7 +4125,7 @@ Module
         { name = "a"
         , moduleName = Artifact
          ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
-        , sort = Internal 17
+        , sort = Internal 18
         }
        )
       )
@@ -4091,7 +4183,7 @@ Module
          { name = "a"
          , moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/Eventually.mlg" )
-         , sort = Internal 17
+         , sort = Internal 18
          }
         )
        ]

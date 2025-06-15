@@ -1,43 +1,40 @@
 (program
    ((|>
        (lambda
-          ($Null.param_xxx)
+          ($Null.param_15)
           (lambda
-             ($Null.param_xxx)
+             ($Null.param_16)
              (select
-                (tuple ($Null.param_xxx $Null.param_xxx))
-                (((tuple (#Null.x_xxx #Null.f_xxx))
-                    (apply #Null.f_xxx (#Null.x_xxx))))))))
+                (tuple ($Null.param_15 $Null.param_16))
+                (((tuple (#Null.x_11 #Null.f_12)) (apply #Null.f_12 (#Null.x_11))))))))
       (mHead
          (lambda
-            ($Null.param_xxx)
+            ($Null.param_17)
             (select
-               $Null.param_xxx
+               $Null.param_17
                (((Nil ()) (invoke Nothing))
-                  ((Cons (#Null.p_xxx #Null.__xxx))
-                     (apply (invoke Just) (#Null.p_xxx)))))))
+                  ((Cons (#Null.p_5 #Null.__6)) (apply (invoke Just) (#Null.p_5)))))))
       (isNothing
          (lambda
-            ($Null.param_xxx)
+            ($Null.param_18)
             (select
-               $Null.param_xxx
-               (((Nothing ()) (invoke True))
-                  ((Just (#Null.__xxx)) (invoke False))))))
+               $Null.param_18
+               (((Nothing ()) (invoke True)) ((Just (#Null.__3)) (invoke False))))))
       (null
          (lambda
-            ($Null.param_xxx)
+            ($Null.param_19)
             (select
-               $Null.param_xxx
-               ((#Null.as_xxx
+               $Null.param_19
+               ((#Null.as_8
                    (apply
                       (invoke isNothing)
-                      ((apply (invoke mHead) (#Null.as_xxx)))))))))
+                      ((apply (invoke mHead) (#Null.as_8)))))))))
       (main
          (lambda
-            ($Null.param_xxx)
+            ($Null.param_20)
             (select
-               $Null.param_xxx
-               ((#Null.$__xxx
+               $Null.param_20
+               ((#Null.$__14
                    (apply
                       (apply
                          (invoke |>)
@@ -49,9 +46,9 @@
                                      (apply (invoke Cons) ((invoke True)))
                                      ((invoke Nil)))))))))
                       ((lambda
-                          ($Null.param_xxx)
+                          ($Null.param_21)
                           (select
-                             $Null.param_xxx
+                             $Null.param_21
                              (((False ())
                                  (apply (invoke malgo_print_string) ("OK")))
                                 ((True ())
@@ -59,22 +56,22 @@
                                       (invoke malgo_exit_failure)
                                       ((tuple ()))))))))))))))
       (Nothing (Nothing ()))
-      (Just (lambda ($Null.constructor_xxx) (Just ($Null.constructor_xxx))))
+      (Just (lambda ($Null.constructor_22) (Just ($Null.constructor_22))))
       (False (False ()))
       (True (True ()))
       (Nil (Nil ()))
       (Cons
          (lambda
-            ($Null.constructor_xxx)
+            ($Null.constructor_23)
             (lambda
-               ($Null.constructor_xxx)
-               (Cons ($Null.constructor_xxx $Null.constructor_xxx)))))
+               ($Null.constructor_24)
+               (Cons ($Null.constructor_23 $Null.constructor_24)))))
       (malgo_print_string
          (lambda
-            ($Null.primitive_xxx)
-            (primitive malgo_print_string ($Null.primitive_xxx))))
+            ($Null.primitive_25)
+            (primitive malgo_print_string ($Null.primitive_25))))
       (malgo_exit_failure
          (lambda
-            ($Null.primitive_xxx)
-            (primitive malgo_exit_failure ($Null.primitive_xxx)))))
+            ($Null.primitive_26)
+            (primitive malgo_exit_failure ($Null.primitive_26)))))
    ())

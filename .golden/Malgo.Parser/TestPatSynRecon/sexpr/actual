@@ -8,7 +8,7 @@
          sum
          (fn
             ((clause
-                (Cons (con Int64# (x)) xs)
+                ((con Cons ((con Int64# (x)) xs)))
                 (seq
                    (do
                       (opapp

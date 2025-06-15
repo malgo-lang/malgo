@@ -4,31 +4,31 @@
          twice
          (fn
             ((clause
-                (#With.k_xxx)
+                (#With.k_6)
                 (seq
-                   (do (apply #With.k_xxx (tuple)))
-                   (do (apply #With.k_xxx (tuple)))))))))
+                   (do (apply #With.k_6 (tuple)))
+                   (do (apply #With.k_6 (tuple)))))))))
        ((def
            printAndReturn
            (fn
               ((clause
-                  (#With.str_xxx #With.k_xxx)
+                  (#With.str_7 #With.k_8)
                   (seq
-                     (do (apply printString #With.str_xxx))
-                     (do (apply #With.k_xxx #With.str_xxx))))))))
+                     (do (apply printString #With.str_7))
+                     (do (apply #With.k_8 #With.str_7))))))))
        ((def
            finally
            (fn
               ((clause
-                  (#With.finalizer_xxx #With.k_xxx)
+                  (#With.finalizer_2 #With.k_3)
                   (seq
-                     (let #With.x_xxx (apply #With.k_xxx (tuple)))
-                     (do (apply #With.finalizer_xxx #With.x_xxx))))))))
+                     (let #With.x_4 (apply #With.k_3 (tuple)))
+                     (do (apply #With.finalizer_2 #With.x_4))))))))
        ((def
            main
            (fn
               ((clause
-                  ()
+                  (#With.$__12)
                   (seq
                      (do
                         (apply
@@ -44,14 +44,14 @@
                                               (apply String# (string "end")))))))))
                            (fn
                               ((clause
-                                  ()
+                                  (#With.$__11)
                                   (seq
                                      (do
                                         (apply
                                            twice
                                            (fn
                                               ((clause
-                                                  ()
+                                                  (#With.$__10)
                                                   (seq
                                                      (do
                                                         (apply
@@ -62,18 +62,16 @@
                                                                  (string "foo")))
                                                            (fn
                                                               ((clause
-                                                                  (#With.x_xxx)
+                                                                  (#With.x_9)
                                                                   (seq
                                                                      (do
                                                                         (apply
                                                                            printString
-                                                                           #With.x_xxx)))))))))))))))))))))))))))
+                                                                           #With.x_9)))))))))))))))))))))))))))
       ((sig
           finally
-          (->
-             (-> #With.a_xxx #With.r_xxx)
-             (-> (-> (tuple) #With.a_xxx) #With.r_xxx)))
-         (sig twice (-> (-> (tuple) #With.a_xxx) #With.a_xxx)))
+          (-> (-> #With.a_0 #With.r_1) (-> (-> (tuple) #With.a_0) #With.r_1)))
+         (sig twice (-> (-> (tuple) #With.a_5) #With.a_5)))
       ()
       ()
       ()

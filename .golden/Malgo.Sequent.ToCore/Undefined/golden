@@ -1,42 +1,42 @@
 ((g
-    $Undefined.return_xxx
+    $Undefined.return_6
     (cut
        (lambda
-          ($Undefined.param_xxx $Undefined.return_xxx)
+          ($Undefined.param_4 $Undefined.return_7)
           (cut
-             $Undefined.param_xxx
-             (select (#Undefined.x_xxx (invoke undefined $Undefined.return_xxx)))))
-       $Undefined.return_xxx))
+             $Undefined.param_4
+             (select (#Undefined.x_0 (invoke undefined $Undefined.return_7)))))
+       $Undefined.return_6))
    (main
-      $Undefined.return_xxx
+      $Undefined.return_8
       (cut
          (lambda
-            ($Undefined.param_xxx $Undefined.return_xxx)
+            ($Undefined.param_5 $Undefined.return_9)
             (cut
-               $Undefined.param_xxx
+               $Undefined.param_5
                (select
-                  (#Undefined.$__xxx
+                  (#Undefined.$__3
                      (invoke
                         undefined
                         (then
-                           #Undefined.x_xxx
+                           #Undefined.x_1
                            (invoke
                               g
                               (apply
-                                 (#Undefined.x_xxx)
+                                 (#Undefined.x_1)
                                  ((then
-                                     #Undefined.y_xxx
+                                     #Undefined.y_2
                                      (invoke
                                         printString
                                         (apply
                                            ((do
-                                               $Undefined.return_xxx
+                                               $Undefined.return_10
                                                (invoke
                                                   String#
                                                   (apply
                                                      ("OK")
-                                                     ($Undefined.return_xxx)))))
-                                           ($Undefined.return_xxx)))))))))))))
-         $Undefined.return_xxx))
-   (f $Undefined.return_xxx (invoke undefined $Undefined.return_xxx))
+                                                     ($Undefined.return_10)))))
+                                           ($Undefined.return_9)))))))))))))
+         $Undefined.return_8))
+   (f $Undefined.return_11 (invoke undefined $Undefined.return_11))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

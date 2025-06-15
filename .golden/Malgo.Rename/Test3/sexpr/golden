@@ -4,13 +4,13 @@
          |>
          (fn
             ((clause
-                (#Test3.x_xxx #Test3.f_xxx)
-                (seq (do (apply #Test3.f_xxx #Test3.x_xxx))))))))
+                (#Test3.x_3 #Test3.f_4)
+                (seq (do (apply #Test3.f_4 #Test3.x_3))))))))
        ((def
            main
            (fn
               ((clause
-                  ()
+                  (#Test3.$__6)
                   (seq
                      (do
                         (opapp
@@ -27,18 +27,18 @@
                                   (seq
                                      (do (apply malgo_print_string (string "OK")))))
                                  (clause
-                                    (#Test3.__xxx)
+                                    (#Test3.__5)
                                     (seq
                                        (do
                                           (apply
                                              malgo_print_string
                                              (string "WRONG"))))))))))))))))
-      ((sig |> (-> #Test3.a_xxx (-> (-> #Test3.a_xxx #Test3.b_xxx) #Test3.b_xxx))))
+      ((sig |> (-> #Test3.a_1 (-> (-> #Test3.a_1 #Test3.b_2) #Test3.b_2))))
       ((data Tag () ((A ()) (B ())))
          (data
             List
-            (#Test3.a_xxx)
-            ((Nil ()) (Cons (#Test3.a_xxx (app List (#Test3.a_xxx)))))))
+            (#Test3.a_0)
+            ((Nil ()) (Cons (#Test3.a_0 (app List (#Test3.a_0)))))))
       ()
       ((foreign malgo_print_string (-> String# (tuple))))
       ()))

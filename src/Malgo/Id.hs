@@ -61,8 +61,8 @@ instance Pretty Id where
 
 instance S.ToSExpr Id where
   toSExpr Id {name, sort = External} = S.A $ S.Symbol name
-  toSExpr Id {name, moduleName, sort = Internal _uniq} = S.A $ S.Symbol $ "#" <> moduleNameDigest moduleName <> "." <> name <> "_" <> "xxx"
-  toSExpr Id {name, moduleName, sort = Temporal _uniq} = S.A $ S.Symbol $ "$" <> moduleNameDigest moduleName <> "." <> name <> "_" <> "xxx"
+  toSExpr Id {name, moduleName, sort = Internal uniq} = S.A $ S.Symbol $ "#" <> moduleNameDigest moduleName <> "." <> name <> "_" <> convertString (show uniq)
+  toSExpr Id {name, moduleName, sort = Temporal uniq} = S.A $ S.Symbol $ "$" <> moduleNameDigest moduleName <> "." <> name <> "_" <> convertString (show uniq)
 
 makeStore ''Id
 

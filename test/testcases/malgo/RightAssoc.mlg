@@ -32,7 +32,7 @@ def f = { n ->
 }
 
 def main : { () }
-def main = { 
+def main = {
   let x = f 4;
   printString "OK"
 }

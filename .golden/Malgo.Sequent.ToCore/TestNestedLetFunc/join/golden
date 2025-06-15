@@ -1,64 +1,64 @@
 ((main
-    $TestNestedLetFunc.return_xxx
+    $TestNestedLetFunc.return_9
     (cut
        (lambda
-          ($TestNestedLetFunc.param_xxx $TestNestedLetFunc.return_xxx)
+          ($TestNestedLetFunc.param_5 $TestNestedLetFunc.return_10)
           (join
-             $TestNestedLetFunc.select_xxx
+             $TestNestedLetFunc.select_20
              (select
-                (#TestNestedLetFunc.$__xxx
+                (#TestNestedLetFunc.$__4
                    (join
-                      $TestNestedLetFunc.then_xxx
+                      $TestNestedLetFunc.then_19
                       (then
-                         #TestNestedLetFunc.f_xxx
+                         #TestNestedLetFunc.f_3
                          (join
-                            $TestNestedLetFunc.apply_xxx
-                            (apply ("PASS") ($TestNestedLetFunc.return_xxx))
+                            $TestNestedLetFunc.apply_18
+                            (apply ("PASS") ($TestNestedLetFunc.return_10))
                             (invoke
                                malgo_print_string
-                               $TestNestedLetFunc.apply_xxx)))
+                               $TestNestedLetFunc.apply_18)))
                       (cut
                          (lambda
-                            ($TestNestedLetFunc.param_xxx
-                               $TestNestedLetFunc.return_xxx)
+                            ($TestNestedLetFunc.param_6
+                               $TestNestedLetFunc.return_11)
                             (join
-                               $TestNestedLetFunc.select_xxx
+                               $TestNestedLetFunc.select_17
                                (select
-                                  (#TestNestedLetFunc.$__xxx
+                                  (#TestNestedLetFunc.$__2
                                      (join
-                                        $TestNestedLetFunc.apply_xxx
+                                        $TestNestedLetFunc.apply_16
                                         (apply
                                            ((construct tuple () ()))
-                                           ($TestNestedLetFunc.return_xxx))
+                                           ($TestNestedLetFunc.return_11))
                                         (cut
                                            (lambda
-                                              ($TestNestedLetFunc.param_xxx
-                                                 $TestNestedLetFunc.return_xxx)
+                                              ($TestNestedLetFunc.param_7
+                                                 $TestNestedLetFunc.return_12)
                                               (join
-                                                 $TestNestedLetFunc.select_xxx
+                                                 $TestNestedLetFunc.select_15
                                                  (select
-                                                    (#TestNestedLetFunc.a_xxx
+                                                    (#TestNestedLetFunc.a_0
                                                        (cut
                                                           (construct tuple () ())
-                                                          $TestNestedLetFunc.return_xxx)))
+                                                          $TestNestedLetFunc.return_12)))
                                                  (cut
-                                                    $TestNestedLetFunc.param_xxx
-                                                    $TestNestedLetFunc.select_xxx)))
-                                           $TestNestedLetFunc.apply_xxx))))
+                                                    $TestNestedLetFunc.param_7
+                                                    $TestNestedLetFunc.select_15)))
+                                           $TestNestedLetFunc.apply_16))))
                                (cut
-                                  $TestNestedLetFunc.param_xxx
-                                  $TestNestedLetFunc.select_xxx)))
-                         $TestNestedLetFunc.then_xxx))))
-             (cut $TestNestedLetFunc.param_xxx $TestNestedLetFunc.select_xxx)))
-       $TestNestedLetFunc.return_xxx))
+                                  $TestNestedLetFunc.param_6
+                                  $TestNestedLetFunc.select_17)))
+                         $TestNestedLetFunc.then_19))))
+             (cut $TestNestedLetFunc.param_5 $TestNestedLetFunc.select_20)))
+       $TestNestedLetFunc.return_9))
    (malgo_print_string
-      $TestNestedLetFunc.return_xxx
+      $TestNestedLetFunc.return_13
       (cut
          (lambda
-            ($TestNestedLetFunc.primitive_xxx $TestNestedLetFunc.return_xxx)
+            ($TestNestedLetFunc.primitive_8 $TestNestedLetFunc.return_14)
             (prim
                malgo_print_string
-               ($TestNestedLetFunc.primitive_xxx)
-               $TestNestedLetFunc.return_xxx))
-         $TestNestedLetFunc.return_xxx))
+               ($TestNestedLetFunc.primitive_8)
+               $TestNestedLetFunc.return_14))
+         $TestNestedLetFunc.return_13))
    ())

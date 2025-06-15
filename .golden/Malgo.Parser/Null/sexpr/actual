@@ -8,13 +8,13 @@
          isNothing
          (fn
             ((clause (Nothing) (seq (do True)))
-               (clause (Just _) (seq (do False))))))
+               (clause ((con Just (_))) (seq (do False))))))
       (sig mHead (-> (app List (a)) (app Maybe (a))))
       (def
          mHead
          (fn
             ((clause (Nil) (seq (do Nothing)))
-               (clause (Cons p _) (seq (do (apply Just p)))))))
+               (clause ((con Cons (p _))) (seq (do (apply Just p)))))))
       (sig null (-> (app List (a)) Bool))
       (def
          null

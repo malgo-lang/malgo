@@ -1,22 +1,22 @@
 ((main
-    $TestExplicitModule.return_xxx
+    $TestExplicitModule.return_2
     (cut
        (lambda
-          ($TestExplicitModule.param_xxx $TestExplicitModule.return_xxx)
+          ($TestExplicitModule.param_1 $TestExplicitModule.return_3)
           (cut
-             $TestExplicitModule.param_xxx
+             $TestExplicitModule.param_1
              (select
-                (#TestExplicitModule.$__xxx
+                (#TestExplicitModule.$__0
                    (invoke
                       putStrLn
                       (apply
                          ((do
-                             $TestExplicitModule.return_xxx
+                             $TestExplicitModule.return_4
                              (invoke
                                 String#
                                 (apply
                                    ("Hello, world")
-                                   ($TestExplicitModule.return_xxx)))))
-                         ($TestExplicitModule.return_xxx)))))))
-       $TestExplicitModule.return_xxx))
+                                   ($TestExplicitModule.return_4)))))
+                         ($TestExplicitModule.return_3)))))))
+       $TestExplicitModule.return_2))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

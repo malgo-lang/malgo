@@ -166,6 +166,10 @@ rnExpr (Project pos (Var _ name) field) = do
     then Var pos <$> lookupQualifiedVarName pos (ModuleName name) field
     else Project pos <$> rnExpr (Var pos name) <*> pure field
 rnExpr (Project pos expr field) = Project pos <$> rnExpr expr <*> pure field
+rnExpr (Fn pos (Clause x [] e :| _)) = do
+  e' <- rnExpr e
+  hole <- newInternalId "$_"
+  pure $ Fn pos (Clause x [VarP x hole] e' :| [])
 rnExpr (Fn pos cs) = Fn pos <$> traverse rnClause cs
 rnExpr (Tuple pos es) = Tuple pos <$> traverse rnExpr es
 rnExpr (Record pos kvs) =

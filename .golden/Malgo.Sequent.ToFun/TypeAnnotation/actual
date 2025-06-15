@@ -1,17 +1,17 @@
 (program
    ((main
        (lambda
-          ($TypeAnnotation.param_xxx)
+          ($TypeAnnotation.param_2)
           (select
-             $TypeAnnotation.param_xxx
-             ((#TypeAnnotation.$__xxx
+             $TypeAnnotation.param_2
+             ((#TypeAnnotation.$__1
                  (apply
                     (invoke printString)
                     ((apply
                         (lambda
-                           ($TypeAnnotation.param_xxx)
+                           ($TypeAnnotation.param_3)
                            (select
-                              $TypeAnnotation.param_xxx
-                              ((#TypeAnnotation.x_xxx #TypeAnnotation.x_xxx))))
+                              $TypeAnnotation.param_3
+                              ((#TypeAnnotation.x_0 #TypeAnnotation.x_0))))
                         ((apply (invoke String#) ("hoge"))))))))))))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

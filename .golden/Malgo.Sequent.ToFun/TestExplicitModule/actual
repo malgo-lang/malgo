@@ -1,10 +1,10 @@
 (program
    ((main
        (lambda
-          ($TestExplicitModule.param_xxx)
+          ($TestExplicitModule.param_1)
           (select
-             $TestExplicitModule.param_xxx
-             ((#TestExplicitModule.$__xxx
+             $TestExplicitModule.param_1
+             ((#TestExplicitModule.$__0
                  (apply
                     (invoke putStrLn)
                     ((apply (invoke String#) ("Hello, world"))))))))))

@@ -4,35 +4,32 @@
          first
          (fn
             ((clause
-                ((record
-                    (fst #TestPolySynonym.x_xxx)
-                    (snd #TestPolySynonym.__xxx)))
-                (seq (do #TestPolySynonym.x_xxx)))))))
+                ((record (fst #TestPolySynonym.x_5) (snd #TestPolySynonym.__6)))
+                (seq (do #TestPolySynonym.x_5)))))))
        ((def
            main
            (fn
               ((clause
-                  ()
+                  (#TestPolySynonym.$__8)
                   (seq
                      (let
-                        #TestPolySynonym.x_xxx
+                        #TestPolySynonym.x_7
                         (record
                            (fst (apply Int32# (int32 1)))
                            (snd (apply String# (string "hoge")))))
-                     (do
-                        (opapp |> (apply first #TestPolySynonym.x_xxx) printInt32)))))))))
+                     (do (opapp |> (apply first #TestPolySynonym.x_7) printInt32)))))))))
       ((sig
           first
           (->
-             (record (fst #TestPolySynonym.a_xxx) (snd #TestPolySynonym.b_xxx))
-             #TestPolySynonym.a_xxx))
+             (record (fst #TestPolySynonym.a_3) (snd #TestPolySynonym.b_4))
+             #TestPolySynonym.a_3))
          (sig main (app Fun0 ((tuple)))))
       ()
-      ((type Fun0 (#TestPolySynonym.a_xxx) (-> (tuple) #TestPolySynonym.a_xxx))
+      ((type Fun0 (#TestPolySynonym.a_0) (-> (tuple) #TestPolySynonym.a_0))
          (type
             Pair
-            (#TestPolySynonym.a_xxx #TestPolySynonym.b_xxx)
-            (record (fst #TestPolySynonym.b_xxx) (snd #TestPolySynonym.a_xxx))))
+            (#TestPolySynonym.a_1 #TestPolySynonym.b_2)
+            (record (fst #TestPolySynonym.b_2) (snd #TestPolySynonym.a_1))))
       ()
       ((import "runtime/malgo/Builtin.mlg" all)
          (import "runtime/malgo/Prelude.mlg" all))))

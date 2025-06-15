@@ -10,7 +10,7 @@ def string# : String# -> String
 def string# = { x -> String# x }
 
 def putStr : String -> ()
-def putStr = { String# x -> malgo_print_string x }
+def putStr = { (String# x) -> malgo_print_string x }
 
 foreign import malgo_int32_t_to_string : Int32# -> String#
 
@@ -28,4 +28,4 @@ def wrap = {
   }
 }
 
-def main = { putStr (show (wrap { Int32# x -> String# (malgo_int32_t_to_string x) }) 1) }
+def main = { putStr (show (wrap { (Int32# x) -> String# (malgo_int32_t_to_string x) }) 1) }

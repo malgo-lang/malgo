@@ -2047,12 +2047,12 @@ Module
                 { _start = SourcePos
                  { sourceName = "./test/testcases/malgo/Factorial.mlg"
                  , sourceLine = Pos 15
-                 , sourceColumn = Pos 39
+                 , sourceColumn = Pos 41
                  }
                 , _end = SourcePos
                  { sourceName = "./test/testcases/malgo/Factorial.mlg"
                  , sourceLine = Pos 15
-                 , sourceColumn = Pos 47
+                 , sourceColumn = Pos 45
                  }
                 }
                }
@@ -2061,7 +2061,7 @@ Module
                { name = "$_"
                , moduleName = Artifact
                 ( ArtifactPath "test/testcases/malgo/Factorial.mlg" )
-               , sort = Internal 57
+               , sort = Internal 9
                }
               )
              ]
@@ -2201,12 +2201,12 @@ Module
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/Factorial.mlg"
                 , sourceLine = Pos 15
-                , sourceColumn = Pos 47
+                , sourceColumn = Pos 49
                 }
                , _end = SourcePos
                 { sourceName = "./test/testcases/malgo/Factorial.mlg"
                 , sourceLine = Pos 15
-                , sourceColumn = Pos 78
+                , sourceColumn = Pos 76
                 }
                }
               }
@@ -2215,7 +2215,7 @@ Module
               { name = "$_"
               , moduleName = Artifact
                ( ArtifactPath "test/testcases/malgo/Factorial.mlg" )
-              , sort = Internal 70
+              , sort = Internal 10
               }
              )
             ]
@@ -3281,7 +3281,15 @@ Module
     [
      ( Typed
       { annotated = TyArr
-       ( TyTuple 0 )
+       ( TyVar
+        ( Id
+         { name = "t"
+         , moduleName = Artifact
+          ( ArtifactPath "test/testcases/malgo/Factorial.mlg" )
+         , sort = Internal 87
+         }
+        )
+       )
        ( TyTuple 0 )
       , value = Range
        { _start = SourcePos
@@ -3305,7 +3313,15 @@ Module
      , Fn
       ( Typed
        { annotated = TyArr
-        ( TyTuple 0 )
+        ( TyVar
+         ( Id
+          { name = "t"
+          , moduleName = Artifact
+           ( ArtifactPath "test/testcases/malgo/Factorial.mlg" )
+          , sort = Internal 87
+          }
+         )
+        )
         ( TyTuple 0 )
        , value = Range
         { _start = SourcePos
@@ -3324,7 +3340,15 @@ Module
       ( Clause
        ( Typed
         { annotated = TyArr
-         ( TyTuple 0 )
+         ( TyVar
+          ( Id
+           { name = "t"
+           , moduleName = Artifact
+            ( ArtifactPath "test/testcases/malgo/Factorial.mlg" )
+           , sort = Internal 87
+           }
+          )
+         )
          ( TyTuple 0 )
         , value = Range
          { _start = SourcePos
@@ -3342,16 +3366,23 @@ Module
        )
        [ VarP
         ( Typed
-         { annotated = TyTuple 0
+         { annotated = TyVar
+          ( Id
+           { name = "t"
+           , moduleName = Artifact
+            ( ArtifactPath "test/testcases/malgo/Factorial.mlg" )
+           , sort = Internal 87
+           }
+          )
          , value = Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/Factorial.mlg"
-           , sourceLine = Pos 17
-           , sourceColumn = Pos 12
+           , sourceLine = Pos 18
+           , sourceColumn = Pos 3
            }
           , _end = SourcePos
            { sourceName = "./test/testcases/malgo/Factorial.mlg"
-           , sourceLine = Pos 20
+           , sourceLine = Pos 19
            , sourceColumn = Pos 1
            }
           }
@@ -3361,7 +3392,7 @@ Module
          { name = "$_"
          , moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/Factorial.mlg" )
-         , sort = Internal 97
+         , sort = Internal 11
          }
         )
        ]

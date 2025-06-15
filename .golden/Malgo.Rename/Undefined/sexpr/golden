@@ -1,14 +1,14 @@
 (module
    "test/testcases/malgo/Undefined.mlg"
-   ((((def g (fn ((clause (#Undefined.x_xxx) (seq (do undefined)))))))
+   ((((def g (fn ((clause (#Undefined.x_0) (seq (do undefined)))))))
        ((def
            main
            (fn
               ((clause
-                  ()
+                  (#Undefined.$__3)
                   (seq
-                     (let #Undefined.x_xxx undefined)
-                     (let #Undefined.y_xxx (apply g #Undefined.x_xxx))
+                     (let #Undefined.x_1 undefined)
+                     (let #Undefined.y_2 (apply g #Undefined.x_1))
                      (do (apply printString (apply String# (string "OK"))))))))))
        ((def f undefined)))
       ((sig f (-> Int32 Int32)) (sig g (-> Int32 Int32)))

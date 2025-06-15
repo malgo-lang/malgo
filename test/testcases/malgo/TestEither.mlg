@@ -10,7 +10,7 @@ def andThen =
     f (Right x) -> f x }
 
 def main = {
-  Right 1 |> { Right x -> putStr (toStringInt32 x), _ -> putStrLn "unreachable" };
+  Right 1 |> { (Right x) -> putStr (toStringInt32 x), _ -> putStrLn "unreachable" };
 
   let x = Right 1;
 
@@ -19,6 +19,6 @@ def main = {
 
   x |> andThen { _ -> Left "error" }
     |> andThen { x -> Right (addInt32 x 1) }
-    |> { Left err -> putStrLn err,
-         Right x -> x |> toStringInt32 |> putStrLn } 
+    |> { (Left err) -> putStrLn err,
+         (Right x) -> x |> toStringInt32 |> putStrLn }
 }
