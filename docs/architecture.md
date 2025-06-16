@@ -15,7 +15,7 @@ Malgo’s source tree is organized by compiler phases and core abstractions:
 - **Refinement**:
   - `Malgo.Refine.Pass`, `Malgo.Refine.RefineEnv`: Cleans up and statically annotates the AST.
 - **Intermediate Representations (IRs)**:
-  - `Malgo.Sequent.Fun`, `Malgo.Sequent.Core`, `Malgo.Sequent.Core.Flat`, `Malgo.Sequent.Core.Join`: Multiple IRs for lowering, optimization, and codegen.
+  - `Malgo.Sequent.Fun`, `Malgo.Sequent.Core.Full`, `Malgo.Sequent.Core.Flat`, `Malgo.Sequent.Core.Join`: Multiple IRs for lowering, optimization, and codegen.
 - **Evaluation**:
   - `Malgo.Sequent.Eval`: Interpreter for the final IR.
 - **Driver**:
@@ -68,19 +68,19 @@ EvalPass (Interpreter)
 5. **IR Lowering**:
 
    - **ToFunPass**: Lowers refined AST to a functional IR (`Sequent.Fun.Program`).
-   - **ToCorePass**: Converts Fun IR to a sequent-style Core IR (`Sequent.Core.Program Full`).
-   - **FlatPass**: Flattens Core IR, removing nested computations (`Program Flat`).
-   - **JoinPass**: Normalizes control flow, producing the final IR (`Program Join`).
+   - **ToCorePass**: Converts Fun IR to a sequent-style Core IR (`Sequent.Core.Full.Program`).
+   - **FlatPass**: Flattens Core IR, removing nested computations (`Sequent.Core.Flat.Program`).
+   - **JoinPass**: Normalizes control flow, producing the final IR (`Sequent.Core.Join.Program`).
 
 6. **Evaluation** (`EvalPass`):
-   - Interprets the final Join IR.
+   - Interprets the final Join IR (`Sequent.Core.Join.Program`).
 
 ### IRs in Detail
 
 | IR Stage       | Defined In             | Purpose / Abstraction                | Structure-Preserving? | Phase Role            |
 | -------------- | ---------------------- | ------------------------------------ | --------------------- | --------------------- |
 | Fun IR         | `Sequent/Fun.hs`       | Functional, simple, close to AST     | Mostly                | Initial lowering      |
-| Core IR (Full) | `Sequent/Core.hs`      | Sequent calculus, explicit control   | Partially             | Pre-optimization      |
+| Core IR (Full) | `Sequent/Core/Full.hs` | Sequent calculus, explicit control   | Partially             | Pre-optimization      |
 | Flat IR        | `Sequent/Core/Flat.hs` | No nested computations, flat control | Lossy (flattens)      | Simplifies codegen    |
 | Join IR        | `Sequent/Core/Join.hs` | Normalized, explicit join points     | Lossy                 | Final, for evaluation |
 
@@ -91,10 +91,6 @@ EvalPass (Interpreter)
 
 ## 📦 Intermediate Representation Design
 
-- **Phase-Indexed Types**:
-  - AST and IRs are parameterized by phase (e.g., `MalgoPhase`), using type families for extensibility.
-- **GADTs & DataKinds**:
-  - IRs use GADTs (e.g., `Producer (x :: Rank)`) and DataKinds (`Rank = Join | Flat | Full`) to encode invariants.
 - **Type Annotations**:
   - Typed ASTs and IRs carry type information, especially after inference.
 - **Functional & Effect Modeling**:
@@ -106,13 +102,19 @@ EvalPass (Interpreter)
 - **Variable Binding**:
   - Named binders (`Id`, `Name`), not De Bruijn indices.
 
-**Example: IR GADT (simplified)**
+**Example: IR Definition (simplified)**
 
 ```haskell
-data Producer (x :: Rank) where
-  Var      :: Range -> Name -> Producer x
-  Literal  :: Range -> Literal -> Producer x
-  Lambda   :: Range -> [Name] -> Statement x -> Producer x
+-- From Malgo.Sequent.Core.Join
+data Producer where
+  Var      :: Range -> Name -> Producer
+  Literal  :: Range -> Literal -> Producer
+  Lambda   :: Range -> [Name] -> Statement -> Producer
+  -- ...
+
+data Statement where
+  Cut :: Producer -> Name -> Statement
+  Join :: Range -> Name -> Consumer -> Statement -> Statement
   -- ...
 ```
 
@@ -124,7 +126,7 @@ data Producer (x :: Rank) where
   - Statically typed, functional language with first-class functions, pattern matching, and algebraic data types.
 - **Evaluation**:
   - IR-based, not direct AST-walking.
-  - Big-step semantics over the Join IR (`Sequent.Core.Program Join`).
+  - Big-step semantics over the Join IR (`Sequent.Core.Join.Program`).
   - Tail-call optimization and closures are supported.
 - **Interpreter**:
   - `Malgo.Sequent.Eval` implements the interpreter, using an explicit environment and handler abstraction.

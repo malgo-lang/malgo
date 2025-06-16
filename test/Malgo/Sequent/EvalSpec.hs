@@ -12,9 +12,8 @@ import Malgo.Pass (runCompileError, runPass)
 import Malgo.Prelude
 import Malgo.Rename
 import Malgo.Rename.RnEnv qualified as RnEnv
-import Malgo.Sequent.Core
 import Malgo.Sequent.Core.Flat (flatProgram)
-import Malgo.Sequent.Core.Join (joinProgram)
+import Malgo.Sequent.Core.Join
 import Malgo.Sequent.Eval (EvalError, Handlers (..), evalProgram)
 import Malgo.Sequent.ToCore (toCore)
 import Malgo.Sequent.ToFun (toFun)
@@ -94,7 +93,7 @@ driveEval builtinName preludeName srcPath = do
       Right _ -> do
         readIORef stdoutBuilder
 
-saveCore :: (Workspace :> es, IOE :> es) => ModuleName -> Program Join -> Eff es ()
+saveCore :: (Workspace :> es, IOE :> es) => ModuleName -> Program -> Eff es ()
 saveCore moduleName program = do
   modulePath <- getModulePath moduleName
   save modulePath ".sqt" program

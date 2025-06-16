@@ -16,28 +16,28 @@ import Malgo.Module (ModuleName)
 import Malgo.Pass
 import Malgo.Prelude hiding (getContents)
 import Malgo.SExpr (sShow)
-import Malgo.Sequent.Core
+import Malgo.Sequent.Core.Join
 import Malgo.Sequent.Fun (Literal (..), Name, Pattern (..), Tag (..))
 
 data EvalPass = EvalPass
 
 instance Pass EvalPass where
-  type Input EvalPass = (ModuleName, Handlers, Program Join)
+  type Input EvalPass = (ModuleName, Handlers, Program)
   type Output EvalPass = ()
   type ErrorType EvalPass = EvalError
   type Effects EvalPass es = (State Uniq :> es, IOE :> es)
 
   runPassImpl _ (moduleName, handlers, program) = runReader moduleName $ runReader handlers $ evalProgram program
 
-fromConsumer :: Env -> Consumer Join -> Value
+fromConsumer :: Env -> Consumer -> Value
 fromConsumer env consumer = Consumer $ \value -> do
   local (const env) $ evalConsumer consumer value
 
 data Value where
   Immediate :: Literal -> Value
   Struct :: Tag -> [Value] -> Value
-  Function :: Env -> [Name] -> Statement Join -> Value
-  Record :: Env -> Map Text (Name, Statement Join) -> Value
+  Function :: Env -> [Name] -> Statement -> Value
+  Record :: Env -> Map Text (Name, Statement) -> Value
   Consumer ::
     ( forall es.
       ( Error EvalError :> es,
@@ -88,7 +88,7 @@ instance Show EvalError where
   show (PrimitiveNotImplemented range name values) = show $ pretty range <> ": Primitive " <> pretty name <> " is not implemented for " <> pretty values
   show (InvalidArguments range name values) = show $ pretty range <> ": Invalid arguments for " <> pretty name <> ": " <> pretty values
 
-type Toplevels = Map Name (Name, Statement Join)
+type Toplevels = Map Name (Name, Statement)
 
 data Handlers = Handlers
   { stdin :: IO (Maybe Char),
@@ -127,14 +127,14 @@ jump range name value = do
     Consumer repr -> repr value
     _ -> throwError $ ExpectConsumer range value
 
-lookupToplevel :: (Reader Toplevels :> es, Error EvalError :> es) => Range -> Name -> Eff es (Name, Statement Join)
+lookupToplevel :: (Reader Toplevels :> es, Error EvalError :> es) => Range -> Name -> Eff es (Name, Statement)
 lookupToplevel range name = do
   toplevels <- ask @Toplevels
   case Map.lookup name toplevels of
     Just value -> pure value
     Nothing -> throwError (UndefinedVariable range name)
 
-evalProgram :: (Error EvalError :> es, State Uniq :> es, Reader ModuleName :> es, Reader Handlers :> es, IOE :> es) => Program Join -> Eff es ()
+evalProgram :: (Error EvalError :> es, State Uniq :> es, Reader ModuleName :> es, Reader Handlers :> es, IOE :> es) => Program -> Eff es ()
 evalProgram (Program {definitions}) = do
   let toplevels = Map.fromList [(name, (return, statement)) | (_, name, return, statement) <- definitions]
   case Map.keys toplevels & find (\name -> name.name == "main") of
@@ -152,7 +152,7 @@ evalProgram (Program {definitions}) = do
               statement
     Nothing -> pure () -- No main function
 
-evalStatement :: (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es, Reader Handlers :> es, IOE :> es) => Statement Join -> Eff es ()
+evalStatement :: (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es, Reader Handlers :> es, IOE :> es) => Statement -> Eff es ()
 evalStatement (Cut producer consumer) = do
   value <- evalProducer producer
   jump (range producer) consumer value
@@ -171,7 +171,7 @@ evalStatement (Invoke range name consumer) = do
   local (extendEnv return covalue) do
     evalStatement statement
 
-evalProducer :: (Error EvalError :> es, Reader Env :> es) => Producer Join -> Eff es Value
+evalProducer :: (Error EvalError :> es, Reader Env :> es) => Producer -> Eff es Value
 evalProducer (Var range name) = lookupEnv range name
 evalProducer (Literal _ literal) = pure $ Immediate literal
 evalProducer (Construct range tag producers consumers) = do
@@ -185,7 +185,7 @@ evalProducer (Object _ fields) = do
   env <- ask @Env
   pure $ Record env fields
 
-evalConsumer :: (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es, Reader Handlers :> es, IOE :> es) => Consumer Join -> Value -> Eff es ()
+evalConsumer :: (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es, Reader Handlers :> es, IOE :> es) => Consumer -> Value -> Eff es ()
 evalConsumer (Label range label) given = do
   covalue <- lookupEnv range label
   case covalue of
