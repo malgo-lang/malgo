@@ -32,9 +32,9 @@ Malgo’s source tree is organized by compiler phases and core abstractions:
 ```
 source file
    ↓
-ParserPass → RenamePass → InferPass → RefinePass
-   ↓           ↓             ↓           ↓
- AST    →  Renamed AST  → Typed AST → Refined AST
+ParserPass → RenamePass → [InferPass] → [RefinePass]
+   ↓           ↓             ↓             ↓
+ AST    →  Renamed AST  → [Typed AST] → [Refined AST]
    ↓
 ToFunPass → ToCorePass → FlatPass → JoinPass
    ↓           ↓           ↓         ↓
@@ -42,6 +42,8 @@ ToFunPass → ToCorePass → FlatPass → JoinPass
    ↓
 EvalPass (Interpreter)
 ```
+
+**Note**: InferPass and RefinePass (shown in brackets) can be skipped for evaluation purposes. The ToFunPass can operate directly on the renamed AST, allowing for faster compilation when type checking is not required.
 
 ---
 
@@ -57,23 +59,54 @@ EvalPass (Interpreter)
 
    - Resolves names, desugars, produces `Module (Malgo Rename)`.
 
-3. **Type Inference** (`InferPass`):
+3. **Type Inference** (`InferPass`) - _Optional for evaluation_:
 
    - Infers types/kinds, annotates AST, produces `Module (Malgo Infer)`.
+   - Can be skipped when type safety guarantees are not required for evaluation.
 
-4. **Refinement** (`RefinePass`):
+4. **Refinement** (`RefinePass`) - _Optional for evaluation_:
 
    - Cleans up AST, removes syntactic sugar, produces `Module (Malgo Refine)`.
+   - Can be skipped when evaluation can work directly with the renamed AST.
 
 5. **IR Lowering**:
 
-   - **ToFunPass**: Lowers refined AST to a functional IR (`Sequent.Fun.Program`).
+   - **ToFunPass**: Lowers AST to a functional IR (`Sequent.Fun.Program`). Can operate on either refined AST (after RefinePass) or directly on renamed AST (skipping InferPass and RefinePass).
    - **ToCorePass**: Converts Fun IR to a sequent-style Core IR (`Sequent.Core.Full.Program`).
    - **FlatPass**: Flattens Core IR, removing nested computations (`Sequent.Core.Flat.Program`).
    - **JoinPass**: Normalizes control flow, producing the final IR (`Sequent.Core.Join.Program`).
 
 6. **Evaluation** (`EvalPass`):
    - Interprets the final Join IR (`Sequent.Core.Join.Program`).
+
+### Optional Type Checking and Refinement
+
+The Malgo compiler supports two compilation modes:
+
+**Full Pipeline Mode** (with type checking):
+
+```
+Parse → Rename → Infer → Refine → ToFun → ToCore → Flat → Join → Eval
+```
+
+**Fast Evaluation Mode** (skipping type checking):
+
+```
+Parse → Rename → ToFun → ToCore → Flat → Join → Eval
+```
+
+**When to Skip Type Checking:**
+
+- **Rapid prototyping**: Quick evaluation without type safety guarantees
+- **Trusted code**: When the code is known to be type-correct
+- **Performance**: Faster compilation when type checking overhead is not desired
+- **Testing**: Evaluating intermediate representations directly
+
+**Implications of Skipping Type Checking:**
+
+- **No type safety**: Runtime errors may occur for type mismatches
+- **Faster compilation**: Eliminates type inference and constraint solving overhead
+- **Direct AST lowering**: ToFunPass operates directly on `Module (Malgo Rename)` instead of `Module (Malgo Refine)`
 
 ### IRs in Detail
 
