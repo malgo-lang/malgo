@@ -37,7 +37,11 @@ data Interface = Interface
     -- | Used in Rename
     infixInfo :: Map PsId (Assoc, Int),
     -- | Used in Rename
-    dependencies :: Set ModuleName
+    dependencies :: Set ModuleName,
+    -- | Used in Rename - List of exported identifiers collected from Rename pass
+    exportedIdentList :: [PsId],
+    -- | Used in Rename - List of exported type identifiers collected from Rename pass
+    exportedTypeIdentList :: [PsId]
   }
   deriving stock (Show, Generic)
 
@@ -55,7 +59,9 @@ buildInterface ::
     HasField "signatureMap" tcEnv (Map RnId (GT.Scheme GT.Type)),
     HasField "typeDefMap" tcEnv (Map RnId (GT.TypeDef GT.Type)),
     HasField "dependencies" rnState (Set ModuleName),
-    HasField "infixInfo" rnState (Map Id (Assoc, Int))
+    HasField "infixInfo" rnState (Map Id (Assoc, Int)),
+    HasField "exportedIdentifiers" rnState [PsId],
+    HasField "exportedTypeIdentifiers" rnState [PsId]
   ) =>
   ModuleName ->
   rnState ->
@@ -71,7 +77,9 @@ buildInterface moduleName rnState tcEnv kindCtx =
             typeSynonymMap = mempty,
             kindCtx = kindCtx,
             infixInfo = Map.mapKeys (\id -> id.name) rnState.infixInfo,
-            dependencies = rnState.dependencies
+            dependencies = rnState.dependencies,
+            exportedIdentList = rnState.exportedIdentifiers,
+            exportedTypeIdentList = rnState.exportedTypeIdentifiers
           }
    in runPureEff $ execState inf do
         ifor_ tcEnv.signatureMap $ \tcId scheme ->
@@ -91,17 +99,14 @@ buildInterface moduleName rnState tcEnv kindCtx =
             modify \inf@Interface {..} ->
               inf {kindCtx = insertKind tv kind kindCtx}
 
-exportedIdentList :: (HasField "signatureMap" r (Map k v)) => r -> [k]
-exportedIdentList inf = Map.keys inf.signatureMap
+exportedIdentList :: (HasField "exportedIdentList" r [k]) => r -> [k]
+exportedIdentList inf = inf.exportedIdentList
 
 exportedTypeIdentList ::
-  ( HasField "typeDefMap" inf (Map name a),
-    HasField "typeSynonymMap" inf (Map id b),
-    HasField "name" id name
-  ) =>
+  (HasField "exportedTypeIdentList" inf [k]) =>
   inf ->
-  [name]
-exportedTypeIdentList inf = Map.keys inf.typeDefMap <> map (\id -> id.name) (Map.keys inf.typeSynonymMap)
+  [k]
+exportedTypeIdentList inf = inf.exportedTypeIdentList
 
 loadInterface ::
   (HasCallStack) =>

@@ -12,20 +12,20 @@ def cons = { x xs -> {LCons x xs} }
 def map = { f xs -> {
   xs () |>
     { LNil -> LNil,
-      LCons x xs -> LCons (f x) (map f xs)
+      (LCons x xs) -> LCons (f x) (map f xs)
     }
   }
 }
 
 def sum = { xs ->
   xs () |> { LNil -> 0L,
-             LCons x xs -> addInt64 x (sum xs)
+             (LCons x xs) -> addInt64 x (sum xs)
            }
 }
 
 def main = {
   let xs = {LCons 1L {LCons 2L nil}};
-  sum (cons 1L (cons 2L nil)) 
+  sum (cons 1L (cons 2L nil))
     |> toStringInt64
     |> putStrLn
 }

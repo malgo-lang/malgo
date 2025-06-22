@@ -22,7 +22,7 @@ def map =
 def sum : List Int32 -> Int32
 def sum =
   { Nil -> 0,
-    Cons x xs -> x + sum xs
+    (Cons x xs) -> x + sum xs
   }
 
 -- [0 .. n]
