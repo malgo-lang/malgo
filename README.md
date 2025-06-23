@@ -1,5 +1,6 @@
 # malgo
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/malgo-lang/malgo)
 [![CI](https://github.com/malgo-lang/malgo/actions/workflows/build.yml/badge.svg)](https://github.com/malgo-lang/malgo/actions/workflows/build.yml)
 
 A statically typed functional programming language.
