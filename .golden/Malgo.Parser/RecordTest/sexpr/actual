@@ -6,7 +6,7 @@
       (data B () ((B (A))))
       (type C (a) (record (x a) (y a)))
       (def f (fn ((clause ((record (a a) (b _))) (seq (do a))))))
-      (def g (fn ((clause (B (record (a a) (b _))) (seq (do a))))))
+      (def g (fn ((clause ((con B ((record (a a) (b _))))) (seq (do a))))))
       (def
          main
          (fn

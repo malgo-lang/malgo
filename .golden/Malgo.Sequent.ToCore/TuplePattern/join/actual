@@ -1,104 +1,104 @@
 ((main
-    $TuplePattern.return_xxx
+    $TuplePattern.return_6
     (cut
        (lambda
-          ($TuplePattern.param_xxx $TuplePattern.return_xxx)
+          ($TuplePattern.param_4 $TuplePattern.return_7)
           (join
-             $TuplePattern.select_xxx
+             $TuplePattern.select_30
              (select
-                (#TuplePattern.$__xxx
+                (#TuplePattern.$__3
                    (join
-                      $TuplePattern.then_xxx
+                      $TuplePattern.then_29
                       (then
-                         $TuplePattern.outer_xxx
+                         $TuplePattern.outer_15
                          (join
-                            $TuplePattern.label_xxx
+                            $TuplePattern.label_19
                             (then
-                               $TuplePattern.inner_xxx
+                               $TuplePattern.inner_16
                                (join
-                                  $TuplePattern.apply_xxx
+                                  $TuplePattern.apply_27
                                   (apply
                                      ((lambda
-                                         ($TuplePattern.param_xxx
-                                            $TuplePattern.return_xxx)
+                                         ($TuplePattern.param_5
+                                            $TuplePattern.return_8)
                                          (join
-                                            $TuplePattern.select_xxx
+                                            $TuplePattern.select_26
                                             (select
                                                ((tuple
-                                                   ((A ()) #TuplePattern.rest_xxx))
+                                                   ((A ()) #TuplePattern.rest_0))
                                                   (join
-                                                     $TuplePattern.then_xxx
+                                                     $TuplePattern.then_25
                                                      (then
-                                                        $TuplePattern.outer_xxx
+                                                        $TuplePattern.outer_17
                                                         (join
-                                                           $TuplePattern.return_xxx
+                                                           $TuplePattern.return_9
                                                            (then
-                                                              $TuplePattern.inner_xxx
+                                                              $TuplePattern.inner_18
                                                               (join
-                                                                 $TuplePattern.apply_xxx
+                                                                 $TuplePattern.apply_24
                                                                  (apply
-                                                                    ($TuplePattern.inner_xxx)
-                                                                    ($TuplePattern.return_xxx))
+                                                                    ($TuplePattern.inner_18)
+                                                                    ($TuplePattern.return_8))
                                                                  (cut
-                                                                    $TuplePattern.outer_xxx
-                                                                    $TuplePattern.apply_xxx)))
+                                                                    $TuplePattern.outer_17
+                                                                    $TuplePattern.apply_24)))
                                                            (join
-                                                              $TuplePattern.apply_xxx
+                                                              $TuplePattern.apply_23
                                                               (apply
                                                                  ("A")
-                                                                 ($TuplePattern.return_xxx))
+                                                                 ($TuplePattern.return_9))
                                                               (invoke
                                                                  String#
-                                                                 $TuplePattern.apply_xxx))))
+                                                                 $TuplePattern.apply_23))))
                                                      (invoke
                                                         printString
-                                                        $TuplePattern.then_xxx)))
+                                                        $TuplePattern.then_25)))
                                                ((tuple
-                                                   ((B ()) #TuplePattern.rest_xxx))
+                                                   ((B ()) #TuplePattern.rest_1))
                                                   (cut
                                                      (construct tuple () ())
-                                                     $TuplePattern.return_xxx))
+                                                     $TuplePattern.return_8))
                                                ((tuple
-                                                   ((C ()) #TuplePattern.rest_xxx))
+                                                   ((C ()) #TuplePattern.rest_2))
                                                   (cut
                                                      (construct tuple () ())
-                                                     $TuplePattern.return_xxx)))
+                                                     $TuplePattern.return_8)))
                                             (cut
-                                               $TuplePattern.param_xxx
-                                               $TuplePattern.select_xxx))))
-                                     ($TuplePattern.return_xxx))
+                                               $TuplePattern.param_5
+                                               $TuplePattern.select_26))))
+                                     ($TuplePattern.return_7))
                                   (join
-                                     $TuplePattern.apply_xxx
+                                     $TuplePattern.apply_28
                                      (apply
-                                        ($TuplePattern.inner_xxx)
-                                        ($TuplePattern.apply_xxx))
+                                        ($TuplePattern.inner_16)
+                                        ($TuplePattern.apply_27))
                                      (cut
-                                        $TuplePattern.outer_xxx
-                                        $TuplePattern.apply_xxx))))
+                                        $TuplePattern.outer_15
+                                        $TuplePattern.apply_28))))
                             (join
-                               $TuplePattern.return_xxx
+                               $TuplePattern.return_10
                                (then
-                                  $TuplePattern.var_xxx
+                                  $TuplePattern.var_20
                                   (join
-                                     $TuplePattern.label_xxx
-                                     $TuplePattern.label_xxx
+                                     $TuplePattern.label_21
+                                     $TuplePattern.label_19
                                      (join
-                                        $TuplePattern.return_xxx
+                                        $TuplePattern.return_11
                                         (then
-                                           $TuplePattern.var_xxx
+                                           $TuplePattern.var_22
                                            (cut
                                               (construct
                                                  tuple
-                                                 ($TuplePattern.var_xxx
-                                                    $TuplePattern.var_xxx)
+                                                 ($TuplePattern.var_20
+                                                    $TuplePattern.var_22)
                                                  ())
-                                              $TuplePattern.label_xxx))
-                                        (invoke B $TuplePattern.return_xxx))))
-                               (invoke A $TuplePattern.return_xxx))))
-                      (invoke |> $TuplePattern.then_xxx))))
-             (cut $TuplePattern.param_xxx $TuplePattern.select_xxx)))
-       $TuplePattern.return_xxx))
-   (A $TuplePattern.return_xxx (cut (construct A () ()) $TuplePattern.return_xxx))
-   (B $TuplePattern.return_xxx (cut (construct B () ()) $TuplePattern.return_xxx))
-   (C $TuplePattern.return_xxx (cut (construct C () ()) $TuplePattern.return_xxx))
+                                              $TuplePattern.label_21))
+                                        (invoke B $TuplePattern.return_11))))
+                               (invoke A $TuplePattern.return_10))))
+                      (invoke |> $TuplePattern.then_29))))
+             (cut $TuplePattern.param_4 $TuplePattern.select_30)))
+       $TuplePattern.return_6))
+   (A $TuplePattern.return_12 (cut (construct A () ()) $TuplePattern.return_12))
+   (B $TuplePattern.return_13 (cut (construct B () ()) $TuplePattern.return_13))
+   (C $TuplePattern.return_14 (cut (construct C () ()) $TuplePattern.return_14))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

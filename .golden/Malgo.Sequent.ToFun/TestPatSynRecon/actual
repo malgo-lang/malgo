@@ -1,45 +1,42 @@
 (program
    ((+#
        (lambda
-          ($TestPatSynRecon.param_xxx)
+          ($TestPatSynRecon.param_7)
           (lambda
-             ($TestPatSynRecon.param_xxx)
+             ($TestPatSynRecon.param_8)
              (select
-                (tuple ($TestPatSynRecon.param_xxx $TestPatSynRecon.param_xxx))
-                (((tuple (#TestPatSynRecon.x_xxx #TestPatSynRecon.y_xxx))
+                (tuple ($TestPatSynRecon.param_7 $TestPatSynRecon.param_8))
+                (((tuple (#TestPatSynRecon.x_0 #TestPatSynRecon.y_1))
                     (apply
-                       (apply (invoke addInt64#) (#TestPatSynRecon.x_xxx))
-                       (#TestPatSynRecon.y_xxx))))))))
+                       (apply (invoke addInt64#) (#TestPatSynRecon.x_0))
+                       (#TestPatSynRecon.y_1))))))))
       (sum
          (lambda
-            ($TestPatSynRecon.param_xxx)
+            ($TestPatSynRecon.param_9)
             (select
-               $TestPatSynRecon.param_xxx
-               (((Cons
-                    ((Int64# (#TestPatSynRecon.x_xxx)) #TestPatSynRecon.xs_xxx))
+               $TestPatSynRecon.param_9
+               (((Cons ((Int64# (#TestPatSynRecon.x_2)) #TestPatSynRecon.xs_3))
                    (apply
                       (apply
                          (invoke |>)
-                         ((apply (invoke sum) (#TestPatSynRecon.xs_xxx))))
+                         ((apply (invoke sum) (#TestPatSynRecon.xs_3))))
                       ((lambda
-                          ($TestPatSynRecon.param_xxx)
+                          ($TestPatSynRecon.param_10)
                           (select
-                             $TestPatSynRecon.param_xxx
-                             (((Int64# (#TestPatSynRecon.s_xxx))
+                             $TestPatSynRecon.param_10
+                             (((Int64# (#TestPatSynRecon.s_4))
                                  (apply
                                     (invoke Int64#)
                                     ((apply
-                                        (apply
-                                           (invoke +#)
-                                           (#TestPatSynRecon.x_xxx))
-                                        (#TestPatSynRecon.s_xxx)))))))))))
+                                        (apply (invoke +#) (#TestPatSynRecon.x_2))
+                                        (#TestPatSynRecon.s_4)))))))))))
                   ((Nil ()) (apply (invoke Int64#) (0_i64)))))))
       (main
          (lambda
-            ($TestPatSynRecon.param_xxx)
+            ($TestPatSynRecon.param_11)
             (select
-               $TestPatSynRecon.param_xxx
-               ((#TestPatSynRecon.$__xxx
+               $TestPatSynRecon.param_11
+               ((#TestPatSynRecon.$__6
                    (apply
                       (apply
                          (invoke |>)
@@ -55,11 +52,11 @@
                                         ((apply (invoke Int64#) (2_i64))))
                                      ((invoke Nil)))))))))
                       ((lambda
-                          ($TestPatSynRecon.param_xxx)
+                          ($TestPatSynRecon.param_12)
                           (select
-                             $TestPatSynRecon.param_xxx
-                             ((#TestPatSynRecon.i_xxx
+                             $TestPatSynRecon.param_12
+                             ((#TestPatSynRecon.i_5
                                  (apply
                                     (invoke printInt64)
-                                    (#TestPatSynRecon.i_xxx))))))))))))))
+                                    (#TestPatSynRecon.i_5))))))))))))))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

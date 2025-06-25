@@ -2,22 +2,22 @@
    ((<|> (invoke Cons))
       (f
          (lambda
-            ($RightAssoc.param_xxx)
+            ($RightAssoc.param_14)
             (select
-               $RightAssoc.param_xxx
-               ((#RightAssoc.n_xxx
+               $RightAssoc.param_14
+               ((#RightAssoc.n_1
                    (let
-                      #RightAssoc.x_xxx
+                      #RightAssoc.x_6
                       (apply
                          (apply
                             (invoke <|>)
                             ((tuple
                                 ((invoke True)
                                    (lambda
-                                      ($RightAssoc.param_xxx)
+                                      ($RightAssoc.param_15)
                                       (select
-                                         $RightAssoc.param_xxx
-                                         ((#RightAssoc.$__xxx
+                                         $RightAssoc.param_15
+                                         ((#RightAssoc.$__2
                                              (apply (invoke Int32#) (1_i32))))))))))
                          ((apply
                              (apply
@@ -25,10 +25,10 @@
                                 ((tuple
                                     ((invoke True)
                                        (lambda
-                                          ($RightAssoc.param_xxx)
+                                          ($RightAssoc.param_16)
                                           (select
-                                             $RightAssoc.param_xxx
-                                             ((#RightAssoc.$__xxx
+                                             $RightAssoc.param_16
+                                             ((#RightAssoc.$__3
                                                  (apply (invoke Int32#) (2_i32))))))))))
                              ((apply
                                  (apply
@@ -36,10 +36,10 @@
                                     ((tuple
                                         ((invoke True)
                                            (lambda
-                                              ($RightAssoc.param_xxx)
+                                              ($RightAssoc.param_17)
                                               (select
-                                                 $RightAssoc.param_xxx
-                                                 ((#RightAssoc.$__xxx
+                                                 $RightAssoc.param_17
+                                                 ((#RightAssoc.$__4
                                                      (apply
                                                         (invoke Int32#)
                                                         (3_i32))))))))))
@@ -49,26 +49,26 @@
                                         ((tuple
                                             ((invoke True)
                                                (lambda
-                                                  ($RightAssoc.param_xxx)
+                                                  ($RightAssoc.param_18)
                                                   (select
-                                                     $RightAssoc.param_xxx
-                                                     ((#RightAssoc.$__xxx
+                                                     $RightAssoc.param_18
+                                                     ((#RightAssoc.$__5
                                                          (apply
                                                             (invoke Int32#)
                                                             (4_i32))))))))))
                                      ((invoke Nil)))))))))
                       (let
-                         #RightAssoc.y_xxx
+                         #RightAssoc.y_11
                          (apply
                             (apply
                                (invoke <|>)
                                ((tuple
                                    ((invoke True)
                                       (lambda
-                                         ($RightAssoc.param_xxx)
+                                         ($RightAssoc.param_19)
                                          (select
-                                            $RightAssoc.param_xxx
-                                            ((#RightAssoc.$__xxx
+                                            $RightAssoc.param_19
+                                            ((#RightAssoc.$__7
                                                 (apply (invoke Int32#) (1_i32))))))))))
                             ((apply
                                 (apply
@@ -76,10 +76,10 @@
                                    ((tuple
                                        ((invoke True)
                                           (lambda
-                                             ($RightAssoc.param_xxx)
+                                             ($RightAssoc.param_20)
                                              (select
-                                                $RightAssoc.param_xxx
-                                                ((#RightAssoc.$__xxx
+                                                $RightAssoc.param_20
+                                                ((#RightAssoc.$__8
                                                     (apply
                                                        (invoke Int32#)
                                                        (2_i32))))))))))
@@ -89,10 +89,10 @@
                                        ((tuple
                                            ((invoke True)
                                               (lambda
-                                                 ($RightAssoc.param_xxx)
+                                                 ($RightAssoc.param_21)
                                                  (select
-                                                    $RightAssoc.param_xxx
-                                                    ((#RightAssoc.$__xxx
+                                                    $RightAssoc.param_21
+                                                    ((#RightAssoc.$__9
                                                         (apply
                                                            (invoke Int32#)
                                                            (3_i32))))))))))
@@ -102,23 +102,23 @@
                                            ((tuple
                                                ((invoke True)
                                                   (lambda
-                                                     ($RightAssoc.param_xxx)
+                                                     ($RightAssoc.param_22)
                                                      (select
-                                                        $RightAssoc.param_xxx
-                                                        ((#RightAssoc.$__xxx
+                                                        $RightAssoc.param_22
+                                                        ((#RightAssoc.$__10
                                                             (apply
                                                                (invoke Int32#)
                                                                (4_i32))))))))))
                                         ((invoke Nil)))))))))
-                         #RightAssoc.y_xxx)))))))
+                         #RightAssoc.y_11)))))))
       (main
          (lambda
-            ($RightAssoc.param_xxx)
+            ($RightAssoc.param_23)
             (select
-               $RightAssoc.param_xxx
-               ((#RightAssoc.$__xxx
+               $RightAssoc.param_23
+               ((#RightAssoc.$__13
                    (let
-                      #RightAssoc.x_xxx
+                      #RightAssoc.x_12
                       (apply (invoke f) ((apply (invoke Int32#) (4_i32))))
                       (apply
                          (invoke printString)

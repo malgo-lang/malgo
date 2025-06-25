@@ -1,43 +1,41 @@
 ((main
-    $Pattern.return_xxx
+    $Pattern.return_4
     (cut
        (lambda
-          ($Pattern.param_xxx $Pattern.return_xxx)
+          ($Pattern.param_2 $Pattern.return_5)
           (join
-             $Pattern.select_xxx
+             $Pattern.select_14
              (select
-                (#Pattern.$__xxx
+                (#Pattern.$__1
                    (join
-                      $Pattern.then_xxx
+                      $Pattern.then_13
                       (then
-                         $Pattern.outer_xxx
+                         $Pattern.outer_9
                          (join
-                            $Pattern.return_xxx
+                            $Pattern.return_6
                             (then
-                               $Pattern.inner_xxx
+                               $Pattern.inner_10
                                (join
-                                  $Pattern.apply_xxx
-                                  (apply
-                                     ($Pattern.inner_xxx)
-                                     ($Pattern.return_xxx))
-                                  (cut $Pattern.outer_xxx $Pattern.apply_xxx)))
+                                  $Pattern.apply_12
+                                  (apply ($Pattern.inner_10) ($Pattern.return_5))
+                                  (cut $Pattern.outer_9 $Pattern.apply_12)))
                             (join
-                               $Pattern.apply_xxx
-                               (apply ("OK") ($Pattern.return_xxx))
-                               (invoke String# $Pattern.apply_xxx))))
-                      (invoke putStrLn $Pattern.then_xxx))))
-             (cut $Pattern.param_xxx $Pattern.select_xxx)))
-       $Pattern.return_xxx))
+                               $Pattern.apply_11
+                               (apply ("OK") ($Pattern.return_6))
+                               (invoke String# $Pattern.apply_11))))
+                      (invoke putStrLn $Pattern.then_13))))
+             (cut $Pattern.param_2 $Pattern.select_14)))
+       $Pattern.return_4))
    (isNil
-      $Pattern.return_xxx
+      $Pattern.return_7
       (cut
          (lambda
-            ($Pattern.param_xxx $Pattern.return_xxx)
+            ($Pattern.param_3 $Pattern.return_8)
             (join
-               $Pattern.select_xxx
+               $Pattern.select_15
                (select
-                  ((Nil ()) (invoke True $Pattern.return_xxx))
-                  (#Pattern.__xxx (invoke False $Pattern.return_xxx)))
-               (cut $Pattern.param_xxx $Pattern.select_xxx)))
-         $Pattern.return_xxx))
+                  ((Nil ()) (invoke True $Pattern.return_8))
+                  (#Pattern.__0 (invoke False $Pattern.return_8)))
+               (cut $Pattern.param_3 $Pattern.select_15)))
+         $Pattern.return_7))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

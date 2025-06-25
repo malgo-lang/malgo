@@ -1595,7 +1595,29 @@ Module
          , sourceColumn = Pos 60
          }
         }
-       ) []
+       )
+       [ VarP
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/Show.mlg"
+          , sourceLine = Pos 32
+          , sourceColumn = Pos 14
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/Show.mlg"
+          , sourceLine = Pos 32
+          , sourceColumn = Pos 60
+          }
+         }
+        )
+        ( Id
+         { name = "$_"
+         , moduleName = Artifact
+          ( ArtifactPath "test/testcases/malgo/Show.mlg" )
+         , sort = Internal 15
+         }
+        )
+       ]
        ( Seq
         ( Range
          { _start = SourcePos

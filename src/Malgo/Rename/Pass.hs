@@ -38,7 +38,7 @@ instance Pass RenamePass where
       )
 
   runPassImpl _ (Module modName (ParsedDefinitions ds), builtinEnv) = do
-    (ds', rnState) <- runState (RnState mempty Set.empty) $ runReader builtinEnv $ runReader modName $ rnDecls ds
+    (ds', rnState) <- runState (RnState mempty Set.empty mempty mempty) $ runReader builtinEnv $ runReader modName $ rnDecls ds
     pure (Module modName $ makeBindGroup ds', rnState)
 
 -- | Rename toplevel declarations
@@ -60,7 +60,7 @@ rnDecls ds = do
   rnEnv <- genToplevelEnv ds =<< ask
   local (const rnEnv) $ do
     -- RnStateの生成
-    put =<< RnState <$> infixDecls ds <*> pure Set.empty
+    put =<< RnState <$> infixDecls ds <*> pure Set.empty <*> pure mempty <*> pure mempty
     -- 生成したRnEnv, RnStateの元でtraverse rnDecl ds
     traverse rnDecl ds
 
@@ -80,42 +80,62 @@ rnDecl ::
   ) =>
   Decl (Malgo NewParse) ->
   Eff es (Decl (Malgo Rename))
-rnDecl (ScDef pos name expr) = ScDef pos <$> lookupVarName pos name <*> rnExpr expr
+rnDecl (ScDef pos name expr) = do
+  resolvedName <- lookupVarName pos name
+  registerExportedIdent resolvedName
+  ScDef pos resolvedName <$> rnExpr expr
 rnDecl (ScSig pos name typ) = do
   tyVars <- Set.toList <$> getTyVars typ
   tyVars' <- traverse resolveName tyVars
+  resolvedName <- lookupVarName pos name
+  registerExportedIdent resolvedName
   local (insertTypeIdent (zip tyVars $ map (Qualified Implicit) tyVars'))
-    $ ScSig pos
-    <$> lookupVarName pos name
-    <*> rnType typ
+    $ ScSig pos resolvedName
+    <$> rnType typ
 rnDecl (DataDef pos name params cs) = do
   params' <- traverse (resolveName . snd) params
+  resolvedName <- lookupTypeName pos name
+  registerExportedTypeIdent resolvedName
   local (insertTypeIdent (zip (map snd params) (map (Qualified Implicit) params')))
-    $ DataDef pos
-    <$> lookupTypeName pos name
-    <*> pure (zipWith (\(range, _) p' -> (range, p')) params params')
-    <*> traverse (bitraverse (lookupVarName pos) (traverse rnType)) cs
+    $ DataDef pos resolvedName
+    <$> pure (zipWith (\(range, _) p' -> (range, p')) params params')
+    <*> traverse
+      ( bitraverse
+          ( \cname -> do
+              resolvedCName <- lookupVarName pos cname
+              registerExportedIdent resolvedCName
+              pure resolvedCName
+          )
+          (traverse rnType)
+      )
+      cs
 rnDecl (TypeSynonym pos name params typ) = do
   params' <- traverse resolveName params
+  resolvedName <- lookupTypeName pos name
+  registerExportedTypeIdent resolvedName
   local (insertTypeIdent (zip params $ map (Qualified Implicit) params'))
-    $ TypeSynonym pos
-    <$> lookupTypeName pos name
-    <*> pure params'
+    $ TypeSynonym pos resolvedName
+    <$> pure params'
     <*> rnType typ
-rnDecl (Infix pos assoc prec name) = Infix pos assoc prec <$> lookupVarName pos name
+rnDecl (Infix pos assoc prec name) = do
+  resolvedName <- lookupVarName pos name
+  registerExportedIdent resolvedName
+  pure $ Infix pos assoc prec resolvedName
 rnDecl (Foreign pos name typ) = do
   tyVars <- Set.toList <$> getTyVars typ
   tyVars' <- traverse resolveName tyVars
+  resolvedName <- lookupVarName pos name
+  registerExportedIdent resolvedName
   local (insertTypeIdent (zip tyVars $ map (Qualified Implicit) tyVars'))
-    $ Foreign (pos, name)
-    <$> lookupVarName pos name
-    <*> rnType typ
+    $ Foreign (pos, name) resolvedName
+    <$> rnType typ
 rnDecl (Import pos modName importList) = do
   interface <- loadInterface modName
   modify \s@RnState {..} ->
     s
       { RnState.infixInfo = s.infixInfo <> Map.mapKeys (externalFromInterface interface) interface.infixInfo,
-        RnState.dependencies = Set.insert modName dependencies <> interface.dependencies
+        RnState.dependencies = Set.insert modName dependencies <> interface.dependencies,
+        RnState.exportedIdentifiers = exportedIdentifiers
       }
   pure $ Import pos modName importList
 
@@ -166,6 +186,10 @@ rnExpr (Project pos (Var _ name) field) = do
     then Var pos <$> lookupQualifiedVarName pos (ModuleName name) field
     else Project pos <$> rnExpr (Var pos name) <*> pure field
 rnExpr (Project pos expr field) = Project pos <$> rnExpr expr <*> pure field
+rnExpr (Fn pos (Clause x [] e :| _)) = do
+  e' <- rnExpr e
+  hole <- newInternalId "$_"
+  pure $ Fn pos (Clause x [VarP x hole] e' :| [])
 rnExpr (Fn pos cs) = Fn pos <$> traverse rnClause cs
 rnExpr (Tuple pos es) = Tuple pos <$> traverse rnExpr es
 rnExpr (Record pos kvs) =
@@ -427,3 +451,19 @@ resolveImport modName (Selected implicits) (psId, rnId)
   | psId `elem` implicits = (psId, Qualified Implicit rnId)
   | otherwise = (psId, Qualified (Explicit modName) rnId)
 resolveImport _ (As modNameAs) (psId, rnId) = (psId, Qualified (Explicit modNameAs) rnId)
+
+-- | Register an identifier as exported if it should be exported from the current module
+registerExportedIdent :: (State RnState :> es, Reader ModuleName :> es) => Id -> Eff es ()
+registerExportedIdent ident = do
+  currentModule <- ask @ModuleName
+  when (ident.sort == External && ident.moduleName == currentModule) do
+    modify \s@RnState {..} ->
+      s {exportedIdentifiers = ident.name : exportedIdentifiers}
+
+-- | Register a type identifier as exported if it should be exported from the current module
+registerExportedTypeIdent :: (State RnState :> es, Reader ModuleName :> es) => Id -> Eff es ()
+registerExportedTypeIdent ident = do
+  currentModule <- ask @ModuleName
+  when (ident.sort == External && ident.moduleName == currentModule) do
+    modify \s@RnState {..} ->
+      s {exportedTypeIdentifiers = ident.name : exportedTypeIdentifiers}

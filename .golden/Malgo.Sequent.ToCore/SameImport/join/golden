@@ -1,37 +1,35 @@
 ((main
-    $SameImport.return_xxx
+    $SameImport.return_2
     (cut
        (lambda
-          ($SameImport.param_xxx $SameImport.return_xxx)
+          ($SameImport.param_1 $SameImport.return_3)
           (join
-             $SameImport.select_xxx
+             $SameImport.select_10
              (select
-                (#SameImport.$__xxx
+                (#SameImport.$__0
                    (join
-                      $SameImport.then_xxx
+                      $SameImport.then_9
                       (then
-                         $SameImport.outer_xxx
+                         $SameImport.outer_5
                          (join
-                            $SameImport.return_xxx
+                            $SameImport.return_4
                             (then
-                               $SameImport.inner_xxx
+                               $SameImport.inner_6
                                (join
-                                  $SameImport.apply_xxx
+                                  $SameImport.apply_8
                                   (apply
-                                     ($SameImport.inner_xxx)
-                                     ($SameImport.return_xxx))
-                                  (cut
-                                     $SameImport.outer_xxx
-                                     $SameImport.apply_xxx)))
+                                     ($SameImport.inner_6)
+                                     ($SameImport.return_3))
+                                  (cut $SameImport.outer_5 $SameImport.apply_8)))
                             (join
-                               $SameImport.apply_xxx
+                               $SameImport.apply_7
                                (apply
                                   ((construct tuple () ()))
-                                  ($SameImport.return_xxx))
-                               (invoke getContents $SameImport.apply_xxx))))
-                      (invoke putStr $SameImport.then_xxx))))
-             (cut $SameImport.param_xxx $SameImport.select_xxx)))
-       $SameImport.return_xxx))
+                                  ($SameImport.return_4))
+                               (invoke getContents $SameImport.apply_7))))
+                      (invoke putStr $SameImport.then_9))))
+             (cut $SameImport.param_1 $SameImport.select_10)))
+       $SameImport.return_2))
    ("runtime/malgo/Builtin.mlg"
       "runtime/malgo/Builtin.mlg"
       "runtime/malgo/Prelude.mlg"))

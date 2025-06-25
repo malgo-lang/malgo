@@ -8,7 +8,7 @@
               (fn
                  ((clause ((con Nothing ())) (seq (do Nothing)))
                     (clause
-                       ((con Just ()) #ToplevelVariable.x_xxx)
+                       ((con Just (#ToplevelVariable.x_1)))
                        (seq (do Nothing)))))
               (seq (do (apply Just (tuple)))))))
        ((def addOne (apply addInt32 one)))
@@ -16,7 +16,7 @@
            main
            (fn
               ((clause
-                  ()
+                  (#ToplevelVariable.$__3)
                   (seq
                      (do
                         (apply
@@ -29,7 +29,7 @@
                                            printString
                                            (apply String# (string "OK"))))))
                                  (clause
-                                    ((con Just ()) #ToplevelVariable.__xxx)
+                                    ((con Just (#ToplevelVariable.__2)))
                                     (seq (do (tuple))))))
                            comp))
                      (do
@@ -40,7 +40,7 @@
                                  (apply
                                     (apply constId const)
                                     (seq (do (apply addOne one)))))))))))))))
-      ((sig comp (app Maybe (#ToplevelVariable.a_xxx))))
+      ((sig comp (app Maybe (#ToplevelVariable.a_0))))
       ()
       ()
       ()

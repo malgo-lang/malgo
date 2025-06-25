@@ -1,67 +1,65 @@
 (program
    ((twice
        (lambda
-          ($With.param_xxx)
+          ($With.param_13)
           (select
-             $With.param_xxx
-             ((#With.k_xxx
+             $With.param_13
+             ((#With.k_6
                  (apply
-                    (lambda ($With.tmp_xxx) (apply #With.k_xxx ((tuple ()))))
-                    ((apply #With.k_xxx ((tuple ()))))))))))
+                    (lambda ($With.tmp_14) (apply #With.k_6 ((tuple ()))))
+                    ((apply #With.k_6 ((tuple ()))))))))))
       (printAndReturn
          (lambda
-            ($With.param_xxx)
+            ($With.param_15)
             (lambda
-               ($With.param_xxx)
+               ($With.param_16)
                (select
-                  (tuple ($With.param_xxx $With.param_xxx))
-                  (((tuple (#With.str_xxx #With.k_xxx))
+                  (tuple ($With.param_15 $With.param_16))
+                  (((tuple (#With.str_7 #With.k_8))
                       (apply
-                         (lambda
-                            ($With.tmp_xxx)
-                            (apply #With.k_xxx (#With.str_xxx)))
-                         ((apply (invoke printString) (#With.str_xxx))))))))))
+                         (lambda ($With.tmp_17) (apply #With.k_8 (#With.str_7)))
+                         ((apply (invoke printString) (#With.str_7))))))))))
       (finally
          (lambda
-            ($With.param_xxx)
+            ($With.param_18)
             (lambda
-               ($With.param_xxx)
+               ($With.param_19)
                (select
-                  (tuple ($With.param_xxx $With.param_xxx))
-                  (((tuple (#With.finalizer_xxx #With.k_xxx))
+                  (tuple ($With.param_18 $With.param_19))
+                  (((tuple (#With.finalizer_2 #With.k_3))
                       (let
-                         #With.x_xxx
-                         (apply #With.k_xxx ((tuple ())))
-                         (apply #With.finalizer_xxx (#With.x_xxx)))))))))
+                         #With.x_4
+                         (apply #With.k_3 ((tuple ())))
+                         (apply #With.finalizer_2 (#With.x_4)))))))))
       (main
          (lambda
-            ($With.param_xxx)
+            ($With.param_20)
             (select
-               $With.param_xxx
-               ((#With.$__xxx
+               $With.param_20
+               ((#With.$__12
                    (apply
                       (apply
                          (invoke finally)
                          ((lambda
-                             ($With.param_xxx)
+                             ($With.param_21)
                              (select
-                                $With.param_xxx
+                                $With.param_21
                                 (((tuple ())
                                     (apply
                                        (invoke printString)
                                        ((apply (invoke String#) ("end"))))))))))
                       ((lambda
-                          ($With.param_xxx)
+                          ($With.param_22)
                           (select
-                             $With.param_xxx
-                             ((#With.$__xxx
+                             $With.param_22
+                             ((#With.$__11
                                  (apply
                                     (invoke twice)
                                     ((lambda
-                                        ($With.param_xxx)
+                                        ($With.param_23)
                                         (select
-                                           $With.param_xxx
-                                           ((#With.$__xxx
+                                           $With.param_23
+                                           ((#With.$__10
                                                (apply
                                                   (apply
                                                      (invoke printAndReturn)
@@ -69,12 +67,12 @@
                                                          (invoke String#)
                                                          ("foo"))))
                                                   ((lambda
-                                                      ($With.param_xxx)
+                                                      ($With.param_24)
                                                       (select
-                                                         $With.param_xxx
-                                                         ((#With.x_xxx
+                                                         $With.param_24
+                                                         ((#With.x_9
                                                              (apply
                                                                 (invoke
                                                                    printString)
-                                                                (#With.x_xxx))))))))))))))))))))))))))
+                                                                (#With.x_9))))))))))))))))))))))))))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

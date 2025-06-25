@@ -1,35 +1,35 @@
 ((main
-    $TestExplicitModule.return_xxx
+    $TestExplicitModule.return_2
     (cut
        (lambda
-          ($TestExplicitModule.param_xxx $TestExplicitModule.return_xxx)
+          ($TestExplicitModule.param_1 $TestExplicitModule.return_3)
           (join
-             $TestExplicitModule.select_xxx
+             $TestExplicitModule.select_10
              (select
-                (#TestExplicitModule.$__xxx
+                (#TestExplicitModule.$__0
                    (join
-                      $TestExplicitModule.then_xxx
+                      $TestExplicitModule.then_9
                       (then
-                         $TestExplicitModule.outer_xxx
+                         $TestExplicitModule.outer_5
                          (join
-                            $TestExplicitModule.return_xxx
+                            $TestExplicitModule.return_4
                             (then
-                               $TestExplicitModule.inner_xxx
+                               $TestExplicitModule.inner_6
                                (join
-                                  $TestExplicitModule.apply_xxx
+                                  $TestExplicitModule.apply_8
                                   (apply
-                                     ($TestExplicitModule.inner_xxx)
-                                     ($TestExplicitModule.return_xxx))
+                                     ($TestExplicitModule.inner_6)
+                                     ($TestExplicitModule.return_3))
                                   (cut
-                                     $TestExplicitModule.outer_xxx
-                                     $TestExplicitModule.apply_xxx)))
+                                     $TestExplicitModule.outer_5
+                                     $TestExplicitModule.apply_8)))
                             (join
-                               $TestExplicitModule.apply_xxx
+                               $TestExplicitModule.apply_7
                                (apply
                                   ("Hello, world")
-                                  ($TestExplicitModule.return_xxx))
-                               (invoke String# $TestExplicitModule.apply_xxx))))
-                      (invoke putStrLn $TestExplicitModule.then_xxx))))
-             (cut $TestExplicitModule.param_xxx $TestExplicitModule.select_xxx)))
-       $TestExplicitModule.return_xxx))
+                                  ($TestExplicitModule.return_4))
+                               (invoke String# $TestExplicitModule.apply_7))))
+                      (invoke putStrLn $TestExplicitModule.then_9))))
+             (cut $TestExplicitModule.param_1 $TestExplicitModule.select_10)))
+       $TestExplicitModule.return_2))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

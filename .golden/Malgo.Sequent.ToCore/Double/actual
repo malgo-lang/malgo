@@ -1,26 +1,26 @@
 ((main
-    $Double.return_xxx
+    $Double.return_2
     (cut
        (lambda
-          ($Double.param_xxx $Double.return_xxx)
+          ($Double.param_1 $Double.return_3)
           (cut
-             $Double.param_xxx
+             $Double.param_1
              (select
-                (#Double.$__xxx
+                (#Double.$__0
                    (invoke
                       putStr
                       (apply
                          ((do
-                             $Double.return_xxx
+                             $Double.return_4
                              (invoke
                                 toStringDouble
                                 (apply
                                    ((do
-                                       $Double.return_xxx
+                                       $Double.return_5
                                        (invoke
                                           Double#
-                                          (apply (3.14_f64) ($Double.return_xxx)))))
-                                   ($Double.return_xxx)))))
-                         ($Double.return_xxx)))))))
-       $Double.return_xxx))
+                                          (apply (3.14_f64) ($Double.return_5)))))
+                                   ($Double.return_4)))))
+                         ($Double.return_3)))))))
+       $Double.return_2))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

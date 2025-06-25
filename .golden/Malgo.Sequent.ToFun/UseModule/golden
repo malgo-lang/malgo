@@ -1,22 +1,22 @@
 (program
    ((succ
        (lambda
-          ($UseModule.param_xxx)
+          ($UseModule.param_2)
           (select
-             $UseModule.param_xxx
-             ((#UseModule.x_xxx
+             $UseModule.param_2
+             ((#UseModule.x_0
                  (apply
-                    (apply (invoke addInt32) (#UseModule.x_xxx))
+                    (apply (invoke addInt32) (#UseModule.x_0))
                     ((apply (invoke Int32#) (1_i32)))))))))
       (main
          (lambda
-            ($UseModule.param_xxx)
+            ($UseModule.param_3)
             (select
-               $UseModule.param_xxx
-               ((#UseModule.$__xxx
+               $UseModule.param_3
+               ((#UseModule.$__1
                    (apply
                       (lambda
-                         ($UseModule.tmp_xxx)
+                         ($UseModule.tmp_4)
                          (apply
                             (apply (invoke <|) ((invoke printInt32)))
                             ((apply

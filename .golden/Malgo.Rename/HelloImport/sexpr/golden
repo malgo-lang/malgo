@@ -4,7 +4,7 @@
          main
          (fn
             ((clause
-                ()
+                (#HelloImport.$__1)
                 (seq
                    (do (apply putStr (seq (do (apply String# (string "hello"))))))
                    (do
@@ -13,11 +13,11 @@
                          putStrLn
                          (fn
                             ((clause
-                                (#HelloImport.f_xxx)
+                                (#HelloImport.f_0)
                                 (seq
                                    (do
                                       (apply
-                                         #HelloImport.f_xxx
+                                         #HelloImport.f_0
                                          (seq
                                             (do (apply String# (string " world")))))))))))))))))))
       ((sig main (-> (tuple) (tuple))))

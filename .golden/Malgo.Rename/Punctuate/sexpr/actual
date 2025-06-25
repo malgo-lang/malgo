@@ -5,23 +5,23 @@
            show
            (fn
               ((clause
-                  ((con Symbol ()) #Punctuate.str_xxx)
+                  ((con Symbol (#Punctuate.str_0)))
                   (seq
                      (do
                         (opapp
                            <>
                            (apply String# (string "Symbol "))
-                           #Punctuate.str_xxx))))
+                           #Punctuate.str_0))))
                  (clause
-                    ((con SInt ()) #Punctuate.int_xxx)
+                    ((con SInt (#Punctuate.int_1)))
                     (seq
                        (do
                           (opapp
                              <>
                              (apply String# (string "SInt "))
-                             (apply toStringInt32 #Punctuate.int_xxx)))))
+                             (apply toStringInt32 #Punctuate.int_1)))))
                  (clause
-                    ((con SList ()) #Punctuate.ss_xxx)
+                    ((con SList (#Punctuate.ss_2)))
                     (seq
                        (do
                           (opapp
@@ -41,16 +41,16 @@
                                                (do
                                                   (apply
                                                      (apply mapList show)
-                                                     #Punctuate.ss_xxx)))))))
+                                                     #Punctuate.ss_2)))))))
                                 (apply String# (string "]")))))))))))
        ((def
            main
            (fn
               ((clause
-                  ()
+                  (#Punctuate.$__4)
                   (seq
                      (let
-                        #Punctuate.x_xxx
+                        #Punctuate.x_3
                         (apply
                            SList
                            (apply
@@ -84,8 +84,7 @@
                                                       Nil)))
                                              Nil))))
                                  Nil))))
-                     (do
-                        (apply putStrLn (seq (do (apply show #Punctuate.x_xxx))))))))))))
+                     (do (apply putStrLn (seq (do (apply show #Punctuate.x_3))))))))))))
       ((sig <> (-> String (-> String String))) (sig show (-> SExpr String)))
       ((data
           SExpr

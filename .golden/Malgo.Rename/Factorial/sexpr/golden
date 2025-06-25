@@ -4,30 +4,27 @@
          ==
          (fn
             ((clause
-                (#Factorial.x_xxx #Factorial.y_xxx)
-                (seq
-                   (do (apply (apply eqInt64 #Factorial.x_xxx) #Factorial.y_xxx))))))))
+                (#Factorial.x_0 #Factorial.y_1)
+                (seq (do (apply (apply eqInt64 #Factorial.x_0) #Factorial.y_1))))))))
        ((def
            -
            (fn
               ((clause
-                  (#Factorial.x_xxx #Factorial.y_xxx)
+                  (#Factorial.x_2 #Factorial.y_3)
                   (seq
-                     (do
-                        (apply (apply subInt64 #Factorial.x_xxx) #Factorial.y_xxx))))))))
+                     (do (apply (apply subInt64 #Factorial.x_2) #Factorial.y_3))))))))
        ((def
            *
            (fn
               ((clause
-                  (#Factorial.x_xxx #Factorial.y_xxx)
+                  (#Factorial.x_4 #Factorial.y_5)
                   (seq
-                     (do
-                        (apply (apply mulInt64 #Factorial.x_xxx) #Factorial.y_xxx))))))))
+                     (do (apply (apply mulInt64 #Factorial.x_4) #Factorial.y_5))))))))
        ((def
            factAcc
            (fn
               ((clause
-                  (#Factorial.n_xxx #Factorial.acc_xxx)
+                  (#Factorial.n_7 #Factorial.acc_8)
                   (seq
                      (do
                         (apply
@@ -38,12 +35,15 @@
                                     (do
                                        (opapp
                                           ==
-                                          #Factorial.n_xxx
+                                          #Factorial.n_7
                                           (apply Int64# (int64 0))))))
-                              (fn ((clause () (seq (do #Factorial.acc_xxx))))))
+                              (fn
+                                 ((clause
+                                     (#Factorial.$__9)
+                                     (seq (do #Factorial.acc_8))))))
                            (fn
                               ((clause
-                                  ()
+                                  (#Factorial.$__10)
                                   (seq
                                      (do
                                         (apply
@@ -53,29 +53,29 @@
                                                  (do
                                                     (opapp
                                                        -
-                                                       #Factorial.n_xxx
+                                                       #Factorial.n_7
                                                        (apply Int64# (int64 1))))))
                                            (seq
                                               (do
                                                  (opapp
                                                     *
-                                                    #Factorial.n_xxx
-                                                    #Factorial.acc_xxx)))))))))))))))))
+                                                    #Factorial.n_7
+                                                    #Factorial.acc_8)))))))))))))))))
        ((def
            fact
            (fn
               ((clause
-                  (#Factorial.n_xxx)
+                  (#Factorial.n_6)
                   (seq
                      (do
                         (apply
-                           (apply factAcc #Factorial.n_xxx)
+                           (apply factAcc #Factorial.n_6)
                            (apply Int64# (int64 1))))))))))
        ((def
            main
            (fn
               ((clause
-                  ()
+                  (#Factorial.$__11)
                   (seq
                      (do
                         (opapp

@@ -1,251 +1,251 @@
-((<> $Punctuate.return_xxx (invoke appendString $Punctuate.return_xxx))
+((<> $Punctuate.return_10 (invoke appendString $Punctuate.return_10))
    (show
-      $Punctuate.return_xxx
+      $Punctuate.return_11
       (cut
          (lambda
-            ($Punctuate.param_xxx $Punctuate.return_xxx)
+            ($Punctuate.param_5 $Punctuate.return_12)
             (cut
-               $Punctuate.param_xxx
+               $Punctuate.param_5
                (select
-                  ((Symbol (#Punctuate.str_xxx))
+                  ((Symbol (#Punctuate.str_0))
                      (invoke
                         <>
                         (apply
                            ((do
-                               $Punctuate.return_xxx
+                               $Punctuate.return_13
                                (invoke
                                   String#
-                                  (apply ("Symbol ") ($Punctuate.return_xxx)))))
-                           ((apply (#Punctuate.str_xxx) ($Punctuate.return_xxx))))))
-                  ((SInt (#Punctuate.int_xxx))
+                                  (apply ("Symbol ") ($Punctuate.return_13)))))
+                           ((apply (#Punctuate.str_0) ($Punctuate.return_12))))))
+                  ((SInt (#Punctuate.int_1))
                      (invoke
                         <>
                         (apply
                            ((do
-                               $Punctuate.return_xxx
+                               $Punctuate.return_15
                                (invoke
                                   String#
-                                  (apply ("SInt ") ($Punctuate.return_xxx)))))
+                                  (apply ("SInt ") ($Punctuate.return_15)))))
                            ((apply
                                ((do
-                                   $Punctuate.return_xxx
+                                   $Punctuate.return_14
                                    (invoke
                                       toStringInt32
                                       (apply
-                                         (#Punctuate.int_xxx)
-                                         ($Punctuate.return_xxx)))))
-                               ($Punctuate.return_xxx))))))
-                  ((SList (#Punctuate.ss_xxx))
+                                         (#Punctuate.int_1)
+                                         ($Punctuate.return_14)))))
+                               ($Punctuate.return_12))))))
+                  ((SList (#Punctuate.ss_2))
                      (invoke
                         <>
                         (apply
                            ((do
-                               $Punctuate.return_xxx
+                               $Punctuate.return_23
                                (invoke
                                   String#
-                                  (apply ("SList [") ($Punctuate.return_xxx)))))
+                                  (apply ("SList [") ($Punctuate.return_23)))))
                            ((apply
                                ((do
-                                   $Punctuate.return_xxx
+                                   $Punctuate.return_16
                                    (invoke
                                       <>
                                       (apply
                                          ((do
-                                             $Punctuate.return_xxx
+                                             $Punctuate.return_18
                                              (invoke
                                                 concatString
                                                 (apply
                                                    ((do
-                                                       $Punctuate.return_xxx
+                                                       $Punctuate.return_19
                                                        (invoke
                                                           punctuate
                                                           (apply
                                                              ((do
-                                                                 $Punctuate.return_xxx
+                                                                 $Punctuate.return_22
                                                                  (invoke
                                                                     String#
                                                                     (apply
                                                                        (", ")
-                                                                       ($Punctuate.return_xxx)))))
+                                                                       ($Punctuate.return_22)))))
                                                              ((apply
                                                                  ((do
-                                                                     $Punctuate.return_xxx
+                                                                     $Punctuate.return_20
                                                                      (invoke
                                                                         mapList
                                                                         (apply
                                                                            ((do
-                                                                               $Punctuate.return_xxx
+                                                                               $Punctuate.return_21
                                                                                (invoke
                                                                                   show
-                                                                                  $Punctuate.return_xxx)))
+                                                                                  $Punctuate.return_21)))
                                                                            ((apply
-                                                                               (#Punctuate.ss_xxx)
-                                                                               ($Punctuate.return_xxx)))))))
-                                                                 ($Punctuate.return_xxx)))))))
-                                                   ($Punctuate.return_xxx)))))
+                                                                               (#Punctuate.ss_2)
+                                                                               ($Punctuate.return_20)))))))
+                                                                 ($Punctuate.return_19)))))))
+                                                   ($Punctuate.return_18)))))
                                          ((apply
                                              ((do
-                                                 $Punctuate.return_xxx
+                                                 $Punctuate.return_17
                                                  (invoke
                                                     String#
                                                     (apply
                                                        ("]")
-                                                       ($Punctuate.return_xxx)))))
-                                             ($Punctuate.return_xxx)))))))
-                               ($Punctuate.return_xxx)))))))))
-         $Punctuate.return_xxx))
+                                                       ($Punctuate.return_17)))))
+                                             ($Punctuate.return_16)))))))
+                               ($Punctuate.return_12)))))))))
+         $Punctuate.return_11))
    (main
-      $Punctuate.return_xxx
+      $Punctuate.return_24
       (cut
          (lambda
-            ($Punctuate.param_xxx $Punctuate.return_xxx)
+            ($Punctuate.param_6 $Punctuate.return_25)
             (cut
-               $Punctuate.param_xxx
+               $Punctuate.param_6
                (select
-                  (#Punctuate.$__xxx
+                  (#Punctuate.$__4
                      (invoke
                         SList
                         (apply
                            ((do
-                               $Punctuate.return_xxx
+                               $Punctuate.return_27
                                (invoke
                                   Cons
                                   (apply
                                      ((do
-                                         $Punctuate.return_xxx
+                                         $Punctuate.return_41
                                          (invoke
                                             Symbol
                                             (apply
                                                ((do
-                                                   $Punctuate.return_xxx
+                                                   $Punctuate.return_42
                                                    (invoke
                                                       String#
                                                       (apply
                                                          ("x")
-                                                         ($Punctuate.return_xxx)))))
-                                               ($Punctuate.return_xxx)))))
+                                                         ($Punctuate.return_42)))))
+                                               ($Punctuate.return_41)))))
                                      ((apply
                                          ((do
-                                             $Punctuate.return_xxx
+                                             $Punctuate.return_28
                                              (invoke
                                                 Cons
                                                 (apply
                                                    ((do
-                                                       $Punctuate.return_xxx
+                                                       $Punctuate.return_30
                                                        (invoke
                                                           SList
                                                           (apply
                                                              ((do
-                                                                 $Punctuate.return_xxx
+                                                                 $Punctuate.return_31
                                                                  (invoke
                                                                     Cons
                                                                     (apply
                                                                        ((do
-                                                                           $Punctuate.return_xxx
+                                                                           $Punctuate.return_39
                                                                            (invoke
                                                                               Symbol
                                                                               (apply
                                                                                  ((do
-                                                                                     $Punctuate.return_xxx
+                                                                                     $Punctuate.return_40
                                                                                      (invoke
                                                                                         String#
                                                                                         (apply
                                                                                            ("y")
-                                                                                           ($Punctuate.return_xxx)))))
-                                                                                 ($Punctuate.return_xxx)))))
+                                                                                           ($Punctuate.return_40)))))
+                                                                                 ($Punctuate.return_39)))))
                                                                        ((apply
                                                                            ((do
-                                                                               $Punctuate.return_xxx
+                                                                               $Punctuate.return_32
                                                                                (invoke
                                                                                   Cons
                                                                                   (apply
                                                                                      ((do
-                                                                                         $Punctuate.return_xxx
+                                                                                         $Punctuate.return_34
                                                                                          (invoke
                                                                                             SList
                                                                                             (apply
                                                                                                ((do
-                                                                                                   $Punctuate.return_xxx
+                                                                                                   $Punctuate.return_35
                                                                                                    (invoke
                                                                                                       Cons
                                                                                                       (apply
                                                                                                          ((do
-                                                                                                             $Punctuate.return_xxx
+                                                                                                             $Punctuate.return_37
                                                                                                              (invoke
                                                                                                                 Symbol
                                                                                                                 (apply
                                                                                                                    ((do
-                                                                                                                       $Punctuate.return_xxx
+                                                                                                                       $Punctuate.return_38
                                                                                                                        (invoke
                                                                                                                           String#
                                                                                                                           (apply
                                                                                                                              ("z")
-                                                                                                                             ($Punctuate.return_xxx)))))
-                                                                                                                   ($Punctuate.return_xxx)))))
+                                                                                                                             ($Punctuate.return_38)))))
+                                                                                                                   ($Punctuate.return_37)))))
                                                                                                          ((apply
                                                                                                              ((do
-                                                                                                                 $Punctuate.return_xxx
+                                                                                                                 $Punctuate.return_36
                                                                                                                  (invoke
                                                                                                                     Nil
-                                                                                                                    $Punctuate.return_xxx)))
-                                                                                                             ($Punctuate.return_xxx)))))))
-                                                                                               ($Punctuate.return_xxx)))))
+                                                                                                                    $Punctuate.return_36)))
+                                                                                                             ($Punctuate.return_35)))))))
+                                                                                               ($Punctuate.return_34)))))
                                                                                      ((apply
                                                                                          ((do
-                                                                                             $Punctuate.return_xxx
+                                                                                             $Punctuate.return_33
                                                                                              (invoke
                                                                                                 Nil
-                                                                                                $Punctuate.return_xxx)))
-                                                                                         ($Punctuate.return_xxx)))))))
-                                                                           ($Punctuate.return_xxx)))))))
-                                                             ($Punctuate.return_xxx)))))
+                                                                                                $Punctuate.return_33)))
+                                                                                         ($Punctuate.return_32)))))))
+                                                                           ($Punctuate.return_31)))))))
+                                                             ($Punctuate.return_30)))))
                                                    ((apply
                                                        ((do
-                                                           $Punctuate.return_xxx
+                                                           $Punctuate.return_29
                                                            (invoke
                                                               Nil
-                                                              $Punctuate.return_xxx)))
-                                                       ($Punctuate.return_xxx)))))))
-                                         ($Punctuate.return_xxx)))))))
+                                                              $Punctuate.return_29)))
+                                                       ($Punctuate.return_28)))))))
+                                         ($Punctuate.return_27)))))))
                            ((then
-                               #Punctuate.x_xxx
+                               #Punctuate.x_3
                                (invoke
                                   putStrLn
                                   (apply
                                      ((do
-                                         $Punctuate.return_xxx
+                                         $Punctuate.return_26
                                          (invoke
                                             show
                                             (apply
-                                               (#Punctuate.x_xxx)
-                                               ($Punctuate.return_xxx)))))
-                                     ($Punctuate.return_xxx)))))))))))
-         $Punctuate.return_xxx))
+                                               (#Punctuate.x_3)
+                                               ($Punctuate.return_26)))))
+                                     ($Punctuate.return_25)))))))))))
+         $Punctuate.return_24))
    (Symbol
-      $Punctuate.return_xxx
+      $Punctuate.return_43
       (cut
          (lambda
-            ($Punctuate.constructor_xxx $Punctuate.return_xxx)
+            ($Punctuate.constructor_7 $Punctuate.return_44)
             (cut
-               (construct Symbol ($Punctuate.constructor_xxx) ())
-               $Punctuate.return_xxx))
-         $Punctuate.return_xxx))
+               (construct Symbol ($Punctuate.constructor_7) ())
+               $Punctuate.return_44))
+         $Punctuate.return_43))
    (SInt
-      $Punctuate.return_xxx
+      $Punctuate.return_45
       (cut
          (lambda
-            ($Punctuate.constructor_xxx $Punctuate.return_xxx)
+            ($Punctuate.constructor_8 $Punctuate.return_46)
             (cut
-               (construct SInt ($Punctuate.constructor_xxx) ())
-               $Punctuate.return_xxx))
-         $Punctuate.return_xxx))
+               (construct SInt ($Punctuate.constructor_8) ())
+               $Punctuate.return_46))
+         $Punctuate.return_45))
    (SList
-      $Punctuate.return_xxx
+      $Punctuate.return_47
       (cut
          (lambda
-            ($Punctuate.constructor_xxx $Punctuate.return_xxx)
+            ($Punctuate.constructor_9 $Punctuate.return_48)
             (cut
-               (construct SList ($Punctuate.constructor_xxx) ())
-               $Punctuate.return_xxx))
-         $Punctuate.return_xxx))
+               (construct SList ($Punctuate.constructor_9) ())
+               $Punctuate.return_48))
+         $Punctuate.return_47))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

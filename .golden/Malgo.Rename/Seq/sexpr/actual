@@ -3,8 +3,8 @@
    ((((def
          executeWhenLoaded
          (seq
-            (let #Seq.x_xxx (apply Int32# (int32 1)))
-            (let #Seq.y_xxx (apply Int32# (int32 2)))
+            (let #Seq.x_0 (apply Int32# (int32 1)))
+            (let #Seq.y_1 (apply Int32# (int32 2)))
             (do
                (apply
                   printString
@@ -12,14 +12,13 @@
                      (do
                         (apply
                            toStringInt32
-                           (seq
-                              (do (apply (apply addInt32 #Seq.x_xxx) #Seq.y_xxx))))))))
-            (do (apply (apply addInt32 #Seq.x_xxx) #Seq.y_xxx)))))
+                           (seq (do (apply (apply addInt32 #Seq.x_0) #Seq.y_1))))))))
+            (do (apply (apply addInt32 #Seq.x_0) #Seq.y_1)))))
        ((def
            main
            (fn
               ((clause
-                  ()
+                  (#Seq.$__2)
                   (seq
                      (do
                         (apply

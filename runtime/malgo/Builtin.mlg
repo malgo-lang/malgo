@@ -29,7 +29,7 @@ def string# = { x -> String# x }
 -- Panic and Undefined
 foreign import malgo_panic : String# -> a
 def panic : String -> a
-def panic = { String# message -> malgo_panic message }
+def panic = { (String# message) -> malgo_panic message }
 
 foreign import malgo_unsafe_cast : a -> b
 
@@ -138,13 +138,13 @@ foreign import sqrtf : Float# -> Float#
 def sqrtFloat# : Float# -> Float#
 def sqrtFloat# = { x -> sqrtf x }
 def sqrtFloat : Float -> Float
-def sqrtFloat = { Float# x -> Float# (sqrtFloat# x) }
+def sqrtFloat = { (Float# x) -> Float# (sqrtFloat# x) }
 
 foreign import sqrt : Double# -> Double#
 def sqrtDouble# : Double# -> Double#
 def sqrtDouble# = { x -> sqrt x }
 def sqrtDouble : Double -> Double
-def sqrtDouble = { Double# x -> Double# (sqrtDouble# x) }
+def sqrtDouble = { (Double# x) -> Double# (sqrtDouble# x) }
 
 def isTrue# : Int32# -> Bool
 def isTrue# = {
@@ -385,25 +385,25 @@ foreign import malgo_is_digit : Char# -> Int32#
 def isDigit# : Char# -> Int32#
 def isDigit# = { x -> malgo_is_digit x }
 def isDigit : Char -> Bool
-def isDigit = { Char# x -> isTrue# (isDigit# x) }
+def isDigit = { (Char# x) -> isTrue# (isDigit# x) }
 
 foreign import malgo_is_lower : Char# -> Int32#
 def isLower# : Char# -> Int32#
 def isLower# = { x -> malgo_is_lower x }
 def isLower : Char -> Bool
-def isLower = { Char# x -> isTrue# (isLower# x) }
+def isLower = { (Char# x) -> isTrue# (isLower# x) }
 
 foreign import malgo_is_upper : Char# -> Int32#
 def isUpper# : Char# -> Int32#
 def isUpper# = { x -> malgo_is_upper x }
 def isUpper : Char -> Bool
-def isUpper = { Char# x -> isTrue# (isUpper# x) }
+def isUpper = { (Char# x) -> isTrue# (isUpper# x) }
 
 foreign import malgo_is_alphanum : Char# -> Int32#
 def isAlphanum# : Char# -> Int32#
 def isAlphanum# = { x -> malgo_is_alphanum x }
 def isAlphanum : Char -> Bool
-def isAlphanum = { Char# x -> isTrue# (isAlphanum# x) }
+def isAlphanum = { (Char# x) -> isTrue# (isAlphanum# x) }
 
 -- String operators
 foreign import malgo_string_length : String# -> Int64#
@@ -440,31 +440,31 @@ foreign import malgo_int32_t_to_string : Int32# -> String#
 def toStringInt32# : Int32# -> String#
 def toStringInt32# = { x -> malgo_int32_t_to_string x }
 def toStringInt32 : Int32 -> String
-def toStringInt32 = { Int32# x -> String# (toStringInt32# x) }
+def toStringInt32 = { (Int32# x) -> String# (toStringInt32# x) }
 
 foreign import malgo_int64_t_to_string : Int64# -> String#
 def toStringInt64# : Int64# -> String#
 def toStringInt64# = { x -> malgo_int64_t_to_string x }
 def toStringInt64 : Int64 -> String
-def toStringInt64 = { Int64# x -> String# (toStringInt64# x) }
+def toStringInt64 = { (Int64# x) -> String# (toStringInt64# x) }
 
 foreign import malgo_float_to_string : Float# -> String#
 def toStringFloat# : Float# -> String#
 def toStringFloat# = { x -> malgo_float_to_string x }
 def toStringFloat : Float -> String
-def toStringFloat = { Float# x -> String# (toStringFloat# x) }
+def toStringFloat = { (Float# x) -> String# (toStringFloat# x) }
 
 foreign import malgo_double_to_string : Double# -> String#
 def toStringDouble# : Double# -> String#
 def toStringDouble# = { x -> malgo_double_to_string x }
 def toStringDouble : Double -> String
-def toStringDouble = { Double# x -> String# (toStringDouble# x) }
+def toStringDouble = { (Double# x) -> String# (toStringDouble# x) }
 
 foreign import malgo_char_to_string : Char# -> String#
 def toStringChar# : Char# -> String#
 def toStringChar# = { x -> malgo_char_to_string x }
 def toStringChar : Char -> String
-def toStringChar = { Char# x -> String# (toStringChar# x) }
+def toStringChar = { (Char# x) -> String# (toStringChar# x) }
 
 
 -- IO functions
@@ -479,13 +479,13 @@ foreign import malgo_print_char : Char# -> ()
 def printChar# : Char# -> ()
 def printChar# = { x -> malgo_print_char x }
 def printChar : Char -> ()
-def printChar = { Char# x -> printChar# x }
+def printChar = { (Char# x) -> printChar# x }
 
 foreign import malgo_print_string : String# -> ()
 def printString# : String# -> ()
 def printString# = { x -> malgo_print_string x }
 def printString : String -> ()
-def printString = { String# x -> printString# x }
+def printString = { (String# x) -> printString# x }
 
 foreign import malgo_flush : () -> ()
 def flush = { _ -> malgo_flush () }

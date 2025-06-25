@@ -1,94 +1,92 @@
 ((succ
-    $TestDot.return_xxx
+    $TestDot.return_4
     (cut
        (lambda
-          ($TestDot.param_xxx $TestDot.return_xxx)
+          ($TestDot.param_2 $TestDot.return_5)
           (cut
-             $TestDot.param_xxx
+             $TestDot.param_2
              (select
-                ((Int64# (#TestDot.x_xxx))
+                ((Int64# (#TestDot.x_0))
                    (invoke
                       Int64#
                       (then
-                         $TestDot.outer_xxx
+                         $TestDot.outer_13
                          (join
-                            $TestDot.return_xxx
+                            $TestDot.return_6
                             (then
-                               $TestDot.inner_xxx
+                               $TestDot.inner_14
                                (cut
-                                  $TestDot.outer_xxx
-                                  (apply
-                                     ($TestDot.inner_xxx)
-                                     ($TestDot.return_xxx))))
+                                  $TestDot.outer_13
+                                  (apply ($TestDot.inner_14) ($TestDot.return_5))))
                             (invoke
                                addInt64#
                                (apply
-                                  (#TestDot.x_xxx)
-                                  ((apply (1_i64) ($TestDot.return_xxx))))))))))))
-       $TestDot.return_xxx))
+                                  (#TestDot.x_0)
+                                  ((apply (1_i64) ($TestDot.return_6))))))))))))
+       $TestDot.return_4))
    (main
-      $TestDot.return_xxx
+      $TestDot.return_7
       (cut
          (lambda
-            ($TestDot.param_xxx $TestDot.return_xxx)
+            ($TestDot.param_3 $TestDot.return_8)
             (cut
-               $TestDot.param_xxx
+               $TestDot.param_3
                (select
-                  (#TestDot.$__xxx
+                  (#TestDot.$__1
                      (invoke
                         printInt64
                         (then
-                           $TestDot.outer_xxx
+                           $TestDot.outer_15
                            (join
-                              $TestDot.return_xxx
+                              $TestDot.return_9
                               (then
-                                 $TestDot.inner_xxx
+                                 $TestDot.inner_16
                                  (cut
-                                    $TestDot.outer_xxx
+                                    $TestDot.outer_15
                                     (apply
-                                       ($TestDot.inner_xxx)
-                                       ($TestDot.return_xxx))))
+                                       ($TestDot.inner_16)
+                                       ($TestDot.return_8))))
                               (invoke
                                  <<
                                  (then
-                                    $TestDot.outer_xxx
+                                    $TestDot.outer_17
                                     (join
-                                       $TestDot.return_xxx
+                                       $TestDot.return_12
                                        (then
-                                          $TestDot.inner_xxx
+                                          $TestDot.inner_18
                                           (cut
-                                             $TestDot.outer_xxx
+                                             $TestDot.outer_17
                                              (apply
-                                                ($TestDot.inner_xxx)
+                                                ($TestDot.inner_18)
                                                 ((then
-                                                    $TestDot.outer_xxx
+                                                    $TestDot.outer_19
                                                     (join
-                                                       $TestDot.return_xxx
+                                                       $TestDot.return_11
                                                        (then
-                                                          $TestDot.inner_xxx
+                                                          $TestDot.inner_20
                                                           (cut
-                                                             $TestDot.outer_xxx
+                                                             $TestDot.outer_19
                                                              (apply
-                                                                ($TestDot.inner_xxx)
+                                                                ($TestDot.inner_20)
                                                                 ((then
-                                                                    $TestDot.outer_xxx
+                                                                    $TestDot.outer_21
                                                                     (join
-                                                                       $TestDot.return_xxx
+                                                                       $TestDot.return_10
                                                                        (then
-                                                                          $TestDot.inner_xxx
+                                                                          $TestDot.inner_22
                                                                           (cut
-                                                                             $TestDot.outer_xxx
+                                                                             $TestDot.outer_21
                                                                              (apply
-                                                                                ($TestDot.inner_xxx)
-                                                                                ($TestDot.return_xxx))))
+                                                                                ($TestDot.inner_22)
+                                                                                ($TestDot.return_9))))
                                                                        (invoke
                                                                           Int64#
                                                                           (apply
                                                                              (0_i64)
-                                                                             ($TestDot.return_xxx)))))))))
+                                                                             ($TestDot.return_10)))))))))
                                                        (invoke
                                                           succ
-                                                          $TestDot.return_xxx)))))))
-                                       (invoke succ $TestDot.return_xxx)))))))))))
-         $TestDot.return_xxx))
+                                                          $TestDot.return_11)))))))
+                                       (invoke succ $TestDot.return_12)))))))))))
+         $TestDot.return_7))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

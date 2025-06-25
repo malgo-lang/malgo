@@ -1,36 +1,34 @@
 ((main
-    $Pattern.return_xxx
+    $Pattern.return_4
     (cut
        (lambda
-          ($Pattern.param_xxx $Pattern.return_xxx)
+          ($Pattern.param_2 $Pattern.return_5)
           (cut
-             $Pattern.param_xxx
+             $Pattern.param_2
              (select
-                (#Pattern.$__xxx
+                (#Pattern.$__1
                    (invoke
                       putStrLn
                       (then
-                         $Pattern.outer_xxx
+                         $Pattern.outer_9
                          (join
-                            $Pattern.return_xxx
+                            $Pattern.return_6
                             (then
-                               $Pattern.inner_xxx
+                               $Pattern.inner_10
                                (cut
-                                  $Pattern.outer_xxx
-                                  (apply
-                                     ($Pattern.inner_xxx)
-                                     ($Pattern.return_xxx))))
-                            (invoke String# (apply ("OK") ($Pattern.return_xxx))))))))))
-       $Pattern.return_xxx))
+                                  $Pattern.outer_9
+                                  (apply ($Pattern.inner_10) ($Pattern.return_5))))
+                            (invoke String# (apply ("OK") ($Pattern.return_6))))))))))
+       $Pattern.return_4))
    (isNil
-      $Pattern.return_xxx
+      $Pattern.return_7
       (cut
          (lambda
-            ($Pattern.param_xxx $Pattern.return_xxx)
+            ($Pattern.param_3 $Pattern.return_8)
             (cut
-               $Pattern.param_xxx
+               $Pattern.param_3
                (select
-                  ((Nil ()) (invoke True $Pattern.return_xxx))
-                  (#Pattern.__xxx (invoke False $Pattern.return_xxx)))))
-         $Pattern.return_xxx))
+                  ((Nil ()) (invoke True $Pattern.return_8))
+                  (#Pattern.__0 (invoke False $Pattern.return_8)))))
+         $Pattern.return_7))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

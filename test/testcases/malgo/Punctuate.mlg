@@ -11,13 +11,13 @@ data SExpr = Symbol String
 
 def show : SExpr -> String
 def show =
-  { Symbol str -> "Symbol " <> str,
-    SInt int -> "SInt " <> toStringInt32 int,
-    SList ss -> "SList [" <> concatString (punctuate ", " (mapList show ss)) <> "]"
+  { (Symbol str) -> "Symbol " <> str,
+    (SInt int) -> "SInt " <> toStringInt32 int,
+    (SList ss) -> "SList [" <> concatString (punctuate ", " (mapList show ss)) <> "]"
   }
 
 def main = {
-  -- (x (y (z)))  
+  -- (x (y (z)))
   let x = SList [Symbol "x", SList [Symbol "y", SList [Symbol "z"]]];
   putStrLn (show x)
 }

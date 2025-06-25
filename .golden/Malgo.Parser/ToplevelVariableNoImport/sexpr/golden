@@ -22,7 +22,7 @@
       (sig printString (-> String (tuple)))
       (def
          printString
-         (fn ((clause (String# x) (seq (do (apply printString# x)))))))
+         (fn ((clause ((con String# (x))) (seq (do (apply printString# x)))))))
       (sig identity (-> a a))
       (def identity (fn ((clause (x) (seq (do x))))))
       (sig const (-> a (-> b a)))
@@ -45,7 +45,7 @@
          toStringInt32
          (fn
             ((clause
-                (Int32# x)
+                ((con Int32# (x)))
                 (seq (do (apply String# (seq (do (apply toStringInt32# x))))))))))
       (def one (int32 1))
       (def addOne (apply addInt32 one))
@@ -56,7 +56,7 @@
          (apply
             (fn
                ((clause (Nothing) (seq (do Nothing)))
-                  (clause (Just x) (seq (do Nothing)))))
+                  (clause ((con Just (x))) (seq (do Nothing)))))
             (seq (do (apply Just (tuple))))))
       (def
          main
@@ -70,7 +70,7 @@
                             ((clause
                                 (Nothing)
                                 (seq (do (apply printString (string "OK")))))
-                               (clause (Just _) (seq (do (tuple))))))
+                               (clause ((con Just (_))) (seq (do (tuple))))))
                          comp))
                    (do
                       (apply

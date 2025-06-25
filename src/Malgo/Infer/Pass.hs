@@ -1,7 +1,6 @@
 module Malgo.Infer.Pass (InferPass (..)) where
 
 import Control.Lens (forOf, mapped, to, traverseOf, traversed, view, (^.), _1, _2, _3)
-import Data.List qualified as List
 import Data.List.Extra (anySame)
 import Data.List.NonEmpty qualified as NonEmpty
 import Data.Map.Strict qualified as Map
@@ -361,11 +360,11 @@ tcExpr (OpApp x@(pos, _) op e1 e2) = do
   retType <- TyMeta <$> freshVar Nothing
   tell [(pos, opType :~ TyArr (typeOf e1') (TyArr (typeOf e2') retType))]
   pure $ OpApp (Typed retType x) op e1' e2'
-tcExpr (Fn pos (Clause x [] e :| _)) = do
-  e' <- tcExpr e
-  hole <- newInternalId "$_"
-  modify $ insertSignature hole (Forall [] (TyTuple 0))
-  pure $ Fn (Typed (TyArr (TyTuple 0) (typeOf e')) pos) (Clause (Typed (TyArr (TyTuple 0) (typeOf e')) x) [VarP (Typed (TyTuple 0) pos) hole] e' :| [])
+-- tcExpr (Fn pos (Clause x [] e :| _)) = do
+--   e' <- tcExpr e
+--   hole <- newInternalId "$_"
+--   modify $ insertSignature hole (Forall [] (TyTuple 0))
+--   pure $ Fn (Typed (TyArr (TyTuple 0) (typeOf e')) pos) (Clause (Typed (TyArr (TyTuple 0) (typeOf e')) x) [VarP (Typed (TyTuple 0) pos) hole] e' :| [])
 tcExpr (Fn pos cs) = do
   (c' :| cs') <- traverse tcClause cs
   -- パターンの数がすべての節で同じかを検査
@@ -424,6 +423,7 @@ tcPatterns (VarP x v : rest) = do
   pure $ VarP (Typed ty x) v : rest'
 tcPatterns (ConP pos con pats : rest) = do
   conType <- instantiate pos =<< lookupVar pos con
+  {-
   let (conParams, _) = splitTyArr conType
   -- コンストラクタの型に基づくASTの組み換え
   -- 足りない分を後続のパターン列から補充
@@ -432,6 +432,9 @@ tcPatterns (ConP pos con pats : rest) = do
   -- 2引数以上の関数での文法エラー
   when (not (null morePats) && not (null actualRest)) do
     throwError $ MissingParentheses pos
+  -}
+  let morePats = []
+  let actualRest = rest
   pats' <- tcPatterns (pats <> morePats)
   ty <- TyMeta <$> freshVar Nothing
   let patTypes = map typeOf pats'

@@ -16,12 +16,10 @@ import Malgo.Module
 import Malgo.Parser.Pass (ParserPass (..))
 import Malgo.Pass (CompileError, Pass (..), runCompileError)
 import Malgo.Prelude
-import Malgo.Refine
 import Malgo.Rename
-import Malgo.Sequent.Core (Join)
-import Malgo.Sequent.Core qualified as Sequent
 import Malgo.Sequent.Core.Flat (FlatPass (..))
 import Malgo.Sequent.Core.Join (JoinPass (..))
+import Malgo.Sequent.Core.Join qualified as Join
 import Malgo.Sequent.Eval (EvalPass (..), Handlers (..))
 import Malgo.Sequent.ToCore (ToCorePass (..))
 import Malgo.Sequent.ToFun (ToFunPass (..))
@@ -58,7 +56,7 @@ compileToCore ::
   ) =>
   ArtifactPath ->
   Syntax.Module (Malgo NewParse) ->
-  Eff es (Sequent.Program Join)
+  Eff es Join.Program
 compileToCore srcPath parsedAst = do
   let moduleName = parsedAst.moduleName
   registerModule moduleName srcPath
@@ -70,15 +68,13 @@ compileToCore srcPath parsedAst = do
   rnEnv <- genBuiltinRnEnv
   (renamedAst, rnState) <- withDump flags.debugMode "=== RENAME ===" do
     runPass RenamePass (parsedAst, rnEnv)
-  (typedAst, tcEnv, kindCtx) <- withDump flags.debugMode "=== TYPE CHECK ===" do
+  (_, tcEnv, kindCtx) <- withDump flags.debugMode "=== TYPE CHECK ===" do
     runPass InferPass (renamedAst, rnEnv)
-  refinedAst <- withDump flags.debugMode "=== REFINE ===" do
-    runPass RefinePass (typedAst, tcEnv)
 
   let inf = buildInterface moduleName rnState tcEnv kindCtx
   save srcPath ".mlgi" (ViaStore inf)
 
-  generateSequent srcPath rnState refinedAst
+  generateSequent srcPath rnState renamedAst
 
 generateSequent ::
   ( IOE :> es,
@@ -88,8 +84,8 @@ generateSequent ::
   ) =>
   ArtifactPath ->
   RnState ->
-  Syntax.Module (Malgo Refine) ->
-  Eff es (Sequent.Program Join)
+  Syntax.Module (Malgo Rename) ->
+  Eff es Join.Program
 generateSequent srcPath rnState Syntax.Module {..} = do
   program <- runReader moduleName do
     runPass ToFunPass moduleDefinition
@@ -99,17 +95,17 @@ generateSequent srcPath rnState Syntax.Module {..} = do
   save srcPath ".sqt" (ViaStore program)
   linkSequent rnState.dependencies program
 
-linkSequent :: (Workspace :> es, IOE :> es) => Set ModuleName -> Sequent.Program Join -> Eff es (Sequent.Program Join)
+linkSequent :: (Workspace :> es, IOE :> es) => Set ModuleName -> Join.Program -> Eff es Join.Program
 linkSequent dependencies program = do
   deps <- for (Set.toList dependencies) \dep -> do
     path <- getModulePath dep
     ViaStore x <- load path ".sqt"
     pure x
   let program' =
-        Sequent.Program
+        Join.Program
           { definitions =
               program.definitions
-                <> concatMap (\Sequent.Program {definitions} -> definitions) deps,
+                <> concatMap (\Join.Program {definitions} -> definitions) deps,
             dependencies = []
           }
   pure program'
@@ -149,7 +145,9 @@ compile srcPath = do
   flags <- ask @Flag
   pwd <- pwdPath
   srcModulePath <- parseArtifactPath pwd srcPath
-  src <- load srcModulePath ".mlg"
+  -- src <- load srcModulePath ".mlg"
+  src <- liftIO $ BS.readFile srcPath -- Read raw source file instead of .malgo-works file
+  save srcModulePath ".mlg" src
   runCompileError do
     parsedAst <- runPass ParserPass (srcPath, convertString @BS.ByteString src)
     when flags.debugMode do
