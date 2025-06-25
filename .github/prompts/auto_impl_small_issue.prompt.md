@@ -35,7 +35,7 @@ Follow **Planning** → **Action**. Obtain user approval between Planning and Ac
 11. Push the branch and create a draft pull request:
     ```bash
     git push --set-upstream origin fix/${issue_number}/<short-description>
-    gh pr create --draft --base main --title "<concise summary>" --body "fix: #${issue_number} Auto-generated PR\n\n- Description of changes\n- References or notes\n- Questions or concerns"
+    gh pr create --draft --base master --title "<concise summary>" --body "fix: #${issue_number} Auto-generated PR\n\n- Description of changes\n- References or notes\n- Questions or concerns"
     ```
 
 ## Pull Request Format
@@ -45,4 +45,4 @@ Follow **Planning** → **Action**. Obtain user approval between Planning and Ac
   - A brief description of the changes
   - Any relevant references or special considerations
   - Any questions or concerns
-- Base branch: `main`
+- Base branch: `master`
