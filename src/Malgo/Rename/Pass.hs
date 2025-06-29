@@ -25,7 +25,7 @@ import Prettyprinter (brackets, nest, squotes, vsep, (<+>))
 data RenamePass = RenamePass
 
 instance Pass RenamePass where
-  type Input RenamePass = (Module (Malgo NewParse), RnEnv)
+  type Input RenamePass = (Module (Malgo Parse), RnEnv)
   type Output RenamePass = (Module (Malgo Rename), RnState)
   type ErrorType RenamePass = RenameError
   type
@@ -53,7 +53,7 @@ rnDecls ::
     Workspace :> es,
     Error RenameError :> es
   ) =>
-  [Decl (Malgo NewParse)] ->
+  [Decl (Malgo Parse)] ->
   Eff es [Decl (Malgo Rename)]
 rnDecls ds = do
   -- RnEnvの生成
@@ -78,7 +78,7 @@ rnDecl ::
     Workspace :> es,
     Error RenameError :> es
   ) =>
-  Decl (Malgo NewParse) ->
+  Decl (Malgo Parse) ->
   Eff es (Decl (Malgo Rename))
 rnDecl (ScDef pos name expr) = do
   resolvedName <- lookupVarName pos name
@@ -97,9 +97,8 @@ rnDecl (DataDef pos name params cs) = do
   resolvedName <- lookupTypeName pos name
   registerExportedTypeIdent resolvedName
   local (insertTypeIdent (zip (map snd params) (map (Qualified Implicit) params')))
-    $ DataDef pos resolvedName
-    <$> pure (zipWith (\(range, _) p' -> (range, p')) params params')
-    <*> traverse
+    $ DataDef pos resolvedName (zipWith (\(range, _) p' -> (range, p')) params params')
+    <$> traverse
       ( bitraverse
           ( \cname -> do
               resolvedCName <- lookupVarName pos cname
@@ -114,9 +113,8 @@ rnDecl (TypeSynonym pos name params typ) = do
   resolvedName <- lookupTypeName pos name
   registerExportedTypeIdent resolvedName
   local (insertTypeIdent (zip params $ map (Qualified Implicit) params'))
-    $ TypeSynonym pos resolvedName
-    <$> pure params'
-    <*> rnType typ
+    $ TypeSynonym pos resolvedName params'
+    <$> rnType typ
 rnDecl (Infix pos assoc prec name) = do
   resolvedName <- lookupVarName pos name
   registerExportedIdent resolvedName
@@ -140,7 +138,7 @@ rnDecl (Import pos modName importList) = do
   pure $ Import pos modName importList
 
 -- | Get type variables from a type.
-getTyVars :: Type (Malgo NewParse) -> Eff es (Set Text)
+getTyVars :: Type (Malgo Parse) -> Eff es (Set Text)
 getTyVars (TyApp _ t ts) = do
   t <- getTyVars t
   ts <- mconcat <$> traverse getTyVars ts
@@ -164,9 +162,9 @@ rnExpr ::
     Reader Flag :> es,
     Error RenameError :> es
   ) =>
-  Expr (Malgo NewParse) ->
+  Expr (Malgo Parse) ->
   Eff es (Expr (Malgo Rename))
-rnExpr (Var pos name) = Var pos <$> lookupVarName pos name
+rnExpr (Var range name) = Var range <$> lookupVarName range name
 rnExpr (Unboxed pos val) = pure $ Unboxed pos val
 rnExpr (Boxed pos val) = do
   f <- lookupBox pos val
@@ -180,12 +178,14 @@ rnExpr (OpApp pos op e1 e2) = do
   case mfixity of
     Just fixity -> mkOpApp pos fixity op' e1' e2'
     Nothing -> errorOn pos $ "No infix declaration:" <+> squotes (pretty op)
-rnExpr (Project pos (Var _ name) field) = do
-  moduleNames <- asks @RnEnv (.moduleNames)
-  if ModuleName name `Set.member` moduleNames
-    then Var pos <$> lookupQualifiedVarName pos (ModuleName name) field
-    else Project pos <$> rnExpr (Var pos name) <*> pure field
-rnExpr (Project pos expr field) = Project pos <$> rnExpr expr <*> pure field
+rnExpr (Project range expr field) =
+  case expr of
+    Var vRange name -> do
+      moduleNames <- asks @RnEnv (.moduleNames)
+      if ModuleName name `Set.member` moduleNames
+        then Var range <$> lookupQualifiedVarName range (ModuleName name) field
+        else Project range <$> rnExpr (Var vRange name) <*> pure field
+    _ -> Project range <$> rnExpr expr <*> pure field
 rnExpr (Fn pos (Clause x [] e :| _)) = do
   e' <- rnExpr e
   hole <- newInternalId "$_"
@@ -221,7 +221,7 @@ lookupBox pos Char {} = lookupVarName pos "Char#"
 lookupBox pos String {} = lookupVarName pos "String#"
 
 -- | Rename a type.
-rnType :: (Reader RnEnv :> es, IOE :> es, Reader Flag :> es, Error RenameError :> es) => Type (Malgo NewParse) -> Eff es (Type (Malgo Rename))
+rnType :: (Reader RnEnv :> es, IOE :> es, Reader Flag :> es, Error RenameError :> es) => Type (Malgo Parse) -> Eff es (Type (Malgo Rename))
 rnType (TyApp pos t ts) = TyApp pos <$> rnType t <*> traverse rnType ts
 rnType (TyVar pos x)
   | isUpper (T.head x) = TyCon pos <$> lookupTypeName pos x
@@ -241,7 +241,7 @@ rnClause ::
     Reader Flag :> es,
     Error RenameError :> es
   ) =>
-  Clause (Malgo NewParse) ->
+  Clause (Malgo Parse) ->
   Eff es (Clause (Malgo Rename))
 rnClause (Clause pos ps e) = do
   ps <- traverse resolveConP ps
@@ -252,7 +252,7 @@ rnClause (Clause pos ps e) = do
   vm <- zip vars . map (Qualified Implicit) <$> traverse resolveName vars
   local (insertVarIdent vm) $ Clause pos <$> traverse rnPat ps <*> rnExpr e
   where
-    resolveConP :: Pat (Malgo NewParse) -> Eff es (Pat (Malgo NewParse))
+    resolveConP :: Pat (Malgo Parse) -> Eff es (Pat (Malgo Parse))
     resolveConP (VarP pos name)
       | isUpper (T.head name) = pure $ ConP pos name []
       | otherwise = pure $ VarP pos name
@@ -280,7 +280,7 @@ rnClause (Clause pos ps e) = do
     patVars BoxedP {} = []
 
 -- | Rename a pattern.
-rnPat :: (Reader RnEnv :> es, IOE :> es, Reader Flag :> es, Error RenameError :> es) => Pat (Malgo NewParse) -> Eff es (Pat (Malgo Rename))
+rnPat :: (Reader RnEnv :> es, IOE :> es, Reader Flag :> es, Error RenameError :> es) => Pat (Malgo Parse) -> Eff es (Pat (Malgo Rename))
 rnPat (VarP pos x) = VarP pos <$> lookupVarName pos x
 rnPat (ConP pos x xs) = ConP pos <$> lookupVarName pos x <*> traverse rnPat xs
 rnPat (TupleP pos xs) = TupleP pos <$> traverse rnPat xs
@@ -304,7 +304,7 @@ rnStmts ::
     Reader Flag :> es,
     Error RenameError :> es
   ) =>
-  NonEmpty (Stmt (Malgo NewParse)) ->
+  NonEmpty (Stmt (Malgo Parse)) ->
   Eff es (NonEmpty (Stmt (Malgo Rename)))
 rnStmts (NoBind x e :| []) = do
   e' <- rnExpr e
@@ -334,7 +334,7 @@ rnStmts (With x Nothing e :| s : ss) = do
 rnStmts (With x _ _ :| []) = errorOn x "`with` statement cannnot appear in the last line of the sequence expression."
 
 -- | Convert infix declarations to a Map. Infix for an undefined identifier is an error.
-infixDecls :: (Reader RnEnv :> es, Error RenameError :> es) => [Decl (Malgo NewParse)] -> Eff es (Map RnId (Assoc, Int))
+infixDecls :: (Reader RnEnv :> es, Error RenameError :> es) => [Decl (Malgo Parse)] -> Eff es (Map RnId (Assoc, Int))
 infixDecls ds =
   foldMapM ?? ds $ \case
     (Infix pos assoc order name) -> do
@@ -343,7 +343,7 @@ infixDecls ds =
     _ -> pure mempty
 
 -- | OpApp recombination.
--- Every OpApp in 'Malgo NewParsed' is treated as left associative.
+-- Every OpApp in 'Malgo Parse' is treated as left associative.
 -- 'mkOpApp' transforms it to actual associativity.
 mkOpApp ::
   (IOE :> es, Reader Flag :> es) =>
@@ -353,10 +353,10 @@ mkOpApp ::
   -- | Outer operator
   RnId ->
   -- | Left expression as (x op y)
-  Expr (Malgo 'Rename) ->
+  Expr (Malgo Rename) ->
   -- | Right expression
-  Expr (Malgo 'Rename) ->
-  Eff es (Expr (Malgo 'Rename))
+  Expr (Malgo Rename) ->
+  Eff es (Expr (Malgo Rename))
 -- (e11 op1 e12) op2 e2
 mkOpApp pos2 fix2 op2 (OpApp (pos1, fix1) op1 e11 e12) e2
   | nofix_error =
@@ -393,8 +393,8 @@ mkOpApp pos2 fix2 op2 (OpApp (pos1, fix1) op1 e11 e12) e2
 mkOpApp pos fix op e1 e2 = pure $ OpApp (pos, fix) op e1 e2
 
 -- | Generate toplevel environment.
-genToplevelEnv :: (IOE :> es, Reader ModuleName :> es, State (Map ModuleName Interface) :> es, Workspace :> es, Error RenameError :> es) => [Decl (Malgo NewParse)] -> RnEnv -> Eff es RnEnv
-genToplevelEnv (ds :: [Decl (Malgo NewParse)]) env = do
+genToplevelEnv :: (IOE :> es, Reader ModuleName :> es, State (Map ModuleName Interface) :> es, Workspace :> es, Error RenameError :> es) => [Decl (Malgo Parse)] -> RnEnv -> Eff es RnEnv
+genToplevelEnv (ds :: [Decl (Malgo Parse)]) env = do
   execState env (traverse aux ds)
   where
     aux (ScDef pos x _) = do

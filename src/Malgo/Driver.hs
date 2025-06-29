@@ -54,7 +54,7 @@ compileToCore ::
     Workspace :> es
   ) =>
   ArtifactPath ->
-  Syntax.Module (Malgo NewParse) ->
+  Syntax.Module (Malgo Parse) ->
   Eff es Join.Program
 compileToCore srcPath parsedAst = do
   let moduleName = parsedAst.moduleName
@@ -117,7 +117,7 @@ compileFromAST ::
     Workspace :> es
   ) =>
   ArtifactPath ->
-  Syntax.Module (Malgo NewParse) ->
+  Syntax.Module (Malgo Parse) ->
   Eff es ()
 compileFromAST srcPath parsedAst = do
   let moduleName = parsedAst.moduleName

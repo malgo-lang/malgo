@@ -387,15 +387,9 @@ instance (ForallDeclX Pretty x, Pretty (XId x)) => Pretty (ParsedDefinitions x) 
   pretty (ParsedDefinitions ds) = sep $ map pretty ds
 
 -- モジュールの循環参照を防ぐため、このモジュールでtype instanceを定義する
-type instance XModule (Malgo 'Parse) = ParsedDefinitions (Malgo Parse)
+type instance XModule (Malgo Parse) = ParsedDefinitions (Malgo Parse)
 
-type instance XModule (Malgo 'NewParse) = ParsedDefinitions (Malgo NewParse)
-
-type instance XModule (Malgo 'Rename) = BindGroup (Malgo 'Rename)
-
-type instance XModule (Malgo 'Infer) = BindGroup (Malgo 'Infer)
-
-type instance XModule (Malgo 'Refine) = BindGroup (Malgo 'Refine)
+type instance XModule (Malgo Rename) = BindGroup (Malgo Rename)
 
 -- * Bind group
 

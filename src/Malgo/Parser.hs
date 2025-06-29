@@ -20,7 +20,7 @@ import Text.Megaparsec.Char.Lexer qualified as L
 type Parser es = ParsecT Void TL.Text (Eff es)
 
 -- | parse a module. Returns the list of pragmas and the module.
-parse :: (IOE :> es, Workspace :> es, Features :> es) => FilePath -> TL.Text -> Eff es (Either (ParseErrorBundle TL.Text Void) (Module (Malgo NewParse)))
+parse :: (IOE :> es, Workspace :> es, Features :> es) => FilePath -> TL.Text -> Eff es (Either (ParseErrorBundle TL.Text Void) (Module (Malgo Parse)))
 parse srcPath text = runFileSystem do
   let features = parseFeatures $ extractPragmas text
   addFeatures features
@@ -36,14 +36,14 @@ extractPragmas = go [] . TL.lines
       | "#" `TL.isPrefixOf` l = go (TL.drop 1 l : pragmas) ls
       | otherwise = go pragmas ls
 
-parser :: (IOE :> es, Workspace :> es, Features :> es) => Parser es (Module (Malgo NewParse))
+parser :: (IOE :> es, Workspace :> es, Features :> es) => Parser es (Module (Malgo Parse))
 parser = do
   space
   mod <- pModuleFile
   eof
   pure mod
 
-pModuleFile :: (IOE :> es, Workspace :> es, Features :> es) => Parser es (Module (Malgo NewParse))
+pModuleFile :: (IOE :> es, Workspace :> es, Features :> es) => Parser es (Module (Malgo Parse))
 pModuleFile = do
   sourcePath <- (.sourceName) <$> getSourcePos
   pwd <- lift pwdPath
@@ -60,7 +60,7 @@ pModuleFile = do
 -- | pDecl parses a declaration and skips any leading pragmas.
 --
 -- > decl = dataDef | typeSynonym | infix | foreign | import | scSig | scDef ;
-pDecl :: (IOE :> es, Workspace :> es, Features :> es) => Parser es (Decl (Malgo NewParse))
+pDecl :: (IOE :> es, Workspace :> es, Features :> es) => Parser es (Decl (Malgo Parse))
 pDecl = do
   _ <- many skipPragma
   choice
@@ -85,7 +85,7 @@ skipPragma = lexeme do
 --
 -- > dataDef = "data" ident ident* "=" constructor ("|" constructor)* ;
 -- > constructor = ident atomType* ;
-pDataDef :: Parser es (Decl (Malgo NewParse))
+pDataDef :: Parser es (Decl (Malgo Parse))
 pDataDef = do
   start <- getSourcePos
   reserved "data"
@@ -110,7 +110,7 @@ pDataDef = do
 -- | pTypeSynonym parses a type synonym.
 --
 -- > typeSynonym = "type" ident ident* "=" type ;
-pTypeSynonym :: Parser es (Decl (Malgo NewParse))
+pTypeSynonym :: Parser es (Decl (Malgo Parse))
 pTypeSynonym = do
   start <- getSourcePos
   reserved "type"
@@ -124,7 +124,7 @@ pTypeSynonym = do
 -- | pInfix parses an infix declaration.
 --
 -- > infix = "infixl" decimal operator | "infixr" decimal operator | "infix" decimal operator ;
-pInfix :: Parser es (Decl (Malgo NewParse))
+pInfix :: Parser es (Decl (Malgo Parse))
 pInfix = do
   start <- getSourcePos
   choice
@@ -151,7 +151,7 @@ pInfix = do
 -- | pForeign parses a foreign declaration.
 --
 -- > foreign = "foreign" "import" ident ":" type ;
-pForeign :: Parser es (Decl (Malgo NewParse))
+pForeign :: Parser es (Decl (Malgo Parse))
 pForeign = do
   start <- getSourcePos
   reserved "foreign"
@@ -169,7 +169,7 @@ pForeign = do
 -- >            | "{" importItem ("," importItem)* "}"
 -- >            | moduleName ;
 -- > importItem = ident | "(" operator ")" ;
-pImport :: (IOE :> es, Workspace :> es) => Parser es (Decl (Malgo NewParse))
+pImport :: (IOE :> es, Workspace :> es) => Parser es (Decl (Malgo Parse))
 pImport = do
   start <- getSourcePos
   reserved "module"
@@ -202,7 +202,7 @@ pImport = do
 -- | pScSig parses a value signature.
 --
 -- > scSig = "def" (ident | "(" operator")")":" type ;
-pScSig :: Parser es (Decl (Malgo NewParse))
+pScSig :: Parser es (Decl (Malgo Parse))
 pScSig = do
   start <- getSourcePos
   reserved "def"
@@ -215,7 +215,7 @@ pScSig = do
 -- | pScDef parses a value definition.
 --
 -- > scDef = "def" (ident | "(" operator")") "=" expr ;
-pScDef :: (Features :> es) => Parser es (Decl (Malgo NewParse))
+pScDef :: (Features :> es) => Parser es (Decl (Malgo Parse))
 pScDef = do
   start <- getSourcePos
   reserved "def"
@@ -227,7 +227,7 @@ pScDef = do
 
 -- * Exprs
 
-pExpr :: (Features :> es) => Parser es (Expr (Malgo NewParse))
+pExpr :: (Features :> es) => Parser es (Expr (Malgo Parse))
 pExpr = do
   start <- getSourcePos
   expr <- pOpApp
@@ -243,7 +243,7 @@ pExpr = do
 -- | pOpApp parses an operator application.
 --
 -- > opApp = apply (operator apply)* ;
-pOpApp :: (Features :> es) => Parser es (Expr (Malgo NewParse))
+pOpApp :: (Features :> es) => Parser es (Expr (Malgo Parse))
 pOpApp = makeExprParser pApply table
   where
     table =
@@ -262,7 +262,7 @@ pOpApp = makeExprParser pApply table
 -- > apply = project
 -- >       | project "(" ")"
 -- >       | project "(" expr ("," expr)* ")" ;
-pApply :: (Features :> es) => Parser es (Expr (Malgo NewParse))
+pApply :: (Features :> es) => Parser es (Expr (Malgo Parse))
 pApply = do
   cStyleApply <- lift $ hasFeature CStyleApply
   if cStyleApply
@@ -292,7 +292,7 @@ pApply = do
 -- | pProject parses a projection.
 --
 -- > project = atom ("." ident)* ;
-pProject :: (Features :> es) => Parser es (Expr (Malgo NewParse))
+pProject :: (Features :> es) => Parser es (Expr (Malgo Parse))
 pProject =
   makeExprParser
     pAtom
@@ -313,7 +313,7 @@ pProject =
 -- >      | brace
 -- >      | list
 -- >      | seq
-pAtom :: (Features :> es) => Parser es (Expr (Malgo NewParse))
+pAtom :: (Features :> es) => Parser es (Expr (Malgo Parse))
 pAtom =
   choice
     [ pLiteral,
@@ -329,7 +329,7 @@ pAtom =
 --
 -- > literal = boxed ["#"] ;
 -- > boxed = double | float | int | long | char | string ;
-pLiteral :: Parser es (Expr (Malgo NewParse))
+pLiteral :: Parser es (Expr (Malgo Parse))
 pLiteral = do
   start <- getSourcePos
   boxed <- pBoxed
@@ -393,7 +393,7 @@ pStringLiteral = lexeme do
 -- | pVariable parses a variable.
 --
 -- > variable = ident ;
-pVariable :: Parser es (Expr (Malgo NewParse))
+pVariable :: Parser es (Expr (Malgo Parse))
 pVariable = do
   start <- getSourcePos
   name <- ident
@@ -408,7 +408,7 @@ pVariable = do
 -- If c-style-apply is enabled:
 -- > tuple = "{" expr ("," expr)+ "}"
 -- >       | "{" "}"
-pTuple :: (Features :> es) => Parser es (Expr (Malgo NewParse))
+pTuple :: (Features :> es) => Parser es (Expr (Malgo Parse))
 pTuple = do
   cStyleApply <- lift $ hasFeature CStyleApply
   if cStyleApply
@@ -434,7 +434,7 @@ pTuple = do
         _ -> pure $ Tuple (Range start end) exprs
 
 -- > record = ident "=" expr ("," ident "=" expr)* ;
-pRecord :: (Features :> es) => Parser es (Expr (Malgo NewParse))
+pRecord :: (Features :> es) => Parser es (Expr (Malgo Parse))
 pRecord = do
   start <- getSourcePos
   fields <- between (symbol "{") (symbol "}") $ sepEndBy1 pField (symbol ",")
@@ -448,7 +448,7 @@ pRecord = do
       pure (field, value)
 
 -- > function = clause ("," clause)* ;
-pFn :: (Features :> es) => Parser es (Expr (Malgo NewParse))
+pFn :: (Features :> es) => Parser es (Expr (Malgo Parse))
 pFn = do
   start <- getSourcePos
   clauses <- between (symbol "{") (symbol "}") $ sepEndBy1 pClause (symbol ",")
@@ -456,7 +456,7 @@ pFn = do
   pure $ Fn (Range start end) $ NonEmpty.fromList clauses
 
 -- > clause = pattern+ "->" stmts ;
-pClause :: (Features :> es) => Parser es (Clause (Malgo NewParse))
+pClause :: (Features :> es) => Parser es (Clause (Malgo Parse))
 pClause = do
   start <- getSourcePos
   cStyleApply <- lift $ hasFeature CStyleApply
@@ -471,17 +471,17 @@ pClause = do
   end <- getSourcePos
   pure $ Clause (Range start end) patterns body
 
-pStmts :: (Features :> es) => Parser es (Expr (Malgo NewParse))
+pStmts :: (Features :> es) => Parser es (Expr (Malgo Parse))
 pStmts = do
   start <- getSourcePos
   stmts <- sepEndBy1 pStmt (symbol ";")
   end <- getSourcePos
   pure $ Seq (Range start end) $ NonEmpty.fromList stmts
 
-pStmt :: (Features :> es) => Parser es (Stmt (Malgo NewParse))
+pStmt :: (Features :> es) => Parser es (Stmt (Malgo Parse))
 pStmt = pLet <|> pWith <|> pNoBind
 
-pLet :: (Features :> es) => Parser es (Stmt (Malgo NewParse))
+pLet :: (Features :> es) => Parser es (Stmt (Malgo Parse))
 pLet = do
   start <- getSourcePos
   reserved "let"
@@ -491,7 +491,7 @@ pLet = do
   end <- getSourcePos
   pure $ Let (Range start end) name body
 
-pWith :: (Features :> es) => Parser es (Stmt (Malgo NewParse))
+pWith :: (Features :> es) => Parser es (Stmt (Malgo Parse))
 pWith = do
   start <- getSourcePos
   reserved "with"
@@ -508,21 +508,21 @@ pWith = do
         pure $ With (Range start end) Nothing body
     ]
 
-pNoBind :: (Features :> es) => Parser es (Stmt (Malgo NewParse))
+pNoBind :: (Features :> es) => Parser es (Stmt (Malgo Parse))
 pNoBind = do
   start <- getSourcePos
   body <- pExpr
   end <- getSourcePos
   pure $ NoBind (Range start end) body
 
-pList :: (Features :> es) => Parser es (Expr (Malgo NewParse))
+pList :: (Features :> es) => Parser es (Expr (Malgo Parse))
 pList = between (symbol "[") (symbol "]") do
   start <- getSourcePos
   elements <- sepEndBy pExpr (symbol ",")
   end <- getSourcePos
   pure $ List (Range start end) elements
 
-pSeq :: (Features :> es) => Parser es (Expr (Malgo NewParse))
+pSeq :: (Features :> es) => Parser es (Expr (Malgo Parse))
 pSeq = between (symbol "(") (symbol ")") pStmts
 
 -- * Patterns
@@ -531,10 +531,10 @@ pSeq = between (symbol "(") (symbol ")") pStmts
 --
 -- > pattern = ident atomPat+
 -- >         | atomPat ;
-pPat :: (Features :> es) => Parser es (Pat (Malgo NewParse))
+pPat :: (Features :> es) => Parser es (Pat (Malgo Parse))
 pPat = try pConP <|> pAtomPat
 
-pConP :: (Features :> es) => Parser es (Pat (Malgo NewParse))
+pConP :: (Features :> es) => Parser es (Pat (Malgo Parse))
 pConP = do
   start <- getSourcePos
   name <- ident
@@ -549,7 +549,7 @@ pConP = do
 -- >         | tuplePat
 -- >         | recordPat
 -- >         | listPat
-pAtomPat :: (Features :> es) => Parser es (Pat (Malgo NewParse))
+pAtomPat :: (Features :> es) => Parser es (Pat (Malgo Parse))
 pAtomPat =
   choice
     [ pVarP,
@@ -562,7 +562,7 @@ pAtomPat =
 -- | pVarP parses a variable pattern.
 --
 -- > varPat = ident ;
-pVarP :: Parser es (Pat (Malgo NewParse))
+pVarP :: Parser es (Pat (Malgo Parse))
 pVarP = do
   start <- getSourcePos
   name <- ident
@@ -570,7 +570,7 @@ pVarP = do
   pure $ VarP (Range start end) name
 
 -- | pLiteralP parses a literal pattern.
-pLiteralP :: Parser es (Pat (Malgo NewParse))
+pLiteralP :: Parser es (Pat (Malgo Parse))
 pLiteralP = do
   start <- getSourcePos
   boxed <- pBoxed
@@ -584,7 +584,7 @@ pLiteralP = do
 --
 -- > tuplePat = "(" pattern ("," pattern)* ")"
 -- >          | "(" ")" ;
-pTupleP :: (Features :> es) => Parser es (Pat (Malgo NewParse))
+pTupleP :: (Features :> es) => Parser es (Pat (Malgo Parse))
 pTupleP = do
   cStyleApply <- lift $ hasFeature CStyleApply
   if cStyleApply
@@ -609,7 +609,7 @@ pTupleP = do
 -- | pRecordP parses a record pattern.
 --
 -- > recordPat = "{" ident "=" pattern ("," ident "=" pattern)* "}" ;
-pRecordP :: (Features :> es) => Parser es (Pat (Malgo NewParse))
+pRecordP :: (Features :> es) => Parser es (Pat (Malgo Parse))
 pRecordP = do
   start <- getSourcePos
   fields <- between (symbol "{") (symbol "}") $ sepEndBy1 pField (symbol ",")
@@ -625,7 +625,7 @@ pRecordP = do
 -- | pListP parses a list pattern.
 --
 -- > listPat = "[" pattern ("," pattern)* "]" ;
-pListP :: (Features :> es) => Parser es (Pat (Malgo NewParse))
+pListP :: (Features :> es) => Parser es (Pat (Malgo Parse))
 pListP = do
   start <- getSourcePos
   pats <- between (symbol "[") (symbol "]") $ sepEndBy pPat (symbol ",")
@@ -638,7 +638,7 @@ pListP = do
 --
 -- > type = tyapp "->" type
 -- >      | tyapp ;
-pType :: Parser es (Type (Malgo NewParse))
+pType :: Parser es (Type (Malgo Parse))
 pType = makeExprParser pTyApp table
   where
     table =
@@ -652,7 +652,7 @@ pType = makeExprParser pTyApp table
 -- | pTyApp parses a type application.
 --
 -- > tyapp = atomType atomType* ;
-pTyApp :: Parser es (Type (Malgo NewParse))
+pTyApp :: Parser es (Type (Malgo Parse))
 pTyApp = do
   start <- getSourcePos
   ty <- pAtomType
@@ -668,13 +668,13 @@ pTyApp = do
 -- >          | tyTuple
 -- >          | tyRecord
 -- >          | tyBlock
-pAtomType :: Parser es (Type (Malgo NewParse))
+pAtomType :: Parser es (Type (Malgo Parse))
 pAtomType = choice [pTyVar, pTyTuple, try pTyRecord, pTyBlock]
 
 -- | pTyVar parses a type variable.
 --
 -- > tyVar = ident ;
-pTyVar :: Parser es (Type (Malgo NewParse))
+pTyVar :: Parser es (Type (Malgo Parse))
 pTyVar = do
   start <- getSourcePos
   name <- ident
@@ -685,7 +685,7 @@ pTyVar = do
 --
 -- > tyTuple = "(" type ("," type)* ")"
 -- >         | "(" ")" ;
-pTyTuple :: Parser es (Type (Malgo NewParse))
+pTyTuple :: Parser es (Type (Malgo Parse))
 pTyTuple = do
   start <- getSourcePos
   tys <- between (symbol "(") (symbol ")") (sepBy pType (symbol ","))
@@ -697,7 +697,7 @@ pTyTuple = do
 -- | pTyRecord parses a record type.
 --
 -- > tyRecord = "{" ident "=" type ("," ident "=" type)* "}" ;
-pTyRecord :: Parser es (Type (Malgo NewParse))
+pTyRecord :: Parser es (Type (Malgo Parse))
 pTyRecord = do
   start <- getSourcePos
   fields <- between (symbol "{") (symbol "}") $ sepEndBy1 pField (symbol ",")
@@ -713,7 +713,7 @@ pTyRecord = do
 -- | pTyBlock parses a block type.
 --
 -- > tyBlock = "{" type "}" ;
-pTyBlock :: Parser es (Type (Malgo NewParse))
+pTyBlock :: Parser es (Type (Malgo Parse))
 pTyBlock = do
   start <- getSourcePos
   ty <- between (symbol "{") (symbol "}") pType

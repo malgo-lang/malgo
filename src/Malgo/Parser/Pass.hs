@@ -9,14 +9,14 @@ import Malgo.Parser (parse)
 import Malgo.Pass
 import Malgo.Prelude
 import Malgo.Syntax (Module)
-import Malgo.Syntax.Extension (Malgo, MalgoPhase (NewParse))
+import Malgo.Syntax.Extension (Malgo, MalgoPhase (Parse))
 import Text.Megaparsec (ParseErrorBundle)
 
 data ParserPass = ParserPass
 
 instance Pass ParserPass where
   type Input ParserPass = (FilePath, TL.Text)
-  type Output ParserPass = Module (Malgo NewParse)
+  type Output ParserPass = Module (Malgo Parse)
   type ErrorType ParserPass = ParseErrorBundle TL.Text Void
   type Effects ParserPass es = (IOE :> es, Workspace :> es, Features :> es)
 
