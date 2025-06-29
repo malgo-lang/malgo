@@ -10,15 +10,12 @@ module Malgo.Interface
   )
 where
 
-import Control.Lens (ifor_)
 import Data.Map.Strict qualified as Map
 import Data.Store (Store)
-import Effectful (Eff, IOE, runPureEff, (:>))
-import Effectful.State.Static.Local (State, execState, get, modify)
+import Effectful (Eff, IOE, (:>))
+import Effectful.State.Static.Local (State, get, modify)
 import GHC.Records (HasField)
 import Malgo.Id
-import Malgo.Infer.Kind (KindCtx, insertKind)
-import Malgo.Infer.TypeRep qualified as GT
 import Malgo.Module
 import Malgo.Prelude
 import Malgo.Syntax.Extension
@@ -26,14 +23,6 @@ import Prettyprinter (viaShow)
 
 data Interface = Interface
   { moduleName :: ModuleName,
-    -- | Used in Infer
-    signatureMap :: Map PsId (GT.Scheme GT.Type),
-    -- | Used in Infer
-    typeDefMap :: Map PsId (GT.TypeDef GT.Type),
-    -- | Used in Infer
-    typeSynonymMap :: Map GT.TypeVar ([GT.TypeVar], GT.Type),
-    -- | Used in Infer
-    kindCtx :: KindCtx,
     -- | Used in Rename
     infixInfo :: Map PsId (Assoc, Int),
     -- | Used in Rename
@@ -55,49 +44,22 @@ externalFromInterface Interface {moduleName} psId =
   Id {name = psId, sort = External, moduleName}
 
 buildInterface ::
-  ( HasField "typeSynonymMap" tcEnv (Map GT.TypeVar ([GT.TypeVar], GT.Type)),
-    HasField "signatureMap" tcEnv (Map RnId (GT.Scheme GT.Type)),
-    HasField "typeDefMap" tcEnv (Map RnId (GT.TypeDef GT.Type)),
-    HasField "dependencies" rnState (Set ModuleName),
+  ( HasField "dependencies" rnState (Set ModuleName),
     HasField "infixInfo" rnState (Map Id (Assoc, Int)),
     HasField "exportedIdentifiers" rnState [PsId],
     HasField "exportedTypeIdentifiers" rnState [PsId]
   ) =>
   ModuleName ->
   rnState ->
-  tcEnv ->
-  KindCtx ->
   Interface
-buildInterface moduleName rnState tcEnv kindCtx =
-  let inf =
-        Interface
-          { moduleName,
-            signatureMap = mempty,
-            typeDefMap = mempty,
-            typeSynonymMap = mempty,
-            kindCtx = kindCtx,
-            infixInfo = Map.mapKeys (\id -> id.name) rnState.infixInfo,
-            dependencies = rnState.dependencies,
-            exportedIdentList = rnState.exportedIdentifiers,
-            exportedTypeIdentList = rnState.exportedTypeIdentifiers
-          }
-   in runPureEff $ execState inf do
-        ifor_ tcEnv.signatureMap $ \tcId scheme ->
-          when (tcId.sort == External && tcId.moduleName == moduleName) do
-            modify \inf@Interface {..} ->
-              inf {signatureMap = Map.insert tcId.name scheme signatureMap}
-        ifor_ tcEnv.typeDefMap $ \rnId typeDef -> do
-          when (rnId.sort == External && rnId.moduleName == moduleName) do
-            modify \inf@Interface {..} ->
-              inf {typeDefMap = Map.insert rnId.name typeDef typeDefMap}
-        ifor_ tcEnv.typeSynonymMap $ \tv (tvs, ty) -> do
-          when (tv.sort == External && tv.moduleName == moduleName) do
-            modify \inf@Interface {..} ->
-              inf {typeSynonymMap = Map.insert tv (tvs, ty) typeSynonymMap}
-        ifor_ kindCtx $ \tv kind -> do
-          when (tv.sort == External && tv.moduleName == moduleName) do
-            modify \inf@Interface {..} ->
-              inf {kindCtx = insertKind tv kind kindCtx}
+buildInterface moduleName rnState =
+  Interface
+    { moduleName,
+      infixInfo = Map.mapKeys (\id -> id.name) rnState.infixInfo,
+      dependencies = rnState.dependencies,
+      exportedIdentList = rnState.exportedIdentifiers,
+      exportedTypeIdentList = rnState.exportedTypeIdentifiers
+    }
 
 exportedIdentList :: (HasField "exportedIdentList" r [k]) => r -> [k]
 exportedIdentList inf = inf.exportedIdentList

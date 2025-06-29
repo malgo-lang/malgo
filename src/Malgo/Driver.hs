@@ -10,7 +10,6 @@ import Effectful.Error.Static (Error)
 import Effectful.Reader.Static
 import Effectful.State.Static.Local
 import Malgo.Features
-import Malgo.Infer
 import Malgo.Interface (Interface, buildInterface)
 import Malgo.Module
 import Malgo.Parser.Pass (ParserPass (..))
@@ -68,10 +67,8 @@ compileToCore srcPath parsedAst = do
   rnEnv <- genBuiltinRnEnv
   (renamedAst, rnState) <- withDump flags.debugMode "=== RENAME ===" do
     runPass RenamePass (parsedAst, rnEnv)
-  (_, tcEnv, kindCtx) <- withDump flags.debugMode "=== TYPE CHECK ===" do
-    runPass InferPass (renamedAst, rnEnv)
 
-  let inf = buildInterface moduleName rnState tcEnv kindCtx
+  let inf = buildInterface moduleName rnState
   save srcPath ".mlgi" (ViaStore inf)
 
   generateSequent srcPath rnState renamedAst
