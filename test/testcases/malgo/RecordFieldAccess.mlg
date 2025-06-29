@@ -1,11 +1,7 @@
 module {..} = import "../../../runtime/malgo/Builtin.mlg"
 module {..} = import "../../../runtime/malgo/Prelude.mlg"
 
-type A = { a: Int32, b: Int32 }
-
-data B = B A
-
-type C a = { x: a, y: a }
+data B = B { a: Int32, b: Int32 }
 
 def f = { { a = a, b = _ } -> a }
 

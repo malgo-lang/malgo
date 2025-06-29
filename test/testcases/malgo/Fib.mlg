@@ -1,5 +1,3 @@
-#backend sequent
-
 module {..} = import "../../../runtime/malgo/Builtin.mlg"
 module {..} = import "../../../runtime/malgo/Prelude.mlg"
 
@@ -17,5 +15,5 @@ def fib = {
 }
 
 def main = {
-  printString (toStringInt64 (fib.tail.tail.tail.head))
+  printString (toStringInt64 (fib.tail.tail.tail.tail.tail.head))
 }

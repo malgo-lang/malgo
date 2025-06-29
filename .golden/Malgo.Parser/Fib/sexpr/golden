@@ -1,0 +1,58 @@
+(module
+   "test/testcases/malgo/Fib.mlg"
+   ((import "runtime/malgo/Builtin.mlg" all)
+      (import "runtime/malgo/Prelude.mlg" all)
+      (type Stream (a) (record (head a) (tail (app Stream (a)))))
+      (def
+         zipWith
+         (fn
+            ((clause
+                (f xs ys)
+                (seq
+                   (do
+                      (record
+                         (head
+                            (apply
+                               (apply f (project xs "head"))
+                               (project ys "head")))
+                         (tail
+                            (apply
+                               (apply (apply zipWith f) (project xs "tail"))
+                               (project ys "tail"))))))))))
+      (def
+         fib
+         (record
+            (head (int64 1))
+            (tail
+               (record
+                  (head (int64 1))
+                  (tail
+                     (apply
+                        (apply (apply zipWith addInt64) fib)
+                        (project fib "tail")))))))
+      (def
+         main
+         (fn
+            ((clause
+                ()
+                (seq
+                   (do
+                      (apply
+                         printString
+                         (seq
+                            (do
+                               (apply
+                                  toStringInt64
+                                  (seq
+                                     (do
+                                        (project
+                                           (project
+                                              (project
+                                                 (project
+                                                    (project
+                                                       (project fib "tail")
+                                                       "tail")
+                                                    "tail")
+                                                 "tail")
+                                              "tail")
+                                           "head")))))))))))))))
