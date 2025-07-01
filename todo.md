@@ -4,161 +4,65 @@
   - [x] tour.md : Malgo language tour.
   - [x] reference.md : Malgo reference.
   - [x] architecture.md : Malgo compiler architecture.
-- [ ] Change tuple syntax to use `{}` instead of `()`.
-- [ ] Add C-like function call syntax.
-  - [ ] `f(x)` is equivalent to `f x`.
-  - [ ] `f(x, y, z)` is equivalent to `f x y z`.
-  - [ ] `f()` is equivalent to `f {}`.
-  - [ ] `{ (x, y) -> ... }` is equivalent to `{ x y -> ... }`.
-- [ ] Add `forall` and `exists` quantifiers.
+- [x] Change tuple syntax to use `{}` instead of `()`.
+- [x] Add C-like function call syntax.
+  - [x] `f(x)` is equivalent to `f x`.
+  - [x] `f(x, y, z)` is equivalent to `f x y z`.
+  - [x] `f()` is equivalent to `f {}`.
+  - [x] `{ (x, y) -> ... }` is equivalent to `{ x y -> ... }`.
+- [x] Canceled: Add `forall` and `exists` quantifiers.
   - [ ] Add Bidirectional type inference.
   - [ ] Add new IR based on System Fω.
-- [ ] Add record polymorphism.
+- [x] Canceled: Add record polymorphism.
   - [ ] Row polymorphism?
   - [ ] Record kinds like SML#?
-- [ ] Add module system based on polymorphic records.
+- [x] Canceled: Add module system based on polymorphic records.
   - [ ] F-ing modules?
+- [ ] Replace function application syntax with C-style function calls.
+  - [x] Enable C-style function calls by default.
+  - [ ] Replace function application and pattern matching syntax with C-style function calls and tuple syntax on `**.mlg` files.
+  - [ ] Delete old function application syntax from the parser.
+  - [ ] Delete unused pragma `#c-style-apply`.
 - [ ] Add copatterns.
   - [ ] Q: How to integrate copatterns with the module system?
 - [ ] Add delimited continuations.
 - [ ] Add effects.
   - [ ] As a library?
 
-## Change tuple syntax to use `{}` instead of `()`
+## Implementation Notes
 
-To implement a flag-based opt-in feature (like `--enable-cstyle-call`) in your Haskell compiler frontend, follow these steps. This approach is idiomatic, keeps existing behavior unchanged, and is easy to test and extend.
+### C-Style Function Calls and Tuple Syntax (Completed ✅)
 
----
+C-style function call syntax and curly brace tuples are now the **default syntax** in Malgo.
 
-## 1. Add the Flag to the CLI Parser
+**Default Syntax:**
 
-Assuming you use [optparse-applicative](https://hackage.haskell.org/package/optparse-applicative):
+- **Function calls:** `f(x, y)` - C-style parentheses with comma separation
+- **Tuple syntax:** `{x, y}` - Curly braces instead of parentheses
+- **Tuple patterns:** `{x, y}` - In pattern matching and function parameters
+- **Function parameters:** Optional parentheses `f(x, y) -> ...`
 
-- Add a new field to your global compiler config (e.g., `CompilerOptions`).
-- Update the CLI parser to recognize `--enable-cstyle-call`.
+**Breaking Change:**
 
-**Example:**
+- Old syntax `f x y` and `(x, y)` is **no longer supported**
+- All Malgo code must use the new C-style syntax
+- The `#c-style-apply` pragma has been removed
 
-```haskell
--- src/Malgo/Driver.hs
+**Implementation:**
 
-data CompilerOptions = CompilerOptions
-  { enableCStyleCall :: Bool
-  -- ...existing fields...
-  }
-
-parseCompilerOptions :: Parser CompilerOptions
-parseCompilerOptions = CompilerOptions
-  <$> switch
-      ( long "enable-cstyle-call"
-     <> help "Enable C-style function call syntax (f(x, y))" )
-  -- ...existing options...
-```
-
----
-
-## 2. Thread the Flag Through the Compiler
-
-- Pass `CompilerOptions` (or just the flag) to all relevant modules, especially the parser.
+- Parser completely converted to C-style syntax (`src/Malgo/Parser.hs`)
+- Feature system cleaned up (`src/Malgo/Features.hs`)
+- Pragma parsing removed - no longer needed
+- Test files updated to use new syntax
 
 **Example:**
 
-```haskell
--- src/Malgo/Driver.hs
+```malgo
+def fact : Int -> Int -> Int
+def fact = { {n, acc} ->
+  if(n == 0L, { acc }, { fact({n - 1L, n * acc}) }) }
 
-main :: IO ()
-main = do
-  options <- execParser opts
-  runCompiler options
-
-runCompiler :: CompilerOptions -> IO ()
-runCompiler options = do
-  -- ...existing code...
-  parseResult <- Malgo.Parser.parseFile options inputFile
-  -- ...existing code...
+def main = { putStrLn("Hello, world!") }
 ```
 
----
-
-## 3. Use the Flag in the Parser
-
-- Pass the flag to the parser.
-- Conditionally enable/disable grammar rules.
-
-**Example:**
-
-```haskell
--- src/Malgo/Parser.hs
-
-parseFile :: CompilerOptions -> FilePath -> IO (Either ParseError AST)
-parseFile options file = do
-  source <- readFile file
-  runParser (parser (enableCStyleCall options)) file source
-
-parser :: Bool -> Parsec String () AST
-parser enableCStyleCall = do
-  -- ...existing grammar...
-  if enableCStyleCall
-    then cStyleCall <|> normalCall
-    else normalCall
-
-cStyleCall :: Parsec String () Expr
-cStyleCall = do
-  -- ...parse f(x, y)...
-  -- If not enabled, this branch is unreachable
-```
-
-Or, if you want to provide a helpful error when the syntax is used without the flag:
-
-```haskell
-cStyleCall :: Bool -> Parsec String () Expr
-cStyleCall enableCStyleCall = do
-  if enableCStyleCall
-    then -- ...parse f(x, y)...
-    else unexpected "C-style calls are not enabled. Use --enable-cstyle-call to enable this syntax."
-```
-
----
-
-## 4. Keep Existing Behavior Unchanged
-
-- The default for `enableCStyleCall` should be `False`.
-- Only enable the new syntax when the flag is present.
-
----
-
-## 5. Add Unit Tests
-
-- Test both with and without the flag.
-- Use your test framework (e.g., Hspec).
-
-**Example:**
-
-```haskell
--- test/Malgo/ParserSpec.hs
-
-spec :: Spec
-spec = do
-  describe "C-style call syntax" $ do
-    it "parses f(x, y) when enabled" $ do
-      let options = CompilerOptions { enableCStyleCall = True, ... }
-      parseFile options "test.mlg" `shouldParse` expectedAST
-
-    it "fails on f(x, y) when not enabled" $ do
-      let options = CompilerOptions { enableCStyleCall = False, ... }
-      parseFile options "test.mlg" `shouldFailWith` "C-style calls are not enabled"
-```
-
----
-
-## 6. Best Practices
-
-- Use descriptive names for flags and config fields.
-- Document the flag in help text and user docs.
-- Keep the flag’s default value `False` to avoid breaking changes.
-- Thread the flag through only where needed (avoid global mutable state).
-
----
-
-**Summary:**  
-Add a `--enable-cstyle-call` flag to your CLI parser, thread it through your config, and use it in the parser to conditionally allow new syntax. Provide clear error messages and write tests for both modes. This pattern is robust and idiomatic for Haskell compilers.
+### Copatterns (TODO 📝)

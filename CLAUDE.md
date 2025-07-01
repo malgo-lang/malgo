@@ -5,6 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Development Commands
 
 ### Build and Setup
+
 ```bash
 # Initial setup (installs GHC, cabal, and tools)
 mise run setup
@@ -20,18 +21,20 @@ mise run setup-hls
 ```
 
 ### Running Tests
+
 ```bash
 # Run all tests
 mise run test
 
 # Run specific test by pattern
-mise run test --option match="Parser"
+mise run test --match="Parser"
 
 # Run a specific test file
 cabal test --test-show-details=direct --test-options=--match --test-options="Malgo.ParserSpec"
 ```
 
 ### Running the Compiler
+
 ```bash
 # Run the malgo executable
 mise run exec
@@ -51,6 +54,7 @@ malgo eval --no-opt examples/malgo/Hello.mlg
 The Malgo compiler follows a multi-stage pipeline with intermediate representations (IRs):
 
 ### Compilation Pipeline
+
 ```
 Source (.mlg) → Parse → Rename → ToFun → ToCore → Flat → Join → Eval
 ```
@@ -58,15 +62,18 @@ Source (.mlg) → Parse → Rename → ToFun → ToCore → Flat → Join → Ev
 ### Key Compiler Phases
 
 1. **Parser** (`Malgo.Parser`): Converts source text to AST
+
    - Entry: `Malgo.Parser.Pass.ParserPass`
    - Output: `Module (Malgo Parse)`
 
 2. **Renamer** (`Malgo.Rename`): Resolves names and desugars
+
    - Entry: `Malgo.Rename.Pass.RenamePass`
    - Output: `Module (Malgo Rename)`
    - Creates module interfaces (.mlgi files)
 
 3. **IR Transformations**:
+
    - **ToFun** (`Malgo.Sequent.ToFun`): AST → functional IR
    - **ToCore** (`Malgo.Sequent.ToCore`): Fun → sequent calculus Core
    - **Flat** (`Malgo.Sequent.Core.Flat`): Flattens nested computations
@@ -75,7 +82,9 @@ Source (.mlg) → Parse → Rename → ToFun → ToCore → Flat → Join → Ev
 4. **Evaluator** (`Malgo.Sequent.Eval`): Interprets the Join IR
 
 ### Pass System
+
 All compiler phases implement the `Pass` typeclass from `Malgo.Pass`:
+
 ```haskell
 class Pass p where
   type PassInput p
@@ -84,6 +93,7 @@ class Pass p where
 ```
 
 ### Module System
+
 - Modules are tracked in `.malgo-works/` directory
 - Interface files (.mlgi) enable separate compilation
 - Dependencies are linked during the Join phase
@@ -91,12 +101,14 @@ class Pass p where
 ## Testing Infrastructure
 
 Tests use HSpec with golden testing:
+
 - Test files: `test/Malgo/*Spec.hs`
 - Test cases: `test/testcases/malgo/`
 - Golden outputs stored alongside test cases
 - Use `Malgo.TestUtils` for common test utilities
 
 ### Test Patterns
+
 ```haskell
 -- Running a single phase test
 runPass ParserPass (filepath, source)
@@ -109,16 +121,19 @@ golden "test description" $ do
 ## Important Files and Directories
 
 ### Core Compiler
+
 - `src/Malgo/Driver.hs`: Main compiler driver and pipeline orchestration
 - `src/Malgo/Syntax.hs`: AST definition with phase indexing
 - `src/Malgo/Pass.hs`: Pass abstraction and error handling
 - `src/Malgo/Monad.hs`: Compiler monad stack setup
 
 ### Runtime
+
 - `runtime/malgo/Builtin.mlg`: Built-in primitive operations
 - `runtime/malgo/Prelude.mlg`: Standard library
 
 ### Build Files
+
 - `mise.toml`: Development task definitions
 - `package.yaml`: Hpack configuration (generates malgo.cabal)
 - `malgo.cabal`: Generated cabal file (do not edit directly)
@@ -126,6 +141,7 @@ golden "test description" $ do
 ## Language Features
 
 ### Syntax Example
+
 ```malgo
 module {..} = import "../../runtime/malgo/Builtin.mlg"
 
@@ -141,6 +157,7 @@ def main = {
 ```
 
 ### Key Language Constructs
+
 - ML-style syntax with curly braces
 - Pattern matching with multiple clauses
 - Explicit type annotations (no type inference)
