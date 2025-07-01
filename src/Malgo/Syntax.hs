@@ -16,6 +16,9 @@ module Malgo.Syntax
     _ListP,
     _UnboxedP,
     _BoxedP,
+    _ThisP,
+    _ProjectP,
+    _ApplyP,
     Decl (..),
     ParsedDefinitions (..),
     BindGroup (..),
@@ -192,6 +195,9 @@ freevars (Fn _ cs) = foldMap freevarsClause cs
     bindVars (ListP _ ps) = mconcat $ map bindVars ps
     bindVars UnboxedP {} = mempty
     bindVars BoxedP {} = mempty
+    bindVars ThisP {} = mempty
+    bindVars (ProjectP _ p _) = bindVars p
+    bindVars (ApplyP _ p1 p2) = bindVars p1 <> bindVars p2
 freevars (Tuple _ es) = mconcat $ map freevars es
 freevars (Record _ kvs) = mconcat $ map (freevars . snd) kvs
 freevars (List _ es) = mconcat $ map freevars es
@@ -256,6 +262,9 @@ data Pat x
   | ListP (XListP x) [Pat x]
   | UnboxedP (XUnboxedP x) (Literal Unboxed)
   | BoxedP (XBoxedP x) (Literal Boxed)
+  | ThisP (XThisP x)
+  | ProjectP (XProjectP x) (Pat x) Text
+  | ApplyP (XApplyP x) (Pat x) (Pat x)
 
 deriving stock instance (ForallPatX Eq x, Eq (XId x)) => Eq (Pat x)
 
@@ -271,6 +280,9 @@ instance (ToSExpr (XId x)) => ToSExpr (Pat x) where
   toSExpr (ListP _ ps) = S.L $ "list" : map toSExpr ps
   toSExpr (UnboxedP _ l) = S.L ["unboxed", toSExpr l]
   toSExpr (BoxedP _ l) = S.L ["boxed", toSExpr l]
+  toSExpr (ThisP _) = S.A "this"
+  toSExpr (ProjectP _ p field) = S.L ["project", toSExpr p, toSExpr field]
+  toSExpr (ApplyP _ p1 p2) = S.L ["apply", toSExpr p1, toSExpr p2]
 
 instance (Pretty (XId x)) => Pretty (Pat x) where
   pretty (VarP _ id) = pretty id
@@ -280,6 +292,9 @@ instance (Pretty (XId x)) => Pretty (Pat x) where
   pretty (ListP _ ps) = sexpr $ "list" : map pretty ps
   pretty (UnboxedP _ l) = sexpr ["unboxed", pretty l]
   pretty (BoxedP _ l) = sexpr ["boxed", pretty l]
+  pretty (ThisP _) = "this"
+  pretty (ProjectP _ p field) = sexpr ["project", pretty p, pretty field]
+  pretty (ApplyP _ p1 p2) = sexpr ["apply", pretty p1, pretty p2]
 
 makePrisms ''Pat
 

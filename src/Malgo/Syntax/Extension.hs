@@ -45,6 +45,9 @@ module Malgo.Syntax.Extension
     XListP,
     XUnboxedP,
     XBoxedP,
+    XThisP,
+    XProjectP,
+    XApplyP,
     ForallPatX,
     XTyApp,
     XTyVar,
@@ -270,7 +273,16 @@ type family XBoxedP x where
   XBoxedP (Malgo Parse) = SimpleX Parse
   XBoxedP (Malgo _) = Void
 
-type ForallPatX (c :: K.Type -> Constraint) x = (c (XVarP x), c (XConP x), c (XTupleP x), c (XRecordP x), c (XListP x), c (XUnboxedP x), c (XBoxedP x))
+type family XThisP x where
+  XThisP (Malgo x) = SimpleX x
+
+type family XProjectP x where
+  XProjectP (Malgo x) = SimpleX x
+
+type family XApplyP x where
+  XApplyP (Malgo x) = SimpleX x
+
+type ForallPatX (c :: K.Type -> Constraint) x = (c (XVarP x), c (XConP x), c (XTupleP x), c (XRecordP x), c (XListP x), c (XUnboxedP x), c (XBoxedP x), c (XThisP x), c (XProjectP x), c (XApplyP x))
 
 -- * Type Extensions
 
