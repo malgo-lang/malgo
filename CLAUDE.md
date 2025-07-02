@@ -33,6 +33,9 @@ mise run test --match="Parser"
 cabal test --test-show-details=direct --test-options=--match --test-options="Malgo.ParserSpec"
 ```
 
+`mise run test` will automatically run all tests for test/testcases/malgo/\*.mlg files.
+So you can add new test cases in that directory and they will be picked up.
+
 ### Running the Compiler
 
 ```bash
