@@ -3,7 +3,7 @@ module Malgo.RenameSpec (spec) where
 import Data.ByteString qualified as BS
 import Effectful.Error.Static (catchError)
 import Malgo.Monad (runMalgoM)
-import Malgo.Parser.Pass
+import Malgo.Parser
 import Malgo.Pass
 import Malgo.Prelude
 import Malgo.Rename

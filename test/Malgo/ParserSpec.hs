@@ -2,7 +2,7 @@ module Malgo.ParserSpec (spec) where
 
 import Data.ByteString.Lazy qualified as BL
 import Malgo.Monad (runMalgoM)
-import Malgo.Parser (parse)
+import Malgo.Parser.Pass (parse)
 import Malgo.Prelude
 import Malgo.SExpr (ToSExpr (..))
 import Malgo.TestUtils

@@ -1,27 +1,33 @@
-module Malgo.Parser.Pass (ParserPass (..)) where
+module Malgo.Parser.Pass
+  ( parse,
+    -- * Re-exports for backwards compatibility
+    Parser,
+  )
+where
 
 import Data.Text.Lazy qualified as TL
-import Effectful (IOE, (:>))
-import Effectful.Error.Static (throwError)
-import Malgo.Features (Features)
+import Effectful
+import Effectful.FileSystem (runFileSystem)
+import Malgo.Features
 import Malgo.Module (Workspace)
-import Malgo.Parser (parse)
-import Malgo.Pass
+import Malgo.Parser.Common
+import Malgo.Parser.Declaration
+import Malgo.Parser.Lexer
 import Malgo.Prelude
-import Malgo.Syntax (Module)
-import Malgo.Syntax.Extension (Malgo, MalgoPhase (Parse))
-import Text.Megaparsec (ParseErrorBundle)
+import Malgo.Syntax
+import Malgo.Syntax.Extension
+import Text.Megaparsec hiding (parse)
 
-data ParserPass = ParserPass
+-- | parse a module. Returns the list of pragmas and the module.
+parse :: (IOE :> es, Workspace :> es, Features :> es) => FilePath -> TL.Text -> Eff es (Either (ParseErrorBundle TL.Text Void) (Module (Malgo Parse)))
+parse srcPath text = runFileSystem do
+  let features = parseFeatures $ extractPragmas text
+  addFeatures features
+  runParserT parser srcPath text
 
-instance Pass ParserPass where
-  type Input ParserPass = (FilePath, TL.Text)
-  type Output ParserPass = Module (Malgo Parse)
-  type ErrorType ParserPass = ParseErrorBundle TL.Text Void
-  type Effects ParserPass es = (IOE :> es, Workspace :> es, Features :> es)
-
-  runPassImpl _ (srcPath, text) = do
-    result <- parse srcPath text
-    case result of
-      Left err -> throwError err
-      Right result -> pure result
+parser :: (IOE :> es, Workspace :> es, Features :> es) => Parser es (Module (Malgo Parse))
+parser = do
+  space
+  mod <- pModuleFile
+  eof
+  pure mod

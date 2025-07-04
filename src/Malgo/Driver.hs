@@ -12,7 +12,7 @@ import Effectful.State.Static.Local
 import Malgo.Features
 import Malgo.Interface (Interface, buildInterface)
 import Malgo.Module
-import Malgo.Parser.Pass (ParserPass (..))
+import Malgo.Parser (ParserPass (..))
 import Malgo.Pass (CompileError, Pass (..), runCompileError)
 import Malgo.Prelude
 import Malgo.Rename
