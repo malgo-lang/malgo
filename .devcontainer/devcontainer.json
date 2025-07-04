@@ -10,7 +10,9 @@
 		// Mount the user's .config/git directory to share git configuration
 		"source=${localEnv:HOME}/.config/git,target=/home/vscode/.config/git,type=bind,consistency=cached",
 		// Mount the user's .ssh directory to share SSH keys
-		"source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached"
+		"source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached",
+		// Mount the user's .claude directory to share Claude configuration
+		"source=${localEnv:HOME}/.claude,target=/home/vscode/.claude,type=bind,consistency=cached"
 	],
 	"remoteEnv": {
 		"PATH": "${containerEnv:PATH}:/home/vscode/.ghcup/bin:/home/vscode/.cabal/bin:/home/vscode/.go/bin",
