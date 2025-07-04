@@ -17,19 +17,25 @@ run = [
     "ghcup set cabal latest",
     "go install github.com/git-chglog/git-chglog/cmd/git-chglog@latest",
     "cabal update",
-    "cabal install hpack --ignore-project --overwrite-policy=always",
-    "cabal install ormolu --ignore-project --overwrite-policy=always"
 ]
 [tasks.setup-hls]
 description = "Setup HLS"
 run = "ghcup compile hls -g 2.11.0.0 --ghc 9.12.2 --cabal-update"
+[tasks.setup-optional-tools]
+description = "Setup optional tools"
+run = [
+    "cabal install hpack --overwrite-policy=always",
+    "cabal install ormolu --overwrite-policy=always"
+]
 [tasks.format]
 description = "Format the code"
-run = "ormolu --mode inplace $(git ls-files '*.hs')"
+run = [
+    "hpack",
+    "ormolu --mode inplace $(git ls-files '*.hs')"
+]
 [tasks.build]
 description = "Build the project"
-depends = ["format"]
-run = "hpack && cabal build"
+run = "cabal build"
 [tasks.test]
 description = "Run the tests"
 depends = ["build"]
