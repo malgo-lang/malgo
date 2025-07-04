@@ -126,26 +126,31 @@ pImport :: (IOE :> es, Workspace :> es) => Parser es (Decl (Malgo Parse))
 pImport = do
   start <- getSourcePos
   reserved "module"
-  pattern <- pModulePattern
+  importList <- pImportList
   reservedOperator "="
   reserved "import"
-  path <- pStringLiteral
+  moduleName <- pModuleName
   end <- getSourcePos
-  pure $ Import (Range start end) (ModuleName path) pattern
+  pure $ Import (Range start end) moduleName importList
   where
-    pModulePattern = choice
-      [ do
-          symbol "{"
-          symbol ".."
-          symbol "}"
-          pure All,
-        do
-          idents <- between (symbol "{") (symbol "}") $ sepBy1 ident (symbol ",")
-          pure $ Selected idents,
-        As <$> pModuleName
-      ]
-    
-    pModuleName = ModuleName <$> ident
+    pImportList = choice [try pAll, pSelected, pAs]
+    pAll = between (symbol "{") (symbol "}") do
+      symbol ".."
+      pure All
+    pSelected = between (symbol "{") (symbol "}") do
+      items <- sepBy pImportItem (symbol ",")
+      pure $ Selected items
+    pAs = As <$> pModuleName
+    pImportItem = choice [ident, between (symbol "(") (symbol ")") operator]
+    pModuleName = asIdent <|> asPath
+    asIdent = ModuleName <$> ident
+    asPath = do
+      path <- pStringLiteral
+      sourcePath <- (.sourceName) <$> getSourcePos
+      pwd <- lift pwdPath
+      sourcePath <- lift $ parseArtifactPath pwd sourcePath
+      path' <- lift $ parseArtifactPath sourcePath path
+      pure $ Artifact path'
 
 pScSig :: (Features :> es) => Parser es (Decl (Malgo Parse))
 pScSig = do

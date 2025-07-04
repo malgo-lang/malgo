@@ -16,7 +16,9 @@ Module
      }
     }
    )
-   ( ModuleName "../../../runtime/malgo/Builtin.mlg" ) All
+   ( Artifact
+    ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+   ) All
   , Import
    ( Range
     { _start = SourcePos
@@ -31,7 +33,9 @@ Module
      }
     }
    )
-   ( ModuleName "../../../runtime/malgo/Prelude.mlg" ) All
+   ( Artifact
+    ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+   ) All
   , Infix
    ( Range
     { _start = SourcePos

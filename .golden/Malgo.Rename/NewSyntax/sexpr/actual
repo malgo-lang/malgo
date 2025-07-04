@@ -1,0 +1,87 @@
+(module
+   "test/testcases/malgo/NewSyntax.mlg"
+   ((((def
+         ==
+         (fn
+            ((clause
+                (#NewSyntax.x_0 #NewSyntax.y_1)
+                (seq (do (apply (apply eqInt64 #NewSyntax.x_0) #NewSyntax.y_1))))))))
+       ((def
+           -
+           (fn
+              ((clause
+                  (#NewSyntax.x_2 #NewSyntax.y_3)
+                  (seq
+                     (do (apply (apply subInt64 #NewSyntax.x_2) #NewSyntax.y_3))))))))
+       ((def
+           *
+           (fn
+              ((clause
+                  (#NewSyntax.x_4 #NewSyntax.y_5)
+                  (seq
+                     (do (apply (apply mulInt64 #NewSyntax.x_4) #NewSyntax.y_5))))))))
+       ((def
+           factAcc
+           (fn
+              ((clause
+                  (#NewSyntax.n_7 #NewSyntax.acc_8)
+                  (seq
+                     (do
+                        (apply
+                           (apply
+                              (apply
+                                 if
+                                 (opapp
+                                    ==
+                                    #NewSyntax.n_7
+                                    (apply Int64# (int64 0))))
+                              (fn
+                                 ((clause
+                                     (#NewSyntax.$__9)
+                                     (seq (do #NewSyntax.acc_8))))))
+                           (fn
+                              ((clause
+                                  (#NewSyntax.$__10)
+                                  (seq
+                                     (do
+                                        (apply
+                                           (apply
+                                              factAcc
+                                              (opapp
+                                                 -
+                                                 #NewSyntax.n_7
+                                                 (apply Int64# (int64 1))))
+                                           (opapp
+                                              *
+                                              #NewSyntax.n_7
+                                              #NewSyntax.acc_8)))))))))))))))
+       ((def
+           fact
+           (fn
+              ((clause
+                  (#NewSyntax.n_6)
+                  (seq
+                     (do
+                        (apply
+                           (apply factAcc #NewSyntax.n_6)
+                           (apply Int64# (int64 1))))))))))
+       ((def
+           main
+           (fn
+              ((clause
+                  (#NewSyntax.$__11)
+                  (seq
+                     (do
+                        (opapp
+                           |>
+                           (opapp
+                              |>
+                              (apply fact (apply Int64# (int64 5)))
+                              toStringInt64)
+                           putStrLn)))))))))
+      ()
+      ()
+      ()
+      ()
+      ((import "runtime/malgo/Builtin.mlg" all)
+         (import "runtime/malgo/Prelude.mlg" all))))
