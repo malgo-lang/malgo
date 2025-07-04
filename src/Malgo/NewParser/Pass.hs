@@ -1,28 +1,27 @@
-module Malgo.Parser.Pass (ParserPass (..), parse, Parser) where
+module Malgo.NewParser.Pass (NewParserPass (..), parse, Parser) where
 
 import Data.Text.Lazy qualified as TL
 import Effectful (Eff, IOE, (:>))
 import Effectful.Error.Static (throwError)
 import Effectful.FileSystem (runFileSystem)
-import Malgo.Features (Features, parseFeatures, addFeatures, hasFeature, Feature(..))
+import Malgo.Features (Features, parseFeatures, addFeatures)
 import Malgo.Module (Workspace)
-import Malgo.Parser.Common
-import Malgo.Parser.Declaration
-import Malgo.Parser.Lexer (extractPragmas, space)
-import Malgo.NewParser.Pass qualified as NewParser
+import Malgo.NewParser.Common
+import Malgo.NewParser.Declaration
+import Malgo.NewParser.Lexer (extractPragmas, space)
 import Malgo.Pass
 import Malgo.Prelude
 import Malgo.Syntax (Module)
 import Malgo.Syntax.Extension (Malgo, MalgoPhase (Parse))
 import Text.Megaparsec (ParseErrorBundle, runParserT, eof)
 
-data ParserPass = ParserPass
+data NewParserPass = NewParserPass
 
-instance Pass ParserPass where
-  type Input ParserPass = (FilePath, TL.Text)
-  type Output ParserPass = Module (Malgo Parse)
-  type ErrorType ParserPass = ParseErrorBundle TL.Text Void
-  type Effects ParserPass es = (IOE :> es, Workspace :> es, Features :> es)
+instance Pass NewParserPass where
+  type Input NewParserPass = (FilePath, TL.Text)
+  type Output NewParserPass = Module (Malgo Parse)
+  type ErrorType NewParserPass = ParseErrorBundle TL.Text Void
+  type Effects NewParserPass es = (IOE :> es, Workspace :> es, Features :> es)
 
   runPassImpl _ (srcPath, text) = do
     result <- parse srcPath text
@@ -30,15 +29,12 @@ instance Pass ParserPass where
       Left err -> throwError err
       Right result -> pure result
 
--- | parse a module. Returns the list of pragmas and the module.
+-- | parse a module with new syntax. Returns the list of pragmas and the module.
 parse :: (IOE :> es, Workspace :> es, Features :> es) => FilePath -> TL.Text -> Eff es (Either (ParseErrorBundle TL.Text Void) (Module (Malgo Parse)))
 parse srcPath text = runFileSystem do
   let features = parseFeatures $ extractPragmas text
   addFeatures features
-  isNewSyntax <- hasFeature NewSyntax
-  if isNewSyntax
-    then NewParser.parse srcPath text
-    else runParserT parser srcPath text
+  runParserT parser srcPath text
 
 parser :: (IOE :> es, Workspace :> es, Features :> es) => Parser es (Module (Malgo Parse))
 parser = do
@@ -46,4 +42,3 @@ parser = do
   mod <- pModuleFile
   eof
   pure mod
-

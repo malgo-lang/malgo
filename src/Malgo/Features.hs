@@ -26,6 +26,7 @@ import Malgo.Prelude
 -- | Feature definition
 data Feature
   = CStyleApply
+  | NewSyntax
   | Experimental String
   deriving stock (Eq, Ord, Show)
 
@@ -69,5 +70,6 @@ parseFeatures = FeatureFlags . Set.fromList . map (parseFeature . convertString)
   where
     parseFeature :: String -> Feature
     parseFeature "c-style-apply" = CStyleApply
+    parseFeature "new-syntax" = NewSyntax
     parseFeature ('e' : 'x' : 'p' : 'e' : 'r' : 'i' : 'm' : 'e' : 'n' : 't' : 'a' : 'l' : '-' : name) = Experimental name
     parseFeature name = error $ "Unknown feature: " <> name
