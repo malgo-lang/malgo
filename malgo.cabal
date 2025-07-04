@@ -47,7 +47,12 @@ library
       Malgo.Syntax
       Malgo.Syntax.Extension
   other-modules:
-      Paths_malgo
+      Malgo.Parser.Common
+      Malgo.Parser.Declaration
+      Malgo.Parser.Expression
+      Malgo.Parser.Lexer
+      Malgo.Parser.Pattern
+      Malgo.Parser.Type
   hs-source-dirs:
       src
   default-extensions:

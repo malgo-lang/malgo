@@ -81,6 +81,13 @@ default-extensions:
 
 library:
   source-dirs: src
+  other-modules:
+    - Malgo.Parser.Common
+    - Malgo.Parser.Declaration
+    - Malgo.Parser.Expression
+    - Malgo.Parser.Lexer
+    - Malgo.Parser.Pattern
+    - Malgo.Parser.Type
 
 executables:
   malgo:
