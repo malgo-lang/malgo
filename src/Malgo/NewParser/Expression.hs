@@ -47,14 +47,16 @@ pOpApp = makeExprParser pApply table
 
 -- NEW SYNTAX: C-style function application f(x, y, z)
 pApply :: (Features :> es) => Parser es (Expr (Malgo Parse))
-pApply = makeExprParser pProject
-  [ [ Postfix $ manyUnaryOp do
-        start <- getSourcePos
-        args <- between (symbol "(") (symbol ")") (sepBy pExpr (symbol ","))
-        end <- getSourcePos
-        pure \fn -> foldl (Apply (Range start end)) fn args
+pApply =
+  makeExprParser
+    pProject
+    [ [ Postfix $ manyUnaryOp do
+          start <- getSourcePos
+          args <- between (symbol "(") (symbol ")") (sepBy pExpr (symbol ","))
+          end <- getSourcePos
+          pure \fn -> foldl (Apply (Range start end)) fn args
+      ]
     ]
-  ]
 
 pProject :: (Features :> es) => Parser es (Expr (Malgo Parse))
 pProject =
@@ -74,9 +76,9 @@ pAtom =
   choice
     [ pLiteral,
       pVariable,
-      try pBraceTuple,  -- NEW: Brace expressions - functions or tuples
-      try pRecord,      -- Records still use braces but with = syntax
-      pParens,          -- Parentheses for grouping only
+      try pBraceTuple, -- NEW: Brace expressions - functions or tuples
+      try pRecord, -- Records still use braces but with = syntax
+      pParens, -- Parentheses for grouping only
       pList,
       pSeq
     ]
@@ -131,28 +133,40 @@ pVariable = do
 pBraceTuple :: (Features :> es) => Parser es (Expr (Malgo Parse))
 pBraceTuple = do
   start <- getSourcePos
-  content <- between (symbol "{") (symbol "}") $ 
-    try pFunctionBlock <|> pTupleContent
+  content <-
+    between (symbol "{") (symbol "}")
+      $ try pFunctionClauses
+      <|> pExpressionSequence
   end <- getSourcePos
   case content of
-    Left clause -> pure $ Fn (Range start end) (NonEmpty.fromList [clause])
+    Left clauses -> pure $ Fn (Range start end) (NonEmpty.fromList clauses)
     Right exprs -> case exprs of
       [] -> pure $ Fn (Range start end) (NonEmpty.fromList [Clause (Range start end) [] (Seq (Range start end) (NonEmpty.fromList [NoBind (Range start end) (Tuple (Range start end) [])]))])
       [expr] -> pure $ Fn (Range start end) (NonEmpty.fromList [Clause (Range start end) [] (Seq (Range start end) (NonEmpty.fromList [NoBind (Range start end) expr]))])
       _ -> pure $ Tuple (Range start end) exprs
   where
-    pFunctionBlock = do
+    -- Try to parse function clauses - must have at least one arrow
+    pFunctionClauses = do
+      clauses <- sepEndBy1 pClause (symbol ",")
+      pure $ Left clauses
+
+    pClause = do
       start <- getSourcePos
-      patterns <- 
-        try (between (symbol "(") (symbol ")") $ sepEndBy pAtomPat (symbol ",")) <|>
-        try (sepEndBy pAtomPat (symbol ",")) <|>
-        pure []
+      patterns <-
+        try (between (symbol "(") (symbol ")") $ sepEndBy pAtomPat (symbol ","))
+          <|> try (sepEndBy pAtomPat (symbol ","))
+          <|> pure []
       reservedOperator "->"
-      stmts <- pStmts
+      bodyExpr <- pStmtsAsExpr
       end <- getSourcePos
-      pure $ Left $ Clause (Range start end) patterns (Seq (Range start end) stmts)
-    
-    pTupleContent = Right <$> sepBy pExpr (symbol ",")
+      pure $ Clause (Range start end) patterns bodyExpr
+
+    -- Parse as expression sequence (could be statements separated by ; or expressions separated by ,)
+    pExpressionSequence = do
+      exprStart <- getSourcePos
+      stmts <- pStmts
+      exprEnd <- getSourcePos
+      pure $ Right [Seq (Range exprStart exprEnd) stmts]
 
 -- Parentheses for grouping expressions only
 pParens :: (Features :> es) => Parser es (Expr (Malgo Parse))
@@ -176,7 +190,6 @@ pRecord = do
       value <- pExpr
       pure (field, value)
 
-
 pList :: (Features :> es) => Parser es (Expr (Malgo Parse))
 pList = do
   start <- getSourcePos
@@ -193,6 +206,14 @@ pSeq = do
 
 pStmts :: (Features :> es) => Parser es (NonEmpty (Stmt (Malgo Parse)))
 pStmts = NonEmpty.fromList <$> sepEndBy1 pStmt (symbol ";")
+
+-- Helper function to parse statements and return them as a Seq expression
+pStmtsAsExpr :: (Features :> es) => Parser es (Expr (Malgo Parse))
+pStmtsAsExpr = do
+  start <- getSourcePos
+  stmts <- pStmts
+  end <- getSourcePos
+  pure $ Seq (Range start end) stmts
 
 pStmt :: (Features :> es) => Parser es (Stmt (Malgo Parse))
 pStmt = choice [try pLet, try pWith, pNoBind]
