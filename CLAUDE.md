@@ -2,183 +2,83 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Development Commands
+## Build System and Commands
 
-### Build and Setup
+Malgo uses `cabal` for package management and `mise` for development task management.
 
-```bash
-# Initial setup (installs GHC, cabal, and tools)
-mise run setup
+### Essential Commands
+- `mise run build` - Build the project (runs `cabal build`)
+- `mise run test` - Run test suite with detailed output
+- `mise run test --match=<pattern>` - Run specific tests matching pattern
+- `cabal exec malgo` - Run the malgo executable directly
+- `cabal exec malgo -- eval <file.mlg>` - Evaluate a Malgo program
+- `cabal exec malgo -- eval --debug-mode --no-opt <file.mlg>` - Debug mode with optimizations disabled
 
-# Build the project (includes auto-formatting)
-mise run build
+### Setup Commands
+- `mise run setup` - Install GHC, cabal, and dependencies
+- `mise run setup-hls` - Build Haskell Language Server
+- `mise run format` - Format code with ormolu
 
-# Format code only
-mise run format
+## Architecture Overview
 
-# Setup Haskell Language Server
-mise run setup-hls
+Malgo is a statically typed functional programming language with a sophisticated multi-stage compiler pipeline.
+
+### Core Pipeline Flow
+```
+Source (.mlg) → Parser → Rename → [Infer] → [Refine] → ToFun → ToCore → Flat → Join → Eval
 ```
 
-### Running Tests
+**Key architectural points:**
+- **Dual Parser System**: Traditional ML syntax (default) vs C-style syntax (with `#new-syntax` pragma)
+- **Optional Type Checking**: InferPass and RefinePass can be skipped for faster evaluation
+- **Multi-IR Pipeline**: Four intermediate representations for different optimization stages
+- **Phase-Indexed AST**: Uses type families for extensibility across compilation phases
 
-```bash
-# Run all tests
-mise run test
+### Module Structure
+- `src/Malgo/Driver.hs` - Main pipeline orchestrator
+- `src/Malgo/Parser.hs` - Traditional syntax parser
+- `src/Malgo/NewParser.hs` - C-style syntax parser (activated by `#new-syntax`)
+- `src/Malgo/Rename/` - Name resolution and desugaring
+- `src/Malgo/Sequent/` - Intermediate representations and transformations
+- `src/Malgo/Sequent/Eval.hs` - Final interpreter
 
-# Run specific test by pattern
-mise run test --match="Parser"
+### Intermediate Representations
+1. **Fun IR** (`Sequent/Fun.hs`) - Functional, close to AST
+2. **Core IR** (`Sequent/Core/Full.hs`) - Sequent calculus with explicit control
+3. **Flat IR** (`Sequent/Core/Flat.hs`) - Flattened, no nested computations
+4. **Join IR** (`Sequent/Core/Join.hs`) - Normalized with explicit join points (final)
 
-# Run a specific test file
-cabal test --test-show-details=direct --test-options=--match --test-options="Malgo.ParserSpec"
-```
-
-`mise run test` will automatically run all tests for test/testcases/malgo/\*.mlg files.
-So you can add new test cases in that directory and they will be picked up.
-
-### Running the Compiler
-
-```bash
-# Run the malgo executable
-mise run exec
-
-# Evaluate a Malgo program
-malgo eval examples/malgo/Hello.mlg
-
-# With debug output
-malgo eval --debug-mode examples/malgo/Hello.mlg
-
-# Without optimizations
-malgo eval --no-opt examples/malgo/Hello.mlg
-```
-
-## Compiler Architecture
-
-The Malgo compiler follows a multi-stage pipeline with intermediate representations (IRs):
-
-### Compilation Pipeline
-
-```
-Source (.mlg) → Parse → Rename → ToFun → ToCore → Flat → Join → Eval
-```
-
-### Key Compiler Phases
-
-1. **Parser** (`Malgo.Parser`): Converts source text to AST
-
-   - Entry: `Malgo.Parser.Pass.ParserPass`
-   - Output: `Module (Malgo Parse)`
-
-2. **Renamer** (`Malgo.Rename`): Resolves names and desugars
-
-   - Entry: `Malgo.Rename.Pass.RenamePass`
-   - Output: `Module (Malgo Rename)`
-   - Creates module interfaces (.mlgi files)
-
-3. **IR Transformations**:
-
-   - **ToFun** (`Malgo.Sequent.ToFun`): AST → functional IR
-   - **ToCore** (`Malgo.Sequent.ToCore`): Fun → sequent calculus Core
-   - **Flat** (`Malgo.Sequent.Core.Flat`): Flattens nested computations
-   - **Join** (`Malgo.Sequent.Core.Join`): Normalizes control flow
-
-4. **Evaluator** (`Malgo.Sequent.Eval`): Interprets the Join IR
-
-### Pass System
-
-All compiler phases implement the `Pass` typeclass from `Malgo.Pass`:
-
-```haskell
-class Pass p where
-  type PassInput p
-  type PassOutput p
-  runPass :: ... => p -> PassInput p -> Eff es (PassOutput p)
-```
-
-### Module System
-
-- Modules are tracked in `.malgo-works/` directory
-- Interface files (.mlgi) enable separate compilation
-- Dependencies are linked during the Join phase
-
-## Testing Infrastructure
-
-Tests use HSpec with golden testing:
-
-- Test files: `test/Malgo/*Spec.hs`
-- Test cases: `test/testcases/malgo/`
-- Golden outputs stored alongside test cases
-- Use `Malgo.TestUtils` for common test utilities
-
-### Test Patterns
-
-```haskell
--- Running a single phase test
-runPass ParserPass (filepath, source)
-
--- Golden test pattern
-golden "test description" $ do
-  -- test action returning String
-```
-
-## Important Files and Directories
-
-### Core Compiler
-
-- `src/Malgo/Driver.hs`: Main compiler driver and pipeline orchestration
-- `src/Malgo/Syntax.hs`: AST definition with phase indexing
-- `src/Malgo/Pass.hs`: Pass abstraction and error handling
-- `src/Malgo/Monad.hs`: Compiler monad stack setup
-
-### Runtime
-
-- `runtime/malgo/Builtin.mlg`: Built-in primitive operations
-- `runtime/malgo/Prelude.mlg`: Standard library
-
-### Build Files
-
-- `mise.toml`: Development task definitions
-- `package.yaml`: Hpack configuration (generates malgo.cabal)
-- `malgo.cabal`: Generated cabal file (do not edit directly)
-
-## Language Features
-
-### Syntax Example
-
-```malgo
-module {..} = import "../../runtime/malgo/Builtin.mlg"
-
-data List a = Nil | Cons a (List a)
-
-def map : (a -> b) -> List a -> List b
-def map = { _ Nil -> Nil,
-            f (Cons x xs) -> Cons (f x) (map f xs) }
-
-def main = {
-  putStrLn "Hello, Malgo!"
-}
-```
-
-### Key Language Constructs
-
-- ML-style syntax with curly braces
-- Pattern matching with multiple clauses
-- Explicit type annotations (no type inference)
-- Module imports/exports
-- Foreign function interface for runtime primitives
-- Infix operators with precedence declarations
+### Language Features
+- Statically typed with type inference
+- First-class functions and pattern matching
+- Algebraic data types and polymorphism
+- Module system with qualified imports
+- Both traditional ML syntax and C-style syntax support
 
 ## Development Workflow
 
-1. Make changes to source files
-2. Run `mise run build` to format and compile
-3. Test changes with `mise run test`
-4. For compiler changes, use debug mode to see intermediate representations
-5. Golden tests will show diffs for output changes
+### Testing
+- Test files are in `test/` directory with golden tests
+- Use `mise run test` to run all tests
+- Use `mise run test --match="Parser"` to run specific test groups
 
-## Debugging Tips
+### File Structure
+- `examples/malgo/` - Example programs
+- `runtime/malgo/` - Standard library (Builtin.mlg, Prelude.mlg)
+- `test/testcases/malgo/` - Test cases for the interpreter
 
-- Use `--debug-mode` flag to see all compiler phases
-- Check `.malgo-works/` for cached module interfaces
-- IR dumps are available via `withDump` in Driver.hs
-- S-expression output available for ASTs and IRs
+### Common Development Tasks
+- Build before testing: `mise run build && mise run test`
+- Format code: `mise run format`
+- Debug compilation: use `--debug-mode` flag with malgo eval
+- Generate dependency graph: `mise run graph`
+
+## Important Notes
+
+- Both parsers produce identical AST structure (`Module (Malgo Parse)`)
+- Type checking can be bypassed for faster evaluation during development
+- The effectful monad stack uses the `Effectful` library
+- IR transformations are structure-preserving until flattening stages
+- Uses GHC 9.12.2 with extensive language extensions enabled
+- **Do not modify files in `test/testcases/**` - these are human-written test cases**
+
