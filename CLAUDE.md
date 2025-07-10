@@ -19,6 +19,9 @@ Malgo uses `cabal` for package management and `mise` for development task manage
 - `mise run setup-hls` - Build Haskell Language Server
 - `mise run format` - Format code with ormolu
 
+## Build Tool Guidelines
+- Use `cabal` as the build tool. Do not use `stack`.
+
 ## Architecture Overview
 
 Malgo is a statically typed functional programming language with a sophisticated multi-stage compiler pipeline.
@@ -81,4 +84,3 @@ Source (.mlg) → Parser → Rename → [Infer] → [Refine] → ToFun → ToCor
 - IR transformations are structure-preserving until flattening stages
 - Uses GHC 9.12.2 with extensive language extensions enabled
 - **Do not modify files in `test/testcases/**` - these are human-written test cases**
-
