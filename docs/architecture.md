@@ -7,7 +7,9 @@ Malgo’s source tree is organized by compiler phases and core abstractions:
 - **Syntax & AST**:
   - `Malgo.Syntax`, `Malgo.Syntax.Extension`: Core AST types, phase-indexed with type families for extensibility.
 - **Parsing**:
-  - `Malgo.Parser`, `Malgo.Parser.Pass`: Lexing and parsing, producing the initial AST.
+  - `Malgo.Parser`, `Malgo.Parser.Pass`: Original parser for traditional Malgo syntax.
+  - `Malgo.NewParser`, `Malgo.NewParser.Pass`: New parser supporting C-style syntax via `#new-syntax` pragma.
+  - Both parsers produce the same AST (`Module (Malgo Parse)`) for compatibility.
 - **Renaming**:
   - `Malgo.Rename.Pass`, `Malgo.Rename.RnEnv`, `Malgo.Rename.RnState`: Name resolution and desugaring.
 - **Type Inference**:
@@ -47,13 +49,61 @@ EvalPass (Interpreter)
 
 ---
 
+## 📝 Parser Architecture
+
+Malgo supports two syntax styles through a dual parser system:
+
+### Traditional Syntax Parser (`Malgo.Parser`)
+
+- **File**: `src/Malgo/Parser.hs`, `src/Malgo/Parser/Pass.hs`
+- **Syntax**: ML-style function application and parenthesized tuples
+- **Examples**:
+  ```malgo
+  f x y           -- Function application
+  (x, y)          -- Tuple
+  { x y -> x + y } -- Function definition
+  ```
+
+### New Syntax Parser (`Malgo.NewParser`)
+
+- **File**: `src/Malgo/NewParser.hs`, `src/Malgo/NewParser/Pass.hs`
+- **Syntax**: C-style function calls and brace-delimited tuples
+- **Activation**: Files must include `#new-syntax` pragma
+- **Examples**:
+  ```malgo
+  f(x, y)         -- Function application
+  {x, y}          -- Tuple
+  { (x, y) -> x + y } -- Function definition
+  ```
+
+### Parser Selection
+
+The choice of parser is determined by pragma detection:
+
+1. **Pragma Detection**: During initial parsing, the system scans for `#new-syntax` pragma
+2. **Parser Selection**: 
+   - If `#new-syntax` is found → Use `Malgo.NewParser`
+   - Otherwise → Use `Malgo.Parser` (default)
+3. **Unified Output**: Both parsers produce identical AST structure (`Module (Malgo Parse)`)
+
+### Implementation Details
+
+- **Shared Components**: Both parsers share common lexer utilities and type definitions
+- **Feature Detection**: `Malgo.Features` module manages syntax feature flags
+- **AST Compatibility**: The same downstream passes work with both syntaxes
+- **Migration Path**: Projects can incrementally adopt new syntax on a per-file basis
+
+---
+
 ## 🔄 Evaluation Pipeline and IR Flow
 
 ### Step-by-Step Transformation
 
 1. **Parsing** (`ParserPass`):
 
-   - Reads source code, produces a phase-indexed AST (`Module (Malgo NewParse)`).
+   - Detects syntax pragma and selects appropriate parser (traditional or new syntax)
+   - Reads source code, produces a phase-indexed AST (`Module (Malgo Parse)`)
+   - Both parsers output identical AST structure for downstream compatibility
 
 2. **Renaming** (`RenamePass`):
 

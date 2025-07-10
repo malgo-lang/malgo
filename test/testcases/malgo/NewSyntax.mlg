@@ -3,18 +3,33 @@ module {..} = import "../../../runtime/malgo/Builtin.mlg"
 module {..} = import "../../../runtime/malgo/Prelude.mlg"
 
 infix 4 (==)
-def (==) = { (x, y) -> eqInt64(x, y) }
+def (==) = { (x, y) -> eqInt32(x, y) }
 
 infixl 6 (-)
-def (-) = { (x, y) -> subInt64(x, y) }
+def (-) = { (x, y) -> subInt32(x, y) }
+
+infixl 6 (+)
+def (+) = { (x, y) -> addInt32(x, y) }
 
 infixl 7 (*)
-def (*) = { (x, y) -> mulInt64(x, y) }
+def (*) = { (x, y) -> mulInt32(x, y) }
 
-def fact = { (n) -> factAcc(n, 1L) }
+def fact = { (n) -> factAcc(n, 1) }
 
-def factAcc = { (n, acc) -> if(n == 0L, { acc }, { factAcc(n - 1L, n * acc) }) }
+def factAcc = { (n, acc) -> if(n == 0, { acc }, { factAcc(n - 1, n * acc) }) }
+
+def fibonacci = {
+  (0) -> 0,
+  (1) -> 1,
+  (n) -> fibonacci(n - 1) + fibonacci(n - 2),
+}
+
+def listLength = {
+  (Nil) -> 0,
+  (Cons(_, tail)) -> 1 + listLength(tail),
+}
 
 def main = {
-  fact(5L) |> toStringInt64 |> putStrLn
+  fact(5) |> toStringInt32 |> putStrLn;
+  fibonacci(10) |> toStringInt32 |> putStrLn
 }

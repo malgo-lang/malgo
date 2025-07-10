@@ -298,7 +298,7 @@ function = "{" clause (";" clause)* "}" ;
 
 clause = "(" ")" "->" statements
        | "(" pattern ("," pattern)* ")" "->" statements
-       | pattern ("," pattern)* "->" statements
+       | statements
        ;
 
 pattern = atomPattern
