@@ -126,7 +126,7 @@ Module
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
         , sourceLine = Pos 6
-        , sourceColumn = Pos 14
+        , sourceColumn = Pos 24
         }
        , _end = SourcePos
         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
@@ -190,7 +190,7 @@ Module
             , sourceColumn = Pos 31
             }
            }
-          ) "eqInt64"
+          ) "eqInt32"
          )
          ( Var
           ( Range
@@ -318,7 +318,7 @@ Module
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
         , sourceLine = Pos 9
-        , sourceColumn = Pos 13
+        , sourceColumn = Pos 23
         }
        , _end = SourcePos
         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
@@ -382,7 +382,7 @@ Module
             , sourceColumn = Pos 31
             }
            }
-          ) "subInt64"
+          ) "subInt32"
          )
          ( Var
           ( Range
@@ -433,7 +433,7 @@ Module
      , sourceColumn = Pos 1
      }
     }
-   ) LeftA 7 "*"
+   ) LeftA 6 "+"
   , ScDef
    ( Range
     { _start = SourcePos
@@ -447,7 +447,7 @@ Module
      , sourceColumn = Pos 1
      }
     }
-   ) "*"
+   ) "+"
    ( Fn
     ( Range
      { _start = SourcePos
@@ -510,7 +510,7 @@ Module
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
         , sourceLine = Pos 12
-        , sourceColumn = Pos 13
+        , sourceColumn = Pos 23
         }
        , _end = SourcePos
         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
@@ -574,7 +574,7 @@ Module
             , sourceColumn = Pos 31
             }
            }
-          ) "mulInt64"
+          ) "addInt32"
          )
          ( Var
           ( Range
@@ -612,7 +612,7 @@ Module
      ) :| []
     )
    )
-  , ScDef
+  , Infix
    ( Range
     { _start = SourcePos
      { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
@@ -621,21 +621,35 @@ Module
      }
     , _end = SourcePos
      { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-     , sourceLine = Pos 16
+     , sourceLine = Pos 15
      , sourceColumn = Pos 1
      }
     }
-   ) "fact"
+   ) LeftA 7 "*"
+  , ScDef
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+     , sourceLine = Pos 15
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+     , sourceLine = Pos 17
+     , sourceColumn = Pos 1
+     }
+    }
+   ) "*"
    ( Fn
     ( Range
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-      , sourceLine = Pos 14
-      , sourceColumn = Pos 12
+      , sourceLine = Pos 15
+      , sourceColumn = Pos 11
       }
      , _end = SourcePos
       { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-      , sourceLine = Pos 16
+      , sourceLine = Pos 17
       , sourceColumn = Pos 1
       }
      }
@@ -644,13 +658,13 @@ Module
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-       , sourceLine = Pos 14
-       , sourceColumn = Pos 14
+       , sourceLine = Pos 15
+       , sourceColumn = Pos 13
        }
       , _end = SourcePos
        { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-       , sourceLine = Pos 14
-       , sourceColumn = Pos 36
+       , sourceLine = Pos 15
+       , sourceColumn = Pos 38
        }
       }
      )
@@ -658,28 +672,42 @@ Module
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-        , sourceLine = Pos 14
-        , sourceColumn = Pos 15
+        , sourceLine = Pos 15
+        , sourceColumn = Pos 14
         }
        , _end = SourcePos
         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-        , sourceLine = Pos 14
-        , sourceColumn = Pos 16
+        , sourceLine = Pos 15
+        , sourceColumn = Pos 15
         }
        }
-      ) "n"
+      ) "x"
+     , VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+        , sourceLine = Pos 15
+        , sourceColumn = Pos 17
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+        , sourceLine = Pos 15
+        , sourceColumn = Pos 18
+        }
+       }
+      ) "y"
      ]
      ( Seq
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-        , sourceLine = Pos 14
-        , sourceColumn = Pos 14
+        , sourceLine = Pos 15
+        , sourceColumn = Pos 23
         }
        , _end = SourcePos
         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-        , sourceLine = Pos 14
-        , sourceColumn = Pos 36
+        , sourceLine = Pos 15
+        , sourceColumn = Pos 38
         }
        }
       )
@@ -687,13 +715,13 @@ Module
        ( Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-         , sourceLine = Pos 14
-         , sourceColumn = Pos 21
+         , sourceLine = Pos 15
+         , sourceColumn = Pos 23
          }
         , _end = SourcePos
          { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-         , sourceLine = Pos 14
-         , sourceColumn = Pos 36
+         , sourceLine = Pos 15
+         , sourceColumn = Pos 38
          }
         }
        )
@@ -701,13 +729,13 @@ Module
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-          , sourceLine = Pos 14
-          , sourceColumn = Pos 28
+          , sourceLine = Pos 15
+          , sourceColumn = Pos 31
           }
          , _end = SourcePos
           { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-          , sourceLine = Pos 14
-          , sourceColumn = Pos 36
+          , sourceLine = Pos 15
+          , sourceColumn = Pos 38
           }
          }
         )
@@ -715,13 +743,13 @@ Module
          ( Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-           , sourceLine = Pos 14
-           , sourceColumn = Pos 28
+           , sourceLine = Pos 15
+           , sourceColumn = Pos 31
            }
           , _end = SourcePos
            { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-           , sourceLine = Pos 14
-           , sourceColumn = Pos 36
+           , sourceLine = Pos 15
+           , sourceColumn = Pos 38
            }
           }
          )
@@ -729,48 +757,47 @@ Module
           ( Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-            , sourceLine = Pos 14
-            , sourceColumn = Pos 21
+            , sourceLine = Pos 15
+            , sourceColumn = Pos 23
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-            , sourceLine = Pos 14
-            , sourceColumn = Pos 28
+            , sourceLine = Pos 15
+            , sourceColumn = Pos 31
             }
            }
-          ) "factAcc"
+          ) "mulInt32"
          )
          ( Var
           ( Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-            , sourceLine = Pos 14
-            , sourceColumn = Pos 29
+            , sourceLine = Pos 15
+            , sourceColumn = Pos 32
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-            , sourceLine = Pos 14
-            , sourceColumn = Pos 30
+            , sourceLine = Pos 15
+            , sourceColumn = Pos 33
             }
            }
-          ) "n"
+          ) "x"
          )
         )
-        ( Boxed
+        ( Var
          ( Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-           , sourceLine = Pos 14
-           , sourceColumn = Pos 32
+           , sourceLine = Pos 15
+           , sourceColumn = Pos 35
            }
           , _end = SourcePos
            { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-           , sourceLine = Pos 14
-           , sourceColumn = Pos 34
+           , sourceLine = Pos 15
+           , sourceColumn = Pos 36
            }
           }
-         )
-         ( Int64 1 )
+         ) "y"
         )
        ) :| []
       )
@@ -781,26 +808,26 @@ Module
    ( Range
     { _start = SourcePos
      { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-     , sourceLine = Pos 16
+     , sourceLine = Pos 17
      , sourceColumn = Pos 1
      }
     , _end = SourcePos
      { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-     , sourceLine = Pos 18
+     , sourceLine = Pos 19
      , sourceColumn = Pos 1
      }
     }
-   ) "factAcc"
+   ) "fact"
    ( Fn
     ( Range
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-      , sourceLine = Pos 16
-      , sourceColumn = Pos 15
+      , sourceLine = Pos 17
+      , sourceColumn = Pos 12
       }
      , _end = SourcePos
       { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-      , sourceLine = Pos 18
+      , sourceLine = Pos 19
       , sourceColumn = Pos 1
       }
      }
@@ -809,13 +836,13 @@ Module
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-       , sourceLine = Pos 16
-       , sourceColumn = Pos 17
+       , sourceLine = Pos 17
+       , sourceColumn = Pos 14
        }
       , _end = SourcePos
        { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-       , sourceLine = Pos 16
-       , sourceColumn = Pos 80
+       , sourceLine = Pos 17
+       , sourceColumn = Pos 35
        }
       }
      )
@@ -823,12 +850,177 @@ Module
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-        , sourceLine = Pos 16
+        , sourceLine = Pos 17
+        , sourceColumn = Pos 15
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+        , sourceLine = Pos 17
+        , sourceColumn = Pos 16
+        }
+       }
+      ) "n"
+     ]
+     ( Seq
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+        , sourceLine = Pos 17
+        , sourceColumn = Pos 21
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+        , sourceLine = Pos 17
+        , sourceColumn = Pos 35
+        }
+       }
+      )
+      ( NoBind
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+         , sourceLine = Pos 17
+         , sourceColumn = Pos 21
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+         , sourceLine = Pos 17
+         , sourceColumn = Pos 35
+         }
+        }
+       )
+       ( Apply
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+          , sourceLine = Pos 17
+          , sourceColumn = Pos 28
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+          , sourceLine = Pos 17
+          , sourceColumn = Pos 35
+          }
+         }
+        )
+        ( Apply
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+           , sourceLine = Pos 17
+           , sourceColumn = Pos 28
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+           , sourceLine = Pos 17
+           , sourceColumn = Pos 35
+           }
+          }
+         )
+         ( Var
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+            , sourceLine = Pos 17
+            , sourceColumn = Pos 21
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+            , sourceLine = Pos 17
+            , sourceColumn = Pos 28
+            }
+           }
+          ) "factAcc"
+         )
+         ( Var
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+            , sourceLine = Pos 17
+            , sourceColumn = Pos 29
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+            , sourceLine = Pos 17
+            , sourceColumn = Pos 30
+            }
+           }
+          ) "n"
+         )
+        )
+        ( Boxed
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+           , sourceLine = Pos 17
+           , sourceColumn = Pos 32
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+           , sourceLine = Pos 17
+           , sourceColumn = Pos 33
+           }
+          }
+         )
+         ( Int32 1 )
+        )
+       ) :| []
+      )
+     ) :| []
+    )
+   )
+  , ScDef
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+     , sourceLine = Pos 19
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+     , sourceLine = Pos 21
+     , sourceColumn = Pos 1
+     }
+    }
+   ) "factAcc"
+   ( Fn
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+      , sourceLine = Pos 19
+      , sourceColumn = Pos 15
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+      , sourceLine = Pos 21
+      , sourceColumn = Pos 1
+      }
+     }
+    )
+    ( Clause
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+       , sourceLine = Pos 19
+       , sourceColumn = Pos 17
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+       , sourceLine = Pos 19
+       , sourceColumn = Pos 78
+       }
+      }
+     )
+     [ VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+        , sourceLine = Pos 19
         , sourceColumn = Pos 18
         }
        , _end = SourcePos
         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-        , sourceLine = Pos 16
+        , sourceLine = Pos 19
         , sourceColumn = Pos 19
         }
        }
@@ -837,12 +1029,12 @@ Module
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-        , sourceLine = Pos 16
+        , sourceLine = Pos 19
         , sourceColumn = Pos 21
         }
        , _end = SourcePos
         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-        , sourceLine = Pos 16
+        , sourceLine = Pos 19
         , sourceColumn = Pos 24
         }
        }
@@ -852,13 +1044,13 @@ Module
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-        , sourceLine = Pos 16
-        , sourceColumn = Pos 17
+        , sourceLine = Pos 19
+        , sourceColumn = Pos 29
         }
        , _end = SourcePos
         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-        , sourceLine = Pos 16
-        , sourceColumn = Pos 80
+        , sourceLine = Pos 19
+        , sourceColumn = Pos 78
         }
        }
       )
@@ -866,13 +1058,13 @@ Module
        ( Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-         , sourceLine = Pos 16
+         , sourceLine = Pos 19
          , sourceColumn = Pos 29
          }
         , _end = SourcePos
          { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-         , sourceLine = Pos 16
-         , sourceColumn = Pos 80
+         , sourceLine = Pos 19
+         , sourceColumn = Pos 78
          }
         }
        )
@@ -880,13 +1072,13 @@ Module
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-          , sourceLine = Pos 16
+          , sourceLine = Pos 19
           , sourceColumn = Pos 31
           }
          , _end = SourcePos
           { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-          , sourceLine = Pos 16
-          , sourceColumn = Pos 80
+          , sourceLine = Pos 19
+          , sourceColumn = Pos 78
           }
          }
         )
@@ -894,13 +1086,13 @@ Module
          ( Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-           , sourceLine = Pos 16
+           , sourceLine = Pos 19
            , sourceColumn = Pos 31
            }
           , _end = SourcePos
            { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-           , sourceLine = Pos 16
-           , sourceColumn = Pos 80
+           , sourceLine = Pos 19
+           , sourceColumn = Pos 78
            }
           }
          )
@@ -908,13 +1100,13 @@ Module
           ( Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-            , sourceLine = Pos 16
+            , sourceLine = Pos 19
             , sourceColumn = Pos 31
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-            , sourceLine = Pos 16
-            , sourceColumn = Pos 80
+            , sourceLine = Pos 19
+            , sourceColumn = Pos 78
             }
            }
           )
@@ -922,12 +1114,12 @@ Module
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-             , sourceLine = Pos 16
+             , sourceLine = Pos 19
              , sourceColumn = Pos 29
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-             , sourceLine = Pos 16
+             , sourceLine = Pos 19
              , sourceColumn = Pos 31
              }
             }
@@ -937,12 +1129,12 @@ Module
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-             , sourceLine = Pos 16
+             , sourceLine = Pos 19
              , sourceColumn = Pos 34
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-             , sourceLine = Pos 16
+             , sourceLine = Pos 19
              , sourceColumn = Pos 37
              }
             }
@@ -951,12 +1143,12 @@ Module
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-              , sourceLine = Pos 16
+              , sourceLine = Pos 19
               , sourceColumn = Pos 32
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-              , sourceLine = Pos 16
+              , sourceLine = Pos 19
               , sourceColumn = Pos 34
               }
              }
@@ -966,17 +1158,17 @@ Module
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-              , sourceLine = Pos 16
+              , sourceLine = Pos 19
               , sourceColumn = Pos 37
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-              , sourceLine = Pos 16
-              , sourceColumn = Pos 39
+              , sourceLine = Pos 19
+              , sourceColumn = Pos 38
               }
              }
             )
-            ( Int64 0 )
+            ( Int32 0 )
            )
           )
          )
@@ -984,13 +1176,13 @@ Module
           ( Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-            , sourceLine = Pos 16
-            , sourceColumn = Pos 41
+            , sourceLine = Pos 19
+            , sourceColumn = Pos 40
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-            , sourceLine = Pos 16
-            , sourceColumn = Pos 48
+            , sourceLine = Pos 19
+            , sourceColumn = Pos 47
             }
            }
           )
@@ -998,13 +1190,13 @@ Module
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-             , sourceLine = Pos 16
-             , sourceColumn = Pos 41
+             , sourceLine = Pos 19
+             , sourceColumn = Pos 40
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-             , sourceLine = Pos 16
-             , sourceColumn = Pos 48
+             , sourceLine = Pos 19
+             , sourceColumn = Pos 47
              }
             }
            ) []
@@ -1012,13 +1204,13 @@ Module
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-              , sourceLine = Pos 16
-              , sourceColumn = Pos 41
+              , sourceLine = Pos 19
+              , sourceColumn = Pos 40
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-              , sourceLine = Pos 16
-              , sourceColumn = Pos 48
+              , sourceLine = Pos 19
+              , sourceColumn = Pos 47
               }
              }
             )
@@ -1026,30 +1218,60 @@ Module
              ( Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-               , sourceLine = Pos 16
-               , sourceColumn = Pos 41
+               , sourceLine = Pos 19
+               , sourceColumn = Pos 40
                }
               , _end = SourcePos
                { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-               , sourceLine = Pos 16
-               , sourceColumn = Pos 48
+               , sourceLine = Pos 19
+               , sourceColumn = Pos 47
                }
               }
              )
-             ( Var
+             ( Seq
               ( Range
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-                , sourceLine = Pos 16
-                , sourceColumn = Pos 43
+                , sourceLine = Pos 19
+                , sourceColumn = Pos 42
                 }
                , _end = SourcePos
                 { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-                , sourceLine = Pos 16
-                , sourceColumn = Pos 47
+                , sourceLine = Pos 19
+                , sourceColumn = Pos 46
                 }
                }
-              ) "acc"
+              )
+              ( NoBind
+               ( Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+                 , sourceLine = Pos 19
+                 , sourceColumn = Pos 42
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+                 , sourceLine = Pos 19
+                 , sourceColumn = Pos 46
+                 }
+                }
+               )
+               ( Var
+                ( Range
+                 { _start = SourcePos
+                  { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+                  , sourceLine = Pos 19
+                  , sourceColumn = Pos 42
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+                  , sourceLine = Pos 19
+                  , sourceColumn = Pos 46
+                  }
+                 }
+                ) "acc"
+               ) :| []
+              )
              ) :| []
             )
            ) :| []
@@ -1060,13 +1282,13 @@ Module
          ( Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-           , sourceLine = Pos 16
-           , sourceColumn = Pos 50
+           , sourceLine = Pos 19
+           , sourceColumn = Pos 49
            }
           , _end = SourcePos
            { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-           , sourceLine = Pos 16
-           , sourceColumn = Pos 78
+           , sourceLine = Pos 19
+           , sourceColumn = Pos 76
            }
           }
          )
@@ -1074,13 +1296,13 @@ Module
           ( Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-            , sourceLine = Pos 16
-            , sourceColumn = Pos 50
+            , sourceLine = Pos 19
+            , sourceColumn = Pos 49
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-            , sourceLine = Pos 16
-            , sourceColumn = Pos 78
+            , sourceLine = Pos 19
+            , sourceColumn = Pos 76
             }
            }
           ) []
@@ -1088,13 +1310,13 @@ Module
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-             , sourceLine = Pos 16
-             , sourceColumn = Pos 50
+             , sourceLine = Pos 19
+             , sourceColumn = Pos 49
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-             , sourceLine = Pos 16
-             , sourceColumn = Pos 78
+             , sourceLine = Pos 19
+             , sourceColumn = Pos 76
              }
             }
            )
@@ -1102,150 +1324,180 @@ Module
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-              , sourceLine = Pos 16
-              , sourceColumn = Pos 50
+              , sourceLine = Pos 19
+              , sourceColumn = Pos 49
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-              , sourceLine = Pos 16
-              , sourceColumn = Pos 78
+              , sourceLine = Pos 19
+              , sourceColumn = Pos 76
               }
              }
             )
-            ( Apply
+            ( Seq
              ( Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-               , sourceLine = Pos 16
-               , sourceColumn = Pos 59
+               , sourceLine = Pos 19
+               , sourceColumn = Pos 51
                }
               , _end = SourcePos
                { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-               , sourceLine = Pos 16
-               , sourceColumn = Pos 77
+               , sourceLine = Pos 19
+               , sourceColumn = Pos 75
                }
               }
              )
-             ( Apply
+             ( NoBind
               ( Range
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-                , sourceLine = Pos 16
-                , sourceColumn = Pos 59
+                , sourceLine = Pos 19
+                , sourceColumn = Pos 51
                 }
                , _end = SourcePos
                 { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-                , sourceLine = Pos 16
-                , sourceColumn = Pos 77
+                , sourceLine = Pos 19
+                , sourceColumn = Pos 75
                 }
                }
               )
-              ( Var
+              ( Apply
                ( Range
                 { _start = SourcePos
                  { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-                 , sourceLine = Pos 16
-                 , sourceColumn = Pos 52
+                 , sourceLine = Pos 19
+                 , sourceColumn = Pos 58
                  }
                 , _end = SourcePos
                  { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-                 , sourceLine = Pos 16
-                 , sourceColumn = Pos 59
-                 }
-                }
-               ) "factAcc"
-              )
-              ( OpApp
-               ( Range
-                { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-                 , sourceLine = Pos 16
-                 , sourceColumn = Pos 62
-                 }
-                , _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-                 , sourceLine = Pos 16
-                 , sourceColumn = Pos 64
-                 }
-                }
-               ) "-"
-               ( Var
-                ( Range
-                 { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-                  , sourceLine = Pos 16
-                  , sourceColumn = Pos 60
-                  }
-                 , _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-                  , sourceLine = Pos 16
-                  , sourceColumn = Pos 62
-                  }
-                 }
-                ) "n"
-               )
-               ( Boxed
-                ( Range
-                 { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-                  , sourceLine = Pos 16
-                  , sourceColumn = Pos 64
-                  }
-                 , _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-                  , sourceLine = Pos 16
-                  , sourceColumn = Pos 66
-                  }
-                 }
-                )
-                ( Int64 1 )
-               )
-              )
-             )
-             ( OpApp
-              ( Range
-               { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-                , sourceLine = Pos 16
-                , sourceColumn = Pos 70
-                }
-               , _end = SourcePos
-                { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-                , sourceLine = Pos 16
-                , sourceColumn = Pos 72
-                }
-               }
-              ) "*"
-              ( Var
-               ( Range
-                { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-                 , sourceLine = Pos 16
-                 , sourceColumn = Pos 68
-                 }
-                , _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-                 , sourceLine = Pos 16
-                 , sourceColumn = Pos 70
-                 }
-                }
-               ) "n"
-              )
-              ( Var
-               ( Range
-                { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-                 , sourceLine = Pos 16
-                 , sourceColumn = Pos 72
-                 }
-                , _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-                 , sourceLine = Pos 16
+                 , sourceLine = Pos 19
                  , sourceColumn = Pos 75
                  }
                 }
-               ) "acc"
-              )
+               )
+               ( Apply
+                ( Range
+                 { _start = SourcePos
+                  { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+                  , sourceLine = Pos 19
+                  , sourceColumn = Pos 58
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+                  , sourceLine = Pos 19
+                  , sourceColumn = Pos 75
+                  }
+                 }
+                )
+                ( Var
+                 ( Range
+                  { _start = SourcePos
+                   { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+                   , sourceLine = Pos 19
+                   , sourceColumn = Pos 51
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+                   , sourceLine = Pos 19
+                   , sourceColumn = Pos 58
+                   }
+                  }
+                 ) "factAcc"
+                )
+                ( OpApp
+                 ( Range
+                  { _start = SourcePos
+                   { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+                   , sourceLine = Pos 19
+                   , sourceColumn = Pos 61
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+                   , sourceLine = Pos 19
+                   , sourceColumn = Pos 63
+                   }
+                  }
+                 ) "-"
+                 ( Var
+                  ( Range
+                   { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+                    , sourceLine = Pos 19
+                    , sourceColumn = Pos 59
+                    }
+                   , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+                    , sourceLine = Pos 19
+                    , sourceColumn = Pos 61
+                    }
+                   }
+                  ) "n"
+                 )
+                 ( Boxed
+                  ( Range
+                   { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+                    , sourceLine = Pos 19
+                    , sourceColumn = Pos 63
+                    }
+                   , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+                    , sourceLine = Pos 19
+                    , sourceColumn = Pos 64
+                    }
+                   }
+                  )
+                  ( Int32 1 )
+                 )
+                )
+               )
+               ( OpApp
+                ( Range
+                 { _start = SourcePos
+                  { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+                  , sourceLine = Pos 19
+                  , sourceColumn = Pos 68
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+                  , sourceLine = Pos 19
+                  , sourceColumn = Pos 70
+                  }
+                 }
+                ) "*"
+                ( Var
+                 ( Range
+                  { _start = SourcePos
+                   { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+                   , sourceLine = Pos 19
+                   , sourceColumn = Pos 66
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+                   , sourceLine = Pos 19
+                   , sourceColumn = Pos 68
+                   }
+                  }
+                 ) "n"
+                )
+                ( Var
+                 ( Range
+                  { _start = SourcePos
+                   { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+                   , sourceLine = Pos 19
+                   , sourceColumn = Pos 70
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+                   , sourceLine = Pos 19
+                   , sourceColumn = Pos 73
+                   }
+                  }
+                 ) "acc"
+                )
+               )
+              ) :| []
              )
             ) :| []
            )
@@ -1261,26 +1513,26 @@ Module
    ( Range
     { _start = SourcePos
      { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-     , sourceLine = Pos 18
+     , sourceLine = Pos 21
      , sourceColumn = Pos 1
      }
     , _end = SourcePos
      { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-     , sourceLine = Pos 21
+     , sourceLine = Pos 27
      , sourceColumn = Pos 1
      }
     }
-   ) "main"
+   ) "fibonacci"
    ( Fn
     ( Range
      { _start = SourcePos
       { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-      , sourceLine = Pos 18
-      , sourceColumn = Pos 12
+      , sourceLine = Pos 21
+      , sourceColumn = Pos 17
       }
      , _end = SourcePos
       { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-      , sourceLine = Pos 21
+      , sourceLine = Pos 27
       , sourceColumn = Pos 1
       }
      }
@@ -1289,12 +1541,722 @@ Module
      ( Range
       { _start = SourcePos
        { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-       , sourceLine = Pos 18
+       , sourceLine = Pos 22
+       , sourceColumn = Pos 3
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+       , sourceLine = Pos 22
+       , sourceColumn = Pos 11
+       }
+      }
+     )
+     [ BoxedP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+        , sourceLine = Pos 22
+        , sourceColumn = Pos 4
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+        , sourceLine = Pos 22
+        , sourceColumn = Pos 5
+        }
+       }
+      )
+      ( Int32 0 )
+     ]
+     ( Seq
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+        , sourceLine = Pos 22
+        , sourceColumn = Pos 10
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+        , sourceLine = Pos 22
+        , sourceColumn = Pos 11
+        }
+       }
+      )
+      ( NoBind
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+         , sourceLine = Pos 22
+         , sourceColumn = Pos 10
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+         , sourceLine = Pos 22
+         , sourceColumn = Pos 11
+         }
+        }
+       )
+       ( Boxed
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+          , sourceLine = Pos 22
+          , sourceColumn = Pos 10
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+          , sourceLine = Pos 22
+          , sourceColumn = Pos 11
+          }
+         }
+        )
+        ( Int32 0 )
+       ) :| []
+      )
+     ) :|
+     [ Clause
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+        , sourceLine = Pos 23
+        , sourceColumn = Pos 3
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+        , sourceLine = Pos 23
+        , sourceColumn = Pos 11
+        }
+       }
+      )
+      [ BoxedP
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+         , sourceLine = Pos 23
+         , sourceColumn = Pos 4
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+         , sourceLine = Pos 23
+         , sourceColumn = Pos 5
+         }
+        }
+       )
+       ( Int32 1 )
+      ]
+      ( Seq
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+         , sourceLine = Pos 23
+         , sourceColumn = Pos 10
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+         , sourceLine = Pos 23
+         , sourceColumn = Pos 11
+         }
+        }
+       )
+       ( NoBind
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+          , sourceLine = Pos 23
+          , sourceColumn = Pos 10
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+          , sourceLine = Pos 23
+          , sourceColumn = Pos 11
+          }
+         }
+        )
+        ( Boxed
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+           , sourceLine = Pos 23
+           , sourceColumn = Pos 10
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+           , sourceLine = Pos 23
+           , sourceColumn = Pos 11
+           }
+          }
+         )
+         ( Int32 1 )
+        ) :| []
+       )
+      )
+     , Clause
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+        , sourceLine = Pos 24
+        , sourceColumn = Pos 3
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+        , sourceLine = Pos 24
+        , sourceColumn = Pos 45
+        }
+       }
+      )
+      [ VarP
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+         , sourceLine = Pos 24
+         , sourceColumn = Pos 4
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+         , sourceLine = Pos 24
+         , sourceColumn = Pos 5
+         }
+        }
+       ) "n"
+      ]
+      ( Seq
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+         , sourceLine = Pos 24
+         , sourceColumn = Pos 10
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+         , sourceLine = Pos 24
+         , sourceColumn = Pos 45
+         }
+        }
+       )
+       ( NoBind
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+          , sourceLine = Pos 24
+          , sourceColumn = Pos 10
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+          , sourceLine = Pos 24
+          , sourceColumn = Pos 45
+          }
+         }
+        )
+        ( OpApp
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+           , sourceLine = Pos 24
+           , sourceColumn = Pos 27
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+           , sourceLine = Pos 24
+           , sourceColumn = Pos 29
+           }
+          }
+         ) "+"
+         ( Apply
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+            , sourceLine = Pos 24
+            , sourceColumn = Pos 19
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+            , sourceLine = Pos 24
+            , sourceColumn = Pos 27
+            }
+           }
+          )
+          ( Var
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+             , sourceLine = Pos 24
+             , sourceColumn = Pos 10
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+             , sourceLine = Pos 24
+             , sourceColumn = Pos 19
+             }
+            }
+           ) "fibonacci"
+          )
+          ( OpApp
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+             , sourceLine = Pos 24
+             , sourceColumn = Pos 22
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+             , sourceLine = Pos 24
+             , sourceColumn = Pos 24
+             }
+            }
+           ) "-"
+           ( Var
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+              , sourceLine = Pos 24
+              , sourceColumn = Pos 20
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+              , sourceLine = Pos 24
+              , sourceColumn = Pos 22
+              }
+             }
+            ) "n"
+           )
+           ( Boxed
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+              , sourceLine = Pos 24
+              , sourceColumn = Pos 24
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+              , sourceLine = Pos 24
+              , sourceColumn = Pos 25
+              }
+             }
+            )
+            ( Int32 1 )
+           )
+          )
+         )
+         ( Apply
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+            , sourceLine = Pos 24
+            , sourceColumn = Pos 38
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+            , sourceLine = Pos 24
+            , sourceColumn = Pos 45
+            }
+           }
+          )
+          ( Var
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+             , sourceLine = Pos 24
+             , sourceColumn = Pos 29
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+             , sourceLine = Pos 24
+             , sourceColumn = Pos 38
+             }
+            }
+           ) "fibonacci"
+          )
+          ( OpApp
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+             , sourceLine = Pos 24
+             , sourceColumn = Pos 41
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+             , sourceLine = Pos 24
+             , sourceColumn = Pos 43
+             }
+            }
+           ) "-"
+           ( Var
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+              , sourceLine = Pos 24
+              , sourceColumn = Pos 39
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+              , sourceLine = Pos 24
+              , sourceColumn = Pos 41
+              }
+             }
+            ) "n"
+           )
+           ( Boxed
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+              , sourceLine = Pos 24
+              , sourceColumn = Pos 43
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+              , sourceLine = Pos 24
+              , sourceColumn = Pos 44
+              }
+             }
+            )
+            ( Int32 2 )
+           )
+          )
+         )
+        ) :| []
+       )
+      )
+     ]
+    )
+   )
+  , ScDef
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+     , sourceLine = Pos 27
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+     , sourceLine = Pos 32
+     , sourceColumn = Pos 1
+     }
+    }
+   ) "listLength"
+   ( Fn
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+      , sourceLine = Pos 27
+      , sourceColumn = Pos 18
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+      , sourceLine = Pos 32
+      , sourceColumn = Pos 1
+      }
+     }
+    )
+    ( Clause
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+       , sourceLine = Pos 28
+       , sourceColumn = Pos 3
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+       , sourceLine = Pos 28
+       , sourceColumn = Pos 13
+       }
+      }
+     )
+     [ VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+        , sourceLine = Pos 28
+        , sourceColumn = Pos 4
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+        , sourceLine = Pos 28
+        , sourceColumn = Pos 7
+        }
+       }
+      ) "Nil"
+     ]
+     ( Seq
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+        , sourceLine = Pos 28
+        , sourceColumn = Pos 12
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+        , sourceLine = Pos 28
+        , sourceColumn = Pos 13
+        }
+       }
+      )
+      ( NoBind
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+         , sourceLine = Pos 28
+         , sourceColumn = Pos 12
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+         , sourceLine = Pos 28
+         , sourceColumn = Pos 13
+         }
+        }
+       )
+       ( Boxed
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+          , sourceLine = Pos 28
+          , sourceColumn = Pos 12
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+          , sourceLine = Pos 28
+          , sourceColumn = Pos 13
+          }
+         }
+        )
+        ( Int32 0 )
+       ) :| []
+      )
+     ) :|
+     [ Clause
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+        , sourceLine = Pos 29
+        , sourceColumn = Pos 3
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+        , sourceLine = Pos 29
+        , sourceColumn = Pos 42
+        }
+       }
+      )
+      [ ApplyP
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+         , sourceLine = Pos 29
+         , sourceColumn = Pos 8
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+         , sourceLine = Pos 29
+         , sourceColumn = Pos 17
+         }
+        }
+       )
+       ( ApplyP
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+          , sourceLine = Pos 29
+          , sourceColumn = Pos 8
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+          , sourceLine = Pos 29
+          , sourceColumn = Pos 17
+          }
+         }
+        )
+        ( VarP
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+           , sourceLine = Pos 29
+           , sourceColumn = Pos 4
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+           , sourceLine = Pos 29
+           , sourceColumn = Pos 8
+           }
+          }
+         ) "Cons"
+        )
+        ( VarP
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+           , sourceLine = Pos 29
+           , sourceColumn = Pos 9
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+           , sourceLine = Pos 29
+           , sourceColumn = Pos 10
+           }
+          }
+         ) "_"
+        )
+       )
+       ( VarP
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+          , sourceLine = Pos 29
+          , sourceColumn = Pos 12
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+          , sourceLine = Pos 29
+          , sourceColumn = Pos 16
+          }
+         }
+        ) "tail"
+       )
+      ]
+      ( Seq
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+         , sourceLine = Pos 29
+         , sourceColumn = Pos 22
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+         , sourceLine = Pos 29
+         , sourceColumn = Pos 42
+         }
+        }
+       )
+       ( NoBind
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+          , sourceLine = Pos 29
+          , sourceColumn = Pos 22
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+          , sourceLine = Pos 29
+          , sourceColumn = Pos 42
+          }
+         }
+        )
+        ( OpApp
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+           , sourceLine = Pos 29
+           , sourceColumn = Pos 24
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+           , sourceLine = Pos 29
+           , sourceColumn = Pos 26
+           }
+          }
+         ) "+"
+         ( Boxed
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+            , sourceLine = Pos 29
+            , sourceColumn = Pos 22
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+            , sourceLine = Pos 29
+            , sourceColumn = Pos 24
+            }
+           }
+          )
+          ( Int32 1 )
+         )
+         ( Apply
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+            , sourceLine = Pos 29
+            , sourceColumn = Pos 36
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+            , sourceLine = Pos 29
+            , sourceColumn = Pos 42
+            }
+           }
+          )
+          ( Var
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+             , sourceLine = Pos 29
+             , sourceColumn = Pos 26
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+             , sourceLine = Pos 29
+             , sourceColumn = Pos 36
+             }
+            }
+           ) "listLength"
+          )
+          ( Var
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+             , sourceLine = Pos 29
+             , sourceColumn = Pos 37
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+             , sourceLine = Pos 29
+             , sourceColumn = Pos 41
+             }
+            }
+           ) "tail"
+          )
+         )
+        ) :| []
+       )
+      )
+     ]
+    )
+   )
+  , ScDef
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+     , sourceLine = Pos 32
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+     , sourceLine = Pos 36
+     , sourceColumn = Pos 1
+     }
+    }
+   ) "main"
+   ( Fn
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+      , sourceLine = Pos 32
+      , sourceColumn = Pos 12
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+      , sourceLine = Pos 36
+      , sourceColumn = Pos 1
+      }
+     }
+    )
+    ( Clause
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+       , sourceLine = Pos 32
        , sourceColumn = Pos 12
        }
       , _end = SourcePos
        { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-       , sourceLine = Pos 21
+       , sourceLine = Pos 36
        , sourceColumn = Pos 1
        }
       }
@@ -1303,12 +2265,12 @@ Module
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-        , sourceLine = Pos 18
+        , sourceLine = Pos 32
         , sourceColumn = Pos 12
         }
        , _end = SourcePos
         { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-        , sourceLine = Pos 21
+        , sourceLine = Pos 36
         , sourceColumn = Pos 1
         }
        }
@@ -1317,120 +2279,271 @@ Module
        ( Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-         , sourceLine = Pos 18
+         , sourceLine = Pos 32
          , sourceColumn = Pos 12
          }
         , _end = SourcePos
          { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-         , sourceLine = Pos 21
+         , sourceLine = Pos 36
          , sourceColumn = Pos 1
          }
         }
        )
-       ( OpApp
+       ( Seq
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-          , sourceLine = Pos 19
-          , sourceColumn = Pos 29
+          , sourceLine = Pos 33
+          , sourceColumn = Pos 3
           }
          , _end = SourcePos
           { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-          , sourceLine = Pos 19
-          , sourceColumn = Pos 32
+          , sourceLine = Pos 35
+          , sourceColumn = Pos 1
           }
          }
-        ) "|>"
-        ( OpApp
+        )
+        ( NoBind
          ( Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-           , sourceLine = Pos 19
-           , sourceColumn = Pos 12
+           , sourceLine = Pos 33
+           , sourceColumn = Pos 3
            }
           , _end = SourcePos
            { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-           , sourceLine = Pos 19
-           , sourceColumn = Pos 15
+           , sourceLine = Pos 33
+           , sourceColumn = Pos 39
            }
           }
-         ) "|>"
-         ( Apply
+         )
+         ( OpApp
           ( Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-            , sourceLine = Pos 19
-            , sourceColumn = Pos 7
+            , sourceLine = Pos 33
+            , sourceColumn = Pos 28
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-            , sourceLine = Pos 19
-            , sourceColumn = Pos 12
+            , sourceLine = Pos 33
+            , sourceColumn = Pos 31
             }
            }
+          ) "|>"
+          ( OpApp
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+             , sourceLine = Pos 33
+             , sourceColumn = Pos 11
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+             , sourceLine = Pos 33
+             , sourceColumn = Pos 14
+             }
+            }
+           ) "|>"
+           ( Apply
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+              , sourceLine = Pos 33
+              , sourceColumn = Pos 7
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+              , sourceLine = Pos 33
+              , sourceColumn = Pos 11
+              }
+             }
+            )
+            ( Var
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+               , sourceLine = Pos 33
+               , sourceColumn = Pos 3
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+               , sourceLine = Pos 33
+               , sourceColumn = Pos 7
+               }
+              }
+             ) "fact"
+            )
+            ( Boxed
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+               , sourceLine = Pos 33
+               , sourceColumn = Pos 8
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+               , sourceLine = Pos 33
+               , sourceColumn = Pos 9
+               }
+              }
+             )
+             ( Int32 5 )
+            )
+           )
+           ( Var
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+              , sourceLine = Pos 33
+              , sourceColumn = Pos 14
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+              , sourceLine = Pos 33
+              , sourceColumn = Pos 28
+              }
+             }
+            ) "toStringInt32"
+           )
           )
           ( Var
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-             , sourceLine = Pos 19
-             , sourceColumn = Pos 3
+             , sourceLine = Pos 33
+             , sourceColumn = Pos 31
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-             , sourceLine = Pos 19
-             , sourceColumn = Pos 7
+             , sourceLine = Pos 33
+             , sourceColumn = Pos 39
              }
             }
-           ) "fact"
+           ) "putStrLn"
           )
-          ( Boxed
-           ( Range
-            { _start = SourcePos
-             { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-             , sourceLine = Pos 19
-             , sourceColumn = Pos 8
-             }
-            , _end = SourcePos
-             { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-             , sourceLine = Pos 19
-             , sourceColumn = Pos 10
-             }
-            }
-           )
-           ( Int64 5 )
-          )
-         )
-         ( Var
+         ) :|
+         [ NoBind
           ( Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-            , sourceLine = Pos 19
-            , sourceColumn = Pos 15
+            , sourceLine = Pos 34
+            , sourceColumn = Pos 3
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-            , sourceLine = Pos 19
-            , sourceColumn = Pos 29
+            , sourceLine = Pos 35
+            , sourceColumn = Pos 1
             }
            }
-          ) "toStringInt64"
-         )
-        )
-        ( Var
-         ( Range
-          { _start = SourcePos
-           { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-           , sourceLine = Pos 19
-           , sourceColumn = Pos 32
-           }
-          , _end = SourcePos
-           { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
-           , sourceLine = Pos 20
-           , sourceColumn = Pos 1
-           }
-          }
-         ) "putStrLn"
+          )
+          ( OpApp
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+             , sourceLine = Pos 34
+             , sourceColumn = Pos 34
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+             , sourceLine = Pos 34
+             , sourceColumn = Pos 37
+             }
+            }
+           ) "|>"
+           ( OpApp
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+              , sourceLine = Pos 34
+              , sourceColumn = Pos 17
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+              , sourceLine = Pos 34
+              , sourceColumn = Pos 20
+              }
+             }
+            ) "|>"
+            ( Apply
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+               , sourceLine = Pos 34
+               , sourceColumn = Pos 12
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+               , sourceLine = Pos 34
+               , sourceColumn = Pos 17
+               }
+              }
+             )
+             ( Var
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+                , sourceLine = Pos 34
+                , sourceColumn = Pos 3
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+                , sourceLine = Pos 34
+                , sourceColumn = Pos 12
+                }
+               }
+              ) "fibonacci"
+             )
+             ( Boxed
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+                , sourceLine = Pos 34
+                , sourceColumn = Pos 13
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+                , sourceLine = Pos 34
+                , sourceColumn = Pos 15
+                }
+               }
+              )
+              ( Int32 10 )
+             )
+            )
+            ( Var
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+               , sourceLine = Pos 34
+               , sourceColumn = Pos 20
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+               , sourceLine = Pos 34
+               , sourceColumn = Pos 34
+               }
+              }
+             ) "toStringInt32"
+            )
+           )
+           ( Var
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+              , sourceLine = Pos 34
+              , sourceColumn = Pos 37
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/NewSyntax.mlg"
+              , sourceLine = Pos 35
+              , sourceColumn = Pos 1
+              }
+             }
+            ) "putStrLn"
+           )
+          )
+         ]
         )
        ) :| []
       )
