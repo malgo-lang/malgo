@@ -25,7 +25,7 @@ description = "Setup HLS"
 run = "ghcup compile hls -g 2.11.0.0 --ghc 9.12.2 --cabal-update"
 [tasks.format]
 description = "Format the code"
-run = "ormolu --mode inplace $(git ls-files '*.hs')"
+run = "ormolu --mode inplace $(find . -name '*.hs')"
 [tasks.build]
 description = "Build the project"
 depends = ["format"]
