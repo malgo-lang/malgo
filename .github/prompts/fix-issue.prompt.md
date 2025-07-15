@@ -1,6 +1,6 @@
 ---
 mode: "agent"
-description: "Prompt for auto-implementing small issues and creating pull requests in the Malgo project"
+description: "Prompt for auto-implementing issues and creating pull requests in the Malgo project"
 ---
 
 ## Steps
@@ -35,7 +35,12 @@ Follow **Planning** → **Action**. Obtain user approval between Planning and Ac
 11. Push the branch and create a draft pull request:
     ```bash
     git push --set-upstream origin fix/${issue_number}/<short-description>
-    gh pr create --draft --base master --title "<concise summary>" --body "fix: #${issue_number} Auto-generated PR\n\n- Description of changes\n- References or notes\n- Questions or concerns"
+    cat <<EOS | gh pr create --draft --base master --title "<concise summary>" --body-title -
+    fix: #${issue_number} Auto-generated PR
+    - Description of changes
+    - References or notes
+    - Questions or concerns
+    EOS
     ```
 
 ## Pull Request Format
