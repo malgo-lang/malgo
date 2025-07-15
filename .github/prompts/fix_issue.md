@@ -33,9 +33,16 @@ Follow **Planning** → **Action**. Obtain user approval between Planning and Ac
    - Use `git add <new-file>` for any added files.
 10. Commit the changes with a concise message summarizing the fix.
 11. Push the branch and create a draft pull request:
+
     ```bash
     git push --set-upstream origin fix/${issue_number}/<short-description>
-    gh pr create --draft --base master --title "<concise summary>" --body "fix: #${issue_number} Auto-generated PR\n\n- Description of changes\n- References or notes\n- Questions or concerns"
+    cat <<EOS | gh pr create --draft --base master --title "<concise summary>" --body-file -
+    fix: #${issue_number} Auto-generated PR
+
+    - Description of changes
+    - References or notes
+    - Questions or concerns
+    EOS
     ```
 
 ## Pull Request Format
