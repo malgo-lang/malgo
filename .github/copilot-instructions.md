@@ -29,3 +29,4 @@ In order to produce highly readable output, data should be converted to strings 
 
 - Use `mise run build` to build the project.
 - Use `mise run test` to run tests.
+- Use `mise run exec` to run `malgo` executable.
