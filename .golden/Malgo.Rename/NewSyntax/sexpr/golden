@@ -1,0 +1,141 @@
+(module
+   "test/testcases/malgo/NewSyntax.mlg"
+   ((((def
+         ==
+         (fn
+            ((clause
+                (#NewSyntax.x_0 #NewSyntax.y_1)
+                (seq (do (apply (apply eqInt32 #NewSyntax.x_0) #NewSyntax.y_1))))))))
+       ((def
+           -
+           (fn
+              ((clause
+                  (#NewSyntax.x_2 #NewSyntax.y_3)
+                  (seq
+                     (do (apply (apply subInt32 #NewSyntax.x_2) #NewSyntax.y_3))))))))
+       ((def
+           +
+           (fn
+              ((clause
+                  (#NewSyntax.x_4 #NewSyntax.y_5)
+                  (seq
+                     (do (apply (apply addInt32 #NewSyntax.x_4) #NewSyntax.y_5))))))))
+       ((def
+           fibonacci
+           (fn
+              ((clause
+                  ((con Int32# ((unboxed (int32 0)))))
+                  (seq (do (apply Int32# (int32 0)))))
+                 (clause
+                    ((con Int32# ((unboxed (int32 1)))))
+                    (seq (do (apply Int32# (int32 1)))))
+                 (clause
+                    (#NewSyntax.n_13)
+                    (seq
+                       (do
+                          (opapp
+                             +
+                             (apply
+                                fibonacci
+                                (opapp - #NewSyntax.n_13 (apply Int32# (int32 1))))
+                             (apply
+                                fibonacci
+                                (opapp - #NewSyntax.n_13 (apply Int32# (int32 2))))))))))))
+       ((def
+           listLength
+           (fn
+              ((clause ((con Nil ())) (seq (do (apply Int32# (int32 0)))))
+                 (clause
+                    ((apply
+                        (apply (con Cons ()) #NewSyntax.__14)
+                        #NewSyntax.tail_15))
+                    (seq
+                       (do
+                          (opapp
+                             +
+                             (apply Int32# (int32 1))
+                             (apply listLength #NewSyntax.tail_15)))))))))
+       ((def
+           *
+           (fn
+              ((clause
+                  (#NewSyntax.x_6 #NewSyntax.y_7)
+                  (seq
+                     (do (apply (apply mulInt32 #NewSyntax.x_6) #NewSyntax.y_7))))))))
+       ((def
+           factAcc
+           (fn
+              ((clause
+                  (#NewSyntax.n_9 #NewSyntax.acc_10)
+                  (seq
+                     (do
+                        (apply
+                           (apply
+                              (apply
+                                 if
+                                 (opapp
+                                    ==
+                                    #NewSyntax.n_9
+                                    (apply Int32# (int32 0))))
+                              (fn
+                                 ((clause
+                                     (#NewSyntax.$__11)
+                                     (seq (do (seq (do #NewSyntax.acc_10))))))))
+                           (fn
+                              ((clause
+                                  (#NewSyntax.$__12)
+                                  (seq
+                                     (do
+                                        (seq
+                                           (do
+                                              (apply
+                                                 (apply
+                                                    factAcc
+                                                    (opapp
+                                                       -
+                                                       #NewSyntax.n_9
+                                                       (apply Int32# (int32 1))))
+                                                 (opapp
+                                                    *
+                                                    #NewSyntax.n_9
+                                                    #NewSyntax.acc_10)))))))))))))))))
+       ((def
+           fact
+           (fn
+              ((clause
+                  (#NewSyntax.n_8)
+                  (seq
+                     (do
+                        (apply
+                           (apply factAcc #NewSyntax.n_8)
+                           (apply Int32# (int32 1))))))))))
+       ((def
+           main
+           (fn
+              ((clause
+                  (#NewSyntax.$__16)
+                  (seq
+                     (do
+                        (seq
+                           (do
+                              (opapp
+                                 |>
+                                 (opapp
+                                    |>
+                                    (apply fact (apply Int32# (int32 5)))
+                                    toStringInt32)
+                                 putStrLn))
+                           (do
+                              (opapp
+                                 |>
+                                 (opapp
+                                    |>
+                                    (apply fibonacci (apply Int32# (int32 10)))
+                                    toStringInt32)
+                                 putStrLn)))))))))))
+      ()
+      ()
+      ()
+      ()
+      ((import "runtime/malgo/Builtin.mlg" all)
+         (import "runtime/malgo/Prelude.mlg" all))))
