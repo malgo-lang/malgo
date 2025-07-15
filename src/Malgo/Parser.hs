@@ -1,21 +1,37 @@
 {-# LANGUAGE NoMonomorphismRestriction #-}
 
-module Malgo.Parser (parse) where
+module Malgo.Parser (parse, ParserPass (..)) where
 
 import Control.Monad.Combinators.Expr (Operator (..), makeExprParser)
 import Control.Monad.Trans (lift)
 import Data.List.NonEmpty qualified as NonEmpty
 import Data.Text.Lazy qualified as TL
 import Effectful
+import Effectful.Error.Static (throwError)
 import Effectful.FileSystem (runFileSystem)
 import Malgo.Features
 import Malgo.Module (ModuleName (..), Workspace, parseArtifactPath, pwdPath)
+import Malgo.Pass
 import Malgo.Prelude hiding (All)
 import Malgo.Syntax
 import Malgo.Syntax.Extension
 import Text.Megaparsec hiding (optional, parse)
 import Text.Megaparsec.Char hiding (space)
 import Text.Megaparsec.Char.Lexer qualified as L
+
+data ParserPass = ParserPass
+
+instance Pass ParserPass where
+  type Input ParserPass = (FilePath, TL.Text)
+  type Output ParserPass = Module (Malgo Parse)
+  type ErrorType ParserPass = ParseErrorBundle TL.Text Void
+  type Effects ParserPass es = (IOE :> es, Workspace :> es, Features :> es)
+
+  runPassImpl _ (srcPath, text) = do
+    result <- parse srcPath text
+    case result of
+      Left err -> throwError err
+      Right result -> pure result
 
 type Parser es = ParsecT Void TL.Text (Eff es)
 

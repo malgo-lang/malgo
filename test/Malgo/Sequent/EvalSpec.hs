@@ -6,8 +6,7 @@ import Effectful.Error.Static (runError)
 import Effectful.Reader.Static (runReader)
 import Malgo.Module
 import Malgo.Monad (runMalgoM)
-import Malgo.Parser (parse)
-import Malgo.Parser.Pass
+import Malgo.Parser (ParserPass (..), parse)
 import Malgo.Pass (runCompileError, runPass)
 import Malgo.Prelude
 import Malgo.Rename

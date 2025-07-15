@@ -3,7 +3,7 @@ module Malgo.Sequent.ToCoreSpec (spec) where
 import Data.ByteString qualified as BS
 import Effectful.Reader.Static (runReader)
 import Malgo.Monad (runMalgoM)
-import Malgo.Parser.Pass
+import Malgo.Parser (ParserPass (..))
 import Malgo.Pass
 import Malgo.Prelude
 import Malgo.Rename
