@@ -270,6 +270,14 @@ rnClause (Clause pos ps e) = do
       pure $ ListP pos parameters'
     resolveConP (UnboxedP pos x) = pure $ UnboxedP pos x
     resolveConP (BoxedP pos x) = pure $ BoxedP pos x
+    resolveConP (ThisP pos) = pure $ ThisP pos
+    resolveConP (ProjectP pos p field) = do
+      p' <- resolveConP p
+      pure $ ProjectP pos p' field
+    resolveConP (ApplyP pos p1 p2) = do
+      p1' <- resolveConP p1
+      p2' <- resolveConP p2
+      pure $ ApplyP pos p1' p2'
 
     patVars (VarP _ x) = [x]
     patVars (ConP _ _ xs) = concatMap patVars xs
@@ -278,6 +286,9 @@ rnClause (Clause pos ps e) = do
     patVars (ListP _ xs) = concatMap patVars xs
     patVars UnboxedP {} = []
     patVars BoxedP {} = []
+    patVars (ThisP _) = []
+    patVars (ProjectP _ p _) = patVars p
+    patVars (ApplyP _ p1 p2) = patVars p1 <> patVars p2
 
 -- | Rename a pattern.
 rnPat :: (Reader RnEnv :> es, IOE :> es, Reader Flag :> es, Error RenameError :> es) => Pat (Malgo Parse) -> Eff es (Pat (Malgo Rename))
@@ -293,6 +304,9 @@ rnPat (UnboxedP pos (String _)) = errorOn pos "String literal pattern is not sup
 rnPat (BoxedP pos (String _)) = errorOn pos "String literal pattern is not supported"
 rnPat (UnboxedP pos x) = pure $ UnboxedP pos x
 rnPat (BoxedP pos x) = ConP pos <$> lookupBox pos x <*> pure [UnboxedP pos (coerce x)]
+rnPat (ThisP pos) = pure $ ThisP pos
+rnPat (ProjectP pos p field) = ProjectP pos <$> rnPat p <*> pure field
+rnPat (ApplyP pos p1 p2) = ApplyP pos <$> rnPat p1 <*> rnPat p2
 
 -- | Rename statements in {}.
 rnStmts ::
