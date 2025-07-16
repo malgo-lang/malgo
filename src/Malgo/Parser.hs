@@ -338,7 +338,8 @@ pAtom =
       try pRecord,
       pFn,
       pList,
-      pSeq
+      pSeq,
+      pParens
     ]
 
 -- | pLiteral parses a literal.
@@ -418,20 +419,20 @@ pVariable = do
 
 -- | pTuple parses a tuple or parenthesized expression.
 --
--- > tuple = "(" expr ("," expr)* ")"
--- >       | "(" ")"
+-- > tuple = "{" expr ("," expr)* "}"
+-- >       | "{" "}"
 --
 -- If c-style-apply is enabled:
--- > tuple = "{" expr ("," expr)+ "}"
--- >       | "{" "}"
+-- > tuple = "(" expr ("," expr)+ ")"
+-- >       | "(" ")"
 pTuple :: (Features :> es) => Parser es (Expr (Malgo Parse))
 pTuple = do
   cStyleApply <- lift $ hasFeature CStyleApply
   if cStyleApply
-    then pCStyleTuple
-    else normal
+    then pBraceTuple
+    else pBraceTuple
   where
-    normal = do
+    pParenTuple = do
       start <- getSourcePos
       exprs <- between (symbol "(") (symbol ")") (sepBy pExpr (symbol ","))
       end <- getSourcePos
@@ -441,12 +442,13 @@ pTuple = do
           -- It should return a Parens expression instead of a Seq expression.
           pure $ Seq (Range start end) $ NonEmpty.fromList [NoBind (Range start end) expr]
         _ -> pure $ Tuple (Range start end) exprs
-    pCStyleTuple = do
+    pBraceTuple = do
       start <- getSourcePos
       exprs <- between (symbol "{") (symbol "}") (sepBy pExpr (symbol ","))
       end <- getSourcePos
       case exprs of
-        [_] -> fail "c-style tuple must have at least two expressions or be empty"
+        [] -> pure $ Tuple (Range start end) exprs
+        [_] -> fail "brace tuple must have at least two expressions or be empty"
         _ -> pure $ Tuple (Range start end) exprs
 
 -- > record = ident "=" expr ("," ident "=" expr)* ;
@@ -541,6 +543,25 @@ pList = between (symbol "[") (symbol "]") do
 pSeq :: (Features :> es) => Parser es (Expr (Malgo Parse))
 pSeq = between (symbol "(") (symbol ")") pStmts
 
+-- | pParens parses a parenthesized expression for grouping.
+pParens :: (Features :> es) => Parser es (Expr (Malgo Parse))
+pParens = do
+  cStyleApply <- lift $ hasFeature CStyleApply
+  if cStyleApply
+    then pBraceParens
+    else pParenParens
+  where
+    pParenParens = do
+      start <- getSourcePos
+      expr <- between (symbol "(") (symbol ")") pExpr
+      end <- getSourcePos
+      pure $ Seq (Range start end) $ NonEmpty.fromList [NoBind (Range start end) expr]
+    pBraceParens = do
+      start <- getSourcePos
+      expr <- between (symbol "{") (symbol "}") pExpr
+      end <- getSourcePos
+      pure $ Seq (Range start end) $ NonEmpty.fromList [NoBind (Range start end) expr]
+
 -- * Patterns
 
 -- | pPat parses a pattern.
@@ -598,28 +619,32 @@ pLiteralP = do
 
 -- | pTupleP parses a tuple pattern or parenthesized pattern.
 --
+-- > tuplePat = "{" pattern ("," pattern)* "}"
+-- >          | "{" "}" ;
+--
+-- If c-style-apply is enabled:
 -- > tuplePat = "(" pattern ("," pattern)* ")"
 -- >          | "(" ")" ;
 pTupleP :: (Features :> es) => Parser es (Pat (Malgo Parse))
 pTupleP = do
   cStyleApply <- lift $ hasFeature CStyleApply
   if cStyleApply
-    then pCStyleTupleP
-    else normal
+    then pBraceTupleP
+    else pBraceTupleP
   where
-    normal = do
+    pParenTupleP = do
       start <- getSourcePos
       pats <- between (symbol "(") (symbol ")") (sepBy pPat (symbol ","))
       end <- getSourcePos
       case pats of
         [pat] -> pure pat
         _ -> pure $ TupleP (Range start end) pats
-    pCStyleTupleP = do
+    pBraceTupleP = do
       start <- getSourcePos
       pats <- between (symbol "{") (symbol "}") (sepBy pPat (symbol ","))
       end <- getSourcePos
       case pats of
-        [_] -> fail "c-style tuple must have at least two patterns or be empty"
+        [_] -> fail "brace tuple must have at least two patterns or be empty"
         _ -> pure $ TupleP (Range start end) pats
 
 -- | pRecordP parses a record pattern.

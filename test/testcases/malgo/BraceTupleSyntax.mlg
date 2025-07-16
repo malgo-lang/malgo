@@ -1,16 +1,12 @@
-module {..} = import "../../runtime/malgo/Builtin.mlg"
+module {..} = import "../../../runtime/malgo/Builtin.mlg"
 
-def testTupleExpr = {
-  x = {1, 2, 3},
-  y = {"hello", "world"},
-  z = {x, y}
-}
+data T = A | B | C
 
-def testTuplePattern = {
-  {x, y} -> x + y,
-  {a, b, c} -> a + b + c
-}
-
+def main : { () }
 def main = {
-  putStrLn "Brace tuple syntax test"
+  {A, B}
+    |> { {A, rest} -> printString "brace tuple works",
+         {B, rest} -> (),
+         {C, rest} -> ()
+       }
 }
