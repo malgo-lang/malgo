@@ -43,7 +43,7 @@ run = """
 [tasks.exec]
 description = "Run the project"
 depends = ["build"]
-run = "cabal exec malgo-exe"
+run = "cabal exec malgo"
 [tasks.changelog]
 description = "Generate changelog"
 run = "git-chglog -o CHANGELOG.md"

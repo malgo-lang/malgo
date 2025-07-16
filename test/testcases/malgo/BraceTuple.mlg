@@ -1,0 +1,10 @@
+module {..} = import "../../../runtime/malgo/Builtin.mlg"
+module {..} = import "../../../runtime/malgo/Prelude.mlg"
+
+def pair = {1L, 2L}
+def triple = {1L, 2L, 3L}
+
+def main = {
+  pair |> { {x, y} -> putStrLn (toStringInt64 x); putStrLn (toStringInt64 y) };
+  triple |> { {a, b, c} -> putStrLn (toStringInt64 a); putStrLn (toStringInt64 b); putStrLn (toStringInt64 c) }
+}
