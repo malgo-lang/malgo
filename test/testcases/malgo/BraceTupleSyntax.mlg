@@ -1,12 +1,5 @@
-module {..} = import "../../../runtime/malgo/Builtin.mlg"
-
 data T = A | B | C
 
-def main : { () }
-def main = {
-  {A, B}
-    |> { {A, rest} -> printString "brace tuple works",
-         {B, rest} -> (),
-         {C, rest} -> ()
-       }
-}
+def tuple = {A, B}
+
+def main = tuple
