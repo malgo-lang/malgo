@@ -5,6 +5,7 @@ module Malgo.Parser (parse, ParserPass (..)) where
 import Control.Monad.Combinators.Expr (Operator (..), makeExprParser)
 import Control.Monad.Trans (lift)
 import Data.List.NonEmpty qualified as NonEmpty
+import Data.Set qualified as Set
 import Data.Text.Lazy qualified as TL
 import Effectful
 import Effectful.Error.Static (throwError)
@@ -39,7 +40,8 @@ type Parser es = ParsecT Void TL.Text (Eff es)
 parse :: (IOE :> es, Workspace :> es, Features :> es) => FilePath -> TL.Text -> Eff es (Either (ParseErrorBundle TL.Text Void) (Module (Malgo Parse)))
 parse srcPath text = runFileSystem do
   let features = parseFeatures $ extractPragmas text
-  addFeatures features
+  -- Enable CStyleApply by default for brace tuple syntax
+  addFeatures (features <> FeatureFlags (Set.singleton CStyleApply))
   runParserT parser srcPath text
 
 -- | Extract pragmas from a module.

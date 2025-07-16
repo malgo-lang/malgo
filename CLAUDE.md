@@ -25,7 +25,7 @@ mise run setup-hls
 mise run test
 
 # Run specific test by pattern
-mise run test --option match="Parser"
+mise run test --match "Parser"
 
 # Run a specific test file
 cabal test --test-show-details=direct --test-options=--match --test-options="Malgo.ParserSpec"
