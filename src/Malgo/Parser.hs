@@ -4,6 +4,7 @@ module Malgo.Parser (parse, ParserPass (..)) where
 
 import Control.Monad.Combinators.Expr (Operator (..), makeExprParser)
 import Control.Monad.Trans (lift)
+import Data.Foldable (toList)
 import Data.List.NonEmpty qualified as NonEmpty
 import Data.Text.Lazy qualified as TL
 import Effectful
@@ -101,7 +102,7 @@ skipPragma = lexeme do
 --
 -- > dataDef = "data" ident ident* "=" constructor ("|" constructor)* ;
 -- > constructor = ident atomType* ;
-pDataDef :: Parser es (Decl (Malgo Parse))
+pDataDef :: (Features :> es) => Parser es (Decl (Malgo Parse))
 pDataDef = do
   start <- getSourcePos
   reserved "data"
@@ -126,7 +127,7 @@ pDataDef = do
 -- | pTypeSynonym parses a type synonym.
 --
 -- > typeSynonym = "type" ident ident* "=" type ;
-pTypeSynonym :: Parser es (Decl (Malgo Parse))
+pTypeSynonym :: (Features :> es) => Parser es (Decl (Malgo Parse))
 pTypeSynonym = do
   start <- getSourcePos
   reserved "type"
@@ -167,7 +168,7 @@ pInfix = do
 -- | pForeign parses a foreign declaration.
 --
 -- > foreign = "foreign" "import" ident ":" type ;
-pForeign :: Parser es (Decl (Malgo Parse))
+pForeign :: (Features :> es) => Parser es (Decl (Malgo Parse))
 pForeign = do
   start <- getSourcePos
   reserved "foreign"
@@ -218,7 +219,7 @@ pImport = do
 -- | pScSig parses a value signature.
 --
 -- > scSig = "def" (ident | "(" operator")")":" type ;
-pScSig :: Parser es (Decl (Malgo Parse))
+pScSig :: (Features :> es) => Parser es (Decl (Malgo Parse))
 pScSig = do
   start <- getSourcePos
   reserved "def"
@@ -334,6 +335,7 @@ pAtom =
   choice
     [ pLiteral,
       pVariable,
+      try pUnit,
       try pTuple,
       try pRecord,
       pFn,
@@ -416,6 +418,17 @@ pVariable = do
   end <- getSourcePos
   pure $ Var (Range start end) name
 
+-- | pUnit parses the unit literal ().
+--
+-- > unit = "(" ")" ;
+pUnit :: Parser es (Expr (Malgo Parse))
+pUnit = do
+  start <- getSourcePos
+  _ <- symbol "("
+  _ <- symbol ")"
+  end <- getSourcePos
+  pure $ Tuple (Range start end) []
+
 -- | pTuple parses a tuple or parenthesized expression.
 --
 -- > tuple = "{" expr ("," expr)* "}"
@@ -428,19 +441,19 @@ pTuple :: (Features :> es) => Parser es (Expr (Malgo Parse))
 pTuple = do
   cStyleApply <- lift $ hasFeature CStyleApply
   if cStyleApply
-    then normal
-    else pCStyleTuple
+    then pCStyleTuple
+    else normal
   where
     normal = do
       start <- getSourcePos
-      exprs <- between (symbol "(") (symbol ")") (sepBy pExpr (symbol ","))
+      exprs <- between (symbol "(") (symbol ")") (sepBy1 pExpr (symbol ","))
       end <- getSourcePos
       case exprs of
         [expr] ->
           -- FIXME: this is a hack to match the behavior of the original parser.
           -- It should return a Parens expression instead of a Seq expression.
           pure $ Seq (Range start end) $ NonEmpty.fromList [NoBind (Range start end) expr]
-        _ -> pure $ Tuple (Range start end) exprs
+        _ -> pure $ Tuple (Range start end) $ toList exprs
     pCStyleTuple = do
       start <- getSourcePos
       exprs <- between (symbol "{") (symbol "}") (sepBy pExpr (symbol ","))
@@ -609,8 +622,8 @@ pTupleP :: (Features :> es) => Parser es (Pat (Malgo Parse))
 pTupleP = do
   cStyleApply <- lift $ hasFeature CStyleApply
   if cStyleApply
-    then normal
-    else pCStyleTupleP
+    then pCStyleTupleP
+    else normal
   where
     normal = do
       start <- getSourcePos
@@ -667,7 +680,7 @@ pParenP = do
 --
 -- > type = tyapp "->" type
 -- >      | tyapp ;
-pType :: Parser es (Type (Malgo Parse))
+pType :: (Features :> es) => Parser es (Type (Malgo Parse))
 pType = makeExprParser pTyApp table
   where
     table =
@@ -681,7 +694,7 @@ pType = makeExprParser pTyApp table
 -- | pTyApp parses a type application.
 --
 -- > tyapp = atomType atomType* ;
-pTyApp :: Parser es (Type (Malgo Parse))
+pTyApp :: (Features :> es) => Parser es (Type (Malgo Parse))
 pTyApp = do
   start <- getSourcePos
   ty <- pAtomType
@@ -694,11 +707,13 @@ pTyApp = do
 -- | pAtomType parses an atomic type.
 --
 -- > atomType = tyVar
+-- >          | tyUnit
 -- >          | tyTuple
+-- >          | tyParen
 -- >          | tyRecord
 -- >          | tyBlock
-pAtomType :: Parser es (Type (Malgo Parse))
-pAtomType = choice [pTyVar, pTyTuple, try pTyRecord, pTyBlock]
+pAtomType :: (Features :> es) => Parser es (Type (Malgo Parse))
+pAtomType = choice [pTyVar, try pTyUnit, try pTyParen, try pTyTuple, try pTyRecord, pTyBlock]
 
 -- | pTyVar parses a type variable.
 --
@@ -710,23 +725,60 @@ pTyVar = do
   end <- getSourcePos
   pure $ TyVar (Range start end) name
 
--- | pTyTuple parses a tuple type or parenthesized type.
+-- | pTyUnit parses the unit type ().
 --
--- > tyTuple = "(" type ("," type)* ")"
--- >         | "(" ")" ;
-pTyTuple :: Parser es (Type (Malgo Parse))
-pTyTuple = do
+-- > tyUnit = "(" ")" ;
+pTyUnit :: Parser es (Type (Malgo Parse))
+pTyUnit = do
   start <- getSourcePos
-  tys <- between (symbol "(") (symbol ")") (sepBy pType (symbol ","))
+  _ <- symbol "("
+  _ <- symbol ")"
   end <- getSourcePos
-  case tys of
-    [ty] -> pure ty
-    _ -> pure $ TyTuple (Range start end) tys
+  pure $ TyTuple (Range start end) []
+
+-- | pTyParen parses a parenthesized type.
+--
+-- > tyParen = "(" type ")" ;
+pTyParen :: (Features :> es) => Parser es (Type (Malgo Parse))
+pTyParen = do
+  start <- getSourcePos
+  ty <- between (symbol "(") (symbol ")") pType
+  end <- getSourcePos
+  pure ty
+
+-- | pTyTuple parses a tuple type.
+--
+-- > tyTuple = "{" type ("," type)* "}"
+-- >         | "{" "}" ;
+-- If c-style-apply is enabled:
+-- > tyTuple = "(" type ("," type)+ ")"
+-- >         | "(" ")" ;
+pTyTuple :: (Features :> es) => Parser es (Type (Malgo Parse))
+pTyTuple = do
+  cStyleApply <- lift $ hasFeature CStyleApply
+  if cStyleApply
+    then pCStyleTyTuple
+    else normal
+  where
+    normal = do
+      start <- getSourcePos
+      tys <- between (symbol "{") (symbol "}") (sepBy pType (symbol ","))
+      end <- getSourcePos
+      case tys of
+        [_] -> fail "tuple type must have at least two types or be empty"
+        _ -> pure $ TyTuple (Range start end) tys
+    pCStyleTyTuple = do
+      start <- getSourcePos
+      tys <- between (symbol "(") (symbol ")") (sepBy pType (symbol ","))
+      end <- getSourcePos
+      case tys of
+        [_] -> fail "tuple type must have at least two types or be empty"
+        _ -> pure $ TyTuple (Range start end) tys
 
 -- | pTyRecord parses a record type.
 --
 -- > tyRecord = "{" ident "=" type ("," ident "=" type)* "}" ;
-pTyRecord :: Parser es (Type (Malgo Parse))
+pTyRecord :: (Features :> es) => Parser es (Type (Malgo Parse))
 pTyRecord = do
   start <- getSourcePos
   fields <- between (symbol "{") (symbol "}") $ sepEndBy1 pField (symbol ",")
@@ -742,7 +794,7 @@ pTyRecord = do
 -- | pTyBlock parses a block type.
 --
 -- > tyBlock = "{" type "}" ;
-pTyBlock :: Parser es (Type (Malgo Parse))
+pTyBlock :: (Features :> es) => Parser es (Type (Malgo Parse))
 pTyBlock = do
   start <- getSourcePos
   ty <- between (symbol "{") (symbol "}") pType
