@@ -21,40 +21,49 @@
                               (do
                                  (opapp
                                     <|>
-                                    (tuple
-                                       True
-                                       (fn
-                                          ((clause
-                                              (#RightAssoc.$__3)
-                                              (seq (do (apply Int32# (int32 2))))))))
+                                    (seq
+                                       (do
+                                          (tuple
+                                             True
+                                             (fn
+                                                ((clause
+                                                    (#RightAssoc.$__3)
+                                                    (seq
+                                                       (do
+                                                          (apply Int32# (int32 2))))))))))
                                     (seq
                                        (do
                                           (opapp
                                              <|>
-                                             (tuple
-                                                True
-                                                (fn
-                                                   ((clause
-                                                       (#RightAssoc.$__4)
-                                                       (seq
-                                                          (do
-                                                             (apply
-                                                                Int32#
-                                                                (int32 3))))))))
+                                             (seq
+                                                (do
+                                                   (tuple
+                                                      True
+                                                      (fn
+                                                         ((clause
+                                                             (#RightAssoc.$__4)
+                                                             (seq
+                                                                (do
+                                                                   (apply
+                                                                      Int32#
+                                                                      (int32 3))))))))))
                                              (seq
                                                 (do
                                                    (opapp
                                                       <|>
-                                                      (tuple
-                                                         True
-                                                         (fn
-                                                            ((clause
-                                                                (#RightAssoc.$__5)
-                                                                (seq
-                                                                   (do
-                                                                      (apply
-                                                                         Int32#
-                                                                         (int32 4))))))))
+                                                      (seq
+                                                         (do
+                                                            (tuple
+                                                               True
+                                                               (fn
+                                                                  ((clause
+                                                                      (#RightAssoc.$__5)
+                                                                      (seq
+                                                                         (do
+                                                                            (apply
+                                                                               Int32#
+                                                                               (int32
+                                                                                  4))))))))))
                                                       Nil)))))))))))
                      (let
                         #RightAssoc.y_11

@@ -20,27 +20,38 @@
                             (do
                                (opapp
                                   <|>
-                                  (tuple
-                                     True
-                                     (fn ((clause () (seq (do (int32 2)))))))
+                                  (seq
+                                     (do
+                                        (tuple
+                                           True
+                                           (fn ((clause () (seq (do (int32 2)))))))))
                                   (seq
                                      (do
                                         (opapp
                                            <|>
-                                           (tuple
-                                              True
-                                              (fn
-                                                 ((clause () (seq (do (int32 3)))))))
+                                           (seq
+                                              (do
+                                                 (tuple
+                                                    True
+                                                    (fn
+                                                       ((clause
+                                                           ()
+                                                           (seq (do (int32 3)))))))))
                                            (seq
                                               (do
                                                  (opapp
                                                     <|>
-                                                    (tuple
-                                                       True
-                                                       (fn
-                                                          ((clause
-                                                              ()
-                                                              (seq (do (int32 4)))))))
+                                                    (seq
+                                                       (do
+                                                          (tuple
+                                                             True
+                                                             (fn
+                                                                ((clause
+                                                                    ()
+                                                                    (seq
+                                                                       (do
+                                                                          (int32
+                                                                             4)))))))))
                                                     Nil)))))))))))
                    (let
                       y

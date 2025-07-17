@@ -7,7 +7,7 @@ def one = { 1 } {}
 def id : a -> a
 def id = { x -> { x } {} }
 
-def main : { () }
+def main : { {} }
 def main = {
   { printString (toStringInt32 (id one) ) }
 } {}

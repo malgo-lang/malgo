@@ -3,17 +3,11 @@
    ((import "runtime/malgo/Builtin.mlg" all)
       (import "runtime/malgo/Prelude.mlg" all)
       (infix neutral 4 ==)
-      (def
-         ==
-         (fn ((clause ((tuple x y)) (seq (do (apply (apply eqInt64 x) y)))))))
+      (def == (fn ((clause (x y) (seq (do (apply (apply eqInt64 x) y)))))))
       (infix left 6 -)
-      (def
-         -
-         (fn ((clause ((tuple x y)) (seq (do (apply (apply subInt64 x) y)))))))
+      (def - (fn ((clause (x y) (seq (do (apply (apply subInt64 x) y)))))))
       (infix left 7 *)
-      (def
-         *
-         (fn ((clause ((tuple x y)) (seq (do (apply (apply mulInt64 x) y)))))))
+      (def * (fn ((clause (x y) (seq (do (apply (apply mulInt64 x) y)))))))
       (def
          fact
          (fn ((clause (n) (seq (do (apply factAcc (tuple n (int64 1)))))))))

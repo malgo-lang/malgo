@@ -19,7 +19,7 @@ def printAndReturn = { str k ->
 }
 
 def main = {
-  with finally { () -> printString "end" };
+  with finally { {} -> printString "end" };
   with twice;
   with x = printAndReturn "foo";
   printString x

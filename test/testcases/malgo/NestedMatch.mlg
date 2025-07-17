@@ -7,13 +7,13 @@ data Bool1 = False1 | True1
 data Bool2 = False2 | True2
 
 
-foreign import malgo_print_string : String# -> ()
+foreign import malgo_print_string : String# -> {}
 
-foreign import malgo_exit_failure : () -> a
+foreign import malgo_exit_failure : {} -> a
 
 def main = {
   { True -> malgo_print_string "OK"#,
-    False -> malgo_exit_failure () }
+    False -> malgo_exit_failure {} }
     ({ True1 -> False,
        False1 -> True}
     ({ True2 -> False1,

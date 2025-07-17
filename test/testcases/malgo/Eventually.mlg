@@ -38,7 +38,7 @@ def comp =
     bind eventually (NotYetDone { Done (printString "2") }) { _ ->
       return eventually 3 } }
 
-def main : { () }
+def main : {}
 def main = {
   comp |> step;
   comp |> step |> step |> step
