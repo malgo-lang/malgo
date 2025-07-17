@@ -3,13 +3,13 @@ module {..} = import "../../../runtime/malgo/Builtin.mlg"
 module {..} = import "../../../runtime/malgo/Prelude.mlg"
 
 infix 4 (==)
-def (==) = { (x, y) -> eqInt64(x, y) }
+def (==) = { {x, y} -> eqInt64(x, y) }
 
 infixl 6 (-)
-def (-) = { (x, y) -> subInt64(x, y) }
+def (-) = { {x, y} -> subInt64(x, y) }
 
 infixl 7 (*)
-def (*) = { (x, y) -> mulInt64(x, y) }
+def (*) = { {x, y} -> mulInt64(x, y) }
 
 def fact = { n -> factAcc({n, 1L}) }
 

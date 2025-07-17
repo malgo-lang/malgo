@@ -17,11 +17,11 @@ def showInt32 = {
 def show : Show a -> a -> String
 def show = { { show = show } -> show }
 
-def showTuple2 : Show a -> Show b -> Show (a, b)
+def showTuple2 : Show a -> Show b -> Show {a, b}
 def showTuple2 = {
   showDictA showDictB -> {
-    show = { (a, b) ->
-      "(" <> show showDictA a <> ", " <> show showDictB b <> ")"
+    show = { {a, b} ->
+      "{" <> show showDictA a <> ", " <> show showDictB b <> "}"
     },
   }
 }
@@ -29,4 +29,4 @@ def showTuple2 = {
 def print : Show a -> a -> ()
 def print = { showDict x -> printString (show showDict x) }
 
-def main = { print (showTuple2 showInt32 showInt32) (1, 2) }
+def main = { print (showTuple2 showInt32 showInt32) {1, 2} }
