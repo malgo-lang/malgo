@@ -18,12 +18,12 @@ def eventually = {
 def eventuallyBind : Eventually a -> (a -> Eventually b) -> Eventually b
 def eventuallyBind =
   { (Done value) k -> k value,
-    (NotYetDone work) k -> NotYetDone { eventuallyBind (work ()) k }
+    (NotYetDone work) k -> NotYetDone { eventuallyBind (work {}) k }
   }
 
 def step =
   { (Done value) -> Done value,
-    (NotYetDone work) -> (work ())
+    (NotYetDone work) -> (work {})
   }
 
 def bind : EventuallyBuilder a b -> Eventually a -> (a -> Eventually b) -> Eventually b

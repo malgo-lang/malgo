@@ -26,7 +26,7 @@ def showTuple2 = {
   }
 }
 
-def print : Show a -> a -> ()
+def print : Show a -> a -> {}
 def print = { showDict x -> printString (show showDict x) }
 
 def main = { print (showTuple2 showInt32 showInt32) {1, 2} }

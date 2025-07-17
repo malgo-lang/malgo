@@ -1,9 +1,9 @@
 data Int32 = Int32# Int32# data String = String# String# foreign import malgo_add_int32_t : Int32# -> Int32# -> Int32# def addInt32# : Int32# -> Int32# -> Int32# def addInt32# = { x y -> malgo_add_int32_t x y } def addInt32 : Int32 -> Int32 -> Int32 def addInt32 = { (Int32# x) (Int32# y) -> Int32# (addInt32# x y) }
 
-foreign import malgo_print_string : String# -> ()
-def printString# : String# -> ()
+foreign import malgo_print_string : String# -> {}
+def printString# : String# -> {}
 def printString# = { x -> malgo_print_string x }
-def printString : String -> ()
+def printString : String -> {}
 def printString = { (String# x) -> printString# x }
 
 def identity : a -> a
@@ -14,7 +14,7 @@ def const = { a _ -> a }
 
 data Maybe a = Nothing | Just a
 
-def printInt32 : Int32 -> ()
+def printInt32 : Int32 -> {}
 def printInt32 = { i -> printString (toStringInt32 i) }
 
 foreign import malgo_int32_t_to_string : Int32# -> String#
@@ -33,11 +33,11 @@ def comp : Maybe a
 def comp =
   { Nothing -> Nothing,
     (Just x) -> Nothing
-  } (Just ())
+  } (Just {})
 
 def main = {
   { Nothing -> printString "OK",
-    (Just _) -> ()
+    (Just _) -> {}
   } comp;
   printInt32 (constId const (addOne one))
 }

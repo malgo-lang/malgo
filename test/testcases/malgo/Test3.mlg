@@ -5,7 +5,7 @@ infixl 0 (|>)
 def (|>) : a -> (a -> b) -> b
 def (|>) = {x f -> f x}
 
-foreign import malgo_print_string : String# -> ()
+foreign import malgo_print_string : String# -> {}
 
 def main = { 
   Cons A (Cons B Nil) |> {

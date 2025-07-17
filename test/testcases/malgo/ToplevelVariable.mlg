@@ -11,11 +11,11 @@ def comp : Maybe a
 def comp =
   { Nothing -> Nothing,
     (Just x) -> Nothing
-  } (Just ())
+  } (Just {})
 
 def main = {
   { Nothing -> printString "OK",
-    (Just _) -> ()
+    (Just _) -> {}
   } comp;
   printInt32 (constId const (addOne one))
 }

@@ -37,13 +37,13 @@
                                                   <>
                                                   (opapp
                                                      <>
-                                                     (string "(")
+                                                     (string "{")
                                                      (apply
                                                         (apply show showDictA)
                                                         a))
                                                   (string ", "))
                                                (apply (apply show showDictB) b))
-                                            (string ")")))))))))))))))
+                                            (string "}")))))))))))))))
       (sig print (-> (app Show (a)) (-> a (tuple))))
       (def
          print

@@ -14,7 +14,7 @@ type S = T
 def idOverS : S -> T
 def idOverS = { x -> x }
 
-def main : { () }
+def main : { {} }
 def main = {
   hello |> { {h, w} -> putStr h; putStr " "; putStrLn w }
 }

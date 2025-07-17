@@ -1,401 +1,370 @@
 ((==
-    $CStyleApply.return_23
+    $CStyleApply.return_20
     (cut
        (lambda
-          ($CStyleApply.param_12 $CStyleApply.return_24)
-          (cut
-             (lambda
-                ($CStyleApply.param_13 $CStyleApply.return_25)
-                (join
-                   $CStyleApply.select_79
-                   (select
-                      ((tuple (#CStyleApply.x_0 #CStyleApply.y_1))
-                         (join
-                            $CStyleApply.apply_77
-                            (apply (#CStyleApply.y_1) ($CStyleApply.return_25))
-                            (join
-                               $CStyleApply.apply_78
-                               (apply (#CStyleApply.x_0) ($CStyleApply.apply_77))
-                               (invoke eqInt64 $CStyleApply.apply_78)))))
-                   (cut
-                      (construct
-                         tuple
-                         ($CStyleApply.param_12 $CStyleApply.param_13)
-                         ())
-                      $CStyleApply.select_79)))
-             $CStyleApply.return_24))
-       $CStyleApply.return_23))
+          ($CStyleApply.param_12 $CStyleApply.return_21)
+          (join
+             $CStyleApply.select_73
+             (select
+                ((tuple (#CStyleApply.x_0 #CStyleApply.y_1))
+                   (join
+                      $CStyleApply.apply_71
+                      (apply (#CStyleApply.y_1) ($CStyleApply.return_21))
+                      (join
+                         $CStyleApply.apply_72
+                         (apply (#CStyleApply.x_0) ($CStyleApply.apply_71))
+                         (invoke eqInt64 $CStyleApply.apply_72)))))
+             (cut $CStyleApply.param_12 $CStyleApply.select_73)))
+       $CStyleApply.return_20))
    (-
+      $CStyleApply.return_22
+      (cut
+         (lambda
+            ($CStyleApply.param_13 $CStyleApply.return_23)
+            (join
+               $CStyleApply.select_76
+               (select
+                  ((tuple (#CStyleApply.x_2 #CStyleApply.y_3))
+                     (join
+                        $CStyleApply.apply_74
+                        (apply (#CStyleApply.y_3) ($CStyleApply.return_23))
+                        (join
+                           $CStyleApply.apply_75
+                           (apply (#CStyleApply.x_2) ($CStyleApply.apply_74))
+                           (invoke subInt64 $CStyleApply.apply_75)))))
+               (cut $CStyleApply.param_13 $CStyleApply.select_76)))
+         $CStyleApply.return_22))
+   (*
+      $CStyleApply.return_24
+      (cut
+         (lambda
+            ($CStyleApply.param_14 $CStyleApply.return_25)
+            (join
+               $CStyleApply.select_79
+               (select
+                  ((tuple (#CStyleApply.x_4 #CStyleApply.y_5))
+                     (join
+                        $CStyleApply.apply_77
+                        (apply (#CStyleApply.y_5) ($CStyleApply.return_25))
+                        (join
+                           $CStyleApply.apply_78
+                           (apply (#CStyleApply.x_4) ($CStyleApply.apply_77))
+                           (invoke mulInt64 $CStyleApply.apply_78)))))
+               (cut $CStyleApply.param_14 $CStyleApply.select_79)))
+         $CStyleApply.return_24))
+   (factAcc
       $CStyleApply.return_26
       (cut
          (lambda
-            ($CStyleApply.param_14 $CStyleApply.return_27)
-            (cut
-               (lambda
-                  ($CStyleApply.param_15 $CStyleApply.return_28)
-                  (join
-                     $CStyleApply.select_82
-                     (select
-                        ((tuple (#CStyleApply.x_2 #CStyleApply.y_3))
-                           (join
-                              $CStyleApply.apply_80
-                              (apply (#CStyleApply.y_3) ($CStyleApply.return_28))
-                              (join
-                                 $CStyleApply.apply_81
-                                 (apply
-                                    (#CStyleApply.x_2)
-                                    ($CStyleApply.apply_80))
-                                 (invoke subInt64 $CStyleApply.apply_81)))))
-                     (cut
-                        (construct
-                           tuple
-                           ($CStyleApply.param_14 $CStyleApply.param_15)
-                           ())
-                        $CStyleApply.select_82)))
-               $CStyleApply.return_27))
-         $CStyleApply.return_26))
-   (*
-      $CStyleApply.return_29
-      (cut
-         (lambda
-            ($CStyleApply.param_16 $CStyleApply.return_30)
-            (cut
-               (lambda
-                  ($CStyleApply.param_17 $CStyleApply.return_31)
-                  (join
-                     $CStyleApply.select_85
-                     (select
-                        ((tuple (#CStyleApply.x_4 #CStyleApply.y_5))
-                           (join
-                              $CStyleApply.apply_83
-                              (apply (#CStyleApply.y_5) ($CStyleApply.return_31))
-                              (join
-                                 $CStyleApply.apply_84
-                                 (apply
-                                    (#CStyleApply.x_4)
-                                    ($CStyleApply.apply_83))
-                                 (invoke mulInt64 $CStyleApply.apply_84)))))
-                     (cut
-                        (construct
-                           tuple
-                           ($CStyleApply.param_16 $CStyleApply.param_17)
-                           ())
-                        $CStyleApply.select_85)))
-               $CStyleApply.return_30))
-         $CStyleApply.return_29))
-   (factAcc
-      $CStyleApply.return_32
-      (cut
-         (lambda
-            ($CStyleApply.param_18 $CStyleApply.return_33)
+            ($CStyleApply.param_15 $CStyleApply.return_27)
             (join
-               $CStyleApply.select_104
+               $CStyleApply.select_98
                (select
                   ((tuple (#CStyleApply.n_7 #CStyleApply.acc_8))
                      (join
-                        $CStyleApply.then_103
+                        $CStyleApply.then_97
                         (then
-                           $CStyleApply.outer_51
+                           $CStyleApply.outer_45
                            (join
-                              $CStyleApply.return_39
+                              $CStyleApply.return_33
                               (then
-                                 $CStyleApply.inner_52
+                                 $CStyleApply.inner_46
                                  (join
-                                    $CStyleApply.apply_100
+                                    $CStyleApply.apply_94
                                     (apply
                                        ((lambda
-                                           ($CStyleApply.param_20
-                                              $CStyleApply.return_34)
+                                           ($CStyleApply.param_17
+                                              $CStyleApply.return_28)
                                            (join
-                                              $CStyleApply.select_99
+                                              $CStyleApply.select_93
                                               (select
                                                  (#CStyleApply.$__10
                                                     (join
-                                                       $CStyleApply.then_98
+                                                       $CStyleApply.then_92
                                                        (then
-                                                          $CStyleApply.outer_53
+                                                          $CStyleApply.outer_47
                                                           (join
-                                                             $CStyleApply.label_55
+                                                             $CStyleApply.label_49
                                                              (then
-                                                                $CStyleApply.inner_54
+                                                                $CStyleApply.inner_48
                                                                 (join
-                                                                   $CStyleApply.apply_97
+                                                                   $CStyleApply.apply_91
                                                                    (apply
-                                                                      ($CStyleApply.inner_54)
-                                                                      ($CStyleApply.return_34))
+                                                                      ($CStyleApply.inner_48)
+                                                                      ($CStyleApply.return_28))
                                                                    (cut
-                                                                      $CStyleApply.outer_53
-                                                                      $CStyleApply.apply_97)))
+                                                                      $CStyleApply.outer_47
+                                                                      $CStyleApply.apply_91)))
                                                              (join
-                                                                $CStyleApply.return_35
+                                                                $CStyleApply.return_29
                                                                 (then
-                                                                   $CStyleApply.var_56
+                                                                   $CStyleApply.var_50
                                                                    (join
-                                                                      $CStyleApply.label_57
-                                                                      $CStyleApply.label_55
+                                                                      $CStyleApply.label_51
+                                                                      $CStyleApply.label_49
                                                                       (join
-                                                                         $CStyleApply.return_37
+                                                                         $CStyleApply.return_31
                                                                          (then
-                                                                            $CStyleApply.var_58
+                                                                            $CStyleApply.var_52
                                                                             (cut
                                                                                (construct
                                                                                   tuple
-                                                                                  ($CStyleApply.var_56
-                                                                                     $CStyleApply.var_58)
+                                                                                  ($CStyleApply.var_50
+                                                                                     $CStyleApply.var_52)
                                                                                   ())
-                                                                               $CStyleApply.label_57))
+                                                                               $CStyleApply.label_51))
                                                                          (join
-                                                                            $CStyleApply.apply_95
+                                                                            $CStyleApply.apply_89
                                                                             (apply
                                                                                (#CStyleApply.acc_8)
-                                                                               ($CStyleApply.return_37))
+                                                                               ($CStyleApply.return_31))
                                                                             (join
-                                                                               $CStyleApply.apply_96
+                                                                               $CStyleApply.apply_90
                                                                                (apply
                                                                                   (#CStyleApply.n_7)
-                                                                                  ($CStyleApply.apply_95))
+                                                                                  ($CStyleApply.apply_89))
                                                                                (invoke
                                                                                   *
-                                                                                  $CStyleApply.apply_96))))))
+                                                                                  $CStyleApply.apply_90))))))
                                                                 (join
-                                                                   $CStyleApply.then_93
+                                                                   $CStyleApply.then_87
                                                                    (then
-                                                                      $CStyleApply.outer_59
+                                                                      $CStyleApply.outer_53
                                                                       (join
-                                                                         $CStyleApply.return_36
+                                                                         $CStyleApply.return_30
                                                                          (then
-                                                                            $CStyleApply.inner_60
+                                                                            $CStyleApply.inner_54
                                                                             (join
-                                                                               $CStyleApply.apply_92
+                                                                               $CStyleApply.apply_86
                                                                                (apply
-                                                                                  ($CStyleApply.inner_60)
-                                                                                  ($CStyleApply.return_35))
+                                                                                  ($CStyleApply.inner_54)
+                                                                                  ($CStyleApply.return_29))
                                                                                (cut
-                                                                                  $CStyleApply.outer_59
-                                                                                  $CStyleApply.apply_92)))
+                                                                                  $CStyleApply.outer_53
+                                                                                  $CStyleApply.apply_86)))
                                                                          (join
-                                                                            $CStyleApply.apply_91
+                                                                            $CStyleApply.apply_85
                                                                             (apply
                                                                                (1_i64)
-                                                                               ($CStyleApply.return_36))
+                                                                               ($CStyleApply.return_30))
                                                                             (invoke
                                                                                Int64#
-                                                                               $CStyleApply.apply_91))))
+                                                                               $CStyleApply.apply_85))))
                                                                    (join
-                                                                      $CStyleApply.apply_94
+                                                                      $CStyleApply.apply_88
                                                                       (apply
                                                                          (#CStyleApply.n_7)
-                                                                         ($CStyleApply.then_93))
+                                                                         ($CStyleApply.then_87))
                                                                       (invoke
                                                                          -
-                                                                         $CStyleApply.apply_94))))))
+                                                                         $CStyleApply.apply_88))))))
                                                        (invoke
                                                           factAcc
-                                                          $CStyleApply.then_98))))
+                                                          $CStyleApply.then_92))))
                                               (cut
-                                                 $CStyleApply.param_20
-                                                 $CStyleApply.select_99))))
-                                       ($CStyleApply.return_33))
+                                                 $CStyleApply.param_17
+                                                 $CStyleApply.select_93))))
+                                       ($CStyleApply.return_27))
                                     (join
-                                       $CStyleApply.apply_101
+                                       $CStyleApply.apply_95
                                        (apply
                                           ((lambda
-                                              ($CStyleApply.param_19
-                                                 $CStyleApply.return_38)
+                                              ($CStyleApply.param_16
+                                                 $CStyleApply.return_32)
                                               (join
-                                                 $CStyleApply.select_90
+                                                 $CStyleApply.select_84
                                                  (select
                                                     (#CStyleApply.$__9
                                                        (cut
                                                           #CStyleApply.acc_8
-                                                          $CStyleApply.return_38)))
+                                                          $CStyleApply.return_32)))
                                                  (cut
-                                                    $CStyleApply.param_19
-                                                    $CStyleApply.select_90))))
-                                          ($CStyleApply.apply_100))
+                                                    $CStyleApply.param_16
+                                                    $CStyleApply.select_84))))
+                                          ($CStyleApply.apply_94))
                                        (join
-                                          $CStyleApply.apply_102
+                                          $CStyleApply.apply_96
                                           (apply
-                                             ($CStyleApply.inner_52)
-                                             ($CStyleApply.apply_101))
+                                             ($CStyleApply.inner_46)
+                                             ($CStyleApply.apply_95))
                                           (cut
-                                             $CStyleApply.outer_51
-                                             $CStyleApply.apply_102)))))
+                                             $CStyleApply.outer_45
+                                             $CStyleApply.apply_96)))))
                               (join
-                                 $CStyleApply.then_88
+                                 $CStyleApply.then_82
                                  (then
-                                    $CStyleApply.outer_61
+                                    $CStyleApply.outer_55
                                     (join
-                                       $CStyleApply.return_40
+                                       $CStyleApply.return_34
                                        (then
-                                          $CStyleApply.inner_62
+                                          $CStyleApply.inner_56
                                           (join
-                                             $CStyleApply.apply_87
+                                             $CStyleApply.apply_81
                                              (apply
-                                                ($CStyleApply.inner_62)
-                                                ($CStyleApply.return_39))
+                                                ($CStyleApply.inner_56)
+                                                ($CStyleApply.return_33))
                                              (cut
-                                                $CStyleApply.outer_61
-                                                $CStyleApply.apply_87)))
+                                                $CStyleApply.outer_55
+                                                $CStyleApply.apply_81)))
                                        (join
-                                          $CStyleApply.apply_86
-                                          (apply (0_i64) ($CStyleApply.return_40))
-                                          (invoke Int64# $CStyleApply.apply_86))))
+                                          $CStyleApply.apply_80
+                                          (apply (0_i64) ($CStyleApply.return_34))
+                                          (invoke Int64# $CStyleApply.apply_80))))
                                  (join
-                                    $CStyleApply.apply_89
+                                    $CStyleApply.apply_83
                                     (apply
                                        (#CStyleApply.n_7)
-                                       ($CStyleApply.then_88))
-                                    (invoke == $CStyleApply.apply_89)))))
-                        (invoke if $CStyleApply.then_103))))
-               (cut $CStyleApply.param_18 $CStyleApply.select_104)))
-         $CStyleApply.return_32))
+                                       ($CStyleApply.then_82))
+                                    (invoke == $CStyleApply.apply_83)))))
+                        (invoke if $CStyleApply.then_97))))
+               (cut $CStyleApply.param_15 $CStyleApply.select_98)))
+         $CStyleApply.return_26))
    (fact
-      $CStyleApply.return_41
+      $CStyleApply.return_35
       (cut
          (lambda
-            ($CStyleApply.param_21 $CStyleApply.return_42)
+            ($CStyleApply.param_18 $CStyleApply.return_36)
             (join
-               $CStyleApply.select_108
+               $CStyleApply.select_102
                (select
                   (#CStyleApply.n_6
                      (join
-                        $CStyleApply.then_107
+                        $CStyleApply.then_101
                         (then
-                           $CStyleApply.outer_63
+                           $CStyleApply.outer_57
                            (join
-                              $CStyleApply.label_65
+                              $CStyleApply.label_59
                               (then
-                                 $CStyleApply.inner_64
+                                 $CStyleApply.inner_58
                                  (join
-                                    $CStyleApply.apply_106
+                                    $CStyleApply.apply_100
                                     (apply
-                                       ($CStyleApply.inner_64)
-                                       ($CStyleApply.return_42))
+                                       ($CStyleApply.inner_58)
+                                       ($CStyleApply.return_36))
                                     (cut
-                                       $CStyleApply.outer_63
-                                       $CStyleApply.apply_106)))
+                                       $CStyleApply.outer_57
+                                       $CStyleApply.apply_100)))
                               (join
-                                 $CStyleApply.return_43
+                                 $CStyleApply.return_37
                                  (then
-                                    $CStyleApply.var_66
+                                    $CStyleApply.var_60
                                     (cut
                                        (construct
                                           tuple
-                                          (#CStyleApply.n_6 $CStyleApply.var_66)
+                                          (#CStyleApply.n_6 $CStyleApply.var_60)
                                           ())
-                                       $CStyleApply.label_65))
+                                       $CStyleApply.label_59))
                                  (join
-                                    $CStyleApply.apply_105
-                                    (apply (1_i64) ($CStyleApply.return_43))
-                                    (invoke Int64# $CStyleApply.apply_105)))))
-                        (invoke factAcc $CStyleApply.then_107))))
-               (cut $CStyleApply.param_21 $CStyleApply.select_108)))
-         $CStyleApply.return_41))
+                                    $CStyleApply.apply_99
+                                    (apply (1_i64) ($CStyleApply.return_37))
+                                    (invoke Int64# $CStyleApply.apply_99)))))
+                        (invoke factAcc $CStyleApply.then_101))))
+               (cut $CStyleApply.param_18 $CStyleApply.select_102)))
+         $CStyleApply.return_35))
    (main
-      $CStyleApply.return_44
+      $CStyleApply.return_38
       (cut
          (lambda
-            ($CStyleApply.param_22 $CStyleApply.return_45)
+            ($CStyleApply.param_19 $CStyleApply.return_39)
             (join
-               $CStyleApply.select_120
+               $CStyleApply.select_114
                (select
                   (#CStyleApply.$__11
                      (join
-                        $CStyleApply.then_119
+                        $CStyleApply.then_113
                         (then
-                           $CStyleApply.outer_67
+                           $CStyleApply.outer_61
                            (join
-                              $CStyleApply.return_47
+                              $CStyleApply.return_41
                               (then
-                                 $CStyleApply.inner_68
+                                 $CStyleApply.inner_62
                                  (join
-                                    $CStyleApply.then_117
+                                    $CStyleApply.then_111
                                     (then
-                                       $CStyleApply.outer_69
+                                       $CStyleApply.outer_63
                                        (join
-                                          $CStyleApply.return_46
+                                          $CStyleApply.return_40
                                           (then
-                                             $CStyleApply.inner_70
+                                             $CStyleApply.inner_64
                                              (join
-                                                $CStyleApply.apply_116
+                                                $CStyleApply.apply_110
                                                 (apply
-                                                   ($CStyleApply.inner_70)
-                                                   ($CStyleApply.return_45))
+                                                   ($CStyleApply.inner_64)
+                                                   ($CStyleApply.return_39))
                                                 (cut
-                                                   $CStyleApply.outer_69
-                                                   $CStyleApply.apply_116)))
-                                          (invoke putStrLn $CStyleApply.return_46)))
+                                                   $CStyleApply.outer_63
+                                                   $CStyleApply.apply_110)))
+                                          (invoke putStrLn $CStyleApply.return_40)))
                                     (join
-                                       $CStyleApply.apply_118
+                                       $CStyleApply.apply_112
                                        (apply
-                                          ($CStyleApply.inner_68)
-                                          ($CStyleApply.then_117))
+                                          ($CStyleApply.inner_62)
+                                          ($CStyleApply.then_111))
                                        (cut
-                                          $CStyleApply.outer_67
-                                          $CStyleApply.apply_118))))
+                                          $CStyleApply.outer_61
+                                          $CStyleApply.apply_112))))
                               (join
-                                 $CStyleApply.then_115
+                                 $CStyleApply.then_109
                                  (then
-                                    $CStyleApply.outer_71
+                                    $CStyleApply.outer_65
                                     (join
-                                       $CStyleApply.return_49
+                                       $CStyleApply.return_43
                                        (then
-                                          $CStyleApply.inner_72
+                                          $CStyleApply.inner_66
                                           (join
-                                             $CStyleApply.then_113
+                                             $CStyleApply.then_107
                                              (then
-                                                $CStyleApply.outer_73
+                                                $CStyleApply.outer_67
                                                 (join
-                                                   $CStyleApply.return_48
+                                                   $CStyleApply.return_42
                                                    (then
-                                                      $CStyleApply.inner_74
+                                                      $CStyleApply.inner_68
                                                       (join
-                                                         $CStyleApply.apply_112
+                                                         $CStyleApply.apply_106
                                                          (apply
-                                                            ($CStyleApply.inner_74)
-                                                            ($CStyleApply.return_47))
+                                                            ($CStyleApply.inner_68)
+                                                            ($CStyleApply.return_41))
                                                          (cut
-                                                            $CStyleApply.outer_73
-                                                            $CStyleApply.apply_112)))
+                                                            $CStyleApply.outer_67
+                                                            $CStyleApply.apply_106)))
                                                    (invoke
                                                       toStringInt64
-                                                      $CStyleApply.return_48)))
+                                                      $CStyleApply.return_42)))
                                              (join
-                                                $CStyleApply.apply_114
+                                                $CStyleApply.apply_108
                                                 (apply
-                                                   ($CStyleApply.inner_72)
-                                                   ($CStyleApply.then_113))
+                                                   ($CStyleApply.inner_66)
+                                                   ($CStyleApply.then_107))
                                                 (cut
-                                                   $CStyleApply.outer_71
-                                                   $CStyleApply.apply_114))))
+                                                   $CStyleApply.outer_65
+                                                   $CStyleApply.apply_108))))
                                        (join
-                                          $CStyleApply.then_111
+                                          $CStyleApply.then_105
                                           (then
-                                             $CStyleApply.outer_75
+                                             $CStyleApply.outer_69
                                              (join
-                                                $CStyleApply.return_50
+                                                $CStyleApply.return_44
                                                 (then
-                                                   $CStyleApply.inner_76
+                                                   $CStyleApply.inner_70
                                                    (join
-                                                      $CStyleApply.apply_110
+                                                      $CStyleApply.apply_104
                                                       (apply
-                                                         ($CStyleApply.inner_76)
-                                                         ($CStyleApply.return_49))
+                                                         ($CStyleApply.inner_70)
+                                                         ($CStyleApply.return_43))
                                                       (cut
-                                                         $CStyleApply.outer_75
-                                                         $CStyleApply.apply_110)))
+                                                         $CStyleApply.outer_69
+                                                         $CStyleApply.apply_104)))
                                                 (join
-                                                   $CStyleApply.apply_109
+                                                   $CStyleApply.apply_103
                                                    (apply
                                                       (5_i64)
-                                                      ($CStyleApply.return_50))
+                                                      ($CStyleApply.return_44))
                                                    (invoke
                                                       Int64#
-                                                      $CStyleApply.apply_109))))
-                                          (invoke fact $CStyleApply.then_111))))
-                                 (invoke |> $CStyleApply.then_115))))
-                        (invoke |> $CStyleApply.then_119))))
-               (cut $CStyleApply.param_22 $CStyleApply.select_120)))
-         $CStyleApply.return_44))
+                                                      $CStyleApply.apply_103))))
+                                          (invoke fact $CStyleApply.then_105))))
+                                 (invoke |> $CStyleApply.then_109))))
+                        (invoke |> $CStyleApply.then_113))))
+               (cut $CStyleApply.param_19 $CStyleApply.select_114)))
+         $CStyleApply.return_38))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

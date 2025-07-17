@@ -669,7 +669,7 @@ pTyApp = do
 -- >          | tyRecord
 -- >          | tyBlock
 pAtomType :: Parser es (Type (Malgo Parse))
-pAtomType = choice [pTyVar, pTyTuple, try pTyRecord, pTyBlock, pTyParens]
+pAtomType = choice [pTyVar, try pTyTuple, try pTyRecord, pTyBlock, pTyParens]
 
 -- | pTyVar parses a type variable.
 --
@@ -681,18 +681,24 @@ pTyVar = do
   end <- getSourcePos
   pure $ TyVar (Range start end) name
 
--- | pTyTuple parses a tuple type or parenthesized type.
+-- | pTyTuple parses a tuple type or unit type.
 --
--- > tyTuple = "{" type ("," type)* "}"
+-- > tyTuple = "{" type ("," type)+ "}"
 -- >         | "{" "}" ;
 pTyTuple :: Parser es (Type (Malgo Parse))
 pTyTuple = do
   start <- getSourcePos
-  tys <- between (symbol "{") (symbol "}") (sepBy pType (symbol ","))
+  tys <- between (symbol "{") (symbol "}") $ do
+    first <- optional pType
+    case first of
+      Nothing -> pure [] -- empty tuple (unit type)
+      Just firstTy -> do
+        rest <- many (symbol "," *> pType)
+        case rest of
+          [] -> fail "tuple type must have at least two types or be empty" -- single element, should be block type
+          _ -> pure (firstTy : rest) -- multiple elements, valid tuple
   end <- getSourcePos
-  case tys of
-    [_] -> fail "tuple type must have at least two types or be empty"
-    _ -> pure $ TyTuple (Range start end) tys
+  pure $ TyTuple (Range start end) tys
 
 -- | pTyRecord parses a record type.
 --

@@ -1,5 +1,5 @@
-foreign import malgo_print_string : String# -> ()
-foreign import malgo_newline : () -> ()
+foreign import malgo_print_string : String# -> {}
+foreign import malgo_newline : {} -> {}
 
 data Int32 = Int32# Int32#
 def int32# : Int32# -> Int32
@@ -9,7 +9,7 @@ data String = String# String#
 def string# : String# -> String
 def string# = { x -> String# x }
 
-def putStr : String -> ()
+def putStr : String -> {}
 def putStr = { (String# x) -> malgo_print_string x }
 
 foreign import malgo_int32_t_to_string : Int32# -> String#

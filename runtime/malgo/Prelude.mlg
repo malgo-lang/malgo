@@ -29,13 +29,13 @@ data List a = Nil | Cons a (List a)
 def head : List a -> a
 def head =
   { (Cons x _) -> x,
-    _ -> exitFailure (),
+    _ -> exitFailure {},
   }
 
 def tail : List a -> List a
 def tail =
   { (Cons _ xs) -> xs,
-    _ -> exitFailure (),
+    _ -> exitFailure {},
   }
 
 -- fold left
@@ -134,8 +134,8 @@ def (<|) = {f x -> f x}
 
 def if : Bool -> {a} -> {a} -> a
 def if =
-  { True t _ -> t (),
-    False _ f -> f (),
+  { True t _ -> t {},
+    False _ f -> f {},
   }
 
 def unless : Bool -> a -> {a} -> a
@@ -145,21 +145,21 @@ def unless = { c tValue f -> if c {tValue} f }
 def cond : List {Bool, {a}} -> a
 def cond =
   { Nil -> panic "no branch",
-    (Cons {True, x} _) -> x (),
+    (Cons {True, x} _) -> x {},
     (Cons {False, _} xs) -> cond xs
   }
 
-def putStr : String -> ()
+def putStr : String -> {}
 def putStr = { str -> printString str }
 
-def putStrLn : String -> ()
+def putStrLn : String -> {}
 def putStrLn = { str ->
   printString str;
-  newline ()
+  newline {}
 }
 
-def printInt32 : Int32 -> ()
+def printInt32 : Int32 -> {}
 def printInt32 = { i -> printString (toStringInt32 i) }
 
-def printInt64 : Int64 -> ()
+def printInt64 : Int64 -> {}
 def printInt64 = { i -> printString (toStringInt64 i) }

@@ -4,14 +4,14 @@
          ==
          (fn
             ((clause
-                (#CStyleApply.x_0 #CStyleApply.y_1)
+                ((tuple #CStyleApply.x_0 #CStyleApply.y_1))
                 (seq
                    (do (apply (apply eqInt64 #CStyleApply.x_0) #CStyleApply.y_1))))))))
        ((def
            -
            (fn
               ((clause
-                  (#CStyleApply.x_2 #CStyleApply.y_3)
+                  ((tuple #CStyleApply.x_2 #CStyleApply.y_3))
                   (seq
                      (do
                         (apply (apply subInt64 #CStyleApply.x_2) #CStyleApply.y_3))))))))
@@ -19,7 +19,7 @@
            *
            (fn
               ((clause
-                  (#CStyleApply.x_4 #CStyleApply.y_5)
+                  ((tuple #CStyleApply.x_4 #CStyleApply.y_5))
                   (seq
                      (do
                         (apply (apply mulInt64 #CStyleApply.x_4) #CStyleApply.y_5))))))))

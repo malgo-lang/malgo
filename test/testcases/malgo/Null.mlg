@@ -28,13 +28,13 @@ def (|>) = {
 }
 
 
-foreign import malgo_print_string : String# -> ()
+foreign import malgo_print_string : String# -> {}
 
-foreign import malgo_exit_failure : () -> a
+foreign import malgo_exit_failure : {} -> a
 
 def main = {
   (null (Cons True (Cons True Nil)))
   |> { False -> malgo_print_string "OK"#,
-       True -> malgo_exit_failure ()
+       True -> malgo_exit_failure {}
      }
 }

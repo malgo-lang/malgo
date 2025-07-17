@@ -1,7 +1,7 @@
 data Bool = True | False
 
-def if = {True t _ -> t (), False _ f -> f ()}
+def if = {True t _ -> t {}, False _ f -> f {}}
 
-foreign import malgo_print_string : String# -> ()
+foreign import malgo_print_string : String# -> {}
 
 def main = {if True {malgo_print_string "True"#} {malgo_print_string "False"#}}

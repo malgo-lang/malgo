@@ -3,14 +3,14 @@ module {..} = import "../../../runtime/malgo/Prelude.mlg"
 
 def finally : (a -> r) -> {a} -> r
 def finally = { finalizer k ->
-  let x = k ();
+  let x = k {};
   finalizer x
 }
 
 def twice : {a} -> a
 def twice = { k ->
-  k ();
-  k ()
+  k {};
+  k {}
 }
 
 def printAndReturn = { str k ->

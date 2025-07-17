@@ -4,7 +4,7 @@ def (|>) = {x f -> f x}
 
 data String = String# String#
 
-foreign import malgo_print_string : String# -> ()
+foreign import malgo_print_string : String# -> {}
 
 def string# : String# -> String
 def string# = { x -> String# x }

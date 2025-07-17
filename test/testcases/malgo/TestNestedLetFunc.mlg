@@ -1,5 +1,5 @@
-foreign import malgo_print_string : String# -> ()
+foreign import malgo_print_string : String# -> {}
 def main = {
-  let f = {let y = {a -> ()} ()};
+  let f = {let y = {a -> {}} {}};
   malgo_print_string "PASS"#
 }
