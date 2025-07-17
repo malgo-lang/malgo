@@ -1,7 +1,7 @@
 module {..} = import "../../../runtime/malgo/Builtin.mlg"
 module {..} = import "../../../runtime/malgo/Prelude.mlg"
 
-type MyTuple a = (a, a)
+type MyTuple a = {a, a}
 
 type MyString = String
 

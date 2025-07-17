@@ -1,12 +1,12 @@
 module {..} = import "../../../../runtime/malgo/Builtin.mlg"
 module {..} = import "../../../../runtime/malgo/Prelude.mlg"
 
-type MyTuple = (a, a)
+type MyTuple = {a, a}
 
 type MyString = String
 
 def hello : MyTuple MyString
-def hello = ("hello", "world")
+def hello = {"hello", "world"}
 
 data T = TCon
 type S = T
@@ -16,5 +16,5 @@ def idOverS = { x -> x }
 
 def main : { () }
 def main = {
-  hello |> { (h, w) -> putStr h; putStr " "; putStrLn w }
+  hello |> { {h, w} -> putStr h; putStr " "; putStrLn w }
 }
