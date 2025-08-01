@@ -17,7 +17,7 @@
                          |>
                          (apply
                             (apply Cons A)
-                            (seq (do (apply (apply Cons B) Nil))))
+                            (parens (apply (apply Cons B) Nil)))
                          (fn
                             ((clause
                                 ((con Cons (A (con Cons (B Nil)))))

@@ -10,7 +10,7 @@
                     (clause
                        ((con Just (#ToplevelVariable.x_1)))
                        (seq (do Nothing)))))
-              (seq (do (apply Just (tuple)))))))
+              (apply Just (tuple)))))
        ((def addOne (apply addInt32 one)))
        ((def
            main
@@ -35,11 +35,7 @@
                      (do
                         (apply
                            printInt32
-                           (seq
-                              (do
-                                 (apply
-                                    (apply constId const)
-                                    (seq (do (apply addOne one)))))))))))))))
+                           (apply (apply constId const) (apply addOne one)))))))))))
       ((sig comp (app Maybe (#ToplevelVariable.a_0))))
       ()
       ()

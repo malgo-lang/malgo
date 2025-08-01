@@ -9,11 +9,7 @@
                    (do
                       (apply
                          putStr
-                         (seq
-                            (do
-                               (apply
-                                  toStringDouble
-                                  (apply Double# (double 3.14_f64))))))))))))))
+                         (apply toStringDouble (apply Double# (double 3.14_f64))))))))))))
       ()
       ()
       ()

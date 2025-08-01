@@ -23,7 +23,7 @@
            (fn
               ((clause
                   (#Null.as_8)
-                  (seq (do (apply isNothing (seq (do (apply mHead #Null.as_8)))))))))))
+                  (seq (do (apply isNothing (apply mHead #Null.as_8)))))))))
        ((def
            main
            (fn
@@ -33,16 +33,11 @@
                      (do
                         (opapp
                            |>
-                           (seq
-                              (do
-                                 (apply
-                                    null
-                                    (seq
-                                       (do
-                                          (apply
-                                             (apply Cons True)
-                                             (seq
-                                                (do (apply (apply Cons True) Nil)))))))))
+                           (apply
+                              null
+                              (apply
+                                 (apply Cons True)
+                                 (apply (apply Cons True) Nil)))
                            (fn
                               ((clause
                                   ((con False ()))

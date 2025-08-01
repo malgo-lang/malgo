@@ -10,11 +10,9 @@
                      (do
                         (apply
                            odd
-                           (seq
-                              (do
-                                 (apply
-                                    (apply subInt32 #EvenOdd.n_0)
-                                    (apply Int32# (int32 1))))))))))))
+                           (apply
+                              (apply subInt32 #EvenOdd.n_0)
+                              (apply Int32# (int32 1))))))))))
         (def
            odd
            (fn
@@ -25,11 +23,9 @@
                        (do
                           (apply
                              even
-                             (seq
-                                (do
-                                   (apply
-                                      (apply subInt32 #EvenOdd.n_1)
-                                      (apply Int32# (int32 1)))))))))))))
+                             (apply
+                                (apply subInt32 #EvenOdd.n_1)
+                                (apply Int32# (int32 1)))))))))))
        ((def
            main
            (fn
@@ -53,7 +49,7 @@
                                           (apply
                                              putStrLn
                                              (apply String# (string "True"))))))))
-                           (seq (do (apply even (apply Int32# (int32 10))))))))))))))
+                           (apply even (apply Int32# (int32 10))))))))))))
       ()
       ()
       ()

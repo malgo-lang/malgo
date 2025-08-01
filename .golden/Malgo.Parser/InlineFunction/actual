@@ -754,7 +754,7 @@ Module
            }
           ) "f"
          )
-         ( Seq
+         ( Parens
           ( Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
@@ -768,21 +768,36 @@ Module
             }
            }
           )
-          ( NoBind
+          ( Apply
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
              , sourceLine = Pos 13
-             , sourceColumn = Pos 22
+             , sourceColumn = Pos 27
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
              , sourceLine = Pos 13
-             , sourceColumn = Pos 30
+             , sourceColumn = Pos 28
              }
             }
            )
-           ( Apply
+           ( Var
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
+              , sourceLine = Pos 13
+              , sourceColumn = Pos 23
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
+              , sourceLine = Pos 13
+              , sourceColumn = Pos 27
+              }
+             }
+            ) "fix"
+           )
+           ( Var
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
@@ -795,38 +810,8 @@ Module
               , sourceColumn = Pos 28
               }
              }
-            )
-            ( Var
-             ( Range
-              { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
-               , sourceLine = Pos 13
-               , sourceColumn = Pos 23
-               }
-              , _end = SourcePos
-               { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
-               , sourceLine = Pos 13
-               , sourceColumn = Pos 27
-               }
-              }
-             ) "fix"
-            )
-            ( Var
-             ( Range
-              { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
-               , sourceLine = Pos 13
-               , sourceColumn = Pos 27
-               }
-              , _end = SourcePos
-               { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
-               , sourceLine = Pos 13
-               , sourceColumn = Pos 28
-               }
-              }
-             ) "f"
-            )
-           ) :| []
+            ) "f"
+           )
           )
          )
         )
@@ -1091,7 +1076,7 @@ Module
                  }
                 ) "if"
                )
-               ( Seq
+               ( Parens
                 ( Range
                  { _start = SourcePos
                   { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
@@ -1105,66 +1090,51 @@ Module
                   }
                  }
                 )
-                ( NoBind
+                ( OpApp
                  ( Range
                   { _start = SourcePos
                    { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
                    , sourceLine = Pos 17
-                   , sourceColumn = Pos 8
+                   , sourceColumn = Pos 11
                    }
                   , _end = SourcePos
                    { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
-                   , sourceLine = Pos 18
-                   , sourceColumn = Pos 7
+                   , sourceLine = Pos 17
+                   , sourceColumn = Pos 14
                    }
                   }
-                 )
-                 ( OpApp
+                 ) "<="
+                 ( Var
                   ( Range
                    { _start = SourcePos
                     { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
                     , sourceLine = Pos 17
-                    , sourceColumn = Pos 11
+                    , sourceColumn = Pos 9
                     }
                    , _end = SourcePos
                     { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
                     , sourceLine = Pos 17
-                    , sourceColumn = Pos 14
+                    , sourceColumn = Pos 11
                     }
                    }
-                  ) "<="
-                  ( Var
-                   ( Range
-                    { _start = SourcePos
-                     { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
-                     , sourceLine = Pos 17
-                     , sourceColumn = Pos 9
-                     }
-                    , _end = SourcePos
-                     { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
-                     , sourceLine = Pos 17
-                     , sourceColumn = Pos 11
-                     }
+                  ) "n"
+                 )
+                 ( Boxed
+                  ( Range
+                   { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
+                    , sourceLine = Pos 17
+                    , sourceColumn = Pos 14
                     }
-                   ) "n"
-                  )
-                  ( Boxed
-                   ( Range
-                    { _start = SourcePos
-                     { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
-                     , sourceLine = Pos 17
-                     , sourceColumn = Pos 14
-                     }
-                    , _end = SourcePos
-                     { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
-                     , sourceLine = Pos 17
-                     , sourceColumn = Pos 15
-                     }
+                   , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
+                    , sourceLine = Pos 17
+                    , sourceColumn = Pos 15
                     }
-                   )
-                   ( Int32 1 )
+                   }
                   )
-                 ) :| []
+                  ( Int32 1 )
+                 )
                 )
                )
               )
@@ -1344,7 +1314,7 @@ Module
                      }
                     ) "f"
                    )
-                   ( Seq
+                   ( Parens
                     ( Range
                      { _start = SourcePos
                       { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
@@ -1358,66 +1328,51 @@ Module
                       }
                      }
                     )
-                    ( NoBind
+                    ( OpApp
                      ( Range
                       { _start = SourcePos
                        { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
                        , sourceLine = Pos 19
-                       , sourceColumn = Pos 11
+                       , sourceColumn = Pos 14
                        }
                       , _end = SourcePos
                        { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
                        , sourceLine = Pos 19
-                       , sourceColumn = Pos 19
+                       , sourceColumn = Pos 16
                        }
                       }
-                     )
-                     ( OpApp
+                     ) "-"
+                     ( Var
                       ( Range
                        { _start = SourcePos
                         { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
                         , sourceLine = Pos 19
-                        , sourceColumn = Pos 14
+                        , sourceColumn = Pos 12
                         }
                        , _end = SourcePos
                         { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
                         , sourceLine = Pos 19
-                        , sourceColumn = Pos 16
+                        , sourceColumn = Pos 14
                         }
                        }
-                      ) "-"
-                      ( Var
-                       ( Range
-                        { _start = SourcePos
-                         { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
-                         , sourceLine = Pos 19
-                         , sourceColumn = Pos 12
-                         }
-                        , _end = SourcePos
-                         { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
-                         , sourceLine = Pos 19
-                         , sourceColumn = Pos 14
-                         }
+                      ) "n"
+                     )
+                     ( Boxed
+                      ( Range
+                       { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
+                        , sourceLine = Pos 19
+                        , sourceColumn = Pos 16
                         }
-                       ) "n"
-                      )
-                      ( Boxed
-                       ( Range
-                        { _start = SourcePos
-                         { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
-                         , sourceLine = Pos 19
-                         , sourceColumn = Pos 16
-                         }
-                        , _end = SourcePos
-                         { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
-                         , sourceLine = Pos 19
-                         , sourceColumn = Pos 17
-                         }
+                       , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
+                        , sourceLine = Pos 19
+                        , sourceColumn = Pos 17
                         }
-                       )
-                       ( Int32 1 )
+                       }
                       )
-                     ) :| []
+                      ( Int32 1 )
+                     )
                     )
                    )
                   )
@@ -1450,7 +1405,7 @@ Module
                      }
                     ) "f"
                    )
-                   ( Seq
+                   ( Parens
                     ( Range
                      { _start = SourcePos
                       { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
@@ -1464,66 +1419,51 @@ Module
                       }
                      }
                     )
-                    ( NoBind
+                    ( OpApp
                      ( Range
                       { _start = SourcePos
                        { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
                        , sourceLine = Pos 19
-                       , sourceColumn = Pos 23
+                       , sourceColumn = Pos 26
                        }
                       , _end = SourcePos
                        { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
                        , sourceLine = Pos 19
-                       , sourceColumn = Pos 31
+                       , sourceColumn = Pos 28
                        }
                       }
-                     )
-                     ( OpApp
+                     ) "-"
+                     ( Var
                       ( Range
                        { _start = SourcePos
                         { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
                         , sourceLine = Pos 19
-                        , sourceColumn = Pos 26
+                        , sourceColumn = Pos 24
                         }
                        , _end = SourcePos
                         { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
                         , sourceLine = Pos 19
-                        , sourceColumn = Pos 28
+                        , sourceColumn = Pos 26
                         }
                        }
-                      ) "-"
-                      ( Var
-                       ( Range
-                        { _start = SourcePos
-                         { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
-                         , sourceLine = Pos 19
-                         , sourceColumn = Pos 24
-                         }
-                        , _end = SourcePos
-                         { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
-                         , sourceLine = Pos 19
-                         , sourceColumn = Pos 26
-                         }
+                      ) "n"
+                     )
+                     ( Boxed
+                      ( Range
+                       { _start = SourcePos
+                        { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
+                        , sourceLine = Pos 19
+                        , sourceColumn = Pos 28
                         }
-                       ) "n"
-                      )
-                      ( Boxed
-                       ( Range
-                        { _start = SourcePos
-                         { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
-                         , sourceLine = Pos 19
-                         , sourceColumn = Pos 28
-                         }
-                        , _end = SourcePos
-                         { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
-                         , sourceLine = Pos 19
-                         , sourceColumn = Pos 29
-                         }
+                       , _end = SourcePos
+                        { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
+                        , sourceLine = Pos 19
+                        , sourceColumn = Pos 29
                         }
-                       )
-                       ( Int32 2 )
+                       }
                       )
-                     ) :| []
+                      ( Int32 2 )
+                     )
                     )
                    )
                   )

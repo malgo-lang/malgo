@@ -46,35 +46,25 @@
                        (do
                           (apply
                              (apply Cons #Prelude.x_67)
-                             (seq
-                                (do
-                                   (apply
-                                      (apply Cons #Prelude.sep_66)
-                                      (seq
-                                         (do
-                                            (apply
-                                               (apply punctuate #Prelude.sep_66)
-                                               #Prelude.xs_68))))))))))))))
+                             (apply
+                                (apply Cons #Prelude.sep_66)
+                                (apply
+                                   (apply punctuate #Prelude.sep_66)
+                                   #Prelude.xs_68))))))))))
        ((def
            printInt64
            (fn
               ((clause
                   (#Prelude.i_102)
                   (seq
-                     (do
-                        (apply
-                           printString
-                           (seq (do (apply toStringInt64 #Prelude.i_102)))))))))))
+                     (do (apply printString (apply toStringInt64 #Prelude.i_102)))))))))
        ((def
            printInt32
            (fn
               ((clause
                   (#Prelude.i_101)
                   (seq
-                     (do
-                        (apply
-                           printString
-                           (seq (do (apply toStringInt32 #Prelude.i_101)))))))))))
+                     (do (apply printString (apply toStringInt32 #Prelude.i_101)))))))))
        ((def
            mapList
            (fn
@@ -84,14 +74,8 @@
                     (seq
                        (do
                           (apply
-                             (apply
-                                Cons
-                                (seq (do (apply #Prelude.f_39 #Prelude.x_40))))
-                             (seq
-                                (do
-                                   (apply
-                                      (apply mapList #Prelude.f_39)
-                                      #Prelude.xs_41)))))))))))
+                             (apply Cons (apply #Prelude.f_39 #Prelude.x_40))
+                             (apply (apply mapList #Prelude.f_39) #Prelude.xs_41)))))))))
        ((def
            listToString
            (fn
@@ -102,7 +86,7 @@
                        (do
                           (apply
                              (apply consString #Prelude.c_42)
-                             (seq (do (apply listToString #Prelude.cs_43)))))))))))
+                             (apply listToString #Prelude.cs_43)))))))))
        ((def
            isWhiteSpace
            (fn
@@ -131,11 +115,9 @@
                            (apply
                               (apply
                                  if
-                                 (seq
-                                    (do
-                                       (apply
-                                          (apply eqString #Prelude.str_47)
-                                          (apply String# (string ""))))))
+                                 (apply
+                                    (apply eqString #Prelude.str_47)
+                                    (apply String# (string ""))))
                               (fn
                                  ((clause
                                      (#Prelude.$__48)
@@ -149,11 +131,7 @@
                                            (apply
                                               (apply substring #Prelude.str_47)
                                               (apply Int64# (int64 1)))
-                                           (seq
-                                              (do
-                                                 (apply
-                                                    lengthString
-                                                    #Prelude.str_47)))))))))))))))))
+                                           (apply lengthString #Prelude.str_47)))))))))))))))
        ((def
            unless
            (fn
@@ -181,11 +159,9 @@
                            (apply
                               (apply
                                  if
-                                 (seq
-                                    (do
-                                       (apply
-                                          (apply eqString #Prelude.str_44)
-                                          (apply String# (string ""))))))
+                                 (apply
+                                    (apply eqString #Prelude.str_44)
+                                    (apply String# (string ""))))
                               (fn ((clause (#Prelude.$__45) (seq (do Nothing))))))
                            (fn
                               ((clause
@@ -194,13 +170,11 @@
                                      (do
                                         (apply
                                            Just
-                                           (seq
-                                              (do
-                                                 (apply
-                                                    (apply
-                                                       atString
-                                                       (apply Int64# (int64 0)))
-                                                    #Prelude.str_44)))))))))))))))))
+                                           (apply
+                                              (apply
+                                                 atString
+                                                 (apply Int64# (int64 0)))
+                                              #Prelude.str_44)))))))))))))))
        ((def
            head
            (fn
@@ -229,11 +203,9 @@
                           (apply
                              (apply
                                 (apply foldl #Prelude.f_32)
-                                (seq
-                                   (do
-                                      (apply
-                                         (apply #Prelude.f_32 #Prelude.z_33)
-                                         #Prelude.x_34))))
+                                (apply
+                                   (apply #Prelude.f_32 #Prelude.z_33)
+                                   #Prelude.x_34))
                              #Prelude.xs_35))))))))
        ((def
            const
@@ -264,7 +236,7 @@
                        (do
                           (apply
                              (apply appendString #Prelude.x_60)
-                             (seq (do (apply concatString #Prelude.xs_61)))))))))))
+                             (apply concatString #Prelude.xs_61)))))))))
        ((def
            case
            (fn
@@ -279,9 +251,7 @@
                   (seq
                      (do
                         (apply
-                           (apply
-                              case
-                              (seq (do (apply headString #Prelude.str_56))))
+                           (apply case (apply headString #Prelude.str_56))
                            (fn
                               ((clause
                                   ((con Nothing ()))
@@ -294,11 +264,9 @@
                                              (apply
                                                 (apply
                                                    if
-                                                   (seq
-                                                      (do
-                                                         (apply
-                                                            #Prelude.pred_55
-                                                            #Prelude.c_57))))
+                                                   (apply
+                                                      #Prelude.pred_55
+                                                      #Prelude.c_57))
                                                 (fn
                                                    ((clause
                                                        (#Prelude.$__58)
@@ -308,11 +276,9 @@
                                                                 (apply
                                                                    dropWhileString
                                                                    #Prelude.pred_55)
-                                                                (seq
-                                                                   (do
-                                                                      (apply
-                                                                         tailString
-                                                                         #Prelude.str_56))))))))))
+                                                                (apply
+                                                                   tailString
+                                                                   #Prelude.str_56))))))))
                                              (fn
                                                 ((clause
                                                     (#Prelude.$__59)
@@ -325,9 +291,7 @@
                   (seq
                      (do
                         (apply
-                           (apply
-                              case
-                              (seq (do (apply headString #Prelude.str_51))))
+                           (apply case (apply headString #Prelude.str_51))
                            (fn
                               ((clause
                                   ((con Nothing ()))
@@ -340,11 +304,9 @@
                                              (apply
                                                 (apply
                                                    if
-                                                   (seq
-                                                      (do
-                                                         (apply
-                                                            #Prelude.pred_50
-                                                            #Prelude.c_52))))
+                                                   (apply
+                                                      #Prelude.pred_50
+                                                      #Prelude.c_52))
                                                 (fn
                                                    ((clause
                                                        (#Prelude.$__53)
@@ -354,17 +316,13 @@
                                                                 (apply
                                                                    consString
                                                                    #Prelude.c_52)
-                                                                (seq
-                                                                   (do
-                                                                      (apply
-                                                                         (apply
-                                                                            takeWhileString
-                                                                            #Prelude.pred_50)
-                                                                         (seq
-                                                                            (do
-                                                                               (apply
-                                                                                  tailString
-                                                                                  #Prelude.str_51)))))))))))))
+                                                                (apply
+                                                                   (apply
+                                                                      takeWhileString
+                                                                      #Prelude.pred_50)
+                                                                   (apply
+                                                                      tailString
+                                                                      #Prelude.str_51)))))))))
                                              (fn
                                                 ((clause
                                                     (#Prelude.$__54)
@@ -393,9 +351,7 @@
                                   (do
                                      (apply
                                         #Prelude.f_73
-                                        (seq
-                                           (do
-                                              (apply #Prelude.g_74 #Prelude.x_75)))))))))))))))))
+                                        (apply #Prelude.g_74 #Prelude.x_75)))))))))))))))
       ((sig identity (-> #Prelude.a_0 #Prelude.a_0))
          (sig const (-> #Prelude.a_2 (-> #Prelude.b_3 #Prelude.a_2)))
          (sig

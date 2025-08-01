@@ -31,17 +31,11 @@
                                 <>
                                 (apply
                                    concatString
-                                   (seq
-                                      (do
-                                         (apply
-                                            (apply
-                                               punctuate
-                                               (apply String# (string ", ")))
-                                            (seq
-                                               (do
-                                                  (apply
-                                                     (apply mapList show)
-                                                     #Punctuate.ss_2)))))))
+                                   (apply
+                                      (apply
+                                         punctuate
+                                         (apply String# (string ", ")))
+                                      (apply (apply mapList show) #Punctuate.ss_2)))
                                 (apply String# (string "]")))))))))))
        ((def
            main
@@ -84,7 +78,7 @@
                                                       Nil)))
                                              Nil))))
                                  Nil))))
-                     (do (apply putStrLn (seq (do (apply show #Punctuate.x_3))))))))))))
+                     (do (apply putStrLn (apply show #Punctuate.x_3))))))))))
       ((sig <> (-> String (-> String String))) (sig show (-> SExpr String)))
       ((data
           SExpr

@@ -6,7 +6,7 @@
             ((clause
                 (#HelloImport.$__1)
                 (seq
-                   (do (apply putStr (seq (do (apply String# (string "hello"))))))
+                   (do (apply putStr (apply String# (string "hello"))))
                    (do
                       (opapp
                          |>
@@ -18,8 +18,7 @@
                                    (do
                                       (apply
                                          #HelloImport.f_0
-                                         (seq
-                                            (do (apply String# (string " world")))))))))))))))))))
+                                         (apply String# (string " world")))))))))))))))))
       ((sig main (-> (tuple) (tuple))))
       ()
       ()

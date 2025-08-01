@@ -241,35 +241,94 @@ Module
              }
             )
            )
-           ( Seq
+           ( Apply
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
               , sourceLine = Pos 6
-              , sourceColumn = Pos 12
+              , sourceColumn = Pos 24
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
               , sourceLine = Pos 6
-              , sourceColumn = Pos 26
+              , sourceColumn = Pos 25
               }
              }
             )
-            ( NoBind
+            ( Apply
              ( Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
                , sourceLine = Pos 6
-               , sourceColumn = Pos 12
+               , sourceColumn = Pos 22
                }
               , _end = SourcePos
                { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
                , sourceLine = Pos 6
-               , sourceColumn = Pos 26
+               , sourceColumn = Pos 24
                }
               }
              )
-             ( Apply
+             ( Var
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+                , sourceLine = Pos 6
+                , sourceColumn = Pos 13
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+                , sourceLine = Pos 6
+                , sourceColumn = Pos 22
+                }
+               }
+              )
+              ( Id
+               { name = "subInt32"
+               , moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+               , sort = External
+               }
+              )
+             )
+             ( Var
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+                , sourceLine = Pos 6
+                , sourceColumn = Pos 22
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+                , sourceLine = Pos 6
+                , sourceColumn = Pos 24
+                }
+               }
+              )
+              ( Id
+               { name = "n"
+               , moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/EvenOdd.mlg" )
+               , sort = Internal 0
+               }
+              )
+             )
+            )
+            ( Apply
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+               , sourceLine = Pos 6
+               , sourceColumn = Pos 24
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+               , sourceLine = Pos 6
+               , sourceColumn = Pos 25
+               }
+              }
+             )
+             ( Var
               ( Range
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
@@ -283,119 +342,30 @@ Module
                 }
                }
               )
-              ( Apply
-               ( Range
-                { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-                 , sourceLine = Pos 6
-                 , sourceColumn = Pos 22
-                 }
-                , _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-                 , sourceLine = Pos 6
-                 , sourceColumn = Pos 24
-                 }
-                }
-               )
-               ( Var
-                ( Range
-                 { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-                  , sourceLine = Pos 6
-                  , sourceColumn = Pos 13
-                  }
-                 , _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-                  , sourceLine = Pos 6
-                  , sourceColumn = Pos 22
-                  }
-                 }
-                )
-                ( Id
-                 { name = "subInt32"
-                 , moduleName = Artifact
-                  ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-                 , sort = External
-                 }
-                )
-               )
-               ( Var
-                ( Range
-                 { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-                  , sourceLine = Pos 6
-                  , sourceColumn = Pos 22
-                  }
-                 , _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-                  , sourceLine = Pos 6
-                  , sourceColumn = Pos 24
-                  }
-                 }
-                )
-                ( Id
-                 { name = "n"
-                 , moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/EvenOdd.mlg" )
-                 , sort = Internal 0
-                 }
-                )
-               )
+              ( Id
+               { name = "Int32#"
+               , moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+               , sort = External
+               }
               )
-              ( Apply
-               ( Range
-                { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-                 , sourceLine = Pos 6
-                 , sourceColumn = Pos 24
-                 }
-                , _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-                 , sourceLine = Pos 6
-                 , sourceColumn = Pos 25
-                 }
+             )
+             ( Unboxed
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+                , sourceLine = Pos 6
+                , sourceColumn = Pos 24
                 }
-               )
-               ( Var
-                ( Range
-                 { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-                  , sourceLine = Pos 6
-                  , sourceColumn = Pos 24
-                  }
-                 , _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-                  , sourceLine = Pos 6
-                  , sourceColumn = Pos 25
-                  }
-                 }
-                )
-                ( Id
-                 { name = "Int32#"
-                 , moduleName = Artifact
-                  ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-                 , sort = External
-                 }
-                )
-               )
-               ( Unboxed
-                ( Range
-                 { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-                  , sourceLine = Pos 6
-                  , sourceColumn = Pos 24
-                  }
-                 , _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-                  , sourceLine = Pos 6
-                  , sourceColumn = Pos 25
-                  }
-                 }
-                )
-                ( Int32 1 )
-               )
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+                , sourceLine = Pos 6
+                , sourceColumn = Pos 25
+                }
+               }
               )
-             ) :| []
+              ( Int32 1 )
+             )
             )
            )
           ) :| []
@@ -641,35 +611,94 @@ Module
              }
             )
            )
-           ( Seq
+           ( Apply
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
               , sourceLine = Pos 11
-              , sourceColumn = Pos 13
+              , sourceColumn = Pos 25
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
               , sourceLine = Pos 11
-              , sourceColumn = Pos 27
+              , sourceColumn = Pos 26
               }
              }
             )
-            ( NoBind
+            ( Apply
              ( Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
                , sourceLine = Pos 11
-               , sourceColumn = Pos 13
+               , sourceColumn = Pos 23
                }
               , _end = SourcePos
                { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
                , sourceLine = Pos 11
-               , sourceColumn = Pos 27
+               , sourceColumn = Pos 25
                }
               }
              )
-             ( Apply
+             ( Var
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+                , sourceLine = Pos 11
+                , sourceColumn = Pos 14
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+                , sourceLine = Pos 11
+                , sourceColumn = Pos 23
+                }
+               }
+              )
+              ( Id
+               { name = "subInt32"
+               , moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+               , sort = External
+               }
+              )
+             )
+             ( Var
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+                , sourceLine = Pos 11
+                , sourceColumn = Pos 23
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+                , sourceLine = Pos 11
+                , sourceColumn = Pos 25
+                }
+               }
+              )
+              ( Id
+               { name = "n"
+               , moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/EvenOdd.mlg" )
+               , sort = Internal 1
+               }
+              )
+             )
+            )
+            ( Apply
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+               , sourceLine = Pos 11
+               , sourceColumn = Pos 25
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+               , sourceLine = Pos 11
+               , sourceColumn = Pos 26
+               }
+              }
+             )
+             ( Var
               ( Range
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
@@ -683,119 +712,30 @@ Module
                 }
                }
               )
-              ( Apply
-               ( Range
-                { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-                 , sourceLine = Pos 11
-                 , sourceColumn = Pos 23
-                 }
-                , _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-                 , sourceLine = Pos 11
-                 , sourceColumn = Pos 25
-                 }
-                }
-               )
-               ( Var
-                ( Range
-                 { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-                  , sourceLine = Pos 11
-                  , sourceColumn = Pos 14
-                  }
-                 , _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-                  , sourceLine = Pos 11
-                  , sourceColumn = Pos 23
-                  }
-                 }
-                )
-                ( Id
-                 { name = "subInt32"
-                 , moduleName = Artifact
-                  ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-                 , sort = External
-                 }
-                )
-               )
-               ( Var
-                ( Range
-                 { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-                  , sourceLine = Pos 11
-                  , sourceColumn = Pos 23
-                  }
-                 , _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-                  , sourceLine = Pos 11
-                  , sourceColumn = Pos 25
-                  }
-                 }
-                )
-                ( Id
-                 { name = "n"
-                 , moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/EvenOdd.mlg" )
-                 , sort = Internal 1
-                 }
-                )
-               )
+              ( Id
+               { name = "Int32#"
+               , moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+               , sort = External
+               }
               )
-              ( Apply
-               ( Range
-                { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-                 , sourceLine = Pos 11
-                 , sourceColumn = Pos 25
-                 }
-                , _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-                 , sourceLine = Pos 11
-                 , sourceColumn = Pos 26
-                 }
+             )
+             ( Unboxed
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+                , sourceLine = Pos 11
+                , sourceColumn = Pos 25
                 }
-               )
-               ( Var
-                ( Range
-                 { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-                  , sourceLine = Pos 11
-                  , sourceColumn = Pos 25
-                  }
-                 , _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-                  , sourceLine = Pos 11
-                  , sourceColumn = Pos 26
-                  }
-                 }
-                )
-                ( Id
-                 { name = "Int32#"
-                 , moduleName = Artifact
-                  ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-                 , sort = External
-                 }
-                )
-               )
-               ( Unboxed
-                ( Range
-                 { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-                  , sourceLine = Pos 11
-                  , sourceColumn = Pos 25
-                  }
-                 , _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-                  , sourceLine = Pos 11
-                  , sourceColumn = Pos 26
-                  }
-                 }
-                )
-                ( Int32 1 )
-               )
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+                , sourceLine = Pos 11
+                , sourceColumn = Pos 26
+                }
+               }
               )
-             ) :| []
+              ( Int32 1 )
+             )
             )
            )
           ) :| []
@@ -1246,35 +1186,57 @@ Module
             ]
            )
           )
-          ( Seq
+          ( Apply
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
              , sourceLine = Pos 16
-             , sourceColumn = Pos 33
+             , sourceColumn = Pos 39
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
              , sourceLine = Pos 16
-             , sourceColumn = Pos 43
+             , sourceColumn = Pos 41
              }
             }
            )
-           ( NoBind
+           ( Var
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
               , sourceLine = Pos 16
-              , sourceColumn = Pos 33
+              , sourceColumn = Pos 34
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
               , sourceLine = Pos 16
-              , sourceColumn = Pos 43
+              , sourceColumn = Pos 39
               }
              }
             )
-            ( Apply
+            ( Id
+             { name = "even"
+             , moduleName = Artifact
+              ( ArtifactPath "test/testcases/malgo/EvenOdd.mlg" )
+             , sort = External
+             }
+            )
+           )
+           ( Apply
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+              , sourceLine = Pos 16
+              , sourceColumn = Pos 39
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+              , sourceLine = Pos 16
+              , sourceColumn = Pos 41
+              }
+             }
+            )
+            ( Var
              ( Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
@@ -1288,82 +1250,30 @@ Module
                }
               }
              )
-             ( Var
-              ( Range
-               { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-                , sourceLine = Pos 16
-                , sourceColumn = Pos 34
-                }
-               , _end = SourcePos
-                { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-                , sourceLine = Pos 16
-                , sourceColumn = Pos 39
-                }
-               }
-              )
-              ( Id
-               { name = "even"
-               , moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/EvenOdd.mlg" )
-               , sort = External
-               }
-              )
+             ( Id
+              { name = "Int32#"
+              , moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+              , sort = External
+              }
              )
-             ( Apply
-              ( Range
-               { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-                , sourceLine = Pos 16
-                , sourceColumn = Pos 39
-                }
-               , _end = SourcePos
-                { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-                , sourceLine = Pos 16
-                , sourceColumn = Pos 41
-                }
+            )
+            ( Unboxed
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+               , sourceLine = Pos 16
+               , sourceColumn = Pos 39
                }
-              )
-              ( Var
-               ( Range
-                { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-                 , sourceLine = Pos 16
-                 , sourceColumn = Pos 39
-                 }
-                , _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-                 , sourceLine = Pos 16
-                 , sourceColumn = Pos 41
-                 }
-                }
-               )
-               ( Id
-                { name = "Int32#"
-                , moduleName = Artifact
-                 ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-                , sort = External
-                }
-               )
-              )
-              ( Unboxed
-               ( Range
-                { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-                 , sourceLine = Pos 16
-                 , sourceColumn = Pos 39
-                 }
-                , _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
-                 , sourceLine = Pos 16
-                 , sourceColumn = Pos 41
-                 }
-                }
-               )
-               ( Int32 10 )
-              )
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+               , sourceLine = Pos 16
+               , sourceColumn = Pos 41
+               }
+              }
              )
-            ) :| []
+             ( Int32 10 )
+            )
            )
           )
          ) :| []

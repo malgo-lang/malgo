@@ -374,35 +374,57 @@ Module
             }
            )
           )
-          ( Seq
+          ( Apply
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
              , sourceLine = Pos 8
-             , sourceColumn = Pos 12
+             , sourceColumn = Pos 15
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
-             , sourceLine = Pos 9
-             , sourceColumn = Pos 1
+             , sourceLine = Pos 8
+             , sourceColumn = Pos 22
              }
             }
            )
-           ( NoBind
+           ( Var
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
               , sourceLine = Pos 8
-              , sourceColumn = Pos 12
+              , sourceColumn = Pos 13
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
-              , sourceLine = Pos 9
-              , sourceColumn = Pos 1
+              , sourceLine = Pos 8
+              , sourceColumn = Pos 15
               }
              }
             )
-            ( Apply
+            ( Id
+             { name = "f"
+             , moduleName = Artifact
+              ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
+             , sort = External
+             }
+            )
+           )
+           ( Apply
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+              , sourceLine = Pos 8
+              , sourceColumn = Pos 15
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+              , sourceLine = Pos 8
+              , sourceColumn = Pos 22
+              }
+             }
+            )
+            ( Var
              ( Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
@@ -416,82 +438,30 @@ Module
                }
               }
              )
-             ( Var
-              ( Range
-               { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
-                , sourceLine = Pos 8
-                , sourceColumn = Pos 13
-                }
-               , _end = SourcePos
-                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
-                , sourceLine = Pos 8
-                , sourceColumn = Pos 15
-                }
-               }
-              )
-              ( Id
-               { name = "f"
-               , moduleName = Artifact
-                ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
-               , sort = External
-               }
-              )
+             ( Id
+              { name = "String#"
+              , moduleName = Artifact
+               ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+              , sort = External
+              }
              )
-             ( Apply
-              ( Range
-               { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
-                , sourceLine = Pos 8
-                , sourceColumn = Pos 15
-                }
-               , _end = SourcePos
-                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
-                , sourceLine = Pos 8
-                , sourceColumn = Pos 22
-                }
+            )
+            ( Unboxed
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+               , sourceLine = Pos 8
+               , sourceColumn = Pos 15
                }
-              )
-              ( Var
-               ( Range
-                { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
-                 , sourceLine = Pos 8
-                 , sourceColumn = Pos 15
-                 }
-                , _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
-                 , sourceLine = Pos 8
-                 , sourceColumn = Pos 22
-                 }
-                }
-               )
-               ( Id
-                { name = "String#"
-                , moduleName = Artifact
-                 ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-                , sort = External
-                }
-               )
-              )
-              ( Unboxed
-               ( Range
-                { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
-                 , sourceLine = Pos 8
-                 , sourceColumn = Pos 15
-                 }
-                , _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
-                 , sourceLine = Pos 8
-                 , sourceColumn = Pos 22
-                 }
-                }
-               )
-               ( String "Hello" )
-              )
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
+               , sourceLine = Pos 8
+               , sourceColumn = Pos 22
+               }
+              }
              )
-            ) :| []
+             ( String "Hello" )
+            )
            )
           )
          ) :| []

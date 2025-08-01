@@ -52,9 +52,7 @@
                 (showDict x)
                 (seq
                    (do
-                      (apply
-                         printString
-                         (seq (do (apply (apply show showDict) x))))))))))
+                      (apply printString (parens (apply (apply show showDict) x)))))))))
       (def
          main
          (fn
@@ -65,6 +63,6 @@
                       (apply
                          (apply
                             print
-                            (seq
-                               (do (apply (apply showTuple2 showInt32) showInt32))))
+                            (parens
+                               (apply (apply showTuple2 showInt32) showInt32)))
                          (tuple (int32 1) (int32 2)))))))))))

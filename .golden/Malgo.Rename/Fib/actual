@@ -906,95 +906,95 @@ Module
             }
            )
           )
-          ( Seq
+          ( Apply
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/Fib.mlg"
              , sourceLine = Pos 18
-             , sourceColumn = Pos 15
+             , sourceColumn = Pos 30
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/Fib.mlg"
-             , sourceLine = Pos 19
-             , sourceColumn = Pos 1
+             , sourceLine = Pos 18
+             , sourceColumn = Pos 65
              }
             }
            )
-           ( NoBind
+           ( Var
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/Fib.mlg"
               , sourceLine = Pos 18
-              , sourceColumn = Pos 15
+              , sourceColumn = Pos 16
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/Fib.mlg"
-              , sourceLine = Pos 19
-              , sourceColumn = Pos 1
+              , sourceLine = Pos 18
+              , sourceColumn = Pos 30
               }
              }
             )
-            ( Apply
+            ( Id
+             { name = "toStringInt64"
+             , moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+             , sort = External
+             }
+            )
+           )
+           ( Project
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/Fib.mlg"
+              , sourceLine = Pos 18
+              , sourceColumn = Pos 59
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/Fib.mlg"
+              , sourceLine = Pos 18
+              , sourceColumn = Pos 64
+              }
+             }
+            )
+            ( Project
              ( Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/Fib.mlg"
                , sourceLine = Pos 18
-               , sourceColumn = Pos 30
+               , sourceColumn = Pos 54
                }
               , _end = SourcePos
                { sourceName = "./test/testcases/malgo/Fib.mlg"
                , sourceLine = Pos 18
-               , sourceColumn = Pos 65
+               , sourceColumn = Pos 59
                }
               }
              )
-             ( Var
+             ( Project
               ( Range
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/Fib.mlg"
                 , sourceLine = Pos 18
-                , sourceColumn = Pos 16
+                , sourceColumn = Pos 49
                 }
                , _end = SourcePos
                 { sourceName = "./test/testcases/malgo/Fib.mlg"
                 , sourceLine = Pos 18
-                , sourceColumn = Pos 30
+                , sourceColumn = Pos 54
                 }
                }
               )
-              ( Id
-               { name = "toStringInt64"
-               , moduleName = Artifact
-                ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-               , sort = External
-               }
-              )
-             )
-             ( Seq
-              ( Range
-               { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/Fib.mlg"
-                , sourceLine = Pos 18
-                , sourceColumn = Pos 30
-                }
-               , _end = SourcePos
-                { sourceName = "./test/testcases/malgo/Fib.mlg"
-                , sourceLine = Pos 18
-                , sourceColumn = Pos 65
-                }
-               }
-              )
-              ( NoBind
+              ( Project
                ( Range
                 { _start = SourcePos
                  { sourceName = "./test/testcases/malgo/Fib.mlg"
                  , sourceLine = Pos 18
-                 , sourceColumn = Pos 30
+                 , sourceColumn = Pos 44
                  }
                 , _end = SourcePos
                  { sourceName = "./test/testcases/malgo/Fib.mlg"
                  , sourceLine = Pos 18
-                 , sourceColumn = Pos 65
+                 , sourceColumn = Pos 49
                  }
                 }
                )
@@ -1003,12 +1003,12 @@ Module
                  { _start = SourcePos
                   { sourceName = "./test/testcases/malgo/Fib.mlg"
                   , sourceLine = Pos 18
-                  , sourceColumn = Pos 59
+                  , sourceColumn = Pos 39
                   }
                  , _end = SourcePos
                   { sourceName = "./test/testcases/malgo/Fib.mlg"
                   , sourceLine = Pos 18
-                  , sourceColumn = Pos 64
+                  , sourceColumn = Pos 44
                   }
                  }
                 )
@@ -1017,102 +1017,42 @@ Module
                   { _start = SourcePos
                    { sourceName = "./test/testcases/malgo/Fib.mlg"
                    , sourceLine = Pos 18
-                   , sourceColumn = Pos 54
+                   , sourceColumn = Pos 34
                    }
                   , _end = SourcePos
                    { sourceName = "./test/testcases/malgo/Fib.mlg"
                    , sourceLine = Pos 18
-                   , sourceColumn = Pos 59
+                   , sourceColumn = Pos 39
                    }
                   }
                  )
-                 ( Project
+                 ( Var
                   ( Range
                    { _start = SourcePos
                     { sourceName = "./test/testcases/malgo/Fib.mlg"
                     , sourceLine = Pos 18
-                    , sourceColumn = Pos 49
+                    , sourceColumn = Pos 31
                     }
                    , _end = SourcePos
                     { sourceName = "./test/testcases/malgo/Fib.mlg"
                     , sourceLine = Pos 18
-                    , sourceColumn = Pos 54
+                    , sourceColumn = Pos 34
                     }
                    }
                   )
-                  ( Project
-                   ( Range
-                    { _start = SourcePos
-                     { sourceName = "./test/testcases/malgo/Fib.mlg"
-                     , sourceLine = Pos 18
-                     , sourceColumn = Pos 44
-                     }
-                    , _end = SourcePos
-                     { sourceName = "./test/testcases/malgo/Fib.mlg"
-                     , sourceLine = Pos 18
-                     , sourceColumn = Pos 49
-                     }
-                    }
-                   )
-                   ( Project
-                    ( Range
-                     { _start = SourcePos
-                      { sourceName = "./test/testcases/malgo/Fib.mlg"
-                      , sourceLine = Pos 18
-                      , sourceColumn = Pos 39
-                      }
-                     , _end = SourcePos
-                      { sourceName = "./test/testcases/malgo/Fib.mlg"
-                      , sourceLine = Pos 18
-                      , sourceColumn = Pos 44
-                      }
-                     }
-                    )
-                    ( Project
-                     ( Range
-                      { _start = SourcePos
-                       { sourceName = "./test/testcases/malgo/Fib.mlg"
-                       , sourceLine = Pos 18
-                       , sourceColumn = Pos 34
-                       }
-                      , _end = SourcePos
-                       { sourceName = "./test/testcases/malgo/Fib.mlg"
-                       , sourceLine = Pos 18
-                       , sourceColumn = Pos 39
-                       }
-                      }
-                     )
-                     ( Var
-                      ( Range
-                       { _start = SourcePos
-                        { sourceName = "./test/testcases/malgo/Fib.mlg"
-                        , sourceLine = Pos 18
-                        , sourceColumn = Pos 31
-                        }
-                       , _end = SourcePos
-                        { sourceName = "./test/testcases/malgo/Fib.mlg"
-                        , sourceLine = Pos 18
-                        , sourceColumn = Pos 34
-                        }
-                       }
-                      )
-                      ( Id
-                       { name = "fib"
-                       , moduleName = Artifact
-                        ( ArtifactPath "test/testcases/malgo/Fib.mlg" )
-                       , sort = External
-                       }
-                      )
-                     ) "tail"
-                    ) "tail"
-                   ) "tail"
-                  ) "tail"
+                  ( Id
+                   { name = "fib"
+                   , moduleName = Artifact
+                    ( ArtifactPath "test/testcases/malgo/Fib.mlg" )
+                   , sort = External
+                   }
+                  )
                  ) "tail"
-                ) "head"
-               ) :| []
-              )
-             )
-            ) :| []
+                ) "tail"
+               ) "tail"
+              ) "tail"
+             ) "tail"
+            ) "head"
            )
           )
          ) :| []

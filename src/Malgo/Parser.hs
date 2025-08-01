@@ -437,9 +437,7 @@ pTuple = do
       end <- getSourcePos
       case exprs of
         [expr] ->
-          -- FIXME: this is a hack to match the behavior of the original parser.
-          -- It should return a Parens expression instead of a Seq expression.
-          pure $ Seq (Range start end) $ NonEmpty.fromList [NoBind (Range start end) expr]
+          pure $ Parens (Range start end) expr
         _ -> pure $ Tuple (Range start end) exprs
     pCStyleTuple = do
       start <- getSourcePos

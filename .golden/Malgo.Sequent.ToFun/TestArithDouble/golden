@@ -79,12 +79,10 @@
                $TestArithDouble.param_25
                ((#TestArithDouble.x_11
                    (apply
-                      (apply
-                         (invoke *)
-                         ((apply
-                             (apply (invoke +) (#TestArithDouble.x_11))
-                             (0.0_f64))))
-                      (#TestArithDouble.x_11)))))))
+                      (apply (invoke +) (#TestArithDouble.x_11))
+                      ((apply
+                          (apply (invoke *) (0.0_f64))
+                          (#TestArithDouble.x_11)))))))))
       (main
          (lambda
             ($TestArithDouble.param_26)

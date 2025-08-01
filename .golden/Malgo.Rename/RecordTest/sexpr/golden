@@ -26,31 +26,18 @@
                      (do
                         (apply
                            printString
-                           (seq
-                              (do
+                           (apply
+                              toStringInt32
+                              (apply
+                                 (apply addInt32 (apply f #RecordTest.x_5))
                                  (apply
-                                    toStringInt32
-                                    (seq
-                                       (do
-                                          (apply
-                                             (apply
-                                                addInt32
-                                                (seq
-                                                   (do (apply f #RecordTest.x_5))))
-                                             (seq
-                                                (do
-                                                   (apply
-                                                      (fn
-                                                         ((clause
-                                                             ((record
-                                                                 (a
-                                                                    #RecordTest.__6)
-                                                                 (b
-                                                                    #RecordTest.b_7)))
-                                                             (seq
-                                                                (do
-                                                                   #RecordTest.b_7)))))
-                                                      #RecordTest.x_5))))))))))))))))))
+                                    (fn
+                                       ((clause
+                                           ((record
+                                               (a #RecordTest.__6)
+                                               (b #RecordTest.b_7)))
+                                           (seq (do #RecordTest.b_7)))))
+                                    #RecordTest.x_5))))))))))))
       ()
       ((data B () ((B (A)))))
       ((type A () (record (a Int32) (b Int32)))

@@ -17,8 +17,7 @@
                          (fn
                             ((clause
                                 ((con Int64# (s)))
-                                (seq
-                                   (do (apply Int64# (seq (do (opapp +# x s)))))))))))))
+                                (seq (do (apply Int64# (parens (opapp +# x s))))))))))))
                (clause (Nil) (seq (do (apply Int64# (int64 0))))))))
       (def
          main
@@ -31,18 +30,13 @@
                          |>
                          (apply
                             sum
-                            (seq
-                               (do
-                                  (apply
+                            (parens
+                               (apply
+                                  (apply Cons (parens (apply Int64# (int64 1))))
+                                  (parens
                                      (apply
-                                        Cons
-                                        (seq (do (apply Int64# (int64 1)))))
-                                     (seq
-                                        (do
-                                           (apply
-                                              (apply
-                                                 Cons
-                                                 (seq
-                                                    (do (apply Int64# (int64 2)))))
-                                              Nil)))))))
+                                        (apply
+                                           Cons
+                                           (parens (apply Int64# (int64 2))))
+                                        Nil)))))
                          (fn ((clause (i) (seq (do (apply printInt64 i)))))))))))))))

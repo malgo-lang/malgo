@@ -406,86 +406,56 @@ Module
         ]
        )
       )
-      ( Seq
+      ( Apply
        ( Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
          , sourceLine = Pos 14
-         , sourceColumn = Pos 5
+         , sourceColumn = Pos 11
          }
         , _end = SourcePos
          { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
-         , sourceLine = Pos 16
-         , sourceColumn = Pos 1
+         , sourceLine = Pos 14
+         , sourceColumn = Pos 13
          }
         }
        )
-       ( NoBind
+       ( Var
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
           , sourceLine = Pos 14
-          , sourceColumn = Pos 5
+          , sourceColumn = Pos 6
           }
          , _end = SourcePos
           { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
-          , sourceLine = Pos 16
-          , sourceColumn = Pos 1
+          , sourceLine = Pos 14
+          , sourceColumn = Pos 11
           }
          }
         )
-        ( Apply
-         ( Range
-          { _start = SourcePos
-           { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
-           , sourceLine = Pos 14
-           , sourceColumn = Pos 11
-           }
-          , _end = SourcePos
-           { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
-           , sourceLine = Pos 14
-           , sourceColumn = Pos 13
-           }
+        ( Id
+         { name = "Just"
+         , moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+         , sort = External
+         }
+        )
+       )
+       ( Tuple
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+          , sourceLine = Pos 14
+          , sourceColumn = Pos 11
           }
-         )
-         ( Var
-          ( Range
-           { _start = SourcePos
-            { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
-            , sourceLine = Pos 14
-            , sourceColumn = Pos 6
-            }
-           , _end = SourcePos
-            { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
-            , sourceLine = Pos 14
-            , sourceColumn = Pos 11
-            }
-           }
-          )
-          ( Id
-           { name = "Just"
-           , moduleName = Artifact
-            ( ArtifactPath "runtime/malgo/Prelude.mlg" )
-           , sort = External
-           }
-          )
-         )
-         ( Tuple
-          ( Range
-           { _start = SourcePos
-            { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
-            , sourceLine = Pos 14
-            , sourceColumn = Pos 11
-            }
-           , _end = SourcePos
-            { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
-            , sourceLine = Pos 14
-            , sourceColumn = Pos 13
-            }
-           }
-          ) []
-         )
-        ) :| []
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+          , sourceLine = Pos 14
+          , sourceColumn = Pos 13
+          }
+         }
+        ) []
        )
       )
      )
@@ -1031,197 +1001,137 @@ Module
              }
             )
            )
-           ( Seq
+           ( Apply
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
               , sourceLine = Pos 20
-              , sourceColumn = Pos 14
+              , sourceColumn = Pos 29
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
-              , sourceLine = Pos 21
-              , sourceColumn = Pos 1
+              , sourceLine = Pos 20
+              , sourceColumn = Pos 41
               }
              }
             )
-            ( NoBind
+            ( Apply
              ( Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
                , sourceLine = Pos 20
-               , sourceColumn = Pos 14
+               , sourceColumn = Pos 23
                }
               , _end = SourcePos
                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
-               , sourceLine = Pos 21
-               , sourceColumn = Pos 1
+               , sourceLine = Pos 20
+               , sourceColumn = Pos 29
                }
               }
              )
-             ( Apply
+             ( Var
               ( Range
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
                 , sourceLine = Pos 20
-                , sourceColumn = Pos 29
+                , sourceColumn = Pos 15
                 }
                , _end = SourcePos
                 { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
                 , sourceLine = Pos 20
-                , sourceColumn = Pos 41
+                , sourceColumn = Pos 23
                 }
                }
               )
-              ( Apply
-               ( Range
-                { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
-                 , sourceLine = Pos 20
-                 , sourceColumn = Pos 23
-                 }
-                , _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
-                 , sourceLine = Pos 20
-                 , sourceColumn = Pos 29
-                 }
-                }
-               )
-               ( Var
-                ( Range
-                 { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
-                  , sourceLine = Pos 20
-                  , sourceColumn = Pos 15
-                  }
-                 , _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
-                  , sourceLine = Pos 20
-                  , sourceColumn = Pos 23
-                  }
-                 }
-                )
-                ( Id
-                 { name = "constId"
-                 , moduleName = Artifact
-                  ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" )
-                 , sort = External
-                 }
-                )
-               )
-               ( Var
-                ( Range
-                 { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
-                  , sourceLine = Pos 20
-                  , sourceColumn = Pos 23
-                  }
-                 , _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
-                  , sourceLine = Pos 20
-                  , sourceColumn = Pos 29
-                  }
-                 }
-                )
-                ( Id
-                 { name = "const"
-                 , moduleName = Artifact
-                  ( ArtifactPath "runtime/malgo/Prelude.mlg" )
-                 , sort = External
-                 }
-                )
-               )
+              ( Id
+               { name = "constId"
+               , moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" )
+               , sort = External
+               }
               )
-              ( Seq
-               ( Range
-                { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
-                 , sourceLine = Pos 20
-                 , sourceColumn = Pos 29
-                 }
-                , _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
-                 , sourceLine = Pos 20
-                 , sourceColumn = Pos 41
-                 }
+             )
+             ( Var
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                , sourceLine = Pos 20
+                , sourceColumn = Pos 23
                 }
-               )
-               ( NoBind
-                ( Range
-                 { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
-                  , sourceLine = Pos 20
-                  , sourceColumn = Pos 29
-                  }
-                 , _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
-                  , sourceLine = Pos 20
-                  , sourceColumn = Pos 41
-                  }
-                 }
-                )
-                ( Apply
-                 ( Range
-                  { _start = SourcePos
-                   { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
-                   , sourceLine = Pos 20
-                   , sourceColumn = Pos 37
-                   }
-                  , _end = SourcePos
-                   { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
-                   , sourceLine = Pos 20
-                   , sourceColumn = Pos 40
-                   }
-                  }
-                 )
-                 ( Var
-                  ( Range
-                   { _start = SourcePos
-                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
-                    , sourceLine = Pos 20
-                    , sourceColumn = Pos 30
-                    }
-                   , _end = SourcePos
-                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
-                    , sourceLine = Pos 20
-                    , sourceColumn = Pos 37
-                    }
-                   }
-                  )
-                  ( Id
-                   { name = "addOne"
-                   , moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" )
-                   , sort = External
-                   }
-                  )
-                 )
-                 ( Var
-                  ( Range
-                   { _start = SourcePos
-                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
-                    , sourceLine = Pos 20
-                    , sourceColumn = Pos 37
-                    }
-                   , _end = SourcePos
-                    { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
-                    , sourceLine = Pos 20
-                    , sourceColumn = Pos 40
-                    }
-                   }
-                  )
-                  ( Id
-                   { name = "one"
-                   , moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" )
-                   , sort = External
-                   }
-                  )
-                 )
-                ) :| []
-               )
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                , sourceLine = Pos 20
+                , sourceColumn = Pos 29
+                }
+               }
               )
-             ) :| []
+              ( Id
+               { name = "const"
+               , moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+               , sort = External
+               }
+              )
+             )
+            )
+            ( Apply
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+               , sourceLine = Pos 20
+               , sourceColumn = Pos 37
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+               , sourceLine = Pos 20
+               , sourceColumn = Pos 40
+               }
+              }
+             )
+             ( Var
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                , sourceLine = Pos 20
+                , sourceColumn = Pos 30
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                , sourceLine = Pos 20
+                , sourceColumn = Pos 37
+                }
+               }
+              )
+              ( Id
+               { name = "addOne"
+               , moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" )
+               , sort = External
+               }
+              )
+             )
+             ( Var
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                , sourceLine = Pos 20
+                , sourceColumn = Pos 37
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+                , sourceLine = Pos 20
+                , sourceColumn = Pos 40
+                }
+               }
+              )
+              ( Id
+               { name = "one"
+               , moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/ToplevelVariable.mlg" )
+               , sort = External
+               }
+              )
+             )
             )
            )
           )

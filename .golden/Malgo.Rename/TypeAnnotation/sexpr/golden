@@ -9,18 +9,14 @@
                    (do
                       (apply
                          printString
-                         (seq
-                            (do
-                               (apply
-                                  (seq
-                                     (do
-                                        (ann
-                                           (fn
-                                              ((clause
-                                                  (#TypeAnnotation.x_0)
-                                                  (seq (do #TypeAnnotation.x_0)))))
-                                           (-> String String))))
-                                  (apply String# (string "hoge"))))))))))))))
+                         (apply
+                            (ann
+                               (fn
+                                  ((clause
+                                      (#TypeAnnotation.x_0)
+                                      (seq (do #TypeAnnotation.x_0)))))
+                               (-> String String))
+                            (apply String# (string "hoge"))))))))))))
       ()
       ()
       ()

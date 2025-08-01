@@ -12,7 +12,7 @@
             (fn
                ((clause (Nothing) (seq (do Nothing)))
                   (clause ((con Just (x))) (seq (do Nothing)))))
-            (seq (do (apply Just (tuple))))))
+            (parens (apply Just (tuple)))))
       (def
          main
          (fn
@@ -30,8 +30,7 @@
                    (do
                       (apply
                          printInt32
-                         (seq
-                            (do
-                               (apply
-                                  (apply constId const)
-                                  (seq (do (apply addOne one)))))))))))))))
+                         (parens
+                            (apply
+                               (apply constId const)
+                               (parens (apply addOne one)))))))))))))

@@ -17,20 +17,20 @@
          (fn
             ((clause
                 (x)
-                (seq (do (apply String# (seq (do (apply toStringDouble# x))))))))))
+                (seq (do (apply String# (parens (apply toStringDouble# x)))))))))
       (def
          traceShowId
          (fn
             ((clause
                 (x)
-                (seq (do (apply putStrLn (seq (do (apply show x))))) (do x))))))
+                (seq (do (apply putStrLn (parens (apply show x)))) (do x))))))
       (sig f (-> Double# Double#))
       (def
          f
          (fn
             ((clause
                 (x)
-                (seq (do (opapp * (seq (do (opapp + x (double 0.0_f64)))) x)))))))
+                (seq (do (opapp * (parens (opapp + x (double 0.0_f64))) x)))))))
       (def
          main
          (fn
@@ -40,6 +40,4 @@
                    (do
                       (apply
                          putStrLn
-                         (seq
-                            (do
-                               (apply show (seq (do (apply f (double 0.5_f64))))))))))))))))
+                         (parens (apply show (parens (apply f (double 0.5_f64))))))))))))))

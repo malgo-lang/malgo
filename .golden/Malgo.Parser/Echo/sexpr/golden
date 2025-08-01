@@ -7,4 +7,4 @@
          (fn
             ((clause
                 ()
-                (seq (do (apply putStr (seq (do (apply getContents (tuple)))))))))))))
+                (seq (do (apply putStr (parens (apply getContents (tuple))))))))))))

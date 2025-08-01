@@ -21,18 +21,14 @@
                                (clause
                                   (False)
                                   (seq (do (apply malgo_exit_failure (tuple)))))))
-                         (seq
-                            (do
-                               (apply
-                                  (fn
-                                     ((clause (True1) (seq (do False)))
-                                        (clause (False1) (seq (do True)))))
-                                  (seq
-                                     (do
-                                        (apply
-                                           (fn
-                                              ((clause (True2) (seq (do False1)))
-                                                 (clause
-                                                    (False2)
-                                                    (seq (do True1)))))
-                                           True2)))))))))))))))
+                         (parens
+                            (apply
+                               (fn
+                                  ((clause (True1) (seq (do False)))
+                                     (clause (False1) (seq (do True)))))
+                               (parens
+                                  (apply
+                                     (fn
+                                        ((clause (True2) (seq (do False1)))
+                                           (clause (False2) (seq (do True1)))))
+                                     True2)))))))))))))

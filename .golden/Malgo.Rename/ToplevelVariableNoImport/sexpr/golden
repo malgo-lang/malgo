@@ -19,11 +19,7 @@
                      (do
                         (apply
                            String#
-                           (seq
-                              (do
-                                 (apply
-                                    toStringInt32#
-                                    #ToplevelVariableNoImport.x_15)))))))))))
+                           (apply toStringInt32# #ToplevelVariableNoImport.x_15)))))))))
        ((def
            printString#
            (fn
@@ -46,11 +42,7 @@
                      (do
                         (apply
                            printString
-                           (seq
-                              (do
-                                 (apply
-                                    toStringInt32
-                                    #ToplevelVariableNoImport.i_13)))))))))))
+                           (apply toStringInt32 #ToplevelVariableNoImport.i_13)))))))))
        ((def one (apply Int32# (int32 1))))
        ((def
            identity
@@ -73,7 +65,7 @@
                     (clause
                        ((con Just (#ToplevelVariableNoImport.x_17)))
                        (seq (do Nothing)))))
-              (seq (do (apply Just (tuple)))))))
+              (apply Just (tuple)))))
        ((def
            addInt32#
            (fn
@@ -94,13 +86,9 @@
                      (do
                         (apply
                            Int32#
-                           (seq
-                              (do
-                                 (apply
-                                    (apply
-                                       addInt32#
-                                       #ToplevelVariableNoImport.x_2)
-                                    #ToplevelVariableNoImport.y_3)))))))))))
+                           (apply
+                              (apply addInt32# #ToplevelVariableNoImport.x_2)
+                              #ToplevelVariableNoImport.y_3)))))))))
        ((def addOne (apply addInt32 one)))
        ((def
            main
@@ -125,11 +113,7 @@
                      (do
                         (apply
                            printInt32
-                           (seq
-                              (do
-                                 (apply
-                                    (apply constId const)
-                                    (seq (do (apply addOne one)))))))))))))))
+                           (apply (apply constId const) (apply addOne one)))))))))))
       ((sig addInt32# (-> Int32# (-> Int32# Int32#)))
          (sig addInt32 (-> Int32 (-> Int32 Int32)))
          (sig printString# (-> String# (tuple)))

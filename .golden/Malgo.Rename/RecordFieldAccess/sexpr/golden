@@ -27,21 +27,11 @@
                      (do
                         (apply
                            printString
-                           (seq
-                              (do
-                                 (apply
-                                    toStringInt32
-                                    (seq
-                                       (do
-                                          (apply
-                                             (apply
-                                                addInt32
-                                                (seq
-                                                   (do
-                                                      (apply
-                                                         f
-                                                         #RecordFieldAccess.x_4))))
-                                             (project #RecordFieldAccess.x_4 "b"))))))))))))))))
+                           (apply
+                              toStringInt32
+                              (apply
+                                 (apply addInt32 (apply f #RecordFieldAccess.x_4))
+                                 (project #RecordFieldAccess.x_4 "b"))))))))))))
       ()
       ((data B () ((B ((record (a Int32) (b Int32)))))))
       ()

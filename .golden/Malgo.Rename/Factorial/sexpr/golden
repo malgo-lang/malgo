@@ -31,12 +31,10 @@
                            (apply
                               (apply
                                  if
-                                 (seq
-                                    (do
-                                       (opapp
-                                          ==
-                                          #Factorial.n_7
-                                          (apply Int64# (int64 0))))))
+                                 (opapp
+                                    ==
+                                    #Factorial.n_7
+                                    (apply Int64# (int64 0))))
                               (fn
                                  ((clause
                                      (#Factorial.$__9)
@@ -49,18 +47,14 @@
                                         (apply
                                            (apply
                                               factAcc
-                                              (seq
-                                                 (do
-                                                    (opapp
-                                                       -
-                                                       #Factorial.n_7
-                                                       (apply Int64# (int64 1))))))
-                                           (seq
-                                              (do
-                                                 (opapp
-                                                    *
-                                                    #Factorial.n_7
-                                                    #Factorial.acc_8)))))))))))))))))
+                                              (opapp
+                                                 -
+                                                 #Factorial.n_7
+                                                 (apply Int64# (int64 1))))
+                                           (opapp
+                                              *
+                                              #Factorial.n_7
+                                              #Factorial.acc_8)))))))))))))))
        ((def
            fact
            (fn

@@ -7,15 +7,9 @@
                 ((con Int64# (#TestDot.x_0)))
                 (seq
                    (do
-                      (seq
-                         (do
-                            (apply
-                               Int64#
-                               (seq
-                                  (do
-                                     (apply
-                                        (apply addInt64# #TestDot.x_0)
-                                        (int64 1))))))))))))))
+                      (apply
+                         Int64#
+                         (apply (apply addInt64# #TestDot.x_0) (int64 1))))))))))
        ((def
            main
            (fn
@@ -25,11 +19,7 @@
                      (do
                         (apply
                            printInt64
-                           (seq
-                              (do
-                                 (apply
-                                    (seq (do (opapp << succ succ)))
-                                    (seq (do (apply Int64# (int64 0))))))))))))))))
+                           (apply (opapp << succ succ) (apply Int64# (int64 0))))))))))))
       ()
       ()
       ()

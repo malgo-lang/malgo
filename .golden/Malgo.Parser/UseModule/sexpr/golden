@@ -20,4 +20,4 @@
                       (opapp
                          <|
                          (project Prelude "printInt32")
-                         (apply (seq (do (opapp << succ succ))) (int32 1)))))))))))
+                         (apply (parens (opapp << succ succ)) (int32 1)))))))))))

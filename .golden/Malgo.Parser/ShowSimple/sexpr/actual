@@ -28,25 +28,22 @@
                    (do
                       (apply
                          putStr
-                         (seq
-                            (do
+                         (parens
+                            (apply
                                (apply
-                                  (apply
-                                     show
-                                     (seq
-                                        (do
-                                           (apply
-                                              wrap
-                                              (fn
-                                                 ((clause
-                                                     ((con Int32# (x)))
-                                                     (seq
-                                                        (do
+                                  show
+                                  (parens
+                                     (apply
+                                        wrap
+                                        (fn
+                                           ((clause
+                                               ((con Int32# (x)))
+                                               (seq
+                                                  (do
+                                                     (apply
+                                                        String#
+                                                        (parens
                                                            (apply
-                                                              String#
-                                                              (seq
-                                                                 (do
-                                                                    (apply
-                                                                       malgo_int32_t_to_string
-                                                                       x)))))))))))))
-                                  (int32 1)))))))))))))
+                                                              malgo_int32_t_to_string
+                                                              x)))))))))))
+                               (int32 1))))))))))))

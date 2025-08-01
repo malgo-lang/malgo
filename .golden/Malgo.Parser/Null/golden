@@ -1092,7 +1092,7 @@ Module
           }
          ) "isNothing"
         )
-        ( Seq
+        ( Parens
          ( Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/Null.mlg"
@@ -1106,21 +1106,36 @@ Module
            }
           }
          )
-         ( NoBind
+         ( Apply
           ( Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/Null.mlg"
             , sourceLine = Pos 21
-            , sourceColumn = Pos 19
+            , sourceColumn = Pos 26
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/Null.mlg"
-            , sourceLine = Pos 22
-            , sourceColumn = Pos 1
+            , sourceLine = Pos 21
+            , sourceColumn = Pos 28
             }
            }
           )
-          ( Apply
+          ( Var
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/Null.mlg"
+             , sourceLine = Pos 21
+             , sourceColumn = Pos 20
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/Null.mlg"
+             , sourceLine = Pos 21
+             , sourceColumn = Pos 26
+             }
+            }
+           ) "mHead"
+          )
+          ( Var
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/Null.mlg"
@@ -1133,38 +1148,8 @@ Module
              , sourceColumn = Pos 28
              }
             }
-           )
-           ( Var
-            ( Range
-             { _start = SourcePos
-              { sourceName = "./test/testcases/malgo/Null.mlg"
-              , sourceLine = Pos 21
-              , sourceColumn = Pos 20
-              }
-             , _end = SourcePos
-              { sourceName = "./test/testcases/malgo/Null.mlg"
-              , sourceLine = Pos 21
-              , sourceColumn = Pos 26
-              }
-             }
-            ) "mHead"
-           )
-           ( Var
-            ( Range
-             { _start = SourcePos
-              { sourceName = "./test/testcases/malgo/Null.mlg"
-              , sourceLine = Pos 21
-              , sourceColumn = Pos 26
-              }
-             , _end = SourcePos
-              { sourceName = "./test/testcases/malgo/Null.mlg"
-              , sourceLine = Pos 21
-              , sourceColumn = Pos 28
-              }
-             }
-            ) "as"
-           )
-          ) :| []
+           ) "as"
+          )
          )
         )
        ) :| []
@@ -1655,7 +1640,7 @@ Module
           }
          }
         ) "|>"
-        ( Seq
+        ( Parens
          ( Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/Null.mlg"
@@ -1669,21 +1654,36 @@ Module
            }
           }
          )
-         ( NoBind
+         ( Apply
           ( Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/Null.mlg"
             , sourceLine = Pos 36
-            , sourceColumn = Pos 3
+            , sourceColumn = Pos 9
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/Null.mlg"
-            , sourceLine = Pos 37
-            , sourceColumn = Pos 3
+            , sourceLine = Pos 36
+            , sourceColumn = Pos 36
             }
            }
           )
-          ( Apply
+          ( Var
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/Null.mlg"
+             , sourceLine = Pos 36
+             , sourceColumn = Pos 4
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/Null.mlg"
+             , sourceLine = Pos 36
+             , sourceColumn = Pos 9
+             }
+            }
+           ) "null"
+          )
+          ( Parens
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/Null.mlg"
@@ -1697,46 +1697,76 @@ Module
              }
             }
            )
-           ( Var
+           ( Apply
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/Null.mlg"
               , sourceLine = Pos 36
-              , sourceColumn = Pos 4
+              , sourceColumn = Pos 20
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/Null.mlg"
               , sourceLine = Pos 36
-              , sourceColumn = Pos 9
-              }
-             }
-            ) "null"
-           )
-           ( Seq
-            ( Range
-             { _start = SourcePos
-              { sourceName = "./test/testcases/malgo/Null.mlg"
-              , sourceLine = Pos 36
-              , sourceColumn = Pos 9
-              }
-             , _end = SourcePos
-              { sourceName = "./test/testcases/malgo/Null.mlg"
-              , sourceLine = Pos 36
-              , sourceColumn = Pos 36
+              , sourceColumn = Pos 35
               }
              }
             )
-            ( NoBind
+            ( Apply
              ( Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/Null.mlg"
                , sourceLine = Pos 36
-               , sourceColumn = Pos 9
+               , sourceColumn = Pos 15
                }
               , _end = SourcePos
                { sourceName = "./test/testcases/malgo/Null.mlg"
                , sourceLine = Pos 36
-               , sourceColumn = Pos 36
+               , sourceColumn = Pos 20
+               }
+              }
+             )
+             ( Var
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/Null.mlg"
+                , sourceLine = Pos 36
+                , sourceColumn = Pos 10
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/Null.mlg"
+                , sourceLine = Pos 36
+                , sourceColumn = Pos 15
+                }
+               }
+              ) "Cons"
+             )
+             ( Var
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/Null.mlg"
+                , sourceLine = Pos 36
+                , sourceColumn = Pos 15
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/Null.mlg"
+                , sourceLine = Pos 36
+                , sourceColumn = Pos 20
+                }
+               }
+              ) "True"
+             )
+            )
+            ( Parens
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/Null.mlg"
+               , sourceLine = Pos 36
+               , sourceColumn = Pos 20
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/Null.mlg"
+               , sourceLine = Pos 36
+               , sourceColumn = Pos 35
                }
               }
              )
@@ -1745,12 +1775,12 @@ Module
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/Null.mlg"
                 , sourceLine = Pos 36
-                , sourceColumn = Pos 20
+                , sourceColumn = Pos 31
                 }
                , _end = SourcePos
                 { sourceName = "./test/testcases/malgo/Null.mlg"
                 , sourceLine = Pos 36
-                , sourceColumn = Pos 35
+                , sourceColumn = Pos 34
                 }
                }
               )
@@ -1759,12 +1789,12 @@ Module
                 { _start = SourcePos
                  { sourceName = "./test/testcases/malgo/Null.mlg"
                  , sourceLine = Pos 36
-                 , sourceColumn = Pos 15
+                 , sourceColumn = Pos 26
                  }
                 , _end = SourcePos
                  { sourceName = "./test/testcases/malgo/Null.mlg"
                  , sourceLine = Pos 36
-                 , sourceColumn = Pos 20
+                 , sourceColumn = Pos 31
                  }
                 }
                )
@@ -1773,12 +1803,12 @@ Module
                  { _start = SourcePos
                   { sourceName = "./test/testcases/malgo/Null.mlg"
                   , sourceLine = Pos 36
-                  , sourceColumn = Pos 10
+                  , sourceColumn = Pos 21
                   }
                  , _end = SourcePos
                   { sourceName = "./test/testcases/malgo/Null.mlg"
                   , sourceLine = Pos 36
-                  , sourceColumn = Pos 15
+                  , sourceColumn = Pos 26
                   }
                  }
                 ) "Cons"
@@ -1788,126 +1818,36 @@ Module
                  { _start = SourcePos
                   { sourceName = "./test/testcases/malgo/Null.mlg"
                   , sourceLine = Pos 36
-                  , sourceColumn = Pos 15
+                  , sourceColumn = Pos 26
                   }
                  , _end = SourcePos
                   { sourceName = "./test/testcases/malgo/Null.mlg"
                   , sourceLine = Pos 36
-                  , sourceColumn = Pos 20
+                  , sourceColumn = Pos 31
                   }
                  }
                 ) "True"
                )
               )
-              ( Seq
+              ( Var
                ( Range
                 { _start = SourcePos
                  { sourceName = "./test/testcases/malgo/Null.mlg"
                  , sourceLine = Pos 36
-                 , sourceColumn = Pos 20
+                 , sourceColumn = Pos 31
                  }
                 , _end = SourcePos
                  { sourceName = "./test/testcases/malgo/Null.mlg"
                  , sourceLine = Pos 36
-                 , sourceColumn = Pos 35
+                 , sourceColumn = Pos 34
                  }
                 }
-               )
-               ( NoBind
-                ( Range
-                 { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/Null.mlg"
-                  , sourceLine = Pos 36
-                  , sourceColumn = Pos 20
-                  }
-                 , _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/Null.mlg"
-                  , sourceLine = Pos 36
-                  , sourceColumn = Pos 35
-                  }
-                 }
-                )
-                ( Apply
-                 ( Range
-                  { _start = SourcePos
-                   { sourceName = "./test/testcases/malgo/Null.mlg"
-                   , sourceLine = Pos 36
-                   , sourceColumn = Pos 31
-                   }
-                  , _end = SourcePos
-                   { sourceName = "./test/testcases/malgo/Null.mlg"
-                   , sourceLine = Pos 36
-                   , sourceColumn = Pos 34
-                   }
-                  }
-                 )
-                 ( Apply
-                  ( Range
-                   { _start = SourcePos
-                    { sourceName = "./test/testcases/malgo/Null.mlg"
-                    , sourceLine = Pos 36
-                    , sourceColumn = Pos 26
-                    }
-                   , _end = SourcePos
-                    { sourceName = "./test/testcases/malgo/Null.mlg"
-                    , sourceLine = Pos 36
-                    , sourceColumn = Pos 31
-                    }
-                   }
-                  )
-                  ( Var
-                   ( Range
-                    { _start = SourcePos
-                     { sourceName = "./test/testcases/malgo/Null.mlg"
-                     , sourceLine = Pos 36
-                     , sourceColumn = Pos 21
-                     }
-                    , _end = SourcePos
-                     { sourceName = "./test/testcases/malgo/Null.mlg"
-                     , sourceLine = Pos 36
-                     , sourceColumn = Pos 26
-                     }
-                    }
-                   ) "Cons"
-                  )
-                  ( Var
-                   ( Range
-                    { _start = SourcePos
-                     { sourceName = "./test/testcases/malgo/Null.mlg"
-                     , sourceLine = Pos 36
-                     , sourceColumn = Pos 26
-                     }
-                    , _end = SourcePos
-                     { sourceName = "./test/testcases/malgo/Null.mlg"
-                     , sourceLine = Pos 36
-                     , sourceColumn = Pos 31
-                     }
-                    }
-                   ) "True"
-                  )
-                 )
-                 ( Var
-                  ( Range
-                   { _start = SourcePos
-                    { sourceName = "./test/testcases/malgo/Null.mlg"
-                    , sourceLine = Pos 36
-                    , sourceColumn = Pos 31
-                    }
-                   , _end = SourcePos
-                    { sourceName = "./test/testcases/malgo/Null.mlg"
-                    , sourceLine = Pos 36
-                    , sourceColumn = Pos 34
-                    }
-                   }
-                  ) "Nil"
-                 )
-                ) :| []
-               )
+               ) "Nil"
               )
-             ) :| []
+             )
             )
            )
-          ) :| []
+          )
          )
         )
         ( Fn

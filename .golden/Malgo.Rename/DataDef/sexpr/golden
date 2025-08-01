@@ -15,12 +15,10 @@
                                    (do
                                       (apply
                                          malgo_print_string
-                                         (seq
-                                            (do
-                                               (apply
-                                                  malgo_int64_t_to_string
-                                                  #DataDef.x_1)))))))))
-                         (seq (do (apply Int# (int64 1)))))))))))))
+                                         (apply
+                                            malgo_int64_t_to_string
+                                            #DataDef.x_1)))))))
+                         (apply Int# (int64 1)))))))))))
       ()
       ((data Int () ((Int# (Int64#))))
          (data

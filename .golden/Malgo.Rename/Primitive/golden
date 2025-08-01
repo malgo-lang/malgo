@@ -137,31 +137,53 @@ Module
             }
            )
           )
-          ( Seq
+          ( Apply
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/Primitive.mlg"
              , sourceLine = Pos 2
-             , sourceColumn = Pos 27
+             , sourceColumn = Pos 43
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/Primitive.mlg"
              , sourceLine = Pos 2
-             , sourceColumn = Pos 65
+             , sourceColumn = Pos 63
              }
             }
            )
-           ( NoBind
+           ( Var
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/Primitive.mlg"
               , sourceLine = Pos 2
-              , sourceColumn = Pos 27
+              , sourceColumn = Pos 28
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/Primitive.mlg"
               , sourceLine = Pos 2
-              , sourceColumn = Pos 65
+              , sourceColumn = Pos 43
+              }
+             }
+            )
+            ( Id
+             { name = "toStringInt64#"
+             , moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+             , sort = External
+             }
+            )
+           )
+           ( Apply
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/Primitive.mlg"
+              , sourceLine = Pos 2
+              , sourceColumn = Pos 59
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/Primitive.mlg"
+              , sourceLine = Pos 2
+              , sourceColumn = Pos 62
               }
              }
             )
@@ -170,12 +192,12 @@ Module
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/Primitive.mlg"
                , sourceLine = Pos 2
-               , sourceColumn = Pos 43
+               , sourceColumn = Pos 54
                }
               , _end = SourcePos
                { sourceName = "./test/testcases/malgo/Primitive.mlg"
                , sourceLine = Pos 2
-               , sourceColumn = Pos 63
+               , sourceColumn = Pos 59
                }
               }
              )
@@ -184,138 +206,56 @@ Module
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/Primitive.mlg"
                 , sourceLine = Pos 2
-                , sourceColumn = Pos 28
+                , sourceColumn = Pos 44
                 }
                , _end = SourcePos
                 { sourceName = "./test/testcases/malgo/Primitive.mlg"
                 , sourceLine = Pos 2
-                , sourceColumn = Pos 43
+                , sourceColumn = Pos 54
                 }
                }
               )
               ( Id
-               { name = "toStringInt64#"
+               { name = "addInt64#"
                , moduleName = Artifact
                 ( ArtifactPath "runtime/malgo/Builtin.mlg" )
                , sort = External
                }
               )
              )
-             ( Seq
+             ( Unboxed
               ( Range
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/Primitive.mlg"
                 , sourceLine = Pos 2
-                , sourceColumn = Pos 43
+                , sourceColumn = Pos 54
                 }
                , _end = SourcePos
                 { sourceName = "./test/testcases/malgo/Primitive.mlg"
                 , sourceLine = Pos 2
-                , sourceColumn = Pos 63
+                , sourceColumn = Pos 59
                 }
                }
               )
-              ( NoBind
-               ( Range
-                { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/Primitive.mlg"
-                 , sourceLine = Pos 2
-                 , sourceColumn = Pos 43
-                 }
-                , _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/Primitive.mlg"
-                 , sourceLine = Pos 2
-                 , sourceColumn = Pos 63
-                 }
-                }
-               )
-               ( Apply
-                ( Range
-                 { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/Primitive.mlg"
-                  , sourceLine = Pos 2
-                  , sourceColumn = Pos 59
-                  }
-                 , _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/Primitive.mlg"
-                  , sourceLine = Pos 2
-                  , sourceColumn = Pos 62
-                  }
-                 }
-                )
-                ( Apply
-                 ( Range
-                  { _start = SourcePos
-                   { sourceName = "./test/testcases/malgo/Primitive.mlg"
-                   , sourceLine = Pos 2
-                   , sourceColumn = Pos 54
-                   }
-                  , _end = SourcePos
-                   { sourceName = "./test/testcases/malgo/Primitive.mlg"
-                   , sourceLine = Pos 2
-                   , sourceColumn = Pos 59
-                   }
-                  }
-                 )
-                 ( Var
-                  ( Range
-                   { _start = SourcePos
-                    { sourceName = "./test/testcases/malgo/Primitive.mlg"
-                    , sourceLine = Pos 2
-                    , sourceColumn = Pos 44
-                    }
-                   , _end = SourcePos
-                    { sourceName = "./test/testcases/malgo/Primitive.mlg"
-                    , sourceLine = Pos 2
-                    , sourceColumn = Pos 54
-                    }
-                   }
-                  )
-                  ( Id
-                   { name = "addInt64#"
-                   , moduleName = Artifact
-                    ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-                   , sort = External
-                   }
-                  )
-                 )
-                 ( Unboxed
-                  ( Range
-                   { _start = SourcePos
-                    { sourceName = "./test/testcases/malgo/Primitive.mlg"
-                    , sourceLine = Pos 2
-                    , sourceColumn = Pos 54
-                    }
-                   , _end = SourcePos
-                    { sourceName = "./test/testcases/malgo/Primitive.mlg"
-                    , sourceLine = Pos 2
-                    , sourceColumn = Pos 59
-                    }
-                   }
-                  )
-                  ( Int64 40 )
-                 )
-                )
-                ( Unboxed
-                 ( Range
-                  { _start = SourcePos
-                   { sourceName = "./test/testcases/malgo/Primitive.mlg"
-                   , sourceLine = Pos 2
-                   , sourceColumn = Pos 59
-                   }
-                  , _end = SourcePos
-                   { sourceName = "./test/testcases/malgo/Primitive.mlg"
-                   , sourceLine = Pos 2
-                   , sourceColumn = Pos 62
-                   }
-                  }
-                 )
-                 ( Int64 2 )
-                )
-               ) :| []
-              )
+              ( Int64 40 )
              )
-            ) :| []
+            )
+            ( Unboxed
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/Primitive.mlg"
+               , sourceLine = Pos 2
+               , sourceColumn = Pos 59
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/Primitive.mlg"
+               , sourceLine = Pos 2
+               , sourceColumn = Pos 62
+               }
+              }
+             )
+             ( Int64 2 )
+            )
            )
           )
          ) :| []

@@ -192,27 +192,27 @@
                (select
                   (#TestArithDouble.x_11
                      (invoke
-                        *
-                        (then
-                           $TestArithDouble.outer_62
-                           (join
-                              $TestArithDouble.return_51
-                              (then
-                                 $TestArithDouble.inner_63
-                                 (cut
-                                    $TestArithDouble.outer_62
-                                    (apply
-                                       ($TestArithDouble.inner_63)
-                                       ((apply
-                                           (#TestArithDouble.x_11)
-                                           ($TestArithDouble.return_50))))))
-                              (invoke
-                                 +
-                                 (apply
-                                    (#TestArithDouble.x_11)
-                                    ((apply
+                        +
+                        (apply
+                           (#TestArithDouble.x_11)
+                           ((then
+                               $TestArithDouble.outer_62
+                               (join
+                                  $TestArithDouble.return_51
+                                  (then
+                                     $TestArithDouble.inner_63
+                                     (cut
+                                        $TestArithDouble.outer_62
+                                        (apply
+                                           ($TestArithDouble.inner_63)
+                                           ($TestArithDouble.return_50))))
+                                  (invoke
+                                     *
+                                     (apply
                                         (0.0_f64)
-                                        ($TestArithDouble.return_51))))))))))))
+                                        ((apply
+                                            (#TestArithDouble.x_11)
+                                            ($TestArithDouble.return_51))))))))))))))
          $TestArithDouble.return_49))
    (main
       $TestArithDouble.return_52
