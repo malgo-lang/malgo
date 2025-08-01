@@ -10,7 +10,7 @@ Follow **Planning** → **Action**. Obtain user approval between Planning and Ac
 ### Planning
 
 1. Fetch the issue body and discussion from GitHub:
-   - Use `gh issue view ${issue_number}`.
+   - Use GitHub MCP server or `gh issue view ${issue_number}`.
 2. Propose a branch name prefixed with `fix/${issue_number}/` based on the issue summary.
 3. (Optional) Search codebase to locate relevant implementation points and draft an implementation plan.
 4. Present the branch name and implementation plan to the user for approval.
@@ -28,20 +28,9 @@ Follow **Planning** → **Action**. Obtain user approval between Planning and Ac
    mise run build    # compile the project
    mise run test     # execute test suite
    ```
-9. If checks pass, stage changes:
-   - Use `git add -u` for modified files.
-   - Use `git add <new-file>` for any added files.
+9. If checks pass, stage changes.
 10. Commit the changes with a concise message summarizing the fix.
-11. Push the branch and create a draft pull request:
-    ```bash
-    git push --set-upstream origin fix/${issue_number}/<short-description>
-    cat <<EOS | gh pr create --draft --base master --title "<concise summary>" --body-title -
-    fix: #${issue_number} Auto-generated PR
-    - Description of changes
-    - References or notes
-    - Questions or concerns
-    EOS
-    ```
+11. Push the branch and create a draft pull request.
 
 ## Pull Request Format
 
