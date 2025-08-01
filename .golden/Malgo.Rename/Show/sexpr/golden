@@ -18,7 +18,8 @@
                      (do
                         (apply
                            printString
-                           (apply (apply show #Show.showDict_13) #Show.x_14)))))))))
+                           (parens
+                              (apply (apply show #Show.showDict_13) #Show.x_14))))))))))
        ((def
            <>
            (fn
@@ -70,7 +71,8 @@
                         (apply
                            (apply
                               print
-                              (apply (apply showTuple2 showInt32) showInt32))
+                              (parens
+                                 (apply (apply showTuple2 showInt32) showInt32)))
                            (tuple
                               (apply Int32# (int32 1))
                               (apply Int32# (int32 2))))))))))))

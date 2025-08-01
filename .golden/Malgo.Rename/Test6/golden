@@ -614,43 +614,21 @@ Module
             ]
            )
           )
-          ( Apply
+          ( Parens
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/Test6.mlg"
              , sourceLine = Pos 9
-             , sourceColumn = Pos 88
+             , sourceColumn = Pos 82
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/Test6.mlg"
              , sourceLine = Pos 9
-             , sourceColumn = Pos 89
+             , sourceColumn = Pos 91
              }
             }
            )
-           ( Var
-            ( Range
-             { _start = SourcePos
-              { sourceName = "./test/testcases/malgo/Test6.mlg"
-              , sourceLine = Pos 9
-              , sourceColumn = Pos 83
-              }
-             , _end = SourcePos
-              { sourceName = "./test/testcases/malgo/Test6.mlg"
-              , sourceLine = Pos 9
-              , sourceColumn = Pos 88
-              }
-             }
-            )
-            ( Id
-             { name = "rtob"
-             , moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Test6.mlg" )
-             , sort = External
-             }
-            )
-           )
-           ( Var
+           ( Apply
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/Test6.mlg"
@@ -664,12 +642,49 @@ Module
               }
              }
             )
-            ( Id
-             { name = "R"
-             , moduleName = Artifact
-              ( ArtifactPath "test/testcases/malgo/Test6.mlg" )
-             , sort = External
-             }
+            ( Var
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/Test6.mlg"
+               , sourceLine = Pos 9
+               , sourceColumn = Pos 83
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/Test6.mlg"
+               , sourceLine = Pos 9
+               , sourceColumn = Pos 88
+               }
+              }
+             )
+             ( Id
+              { name = "rtob"
+              , moduleName = Artifact
+               ( ArtifactPath "test/testcases/malgo/Test6.mlg" )
+              , sort = External
+              }
+             )
+            )
+            ( Var
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/Test6.mlg"
+               , sourceLine = Pos 9
+               , sourceColumn = Pos 88
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/Test6.mlg"
+               , sourceLine = Pos 9
+               , sourceColumn = Pos 89
+               }
+              }
+             )
+             ( Id
+              { name = "R"
+              , moduleName = Artifact
+               ( ArtifactPath "test/testcases/malgo/Test6.mlg" )
+              , sort = External
+              }
+             )
             )
            )
           )

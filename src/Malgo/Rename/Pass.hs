@@ -209,7 +209,7 @@ rnExpr (List pos es) = do
     buildListApply nilName consName (x : xs) = Apply pos (Apply pos (Var pos consName) x) (buildListApply nilName consName xs)
 rnExpr (Ann pos e t) = Ann pos <$> rnExpr e <*> rnType t
 rnExpr (Seq pos ss) = Seq pos <$> rnStmts ss
-rnExpr (Parens _ e) = rnExpr e
+rnExpr (Parens pos e) = Parens pos <$> rnExpr e
 
 -- | Renamed identifier corresponding Boxed literals.
 lookupBox :: (Reader RnEnv :> es, Error RenameError :> es) => Range -> Literal x -> Eff es Id

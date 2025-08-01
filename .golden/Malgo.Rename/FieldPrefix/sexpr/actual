@@ -28,10 +28,14 @@
                   ((record (x #FieldPrefix.x_0) (y #FieldPrefix.y_1)))
                   (seq
                      (do
-                        (apply printString (apply toStringInt32 #FieldPrefix.x_0)))
+                        (apply
+                           printString
+                           (parens (apply toStringInt32 #FieldPrefix.x_0))))
                      (do (apply printString (apply String# (string ", "))))
                      (do
-                        (apply printString (apply toStringInt32 #FieldPrefix.y_1)))))))))
+                        (apply
+                           printString
+                           (parens (apply toStringInt32 #FieldPrefix.y_1))))))))))
        ((def
            main
            (fn ((clause (#FieldPrefix.$__6) (seq (do (apply print2D zero2D)))))))))

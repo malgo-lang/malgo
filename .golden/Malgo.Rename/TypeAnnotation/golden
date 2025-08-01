@@ -137,197 +137,19 @@ Module
             }
            )
           )
-          ( Apply
+          ( Parens
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
              , sourceLine = Pos 5
-             , sourceColumn = Pos 46
+             , sourceColumn = Pos 15
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
-             , sourceLine = Pos 5
-             , sourceColumn = Pos 52
+             , sourceLine = Pos 6
+             , sourceColumn = Pos 1
              }
             }
-           )
-           ( Ann
-            ( Range
-             { _start = SourcePos
-              { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
-              , sourceLine = Pos 5
-              , sourceColumn = Pos 17
-              }
-             , _end = SourcePos
-              { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
-              , sourceLine = Pos 5
-              , sourceColumn = Pos 44
-              }
-             }
-            )
-            ( Fn
-             ( Range
-              { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
-               , sourceLine = Pos 5
-               , sourceColumn = Pos 17
-               }
-              , _end = SourcePos
-               { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
-               , sourceLine = Pos 5
-               , sourceColumn = Pos 26
-               }
-              }
-             )
-             ( Clause
-              ( Range
-               { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
-                , sourceLine = Pos 5
-                , sourceColumn = Pos 18
-                }
-               , _end = SourcePos
-                { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
-                , sourceLine = Pos 5
-                , sourceColumn = Pos 24
-                }
-               }
-              )
-              [ VarP
-               ( Range
-                { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
-                 , sourceLine = Pos 5
-                 , sourceColumn = Pos 18
-                 }
-                , _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
-                 , sourceLine = Pos 5
-                 , sourceColumn = Pos 20
-                 }
-                }
-               )
-               ( Id
-                { name = "x"
-                , moduleName = Artifact
-                 ( ArtifactPath "test/testcases/malgo/TypeAnnotation.mlg" )
-                , sort = Internal 0
-                }
-               )
-              ]
-              ( Seq
-               ( Range
-                { _start = SourcePos
-                 { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
-                 , sourceLine = Pos 5
-                 , sourceColumn = Pos 23
-                 }
-                , _end = SourcePos
-                 { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
-                 , sourceLine = Pos 5
-                 , sourceColumn = Pos 24
-                 }
-                }
-               )
-               ( NoBind
-                ( Range
-                 { _start = SourcePos
-                  { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
-                  , sourceLine = Pos 5
-                  , sourceColumn = Pos 23
-                  }
-                 , _end = SourcePos
-                  { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
-                  , sourceLine = Pos 5
-                  , sourceColumn = Pos 24
-                  }
-                 }
-                )
-                ( Var
-                 ( Range
-                  { _start = SourcePos
-                   { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
-                   , sourceLine = Pos 5
-                   , sourceColumn = Pos 23
-                   }
-                  , _end = SourcePos
-                   { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
-                   , sourceLine = Pos 5
-                   , sourceColumn = Pos 24
-                   }
-                  }
-                 )
-                 ( Id
-                  { name = "x"
-                  , moduleName = Artifact
-                   ( ArtifactPath "test/testcases/malgo/TypeAnnotation.mlg" )
-                  , sort = Internal 0
-                  }
-                 )
-                ) :| []
-               )
-              ) :| []
-             )
-            )
-            ( TyArr
-             ( Range
-              { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
-               , sourceLine = Pos 5
-               , sourceColumn = Pos 35
-               }
-              , _end = SourcePos
-               { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
-               , sourceLine = Pos 5
-               , sourceColumn = Pos 38
-               }
-              }
-             )
-             ( TyCon
-              ( Range
-               { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
-                , sourceLine = Pos 5
-                , sourceColumn = Pos 28
-                }
-               , _end = SourcePos
-                { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
-                , sourceLine = Pos 5
-                , sourceColumn = Pos 35
-                }
-               }
-              )
-              ( Id
-               { name = "String"
-               , moduleName = Artifact
-                ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-               , sort = External
-               }
-              )
-             )
-             ( TyCon
-              ( Range
-               { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
-                , sourceLine = Pos 5
-                , sourceColumn = Pos 38
-                }
-               , _end = SourcePos
-                { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
-                , sourceLine = Pos 5
-                , sourceColumn = Pos 44
-                }
-               }
-              )
-              ( Id
-               { name = "String"
-               , moduleName = Artifact
-                ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-               , sort = External
-               }
-              )
-             )
-            )
            )
            ( Apply
             ( Range
@@ -343,29 +165,200 @@ Module
               }
              }
             )
-            ( Var
+            ( Parens
              ( Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
                , sourceLine = Pos 5
-               , sourceColumn = Pos 46
+               , sourceColumn = Pos 16
                }
               , _end = SourcePos
                { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
                , sourceLine = Pos 5
-               , sourceColumn = Pos 52
+               , sourceColumn = Pos 46
                }
               }
              )
-             ( Id
-              { name = "String#"
-              , moduleName = Artifact
-               ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-              , sort = External
-              }
+             ( Ann
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                , sourceLine = Pos 5
+                , sourceColumn = Pos 17
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                , sourceLine = Pos 5
+                , sourceColumn = Pos 44
+                }
+               }
+              )
+              ( Fn
+               ( Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                 , sourceLine = Pos 5
+                 , sourceColumn = Pos 17
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                 , sourceLine = Pos 5
+                 , sourceColumn = Pos 26
+                 }
+                }
+               )
+               ( Clause
+                ( Range
+                 { _start = SourcePos
+                  { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                  , sourceLine = Pos 5
+                  , sourceColumn = Pos 18
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                  , sourceLine = Pos 5
+                  , sourceColumn = Pos 24
+                  }
+                 }
+                )
+                [ VarP
+                 ( Range
+                  { _start = SourcePos
+                   { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                   , sourceLine = Pos 5
+                   , sourceColumn = Pos 18
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                   , sourceLine = Pos 5
+                   , sourceColumn = Pos 20
+                   }
+                  }
+                 )
+                 ( Id
+                  { name = "x"
+                  , moduleName = Artifact
+                   ( ArtifactPath "test/testcases/malgo/TypeAnnotation.mlg" )
+                  , sort = Internal 0
+                  }
+                 )
+                ]
+                ( Seq
+                 ( Range
+                  { _start = SourcePos
+                   { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                   , sourceLine = Pos 5
+                   , sourceColumn = Pos 23
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                   , sourceLine = Pos 5
+                   , sourceColumn = Pos 24
+                   }
+                  }
+                 )
+                 ( NoBind
+                  ( Range
+                   { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                    , sourceLine = Pos 5
+                    , sourceColumn = Pos 23
+                    }
+                   , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                    , sourceLine = Pos 5
+                    , sourceColumn = Pos 24
+                    }
+                   }
+                  )
+                  ( Var
+                   ( Range
+                    { _start = SourcePos
+                     { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                     , sourceLine = Pos 5
+                     , sourceColumn = Pos 23
+                     }
+                    , _end = SourcePos
+                     { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                     , sourceLine = Pos 5
+                     , sourceColumn = Pos 24
+                     }
+                    }
+                   )
+                   ( Id
+                    { name = "x"
+                    , moduleName = Artifact
+                     ( ArtifactPath "test/testcases/malgo/TypeAnnotation.mlg" )
+                    , sort = Internal 0
+                    }
+                   )
+                  ) :| []
+                 )
+                ) :| []
+               )
+              )
+              ( TyArr
+               ( Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                 , sourceLine = Pos 5
+                 , sourceColumn = Pos 35
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                 , sourceLine = Pos 5
+                 , sourceColumn = Pos 38
+                 }
+                }
+               )
+               ( TyCon
+                ( Range
+                 { _start = SourcePos
+                  { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                  , sourceLine = Pos 5
+                  , sourceColumn = Pos 28
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                  , sourceLine = Pos 5
+                  , sourceColumn = Pos 35
+                  }
+                 }
+                )
+                ( Id
+                 { name = "String"
+                 , moduleName = Artifact
+                  ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+                 , sort = External
+                 }
+                )
+               )
+               ( TyCon
+                ( Range
+                 { _start = SourcePos
+                  { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                  , sourceLine = Pos 5
+                  , sourceColumn = Pos 38
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                  , sourceLine = Pos 5
+                  , sourceColumn = Pos 44
+                  }
+                 }
+                )
+                ( Id
+                 { name = "String"
+                 , moduleName = Artifact
+                  ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+                 , sort = External
+                 }
+                )
+               )
+              )
              )
             )
-            ( Unboxed
+            ( Apply
              ( Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
@@ -379,7 +372,44 @@ Module
                }
               }
              )
-             ( String "hoge" )
+             ( Var
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                , sourceLine = Pos 5
+                , sourceColumn = Pos 46
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                , sourceLine = Pos 5
+                , sourceColumn = Pos 52
+                }
+               }
+              )
+              ( Id
+               { name = "String#"
+               , moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+               , sort = External
+               }
+              )
+             )
+             ( Unboxed
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                , sourceLine = Pos 5
+                , sourceColumn = Pos 46
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/TypeAnnotation.mlg"
+                , sourceLine = Pos 5
+                , sourceColumn = Pos 52
+                }
+               }
+              )
+              ( String "hoge" )
+             )
             )
            )
           )

@@ -12,7 +12,11 @@
            (fn
               ((clause
                   ((con Int64# (#Builtin.x_258)))
-                  (seq (do (apply String# (apply toStringInt64# #Builtin.x_258)))))))))
+                  (seq
+                     (do
+                        (apply
+                           String#
+                           (parens (apply toStringInt64# #Builtin.x_258))))))))))
        ((def
            toStringInt32#
            (fn
@@ -24,7 +28,11 @@
            (fn
               ((clause
                   ((con Int32# (#Builtin.x_256)))
-                  (seq (do (apply String# (apply toStringInt32# #Builtin.x_256)))))))))
+                  (seq
+                     (do
+                        (apply
+                           String#
+                           (parens (apply toStringInt32# #Builtin.x_256))))))))))
        ((def
            toStringFloat#
            (fn
@@ -36,7 +44,11 @@
            (fn
               ((clause
                   ((con Float# (#Builtin.x_260)))
-                  (seq (do (apply String# (apply toStringFloat# #Builtin.x_260)))))))))
+                  (seq
+                     (do
+                        (apply
+                           String#
+                           (parens (apply toStringFloat# #Builtin.x_260))))))))))
        ((def
            toStringDouble#
            (fn
@@ -49,7 +61,10 @@
               ((clause
                   ((con Double# (#Builtin.x_262)))
                   (seq
-                     (do (apply String# (apply toStringDouble# #Builtin.x_262)))))))))
+                     (do
+                        (apply
+                           String#
+                           (parens (apply toStringDouble# #Builtin.x_262))))))))))
        ((def
            toStringChar#
            (fn
@@ -61,7 +76,11 @@
            (fn
               ((clause
                   ((con Char# (#Builtin.x_264)))
-                  (seq (do (apply String# (apply toStringChar# #Builtin.x_264)))))))))
+                  (seq
+                     (do
+                        (apply
+                           String#
+                           (parens (apply toStringChar# #Builtin.x_264))))))))))
        ((def
            substring#
            (fn
@@ -85,11 +104,12 @@
                      (do
                         (apply
                            String#
-                           (apply
+                           (parens
                               (apply
-                                 (apply substring# #Builtin.str_252)
-                                 #Builtin.start_253)
-                              #Builtin.end_254)))))))))
+                                 (apply
+                                    (apply substring# #Builtin.str_252)
+                                    #Builtin.start_253)
+                                 #Builtin.end_254))))))))))
        ((def
            subInt64#
            (fn
@@ -109,7 +129,10 @@
                      (do
                         (apply
                            Int64#
-                           (apply (apply subInt64# #Builtin.x_34) #Builtin.y_35)))))))))
+                           (parens
+                              (apply
+                                 (apply subInt64# #Builtin.x_34)
+                                 #Builtin.y_35))))))))))
        ((def
            subInt32#
            (fn
@@ -129,7 +152,10 @@
                      (do
                         (apply
                            Int32#
-                           (apply (apply subInt32# #Builtin.x_18) #Builtin.y_19)))))))))
+                           (parens
+                              (apply
+                                 (apply subInt32# #Builtin.x_18)
+                                 #Builtin.y_19))))))))))
        ((def
            subFloat#
            (fn
@@ -149,7 +175,10 @@
                      (do
                         (apply
                            Float#
-                           (apply (apply subFloat# #Builtin.x_50) #Builtin.y_51)))))))))
+                           (parens
+                              (apply
+                                 (apply subFloat# #Builtin.x_50)
+                                 #Builtin.y_51))))))))))
        ((def
            subDouble#
            (fn
@@ -169,7 +198,10 @@
                      (do
                         (apply
                            Double#
-                           (apply (apply subDouble# #Builtin.x_66) #Builtin.y_67)))))))))
+                           (parens
+                              (apply
+                                 (apply subDouble# #Builtin.x_66)
+                                 #Builtin.y_67))))))))))
        ((def
            string#
            (fn ((clause (#Builtin.x_5) (seq (do (apply String# #Builtin.x_5))))))))
@@ -181,7 +213,8 @@
            (fn
               ((clause
                   ((con Float# (#Builtin.x_77)))
-                  (seq (do (apply Float# (apply sqrtFloat# #Builtin.x_77)))))))))
+                  (seq
+                     (do (apply Float# (parens (apply sqrtFloat# #Builtin.x_77))))))))))
        ((def
            sqrtDouble#
            (fn ((clause (#Builtin.x_78) (seq (do (apply sqrt #Builtin.x_78))))))))
@@ -190,7 +223,9 @@
            (fn
               ((clause
                   ((con Double# (#Builtin.x_79)))
-                  (seq (do (apply Double# (apply sqrtDouble# #Builtin.x_79)))))))))
+                  (seq
+                     (do
+                        (apply Double# (parens (apply sqrtDouble# #Builtin.x_79))))))))))
        ((def
            printString#
            (fn
@@ -232,7 +267,9 @@
            (fn
               ((clause
                   ((con Char# (#Builtin.chr_226)))
-                  (seq (do (apply Int32# (apply ordChar# #Builtin.chr_226)))))))))
+                  (seq
+                     (do
+                        (apply Int32# (parens (apply ordChar# #Builtin.chr_226))))))))))
        ((def
            not
            (fn
@@ -321,7 +358,10 @@
                      (do
                         (apply
                            Int64#
-                           (apply (apply mulInt64# #Builtin.x_38) #Builtin.y_39)))))))))
+                           (parens
+                              (apply
+                                 (apply mulInt64# #Builtin.x_38)
+                                 #Builtin.y_39))))))))))
        ((def
            mulInt32#
            (fn
@@ -341,7 +381,10 @@
                      (do
                         (apply
                            Int32#
-                           (apply (apply mulInt32# #Builtin.x_22) #Builtin.y_23)))))))))
+                           (parens
+                              (apply
+                                 (apply mulInt32# #Builtin.x_22)
+                                 #Builtin.y_23))))))))))
        ((def
            mulFloat#
            (fn
@@ -361,7 +404,10 @@
                      (do
                         (apply
                            Float#
-                           (apply (apply mulFloat# #Builtin.x_54) #Builtin.y_55)))))))))
+                           (parens
+                              (apply
+                                 (apply mulFloat# #Builtin.x_54)
+                                 #Builtin.y_55))))))))))
        ((def
            mulDouble#
            (fn
@@ -381,7 +427,10 @@
                      (do
                         (apply
                            Double#
-                           (apply (apply mulDouble# #Builtin.x_70) #Builtin.y_71)))))))))
+                           (parens
+                              (apply
+                                 (apply mulDouble# #Builtin.x_70)
+                                 #Builtin.y_71))))))))))
        ((def
            ltString#
            (fn
@@ -453,7 +502,11 @@
            (fn
               ((clause
                   ((con String# (#Builtin.str_236)))
-                  (seq (do (apply Int64# (apply lengthString# #Builtin.str_236)))))))))
+                  (seq
+                     (do
+                        (apply
+                           Int64#
+                           (parens (apply lengthString# #Builtin.str_236))))))))))
        ((def
            leString#
            (fn
@@ -530,7 +583,8 @@
            (fn
               ((clause
                   ((con Char# (#Builtin.x_232)))
-                  (seq (do (apply isTrue# (apply isUpper# #Builtin.x_232)))))))))
+                  (seq
+                     (do (apply isTrue# (parens (apply isUpper# #Builtin.x_232))))))))))
        ((def
            leChar
            (fn
@@ -540,7 +594,10 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply leChar# #Builtin.x_195) #Builtin.y_196)))))))))
+                           (parens
+                              (apply
+                                 (apply leChar# #Builtin.x_195)
+                                 #Builtin.y_196))))))))))
        ((def
            leDouble
            (fn
@@ -550,7 +607,10 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply leDouble# #Builtin.x_171) #Builtin.y_172)))))))))
+                           (parens
+                              (apply
+                                 (apply leDouble# #Builtin.x_171)
+                                 #Builtin.y_172))))))))))
        ((def
            leFloat
            (fn
@@ -560,7 +620,10 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply leFloat# #Builtin.x_147) #Builtin.y_148)))))))))
+                           (parens
+                              (apply
+                                 (apply leFloat# #Builtin.x_147)
+                                 #Builtin.y_148))))))))))
        ((def
            leInt32
            (fn
@@ -570,7 +633,10 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply leInt32# #Builtin.x_99) #Builtin.y_100)))))))))
+                           (parens
+                              (apply
+                                 (apply leInt32# #Builtin.x_99)
+                                 #Builtin.y_100))))))))))
        ((def
            leInt64
            (fn
@@ -580,7 +646,10 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply leInt64# #Builtin.x_123) #Builtin.y_124)))))))))
+                           (parens
+                              (apply
+                                 (apply leInt64# #Builtin.x_123)
+                                 #Builtin.y_124))))))))))
        ((def
            leString
            (fn
@@ -590,7 +659,10 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply leString# #Builtin.x_219) #Builtin.y_220)))))))))
+                           (parens
+                              (apply
+                                 (apply leString# #Builtin.x_219)
+                                 #Builtin.y_220))))))))))
        ((def
            ltChar
            (fn
@@ -600,7 +672,10 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply ltChar# #Builtin.x_187) #Builtin.y_188)))))))))
+                           (parens
+                              (apply
+                                 (apply ltChar# #Builtin.x_187)
+                                 #Builtin.y_188))))))))))
        ((def
            ltDouble
            (fn
@@ -610,7 +685,10 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply ltDouble# #Builtin.x_163) #Builtin.y_164)))))))))
+                           (parens
+                              (apply
+                                 (apply ltDouble# #Builtin.x_163)
+                                 #Builtin.y_164))))))))))
        ((def
            ltFloat
            (fn
@@ -620,7 +698,10 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply ltFloat# #Builtin.x_139) #Builtin.y_140)))))))))
+                           (parens
+                              (apply
+                                 (apply ltFloat# #Builtin.x_139)
+                                 #Builtin.y_140))))))))))
        ((def
            ltInt32
            (fn
@@ -630,7 +711,8 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply ltInt32# #Builtin.x_91) #Builtin.y_92)))))))))
+                           (parens
+                              (apply (apply ltInt32# #Builtin.x_91) #Builtin.y_92))))))))))
        ((def
            ltInt64
            (fn
@@ -640,7 +722,10 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply ltInt64# #Builtin.x_115) #Builtin.y_116)))))))))
+                           (parens
+                              (apply
+                                 (apply ltInt64# #Builtin.x_115)
+                                 #Builtin.y_116))))))))))
        ((def
            ltString
            (fn
@@ -650,7 +735,10 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply ltString# #Builtin.x_211) #Builtin.y_212)))))))))
+                           (parens
+                              (apply
+                                 (apply ltString# #Builtin.x_211)
+                                 #Builtin.y_212))))))))))
        ((def
            neChar
            (fn
@@ -660,7 +748,10 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply neChar# #Builtin.x_183) #Builtin.y_184)))))))))
+                           (parens
+                              (apply
+                                 (apply neChar# #Builtin.x_183)
+                                 #Builtin.y_184))))))))))
        ((def
            neDouble
            (fn
@@ -670,7 +761,10 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply neDouble# #Builtin.x_159) #Builtin.y_160)))))))))
+                           (parens
+                              (apply
+                                 (apply neDouble# #Builtin.x_159)
+                                 #Builtin.y_160))))))))))
        ((def
            neFloat
            (fn
@@ -680,7 +774,10 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply neFloat# #Builtin.x_135) #Builtin.y_136)))))))))
+                           (parens
+                              (apply
+                                 (apply neFloat# #Builtin.x_135)
+                                 #Builtin.y_136))))))))))
        ((def
            neInt32
            (fn
@@ -690,7 +787,8 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply neInt32# #Builtin.x_87) #Builtin.y_88)))))))))
+                           (parens
+                              (apply (apply neInt32# #Builtin.x_87) #Builtin.y_88))))))))))
        ((def
            neInt64
            (fn
@@ -700,7 +798,10 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply neInt64# #Builtin.x_111) #Builtin.y_112)))))))))
+                           (parens
+                              (apply
+                                 (apply neInt64# #Builtin.x_111)
+                                 #Builtin.y_112))))))))))
        ((def
            neString
            (fn
@@ -710,7 +811,10 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply neString# #Builtin.x_207) #Builtin.y_208)))))))))
+                           (parens
+                              (apply
+                                 (apply neString# #Builtin.x_207)
+                                 #Builtin.y_208))))))))))
        ((def
            isLower#
            (fn
@@ -722,7 +826,8 @@
            (fn
               ((clause
                   ((con Char# (#Builtin.x_230)))
-                  (seq (do (apply isTrue# (apply isLower# #Builtin.x_230)))))))))
+                  (seq
+                     (do (apply isTrue# (parens (apply isLower# #Builtin.x_230))))))))))
        ((def
            isDigit#
            (fn
@@ -734,7 +839,8 @@
            (fn
               ((clause
                   ((con Char# (#Builtin.x_228)))
-                  (seq (do (apply isTrue# (apply isDigit# #Builtin.x_228)))))))))
+                  (seq
+                     (do (apply isTrue# (parens (apply isDigit# #Builtin.x_228))))))))))
        ((def
            isAlphanum#
            (fn
@@ -746,7 +852,11 @@
            (fn
               ((clause
                   ((con Char# (#Builtin.x_234)))
-                  (seq (do (apply isTrue# (apply isAlphanum# #Builtin.x_234)))))))))
+                  (seq
+                     (do
+                        (apply
+                           isTrue#
+                           (parens (apply isAlphanum# #Builtin.x_234))))))))))
        ((def
            int64#
            (fn ((clause (#Builtin.x_1) (seq (do (apply Int64# #Builtin.x_1))))))))
@@ -772,7 +882,10 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply gtString# #Builtin.x_215) #Builtin.y_216)))))))))
+                           (parens
+                              (apply
+                                 (apply gtString# #Builtin.x_215)
+                                 #Builtin.y_216))))))))))
        ((def
            gtInt64#
            (fn
@@ -792,7 +905,10 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply gtInt64# #Builtin.x_119) #Builtin.y_120)))))))))
+                           (parens
+                              (apply
+                                 (apply gtInt64# #Builtin.x_119)
+                                 #Builtin.y_120))))))))))
        ((def
            gtInt32#
            (fn
@@ -812,7 +928,8 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply gtInt32# #Builtin.x_95) #Builtin.y_96)))))))))
+                           (parens
+                              (apply (apply gtInt32# #Builtin.x_95) #Builtin.y_96))))))))))
        ((def
            gtFloat#
            (fn
@@ -832,7 +949,10 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply gtFloat# #Builtin.x_143) #Builtin.y_144)))))))))
+                           (parens
+                              (apply
+                                 (apply gtFloat# #Builtin.x_143)
+                                 #Builtin.y_144))))))))))
        ((def
            gtDouble#
            (fn
@@ -852,7 +972,10 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply gtDouble# #Builtin.x_167) #Builtin.y_168)))))))))
+                           (parens
+                              (apply
+                                 (apply gtDouble# #Builtin.x_167)
+                                 #Builtin.y_168))))))))))
        ((def
            gtChar#
            (fn
@@ -872,19 +995,26 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply gtChar# #Builtin.x_191) #Builtin.y_192)))))))))
+                           (parens
+                              (apply
+                                 (apply gtChar# #Builtin.x_191)
+                                 #Builtin.y_192))))))))))
        ((def
            getContents
            (fn
               ((clause
                   (#Builtin.__275)
-                  (seq (do (apply String# (apply malgo_get_contents (tuple))))))))))
+                  (seq
+                     (do
+                        (apply
+                           String#
+                           (parens (apply malgo_get_contents (tuple)))))))))))
        ((def
            getChar
            (fn
               ((clause
                   (#Builtin.__274)
-                  (seq (do (apply Char# (apply malgo_get_char (tuple))))))))))
+                  (seq (do (apply Char# (parens (apply malgo_get_char (tuple)))))))))))
        ((def
            geString#
            (fn
@@ -904,7 +1034,10 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply geString# #Builtin.x_223) #Builtin.y_224)))))))))
+                           (parens
+                              (apply
+                                 (apply geString# #Builtin.x_223)
+                                 #Builtin.y_224))))))))))
        ((def
            geInt64#
            (fn
@@ -924,7 +1057,10 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply geInt64# #Builtin.x_127) #Builtin.y_128)))))))))
+                           (parens
+                              (apply
+                                 (apply geInt64# #Builtin.x_127)
+                                 #Builtin.y_128))))))))))
        ((def
            geInt32#
            (fn
@@ -944,7 +1080,10 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply geInt32# #Builtin.x_103) #Builtin.y_104)))))))))
+                           (parens
+                              (apply
+                                 (apply geInt32# #Builtin.x_103)
+                                 #Builtin.y_104))))))))))
        ((def
            geFloat#
            (fn
@@ -964,7 +1103,10 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply geFloat# #Builtin.x_151) #Builtin.y_152)))))))))
+                           (parens
+                              (apply
+                                 (apply geFloat# #Builtin.x_151)
+                                 #Builtin.y_152))))))))))
        ((def
            geDouble#
            (fn
@@ -984,7 +1126,10 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply geDouble# #Builtin.x_175) #Builtin.y_176)))))))))
+                           (parens
+                              (apply
+                                 (apply geDouble# #Builtin.x_175)
+                                 #Builtin.y_176))))))))))
        ((def
            geChar#
            (fn
@@ -1004,7 +1149,10 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply geChar# #Builtin.x_199) #Builtin.y_200)))))))))
+                           (parens
+                              (apply
+                                 (apply geChar# #Builtin.x_199)
+                                 #Builtin.y_200))))))))))
        ((def
            flush
            (fn ((clause (#Builtin.__273) (seq (do (apply malgo_flush (tuple)))))))))
@@ -1036,7 +1184,10 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply eqString# #Builtin.x_203) #Builtin.y_204)))))))))
+                           (parens
+                              (apply
+                                 (apply eqString# #Builtin.x_203)
+                                 #Builtin.y_204))))))))))
        ((def
            eqInt64#
            (fn
@@ -1056,7 +1207,10 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply eqInt64# #Builtin.x_107) #Builtin.y_108)))))))))
+                           (parens
+                              (apply
+                                 (apply eqInt64# #Builtin.x_107)
+                                 #Builtin.y_108))))))))))
        ((def
            eqInt32#
            (fn
@@ -1076,7 +1230,8 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply eqInt32# #Builtin.x_83) #Builtin.y_84)))))))))
+                           (parens
+                              (apply (apply eqInt32# #Builtin.x_83) #Builtin.y_84))))))))))
        ((def
            eqFloat#
            (fn
@@ -1096,7 +1251,10 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply eqFloat# #Builtin.x_131) #Builtin.y_132)))))))))
+                           (parens
+                              (apply
+                                 (apply eqFloat# #Builtin.x_131)
+                                 #Builtin.y_132))))))))))
        ((def
            eqDouble#
            (fn
@@ -1116,7 +1274,10 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply eqDouble# #Builtin.x_155) #Builtin.y_156)))))))))
+                           (parens
+                              (apply
+                                 (apply eqDouble# #Builtin.x_155)
+                                 #Builtin.y_156))))))))))
        ((def
            eqChar#
            (fn
@@ -1136,7 +1297,10 @@
                      (do
                         (apply
                            isTrue#
-                           (apply (apply eqChar# #Builtin.x_179) #Builtin.y_180)))))))))
+                           (parens
+                              (apply
+                                 (apply eqChar# #Builtin.x_179)
+                                 #Builtin.y_180))))))))))
        ((def
            double#
            (fn ((clause (#Builtin.x_3) (seq (do (apply Double# #Builtin.x_3))))))))
@@ -1159,7 +1323,10 @@
                      (do
                         (apply
                            Int64#
-                           (apply (apply divInt64# #Builtin.x_42) #Builtin.y_43)))))))))
+                           (parens
+                              (apply
+                                 (apply divInt64# #Builtin.x_42)
+                                 #Builtin.y_43))))))))))
        ((def
            divInt32#
            (fn
@@ -1179,7 +1346,10 @@
                      (do
                         (apply
                            Int32#
-                           (apply (apply divInt32# #Builtin.x_26) #Builtin.y_27)))))))))
+                           (parens
+                              (apply
+                                 (apply divInt32# #Builtin.x_26)
+                                 #Builtin.y_27))))))))))
        ((def
            divFloat#
            (fn
@@ -1199,7 +1369,10 @@
                      (do
                         (apply
                            Float#
-                           (apply (apply divFloat# #Builtin.x_58) #Builtin.y_59)))))))))
+                           (parens
+                              (apply
+                                 (apply divFloat# #Builtin.x_58)
+                                 #Builtin.y_59))))))))))
        ((def
            divDouble#
            (fn
@@ -1219,7 +1392,10 @@
                      (do
                         (apply
                            Double#
-                           (apply (apply divDouble# #Builtin.x_74) #Builtin.y_75)))))))))
+                           (parens
+                              (apply
+                                 (apply divDouble# #Builtin.x_74)
+                                 #Builtin.y_75))))))))))
        ((def
            consString#
            (fn
@@ -1239,9 +1415,10 @@
                      (do
                         (apply
                            String#
-                           (apply
-                              (apply consString# #Builtin.c_243)
-                              #Builtin.cs_244)))))))))
+                           (parens
+                              (apply
+                                 (apply consString# #Builtin.c_243)
+                                 #Builtin.cs_244))))))))))
        ((def
            char#
            (fn ((clause (#Builtin.x_4) (seq (do (apply Char# #Builtin.x_4))))))))
@@ -1264,7 +1441,10 @@
                      (do
                         (apply
                            Char#
-                           (apply (apply atString# #Builtin.i_239) #Builtin.x_240)))))))))
+                           (parens
+                              (apply
+                                 (apply atString# #Builtin.i_239)
+                                 #Builtin.x_240))))))))))
        ((def
            appendString#
            (fn
@@ -1284,9 +1464,10 @@
                      (do
                         (apply
                            String#
-                           (apply
-                              (apply appendString# #Builtin.x_247)
-                              #Builtin.y_248)))))))))
+                           (parens
+                              (apply
+                                 (apply appendString# #Builtin.x_247)
+                                 #Builtin.y_248))))))))))
        ((def
            addInt64#
            (fn
@@ -1306,7 +1487,10 @@
                      (do
                         (apply
                            Int64#
-                           (apply (apply addInt64# #Builtin.x_30) #Builtin.y_31)))))))))
+                           (parens
+                              (apply
+                                 (apply addInt64# #Builtin.x_30)
+                                 #Builtin.y_31))))))))))
        ((def
            addInt32#
            (fn
@@ -1326,7 +1510,10 @@
                      (do
                         (apply
                            Int32#
-                           (apply (apply addInt32# #Builtin.x_14) #Builtin.y_15)))))))))
+                           (parens
+                              (apply
+                                 (apply addInt32# #Builtin.x_14)
+                                 #Builtin.y_15))))))))))
        ((def
            addFloat#
            (fn
@@ -1346,7 +1533,10 @@
                      (do
                         (apply
                            Float#
-                           (apply (apply addFloat# #Builtin.x_46) #Builtin.y_47)))))))))
+                           (parens
+                              (apply
+                                 (apply addFloat# #Builtin.x_46)
+                                 #Builtin.y_47))))))))))
        ((def
            addDouble#
            (fn
@@ -1366,7 +1556,10 @@
                      (do
                         (apply
                            Double#
-                           (apply (apply addDouble# #Builtin.x_62) #Builtin.y_63))))))))))
+                           (parens
+                              (apply
+                                 (apply addDouble# #Builtin.x_62)
+                                 #Builtin.y_63)))))))))))
       ((sig int32# (-> Int32# Int32))
          (sig int64# (-> Int64# Int64))
          (sig float# (-> Float# Float))
