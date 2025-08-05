@@ -10,9 +10,7 @@
                   (n)
                   (seq
                      (do
-                        (apply
-                           odd
-                           (seq (do (apply (apply subInt32 n) (int32 1)))))))))))
+                        (apply odd (parens (apply (apply subInt32 n) (int32 1))))))))))
       (def
          odd
          (fn
@@ -21,9 +19,7 @@
                   (n)
                   (seq
                      (do
-                        (apply
-                           even
-                           (seq (do (apply (apply subInt32 n) (int32 1)))))))))))
+                        (apply even (parens (apply (apply subInt32 n) (int32 1))))))))))
       (def
          main
          (fn
@@ -39,4 +35,4 @@
                                (clause
                                   (True)
                                   (seq (do (apply putStrLn (string "True")))))))
-                         (seq (do (apply even (int32 10)))))))))))))
+                         (parens (apply even (int32 10))))))))))))

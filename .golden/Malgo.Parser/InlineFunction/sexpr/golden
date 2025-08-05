@@ -11,9 +11,7 @@
       (def
          fix
          (fn
-            ((clause
-                (f x)
-                (seq (do (apply (apply f (seq (do (apply fix f)))) x)))))))
+            ((clause (f x) (seq (do (apply (apply f (parens (apply fix f))) x)))))))
       (def
          main
          (fn
@@ -33,7 +31,7 @@
                                          (apply
                                             (apply
                                                if
-                                               (seq (do (opapp <= n (int32 1)))))
+                                               (parens (opapp <= n (int32 1))))
                                             (fn
                                                ((clause () (seq (do (int32 1)))))))
                                          (fn
@@ -45,20 +43,18 @@
                                                          +
                                                          (apply
                                                             f
-                                                            (seq
-                                                               (do
-                                                                  (opapp
-                                                                     -
-                                                                     n
-                                                                     (int32 1)))))
+                                                            (parens
+                                                               (opapp
+                                                                  -
+                                                                  n
+                                                                  (int32 1))))
                                                          (apply
                                                             f
-                                                            (seq
-                                                               (do
-                                                                  (opapp
-                                                                     -
-                                                                     n
-                                                                     (int32 2)))))))))))))))))))
+                                                            (parens
+                                                               (opapp
+                                                                  -
+                                                                  n
+                                                                  (int32 2))))))))))))))))))
                    (do
                       (opapp
                          |>

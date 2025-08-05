@@ -204,6 +204,7 @@ type family XSeq x where
 
 type family XParens x where
   XParens (Malgo Parse) = SimpleX Parse
+  XParens (Malgo Rename) = SimpleX Rename
   XParens (Malgo _) = Void
 
 type ForallExpX (c :: K.Type -> Constraint) x =

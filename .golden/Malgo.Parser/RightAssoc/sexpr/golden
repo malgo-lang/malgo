@@ -16,32 +16,26 @@
                       (opapp
                          <|>
                          (tuple True (fn ((clause () (seq (do (int32 1)))))))
-                         (seq
-                            (do
-                               (opapp
-                                  <|>
-                                  (tuple
-                                     True
-                                     (fn ((clause () (seq (do (int32 2)))))))
-                                  (seq
-                                     (do
+                         (parens
+                            (opapp
+                               <|>
+                               (tuple
+                                  True
+                                  (fn ((clause () (seq (do (int32 2)))))))
+                               (parens
+                                  (opapp
+                                     <|>
+                                     (tuple
+                                        True
+                                        (fn ((clause () (seq (do (int32 3)))))))
+                                     (parens
                                         (opapp
                                            <|>
                                            (tuple
                                               True
                                               (fn
-                                                 ((clause () (seq (do (int32 3)))))))
-                                           (seq
-                                              (do
-                                                 (opapp
-                                                    <|>
-                                                    (tuple
-                                                       True
-                                                       (fn
-                                                          ((clause
-                                                              ()
-                                                              (seq (do (int32 4)))))))
-                                                    Nil)))))))))))
+                                                 ((clause () (seq (do (int32 4)))))))
+                                           Nil))))))))
                    (let
                       y
                       (opapp

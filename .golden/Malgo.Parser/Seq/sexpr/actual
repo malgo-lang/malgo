@@ -10,11 +10,8 @@
             (do
                (apply
                   printString
-                  (seq
-                     (do
-                        (apply
-                           toStringInt32
-                           (seq (do (apply (apply addInt32 x) y))))))))
+                  (parens
+                     (apply toStringInt32 (parens (apply (apply addInt32 x) y))))))
             (do (apply (apply addInt32 x) y))))
       (def
          main
@@ -25,4 +22,4 @@
                    (do
                       (apply
                          printString
-                         (seq (do (apply toStringInt32 executeWhenLoaded))))))))))))
+                         (parens (apply toStringInt32 executeWhenLoaded)))))))))))

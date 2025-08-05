@@ -97,6 +97,7 @@ fromExpr (S.Record range fields) = do
   pure $ F.Object range $ Map.fromList fields
 fromExpr (S.Ann _ expr _) = fromExpr expr
 fromExpr (S.Seq _ stmts) = fromStmts stmts
+fromExpr (S.Parens _ expr) = fromExpr expr
 
 fromStmts :: (State Uniq :> es, Reader ModuleName :> es) => NonEmpty (S.Stmt (Malgo Rename)) -> Eff es F.Expr
 fromStmts (NoBind _ expr :| []) = fromExpr expr

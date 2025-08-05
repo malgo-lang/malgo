@@ -39,20 +39,18 @@
                    (do
                       (apply
                          printString
-                         (seq
-                            (do
-                               (apply
-                                  toStringInt64
-                                  (seq
-                                     (do
+                         (parens
+                            (apply
+                               toStringInt64
+                               (parens
+                                  (project
+                                     (project
                                         (project
                                            (project
                                               (project
-                                                 (project
-                                                    (project
-                                                       (project fib "tail")
-                                                       "tail")
-                                                    "tail")
+                                                 (project fib "tail")
                                                  "tail")
                                               "tail")
-                                           "head")))))))))))))))
+                                           "tail")
+                                        "tail")
+                                     "head")))))))))))))

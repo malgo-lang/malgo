@@ -8,7 +8,7 @@
                 (seq (do (apply Done #Eventually.value_12))))
                (clause
                   ((con NotYetDone (#Eventually.work_13)))
-                  (seq (do (seq (do (apply #Eventually.work_13 (tuple)))))))))))
+                  (seq (do (parens (apply #Eventually.work_13 (tuple))))))))))
        ((def
            return
            (fn
@@ -35,11 +35,10 @@
                                           (apply
                                              (apply
                                                 eventuallyBind
-                                                (seq
-                                                   (do
-                                                      (apply
-                                                         #Eventually.work_9
-                                                         (tuple)))))
+                                                (parens
+                                                   (apply
+                                                      #Eventually.work_9
+                                                      (tuple))))
                                              #Eventually.k_10))))))))))))))
        ((def eventually (record (bind eventuallyBind) (return Done))))
        ((def
@@ -53,22 +52,20 @@
            (apply
               (apply
                  (apply bind eventually)
-                 (seq
-                    (do
-                       (apply
-                          NotYetDone
-                          (fn
-                             ((clause
-                                 (#Eventually.$__22)
-                                 (seq
-                                    (do
-                                       (apply
-                                          Done
-                                          (seq
-                                             (do
-                                                (apply
-                                                   printString
-                                                   (apply String# (string "1")))))))))))))))
+                 (parens
+                    (apply
+                       NotYetDone
+                       (fn
+                          ((clause
+                              (#Eventually.$__22)
+                              (seq
+                                 (do
+                                    (apply
+                                       Done
+                                       (parens
+                                          (apply
+                                             printString
+                                             (apply String# (string "1")))))))))))))
               (fn
                  ((clause
                      (#Eventually.__23)
@@ -77,24 +74,22 @@
                            (apply
                               (apply
                                  (apply bind eventually)
-                                 (seq
-                                    (do
-                                       (apply
-                                          NotYetDone
-                                          (fn
-                                             ((clause
-                                                 (#Eventually.$__24)
-                                                 (seq
-                                                    (do
-                                                       (apply
-                                                          Done
-                                                          (seq
-                                                             (do
-                                                                (apply
-                                                                   printString
-                                                                   (apply
-                                                                      String#
-                                                                      (string "2")))))))))))))))
+                                 (parens
+                                    (apply
+                                       NotYetDone
+                                       (fn
+                                          ((clause
+                                              (#Eventually.$__24)
+                                              (seq
+                                                 (do
+                                                    (apply
+                                                       Done
+                                                       (parens
+                                                          (apply
+                                                             printString
+                                                             (apply
+                                                                String#
+                                                                (string "2")))))))))))))
                               (fn
                                  ((clause
                                      (#Eventually.__25)
@@ -121,11 +116,10 @@
                                      (do
                                         (apply
                                            printString
-                                           (seq
-                                              (do
-                                                 (apply
-                                                    toStringInt32
-                                                    #Eventually.x_26)))))))
+                                           (parens
+                                              (apply
+                                                 toStringInt32
+                                                 #Eventually.x_26))))))
                                  (clause
                                     ((con NotYetDone (#Eventually.__27)))
                                     (seq

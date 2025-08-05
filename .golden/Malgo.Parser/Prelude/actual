@@ -2506,7 +2506,7 @@ Module
             ) "f"
            )
           )
-          ( Seq
+          ( Parens
            ( Range
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -2520,17 +2520,17 @@ Module
              }
             }
            )
-           ( NoBind
+           ( Apply
             ( Range
              { _start = SourcePos
               { sourceName = "./runtime/malgo/Prelude.mlg"
               , sourceLine = Pos 45
-              , sourceColumn = Pos 32
+              , sourceColumn = Pos 37
               }
              , _end = SourcePos
               { sourceName = "./runtime/malgo/Prelude.mlg"
               , sourceLine = Pos 45
-              , sourceColumn = Pos 40
+              , sourceColumn = Pos 38
               }
              }
             )
@@ -2539,16 +2539,31 @@ Module
               { _start = SourcePos
                { sourceName = "./runtime/malgo/Prelude.mlg"
                , sourceLine = Pos 45
-               , sourceColumn = Pos 37
+               , sourceColumn = Pos 35
                }
               , _end = SourcePos
                { sourceName = "./runtime/malgo/Prelude.mlg"
                , sourceLine = Pos 45
-               , sourceColumn = Pos 38
+               , sourceColumn = Pos 37
                }
               }
              )
-             ( Apply
+             ( Var
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./runtime/malgo/Prelude.mlg"
+                , sourceLine = Pos 45
+                , sourceColumn = Pos 33
+                }
+               , _end = SourcePos
+                { sourceName = "./runtime/malgo/Prelude.mlg"
+                , sourceLine = Pos 45
+                , sourceColumn = Pos 35
+                }
+               }
+              ) "f"
+             )
+             ( Var
               ( Range
                { _start = SourcePos
                 { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -2561,54 +2576,24 @@ Module
                 , sourceColumn = Pos 37
                 }
                }
-              )
-              ( Var
-               ( Range
-                { _start = SourcePos
-                 { sourceName = "./runtime/malgo/Prelude.mlg"
-                 , sourceLine = Pos 45
-                 , sourceColumn = Pos 33
-                 }
-                , _end = SourcePos
-                 { sourceName = "./runtime/malgo/Prelude.mlg"
-                 , sourceLine = Pos 45
-                 , sourceColumn = Pos 35
-                 }
-                }
-               ) "f"
-              )
-              ( Var
-               ( Range
-                { _start = SourcePos
-                 { sourceName = "./runtime/malgo/Prelude.mlg"
-                 , sourceLine = Pos 45
-                 , sourceColumn = Pos 35
-                 }
-                , _end = SourcePos
-                 { sourceName = "./runtime/malgo/Prelude.mlg"
-                 , sourceLine = Pos 45
-                 , sourceColumn = Pos 37
-                 }
-                }
-               ) "z"
-              )
+              ) "z"
              )
-             ( Var
-              ( Range
-               { _start = SourcePos
-                { sourceName = "./runtime/malgo/Prelude.mlg"
-                , sourceLine = Pos 45
-                , sourceColumn = Pos 37
-                }
-               , _end = SourcePos
-                { sourceName = "./runtime/malgo/Prelude.mlg"
-                , sourceLine = Pos 45
-                , sourceColumn = Pos 38
-                }
+            )
+            ( Var
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./runtime/malgo/Prelude.mlg"
+               , sourceLine = Pos 45
+               , sourceColumn = Pos 37
                }
-              ) "x"
-             )
-            ) :| []
+              , _end = SourcePos
+               { sourceName = "./runtime/malgo/Prelude.mlg"
+               , sourceLine = Pos 45
+               , sourceColumn = Pos 38
+               }
+              }
+             ) "x"
+            )
            )
           )
          )
@@ -3071,7 +3056,7 @@ Module
             }
            ) "Cons"
           )
-          ( Seq
+          ( Parens
            ( Range
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -3085,21 +3070,36 @@ Module
              }
             }
            )
-           ( NoBind
+           ( Apply
             ( Range
              { _start = SourcePos
               { sourceName = "./runtime/malgo/Prelude.mlg"
               , sourceLine = Pos 52
-              , sourceColumn = Pos 27
+              , sourceColumn = Pos 30
               }
              , _end = SourcePos
               { sourceName = "./runtime/malgo/Prelude.mlg"
               , sourceLine = Pos 52
-              , sourceColumn = Pos 33
+              , sourceColumn = Pos 31
               }
              }
             )
-            ( Apply
+            ( Var
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./runtime/malgo/Prelude.mlg"
+               , sourceLine = Pos 52
+               , sourceColumn = Pos 28
+               }
+              , _end = SourcePos
+               { sourceName = "./runtime/malgo/Prelude.mlg"
+               , sourceLine = Pos 52
+               , sourceColumn = Pos 30
+               }
+              }
+             ) "f"
+            )
+            ( Var
              ( Range
               { _start = SourcePos
                { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -3112,42 +3112,12 @@ Module
                , sourceColumn = Pos 31
                }
               }
-             )
-             ( Var
-              ( Range
-               { _start = SourcePos
-                { sourceName = "./runtime/malgo/Prelude.mlg"
-                , sourceLine = Pos 52
-                , sourceColumn = Pos 28
-                }
-               , _end = SourcePos
-                { sourceName = "./runtime/malgo/Prelude.mlg"
-                , sourceLine = Pos 52
-                , sourceColumn = Pos 30
-                }
-               }
-              ) "f"
-             )
-             ( Var
-              ( Range
-               { _start = SourcePos
-                { sourceName = "./runtime/malgo/Prelude.mlg"
-                , sourceLine = Pos 52
-                , sourceColumn = Pos 30
-                }
-               , _end = SourcePos
-                { sourceName = "./runtime/malgo/Prelude.mlg"
-                , sourceLine = Pos 52
-                , sourceColumn = Pos 31
-                }
-               }
-              ) "x"
-             )
-            ) :| []
+             ) "x"
+            )
            )
           )
          )
-         ( Seq
+         ( Parens
           ( Range
            { _start = SourcePos
             { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -3161,17 +3131,17 @@ Module
             }
            }
           )
-          ( NoBind
+          ( Apply
            ( Range
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Prelude.mlg"
              , sourceLine = Pos 52
-             , sourceColumn = Pos 33
+             , sourceColumn = Pos 44
              }
             , _end = SourcePos
              { sourceName = "./runtime/malgo/Prelude.mlg"
              , sourceLine = Pos 52
-             , sourceColumn = Pos 47
+             , sourceColumn = Pos 46
              }
             }
            )
@@ -3180,16 +3150,31 @@ Module
              { _start = SourcePos
               { sourceName = "./runtime/malgo/Prelude.mlg"
               , sourceLine = Pos 52
-              , sourceColumn = Pos 44
+              , sourceColumn = Pos 42
               }
              , _end = SourcePos
               { sourceName = "./runtime/malgo/Prelude.mlg"
               , sourceLine = Pos 52
-              , sourceColumn = Pos 46
+              , sourceColumn = Pos 44
               }
              }
             )
-            ( Apply
+            ( Var
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./runtime/malgo/Prelude.mlg"
+               , sourceLine = Pos 52
+               , sourceColumn = Pos 34
+               }
+              , _end = SourcePos
+               { sourceName = "./runtime/malgo/Prelude.mlg"
+               , sourceLine = Pos 52
+               , sourceColumn = Pos 42
+               }
+              }
+             ) "mapList"
+            )
+            ( Var
              ( Range
               { _start = SourcePos
                { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -3202,54 +3187,24 @@ Module
                , sourceColumn = Pos 44
                }
               }
-             )
-             ( Var
-              ( Range
-               { _start = SourcePos
-                { sourceName = "./runtime/malgo/Prelude.mlg"
-                , sourceLine = Pos 52
-                , sourceColumn = Pos 34
-                }
-               , _end = SourcePos
-                { sourceName = "./runtime/malgo/Prelude.mlg"
-                , sourceLine = Pos 52
-                , sourceColumn = Pos 42
-                }
-               }
-              ) "mapList"
-             )
-             ( Var
-              ( Range
-               { _start = SourcePos
-                { sourceName = "./runtime/malgo/Prelude.mlg"
-                , sourceLine = Pos 52
-                , sourceColumn = Pos 42
-                }
-               , _end = SourcePos
-                { sourceName = "./runtime/malgo/Prelude.mlg"
-                , sourceLine = Pos 52
-                , sourceColumn = Pos 44
-                }
-               }
-              ) "f"
-             )
+             ) "f"
             )
-            ( Var
-             ( Range
-              { _start = SourcePos
-               { sourceName = "./runtime/malgo/Prelude.mlg"
-               , sourceLine = Pos 52
-               , sourceColumn = Pos 44
-               }
-              , _end = SourcePos
-               { sourceName = "./runtime/malgo/Prelude.mlg"
-               , sourceLine = Pos 52
-               , sourceColumn = Pos 46
-               }
+           )
+           ( Var
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./runtime/malgo/Prelude.mlg"
+              , sourceLine = Pos 52
+              , sourceColumn = Pos 44
               }
-             ) "xs"
-            )
-           ) :| []
+             , _end = SourcePos
+              { sourceName = "./runtime/malgo/Prelude.mlg"
+              , sourceLine = Pos 52
+              , sourceColumn = Pos 46
+              }
+             }
+            ) "xs"
+           )
           )
          )
         ) :| []
@@ -3595,7 +3550,7 @@ Module
            ) "c"
           )
          )
-         ( Seq
+         ( Parens
           ( Range
            { _start = SourcePos
             { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -3609,21 +3564,36 @@ Module
             }
            }
           )
-          ( NoBind
+          ( Apply
            ( Range
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Prelude.mlg"
              , sourceLine = Pos 59
-             , sourceColumn = Pos 33
+             , sourceColumn = Pos 47
              }
             , _end = SourcePos
              { sourceName = "./runtime/malgo/Prelude.mlg"
-             , sourceLine = Pos 60
-             , sourceColumn = Pos 3
+             , sourceLine = Pos 59
+             , sourceColumn = Pos 49
              }
             }
            )
-           ( Apply
+           ( Var
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./runtime/malgo/Prelude.mlg"
+              , sourceLine = Pos 59
+              , sourceColumn = Pos 34
+              }
+             , _end = SourcePos
+              { sourceName = "./runtime/malgo/Prelude.mlg"
+              , sourceLine = Pos 59
+              , sourceColumn = Pos 47
+              }
+             }
+            ) "listToString"
+           )
+           ( Var
             ( Range
              { _start = SourcePos
               { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -3636,38 +3606,8 @@ Module
               , sourceColumn = Pos 49
               }
              }
-            )
-            ( Var
-             ( Range
-              { _start = SourcePos
-               { sourceName = "./runtime/malgo/Prelude.mlg"
-               , sourceLine = Pos 59
-               , sourceColumn = Pos 34
-               }
-              , _end = SourcePos
-               { sourceName = "./runtime/malgo/Prelude.mlg"
-               , sourceLine = Pos 59
-               , sourceColumn = Pos 47
-               }
-              }
-             ) "listToString"
-            )
-            ( Var
-             ( Range
-              { _start = SourcePos
-               { sourceName = "./runtime/malgo/Prelude.mlg"
-               , sourceLine = Pos 59
-               , sourceColumn = Pos 47
-               }
-              , _end = SourcePos
-               { sourceName = "./runtime/malgo/Prelude.mlg"
-               , sourceLine = Pos 59
-               , sourceColumn = Pos 49
-               }
-              }
-             ) "cs"
-            )
-           ) :| []
+            ) "cs"
+           )
           )
          )
         ) :| []
@@ -3907,7 +3847,7 @@ Module
             }
            ) "if"
           )
-          ( Seq
+          ( Parens
            ( Range
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -3921,21 +3861,66 @@ Module
              }
             }
            )
-           ( NoBind
+           ( Apply
             ( Range
              { _start = SourcePos
               { sourceName = "./runtime/malgo/Prelude.mlg"
               , sourceLine = Pos 65
-              , sourceColumn = Pos 6
+              , sourceColumn = Pos 20
               }
              , _end = SourcePos
               { sourceName = "./runtime/malgo/Prelude.mlg"
-              , sourceLine = Pos 66
-              , sourceColumn = Pos 5
+              , sourceLine = Pos 65
+              , sourceColumn = Pos 22
               }
              }
             )
             ( Apply
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./runtime/malgo/Prelude.mlg"
+               , sourceLine = Pos 65
+               , sourceColumn = Pos 16
+               }
+              , _end = SourcePos
+               { sourceName = "./runtime/malgo/Prelude.mlg"
+               , sourceLine = Pos 65
+               , sourceColumn = Pos 20
+               }
+              }
+             )
+             ( Var
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./runtime/malgo/Prelude.mlg"
+                , sourceLine = Pos 65
+                , sourceColumn = Pos 7
+                }
+               , _end = SourcePos
+                { sourceName = "./runtime/malgo/Prelude.mlg"
+                , sourceLine = Pos 65
+                , sourceColumn = Pos 16
+                }
+               }
+              ) "eqString"
+             )
+             ( Var
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./runtime/malgo/Prelude.mlg"
+                , sourceLine = Pos 65
+                , sourceColumn = Pos 16
+                }
+               , _end = SourcePos
+                { sourceName = "./runtime/malgo/Prelude.mlg"
+                , sourceLine = Pos 65
+                , sourceColumn = Pos 20
+                }
+               }
+              ) "str"
+             )
+            )
+            ( Boxed
              ( Range
               { _start = SourcePos
                { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -3949,68 +3934,8 @@ Module
                }
               }
              )
-             ( Apply
-              ( Range
-               { _start = SourcePos
-                { sourceName = "./runtime/malgo/Prelude.mlg"
-                , sourceLine = Pos 65
-                , sourceColumn = Pos 16
-                }
-               , _end = SourcePos
-                { sourceName = "./runtime/malgo/Prelude.mlg"
-                , sourceLine = Pos 65
-                , sourceColumn = Pos 20
-                }
-               }
-              )
-              ( Var
-               ( Range
-                { _start = SourcePos
-                 { sourceName = "./runtime/malgo/Prelude.mlg"
-                 , sourceLine = Pos 65
-                 , sourceColumn = Pos 7
-                 }
-                , _end = SourcePos
-                 { sourceName = "./runtime/malgo/Prelude.mlg"
-                 , sourceLine = Pos 65
-                 , sourceColumn = Pos 16
-                 }
-                }
-               ) "eqString"
-              )
-              ( Var
-               ( Range
-                { _start = SourcePos
-                 { sourceName = "./runtime/malgo/Prelude.mlg"
-                 , sourceLine = Pos 65
-                 , sourceColumn = Pos 16
-                 }
-                , _end = SourcePos
-                 { sourceName = "./runtime/malgo/Prelude.mlg"
-                 , sourceLine = Pos 65
-                 , sourceColumn = Pos 20
-                 }
-                }
-               ) "str"
-              )
-             )
-             ( Boxed
-              ( Range
-               { _start = SourcePos
-                { sourceName = "./runtime/malgo/Prelude.mlg"
-                , sourceLine = Pos 65
-                , sourceColumn = Pos 20
-                }
-               , _end = SourcePos
-                { sourceName = "./runtime/malgo/Prelude.mlg"
-                , sourceLine = Pos 65
-                , sourceColumn = Pos 22
-                }
-               }
-              )
-              ( String "" )
-             )
-            ) :| []
+             ( String "" )
+            )
            )
           )
          )
@@ -4175,7 +4100,7 @@ Module
                }
               ) "Just"
              )
-             ( Seq
+             ( Parens
               ( Range
                { _start = SourcePos
                 { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -4189,17 +4114,17 @@ Module
                 }
                }
               )
-              ( NoBind
+              ( Apply
                ( Range
                 { _start = SourcePos
                  { sourceName = "./runtime/malgo/Prelude.mlg"
                  , sourceLine = Pos 67
-                 , sourceColumn = Pos 12
+                 , sourceColumn = Pos 25
                  }
                 , _end = SourcePos
                  { sourceName = "./runtime/malgo/Prelude.mlg"
                  , sourceLine = Pos 67
-                 , sourceColumn = Pos 30
+                 , sourceColumn = Pos 28
                  }
                 }
                )
@@ -4208,16 +4133,31 @@ Module
                  { _start = SourcePos
                   { sourceName = "./runtime/malgo/Prelude.mlg"
                   , sourceLine = Pos 67
-                  , sourceColumn = Pos 25
+                  , sourceColumn = Pos 22
                   }
                  , _end = SourcePos
                   { sourceName = "./runtime/malgo/Prelude.mlg"
                   , sourceLine = Pos 67
-                  , sourceColumn = Pos 28
+                  , sourceColumn = Pos 25
                   }
                  }
                 )
-                ( Apply
+                ( Var
+                 ( Range
+                  { _start = SourcePos
+                   { sourceName = "./runtime/malgo/Prelude.mlg"
+                   , sourceLine = Pos 67
+                   , sourceColumn = Pos 13
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./runtime/malgo/Prelude.mlg"
+                   , sourceLine = Pos 67
+                   , sourceColumn = Pos 22
+                   }
+                  }
+                 ) "atString"
+                )
+                ( Boxed
                  ( Range
                   { _start = SourcePos
                    { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -4231,54 +4171,24 @@ Module
                    }
                   }
                  )
-                 ( Var
-                  ( Range
-                   { _start = SourcePos
-                    { sourceName = "./runtime/malgo/Prelude.mlg"
-                    , sourceLine = Pos 67
-                    , sourceColumn = Pos 13
-                    }
-                   , _end = SourcePos
-                    { sourceName = "./runtime/malgo/Prelude.mlg"
-                    , sourceLine = Pos 67
-                    , sourceColumn = Pos 22
-                    }
-                   }
-                  ) "atString"
-                 )
-                 ( Boxed
-                  ( Range
-                   { _start = SourcePos
-                    { sourceName = "./runtime/malgo/Prelude.mlg"
-                    , sourceLine = Pos 67
-                    , sourceColumn = Pos 22
-                    }
-                   , _end = SourcePos
-                    { sourceName = "./runtime/malgo/Prelude.mlg"
-                    , sourceLine = Pos 67
-                    , sourceColumn = Pos 25
-                    }
-                   }
-                  )
-                  ( Int64 0 )
-                 )
+                 ( Int64 0 )
                 )
-                ( Var
-                 ( Range
-                  { _start = SourcePos
-                   { sourceName = "./runtime/malgo/Prelude.mlg"
-                   , sourceLine = Pos 67
-                   , sourceColumn = Pos 25
-                   }
-                  , _end = SourcePos
-                   { sourceName = "./runtime/malgo/Prelude.mlg"
-                   , sourceLine = Pos 67
-                   , sourceColumn = Pos 28
-                   }
+               )
+               ( Var
+                ( Range
+                 { _start = SourcePos
+                  { sourceName = "./runtime/malgo/Prelude.mlg"
+                  , sourceLine = Pos 67
+                  , sourceColumn = Pos 25
                   }
-                 ) "str"
-                )
-               ) :| []
+                 , _end = SourcePos
+                  { sourceName = "./runtime/malgo/Prelude.mlg"
+                  , sourceLine = Pos 67
+                  , sourceColumn = Pos 28
+                  }
+                 }
+                ) "str"
+               )
               )
              )
             ) :| []
@@ -4492,7 +4402,7 @@ Module
             }
            ) "if"
           )
-          ( Seq
+          ( Parens
            ( Range
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -4506,21 +4416,66 @@ Module
              }
             }
            )
-           ( NoBind
+           ( Apply
             ( Range
              { _start = SourcePos
               { sourceName = "./runtime/malgo/Prelude.mlg"
               , sourceLine = Pos 73
-              , sourceColumn = Pos 6
+              , sourceColumn = Pos 20
               }
              , _end = SourcePos
               { sourceName = "./runtime/malgo/Prelude.mlg"
-              , sourceLine = Pos 74
-              , sourceColumn = Pos 5
+              , sourceLine = Pos 73
+              , sourceColumn = Pos 22
               }
              }
             )
             ( Apply
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./runtime/malgo/Prelude.mlg"
+               , sourceLine = Pos 73
+               , sourceColumn = Pos 16
+               }
+              , _end = SourcePos
+               { sourceName = "./runtime/malgo/Prelude.mlg"
+               , sourceLine = Pos 73
+               , sourceColumn = Pos 20
+               }
+              }
+             )
+             ( Var
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./runtime/malgo/Prelude.mlg"
+                , sourceLine = Pos 73
+                , sourceColumn = Pos 7
+                }
+               , _end = SourcePos
+                { sourceName = "./runtime/malgo/Prelude.mlg"
+                , sourceLine = Pos 73
+                , sourceColumn = Pos 16
+                }
+               }
+              ) "eqString"
+             )
+             ( Var
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./runtime/malgo/Prelude.mlg"
+                , sourceLine = Pos 73
+                , sourceColumn = Pos 16
+                }
+               , _end = SourcePos
+                { sourceName = "./runtime/malgo/Prelude.mlg"
+                , sourceLine = Pos 73
+                , sourceColumn = Pos 20
+                }
+               }
+              ) "str"
+             )
+            )
+            ( Boxed
              ( Range
               { _start = SourcePos
                { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -4534,68 +4489,8 @@ Module
                }
               }
              )
-             ( Apply
-              ( Range
-               { _start = SourcePos
-                { sourceName = "./runtime/malgo/Prelude.mlg"
-                , sourceLine = Pos 73
-                , sourceColumn = Pos 16
-                }
-               , _end = SourcePos
-                { sourceName = "./runtime/malgo/Prelude.mlg"
-                , sourceLine = Pos 73
-                , sourceColumn = Pos 20
-                }
-               }
-              )
-              ( Var
-               ( Range
-                { _start = SourcePos
-                 { sourceName = "./runtime/malgo/Prelude.mlg"
-                 , sourceLine = Pos 73
-                 , sourceColumn = Pos 7
-                 }
-                , _end = SourcePos
-                 { sourceName = "./runtime/malgo/Prelude.mlg"
-                 , sourceLine = Pos 73
-                 , sourceColumn = Pos 16
-                 }
-                }
-               ) "eqString"
-              )
-              ( Var
-               ( Range
-                { _start = SourcePos
-                 { sourceName = "./runtime/malgo/Prelude.mlg"
-                 , sourceLine = Pos 73
-                 , sourceColumn = Pos 16
-                 }
-                , _end = SourcePos
-                 { sourceName = "./runtime/malgo/Prelude.mlg"
-                 , sourceLine = Pos 73
-                 , sourceColumn = Pos 20
-                 }
-                }
-               ) "str"
-              )
-             )
-             ( Boxed
-              ( Range
-               { _start = SourcePos
-                { sourceName = "./runtime/malgo/Prelude.mlg"
-                , sourceLine = Pos 73
-                , sourceColumn = Pos 20
-                }
-               , _end = SourcePos
-                { sourceName = "./runtime/malgo/Prelude.mlg"
-                , sourceLine = Pos 73
-                , sourceColumn = Pos 22
-                }
-               }
-              )
-              ( String "" )
-             )
-            ) :| []
+             ( String "" )
+            )
            )
           )
          )
@@ -4821,7 +4716,7 @@ Module
                ( Int64 1 )
               )
              )
-             ( Seq
+             ( Parens
               ( Range
                { _start = SourcePos
                 { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -4835,21 +4730,36 @@ Module
                 }
                }
               )
-              ( NoBind
+              ( Apply
                ( Range
                 { _start = SourcePos
                  { sourceName = "./runtime/malgo/Prelude.mlg"
                  , sourceLine = Pos 75
-                 , sourceColumn = Pos 24
+                 , sourceColumn = Pos 38
                  }
                 , _end = SourcePos
                  { sourceName = "./runtime/malgo/Prelude.mlg"
                  , sourceLine = Pos 75
-                 , sourceColumn = Pos 43
+                 , sourceColumn = Pos 41
                  }
                 }
                )
-               ( Apply
+               ( Var
+                ( Range
+                 { _start = SourcePos
+                  { sourceName = "./runtime/malgo/Prelude.mlg"
+                  , sourceLine = Pos 75
+                  , sourceColumn = Pos 25
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./runtime/malgo/Prelude.mlg"
+                  , sourceLine = Pos 75
+                  , sourceColumn = Pos 38
+                  }
+                 }
+                ) "lengthString"
+               )
+               ( Var
                 ( Range
                  { _start = SourcePos
                   { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -4862,38 +4772,8 @@ Module
                   , sourceColumn = Pos 41
                   }
                  }
-                )
-                ( Var
-                 ( Range
-                  { _start = SourcePos
-                   { sourceName = "./runtime/malgo/Prelude.mlg"
-                   , sourceLine = Pos 75
-                   , sourceColumn = Pos 25
-                   }
-                  , _end = SourcePos
-                   { sourceName = "./runtime/malgo/Prelude.mlg"
-                   , sourceLine = Pos 75
-                   , sourceColumn = Pos 38
-                   }
-                  }
-                 ) "lengthString"
-                )
-                ( Var
-                 ( Range
-                  { _start = SourcePos
-                   { sourceName = "./runtime/malgo/Prelude.mlg"
-                   , sourceLine = Pos 75
-                   , sourceColumn = Pos 38
-                   }
-                  , _end = SourcePos
-                   { sourceName = "./runtime/malgo/Prelude.mlg"
-                   , sourceLine = Pos 75
-                   , sourceColumn = Pos 41
-                   }
-                  }
-                 ) "str"
-                )
-               ) :| []
+                ) "str"
+               )
               )
              )
             ) :| []
@@ -5048,7 +4928,7 @@ Module
            }
           ) "case"
          )
-         ( Seq
+         ( Parens
           ( Range
            { _start = SourcePos
             { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -5062,21 +4942,36 @@ Module
             }
            }
           )
-          ( NoBind
+          ( Apply
            ( Range
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Prelude.mlg"
              , sourceLine = Pos 80
-             , sourceColumn = Pos 8
+             , sourceColumn = Pos 20
              }
             , _end = SourcePos
              { sourceName = "./runtime/malgo/Prelude.mlg"
              , sourceLine = Pos 80
-             , sourceColumn = Pos 25
+             , sourceColumn = Pos 23
              }
             }
            )
-           ( Apply
+           ( Var
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./runtime/malgo/Prelude.mlg"
+              , sourceLine = Pos 80
+              , sourceColumn = Pos 9
+              }
+             , _end = SourcePos
+              { sourceName = "./runtime/malgo/Prelude.mlg"
+              , sourceLine = Pos 80
+              , sourceColumn = Pos 20
+              }
+             }
+            ) "headString"
+           )
+           ( Var
             ( Range
              { _start = SourcePos
               { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -5089,38 +4984,8 @@ Module
               , sourceColumn = Pos 23
               }
              }
-            )
-            ( Var
-             ( Range
-              { _start = SourcePos
-               { sourceName = "./runtime/malgo/Prelude.mlg"
-               , sourceLine = Pos 80
-               , sourceColumn = Pos 9
-               }
-              , _end = SourcePos
-               { sourceName = "./runtime/malgo/Prelude.mlg"
-               , sourceLine = Pos 80
-               , sourceColumn = Pos 20
-               }
-              }
-             ) "headString"
-            )
-            ( Var
-             ( Range
-              { _start = SourcePos
-               { sourceName = "./runtime/malgo/Prelude.mlg"
-               , sourceLine = Pos 80
-               , sourceColumn = Pos 20
-               }
-              , _end = SourcePos
-               { sourceName = "./runtime/malgo/Prelude.mlg"
-               , sourceLine = Pos 80
-               , sourceColumn = Pos 23
-               }
-              }
-             ) "str"
-            )
-           ) :| []
+            ) "str"
+           )
           )
          )
         )
@@ -5341,7 +5206,7 @@ Module
                   }
                  ) "if"
                 )
-                ( Seq
+                ( Parens
                  ( Range
                   { _start = SourcePos
                    { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -5355,21 +5220,36 @@ Module
                    }
                   }
                  )
-                 ( NoBind
+                 ( Apply
                   ( Range
                    { _start = SourcePos
                     { sourceName = "./runtime/malgo/Prelude.mlg"
                     , sourceLine = Pos 83
-                    , sourceColumn = Pos 10
+                    , sourceColumn = Pos 16
                     }
                    , _end = SourcePos
                     { sourceName = "./runtime/malgo/Prelude.mlg"
-                    , sourceLine = Pos 84
-                    , sourceColumn = Pos 9
+                    , sourceLine = Pos 83
+                    , sourceColumn = Pos 17
                     }
                    }
                   )
-                  ( Apply
+                  ( Var
+                   ( Range
+                    { _start = SourcePos
+                     { sourceName = "./runtime/malgo/Prelude.mlg"
+                     , sourceLine = Pos 83
+                     , sourceColumn = Pos 11
+                     }
+                    , _end = SourcePos
+                     { sourceName = "./runtime/malgo/Prelude.mlg"
+                     , sourceLine = Pos 83
+                     , sourceColumn = Pos 16
+                     }
+                    }
+                   ) "pred"
+                  )
+                  ( Var
                    ( Range
                     { _start = SourcePos
                      { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -5382,38 +5262,8 @@ Module
                      , sourceColumn = Pos 17
                      }
                     }
-                   )
-                   ( Var
-                    ( Range
-                     { _start = SourcePos
-                      { sourceName = "./runtime/malgo/Prelude.mlg"
-                      , sourceLine = Pos 83
-                      , sourceColumn = Pos 11
-                      }
-                     , _end = SourcePos
-                      { sourceName = "./runtime/malgo/Prelude.mlg"
-                      , sourceLine = Pos 83
-                      , sourceColumn = Pos 16
-                      }
-                     }
-                    ) "pred"
-                   )
-                   ( Var
-                    ( Range
-                     { _start = SourcePos
-                      { sourceName = "./runtime/malgo/Prelude.mlg"
-                      , sourceLine = Pos 83
-                      , sourceColumn = Pos 16
-                      }
-                     , _end = SourcePos
-                      { sourceName = "./runtime/malgo/Prelude.mlg"
-                      , sourceLine = Pos 83
-                      , sourceColumn = Pos 17
-                      }
-                     }
-                    ) "c"
-                   )
-                  ) :| []
+                   ) "c"
+                  )
                  )
                 )
                )
@@ -5532,7 +5382,7 @@ Module
                       ) "c"
                      )
                     )
-                    ( Seq
+                    ( Parens
                      ( Range
                       { _start = SourcePos
                        { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -5546,21 +5396,66 @@ Module
                        }
                       }
                      )
-                     ( NoBind
+                     ( Apply
                       ( Range
                        { _start = SourcePos
                         { sourceName = "./runtime/malgo/Prelude.mlg"
                         , sourceLine = Pos 84
-                        , sourceColumn = Pos 24
+                        , sourceColumn = Pos 46
                         }
                        , _end = SourcePos
                         { sourceName = "./runtime/malgo/Prelude.mlg"
                         , sourceLine = Pos 84
-                        , sourceColumn = Pos 64
+                        , sourceColumn = Pos 62
                         }
                        }
                       )
                       ( Apply
+                       ( Range
+                        { _start = SourcePos
+                         { sourceName = "./runtime/malgo/Prelude.mlg"
+                         , sourceLine = Pos 84
+                         , sourceColumn = Pos 41
+                         }
+                        , _end = SourcePos
+                         { sourceName = "./runtime/malgo/Prelude.mlg"
+                         , sourceLine = Pos 84
+                         , sourceColumn = Pos 46
+                         }
+                        }
+                       )
+                       ( Var
+                        ( Range
+                         { _start = SourcePos
+                          { sourceName = "./runtime/malgo/Prelude.mlg"
+                          , sourceLine = Pos 84
+                          , sourceColumn = Pos 25
+                          }
+                         , _end = SourcePos
+                          { sourceName = "./runtime/malgo/Prelude.mlg"
+                          , sourceLine = Pos 84
+                          , sourceColumn = Pos 41
+                          }
+                         }
+                        ) "takeWhileString"
+                       )
+                       ( Var
+                        ( Range
+                         { _start = SourcePos
+                          { sourceName = "./runtime/malgo/Prelude.mlg"
+                          , sourceLine = Pos 84
+                          , sourceColumn = Pos 41
+                          }
+                         , _end = SourcePos
+                          { sourceName = "./runtime/malgo/Prelude.mlg"
+                          , sourceLine = Pos 84
+                          , sourceColumn = Pos 46
+                          }
+                         }
+                        ) "pred"
+                       )
+                      )
+                      ( Parens
                        ( Range
                         { _start = SourcePos
                          { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -5579,12 +5474,12 @@ Module
                          { _start = SourcePos
                           { sourceName = "./runtime/malgo/Prelude.mlg"
                           , sourceLine = Pos 84
-                          , sourceColumn = Pos 41
+                          , sourceColumn = Pos 58
                           }
                          , _end = SourcePos
                           { sourceName = "./runtime/malgo/Prelude.mlg"
                           , sourceLine = Pos 84
-                          , sourceColumn = Pos 46
+                          , sourceColumn = Pos 61
                           }
                          }
                         )
@@ -5593,108 +5488,33 @@ Module
                           { _start = SourcePos
                            { sourceName = "./runtime/malgo/Prelude.mlg"
                            , sourceLine = Pos 84
-                           , sourceColumn = Pos 25
+                           , sourceColumn = Pos 47
                            }
                           , _end = SourcePos
                            { sourceName = "./runtime/malgo/Prelude.mlg"
                            , sourceLine = Pos 84
-                           , sourceColumn = Pos 41
+                           , sourceColumn = Pos 58
                            }
                           }
-                         ) "takeWhileString"
+                         ) "tailString"
                         )
                         ( Var
                          ( Range
                           { _start = SourcePos
                            { sourceName = "./runtime/malgo/Prelude.mlg"
                            , sourceLine = Pos 84
-                           , sourceColumn = Pos 41
+                           , sourceColumn = Pos 58
                            }
                           , _end = SourcePos
                            { sourceName = "./runtime/malgo/Prelude.mlg"
                            , sourceLine = Pos 84
-                           , sourceColumn = Pos 46
+                           , sourceColumn = Pos 61
                            }
                           }
-                         ) "pred"
+                         ) "str"
                         )
                        )
-                       ( Seq
-                        ( Range
-                         { _start = SourcePos
-                          { sourceName = "./runtime/malgo/Prelude.mlg"
-                          , sourceLine = Pos 84
-                          , sourceColumn = Pos 46
-                          }
-                         , _end = SourcePos
-                          { sourceName = "./runtime/malgo/Prelude.mlg"
-                          , sourceLine = Pos 84
-                          , sourceColumn = Pos 62
-                          }
-                         }
-                        )
-                        ( NoBind
-                         ( Range
-                          { _start = SourcePos
-                           { sourceName = "./runtime/malgo/Prelude.mlg"
-                           , sourceLine = Pos 84
-                           , sourceColumn = Pos 46
-                           }
-                          , _end = SourcePos
-                           { sourceName = "./runtime/malgo/Prelude.mlg"
-                           , sourceLine = Pos 84
-                           , sourceColumn = Pos 62
-                           }
-                          }
-                         )
-                         ( Apply
-                          ( Range
-                           { _start = SourcePos
-                            { sourceName = "./runtime/malgo/Prelude.mlg"
-                            , sourceLine = Pos 84
-                            , sourceColumn = Pos 58
-                            }
-                           , _end = SourcePos
-                            { sourceName = "./runtime/malgo/Prelude.mlg"
-                            , sourceLine = Pos 84
-                            , sourceColumn = Pos 61
-                            }
-                           }
-                          )
-                          ( Var
-                           ( Range
-                            { _start = SourcePos
-                             { sourceName = "./runtime/malgo/Prelude.mlg"
-                             , sourceLine = Pos 84
-                             , sourceColumn = Pos 47
-                             }
-                            , _end = SourcePos
-                             { sourceName = "./runtime/malgo/Prelude.mlg"
-                             , sourceLine = Pos 84
-                             , sourceColumn = Pos 58
-                             }
-                            }
-                           ) "tailString"
-                          )
-                          ( Var
-                           ( Range
-                            { _start = SourcePos
-                             { sourceName = "./runtime/malgo/Prelude.mlg"
-                             , sourceLine = Pos 84
-                             , sourceColumn = Pos 58
-                             }
-                            , _end = SourcePos
-                             { sourceName = "./runtime/malgo/Prelude.mlg"
-                             , sourceLine = Pos 84
-                             , sourceColumn = Pos 61
-                             }
-                            }
-                           ) "str"
-                          )
-                         ) :| []
-                        )
-                       )
-                      ) :| []
+                      )
                      )
                     )
                    ) :| []
@@ -5932,7 +5752,7 @@ Module
            }
           ) "case"
          )
-         ( Seq
+         ( Parens
           ( Range
            { _start = SourcePos
             { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -5946,21 +5766,36 @@ Module
             }
            }
           )
-          ( NoBind
+          ( Apply
            ( Range
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Prelude.mlg"
              , sourceLine = Pos 91
-             , sourceColumn = Pos 8
+             , sourceColumn = Pos 20
              }
             , _end = SourcePos
              { sourceName = "./runtime/malgo/Prelude.mlg"
              , sourceLine = Pos 91
-             , sourceColumn = Pos 25
+             , sourceColumn = Pos 23
              }
             }
            )
-           ( Apply
+           ( Var
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./runtime/malgo/Prelude.mlg"
+              , sourceLine = Pos 91
+              , sourceColumn = Pos 9
+              }
+             , _end = SourcePos
+              { sourceName = "./runtime/malgo/Prelude.mlg"
+              , sourceLine = Pos 91
+              , sourceColumn = Pos 20
+              }
+             }
+            ) "headString"
+           )
+           ( Var
             ( Range
              { _start = SourcePos
               { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -5973,38 +5808,8 @@ Module
               , sourceColumn = Pos 23
               }
              }
-            )
-            ( Var
-             ( Range
-              { _start = SourcePos
-               { sourceName = "./runtime/malgo/Prelude.mlg"
-               , sourceLine = Pos 91
-               , sourceColumn = Pos 9
-               }
-              , _end = SourcePos
-               { sourceName = "./runtime/malgo/Prelude.mlg"
-               , sourceLine = Pos 91
-               , sourceColumn = Pos 20
-               }
-              }
-             ) "headString"
-            )
-            ( Var
-             ( Range
-              { _start = SourcePos
-               { sourceName = "./runtime/malgo/Prelude.mlg"
-               , sourceLine = Pos 91
-               , sourceColumn = Pos 20
-               }
-              , _end = SourcePos
-               { sourceName = "./runtime/malgo/Prelude.mlg"
-               , sourceLine = Pos 91
-               , sourceColumn = Pos 23
-               }
-              }
-             ) "str"
-            )
-           ) :| []
+            ) "str"
+           )
           )
          )
         )
@@ -6225,7 +6030,7 @@ Module
                   }
                  ) "if"
                 )
-                ( Seq
+                ( Parens
                  ( Range
                   { _start = SourcePos
                    { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -6239,21 +6044,36 @@ Module
                    }
                   }
                  )
-                 ( NoBind
+                 ( Apply
                   ( Range
                    { _start = SourcePos
                     { sourceName = "./runtime/malgo/Prelude.mlg"
                     , sourceLine = Pos 94
-                    , sourceColumn = Pos 10
+                    , sourceColumn = Pos 16
                     }
                    , _end = SourcePos
                     { sourceName = "./runtime/malgo/Prelude.mlg"
-                    , sourceLine = Pos 95
-                    , sourceColumn = Pos 9
+                    , sourceLine = Pos 94
+                    , sourceColumn = Pos 17
                     }
                    }
                   )
-                  ( Apply
+                  ( Var
+                   ( Range
+                    { _start = SourcePos
+                     { sourceName = "./runtime/malgo/Prelude.mlg"
+                     , sourceLine = Pos 94
+                     , sourceColumn = Pos 11
+                     }
+                    , _end = SourcePos
+                     { sourceName = "./runtime/malgo/Prelude.mlg"
+                     , sourceLine = Pos 94
+                     , sourceColumn = Pos 16
+                     }
+                    }
+                   ) "pred"
+                  )
+                  ( Var
                    ( Range
                     { _start = SourcePos
                      { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -6266,38 +6086,8 @@ Module
                      , sourceColumn = Pos 17
                      }
                     }
-                   )
-                   ( Var
-                    ( Range
-                     { _start = SourcePos
-                      { sourceName = "./runtime/malgo/Prelude.mlg"
-                      , sourceLine = Pos 94
-                      , sourceColumn = Pos 11
-                      }
-                     , _end = SourcePos
-                      { sourceName = "./runtime/malgo/Prelude.mlg"
-                      , sourceLine = Pos 94
-                      , sourceColumn = Pos 16
-                      }
-                     }
-                    ) "pred"
-                   )
-                   ( Var
-                    ( Range
-                     { _start = SourcePos
-                      { sourceName = "./runtime/malgo/Prelude.mlg"
-                      , sourceLine = Pos 94
-                      , sourceColumn = Pos 16
-                      }
-                     , _end = SourcePos
-                      { sourceName = "./runtime/malgo/Prelude.mlg"
-                      , sourceLine = Pos 94
-                      , sourceColumn = Pos 17
-                      }
-                     }
-                    ) "c"
-                   )
-                  ) :| []
+                   ) "c"
+                  )
                  )
                 )
                )
@@ -6416,7 +6206,7 @@ Module
                       ) "pred"
                      )
                     )
-                    ( Seq
+                    ( Parens
                      ( Range
                       { _start = SourcePos
                        { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -6430,21 +6220,36 @@ Module
                        }
                       }
                      )
-                     ( NoBind
+                     ( Apply
                       ( Range
                        { _start = SourcePos
                         { sourceName = "./runtime/malgo/Prelude.mlg"
                         , sourceLine = Pos 95
-                        , sourceColumn = Pos 32
+                        , sourceColumn = Pos 44
                         }
                        , _end = SourcePos
                         { sourceName = "./runtime/malgo/Prelude.mlg"
                         , sourceLine = Pos 95
-                        , sourceColumn = Pos 49
+                        , sourceColumn = Pos 47
                         }
                        }
                       )
-                      ( Apply
+                      ( Var
+                       ( Range
+                        { _start = SourcePos
+                         { sourceName = "./runtime/malgo/Prelude.mlg"
+                         , sourceLine = Pos 95
+                         , sourceColumn = Pos 33
+                         }
+                        , _end = SourcePos
+                         { sourceName = "./runtime/malgo/Prelude.mlg"
+                         , sourceLine = Pos 95
+                         , sourceColumn = Pos 44
+                         }
+                        }
+                       ) "tailString"
+                      )
+                      ( Var
                        ( Range
                         { _start = SourcePos
                          { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -6457,38 +6262,8 @@ Module
                          , sourceColumn = Pos 47
                          }
                         }
-                       )
-                       ( Var
-                        ( Range
-                         { _start = SourcePos
-                          { sourceName = "./runtime/malgo/Prelude.mlg"
-                          , sourceLine = Pos 95
-                          , sourceColumn = Pos 33
-                          }
-                         , _end = SourcePos
-                          { sourceName = "./runtime/malgo/Prelude.mlg"
-                          , sourceLine = Pos 95
-                          , sourceColumn = Pos 44
-                          }
-                         }
-                        ) "tailString"
-                       )
-                       ( Var
-                        ( Range
-                         { _start = SourcePos
-                          { sourceName = "./runtime/malgo/Prelude.mlg"
-                          , sourceLine = Pos 95
-                          , sourceColumn = Pos 44
-                          }
-                         , _end = SourcePos
-                          { sourceName = "./runtime/malgo/Prelude.mlg"
-                          , sourceLine = Pos 95
-                          , sourceColumn = Pos 47
-                          }
-                         }
-                        ) "str"
-                       )
-                      ) :| []
+                       ) "str"
+                      )
                      )
                     )
                    ) :| []
@@ -6920,7 +6695,7 @@ Module
            ) "x"
           )
          )
-         ( Seq
+         ( Parens
           ( Range
            { _start = SourcePos
             { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -6934,21 +6709,36 @@ Module
             }
            }
           )
-          ( NoBind
+          ( Apply
            ( Range
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Prelude.mlg"
              , sourceLine = Pos 103
-             , sourceColumn = Pos 35
+             , sourceColumn = Pos 49
              }
             , _end = SourcePos
              { sourceName = "./runtime/malgo/Prelude.mlg"
-             , sourceLine = Pos 104
-             , sourceColumn = Pos 3
+             , sourceLine = Pos 103
+             , sourceColumn = Pos 51
              }
             }
            )
-           ( Apply
+           ( Var
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./runtime/malgo/Prelude.mlg"
+              , sourceLine = Pos 103
+              , sourceColumn = Pos 36
+              }
+             , _end = SourcePos
+              { sourceName = "./runtime/malgo/Prelude.mlg"
+              , sourceLine = Pos 103
+              , sourceColumn = Pos 49
+              }
+             }
+            ) "concatString"
+           )
+           ( Var
             ( Range
              { _start = SourcePos
               { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -6961,38 +6751,8 @@ Module
               , sourceColumn = Pos 51
               }
              }
-            )
-            ( Var
-             ( Range
-              { _start = SourcePos
-               { sourceName = "./runtime/malgo/Prelude.mlg"
-               , sourceLine = Pos 103
-               , sourceColumn = Pos 36
-               }
-              , _end = SourcePos
-               { sourceName = "./runtime/malgo/Prelude.mlg"
-               , sourceLine = Pos 103
-               , sourceColumn = Pos 49
-               }
-              }
-             ) "concatString"
-            )
-            ( Var
-             ( Range
-              { _start = SourcePos
-               { sourceName = "./runtime/malgo/Prelude.mlg"
-               , sourceLine = Pos 103
-               , sourceColumn = Pos 49
-               }
-              , _end = SourcePos
-               { sourceName = "./runtime/malgo/Prelude.mlg"
-               , sourceLine = Pos 103
-               , sourceColumn = Pos 51
-               }
-              }
-             ) "xs"
-            )
-           ) :| []
+            ) "xs"
+           )
           )
          )
         ) :| []
@@ -7602,7 +7362,7 @@ Module
            ) "x"
           )
          )
-         ( Seq
+         ( Parens
           ( Range
            { _start = SourcePos
             { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -7616,21 +7376,66 @@ Module
             }
            }
           )
-          ( NoBind
+          ( Apply
            ( Range
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Prelude.mlg"
              , sourceLine = Pos 110
-             , sourceColumn = Pos 31
+             , sourceColumn = Pos 41
              }
             , _end = SourcePos
              { sourceName = "./runtime/malgo/Prelude.mlg"
-             , sourceLine = Pos 111
-             , sourceColumn = Pos 3
+             , sourceLine = Pos 110
+             , sourceColumn = Pos 59
              }
             }
            )
            ( Apply
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./runtime/malgo/Prelude.mlg"
+              , sourceLine = Pos 110
+              , sourceColumn = Pos 37
+              }
+             , _end = SourcePos
+              { sourceName = "./runtime/malgo/Prelude.mlg"
+              , sourceLine = Pos 110
+              , sourceColumn = Pos 41
+              }
+             }
+            )
+            ( Var
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./runtime/malgo/Prelude.mlg"
+               , sourceLine = Pos 110
+               , sourceColumn = Pos 32
+               }
+              , _end = SourcePos
+               { sourceName = "./runtime/malgo/Prelude.mlg"
+               , sourceLine = Pos 110
+               , sourceColumn = Pos 37
+               }
+              }
+             ) "Cons"
+            )
+            ( Var
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./runtime/malgo/Prelude.mlg"
+               , sourceLine = Pos 110
+               , sourceColumn = Pos 37
+               }
+              , _end = SourcePos
+               { sourceName = "./runtime/malgo/Prelude.mlg"
+               , sourceLine = Pos 110
+               , sourceColumn = Pos 41
+               }
+              }
+             ) "sep"
+            )
+           )
+           ( Parens
             ( Range
              { _start = SourcePos
               { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -7649,152 +7454,77 @@ Module
               { _start = SourcePos
                { sourceName = "./runtime/malgo/Prelude.mlg"
                , sourceLine = Pos 110
-               , sourceColumn = Pos 37
+               , sourceColumn = Pos 56
                }
               , _end = SourcePos
                { sourceName = "./runtime/malgo/Prelude.mlg"
                , sourceLine = Pos 110
-               , sourceColumn = Pos 41
+               , sourceColumn = Pos 58
                }
               }
              )
-             ( Var
+             ( Apply
               ( Range
                { _start = SourcePos
                 { sourceName = "./runtime/malgo/Prelude.mlg"
                 , sourceLine = Pos 110
-                , sourceColumn = Pos 32
+                , sourceColumn = Pos 52
                 }
                , _end = SourcePos
                 { sourceName = "./runtime/malgo/Prelude.mlg"
                 , sourceLine = Pos 110
-                , sourceColumn = Pos 37
-                }
-               }
-              ) "Cons"
-             )
-             ( Var
-              ( Range
-               { _start = SourcePos
-                { sourceName = "./runtime/malgo/Prelude.mlg"
-                , sourceLine = Pos 110
-                , sourceColumn = Pos 37
-                }
-               , _end = SourcePos
-                { sourceName = "./runtime/malgo/Prelude.mlg"
-                , sourceLine = Pos 110
-                , sourceColumn = Pos 41
-                }
-               }
-              ) "sep"
-             )
-            )
-            ( Seq
-             ( Range
-              { _start = SourcePos
-               { sourceName = "./runtime/malgo/Prelude.mlg"
-               , sourceLine = Pos 110
-               , sourceColumn = Pos 41
-               }
-              , _end = SourcePos
-               { sourceName = "./runtime/malgo/Prelude.mlg"
-               , sourceLine = Pos 110
-               , sourceColumn = Pos 59
-               }
-              }
-             )
-             ( NoBind
-              ( Range
-               { _start = SourcePos
-                { sourceName = "./runtime/malgo/Prelude.mlg"
-                , sourceLine = Pos 110
-                , sourceColumn = Pos 41
-                }
-               , _end = SourcePos
-                { sourceName = "./runtime/malgo/Prelude.mlg"
-                , sourceLine = Pos 110
-                , sourceColumn = Pos 59
+                , sourceColumn = Pos 56
                 }
                }
               )
-              ( Apply
+              ( Var
                ( Range
                 { _start = SourcePos
                  { sourceName = "./runtime/malgo/Prelude.mlg"
                  , sourceLine = Pos 110
-                 , sourceColumn = Pos 56
+                 , sourceColumn = Pos 42
                  }
                 , _end = SourcePos
                  { sourceName = "./runtime/malgo/Prelude.mlg"
                  , sourceLine = Pos 110
-                 , sourceColumn = Pos 58
+                 , sourceColumn = Pos 52
                  }
                 }
-               )
-               ( Apply
-                ( Range
-                 { _start = SourcePos
-                  { sourceName = "./runtime/malgo/Prelude.mlg"
-                  , sourceLine = Pos 110
-                  , sourceColumn = Pos 52
-                  }
-                 , _end = SourcePos
-                  { sourceName = "./runtime/malgo/Prelude.mlg"
-                  , sourceLine = Pos 110
-                  , sourceColumn = Pos 56
-                  }
+               ) "punctuate"
+              )
+              ( Var
+               ( Range
+                { _start = SourcePos
+                 { sourceName = "./runtime/malgo/Prelude.mlg"
+                 , sourceLine = Pos 110
+                 , sourceColumn = Pos 52
                  }
-                )
-                ( Var
-                 ( Range
-                  { _start = SourcePos
-                   { sourceName = "./runtime/malgo/Prelude.mlg"
-                   , sourceLine = Pos 110
-                   , sourceColumn = Pos 42
-                   }
-                  , _end = SourcePos
-                   { sourceName = "./runtime/malgo/Prelude.mlg"
-                   , sourceLine = Pos 110
-                   , sourceColumn = Pos 52
-                   }
-                  }
-                 ) "punctuate"
-                )
-                ( Var
-                 ( Range
-                  { _start = SourcePos
-                   { sourceName = "./runtime/malgo/Prelude.mlg"
-                   , sourceLine = Pos 110
-                   , sourceColumn = Pos 52
-                   }
-                  , _end = SourcePos
-                   { sourceName = "./runtime/malgo/Prelude.mlg"
-                   , sourceLine = Pos 110
-                   , sourceColumn = Pos 56
-                   }
-                  }
-                 ) "sep"
-                )
-               )
-               ( Var
-                ( Range
-                 { _start = SourcePos
-                  { sourceName = "./runtime/malgo/Prelude.mlg"
-                  , sourceLine = Pos 110
-                  , sourceColumn = Pos 56
-                  }
-                 , _end = SourcePos
-                  { sourceName = "./runtime/malgo/Prelude.mlg"
-                  , sourceLine = Pos 110
-                  , sourceColumn = Pos 58
-                  }
+                , _end = SourcePos
+                 { sourceName = "./runtime/malgo/Prelude.mlg"
+                 , sourceLine = Pos 110
+                 , sourceColumn = Pos 56
                  }
-                ) "xs"
-               )
-              ) :| []
+                }
+               ) "sep"
+              )
+             )
+             ( Var
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./runtime/malgo/Prelude.mlg"
+                , sourceLine = Pos 110
+                , sourceColumn = Pos 56
+                }
+               , _end = SourcePos
+                { sourceName = "./runtime/malgo/Prelude.mlg"
+                , sourceLine = Pos 110
+                , sourceColumn = Pos 58
+                }
+               }
+              ) "xs"
              )
             )
-           ) :| []
+           )
           )
          )
         ) :| []
@@ -8719,7 +8449,7 @@ Module
               }
              ) "f"
             )
-            ( Seq
+            ( Parens
              ( Range
               { _start = SourcePos
                { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -8733,21 +8463,36 @@ Module
                }
               }
              )
-             ( NoBind
+             ( Apply
               ( Range
                { _start = SourcePos
                 { sourceName = "./runtime/malgo/Prelude.mlg"
                 , sourceLine = Pos 125
-                , sourceColumn = Pos 28
+                , sourceColumn = Pos 31
                 }
                , _end = SourcePos
                 { sourceName = "./runtime/malgo/Prelude.mlg"
                 , sourceLine = Pos 125
-                , sourceColumn = Pos 33
+                , sourceColumn = Pos 32
                 }
                }
               )
-              ( Apply
+              ( Var
+               ( Range
+                { _start = SourcePos
+                 { sourceName = "./runtime/malgo/Prelude.mlg"
+                 , sourceLine = Pos 125
+                 , sourceColumn = Pos 29
+                 }
+                , _end = SourcePos
+                 { sourceName = "./runtime/malgo/Prelude.mlg"
+                 , sourceLine = Pos 125
+                 , sourceColumn = Pos 31
+                 }
+                }
+               ) "g"
+              )
+              ( Var
                ( Range
                 { _start = SourcePos
                  { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -8760,38 +8505,8 @@ Module
                  , sourceColumn = Pos 32
                  }
                 }
-               )
-               ( Var
-                ( Range
-                 { _start = SourcePos
-                  { sourceName = "./runtime/malgo/Prelude.mlg"
-                  , sourceLine = Pos 125
-                  , sourceColumn = Pos 29
-                  }
-                 , _end = SourcePos
-                  { sourceName = "./runtime/malgo/Prelude.mlg"
-                  , sourceLine = Pos 125
-                  , sourceColumn = Pos 31
-                  }
-                 }
-                ) "g"
-               )
-               ( Var
-                ( Range
-                 { _start = SourcePos
-                  { sourceName = "./runtime/malgo/Prelude.mlg"
-                  , sourceLine = Pos 125
-                  , sourceColumn = Pos 31
-                  }
-                 , _end = SourcePos
-                  { sourceName = "./runtime/malgo/Prelude.mlg"
-                  , sourceLine = Pos 125
-                  , sourceColumn = Pos 32
-                  }
-                 }
-                ) "x"
-               )
-              ) :| []
+               ) "x"
+              )
              )
             )
            ) :| []
@@ -11437,7 +11152,7 @@ Module
           }
          ) "printString"
         )
-        ( Seq
+        ( Parens
          ( Range
           { _start = SourcePos
            { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -11451,21 +11166,36 @@ Module
            }
           }
          )
-         ( NoBind
+         ( Apply
           ( Range
            { _start = SourcePos
             { sourceName = "./runtime/malgo/Prelude.mlg"
             , sourceLine = Pos 162
-            , sourceColumn = Pos 37
+            , sourceColumn = Pos 52
             }
            , _end = SourcePos
             { sourceName = "./runtime/malgo/Prelude.mlg"
             , sourceLine = Pos 162
-            , sourceColumn = Pos 55
+            , sourceColumn = Pos 53
             }
            }
           )
-          ( Apply
+          ( Var
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./runtime/malgo/Prelude.mlg"
+             , sourceLine = Pos 162
+             , sourceColumn = Pos 38
+             }
+            , _end = SourcePos
+             { sourceName = "./runtime/malgo/Prelude.mlg"
+             , sourceLine = Pos 162
+             , sourceColumn = Pos 52
+             }
+            }
+           ) "toStringInt32"
+          )
+          ( Var
            ( Range
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -11478,38 +11208,8 @@ Module
              , sourceColumn = Pos 53
              }
             }
-           )
-           ( Var
-            ( Range
-             { _start = SourcePos
-              { sourceName = "./runtime/malgo/Prelude.mlg"
-              , sourceLine = Pos 162
-              , sourceColumn = Pos 38
-              }
-             , _end = SourcePos
-              { sourceName = "./runtime/malgo/Prelude.mlg"
-              , sourceLine = Pos 162
-              , sourceColumn = Pos 52
-              }
-             }
-            ) "toStringInt32"
-           )
-           ( Var
-            ( Range
-             { _start = SourcePos
-              { sourceName = "./runtime/malgo/Prelude.mlg"
-              , sourceLine = Pos 162
-              , sourceColumn = Pos 52
-              }
-             , _end = SourcePos
-              { sourceName = "./runtime/malgo/Prelude.mlg"
-              , sourceLine = Pos 162
-              , sourceColumn = Pos 53
-              }
-             }
-            ) "i"
-           )
-          ) :| []
+           ) "i"
+          )
          )
         )
        ) :| []
@@ -11690,7 +11390,7 @@ Module
           }
          ) "printString"
         )
-        ( Seq
+        ( Parens
          ( Range
           { _start = SourcePos
            { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -11704,21 +11404,36 @@ Module
            }
           }
          )
-         ( NoBind
+         ( Apply
           ( Range
            { _start = SourcePos
             { sourceName = "./runtime/malgo/Prelude.mlg"
             , sourceLine = Pos 165
-            , sourceColumn = Pos 37
+            , sourceColumn = Pos 52
             }
            , _end = SourcePos
             { sourceName = "./runtime/malgo/Prelude.mlg"
             , sourceLine = Pos 165
-            , sourceColumn = Pos 55
+            , sourceColumn = Pos 53
             }
            }
           )
-          ( Apply
+          ( Var
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./runtime/malgo/Prelude.mlg"
+             , sourceLine = Pos 165
+             , sourceColumn = Pos 38
+             }
+            , _end = SourcePos
+             { sourceName = "./runtime/malgo/Prelude.mlg"
+             , sourceLine = Pos 165
+             , sourceColumn = Pos 52
+             }
+            }
+           ) "toStringInt64"
+          )
+          ( Var
            ( Range
             { _start = SourcePos
              { sourceName = "./runtime/malgo/Prelude.mlg"
@@ -11731,38 +11446,8 @@ Module
              , sourceColumn = Pos 53
              }
             }
-           )
-           ( Var
-            ( Range
-             { _start = SourcePos
-              { sourceName = "./runtime/malgo/Prelude.mlg"
-              , sourceLine = Pos 165
-              , sourceColumn = Pos 38
-              }
-             , _end = SourcePos
-              { sourceName = "./runtime/malgo/Prelude.mlg"
-              , sourceLine = Pos 165
-              , sourceColumn = Pos 52
-              }
-             }
-            ) "toStringInt64"
-           )
-           ( Var
-            ( Range
-             { _start = SourcePos
-              { sourceName = "./runtime/malgo/Prelude.mlg"
-              , sourceLine = Pos 165
-              , sourceColumn = Pos 52
-              }
-             , _end = SourcePos
-              { sourceName = "./runtime/malgo/Prelude.mlg"
-              , sourceLine = Pos 165
-              , sourceColumn = Pos 53
-              }
-             }
-            ) "i"
-           )
-          ) :| []
+           ) "i"
+          )
          )
         )
        ) :| []

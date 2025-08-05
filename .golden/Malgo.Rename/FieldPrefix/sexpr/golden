@@ -30,12 +30,12 @@
                      (do
                         (apply
                            printString
-                           (seq (do (apply toStringInt32 #FieldPrefix.x_0)))))
+                           (parens (apply toStringInt32 #FieldPrefix.x_0))))
                      (do (apply printString (apply String# (string ", "))))
                      (do
                         (apply
                            printString
-                           (seq (do (apply toStringInt32 #FieldPrefix.y_1)))))))))))
+                           (parens (apply toStringInt32 #FieldPrefix.y_1))))))))))
        ((def
            main
            (fn ((clause (#FieldPrefix.$__6) (seq (do (apply print2D zero2D)))))))))

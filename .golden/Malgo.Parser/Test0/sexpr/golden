@@ -23,4 +23,4 @@
                                    (do
                                       (apply
                                          printString#
-                                         (seq (do (apply toStringInt64# i))))))))))))))))))
+                                         (parens (apply toStringInt64# i)))))))))))))))))

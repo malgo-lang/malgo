@@ -1784,7 +1784,7 @@ Module
           }
          ) "printString"
         )
-        ( Seq
+        ( Parens
          ( Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/Show.mlg"
@@ -1798,17 +1798,17 @@ Module
            }
           }
          )
-         ( NoBind
+         ( Apply
           ( Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/Show.mlg"
             , sourceLine = Pos 30
-            , sourceColumn = Pos 41
+            , sourceColumn = Pos 56
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/Show.mlg"
             , sourceLine = Pos 30
-            , sourceColumn = Pos 59
+            , sourceColumn = Pos 57
             }
            }
           )
@@ -1817,16 +1817,31 @@ Module
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/Show.mlg"
              , sourceLine = Pos 30
-             , sourceColumn = Pos 56
+             , sourceColumn = Pos 47
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/Show.mlg"
              , sourceLine = Pos 30
-             , sourceColumn = Pos 57
+             , sourceColumn = Pos 56
              }
             }
            )
-           ( Apply
+           ( Var
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/Show.mlg"
+              , sourceLine = Pos 30
+              , sourceColumn = Pos 42
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/Show.mlg"
+              , sourceLine = Pos 30
+              , sourceColumn = Pos 47
+              }
+             }
+            ) "show"
+           )
+           ( Var
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/Show.mlg"
@@ -1839,54 +1854,24 @@ Module
               , sourceColumn = Pos 56
               }
              }
-            )
-            ( Var
-             ( Range
-              { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/Show.mlg"
-               , sourceLine = Pos 30
-               , sourceColumn = Pos 42
-               }
-              , _end = SourcePos
-               { sourceName = "./test/testcases/malgo/Show.mlg"
-               , sourceLine = Pos 30
-               , sourceColumn = Pos 47
-               }
-              }
-             ) "show"
-            )
-            ( Var
-             ( Range
-              { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/Show.mlg"
-               , sourceLine = Pos 30
-               , sourceColumn = Pos 47
-               }
-              , _end = SourcePos
-               { sourceName = "./test/testcases/malgo/Show.mlg"
-               , sourceLine = Pos 30
-               , sourceColumn = Pos 56
-               }
-              }
-             ) "showDict"
-            )
+            ) "showDict"
            )
-           ( Var
-            ( Range
-             { _start = SourcePos
-              { sourceName = "./test/testcases/malgo/Show.mlg"
-              , sourceLine = Pos 30
-              , sourceColumn = Pos 56
-              }
-             , _end = SourcePos
-              { sourceName = "./test/testcases/malgo/Show.mlg"
-              , sourceLine = Pos 30
-              , sourceColumn = Pos 57
-              }
+          )
+          ( Var
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/Show.mlg"
+             , sourceLine = Pos 30
+             , sourceColumn = Pos 56
              }
-            ) "x"
-           )
-          ) :| []
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/Show.mlg"
+             , sourceLine = Pos 30
+             , sourceColumn = Pos 57
+             }
+            }
+           ) "x"
+          )
          )
         )
        ) :| []
@@ -2007,7 +1992,7 @@ Module
            }
           ) "print"
          )
-         ( Seq
+         ( Parens
           ( Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/Show.mlg"
@@ -2021,17 +2006,17 @@ Module
             }
            }
           )
-          ( NoBind
+          ( Apply
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/Show.mlg"
              , sourceLine = Pos 32
-             , sourceColumn = Pos 20
+             , sourceColumn = Pos 42
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/Show.mlg"
              , sourceLine = Pos 32
-             , sourceColumn = Pos 53
+             , sourceColumn = Pos 51
              }
             }
            )
@@ -2040,16 +2025,31 @@ Module
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/Show.mlg"
               , sourceLine = Pos 32
-              , sourceColumn = Pos 42
+              , sourceColumn = Pos 32
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/Show.mlg"
               , sourceLine = Pos 32
-              , sourceColumn = Pos 51
+              , sourceColumn = Pos 42
               }
              }
             )
-            ( Apply
+            ( Var
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/Show.mlg"
+               , sourceLine = Pos 32
+               , sourceColumn = Pos 21
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/Show.mlg"
+               , sourceLine = Pos 32
+               , sourceColumn = Pos 32
+               }
+              }
+             ) "showTuple2"
+            )
+            ( Var
              ( Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/Show.mlg"
@@ -2062,54 +2062,24 @@ Module
                , sourceColumn = Pos 42
                }
               }
-             )
-             ( Var
-              ( Range
-               { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/Show.mlg"
-                , sourceLine = Pos 32
-                , sourceColumn = Pos 21
-                }
-               , _end = SourcePos
-                { sourceName = "./test/testcases/malgo/Show.mlg"
-                , sourceLine = Pos 32
-                , sourceColumn = Pos 32
-                }
-               }
-              ) "showTuple2"
-             )
-             ( Var
-              ( Range
-               { _start = SourcePos
-                { sourceName = "./test/testcases/malgo/Show.mlg"
-                , sourceLine = Pos 32
-                , sourceColumn = Pos 32
-                }
-               , _end = SourcePos
-                { sourceName = "./test/testcases/malgo/Show.mlg"
-                , sourceLine = Pos 32
-                , sourceColumn = Pos 42
-                }
-               }
-              ) "showInt32"
-             )
-            )
-            ( Var
-             ( Range
-              { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/Show.mlg"
-               , sourceLine = Pos 32
-               , sourceColumn = Pos 42
-               }
-              , _end = SourcePos
-               { sourceName = "./test/testcases/malgo/Show.mlg"
-               , sourceLine = Pos 32
-               , sourceColumn = Pos 51
-               }
-              }
              ) "showInt32"
             )
-           ) :| []
+           )
+           ( Var
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/Show.mlg"
+              , sourceLine = Pos 32
+              , sourceColumn = Pos 42
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/Show.mlg"
+              , sourceLine = Pos 32
+              , sourceColumn = Pos 51
+              }
+             }
+            ) "showInt32"
+           )
           )
          )
         )

@@ -33,30 +33,25 @@
                      (do
                         (apply
                            putStr
-                           (seq
-                              (do
+                           (parens
+                              (apply
                                  (apply
-                                    (apply
-                                       show
-                                       (seq
-                                          (do
-                                             (apply
-                                                wrap
-                                                (fn
-                                                   ((clause
-                                                       ((con
-                                                           Int32#
-                                                           (#ShowSimple.x_7)))
-                                                       (seq
-                                                          (do
+                                    show
+                                    (parens
+                                       (apply
+                                          wrap
+                                          (fn
+                                             ((clause
+                                                 ((con Int32# (#ShowSimple.x_7)))
+                                                 (seq
+                                                    (do
+                                                       (apply
+                                                          String#
+                                                          (parens
                                                              (apply
-                                                                String#
-                                                                (seq
-                                                                   (do
-                                                                      (apply
-                                                                         malgo_int32_t_to_string
-                                                                         #ShowSimple.x_7)))))))))))))
-                                    (apply Int32# (int32 1)))))))))))))
+                                                                malgo_int32_t_to_string
+                                                                #ShowSimple.x_7)))))))))))
+                                 (apply Int32# (int32 1))))))))))))
        ((def
            int32#
            (fn

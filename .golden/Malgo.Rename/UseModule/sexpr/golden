@@ -23,7 +23,7 @@
                            <|
                            printInt32
                            (apply
-                              (seq (do (opapp << succ succ)))
+                              (parens (opapp << succ succ))
                               (apply Int32# (int32 1))))))))))))
       ()
       ()

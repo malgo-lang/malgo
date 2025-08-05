@@ -11,12 +11,12 @@
                 ()
                 (seq
                    (let x (apply (apply addInt32# (int32 1)) (int32 2)))
-                   (do (apply printString# (seq (do (apply toStringInt32# x)))))
+                   (do (apply printString# (parens (apply toStringInt32# x))))
                    (let
                       x
                       (apply
                          Int32#
-                         (seq (do (apply (apply addInt32# (int32 1)) (int32 2))))))
+                         (parens (apply (apply addInt32# (int32 1)) (int32 2)))))
                    (let
                       printInt32
                       (fn
@@ -26,5 +26,5 @@
                                 (do
                                    (apply
                                       printString#
-                                      (seq (do (apply toStringInt32# x))))))))))
+                                      (parens (apply toStringInt32# x)))))))))
                    (do (apply printInt32 x)))))))))

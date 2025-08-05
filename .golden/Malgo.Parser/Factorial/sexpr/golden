@@ -20,7 +20,7 @@
                    (do
                       (apply
                          (apply
-                            (apply if (seq (do (opapp == n (int64 0)))))
+                            (apply if (parens (opapp == n (int64 0))))
                             (fn ((clause () (seq (do acc))))))
                          (fn
                             ((clause
@@ -30,8 +30,8 @@
                                       (apply
                                          (apply
                                             factAcc
-                                            (seq (do (opapp - n (int64 1)))))
-                                         (seq (do (opapp * n acc))))))))))))))))
+                                            (parens (opapp - n (int64 1))))
+                                         (parens (opapp * n acc)))))))))))))))
       (def
          main
          (fn

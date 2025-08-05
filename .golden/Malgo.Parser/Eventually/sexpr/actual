@@ -40,7 +40,7 @@
                                         (apply
                                            (apply
                                               eventuallyBind
-                                              (seq (do (apply work (tuple)))))
+                                              (parens (apply work (tuple))))
                                            k)))))))))))))
       (def
          step
@@ -48,7 +48,7 @@
             ((clause ((con Done (value))) (seq (do (apply Done value))))
                (clause
                   ((con NotYetDone (work)))
-                  (seq (do (seq (do (apply work (tuple))))))))))
+                  (seq (do (parens (apply work (tuple)))))))))
       (sig
          bind
          (->
@@ -65,19 +65,17 @@
          (apply
             (apply
                (apply bind eventually)
-               (seq
-                  (do
-                     (apply
-                        NotYetDone
-                        (fn
-                           ((clause
-                               ()
-                               (seq
-                                  (do
-                                     (apply
-                                        Done
-                                        (seq
-                                           (do (apply printString (string "1"))))))))))))))
+               (parens
+                  (apply
+                     NotYetDone
+                     (fn
+                        ((clause
+                            ()
+                            (seq
+                               (do
+                                  (apply
+                                     Done
+                                     (parens (apply printString (string "1"))))))))))))
             (fn
                ((clause
                    (_)
@@ -86,22 +84,20 @@
                          (apply
                             (apply
                                (apply bind eventually)
-                               (seq
-                                  (do
-                                     (apply
-                                        NotYetDone
-                                        (fn
-                                           ((clause
-                                               ()
-                                               (seq
-                                                  (do
-                                                     (apply
-                                                        Done
-                                                        (seq
-                                                           (do
-                                                              (apply
-                                                                 printString
-                                                                 (string "2"))))))))))))))
+                               (parens
+                                  (apply
+                                     NotYetDone
+                                     (fn
+                                        ((clause
+                                            ()
+                                            (seq
+                                               (do
+                                                  (apply
+                                                     Done
+                                                     (parens
+                                                        (apply
+                                                           printString
+                                                           (string "2"))))))))))))
                             (fn
                                ((clause
                                    (_)
@@ -129,7 +125,7 @@
                                    (do
                                       (apply
                                          printString
-                                         (seq (do (apply toStringInt32 x)))))))
+                                         (parens (apply toStringInt32 x))))))
                                (clause
                                   ((con NotYetDone (_)))
                                   (seq

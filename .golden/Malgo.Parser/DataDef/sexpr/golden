@@ -19,6 +19,6 @@
                                    (do
                                       (apply
                                          malgo_print_string
-                                         (seq
-                                            (do (apply malgo_int64_t_to_string x)))))))))
-                         (seq (do (apply Int# (int64 1)))))))))))))
+                                         (parens
+                                            (apply malgo_int64_t_to_string x))))))))
+                         (parens (apply Int# (int64 1))))))))))))

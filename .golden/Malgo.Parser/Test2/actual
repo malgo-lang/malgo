@@ -614,7 +614,7 @@ Module
           ]
          )
         )
-        ( Seq
+        ( Parens
          ( Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/Test2.mlg"
@@ -628,21 +628,36 @@ Module
            }
           }
          )
-         ( NoBind
+         ( Apply
           ( Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/Test2.mlg"
             , sourceLine = Pos 7
-            , sourceColumn = Pos 81
+            , sourceColumn = Pos 87
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/Test2.mlg"
             , sourceLine = Pos 7
-            , sourceColumn = Pos 90
+            , sourceColumn = Pos 88
             }
            }
           )
-          ( Apply
+          ( Var
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/Test2.mlg"
+             , sourceLine = Pos 7
+             , sourceColumn = Pos 82
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/Test2.mlg"
+             , sourceLine = Pos 7
+             , sourceColumn = Pos 87
+             }
+            }
+           ) "rtob"
+          )
+          ( Var
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/Test2.mlg"
@@ -655,38 +670,8 @@ Module
              , sourceColumn = Pos 88
              }
             }
-           )
-           ( Var
-            ( Range
-             { _start = SourcePos
-              { sourceName = "./test/testcases/malgo/Test2.mlg"
-              , sourceLine = Pos 7
-              , sourceColumn = Pos 82
-              }
-             , _end = SourcePos
-              { sourceName = "./test/testcases/malgo/Test2.mlg"
-              , sourceLine = Pos 7
-              , sourceColumn = Pos 87
-              }
-             }
-            ) "rtob"
-           )
-           ( Var
-            ( Range
-             { _start = SourcePos
-              { sourceName = "./test/testcases/malgo/Test2.mlg"
-              , sourceLine = Pos 7
-              , sourceColumn = Pos 87
-              }
-             , _end = SourcePos
-              { sourceName = "./test/testcases/malgo/Test2.mlg"
-              , sourceLine = Pos 7
-              , sourceColumn = Pos 88
-              }
-             }
-            ) "R"
-           )
-          ) :| []
+           ) "R"
+          )
          )
         )
        ) :| []

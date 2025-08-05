@@ -19,7 +19,7 @@
                      (do
                         (apply
                            putStrLn
-                           (seq (do (apply f (apply String# (string "Hello"))))))))))))))
+                           (parens (apply f (apply String# (string "Hello")))))))))))))
       ((sig f (-> #DeferLaw.a_0 #DeferLaw.a_0)))
       ()
       ()

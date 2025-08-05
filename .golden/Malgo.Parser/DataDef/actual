@@ -487,7 +487,7 @@ Module
                }
               ) "malgo_print_string"
              )
-             ( Seq
+             ( Parens
               ( Range
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/DataDef.mlg"
@@ -501,21 +501,36 @@ Module
                 }
                }
               )
-              ( NoBind
+              ( Apply
                ( Range
                 { _start = SourcePos
                  { sourceName = "./test/testcases/malgo/DataDef.mlg"
                  , sourceLine = Pos 7
-                 , sourceColumn = Pos 46
+                 , sourceColumn = Pos 71
                  }
                 , _end = SourcePos
                  { sourceName = "./test/testcases/malgo/DataDef.mlg"
                  , sourceLine = Pos 7
-                 , sourceColumn = Pos 74
+                 , sourceColumn = Pos 72
                  }
                 }
                )
-               ( Apply
+               ( Var
+                ( Range
+                 { _start = SourcePos
+                  { sourceName = "./test/testcases/malgo/DataDef.mlg"
+                  , sourceLine = Pos 7
+                  , sourceColumn = Pos 47
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/DataDef.mlg"
+                  , sourceLine = Pos 7
+                  , sourceColumn = Pos 71
+                  }
+                 }
+                ) "malgo_int64_t_to_string"
+               )
+               ( Var
                 ( Range
                  { _start = SourcePos
                   { sourceName = "./test/testcases/malgo/DataDef.mlg"
@@ -528,38 +543,8 @@ Module
                   , sourceColumn = Pos 72
                   }
                  }
-                )
-                ( Var
-                 ( Range
-                  { _start = SourcePos
-                   { sourceName = "./test/testcases/malgo/DataDef.mlg"
-                   , sourceLine = Pos 7
-                   , sourceColumn = Pos 47
-                   }
-                  , _end = SourcePos
-                   { sourceName = "./test/testcases/malgo/DataDef.mlg"
-                   , sourceLine = Pos 7
-                   , sourceColumn = Pos 71
-                   }
-                  }
-                 ) "malgo_int64_t_to_string"
-                )
-                ( Var
-                 ( Range
-                  { _start = SourcePos
-                   { sourceName = "./test/testcases/malgo/DataDef.mlg"
-                   , sourceLine = Pos 7
-                   , sourceColumn = Pos 71
-                   }
-                  , _end = SourcePos
-                   { sourceName = "./test/testcases/malgo/DataDef.mlg"
-                   , sourceLine = Pos 7
-                   , sourceColumn = Pos 72
-                   }
-                  }
-                 ) "x"
-                )
-               ) :| []
+                ) "x"
+               )
               )
              )
             ) :| []
@@ -567,7 +552,7 @@ Module
           ) :| []
          )
         )
-        ( Seq
+        ( Parens
          ( Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/DataDef.mlg"
@@ -581,21 +566,36 @@ Module
            }
           }
          )
-         ( NoBind
+         ( Apply
           ( Range
            { _start = SourcePos
             { sourceName = "./test/testcases/malgo/DataDef.mlg"
             , sourceLine = Pos 7
-            , sourceColumn = Pos 76
+            , sourceColumn = Pos 82
             }
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/DataDef.mlg"
             , sourceLine = Pos 7
-            , sourceColumn = Pos 87
+            , sourceColumn = Pos 85
             }
            }
           )
-          ( Apply
+          ( Var
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/DataDef.mlg"
+             , sourceLine = Pos 7
+             , sourceColumn = Pos 77
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/DataDef.mlg"
+             , sourceLine = Pos 7
+             , sourceColumn = Pos 82
+             }
+            }
+           ) "Int#"
+          )
+          ( Unboxed
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/DataDef.mlg"
@@ -609,38 +609,8 @@ Module
              }
             }
            )
-           ( Var
-            ( Range
-             { _start = SourcePos
-              { sourceName = "./test/testcases/malgo/DataDef.mlg"
-              , sourceLine = Pos 7
-              , sourceColumn = Pos 77
-              }
-             , _end = SourcePos
-              { sourceName = "./test/testcases/malgo/DataDef.mlg"
-              , sourceLine = Pos 7
-              , sourceColumn = Pos 82
-              }
-             }
-            ) "Int#"
-           )
-           ( Unboxed
-            ( Range
-             { _start = SourcePos
-              { sourceName = "./test/testcases/malgo/DataDef.mlg"
-              , sourceLine = Pos 7
-              , sourceColumn = Pos 82
-              }
-             , _end = SourcePos
-              { sourceName = "./test/testcases/malgo/DataDef.mlg"
-              , sourceLine = Pos 7
-              , sourceColumn = Pos 85
-              }
-             }
-            )
-            ( Int64 1 )
-           )
-          ) :| []
+           ( Int64 1 )
+          )
          )
         )
        ) :| []

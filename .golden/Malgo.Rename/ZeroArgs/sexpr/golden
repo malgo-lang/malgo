@@ -31,11 +31,10 @@
                                      (do
                                         (apply
                                            printString
-                                           (seq
-                                              (do
-                                                 (apply
-                                                    toStringInt32
-                                                    (seq (do (apply id one)))))))))))))))))
+                                           (parens
+                                              (apply
+                                                 toStringInt32
+                                                 (parens (apply id one)))))))))))))))
               (tuple)))))
       ((sig one Int32)
          (sig id (-> #ZeroArgs.a_1 #ZeroArgs.a_1))

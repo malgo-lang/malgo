@@ -41,7 +41,7 @@
          (fn
             ((clause
                 ((con Int32# (x)) (con Int32# (y)))
-                (seq (do (apply Int32# (seq (do (apply (apply addInt32# x) y))))))))))
+                (seq (do (apply Int32# (parens (apply (apply addInt32# x) y)))))))))
       (foreign malgo_sub_int32_t (-> Int32# (-> Int32# Int32#)))
       (sig subInt32# (-> Int32# (-> Int32# Int32#)))
       (def
@@ -53,7 +53,7 @@
          (fn
             ((clause
                 ((con Int32# (x)) (con Int32# (y)))
-                (seq (do (apply Int32# (seq (do (apply (apply subInt32# x) y))))))))))
+                (seq (do (apply Int32# (parens (apply (apply subInt32# x) y)))))))))
       (foreign malgo_mul_int32_t (-> Int32# (-> Int32# Int32#)))
       (sig mulInt32# (-> Int32# (-> Int32# Int32#)))
       (def
@@ -65,7 +65,7 @@
          (fn
             ((clause
                 ((con Int32# (x)) (con Int32# (y)))
-                (seq (do (apply Int32# (seq (do (apply (apply mulInt32# x) y))))))))))
+                (seq (do (apply Int32# (parens (apply (apply mulInt32# x) y)))))))))
       (foreign malgo_div_int32_t (-> Int32# (-> Int32# Int32#)))
       (sig divInt32# (-> Int32# (-> Int32# Int32#)))
       (def
@@ -77,7 +77,7 @@
          (fn
             ((clause
                 ((con Int32# (x)) (con Int32# (y)))
-                (seq (do (apply Int32# (seq (do (apply (apply divInt32# x) y))))))))))
+                (seq (do (apply Int32# (parens (apply (apply divInt32# x) y)))))))))
       (foreign malgo_add_int64_t (-> Int64# (-> Int64# Int64#)))
       (sig addInt64# (-> Int64# (-> Int64# Int64#)))
       (def
@@ -89,7 +89,7 @@
          (fn
             ((clause
                 ((con Int64# (x)) (con Int64# (y)))
-                (seq (do (apply Int64# (seq (do (apply (apply addInt64# x) y))))))))))
+                (seq (do (apply Int64# (parens (apply (apply addInt64# x) y)))))))))
       (foreign malgo_sub_int64_t (-> Int64# (-> Int64# Int64#)))
       (sig subInt64# (-> Int64# (-> Int64# Int64#)))
       (def
@@ -101,7 +101,7 @@
          (fn
             ((clause
                 ((con Int64# (x)) (con Int64# (y)))
-                (seq (do (apply Int64# (seq (do (apply (apply subInt64# x) y))))))))))
+                (seq (do (apply Int64# (parens (apply (apply subInt64# x) y)))))))))
       (foreign malgo_mul_int64_t (-> Int64# (-> Int64# Int64#)))
       (sig mulInt64# (-> Int64# (-> Int64# Int64#)))
       (def
@@ -113,7 +113,7 @@
          (fn
             ((clause
                 ((con Int64# (x)) (con Int64# (y)))
-                (seq (do (apply Int64# (seq (do (apply (apply mulInt64# x) y))))))))))
+                (seq (do (apply Int64# (parens (apply (apply mulInt64# x) y)))))))))
       (foreign malgo_div_int64_t (-> Int64# (-> Int64# Int64#)))
       (sig divInt64# (-> Int64# (-> Int64# Int64#)))
       (def
@@ -125,7 +125,7 @@
          (fn
             ((clause
                 ((con Int64# (x)) (con Int64# (y)))
-                (seq (do (apply Int64# (seq (do (apply (apply divInt64# x) y))))))))))
+                (seq (do (apply Int64# (parens (apply (apply divInt64# x) y)))))))))
       (foreign malgo_add_float (-> Float# (-> Float# Float#)))
       (sig addFloat# (-> Float# (-> Float# Float#)))
       (def
@@ -137,7 +137,7 @@
          (fn
             ((clause
                 ((con Float# (x)) (con Float# (y)))
-                (seq (do (apply Float# (seq (do (apply (apply addFloat# x) y))))))))))
+                (seq (do (apply Float# (parens (apply (apply addFloat# x) y)))))))))
       (foreign malgo_sub_float (-> Float# (-> Float# Float#)))
       (sig subFloat# (-> Float# (-> Float# Float#)))
       (def
@@ -149,7 +149,7 @@
          (fn
             ((clause
                 ((con Float# (x)) (con Float# (y)))
-                (seq (do (apply Float# (seq (do (apply (apply subFloat# x) y))))))))))
+                (seq (do (apply Float# (parens (apply (apply subFloat# x) y)))))))))
       (foreign malgo_mul_float (-> Float# (-> Float# Float#)))
       (sig mulFloat# (-> Float# (-> Float# Float#)))
       (def
@@ -161,7 +161,7 @@
          (fn
             ((clause
                 ((con Float# (x)) (con Float# (y)))
-                (seq (do (apply Float# (seq (do (apply (apply mulFloat# x) y))))))))))
+                (seq (do (apply Float# (parens (apply (apply mulFloat# x) y)))))))))
       (foreign malgo_div_float (-> Float# (-> Float# Float#)))
       (sig divFloat# (-> Float# (-> Float# Float#)))
       (def
@@ -173,7 +173,7 @@
          (fn
             ((clause
                 ((con Float# (x)) (con Float# (y)))
-                (seq (do (apply Float# (seq (do (apply (apply divFloat# x) y))))))))))
+                (seq (do (apply Float# (parens (apply (apply divFloat# x) y)))))))))
       (foreign malgo_add_double (-> Double# (-> Double# Double#)))
       (sig addDouble# (-> Double# (-> Double# Double#)))
       (def
@@ -185,8 +185,7 @@
          (fn
             ((clause
                 ((con Double# (x)) (con Double# (y)))
-                (seq
-                   (do (apply Double# (seq (do (apply (apply addDouble# x) y))))))))))
+                (seq (do (apply Double# (parens (apply (apply addDouble# x) y)))))))))
       (foreign malgo_sub_double (-> Double# (-> Double# Double#)))
       (sig subDouble# (-> Double# (-> Double# Double#)))
       (def
@@ -198,8 +197,7 @@
          (fn
             ((clause
                 ((con Double# (x)) (con Double# (y)))
-                (seq
-                   (do (apply Double# (seq (do (apply (apply subDouble# x) y))))))))))
+                (seq (do (apply Double# (parens (apply (apply subDouble# x) y)))))))))
       (foreign malgo_mul_double (-> Double# (-> Double# Double#)))
       (sig mulDouble# (-> Double# (-> Double# Double#)))
       (def
@@ -211,8 +209,7 @@
          (fn
             ((clause
                 ((con Double# (x)) (con Double# (y)))
-                (seq
-                   (do (apply Double# (seq (do (apply (apply mulDouble# x) y))))))))))
+                (seq (do (apply Double# (parens (apply (apply mulDouble# x) y)))))))))
       (foreign malgo_div_double (-> Double# (-> Double# Double#)))
       (sig divDouble# (-> Double# (-> Double# Double#)))
       (def
@@ -224,8 +221,7 @@
          (fn
             ((clause
                 ((con Double# (x)) (con Double# (y)))
-                (seq
-                   (do (apply Double# (seq (do (apply (apply divDouble# x) y))))))))))
+                (seq (do (apply Double# (parens (apply (apply divDouble# x) y)))))))))
       (foreign sqrtf (-> Float# Float#))
       (sig sqrtFloat# (-> Float# Float#))
       (def sqrtFloat# (fn ((clause (x) (seq (do (apply sqrtf x)))))))
@@ -235,7 +231,7 @@
          (fn
             ((clause
                 ((con Float# (x)))
-                (seq (do (apply Float# (seq (do (apply sqrtFloat# x))))))))))
+                (seq (do (apply Float# (parens (apply sqrtFloat# x)))))))))
       (foreign sqrt (-> Double# Double#))
       (sig sqrtDouble# (-> Double# Double#))
       (def sqrtDouble# (fn ((clause (x) (seq (do (apply sqrt x)))))))
@@ -245,7 +241,7 @@
          (fn
             ((clause
                 ((con Double# (x)))
-                (seq (do (apply Double# (seq (do (apply sqrtDouble# x))))))))))
+                (seq (do (apply Double# (parens (apply sqrtDouble# x)))))))))
       (sig isTrue# (-> Int32# Bool))
       (def
          isTrue#
@@ -267,7 +263,7 @@
          (fn
             ((clause
                 ((con Int32# (x)) (con Int32# (y)))
-                (seq (do (apply isTrue# (seq (do (apply (apply eqInt32# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply eqInt32# x) y)))))))))
       (foreign malgo_ne_int32_t (-> Int32# (-> Int32# Int32#)))
       (sig neInt32# (-> Int32# (-> Int32# Int32#)))
       (def
@@ -279,7 +275,7 @@
          (fn
             ((clause
                 ((con Int32# (x)) (con Int32# (y)))
-                (seq (do (apply isTrue# (seq (do (apply (apply neInt32# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply neInt32# x) y)))))))))
       (foreign malgo_lt_int32_t (-> Int32# (-> Int32# Int32#)))
       (sig ltInt32# (-> Int32# (-> Int32# Int32#)))
       (def
@@ -291,7 +287,7 @@
          (fn
             ((clause
                 ((con Int32# (x)) (con Int32# (y)))
-                (seq (do (apply isTrue# (seq (do (apply (apply ltInt32# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply ltInt32# x) y)))))))))
       (foreign malgo_gt_int32_t (-> Int32# (-> Int32# Int32#)))
       (sig gtInt32# (-> Int32# (-> Int32# Int32#)))
       (def
@@ -303,7 +299,7 @@
          (fn
             ((clause
                 ((con Int32# (x)) (con Int32# (y)))
-                (seq (do (apply isTrue# (seq (do (apply (apply gtInt32# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply gtInt32# x) y)))))))))
       (foreign malgo_le_int32_t (-> Int32# (-> Int32# Int32#)))
       (sig leInt32# (-> Int32# (-> Int32# Int32#)))
       (def
@@ -315,7 +311,7 @@
          (fn
             ((clause
                 ((con Int32# (x)) (con Int32# (y)))
-                (seq (do (apply isTrue# (seq (do (apply (apply leInt32# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply leInt32# x) y)))))))))
       (foreign malgo_ge_int32_t (-> Int32# (-> Int32# Int32#)))
       (sig geInt32# (-> Int32# (-> Int32# Int32#)))
       (def
@@ -327,7 +323,7 @@
          (fn
             ((clause
                 ((con Int32# (x)) (con Int32# (y)))
-                (seq (do (apply isTrue# (seq (do (apply (apply geInt32# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply geInt32# x) y)))))))))
       (foreign malgo_eq_int64_t (-> Int64# (-> Int64# Int32#)))
       (sig eqInt64# (-> Int64# (-> Int64# Int32#)))
       (def
@@ -339,7 +335,7 @@
          (fn
             ((clause
                 ((con Int64# (x)) (con Int64# (y)))
-                (seq (do (apply isTrue# (seq (do (apply (apply eqInt64# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply eqInt64# x) y)))))))))
       (foreign malgo_ne_int64_t (-> Int64# (-> Int64# Int32#)))
       (sig neInt64# (-> Int64# (-> Int64# Int32#)))
       (def
@@ -351,7 +347,7 @@
          (fn
             ((clause
                 ((con Int64# (x)) (con Int64# (y)))
-                (seq (do (apply isTrue# (seq (do (apply (apply neInt64# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply neInt64# x) y)))))))))
       (foreign malgo_lt_int64_t (-> Int64# (-> Int64# Int32#)))
       (sig ltInt64# (-> Int64# (-> Int64# Int32#)))
       (def
@@ -363,7 +359,7 @@
          (fn
             ((clause
                 ((con Int64# (x)) (con Int64# (y)))
-                (seq (do (apply isTrue# (seq (do (apply (apply ltInt64# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply ltInt64# x) y)))))))))
       (foreign malgo_gt_int64_t (-> Int64# (-> Int64# Int32#)))
       (sig gtInt64# (-> Int64# (-> Int64# Int32#)))
       (def
@@ -375,7 +371,7 @@
          (fn
             ((clause
                 ((con Int64# (x)) (con Int64# (y)))
-                (seq (do (apply isTrue# (seq (do (apply (apply gtInt64# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply gtInt64# x) y)))))))))
       (foreign malgo_le_int64_t (-> Int64# (-> Int64# Int32#)))
       (sig leInt64# (-> Int64# (-> Int64# Int32#)))
       (def
@@ -387,7 +383,7 @@
          (fn
             ((clause
                 ((con Int64# (x)) (con Int64# (y)))
-                (seq (do (apply isTrue# (seq (do (apply (apply leInt64# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply leInt64# x) y)))))))))
       (foreign malgo_ge_int64_t (-> Int64# (-> Int64# Int32#)))
       (sig geInt64# (-> Int64# (-> Int64# Int32#)))
       (def
@@ -399,7 +395,7 @@
          (fn
             ((clause
                 ((con Int64# (x)) (con Int64# (y)))
-                (seq (do (apply isTrue# (seq (do (apply (apply geInt64# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply geInt64# x) y)))))))))
       (foreign malgo_eq_float (-> Float# (-> Float# Int32#)))
       (sig eqFloat# (-> Float# (-> Float# Int32#)))
       (def
@@ -411,7 +407,7 @@
          (fn
             ((clause
                 ((con Float# (x)) (con Float# (y)))
-                (seq (do (apply isTrue# (seq (do (apply (apply eqFloat# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply eqFloat# x) y)))))))))
       (foreign malgo_ne_float (-> Float# (-> Float# Int32#)))
       (sig neFloat# (-> Float# (-> Float# Int32#)))
       (def
@@ -423,7 +419,7 @@
          (fn
             ((clause
                 ((con Float# (x)) (con Float# (y)))
-                (seq (do (apply isTrue# (seq (do (apply (apply neFloat# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply neFloat# x) y)))))))))
       (foreign malgo_lt_float (-> Float# (-> Float# Int32#)))
       (sig ltFloat# (-> Float# (-> Float# Int32#)))
       (def
@@ -435,7 +431,7 @@
          (fn
             ((clause
                 ((con Float# (x)) (con Float# (y)))
-                (seq (do (apply isTrue# (seq (do (apply (apply ltFloat# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply ltFloat# x) y)))))))))
       (foreign malgo_gt_float (-> Float# (-> Float# Int32#)))
       (sig gtFloat# (-> Float# (-> Float# Int32#)))
       (def
@@ -447,7 +443,7 @@
          (fn
             ((clause
                 ((con Float# (x)) (con Float# (y)))
-                (seq (do (apply isTrue# (seq (do (apply (apply gtFloat# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply gtFloat# x) y)))))))))
       (foreign malgo_le_float (-> Float# (-> Float# Int32#)))
       (sig leFloat# (-> Float# (-> Float# Int32#)))
       (def
@@ -459,7 +455,7 @@
          (fn
             ((clause
                 ((con Float# (x)) (con Float# (y)))
-                (seq (do (apply isTrue# (seq (do (apply (apply leFloat# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply leFloat# x) y)))))))))
       (foreign malgo_ge_float (-> Float# (-> Float# Int32#)))
       (sig geFloat# (-> Float# (-> Float# Int32#)))
       (def
@@ -471,7 +467,7 @@
          (fn
             ((clause
                 ((con Float# (x)) (con Float# (y)))
-                (seq (do (apply isTrue# (seq (do (apply (apply geFloat# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply geFloat# x) y)))))))))
       (foreign malgo_eq_double (-> Double# (-> Double# Int32#)))
       (sig eqDouble# (-> Double# (-> Double# Int32#)))
       (def
@@ -483,8 +479,7 @@
          (fn
             ((clause
                 ((con Double# (x)) (con Double# (y)))
-                (seq
-                   (do (apply isTrue# (seq (do (apply (apply eqDouble# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply eqDouble# x) y)))))))))
       (foreign malgo_ne_double (-> Double# (-> Double# Int32#)))
       (sig neDouble# (-> Double# (-> Double# Int32#)))
       (def
@@ -496,8 +491,7 @@
          (fn
             ((clause
                 ((con Double# (x)) (con Double# (y)))
-                (seq
-                   (do (apply isTrue# (seq (do (apply (apply neDouble# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply neDouble# x) y)))))))))
       (foreign malgo_lt_double (-> Double# (-> Double# Int32#)))
       (sig ltDouble# (-> Double# (-> Double# Int32#)))
       (def
@@ -509,8 +503,7 @@
          (fn
             ((clause
                 ((con Double# (x)) (con Double# (y)))
-                (seq
-                   (do (apply isTrue# (seq (do (apply (apply ltDouble# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply ltDouble# x) y)))))))))
       (foreign malgo_gt_double (-> Double# (-> Double# Int32#)))
       (sig gtDouble# (-> Double# (-> Double# Int32#)))
       (def
@@ -522,8 +515,7 @@
          (fn
             ((clause
                 ((con Double# (x)) (con Double# (y)))
-                (seq
-                   (do (apply isTrue# (seq (do (apply (apply gtDouble# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply gtDouble# x) y)))))))))
       (foreign malgo_le_double (-> Double# (-> Double# Int32#)))
       (sig leDouble# (-> Double# (-> Double# Int32#)))
       (def
@@ -535,8 +527,7 @@
          (fn
             ((clause
                 ((con Double# (x)) (con Double# (y)))
-                (seq
-                   (do (apply isTrue# (seq (do (apply (apply leDouble# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply leDouble# x) y)))))))))
       (foreign malgo_ge_double (-> Double# (-> Double# Int32#)))
       (sig geDouble# (-> Double# (-> Double# Int32#)))
       (def
@@ -548,8 +539,7 @@
          (fn
             ((clause
                 ((con Double# (x)) (con Double# (y)))
-                (seq
-                   (do (apply isTrue# (seq (do (apply (apply geDouble# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply geDouble# x) y)))))))))
       (foreign malgo_eq_char (-> Char# (-> Char# Int32#)))
       (sig eqChar# (-> Char# (-> Char# Int32#)))
       (def
@@ -561,7 +551,7 @@
          (fn
             ((clause
                 ((con Char# (x)) (con Char# (y)))
-                (seq (do (apply isTrue# (seq (do (apply (apply eqChar# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply eqChar# x) y)))))))))
       (foreign malgo_ne_char (-> Char# (-> Char# Int32#)))
       (sig neChar# (-> Char# (-> Char# Int32#)))
       (def
@@ -573,7 +563,7 @@
          (fn
             ((clause
                 ((con Char# (x)) (con Char# (y)))
-                (seq (do (apply isTrue# (seq (do (apply (apply neChar# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply neChar# x) y)))))))))
       (foreign malgo_lt_char (-> Char# (-> Char# Int32#)))
       (sig ltChar# (-> Char# (-> Char# Int32#)))
       (def
@@ -585,7 +575,7 @@
          (fn
             ((clause
                 ((con Char# (x)) (con Char# (y)))
-                (seq (do (apply isTrue# (seq (do (apply (apply ltChar# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply ltChar# x) y)))))))))
       (foreign malgo_gt_char (-> Char# (-> Char# Int32#)))
       (sig gtChar# (-> Char# (-> Char# Int32#)))
       (def
@@ -597,7 +587,7 @@
          (fn
             ((clause
                 ((con Char# (x)) (con Char# (y)))
-                (seq (do (apply isTrue# (seq (do (apply (apply gtChar# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply gtChar# x) y)))))))))
       (foreign malgo_le_char (-> Char# (-> Char# Int32#)))
       (sig leChar# (-> Char# (-> Char# Int32#)))
       (def
@@ -609,7 +599,7 @@
          (fn
             ((clause
                 ((con Char# (x)) (con Char# (y)))
-                (seq (do (apply isTrue# (seq (do (apply (apply leChar# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply leChar# x) y)))))))))
       (foreign malgo_ge_char (-> Char# (-> Char# Int32#)))
       (sig geChar# (-> Char# (-> Char# Int32#)))
       (def
@@ -621,7 +611,7 @@
          (fn
             ((clause
                 ((con Char# (x)) (con Char# (y)))
-                (seq (do (apply isTrue# (seq (do (apply (apply geChar# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply geChar# x) y)))))))))
       (foreign malgo_eq_string (-> String# (-> String# Int32#)))
       (sig eqString# (-> String# (-> String# Int32#)))
       (def
@@ -633,8 +623,7 @@
          (fn
             ((clause
                 ((con String# (x)) (con String# (y)))
-                (seq
-                   (do (apply isTrue# (seq (do (apply (apply eqString# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply eqString# x) y)))))))))
       (foreign malgo_ne_string (-> String# (-> String# Int32#)))
       (sig neString# (-> String# (-> String# Int32#)))
       (def
@@ -646,8 +635,7 @@
          (fn
             ((clause
                 ((con String# (x)) (con String# (y)))
-                (seq
-                   (do (apply isTrue# (seq (do (apply (apply neString# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply neString# x) y)))))))))
       (foreign malgo_lt_string (-> String# (-> String# Int32#)))
       (sig ltString# (-> String# (-> String# Int32#)))
       (def
@@ -659,8 +647,7 @@
          (fn
             ((clause
                 ((con String# (x)) (con String# (y)))
-                (seq
-                   (do (apply isTrue# (seq (do (apply (apply ltString# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply ltString# x) y)))))))))
       (foreign malgo_gt_string (-> String# (-> String# Int32#)))
       (sig gtString# (-> String# (-> String# Int32#)))
       (def
@@ -672,8 +659,7 @@
          (fn
             ((clause
                 ((con String# (x)) (con String# (y)))
-                (seq
-                   (do (apply isTrue# (seq (do (apply (apply gtString# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply gtString# x) y)))))))))
       (foreign malgo_le_string (-> String# (-> String# Int32#)))
       (sig leString# (-> String# (-> String# Int32#)))
       (def
@@ -685,8 +671,7 @@
          (fn
             ((clause
                 ((con String# (x)) (con String# (y)))
-                (seq
-                   (do (apply isTrue# (seq (do (apply (apply leString# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply leString# x) y)))))))))
       (foreign malgo_ge_string (-> String# (-> String# Int32#)))
       (sig geString# (-> String# (-> String# Int32#)))
       (def
@@ -698,8 +683,7 @@
          (fn
             ((clause
                 ((con String# (x)) (con String# (y)))
-                (seq
-                   (do (apply isTrue# (seq (do (apply (apply geString# x) y))))))))))
+                (seq (do (apply isTrue# (parens (apply (apply geString# x) y)))))))))
       (foreign malgo_char_ord (-> Char# Int32#))
       (sig ordChar# (-> Char# Int32#))
       (def ordChar# (fn ((clause (x) (seq (do (apply malgo_char_ord x)))))))
@@ -709,7 +693,7 @@
          (fn
             ((clause
                 ((con Char# (chr)))
-                (seq (do (apply Int32# (seq (do (apply ordChar# chr))))))))))
+                (seq (do (apply Int32# (parens (apply ordChar# chr)))))))))
       (foreign malgo_is_digit (-> Char# Int32#))
       (sig isDigit# (-> Char# Int32#))
       (def isDigit# (fn ((clause (x) (seq (do (apply malgo_is_digit x)))))))
@@ -719,7 +703,7 @@
          (fn
             ((clause
                 ((con Char# (x)))
-                (seq (do (apply isTrue# (seq (do (apply isDigit# x))))))))))
+                (seq (do (apply isTrue# (parens (apply isDigit# x)))))))))
       (foreign malgo_is_lower (-> Char# Int32#))
       (sig isLower# (-> Char# Int32#))
       (def isLower# (fn ((clause (x) (seq (do (apply malgo_is_lower x)))))))
@@ -729,7 +713,7 @@
          (fn
             ((clause
                 ((con Char# (x)))
-                (seq (do (apply isTrue# (seq (do (apply isLower# x))))))))))
+                (seq (do (apply isTrue# (parens (apply isLower# x)))))))))
       (foreign malgo_is_upper (-> Char# Int32#))
       (sig isUpper# (-> Char# Int32#))
       (def isUpper# (fn ((clause (x) (seq (do (apply malgo_is_upper x)))))))
@@ -739,7 +723,7 @@
          (fn
             ((clause
                 ((con Char# (x)))
-                (seq (do (apply isTrue# (seq (do (apply isUpper# x))))))))))
+                (seq (do (apply isTrue# (parens (apply isUpper# x)))))))))
       (foreign malgo_is_alphanum (-> Char# Int32#))
       (sig isAlphanum# (-> Char# Int32#))
       (def isAlphanum# (fn ((clause (x) (seq (do (apply malgo_is_alphanum x)))))))
@@ -749,7 +733,7 @@
          (fn
             ((clause
                 ((con Char# (x)))
-                (seq (do (apply isTrue# (seq (do (apply isAlphanum# x))))))))))
+                (seq (do (apply isTrue# (parens (apply isAlphanum# x)))))))))
       (foreign malgo_string_length (-> String# Int64#))
       (sig lengthString# (-> String# Int64#))
       (def
@@ -761,7 +745,7 @@
          (fn
             ((clause
                 ((con String# (str)))
-                (seq (do (apply Int64# (seq (do (apply lengthString# str))))))))))
+                (seq (do (apply Int64# (parens (apply lengthString# str)))))))))
       (foreign malgo_string_at (-> Int64# (-> String# Char#)))
       (sig atString# (-> Int64# (-> String# Char#)))
       (def
@@ -773,7 +757,7 @@
          (fn
             ((clause
                 ((con Int64# (i)) (con String# (x)))
-                (seq (do (apply Char# (seq (do (apply (apply atString# i) x))))))))))
+                (seq (do (apply Char# (parens (apply (apply atString# i) x)))))))))
       (foreign malgo_string_cons (-> Char# (-> String# String#)))
       (sig consString# (-> Char# (-> String# String#)))
       (def
@@ -786,8 +770,7 @@
             ((clause
                 ((con Char# (c)) (con String# (cs)))
                 (seq
-                   (do
-                      (apply String# (seq (do (apply (apply consString# c) cs))))))))))
+                   (do (apply String# (parens (apply (apply consString# c) cs)))))))))
       (foreign malgo_string_append (-> String# (-> String# String#)))
       (sig appendString# (-> String# (-> String# String#)))
       (def
@@ -800,8 +783,7 @@
             ((clause
                 ((con String# (x)) (con String# (y)))
                 (seq
-                   (do
-                      (apply String# (seq (do (apply (apply appendString# x) y))))))))))
+                   (do (apply String# (parens (apply (apply appendString# x) y)))))))))
       (foreign malgo_substring (-> String# (-> Int64# (-> Int64# String#))))
       (sig substring# (-> String# (-> Int64# (-> Int64# String#))))
       (def
@@ -820,8 +802,7 @@
                    (do
                       (apply
                          String#
-                         (seq
-                            (do (apply (apply (apply substring# str) start) end))))))))))
+                         (parens (apply (apply (apply substring# str) start) end)))))))))
       (foreign malgo_int32_t_to_string (-> Int32# String#))
       (sig toStringInt32# (-> Int32# String#))
       (def
@@ -833,7 +814,7 @@
          (fn
             ((clause
                 ((con Int32# (x)))
-                (seq (do (apply String# (seq (do (apply toStringInt32# x))))))))))
+                (seq (do (apply String# (parens (apply toStringInt32# x)))))))))
       (foreign malgo_int64_t_to_string (-> Int64# String#))
       (sig toStringInt64# (-> Int64# String#))
       (def
@@ -845,7 +826,7 @@
          (fn
             ((clause
                 ((con Int64# (x)))
-                (seq (do (apply String# (seq (do (apply toStringInt64# x))))))))))
+                (seq (do (apply String# (parens (apply toStringInt64# x)))))))))
       (foreign malgo_float_to_string (-> Float# String#))
       (sig toStringFloat# (-> Float# String#))
       (def
@@ -857,7 +838,7 @@
          (fn
             ((clause
                 ((con Float# (x)))
-                (seq (do (apply String# (seq (do (apply toStringFloat# x))))))))))
+                (seq (do (apply String# (parens (apply toStringFloat# x)))))))))
       (foreign malgo_double_to_string (-> Double# String#))
       (sig toStringDouble# (-> Double# String#))
       (def
@@ -869,7 +850,7 @@
          (fn
             ((clause
                 ((con Double# (x)))
-                (seq (do (apply String# (seq (do (apply toStringDouble# x))))))))))
+                (seq (do (apply String# (parens (apply toStringDouble# x)))))))))
       (foreign malgo_char_to_string (-> Char# String#))
       (sig toStringChar# (-> Char# String#))
       (def
@@ -881,7 +862,7 @@
          (fn
             ((clause
                 ((con Char# (x)))
-                (seq (do (apply String# (seq (do (apply toStringChar# x))))))))))
+                (seq (do (apply String# (parens (apply toStringChar# x)))))))))
       (foreign malgo_exit_failure (-> (tuple) a))
       (sig exitFailure (-> (tuple) a))
       (def
@@ -913,7 +894,7 @@
          (fn
             ((clause
                 (_)
-                (seq (do (apply Char# (seq (do (apply malgo_get_char (tuple)))))))))))
+                (seq (do (apply Char# (parens (apply malgo_get_char (tuple))))))))))
       (foreign malgo_get_contents (-> (tuple) String#))
       (def
          getContents
@@ -922,6 +903,4 @@
                 (_)
                 (seq
                    (do
-                      (apply
-                         String#
-                         (seq (do (apply malgo_get_contents (tuple)))))))))))))
+                      (apply String# (parens (apply malgo_get_contents (tuple))))))))))))

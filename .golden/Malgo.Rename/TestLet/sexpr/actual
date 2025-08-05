@@ -18,13 +18,12 @@
                      (do
                         (apply
                            printString#
-                           (seq (do (apply toStringInt32# #TestLet.x_4)))))
+                           (parens (apply toStringInt32# #TestLet.x_4))))
                      (let
                         #TestLet.x_5
                         (apply
                            Int32#
-                           (seq
-                              (do (apply (apply addInt32# (int32 1)) (int32 2))))))
+                           (parens (apply (apply addInt32# (int32 1)) (int32 2)))))
                      (let
                         #TestLet.printInt32_7
                         (fn
@@ -34,9 +33,8 @@
                                   (do
                                      (apply
                                         printString#
-                                        (seq
-                                           (do
-                                              (apply toStringInt32# #TestLet.x_6))))))))))
+                                        (parens
+                                           (apply toStringInt32# #TestLet.x_6)))))))))
                      (do (apply #TestLet.printInt32_7 #TestLet.x_5)))))))))
       ((sig |> (-> #TestLet.a_0 (-> (-> #TestLet.a_0 #TestLet.b_1) #TestLet.b_1))))
       ()
