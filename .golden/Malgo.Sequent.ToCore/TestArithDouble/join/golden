@@ -243,7 +243,7 @@
                (select
                   (#TestArithDouble.x_11
                      (join
-                        $TestArithDouble.then_96
+                        $TestArithDouble.then_97
                         (then
                            $TestArithDouble.outer_62
                            (join
@@ -253,26 +253,26 @@
                                  (join
                                     $TestArithDouble.apply_95
                                     (apply
-                                       ($TestArithDouble.inner_63)
+                                       (#TestArithDouble.x_11)
                                        ($TestArithDouble.return_50))
-                                    (cut
-                                       $TestArithDouble.outer_62
-                                       $TestArithDouble.apply_95)))
+                                    (join
+                                       $TestArithDouble.apply_96
+                                       (apply
+                                          ($TestArithDouble.inner_63)
+                                          ($TestArithDouble.apply_95))
+                                       (cut
+                                          $TestArithDouble.outer_62
+                                          $TestArithDouble.apply_96))))
                               (join
                                  $TestArithDouble.apply_93
-                                 (apply
-                                    (#TestArithDouble.x_11)
-                                    ($TestArithDouble.return_51))
+                                 (apply (0.0_f64) ($TestArithDouble.return_51))
                                  (join
                                     $TestArithDouble.apply_94
-                                    (apply (0.0_f64) ($TestArithDouble.apply_93))
-                                    (invoke * $TestArithDouble.apply_94)))))
-                        (join
-                           $TestArithDouble.apply_97
-                           (apply
-                              (#TestArithDouble.x_11)
-                              ($TestArithDouble.then_96))
-                           (invoke + $TestArithDouble.apply_97)))))
+                                    (apply
+                                       (#TestArithDouble.x_11)
+                                       ($TestArithDouble.apply_93))
+                                    (invoke + $TestArithDouble.apply_94)))))
+                        (invoke * $TestArithDouble.then_97))))
                (cut $TestArithDouble.param_25 $TestArithDouble.select_98)))
          $TestArithDouble.return_49))
    (main

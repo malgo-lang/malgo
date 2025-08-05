@@ -171,19 +171,19 @@
                (select
                   (#TestArithDouble.x_11
                      (invoke
-                        +
+                        *
                         (apply
-                           (#TestArithDouble.x_11)
-                           ((apply
-                               ((do
-                                   $TestArithDouble.return_51
-                                   (invoke
-                                      *
-                                      (apply
+                           ((do
+                               $TestArithDouble.return_51
+                               (invoke
+                                  +
+                                  (apply
+                                     (#TestArithDouble.x_11)
+                                     ((apply
                                          (0.0_f64)
-                                         ((apply
-                                             (#TestArithDouble.x_11)
-                                             ($TestArithDouble.return_51)))))))
+                                         ($TestArithDouble.return_51)))))))
+                           ((apply
+                               (#TestArithDouble.x_11)
                                ($TestArithDouble.return_50)))))))))
          $TestArithDouble.return_49))
    (main

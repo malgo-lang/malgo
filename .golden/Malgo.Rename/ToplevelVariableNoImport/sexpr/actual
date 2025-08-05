@@ -19,7 +19,10 @@
                      (do
                         (apply
                            String#
-                           (apply toStringInt32# #ToplevelVariableNoImport.x_15)))))))))
+                           (parens
+                              (apply
+                                 toStringInt32#
+                                 #ToplevelVariableNoImport.x_15))))))))))
        ((def
            printString#
            (fn
@@ -42,7 +45,8 @@
                      (do
                         (apply
                            printString
-                           (apply toStringInt32 #ToplevelVariableNoImport.i_13)))))))))
+                           (parens
+                              (apply toStringInt32 #ToplevelVariableNoImport.i_13))))))))))
        ((def one (apply Int32# (int32 1))))
        ((def
            identity
@@ -65,7 +69,7 @@
                     (clause
                        ((con Just (#ToplevelVariableNoImport.x_17)))
                        (seq (do Nothing)))))
-              (apply Just (tuple)))))
+              (parens (apply Just (tuple))))))
        ((def
            addInt32#
            (fn
@@ -86,9 +90,10 @@
                      (do
                         (apply
                            Int32#
-                           (apply
-                              (apply addInt32# #ToplevelVariableNoImport.x_2)
-                              #ToplevelVariableNoImport.y_3)))))))))
+                           (parens
+                              (apply
+                                 (apply addInt32# #ToplevelVariableNoImport.x_2)
+                                 #ToplevelVariableNoImport.y_3))))))))))
        ((def addOne (apply addInt32 one)))
        ((def
            main
@@ -113,7 +118,10 @@
                      (do
                         (apply
                            printInt32
-                           (apply (apply constId const) (apply addOne one)))))))))))
+                           (parens
+                              (apply
+                                 (apply constId const)
+                                 (parens (apply addOne one)))))))))))))
       ((sig addInt32# (-> Int32# (-> Int32# Int32#)))
          (sig addInt32 (-> Int32 (-> Int32 Int32)))
          (sig printString# (-> String# (tuple)))

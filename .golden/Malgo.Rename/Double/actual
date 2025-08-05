@@ -137,41 +137,19 @@ Module
             }
            )
           )
-          ( Apply
+          ( Parens
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/Double.mlg"
              , sourceLine = Pos 5
-             , sourceColumn = Pos 26
+             , sourceColumn = Pos 10
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/Double.mlg"
-             , sourceLine = Pos 5
-             , sourceColumn = Pos 30
+             , sourceLine = Pos 6
+             , sourceColumn = Pos 1
              }
             }
-           )
-           ( Var
-            ( Range
-             { _start = SourcePos
-              { sourceName = "./test/testcases/malgo/Double.mlg"
-              , sourceLine = Pos 5
-              , sourceColumn = Pos 11
-              }
-             , _end = SourcePos
-              { sourceName = "./test/testcases/malgo/Double.mlg"
-              , sourceLine = Pos 5
-              , sourceColumn = Pos 26
-              }
-             }
-            )
-            ( Id
-             { name = "toStringDouble"
-             , moduleName = Artifact
-              ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-             , sort = External
-             }
-            )
            )
            ( Apply
             ( Range
@@ -192,24 +170,24 @@ Module
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/Double.mlg"
                , sourceLine = Pos 5
-               , sourceColumn = Pos 26
+               , sourceColumn = Pos 11
                }
               , _end = SourcePos
                { sourceName = "./test/testcases/malgo/Double.mlg"
                , sourceLine = Pos 5
-               , sourceColumn = Pos 30
+               , sourceColumn = Pos 26
                }
               }
              )
              ( Id
-              { name = "Double#"
+              { name = "toStringDouble"
               , moduleName = Artifact
                ( ArtifactPath "runtime/malgo/Builtin.mlg" )
               , sort = External
               }
              )
             )
-            ( Unboxed
+            ( Apply
              ( Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/Double.mlg"
@@ -223,7 +201,44 @@ Module
                }
               }
              )
-             ( Double 3.14 )
+             ( Var
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/Double.mlg"
+                , sourceLine = Pos 5
+                , sourceColumn = Pos 26
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/Double.mlg"
+                , sourceLine = Pos 5
+                , sourceColumn = Pos 30
+                }
+               }
+              )
+              ( Id
+               { name = "Double#"
+               , moduleName = Artifact
+                ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+               , sort = External
+               }
+              )
+             )
+             ( Unboxed
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/Double.mlg"
+                , sourceLine = Pos 5
+                , sourceColumn = Pos 26
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/Double.mlg"
+                , sourceLine = Pos 5
+                , sourceColumn = Pos 30
+                }
+               }
+              )
+              ( Double 3.14 )
+             )
             )
            )
           )

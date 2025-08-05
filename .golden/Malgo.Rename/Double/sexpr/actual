@@ -9,7 +9,10 @@
                    (do
                       (apply
                          putStr
-                         (apply toStringDouble (apply Double# (double 3.14_f64))))))))))))
+                         (parens
+                            (apply
+                               toStringDouble
+                               (apply Double# (double 3.14_f64)))))))))))))
       ()
       ()
       ()

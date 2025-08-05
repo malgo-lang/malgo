@@ -172,43 +172,21 @@ Module
              }
             )
            )
-           ( Apply
+           ( Parens
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
               , sourceLine = Pos 13
-              , sourceColumn = Pos 27
+              , sourceColumn = Pos 22
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
               , sourceLine = Pos 13
-              , sourceColumn = Pos 28
+              , sourceColumn = Pos 30
               }
              }
             )
-            ( Var
-             ( Range
-              { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
-               , sourceLine = Pos 13
-               , sourceColumn = Pos 23
-               }
-              , _end = SourcePos
-               { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
-               , sourceLine = Pos 13
-               , sourceColumn = Pos 27
-               }
-              }
-             )
-             ( Id
-              { name = "fix"
-              , moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" )
-              , sort = External
-              }
-             )
-            )
-            ( Var
+            ( Apply
              ( Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
@@ -222,12 +200,49 @@ Module
                }
               }
              )
-             ( Id
-              { name = "f"
-              , moduleName = Artifact
-               ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" )
-              , sort = Internal 6
-              }
+             ( Var
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
+                , sourceLine = Pos 13
+                , sourceColumn = Pos 23
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
+                , sourceLine = Pos 13
+                , sourceColumn = Pos 27
+                }
+               }
+              )
+              ( Id
+               { name = "fix"
+               , moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" )
+               , sort = External
+               }
+              )
+             )
+             ( Var
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
+                , sourceLine = Pos 13
+                , sourceColumn = Pos 27
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
+                , sourceLine = Pos 13
+                , sourceColumn = Pos 28
+                }
+               }
+              )
+              ( Id
+               { name = "f"
+               , moduleName = Artifact
+                ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" )
+               , sort = Internal 6
+               }
+              )
              )
             )
            )
@@ -1224,65 +1239,43 @@ Module
                    }
                   )
                  )
-                 ( OpApp
+                 ( Parens
                   ( Range
                    { _start = SourcePos
                     { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
                     , sourceLine = Pos 17
-                    , sourceColumn = Pos 11
+                    , sourceColumn = Pos 8
                     }
                    , _end = SourcePos
                     { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
-                    , sourceLine = Pos 17
-                    , sourceColumn = Pos 14
+                    , sourceLine = Pos 18
+                    , sourceColumn = Pos 7
                     }
                    }
-                  ,
-                   ( NeutralA
-                   , 4
-                   )
                   )
-                  ( Id
-                   { name = "<="
-                   , moduleName = Artifact
-                    ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" )
-                   , sort = External
-                   }
-                  )
-                  ( Var
+                  ( OpApp
                    ( Range
                     { _start = SourcePos
-                     { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
-                     , sourceLine = Pos 17
-                     , sourceColumn = Pos 9
-                     }
-                    , _end = SourcePos
                      { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
                      , sourceLine = Pos 17
                      , sourceColumn = Pos 11
                      }
-                    }
-                   )
-                   ( Id
-                    { name = "n"
-                    , moduleName = Artifact
-                     ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" )
-                    , sort = Internal 9
-                    }
-                   )
-                  )
-                  ( Apply
-                   ( Range
-                    { _start = SourcePos
+                    , _end = SourcePos
                      { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
                      , sourceLine = Pos 17
                      , sourceColumn = Pos 14
                      }
-                    , _end = SourcePos
-                     { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
-                     , sourceLine = Pos 17
-                     , sourceColumn = Pos 15
-                     }
+                    }
+                   ,
+                    ( NeutralA
+                    , 4
+                    )
+                   )
+                   ( Id
+                    { name = "<="
+                    , moduleName = Artifact
+                     ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" )
+                    , sort = External
                     }
                    )
                    ( Var
@@ -1290,24 +1283,24 @@ Module
                      { _start = SourcePos
                       { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
                       , sourceLine = Pos 17
-                      , sourceColumn = Pos 14
+                      , sourceColumn = Pos 9
                       }
                      , _end = SourcePos
                       { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
                       , sourceLine = Pos 17
-                      , sourceColumn = Pos 15
+                      , sourceColumn = Pos 11
                       }
                      }
                     )
                     ( Id
-                     { name = "Int32#"
+                     { name = "n"
                      , moduleName = Artifact
-                      ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-                     , sort = External
+                      ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" )
+                     , sort = Internal 9
                      }
                     )
                    )
-                   ( Unboxed
+                   ( Apply
                     ( Range
                      { _start = SourcePos
                       { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
@@ -1321,7 +1314,44 @@ Module
                       }
                      }
                     )
-                    ( Int32 1 )
+                    ( Var
+                     ( Range
+                      { _start = SourcePos
+                       { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
+                       , sourceLine = Pos 17
+                       , sourceColumn = Pos 14
+                       }
+                      , _end = SourcePos
+                       { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
+                       , sourceLine = Pos 17
+                       , sourceColumn = Pos 15
+                       }
+                      }
+                     )
+                     ( Id
+                      { name = "Int32#"
+                      , moduleName = Artifact
+                       ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+                      , sort = External
+                      }
+                     )
+                    )
+                    ( Unboxed
+                     ( Range
+                      { _start = SourcePos
+                       { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
+                       , sourceLine = Pos 17
+                       , sourceColumn = Pos 14
+                       }
+                      , _end = SourcePos
+                       { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
+                       , sourceLine = Pos 17
+                       , sourceColumn = Pos 15
+                       }
+                      }
+                     )
+                     ( Int32 1 )
+                    )
                    )
                   )
                  )
@@ -1601,65 +1631,43 @@ Module
                        }
                       )
                      )
-                     ( OpApp
+                     ( Parens
                       ( Range
                        { _start = SourcePos
                         { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
                         , sourceLine = Pos 19
-                        , sourceColumn = Pos 14
+                        , sourceColumn = Pos 11
                         }
                        , _end = SourcePos
                         { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
                         , sourceLine = Pos 19
-                        , sourceColumn = Pos 16
+                        , sourceColumn = Pos 19
                         }
                        }
-                      ,
-                       ( LeftA
-                       , 6
-                       )
                       )
-                      ( Id
-                       { name = "-"
-                       , moduleName = Artifact
-                        ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" )
-                       , sort = External
-                       }
-                      )
-                      ( Var
+                      ( OpApp
                        ( Range
                         { _start = SourcePos
-                         { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
-                         , sourceLine = Pos 19
-                         , sourceColumn = Pos 12
-                         }
-                        , _end = SourcePos
                          { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
                          , sourceLine = Pos 19
                          , sourceColumn = Pos 14
                          }
-                        }
-                       )
-                       ( Id
-                        { name = "n"
-                        , moduleName = Artifact
-                         ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" )
-                        , sort = Internal 9
-                        }
-                       )
-                      )
-                      ( Apply
-                       ( Range
-                        { _start = SourcePos
+                        , _end = SourcePos
                          { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
                          , sourceLine = Pos 19
                          , sourceColumn = Pos 16
                          }
-                        , _end = SourcePos
-                         { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
-                         , sourceLine = Pos 19
-                         , sourceColumn = Pos 17
-                         }
+                        }
+                       ,
+                        ( LeftA
+                        , 6
+                        )
+                       )
+                       ( Id
+                        { name = "-"
+                        , moduleName = Artifact
+                         ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" )
+                        , sort = External
                         }
                        )
                        ( Var
@@ -1667,24 +1675,24 @@ Module
                          { _start = SourcePos
                           { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
                           , sourceLine = Pos 19
-                          , sourceColumn = Pos 16
+                          , sourceColumn = Pos 12
                           }
                          , _end = SourcePos
                           { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
                           , sourceLine = Pos 19
-                          , sourceColumn = Pos 17
+                          , sourceColumn = Pos 14
                           }
                          }
                         )
                         ( Id
-                         { name = "Int32#"
+                         { name = "n"
                          , moduleName = Artifact
-                          ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-                         , sort = External
+                          ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" )
+                         , sort = Internal 9
                          }
                         )
                        )
-                       ( Unboxed
+                       ( Apply
                         ( Range
                          { _start = SourcePos
                           { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
@@ -1698,7 +1706,44 @@ Module
                           }
                          }
                         )
-                        ( Int32 1 )
+                        ( Var
+                         ( Range
+                          { _start = SourcePos
+                           { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
+                           , sourceLine = Pos 19
+                           , sourceColumn = Pos 16
+                           }
+                          , _end = SourcePos
+                           { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
+                           , sourceLine = Pos 19
+                           , sourceColumn = Pos 17
+                           }
+                          }
+                         )
+                         ( Id
+                          { name = "Int32#"
+                          , moduleName = Artifact
+                           ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+                          , sort = External
+                          }
+                         )
+                        )
+                        ( Unboxed
+                         ( Range
+                          { _start = SourcePos
+                           { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
+                           , sourceLine = Pos 19
+                           , sourceColumn = Pos 16
+                           }
+                          , _end = SourcePos
+                           { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
+                           , sourceLine = Pos 19
+                           , sourceColumn = Pos 17
+                           }
+                          }
+                         )
+                         ( Int32 1 )
+                        )
                        )
                       )
                      )
@@ -1739,65 +1784,43 @@ Module
                        }
                       )
                      )
-                     ( OpApp
+                     ( Parens
                       ( Range
                        { _start = SourcePos
                         { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
                         , sourceLine = Pos 19
-                        , sourceColumn = Pos 26
+                        , sourceColumn = Pos 23
                         }
                        , _end = SourcePos
                         { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
                         , sourceLine = Pos 19
-                        , sourceColumn = Pos 28
+                        , sourceColumn = Pos 31
                         }
                        }
-                      ,
-                       ( LeftA
-                       , 6
-                       )
                       )
-                      ( Id
-                       { name = "-"
-                       , moduleName = Artifact
-                        ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" )
-                       , sort = External
-                       }
-                      )
-                      ( Var
+                      ( OpApp
                        ( Range
                         { _start = SourcePos
-                         { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
-                         , sourceLine = Pos 19
-                         , sourceColumn = Pos 24
-                         }
-                        , _end = SourcePos
                          { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
                          , sourceLine = Pos 19
                          , sourceColumn = Pos 26
                          }
-                        }
-                       )
-                       ( Id
-                        { name = "n"
-                        , moduleName = Artifact
-                         ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" )
-                        , sort = Internal 9
-                        }
-                       )
-                      )
-                      ( Apply
-                       ( Range
-                        { _start = SourcePos
+                        , _end = SourcePos
                          { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
                          , sourceLine = Pos 19
                          , sourceColumn = Pos 28
                          }
-                        , _end = SourcePos
-                         { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
-                         , sourceLine = Pos 19
-                         , sourceColumn = Pos 29
-                         }
+                        }
+                       ,
+                        ( LeftA
+                        , 6
+                        )
+                       )
+                       ( Id
+                        { name = "-"
+                        , moduleName = Artifact
+                         ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" )
+                        , sort = External
                         }
                        )
                        ( Var
@@ -1805,24 +1828,24 @@ Module
                          { _start = SourcePos
                           { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
                           , sourceLine = Pos 19
-                          , sourceColumn = Pos 28
+                          , sourceColumn = Pos 24
                           }
                          , _end = SourcePos
                           { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
                           , sourceLine = Pos 19
-                          , sourceColumn = Pos 29
+                          , sourceColumn = Pos 26
                           }
                          }
                         )
                         ( Id
-                         { name = "Int32#"
+                         { name = "n"
                          , moduleName = Artifact
-                          ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-                         , sort = External
+                          ( ArtifactPath "test/testcases/malgo/InlineFunction.mlg" )
+                         , sort = Internal 9
                          }
                         )
                        )
-                       ( Unboxed
+                       ( Apply
                         ( Range
                          { _start = SourcePos
                           { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
@@ -1836,7 +1859,44 @@ Module
                           }
                          }
                         )
-                        ( Int32 2 )
+                        ( Var
+                         ( Range
+                          { _start = SourcePos
+                           { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
+                           , sourceLine = Pos 19
+                           , sourceColumn = Pos 28
+                           }
+                          , _end = SourcePos
+                           { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
+                           , sourceLine = Pos 19
+                           , sourceColumn = Pos 29
+                           }
+                          }
+                         )
+                         ( Id
+                          { name = "Int32#"
+                          , moduleName = Artifact
+                           ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+                          , sort = External
+                          }
+                         )
+                        )
+                        ( Unboxed
+                         ( Range
+                          { _start = SourcePos
+                           { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
+                           , sourceLine = Pos 19
+                           , sourceColumn = Pos 28
+                           }
+                          , _end = SourcePos
+                           { sourceName = "./test/testcases/malgo/InlineFunction.mlg"
+                           , sourceLine = Pos 19
+                           , sourceColumn = Pos 29
+                           }
+                          }
+                         )
+                         ( Int32 2 )
+                        )
                        )
                       )
                      )

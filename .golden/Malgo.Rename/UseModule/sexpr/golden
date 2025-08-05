@@ -22,7 +22,9 @@
                         (opapp
                            <|
                            printInt32
-                           (apply (opapp << succ succ) (apply Int32# (int32 1))))))))))))
+                           (apply
+                              (parens (opapp << succ succ))
+                              (apply Int32# (int32 1))))))))))))
       ()
       ()
       ()

@@ -27,7 +27,10 @@
                                      (do
                                         (apply
                                            putStr
-                                           (apply toStringInt32 #TestEither.x_7)))))
+                                           (parens
+                                              (apply
+                                                 toStringInt32
+                                                 #TestEither.x_7))))))
                                  (clause
                                     (#TestEither.__8)
                                     (seq
@@ -53,11 +56,12 @@
                                            (do
                                               (apply
                                                  Right
-                                                 (apply
+                                                 (parens
                                                     (apply
-                                                       addInt32
-                                                       #TestEither.x_10)
-                                                    (apply Int32# (int32 1)))))))))))
+                                                       (apply
+                                                          addInt32
+                                                          #TestEither.x_10)
+                                                       (apply Int32# (int32 1))))))))))))
                            (apply
                               andThen
                               (fn
@@ -104,11 +108,12 @@
                                            (do
                                               (apply
                                                  Right
-                                                 (apply
+                                                 (parens
                                                     (apply
-                                                       addInt32
-                                                       #TestEither.x_13)
-                                                    (apply Int32# (int32 1)))))))))))
+                                                       (apply
+                                                          addInt32
+                                                          #TestEither.x_13)
+                                                       (apply Int32# (int32 1))))))))))))
                            (fn
                               ((clause
                                   ((con Left (#TestEither.err_14)))

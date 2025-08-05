@@ -17,7 +17,10 @@
                    (do
                       (apply
                          putStrLn
-                         (apply toStringInt32 (apply head #TestList.xs_0)))))))))))
+                         (parens
+                            (apply
+                               toStringInt32
+                               (parens (apply head #TestList.xs_0)))))))))))))
       ()
       ()
       ()

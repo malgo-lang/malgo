@@ -23,7 +23,8 @@
                                      (do
                                         (apply
                                            printString#
-                                           (apply toStringInt64# #Test0.i_6)))))))))))))))
+                                           (parens
+                                              (apply toStringInt64# #Test0.i_6))))))))))))))))
        ((def
            +#
            (fn
