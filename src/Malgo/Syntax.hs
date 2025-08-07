@@ -124,6 +124,8 @@ data Expr x
   | Ann (XAnn x) (Expr x) (Type x)
   | Seq (XSeq x) (NonEmpty (Stmt x))
   | Parens (XParens x) (Expr x)
+  | Shift (XShift x) (XId x) (Expr x)
+  | Reset (XReset x) (Expr x)
 
 deriving stock instance (ForallExpX Eq x, ForallClauseX Eq x, ForallPatX Eq x, ForallStmtX Eq x, ForallTypeX Eq x, Eq (XId x)) => Eq (Expr x)
 
@@ -143,6 +145,8 @@ instance (ToSExpr (XId x)) => ToSExpr (Expr x) where
   toSExpr (Ann _ e t) = S.L ["ann", toSExpr e, toSExpr t]
   toSExpr (Seq _ ss) = S.L $ "seq" : map toSExpr (NE.toList ss)
   toSExpr (Parens _ e) = S.L ["parens", toSExpr e]
+  toSExpr (Shift _ k e) = S.L ["shift", toSExpr k, toSExpr e]
+  toSExpr (Reset _ e) = S.L ["reset", toSExpr e]
 
 instance (Pretty (XId x)) => Pretty (Expr x) where
   pretty (Var _ id) = pretty id
@@ -158,6 +162,8 @@ instance (Pretty (XId x)) => Pretty (Expr x) where
   pretty (Ann _ e t) = sexpr ["ann", pretty e, pretty t]
   pretty (Seq _ ss) = sexpr $ "seq" : map pretty (toList ss)
   pretty (Parens _ e) = sexpr ["parens", pretty e]
+  pretty (Shift _ k e) = sexpr ["shift", pretty k, pretty e]
+  pretty (Reset _ e) = sexpr ["reset", pretty e]
 
 instance (ForallExpX HasRange x) => HasRange (Expr x) where
   range (Var x _) = range x
@@ -173,6 +179,8 @@ instance (ForallExpX HasRange x) => HasRange (Expr x) where
   range (Ann x _ _) = range x
   range (Seq x _) = range x
   range (Parens x _) = range x
+  range (Shift x _ _) = range x
+  range (Reset x _) = range x
 
 freevars :: (Ord (XId x)) => Expr x -> Set (XId x)
 freevars (Var _ v) = Set.singleton v
@@ -205,6 +213,8 @@ freevars (Seq _ ss) = freevarsStmts ss
     freevarsStmts' [] = mempty
     freevarsStmts' (s : ss) = freevarsStmts (s :| ss)
 freevars (Parens _ e) = freevars e
+freevars (Shift _ k e) = Set.delete k (freevars e)
+freevars (Reset _ e) = freevars e
 
 -- * Stmt
 

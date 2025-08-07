@@ -31,6 +31,8 @@ module Malgo.Syntax.Extension
     XAnn,
     XSeq,
     XParens,
+    XShift,
+    XReset,
     ForallExpX,
     XClause,
     ForallClauseX,
@@ -207,6 +209,12 @@ type family XParens x where
   XParens (Malgo Rename) = SimpleX Rename
   XParens (Malgo _) = Void
 
+type family XShift x where
+  XShift (Malgo x) = SimpleX x
+
+type family XReset x where
+  XReset (Malgo x) = SimpleX x
+
 type ForallExpX (c :: K.Type -> Constraint) x =
   ( c (XVar x),
     c (XCon x),
@@ -222,7 +230,9 @@ type ForallExpX (c :: K.Type -> Constraint) x =
     c (XRecordAccess x),
     c (XAnn x),
     c (XSeq x),
-    c (XParens x)
+    c (XParens x),
+    c (XShift x),
+    c (XReset x)
   )
 
 -- * Clause Extensions

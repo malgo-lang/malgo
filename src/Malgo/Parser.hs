@@ -338,7 +338,9 @@ pAtom =
       try pRecord,
       pFn,
       pList,
-      pSeq
+      pSeq,
+      pShift,
+      pReset
     ]
 
 -- | pLiteral parses a literal.
@@ -538,6 +540,29 @@ pList = between (symbol "[") (symbol "]") do
 
 pSeq :: (Features :> es) => Parser es (Expr (Malgo Parse))
 pSeq = between (symbol "(") (symbol ")") pStmts
+
+-- | pShift parses a shift expression.
+--
+-- > shift = "shift" ident expr ;
+pShift :: (Features :> es) => Parser es (Expr (Malgo Parse))
+pShift = do
+  start <- getSourcePos
+  reserved "shift"
+  k <- ident
+  body <- pExpr
+  end <- getSourcePos
+  pure $ Shift (Range start end) k body
+
+-- | pReset parses a reset expression.
+--
+-- > reset = "reset" expr ;
+pReset :: (Features :> es) => Parser es (Expr (Malgo Parse))
+pReset = do
+  start <- getSourcePos
+  reserved "reset"
+  body <- pExpr
+  end <- getSourcePos
+  pure $ Reset (Range start end) body
 
 -- * Patterns
 
@@ -798,7 +823,9 @@ reservedKeywords =
     "let",
     "type",
     "module",
-    "with"
+    "with",
+    "shift",
+    "reset"
   ]
 
 operator :: Parser es Text
