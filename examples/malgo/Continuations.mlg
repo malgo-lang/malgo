@@ -1,0 +1,44 @@
+-- Example of delimited continuations in Malgo
+-- This demonstrates basic shift/reset syntax
+
+data Bool = True | False
+data Unit = Unit
+
+-- Example 1: Basic reset (establishes a continuation boundary)
+def basicReset : () -> ()
+def basicReset = { _ ->
+  reset {
+    Unit
+  }
+}
+
+-- Example 2: Basic shift (captures continuation up to reset)
+def basicShift : () -> ()
+def basicShift = { _ ->
+  reset {
+    shift k {
+      -- k is the captured continuation
+      k Unit
+    }
+  }
+}
+
+-- Example 3: Nested reset/shift
+def nestedExample : () -> ()
+def nestedExample = { _ ->
+  reset {
+    shift k1 {
+      reset {
+        shift k2 {
+          k2 (k1 Unit)
+        }
+      }
+    }
+  }
+}
+
+def main = {
+  basicReset (),
+  basicShift (),
+  nestedExample ()
+}

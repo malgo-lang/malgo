@@ -1,0 +1,17 @@
+-- Test basic shift and reset parsing and compilation
+
+data Bool = True | False
+
+-- Test that reset can contain simple values
+def testReset : () -> ()
+def testReset = { _ -> reset True }
+
+-- Test that shift can bind a continuation parameter
+def testShift : () -> ()  
+def testShift = { _ ->
+  reset {
+    shift k { k True }
+  }
+}
+
+def main = { testReset (), testShift () }

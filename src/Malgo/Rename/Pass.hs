@@ -210,6 +210,11 @@ rnExpr (List pos es) = do
 rnExpr (Ann pos e t) = Ann pos <$> rnExpr e <*> rnType t
 rnExpr (Seq pos ss) = Seq pos <$> rnStmts ss
 rnExpr (Parens pos e) = Parens pos <$> rnExpr e
+rnExpr (Shift pos k body) = do
+  k' <- resolveName k
+  local (insertVarIdent [(k, Qualified Implicit k')]) $ 
+    Shift pos k' <$> rnExpr body
+rnExpr (Reset pos body) = Reset pos <$> rnExpr body
 
 -- | Renamed identifier corresponding Boxed literals.
 lookupBox :: (Reader RnEnv :> es, Error RenameError :> es) => Range -> Literal x -> Eff es Id
