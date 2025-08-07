@@ -1,0 +1,783 @@
+Module
+ { moduleName = Artifact
+  ( ArtifactPath "test/testcases/malgo/Continuation.mlg" )
+ , moduleDefinition = ParsedDefinitions
+  [ DataDef
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/Continuation.mlg"
+     , sourceLine = Pos 3
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/Continuation.mlg"
+     , sourceLine = Pos 6
+     , sourceColumn = Pos 1
+     }
+    }
+   ) "Bool" []
+   [
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/Continuation.mlg"
+      , sourceLine = Pos 3
+      , sourceColumn = Pos 13
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/Continuation.mlg"
+      , sourceLine = Pos 3
+      , sourceColumn = Pos 18
+      }
+     }
+    , "True"
+    , []
+    )
+   ,
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/Continuation.mlg"
+      , sourceLine = Pos 3
+      , sourceColumn = Pos 20
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/Continuation.mlg"
+      , sourceLine = Pos 6
+      , sourceColumn = Pos 1
+      }
+     }
+    , "False"
+    , []
+    )
+   ]
+  , ScSig
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/Continuation.mlg"
+     , sourceLine = Pos 6
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/Continuation.mlg"
+     , sourceLine = Pos 7
+     , sourceColumn = Pos 1
+     }
+    }
+   ) "testReset"
+   ( TyArr
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/Continuation.mlg"
+      , sourceLine = Pos 6
+      , sourceColumn = Pos 20
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/Continuation.mlg"
+      , sourceLine = Pos 6
+      , sourceColumn = Pos 23
+      }
+     }
+    )
+    ( TyTuple
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/Continuation.mlg"
+       , sourceLine = Pos 6
+       , sourceColumn = Pos 17
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/Continuation.mlg"
+       , sourceLine = Pos 6
+       , sourceColumn = Pos 20
+       }
+      }
+     ) []
+    )
+    ( TyTuple
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/Continuation.mlg"
+       , sourceLine = Pos 6
+       , sourceColumn = Pos 23
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/Continuation.mlg"
+       , sourceLine = Pos 7
+       , sourceColumn = Pos 1
+       }
+      }
+     ) []
+    )
+   )
+  , ScDef
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/Continuation.mlg"
+     , sourceLine = Pos 7
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/Continuation.mlg"
+     , sourceLine = Pos 10
+     , sourceColumn = Pos 1
+     }
+    }
+   ) "testReset"
+   ( Fn
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/Continuation.mlg"
+      , sourceLine = Pos 7
+      , sourceColumn = Pos 17
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/Continuation.mlg"
+      , sourceLine = Pos 10
+      , sourceColumn = Pos 1
+      }
+     }
+    )
+    ( Clause
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/Continuation.mlg"
+       , sourceLine = Pos 7
+       , sourceColumn = Pos 19
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/Continuation.mlg"
+       , sourceLine = Pos 7
+       , sourceColumn = Pos 35
+       }
+      }
+     )
+     [ VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/Continuation.mlg"
+        , sourceLine = Pos 7
+        , sourceColumn = Pos 19
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/Continuation.mlg"
+        , sourceLine = Pos 7
+        , sourceColumn = Pos 21
+        }
+       }
+      ) "_"
+     ]
+     ( Seq
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/Continuation.mlg"
+        , sourceLine = Pos 7
+        , sourceColumn = Pos 24
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/Continuation.mlg"
+        , sourceLine = Pos 7
+        , sourceColumn = Pos 35
+        }
+       }
+      )
+      ( NoBind
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/Continuation.mlg"
+         , sourceLine = Pos 7
+         , sourceColumn = Pos 24
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/Continuation.mlg"
+         , sourceLine = Pos 7
+         , sourceColumn = Pos 35
+         }
+        }
+       )
+       ( Reset
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/Continuation.mlg"
+          , sourceLine = Pos 7
+          , sourceColumn = Pos 24
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/Continuation.mlg"
+          , sourceLine = Pos 7
+          , sourceColumn = Pos 35
+          }
+         }
+        )
+        ( Var
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/Continuation.mlg"
+           , sourceLine = Pos 7
+           , sourceColumn = Pos 30
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/Continuation.mlg"
+           , sourceLine = Pos 7
+           , sourceColumn = Pos 35
+           }
+          }
+         ) "True"
+        )
+       ) :| []
+      )
+     ) :| []
+    )
+   )
+  , ScSig
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/Continuation.mlg"
+     , sourceLine = Pos 10
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/Continuation.mlg"
+     , sourceLine = Pos 11
+     , sourceColumn = Pos 1
+     }
+    }
+   ) "testShift"
+   ( TyArr
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/Continuation.mlg"
+      , sourceLine = Pos 10
+      , sourceColumn = Pos 20
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/Continuation.mlg"
+      , sourceLine = Pos 10
+      , sourceColumn = Pos 23
+      }
+     }
+    )
+    ( TyTuple
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/Continuation.mlg"
+       , sourceLine = Pos 10
+       , sourceColumn = Pos 17
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/Continuation.mlg"
+       , sourceLine = Pos 10
+       , sourceColumn = Pos 20
+       }
+      }
+     ) []
+    )
+    ( TyTuple
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/Continuation.mlg"
+       , sourceLine = Pos 10
+       , sourceColumn = Pos 23
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/Continuation.mlg"
+       , sourceLine = Pos 11
+       , sourceColumn = Pos 1
+       }
+      }
+     ) []
+    )
+   )
+  , ScDef
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/Continuation.mlg"
+     , sourceLine = Pos 11
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/Continuation.mlg"
+     , sourceLine = Pos 17
+     , sourceColumn = Pos 1
+     }
+    }
+   ) "testShift"
+   ( Fn
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/Continuation.mlg"
+      , sourceLine = Pos 11
+      , sourceColumn = Pos 17
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/Continuation.mlg"
+      , sourceLine = Pos 17
+      , sourceColumn = Pos 1
+      }
+     }
+    )
+    ( Clause
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/Continuation.mlg"
+       , sourceLine = Pos 11
+       , sourceColumn = Pos 19
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/Continuation.mlg"
+       , sourceLine = Pos 15
+       , sourceColumn = Pos 1
+       }
+      }
+     )
+     [ VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/Continuation.mlg"
+        , sourceLine = Pos 11
+        , sourceColumn = Pos 19
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/Continuation.mlg"
+        , sourceLine = Pos 11
+        , sourceColumn = Pos 21
+        }
+       }
+      ) "_"
+     ]
+     ( Seq
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/Continuation.mlg"
+        , sourceLine = Pos 12
+        , sourceColumn = Pos 3
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/Continuation.mlg"
+        , sourceLine = Pos 15
+        , sourceColumn = Pos 1
+        }
+       }
+      )
+      ( NoBind
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/Continuation.mlg"
+         , sourceLine = Pos 12
+         , sourceColumn = Pos 3
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/Continuation.mlg"
+         , sourceLine = Pos 15
+         , sourceColumn = Pos 1
+         }
+        }
+       )
+       ( Reset
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/Continuation.mlg"
+          , sourceLine = Pos 12
+          , sourceColumn = Pos 3
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/Continuation.mlg"
+          , sourceLine = Pos 15
+          , sourceColumn = Pos 1
+          }
+         }
+        )
+        ( Fn
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/Continuation.mlg"
+           , sourceLine = Pos 12
+           , sourceColumn = Pos 9
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/Continuation.mlg"
+           , sourceLine = Pos 15
+           , sourceColumn = Pos 1
+           }
+          }
+         )
+         ( Clause
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/Continuation.mlg"
+            , sourceLine = Pos 13
+            , sourceColumn = Pos 5
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/Continuation.mlg"
+            , sourceLine = Pos 14
+            , sourceColumn = Pos 3
+            }
+           }
+          ) []
+          ( Seq
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/Continuation.mlg"
+             , sourceLine = Pos 13
+             , sourceColumn = Pos 5
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/Continuation.mlg"
+             , sourceLine = Pos 14
+             , sourceColumn = Pos 3
+             }
+            }
+           )
+           ( NoBind
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/Continuation.mlg"
+              , sourceLine = Pos 13
+              , sourceColumn = Pos 5
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/Continuation.mlg"
+              , sourceLine = Pos 14
+              , sourceColumn = Pos 3
+              }
+             }
+            )
+            ( Shift
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/Continuation.mlg"
+               , sourceLine = Pos 13
+               , sourceColumn = Pos 5
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/Continuation.mlg"
+               , sourceLine = Pos 14
+               , sourceColumn = Pos 3
+               }
+              }
+             ) "k"
+             ( Fn
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/Continuation.mlg"
+                , sourceLine = Pos 13
+                , sourceColumn = Pos 13
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/Continuation.mlg"
+                , sourceLine = Pos 14
+                , sourceColumn = Pos 3
+                }
+               }
+              )
+              ( Clause
+               ( Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/Continuation.mlg"
+                 , sourceLine = Pos 13
+                 , sourceColumn = Pos 15
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/Continuation.mlg"
+                 , sourceLine = Pos 13
+                 , sourceColumn = Pos 22
+                 }
+                }
+               ) []
+               ( Seq
+                ( Range
+                 { _start = SourcePos
+                  { sourceName = "./test/testcases/malgo/Continuation.mlg"
+                  , sourceLine = Pos 13
+                  , sourceColumn = Pos 15
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/Continuation.mlg"
+                  , sourceLine = Pos 13
+                  , sourceColumn = Pos 22
+                  }
+                 }
+                )
+                ( NoBind
+                 ( Range
+                  { _start = SourcePos
+                   { sourceName = "./test/testcases/malgo/Continuation.mlg"
+                   , sourceLine = Pos 13
+                   , sourceColumn = Pos 15
+                   }
+                  , _end = SourcePos
+                   { sourceName = "./test/testcases/malgo/Continuation.mlg"
+                   , sourceLine = Pos 13
+                   , sourceColumn = Pos 22
+                   }
+                  }
+                 )
+                 ( Apply
+                  ( Range
+                   { _start = SourcePos
+                    { sourceName = "./test/testcases/malgo/Continuation.mlg"
+                    , sourceLine = Pos 13
+                    , sourceColumn = Pos 17
+                    }
+                   , _end = SourcePos
+                    { sourceName = "./test/testcases/malgo/Continuation.mlg"
+                    , sourceLine = Pos 13
+                    , sourceColumn = Pos 22
+                    }
+                   }
+                  )
+                  ( Var
+                   ( Range
+                    { _start = SourcePos
+                     { sourceName = "./test/testcases/malgo/Continuation.mlg"
+                     , sourceLine = Pos 13
+                     , sourceColumn = Pos 15
+                     }
+                    , _end = SourcePos
+                     { sourceName = "./test/testcases/malgo/Continuation.mlg"
+                     , sourceLine = Pos 13
+                     , sourceColumn = Pos 17
+                     }
+                    }
+                   ) "k"
+                  )
+                  ( Var
+                   ( Range
+                    { _start = SourcePos
+                     { sourceName = "./test/testcases/malgo/Continuation.mlg"
+                     , sourceLine = Pos 13
+                     , sourceColumn = Pos 17
+                     }
+                    , _end = SourcePos
+                     { sourceName = "./test/testcases/malgo/Continuation.mlg"
+                     , sourceLine = Pos 13
+                     , sourceColumn = Pos 22
+                     }
+                    }
+                   ) "True"
+                  )
+                 ) :| []
+                )
+               ) :| []
+              )
+             )
+            ) :| []
+           )
+          ) :| []
+         )
+        )
+       ) :| []
+      )
+     ) :| []
+    )
+   )
+  , ScDef
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/Continuation.mlg"
+     , sourceLine = Pos 17
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/Continuation.mlg"
+     , sourceLine = Pos 17
+     , sourceColumn = Pos 42
+     }
+    }
+   ) "main"
+   ( Fn
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/Continuation.mlg"
+      , sourceLine = Pos 17
+      , sourceColumn = Pos 12
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/Continuation.mlg"
+      , sourceLine = Pos 17
+      , sourceColumn = Pos 42
+      }
+     }
+    )
+    ( Clause
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/Continuation.mlg"
+       , sourceLine = Pos 17
+       , sourceColumn = Pos 14
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/Continuation.mlg"
+       , sourceLine = Pos 17
+       , sourceColumn = Pos 26
+       }
+      }
+     ) []
+     ( Seq
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/Continuation.mlg"
+        , sourceLine = Pos 17
+        , sourceColumn = Pos 14
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/Continuation.mlg"
+        , sourceLine = Pos 17
+        , sourceColumn = Pos 26
+        }
+       }
+      )
+      ( NoBind
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/Continuation.mlg"
+         , sourceLine = Pos 17
+         , sourceColumn = Pos 14
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/Continuation.mlg"
+         , sourceLine = Pos 17
+         , sourceColumn = Pos 26
+         }
+        }
+       )
+       ( Apply
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/Continuation.mlg"
+          , sourceLine = Pos 17
+          , sourceColumn = Pos 24
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/Continuation.mlg"
+          , sourceLine = Pos 17
+          , sourceColumn = Pos 26
+          }
+         }
+        )
+        ( Var
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/Continuation.mlg"
+           , sourceLine = Pos 17
+           , sourceColumn = Pos 14
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/Continuation.mlg"
+           , sourceLine = Pos 17
+           , sourceColumn = Pos 24
+           }
+          }
+         ) "testReset"
+        )
+        ( Tuple
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/Continuation.mlg"
+           , sourceLine = Pos 17
+           , sourceColumn = Pos 24
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/Continuation.mlg"
+           , sourceLine = Pos 17
+           , sourceColumn = Pos 26
+           }
+          }
+         ) []
+        )
+       ) :| []
+      )
+     ) :|
+     [ Clause
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/Continuation.mlg"
+        , sourceLine = Pos 17
+        , sourceColumn = Pos 28
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/Continuation.mlg"
+        , sourceLine = Pos 17
+        , sourceColumn = Pos 41
+        }
+       }
+      ) []
+      ( Seq
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/Continuation.mlg"
+         , sourceLine = Pos 17
+         , sourceColumn = Pos 28
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/Continuation.mlg"
+         , sourceLine = Pos 17
+         , sourceColumn = Pos 41
+         }
+        }
+       )
+       ( NoBind
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/Continuation.mlg"
+          , sourceLine = Pos 17
+          , sourceColumn = Pos 28
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/Continuation.mlg"
+          , sourceLine = Pos 17
+          , sourceColumn = Pos 41
+          }
+         }
+        )
+        ( Apply
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/Continuation.mlg"
+           , sourceLine = Pos 17
+           , sourceColumn = Pos 38
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/Continuation.mlg"
+           , sourceLine = Pos 17
+           , sourceColumn = Pos 41
+           }
+          }
+         )
+         ( Var
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/Continuation.mlg"
+            , sourceLine = Pos 17
+            , sourceColumn = Pos 28
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/Continuation.mlg"
+            , sourceLine = Pos 17
+            , sourceColumn = Pos 38
+            }
+           }
+          ) "testShift"
+         )
+         ( Tuple
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/Continuation.mlg"
+            , sourceLine = Pos 17
+            , sourceColumn = Pos 38
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/Continuation.mlg"
+            , sourceLine = Pos 17
+            , sourceColumn = Pos 41
+            }
+           }
+          ) []
+         )
+        ) :| []
+       )
+      )
+     ]
+    )
+   )
+  ]
+ }

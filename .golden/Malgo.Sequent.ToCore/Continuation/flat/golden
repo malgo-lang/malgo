@@ -1,0 +1,85 @@
+((testShift
+    $Continuation.return_11
+    (cut
+       (lambda
+          ($Continuation.param_6 $Continuation.return_12)
+          (cut
+             $Continuation.param_6
+             (select
+                (#Continuation.__1
+                   (cut
+                      (reset
+                         (cut
+                            (lambda
+                               ($Continuation.param_7 $Continuation.return_14)
+                               (cut
+                                  $Continuation.param_7
+                                  (select
+                                     (#Continuation.$__4
+                                        (cut
+                                           (shift
+                                              #Continuation.k_2
+                                              (cut
+                                                 (lambda
+                                                    ($Continuation.param_8
+                                                       $Continuation.return_16)
+                                                    (cut
+                                                       $Continuation.param_8
+                                                       (select
+                                                          (#Continuation.$__3
+                                                             (cut
+                                                                #Continuation.k_2
+                                                                (then
+                                                                   $Continuation.outer_25
+                                                                   (join
+                                                                      $Continuation.return_17
+                                                                      (then
+                                                                         $Continuation.inner_26
+                                                                         (cut
+                                                                            $Continuation.outer_25
+                                                                            (apply
+                                                                               ($Continuation.inner_26)
+                                                                               ($Continuation.return_16))))
+                                                                      (invoke
+                                                                         True
+                                                                         $Continuation.return_17))))))))
+                                                 $Continuation.return_15))
+                                           $Continuation.return_14)))))
+                            $Continuation.return_13))
+                      $Continuation.return_12)))))
+       $Continuation.return_11))
+   (testReset
+      $Continuation.return_18
+      (cut
+         (lambda
+            ($Continuation.param_9 $Continuation.return_19)
+            (cut
+               $Continuation.param_9
+               (select
+                  (#Continuation.__0
+                     (cut
+                        (reset (invoke True $Continuation.return_20))
+                        $Continuation.return_19)))))
+         $Continuation.return_18))
+   (main
+      $Continuation.return_21
+      (cut
+         (lambda
+            ($Continuation.param_10 $Continuation.return_22)
+            (cut
+               $Continuation.param_10
+               (select
+                  (#Continuation.$__5
+                     (invoke
+                        testReset
+                        (apply
+                           ((construct tuple () ()))
+                           ($Continuation.return_22)))))))
+         $Continuation.return_21))
+   (True
+      $Continuation.return_23
+      (cut (construct True () ()) $Continuation.return_23))
+   (False
+      $Continuation.return_24
+      (cut (construct False () ()) $Continuation.return_24))
+   ())

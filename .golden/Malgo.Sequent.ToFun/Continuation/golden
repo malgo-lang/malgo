@@ -1,0 +1,38 @@
+(program
+   ((testShift
+       (lambda
+          ($Continuation.param_6)
+          (select
+             $Continuation.param_6
+             ((#Continuation.__1
+                 (reset
+                    (lambda
+                       ($Continuation.param_7)
+                       (select
+                          $Continuation.param_7
+                          ((#Continuation.$__4
+                              (shift
+                                 #Continuation.k_2
+                                 (lambda
+                                    ($Continuation.param_8)
+                                    (select
+                                       $Continuation.param_8
+                                       ((#Continuation.$__3
+                                           (apply
+                                              #Continuation.k_2
+                                              ((invoke True))))))))))))))))))
+      (testReset
+         (lambda
+            ($Continuation.param_9)
+            (select
+               $Continuation.param_9
+               ((#Continuation.__0 (reset (invoke True)))))))
+      (main
+         (lambda
+            ($Continuation.param_10)
+            (select
+               $Continuation.param_10
+               ((#Continuation.$__5 (apply (invoke testReset) ((tuple ()))))))))
+      (True (True ()))
+      (False (False ())))
+   ())

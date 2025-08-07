@@ -1,0 +1,37 @@
+(module
+   "test/testcases/malgo/Continuation.mlg"
+   ((((def
+         testShift
+         (fn
+            ((clause
+                (#Continuation.__1)
+                (seq
+                   (do
+                      (reset
+                         (fn
+                            ((clause
+                                (#Continuation.$__4)
+                                (seq
+                                   (do
+                                      (shift
+                                         #Continuation.k_2
+                                         (fn
+                                            ((clause
+                                                (#Continuation.$__3)
+                                                (seq
+                                                   (do
+                                                      (apply
+                                                         #Continuation.k_2
+                                                         True))))))))))))))))))))
+       ((def
+           testReset
+           (fn ((clause (#Continuation.__0) (seq (do (reset True))))))))
+       ((def
+           main
+           (fn
+              ((clause (#Continuation.$__5) (seq (do (apply testReset (tuple))))))))))
+      ((sig testReset (-> (tuple) (tuple))) (sig testShift (-> (tuple) (tuple))))
+      ((data Bool () ((True ()) (False ()))))
+      ()
+      ()
+      ()))
