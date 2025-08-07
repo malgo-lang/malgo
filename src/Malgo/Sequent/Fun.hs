@@ -79,6 +79,8 @@ data Expr
   | Primitive Range Text [Expr]
   | Select Range Expr [Branch]
   | Invoke Range Name
+  | Shift Range Name Expr
+  | Reset Range Expr
   deriving stock (Show)
 
 instance HasRange Expr where
@@ -93,6 +95,8 @@ instance HasRange Expr where
   range (Primitive r _ _) = r
   range (Select r _ _) = r
   range (Invoke r _) = r
+  range (Shift r _ _) = r
+  range (Reset r _) = r
 
 instance ToSExpr Expr where
   toSExpr (Var _ name) = toSExpr name
@@ -106,6 +110,8 @@ instance ToSExpr Expr where
   toSExpr (Primitive _ operator arguments) = S.L [S.A "primitive", toSExpr operator, S.L $ map toSExpr arguments]
   toSExpr (Select _ scrutinees branches) = S.L [S.A "select", toSExpr scrutinees, S.L $ map toSExpr branches]
   toSExpr (Invoke _ name) = S.L [S.A "invoke", toSExpr name]
+  toSExpr (Shift _ k body) = S.L [S.A "shift", toSExpr k, toSExpr body]
+  toSExpr (Reset _ body) = S.L [S.A "reset", toSExpr body]
 
 data Branch = Branch Range Pattern Expr
   deriving stock (Show)

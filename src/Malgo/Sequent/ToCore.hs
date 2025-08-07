@@ -89,6 +89,14 @@ toProducer producer@(Select range _ _) = do
 toProducer producer@(Invoke range _) = do
   return <- newTemporalId "return"
   Do range return <$> toStatement producer (C.Label range return)
+toProducer (Shift range k body) = do
+  return <- newTemporalId "return"
+  body' <- toStatement body (C.Label range return)
+  pure $ C.Shift range k body'
+toProducer (Reset range body) = do
+  return <- newTemporalId "return"
+  body' <- toStatement body (C.Label range return)
+  pure $ C.Reset range body'
 
 convertBranch :: (State Uniq :> es, Reader ModuleName :> es) => C.Consumer -> Branch -> Eff es C.Branch
 convertBranch consumer (Branch range pattern body) = do

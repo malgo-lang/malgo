@@ -81,6 +81,12 @@ joinProducer (Flat.Lambda range names statement) = do
 joinProducer (Flat.Object range fields) = do
   fields <- traverseOf (traverse . _2) (runJoin . joinStatement) fields
   pure $ Object range fields
+joinProducer (Flat.Shift range k statement) = do
+  statement <- runJoin $ joinStatement statement
+  pure $ Shift range k statement
+joinProducer (Flat.Reset range statement) = do
+  statement <- runJoin $ joinStatement statement
+  pure $ Reset range statement
 
 joinConsumer :: (State Uniq :> es, Reader ModuleName :> es, Writer (Endo Statement) :> es) => Flat.Consumer -> Eff es Name
 joinConsumer (Flat.Label _ name) = pure name
@@ -144,6 +150,8 @@ data Producer where
   Construct :: Range -> Tag -> [Producer] -> [Name] -> Producer
   Lambda :: Range -> [Name] -> Statement -> Producer
   Object :: Range -> Map Text (Name, Statement) -> Producer
+  Shift :: Range -> Name -> Statement -> Producer
+  Reset :: Range -> Statement -> Producer
 
 deriving stock instance Show Producer
 
@@ -159,6 +167,8 @@ instance HasRange Producer where
   range (Construct range _ _ _) = range
   range (Lambda range _ _) = range
   range (Object range _) = range
+  range (Shift range _ _) = range
+  range (Reset range _) = range
 
 instance ToSExpr Producer where
   toSExpr (Var _ name) = toSExpr name
@@ -167,6 +177,8 @@ instance ToSExpr Producer where
     S.L [S.A "construct", toSExpr tag, S.L $ map toSExpr producers, S.L $ map toSExpr consumers]
   toSExpr (Lambda _ names statement) = S.L [S.A "lambda", S.L $ map toSExpr names, toSExpr statement]
   toSExpr (Object _ kvs) = S.L $ map (\(k, v) -> S.L [toSExpr k, toSExpr v]) $ Map.toList kvs
+  toSExpr (Shift _ k statement) = S.L [S.A "shift", toSExpr k, toSExpr statement]
+  toSExpr (Reset _ statement) = S.L [S.A "reset", toSExpr statement]
 
 data Consumer where
   Label :: Range -> Name -> Consumer

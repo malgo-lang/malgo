@@ -120,6 +120,12 @@ flatProducer (Full.Object range fields) = do
 flatProducer (Full.Do range name statement) = do
   statement' <- flatStatement statement
   pure $ Do' range name statement'
+flatProducer (Full.Shift range k statement) = do
+  statement' <- flatStatement statement
+  pure $ Zero (Shift range k statement')
+flatProducer (Full.Reset range statement) = do
+  statement' <- flatStatement statement
+  pure $ Zero (Reset range statement')
 
 flatConsumer :: (State Uniq :> es, Reader ModuleName :> es) => Full.Consumer -> Eff es Consumer
 flatConsumer (Full.Label range name) = pure $ Label range name
@@ -177,6 +183,8 @@ isValue (Full.Construct _ _ ps _) = all isValue ps
 isValue Full.Lambda {} = True
 isValue Full.Object {} = True
 isValue Full.Do {} = False
+isValue Full.Shift {} = False
+isValue Full.Reset {} = False
 
 data Program = Program
   { definitions :: [(Range, Name, Name, Statement)],
@@ -195,6 +203,8 @@ data Producer where
   Construct :: Range -> Tag -> [Producer] -> [Consumer] -> Producer
   Lambda :: Range -> [Name] -> Statement -> Producer
   Object :: Range -> Map Text (Name, Statement) -> Producer
+  Shift :: Range -> Name -> Statement -> Producer
+  Reset :: Range -> Statement -> Producer
 
 deriving stock instance Show Producer
 
@@ -210,6 +220,8 @@ instance HasRange Producer where
   range (Construct range _ _ _) = range
   range (Lambda range _ _) = range
   range (Object range _) = range
+  range (Shift range _ _) = range
+  range (Reset range _) = range
 
 instance ToSExpr Producer where
   toSExpr (Var _ name) = toSExpr name
@@ -218,6 +230,8 @@ instance ToSExpr Producer where
     S.L [S.A "construct", toSExpr tag, S.L $ map toSExpr producers, S.L $ map toSExpr consumers]
   toSExpr (Lambda _ names statement) = S.L [S.A "lambda", S.L $ map toSExpr names, toSExpr statement]
   toSExpr (Object _ kvs) = S.L $ map (\(k, v) -> S.L [toSExpr k, toSExpr v]) $ Map.toList kvs
+  toSExpr (Shift _ k statement) = S.L [S.A "shift", toSExpr k, toSExpr statement]
+  toSExpr (Reset _ statement) = S.L [S.A "reset", toSExpr statement]
 
 data Consumer where
   Label :: Range -> Name -> Consumer

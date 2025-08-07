@@ -98,6 +98,12 @@ fromExpr (S.Record range fields) = do
 fromExpr (S.Ann _ expr _) = fromExpr expr
 fromExpr (S.Seq _ stmts) = fromStmts stmts
 fromExpr (S.Parens _ expr) = fromExpr expr
+fromExpr (S.Shift range k body) = do
+  body <- fromExpr body
+  pure $ F.Shift range k body
+fromExpr (S.Reset range body) = do
+  body <- fromExpr body
+  pure $ F.Reset range body
 
 fromStmts :: (State Uniq :> es, Reader ModuleName :> es) => NonEmpty (S.Stmt (Malgo Rename)) -> Eff es F.Expr
 fromStmts (NoBind _ expr :| []) = fromExpr expr

@@ -37,6 +37,8 @@ data Producer where
   Lambda :: Range -> [Name] -> Statement -> Producer
   Object :: Range -> Map Text (Name, Statement) -> Producer
   Do :: Range -> Name -> Statement -> Producer
+  Shift :: Range -> Name -> Statement -> Producer
+  Reset :: Range -> Statement -> Producer
 
 deriving stock instance Show Producer
 
@@ -53,6 +55,8 @@ instance HasRange Producer where
   range (Lambda range _ _) = range
   range (Object range _) = range
   range (Do range _ _) = range
+  range (Shift range _ _) = range
+  range (Reset range _) = range
 
 instance ToSExpr Producer where
   toSExpr (Var _ name) = toSExpr name
@@ -62,6 +66,8 @@ instance ToSExpr Producer where
   toSExpr (Lambda _ names statement) = S.L [S.A "lambda", S.L $ map toSExpr names, toSExpr statement]
   toSExpr (Object _ kvs) = S.L $ map (\(k, v) -> S.L [toSExpr k, toSExpr v]) $ Map.toList kvs
   toSExpr (Do _ name statement) = S.L [S.A "do", toSExpr name, toSExpr statement]
+  toSExpr (Shift _ k statement) = S.L [S.A "shift", toSExpr k, toSExpr statement]
+  toSExpr (Reset _ statement) = S.L [S.A "reset", toSExpr statement]
 
 data Consumer where
   Label :: Range -> Name -> Consumer

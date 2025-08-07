@@ -184,6 +184,18 @@ evalProducer (Lambda _ parameters statement) = do
 evalProducer (Object _ fields) = do
   env <- ask @Env
   pure $ Record env fields
+evalProducer (Shift range k statement) = do
+  env <- ask @Env
+  -- For now, bind k to a dummy continuation that just returns its argument
+  -- This will be refined later with proper continuation capture
+  let dummyContinuation = Consumer $ \value -> pure ()
+  -- Return a function that when called will evaluate the statement with the continuation bound
+  pure $ Function (extendEnv k dummyContinuation env) [] statement
+evalProducer (Reset range statement) = do
+  env <- ask @Env
+  -- For now, return a function that will evaluate the statement when called
+  -- This will be refined later with proper reset semantics
+  pure $ Function env [] statement
 
 evalConsumer :: (Error EvalError :> es, Reader Env :> es, Reader Toplevels :> es, Reader Handlers :> es, IOE :> es) => Consumer -> Value -> Eff es ()
 evalConsumer (Label range label) given = do
