@@ -29,6 +29,10 @@ library
       Malgo.Module
       Malgo.Monad
       Malgo.Parser
+      Malgo.Parser.Core
+      Malgo.Parser.CStyle
+      Malgo.Parser.Regular
+      Malgo.Parser.Wrapper
       Malgo.Pass
       Malgo.Prelude
       Malgo.Rename
@@ -165,6 +169,9 @@ test-suite malgo-test
   main-is: Spec.hs
   other-modules:
       Malgo.FeaturesSpec
+      Malgo.Parser.CStyleSpec
+      Malgo.Parser.RegularSpec
+      Malgo.Parser.WrapperSpec
       Malgo.ParserSpec
       Malgo.RenameSpec
       Malgo.Sequent.EvalSpec

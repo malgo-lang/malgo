@@ -1,0 +1,16 @@
+#c-style-apply
+module {..} = import "../../../runtime/malgo/Builtin.mlg"
+
+-- C-style type synonym with empty parameter list
+type IntWrapper() = Int32
+
+-- C-style type synonym with single parameter
+type Optional(a) = a
+
+-- C-style type synonym with multiple parameters
+type Function(a, b) = a -> b
+
+-- C-style type synonym with complex type expression
+type Callback(a, b, c) = a -> b -> c
+
+def main = { 42 }
