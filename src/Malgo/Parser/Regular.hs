@@ -46,6 +46,46 @@ pDecl = do
       pScDef
     ]
 
+-- | pDataDef parses a data definition.
+--
+-- > dataDef = "data" ident ident* "=" constructor ("|" constructor)* ;
+-- > constructor = ident atomType* ;
+pDataDef :: Parser es (Decl (Malgo Parse))
+pDataDef = do
+  start <- getSourcePos
+  reserved "data"
+  name <- ident
+  parameters <- many do
+    start <- getSourcePos
+    parameter <- ident
+    end <- getSourcePos
+    pure (Range start end, parameter)
+  reservedOperator "="
+  constructors <- sepBy1 pConstructor (reservedOperator "|")
+  end <- getSourcePos
+  pure $ DataDef (Range start end) name parameters constructors
+  where
+    pConstructor = do
+      start <- getSourcePos
+      name <- ident
+      parameters <- many pAtomType
+      end <- getSourcePos
+      pure (Range start end, name, parameters)
+
+-- | pTypeSynonym parses a type synonym.
+--
+-- > typeSynonym = "type" ident ident* "=" type ;
+pTypeSynonym :: Parser es (Decl (Malgo Parse))
+pTypeSynonym = do
+  start <- getSourcePos
+  reserved "type"
+  name <- ident
+  parameters <- many ident
+  reservedOperator "="
+  ty <- pType
+  end <- getSourcePos
+  pure $ TypeSynonym (Range start end) name parameters ty
+
 -- | pScDef parses value definitions with regular expression syntax
 pScDef :: (Features :> es) => Parser es (Decl (Malgo Parse))
 pScDef = do

@@ -57,6 +57,54 @@ pScDef = do
   end <- getSourcePos
   pure $ ScDef (Range start end) name body
 
+-- | pCStyleDataDef parses C-style data definitions with parenthesized parameters
+-- > cStyleDataDef = "data" ident "(" (ident ("," ident)*)? ")" "=" constructor ("|" constructor)* ;
+-- > constructor = ident "(" (atomType ("," atomType)*)? ")" ;
+pDataDef :: Parser es (Decl (Malgo Parse))
+pDataDef = do
+  start <- getSourcePos
+  reserved "data"
+  name <- ident
+  parameters <- pParameterList
+  reservedOperator "="
+  constructors <- sepBy1 pCStyleConstructor (reservedOperator "|")
+  end <- getSourcePos
+  pure $ DataDef (Range start end) name parameters constructors
+  where
+    pCStyleConstructor = do
+      start <- getSourcePos
+      name <- ident
+      parameters <- pConstructorParams
+      end <- getSourcePos
+      pure (Range start end, name, parameters)
+
+-- | pCStyleTypeSynonym parses C-style type synonyms with parenthesized parameters
+-- > cStyleTypeSynonym = "type" ident "(" (ident ("," ident)*)? ")" "=" type ;
+pTypeSynonym :: Parser es (Decl (Malgo Parse))
+pTypeSynonym = do
+  start <- getSourcePos
+  reserved "type"
+  name <- ident
+  parameters <- map snd <$> pParameterList
+  reservedOperator "="
+  ty <- pType
+  end <- getSourcePos
+  pure $ TypeSynonym (Range start end) name parameters ty
+
+-- | pParameterList parses comma-separated parameters in parentheses
+pParameterList :: Parser es [(Range, Text)]
+pParameterList = between (symbol "(") (symbol ")") (sepBy pParameter (symbol ","))
+  where
+    pParameter = do
+      start <- getSourcePos
+      param <- ident
+      end <- getSourcePos
+      pure (Range start end, param)
+
+-- | pConstructorParams parses comma-separated types in parentheses
+pConstructorParams :: Parser es [Type (Malgo Parse)]
+pConstructorParams = between (symbol "(") (symbol ")") (sepBy pType (symbol ","))
+
 -- | pExpr parses expressions with C-style syntax
 pExpr :: (Features :> es) => Parser es (Expr (Malgo Parse))
 pExpr = do

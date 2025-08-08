@@ -6,6 +6,7 @@ import Malgo.Parser.CStyle (parseCStyle)
 import Malgo.Prelude
 import Malgo.SExpr qualified as SExpr
 import Malgo.TestUtils
+import System.FilePath ((</>))
 import Test.Hspec
 import Text.Megaparsec (errorBundlePretty)
 
@@ -17,7 +18,7 @@ spec = describe "C-Style Parser" do
       parseCStyle "test.mlg" (convertString src)
     case result of
       Left err -> expectationFailure $ errorBundlePretty err
-      Right parsed -> parsed `shouldSatisfy` isValidCStyleAST
+      Right _ -> pure ()
 
   it "parses C-style tuple syntax with braces" do
     let src = "def main = {x, y}" :: String
@@ -25,7 +26,7 @@ spec = describe "C-Style Parser" do
       parseCStyle "test.mlg" (convertString src)
     case result of
       Left err -> expectationFailure $ errorBundlePretty err
-      Right parsed -> parsed `shouldSatisfy` isValidCStyleAST
+      Right _ -> pure ()
 
   it "parses C-style function clauses with parentheses" do
     let src = "def f = { (x, y) -> x }" :: String
@@ -33,7 +34,7 @@ spec = describe "C-Style Parser" do
       parseCStyle "test.mlg" (convertString src)
     case result of
       Left err -> expectationFailure $ errorBundlePretty err
-      Right parsed -> parsed `shouldSatisfy` isValidCStyleAST
+      Right _ -> pure ()
 
   it "parses empty function calls" do
     let src = "def main = f()" :: String
@@ -41,7 +42,7 @@ spec = describe "C-Style Parser" do
       parseCStyle "test.mlg" (convertString src)
     case result of
       Left err -> expectationFailure $ errorBundlePretty err
-      Right parsed -> parsed `shouldSatisfy` isValidCStyleAST
+      Right _ -> pure ()
 
   it "handles nested C-style calls" do
     let src = "def main = f(g(x), h(y, z))" :: String
@@ -49,8 +50,31 @@ spec = describe "C-Style Parser" do
       parseCStyle "test.mlg" (convertString src)
     case result of
       Left err -> expectationFailure $ errorBundlePretty err
-      Right parsed -> parsed `shouldSatisfy` isValidCStyleAST
+      Right _ -> pure ()
 
--- Helper function to validate C-style AST structure
-isValidCStyleAST :: (Show a) => a -> Bool
-isValidCStyleAST _ = True -- Placeholder - will be implemented with actual AST validation
+  -- Golden tests for C-style data definitions and type synonyms
+  golden "CStyleDataDef" (driveCStyleParse (testcaseDir </> "CStyleDataDef.mlg"))
+  golden "CStyleDataDef sexpr" (driveCStyleParseSExpr (testcaseDir </> "CStyleDataDef.mlg"))
+  golden "CStyleTypeSynonym" (driveCStyleParse (testcaseDir </> "CStyleTypeSynonym.mlg"))
+  golden "CStyleTypeSynonym sexpr" (driveCStyleParseSExpr (testcaseDir </> "CStyleTypeSynonym.mlg"))
+
+-- Drive functions for C-style parsing golden tests
+driveCStyleParse :: FilePath -> IO String
+driveCStyleParse srcPath = do
+  src <- convertString <$> BL.readFile srcPath
+  runMalgoM flag do
+    parsed <- parseCStyle srcPath src
+    case parsed of
+      Left err -> error $ errorBundlePretty err
+      Right parsed ->
+        pure $ pShowCompact parsed
+
+driveCStyleParseSExpr :: FilePath -> IO String
+driveCStyleParseSExpr srcPath = do
+  src <- convertString <$> BL.readFile srcPath
+  runMalgoM flag do
+    parsed <- parseCStyle srcPath src
+    case parsed of
+      Left err -> error $ errorBundlePretty err
+      Right parsed ->
+        pure $ pShowCompact $ SExpr.toSExpr parsed

@@ -1,0 +1,13 @@
+#c-style-apply
+module {..} = import "../../../runtime/malgo/Builtin.mlg"
+
+-- C-style data definition with parenthesized parameters
+data List(a) = Cons(a, List(a)) | Nil()
+
+-- C-style data definition with multiple parameters
+data Map(k, v) = Entry(k, v) | Empty()
+
+-- C-style data definition with simple constructor
+data Tree(a) = Node(a, Tree(a), Tree(a)) | Leaf()
+
+def main = { 42 }
