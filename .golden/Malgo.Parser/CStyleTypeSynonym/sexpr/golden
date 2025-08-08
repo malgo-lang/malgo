@@ -1,0 +1,8 @@
+(module
+   "test/testcases/malgo/CStyleTypeSynonym.mlg"
+   ((import "runtime/malgo/Builtin.mlg" all)
+      (type IntWrapper () Int32)
+      (type Optional (a) a)
+      (type Function (a b) (-> a b))
+      (type Callback (a b c) (-> a (-> b c)))
+      (def main (fn ((clause () (seq (do (int32 42)))))))))
