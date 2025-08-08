@@ -8,6 +8,7 @@ _.path = [
     "~/.local/bin",
     "~/.cabal/bin"
 ]
+
 [tasks.setup]
 description = "Setup tools"
 run = [
@@ -20,16 +21,20 @@ run = [
     "cabal install hpack --ignore-project --overwrite-policy=always",
     "cabal install ormolu --ignore-project --overwrite-policy=always"
 ]
+
 [tasks.setup-hls]
 description = "Setup HLS"
 run = "ghcup compile hls -g 2.11.0.0 --ghc 9.12.2 --cabal-update"
+
 [tasks.format]
 description = "Format the code"
 run = "ormolu --mode inplace $(find . -name '*.hs')"
+
 [tasks.build]
 description = "Build the project"
 depends = ["format"]
 run = "hpack && cabal build"
+
 [tasks.test]
 description = "Run the tests"
 depends = ["build"]
@@ -40,13 +45,20 @@ run = """
         cabal test --test-show-details=direct --test-options=--match --test-options={{option(name=\"match\")}}
     fi
 """
+
+[tasks.reset]
+description = "Reset golden test files"
+run = "trash .golden"
+
 [tasks.exec]
 description = "Run the project"
 depends = ["build"]
 run = "cabal exec malgo-exe"
+
 [tasks.changelog]
 description = "Generate changelog"
 run = "git-chglog -o CHANGELOG.md"
+
 [tasks.graph]
 description = "Generate dependency graph"
 run = [

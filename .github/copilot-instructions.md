@@ -21,6 +21,9 @@ mise run build    # Format + compile (uses ormolu, hpack)
 mise run test     # Run full test suite
 mise run test --match="Parser"  # Run specific tests
 
+# Reset golden files
+mise run reset
+
 # Running the compiler
 malgo eval examples/malgo/Hello.mlg
 malgo eval --debug-mode --no-opt examples/malgo/Hello.mlg  # See all IR stages
