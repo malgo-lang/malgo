@@ -16,25 +16,25 @@ import Text.Megaparsec hiding (optional, parse)
 -- | parseCStyle parses C-style apply syntax with parentheses and braces
 parseCStyle :: (IOE :> es, Workspace :> es, Features :> es) => FilePath -> TL.Text -> Eff es (Either (ParseErrorBundle TL.Text Void) (Module (Malgo Parse)))
 parseCStyle srcPath text = do
-  runParserT (pCStyleModule <* eof) srcPath text
+  runParserT (pModule <* eof) srcPath text
 
--- | pCStyleModule parses a complete module using C-style syntax
-pCStyleModule :: (IOE :> es, Workspace :> es, Features :> es) => Parser es (Module (Malgo Parse))
-pCStyleModule = do
+-- | pModule parses a complete module using C-style syntax
+pModule :: (IOE :> es, Workspace :> es, Features :> es) => Parser es (Module (Malgo Parse))
+pModule = do
   space -- consume leading whitespace and comments
   sourcePath <- (.sourceName) <$> getSourcePos
   pwd <- lift pwdPath
   sourcePath <- lift $ parseArtifactPath pwd sourcePath
-  decls <- many pCStyleDecl
+  decls <- many pDecl
   pure
     Module
       { moduleName = Artifact sourcePath,
         moduleDefinition = ParsedDefinitions decls
       }
 
--- | pCStyleDecl parses declarations with C-style expression syntax
-pCStyleDecl :: (IOE :> es, Workspace :> es, Features :> es) => Parser es (Decl (Malgo Parse))
-pCStyleDecl = do
+-- | pDecl parses declarations with C-style expression syntax
+pDecl :: (IOE :> es, Workspace :> es, Features :> es) => Parser es (Decl (Malgo Parse))
+pDecl = do
   _ <- many skipPragma
   choice
     [ pDataDef,
@@ -42,26 +42,26 @@ pCStyleDecl = do
       pInfix,
       pForeign,
       pImport,
-      try pScSig, -- must be before pCStyleScDef
-      pCStyleScDef
+      try pScSig, -- must be before pScDef
+      pScDef
     ]
 
--- | pCStyleScDef parses value definitions with C-style expression syntax
-pCStyleScDef :: (Features :> es) => Parser es (Decl (Malgo Parse))
-pCStyleScDef = do
+-- | pScDef parses value definitions with C-style expression syntax
+pScDef :: (Features :> es) => Parser es (Decl (Malgo Parse))
+pScDef = do
   start <- getSourcePos
   reserved "def"
   name <- choice [ident, between (symbol "(") (symbol ")") operator]
   reservedOperator "="
-  body <- pCStyleExpr
+  body <- pExpr
   end <- getSourcePos
   pure $ ScDef (Range start end) name body
 
--- | pCStyleExpr parses expressions with C-style syntax
-pCStyleExpr :: (Features :> es) => Parser es (Expr (Malgo Parse))
-pCStyleExpr = do
+-- | pExpr parses expressions with C-style syntax
+pExpr :: (Features :> es) => Parser es (Expr (Malgo Parse))
+pExpr = do
   start <- getSourcePos
-  expr <- pCStyleOpApp
+  expr <- pOpApp
   -- try parse a type annotation
   try (pAnn start expr) <|> pure expr
   where
@@ -71,9 +71,9 @@ pCStyleExpr = do
       end <- getSourcePos
       pure $ Ann (Range start end) expr ty
 
--- | pCStyleOpApp parses operator application with C-style syntax
-pCStyleOpApp :: (Features :> es) => Parser es (Expr (Malgo Parse))
-pCStyleOpApp = makeExprParser pCStyleApply table
+-- | pOpApp parses operator application with C-style syntax
+pOpApp :: (Features :> es) => Parser es (Expr (Malgo Parse))
+pOpApp = makeExprParser pApply table
   where
     table =
       [ [ InfixL do
@@ -84,24 +84,24 @@ pCStyleOpApp = makeExprParser pCStyleApply table
         ]
       ]
 
--- | pCStyleApply parses C-style function application with parentheses
-pCStyleApply :: (Features :> es) => Parser es (Expr (Malgo Parse))
-pCStyleApply =
+-- | pApply parses C-style function application with parentheses
+pApply :: (Features :> es) => Parser es (Expr (Malgo Parse))
+pApply =
   makeExprParser
-    pCStyleProject
+    pProject
     [ [ Postfix $ manyUnaryOp do
           start <- getSourcePos
-          args <- between (symbol "(") (symbol ")") (sepBy pCStyleExpr (symbol ","))
+          args <- between (symbol "(") (symbol ")") (sepBy pExpr (symbol ","))
           end <- getSourcePos
           pure \fn -> foldl (Apply (Range start end)) fn args
       ]
     ]
 
--- | pCStyleProject parses field projection
-pCStyleProject :: (Features :> es) => Parser es (Expr (Malgo Parse))
-pCStyleProject =
+-- | pProject parses field projection
+pProject :: (Features :> es) => Parser es (Expr (Malgo Parse))
+pProject =
   makeExprParser
-    pCStyleAtom
+    pAtom
     [ [ Postfix $ manyUnaryOp do
           start <- getSourcePos
           reservedOperator "."
@@ -111,33 +111,33 @@ pCStyleProject =
       ]
     ]
 
--- | pCStyleAtom parses atoms with C-style syntax
-pCStyleAtom :: (Features :> es) => Parser es (Expr (Malgo Parse))
-pCStyleAtom =
+-- | pAtom parses atoms with C-style syntax
+pAtom :: (Features :> es) => Parser es (Expr (Malgo Parse))
+pAtom =
   choice
     [ pLiteral,
       pVariable,
-      try pCStyleTuple,
-      try pCStyleRecord,
-      pCStyleFn,
+      try pTuple,
+      try pRecord,
+      pFn,
       pList,
-      pCStyleSeq
+      pSeq
     ]
 
--- | pCStyleTuple parses C-style tuple syntax with braces
+-- | pTuple parses C-style tuple syntax with braces
 -- > tuple = "{" expr ("," expr)+ "}" | "{" "}"
-pCStyleTuple :: (Features :> es) => Parser es (Expr (Malgo Parse))
-pCStyleTuple = do
+pTuple :: (Features :> es) => Parser es (Expr (Malgo Parse))
+pTuple = do
   start <- getSourcePos
-  exprs <- between (symbol "{") (symbol "}") (sepBy pCStyleExpr (symbol ","))
+  exprs <- between (symbol "{") (symbol "}") (sepBy pExpr (symbol ","))
   end <- getSourcePos
   case exprs of
     [_] -> fail "c-style tuple must have at least two expressions or be empty"
     _ -> pure $ Tuple (Range start end) exprs
 
--- | pCStyleRecord parses record syntax (separate from tuples in C-style)
-pCStyleRecord :: (Features :> es) => Parser es (Expr (Malgo Parse))
-pCStyleRecord = do
+-- | pRecord parses record syntax (separate from tuples in C-style)
+pRecord :: (Features :> es) => Parser es (Expr (Malgo Parse))
+pRecord = do
   start <- getSourcePos
   fields <- between (symbol "{") (symbol "}") $ sepEndBy1 pField (symbol ",")
   end <- getSourcePos
@@ -146,123 +146,123 @@ pCStyleRecord = do
     pField = label "record field" do
       field <- ident
       reservedOperator "="
-      value <- pCStyleExpr
+      value <- pExpr
       pure (field, value)
 
--- | pCStyleFn parses function syntax with C-style clauses
-pCStyleFn :: (Features :> es) => Parser es (Expr (Malgo Parse))
-pCStyleFn = do
+-- | pFn parses function syntax with C-style clauses
+pFn :: (Features :> es) => Parser es (Expr (Malgo Parse))
+pFn = do
   start <- getSourcePos
-  clauses <- between (symbol "{") (symbol "}") $ sepEndBy1 pCStyleClause (symbol ",")
+  clauses <- between (symbol "{") (symbol "}") $ sepEndBy1 pClause (symbol ",")
   end <- getSourcePos
   pure $ Fn (Range start end) $ NonEmpty.fromList clauses
 
--- | pCStyleClause parses C-style clauses with optional parentheses
+-- | pClause parses C-style clauses with optional parentheses
 -- > clause = "(" pattern ("," pattern)* ")" "->" stmts
 -- >        | pattern+ "->" stmts
-pCStyleClause :: (Features :> es) => Parser es (Clause (Malgo Parse))
-pCStyleClause = do
+pClause :: (Features :> es) => Parser es (Clause (Malgo Parse))
+pClause = do
   start <- getSourcePos
   patterns <-
-    try (between (symbol "(") (symbol ")") (sepEndBy pCStyleAtomPat (symbol ",")) <* reservedOperator "->")
-      <|> try (some pCStyleAtomPat <* reservedOperator "->")
+    try (between (symbol "(") (symbol ")") (sepEndBy pAtomPat (symbol ",")) <* reservedOperator "->")
+      <|> try (some pAtomPat <* reservedOperator "->")
       <|> pure []
-  body <- pCStyleStmts
+  body <- pStmts
   end <- getSourcePos
   pure $ Clause (Range start end) patterns body
 
--- | pCStyleAtomPat parses atomic patterns with C-style syntax
-pCStyleAtomPat :: (Features :> es) => Parser es (Pat (Malgo Parse))
-pCStyleAtomPat =
+-- | pAtomPat parses atomic patterns with C-style syntax
+pAtomPat :: (Features :> es) => Parser es (Pat (Malgo Parse))
+pAtomPat =
   choice
     [ pVarP,
       pLiteralP,
-      try pCStyleTupleP,
+      try pTupleP,
       pRecordP,
       pListP
     ]
 
--- | pCStyleTupleP parses C-style tuple patterns with braces
-pCStyleTupleP :: (Features :> es) => Parser es (Pat (Malgo Parse))
-pCStyleTupleP = do
+-- | pTupleP parses C-style tuple patterns with braces
+pTupleP :: (Features :> es) => Parser es (Pat (Malgo Parse))
+pTupleP = do
   start <- getSourcePos
-  patterns <- between (symbol "{") (symbol "}") (sepBy pCStylePat (symbol ","))
+  patterns <- between (symbol "{") (symbol "}") (sepBy pPat (symbol ","))
   end <- getSourcePos
   case patterns of
     [_] -> fail "c-style tuple must have at least two patterns or be empty"
     _ -> pure $ TupleP (Range start end) patterns
 
--- | pCStylePat parses patterns with C-style syntax
-pCStylePat :: (Features :> es) => Parser es (Pat (Malgo Parse))
-pCStylePat = try pCStyleConP <|> pCStyleAtomPat
+-- | pPat parses patterns with C-style syntax
+pPat :: (Features :> es) => Parser es (Pat (Malgo Parse))
+pPat = try pConP <|> pAtomPat
 
--- | pCStyleConP parses constructor patterns with C-style syntax
-pCStyleConP :: (Features :> es) => Parser es (Pat (Malgo Parse))
-pCStyleConP = do
+-- | pConP parses constructor patterns with C-style syntax
+pConP :: (Features :> es) => Parser es (Pat (Malgo Parse))
+pConP = do
   start <- getSourcePos
   constructor <- ident
-  patterns <- some pCStyleAtomPat
+  patterns <- some pAtomPat
   end <- getSourcePos
   pure $ ConP (Range start end) constructor patterns
 
--- | pCStyleStmts parses statements using C-style syntax
-pCStyleStmts :: (Features :> es) => Parser es (Expr (Malgo Parse))
-pCStyleStmts = do
+-- | pStmts parses statements using C-style syntax
+pStmts :: (Features :> es) => Parser es (Expr (Malgo Parse))
+pStmts = do
   start <- getSourcePos
-  stmts <- sepEndBy1 pCStyleStmt (symbol ";")
+  stmts <- sepEndBy1 pStmt (symbol ";")
   end <- getSourcePos
   pure $ Seq (Range start end) $ NonEmpty.fromList stmts
 
--- | pCStyleStmt parses statements using C-style syntax
-pCStyleStmt :: (Features :> es) => Parser es (Stmt (Malgo Parse))
-pCStyleStmt = pCStyleLet <|> pCStyleWith <|> pCStyleNoBind
+-- | pStmt parses statements using C-style syntax
+pStmt :: (Features :> es) => Parser es (Stmt (Malgo Parse))
+pStmt = pLet <|> pWith <|> pNoBind
 
--- | pCStyleLet parses let statements using C-style syntax
-pCStyleLet :: (Features :> es) => Parser es (Stmt (Malgo Parse))
-pCStyleLet = do
+-- | pLet parses let statements using C-style syntax
+pLet :: (Features :> es) => Parser es (Stmt (Malgo Parse))
+pLet = do
   start <- getSourcePos
   reserved "let"
   name <- ident
   reservedOperator "="
-  body <- pCStyleExpr
+  body <- pExpr
   end <- getSourcePos
   pure $ Let (Range start end) name body
 
--- | pCStyleWith parses with statements using C-style syntax
-pCStyleWith :: (Features :> es) => Parser es (Stmt (Malgo Parse))
-pCStyleWith = do
+-- | pWith parses with statements using C-style syntax
+pWith :: (Features :> es) => Parser es (Stmt (Malgo Parse))
+pWith = do
   start <- getSourcePos
   reserved "with"
   choice
     [ try do
         name <- ident
         reservedOperator "="
-        body <- pCStyleExpr
+        body <- pExpr
         end <- getSourcePos
         pure $ With (Range start end) (Just name) body,
       do
-        body <- pCStyleExpr
+        body <- pExpr
         end <- getSourcePos
         pure $ With (Range start end) Nothing body
     ]
 
--- | pCStyleNoBind parses no-bind statements using C-style syntax
-pCStyleNoBind :: (Features :> es) => Parser es (Stmt (Malgo Parse))
-pCStyleNoBind = do
+-- | pNoBind parses no-bind statements using C-style syntax
+pNoBind :: (Features :> es) => Parser es (Stmt (Malgo Parse))
+pNoBind = do
   start <- getSourcePos
-  body <- pCStyleExpr
+  body <- pExpr
   end <- getSourcePos
   pure $ NoBind (Range start end) body
 
--- | pCStyleSeq parses parenthesized sequences using C-style syntax
-pCStyleSeq :: (Features :> es) => Parser es (Expr (Malgo Parse))
-pCStyleSeq = between (symbol "(") (symbol ")") pCStyleStmts
+-- | pSeq parses parenthesized sequences using C-style syntax
+pSeq :: (Features :> es) => Parser es (Expr (Malgo Parse))
+pSeq = between (symbol "(") (symbol ")") pStmts
 
 -- | pList parses list literals using C-style syntax
 pList :: (Features :> es) => Parser es (Expr (Malgo Parse))
 pList = between (symbol "[") (symbol "]") do
   start <- getSourcePos
-  elements <- sepEndBy pCStyleExpr (symbol ",")
+  elements <- sepEndBy pExpr (symbol ",")
   end <- getSourcePos
   pure $ List (Range start end) elements
 
@@ -277,13 +277,13 @@ pRecordP = do
     pField = do
       field <- ident
       reservedOperator "="
-      value <- pCStylePat
+      value <- pPat
       pure (field, value)
 
 -- | pListP parses list patterns using C-style syntax
 pListP :: (Features :> es) => Parser es (Pat (Malgo Parse))
 pListP = do
   start <- getSourcePos
-  pats <- between (symbol "[") (symbol "]") $ sepEndBy pCStylePat (symbol ",")
+  pats <- between (symbol "[") (symbol "]") $ sepEndBy pPat (symbol ",")
   end <- getSourcePos
   pure $ ListP (Range start end) pats
