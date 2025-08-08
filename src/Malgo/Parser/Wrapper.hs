@@ -35,7 +35,7 @@ filterKnownPragmas = filter isKnownPragma
         || "experimental-"
         `T.isPrefixOf` pragma
 
--- \| Extract pragmas from a module.
+-- | Extract pragmas from a module.
 -- Returns the list of pragmas.
 extractPragmas :: TL.Text -> [Text]
 extractPragmas = go [] . TL.lines
