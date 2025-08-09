@@ -1,5 +1,3 @@
-{-# HLINT ignore "Use <$>" #-}
-
 module Malgo.Parser.Core
   ( -- * Parser Type and Effects
     Parser,
@@ -425,5 +423,4 @@ captureRange :: (MonadParsec e s m, TraversableStream s) => m (Range -> b) -> m 
 captureRange action = do
   start <- getSourcePos
   result <- action
-  end <- getSourcePos
-  pure $ result (Range start end)
+  result . Range start <$> getSourcePos
