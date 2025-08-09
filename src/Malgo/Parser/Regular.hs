@@ -51,65 +51,54 @@ pDecl = do
 -- > dataDef = "data" ident ident* "=" constructor ("|" constructor)* ;
 -- > constructor = ident atomType* ;
 pDataDef :: Parser es (Decl (Malgo Parse))
-pDataDef = do
-  start <- getSourcePos
+pDataDef = captureRange do
   reserved "data"
   name <- ident
   parameters <- many do
-    start <- getSourcePos
-    parameter <- ident
-    end <- getSourcePos
-    pure (Range start end, parameter)
+    captureRange do
+      parameter <- ident
+      pure (,parameter)
   reservedOperator "="
   constructors <- sepBy1 pConstructor (reservedOperator "|")
-  end <- getSourcePos
-  pure $ DataDef (Range start end) name parameters constructors
+  pure $ \range -> DataDef range name parameters constructors
   where
-    pConstructor = do
-      start <- getSourcePos
+    pConstructor = captureRange do
       name <- ident
       parameters <- many pAtomType
-      end <- getSourcePos
-      pure (Range start end, name, parameters)
+      pure (,name,parameters)
 
 -- | pTypeSynonym parses a type synonym.
 --
 -- > typeSynonym = "type" ident ident* "=" type ;
 pTypeSynonym :: Parser es (Decl (Malgo Parse))
-pTypeSynonym = do
-  start <- getSourcePos
+pTypeSynonym = captureRange do
   reserved "type"
   name <- ident
   parameters <- many ident
   reservedOperator "="
   ty <- pType
-  end <- getSourcePos
-  pure $ TypeSynonym (Range start end) name parameters ty
+  pure $ \range -> TypeSynonym range name parameters ty
 
 -- | pScDef parses value definitions with regular expression syntax
 pScDef :: (Features :> es) => Parser es (Decl (Malgo Parse))
-pScDef = do
-  start <- getSourcePos
+pScDef = captureRange do
   reserved "def"
   name <- choice [ident, between (symbol "(") (symbol ")") operator]
   reservedOperator "="
   body <- pExpr
-  end <- getSourcePos
-  pure $ ScDef (Range start end) name body
+  pure $ \range -> ScDef range name body
 
 -- | pExpr parses expressions with regular syntax (no C-style)
 pExpr :: (Features :> es) => Parser es (Expr (Malgo Parse))
 pExpr = do
-  start <- getSourcePos
   expr <- pOpApp
   -- try parse a type annotation
-  try (pAnn start expr) <|> pure expr
+  try (pAnn expr) <|> pure expr
   where
-    pAnn start expr = do
+    pAnn expr = captureRange do
       reservedOperator ":"
       ty <- pType
-      end <- getSourcePos
-      pure $ Ann (Range start end) expr ty
+      pure $ \range -> Ann range expr ty
 
 -- | pOpApp parses operator application with regular syntax
 pOpApp :: (Features :> es) => Parser es (Expr (Malgo Parse))
@@ -117,10 +106,9 @@ pOpApp = makeExprParser pApply table
   where
     table =
       [ [ InfixL do
-            start <- getSourcePos
-            op <- operator
-            end <- getSourcePos
-            pure $ OpApp (Range start end) op
+            captureRange do
+              op <- operator
+              pure $ \range -> OpApp range op
         ]
       ]
 
@@ -130,10 +118,9 @@ pApply =
   makeExprParser
     pProject
     [ [ Postfix $ manyUnaryOp do
-          start <- getSourcePos
-          argument <- pProject
-          end <- getSourcePos
-          pure \fn -> Apply (Range start end) fn argument
+          captureRange do
+            argument <- pProject
+            pure $ \range fn -> Apply range fn argument
       ]
     ]
 
@@ -143,11 +130,10 @@ pProject =
   makeExprParser
     pAtom
     [ [ Postfix $ manyUnaryOp do
-          start <- getSourcePos
-          reservedOperator "."
-          field <- ident
-          end <- getSourcePos
-          pure \record -> Project (Range start end) record field
+          captureRange do
+            reservedOperator "."
+            field <- ident
+            pure $ \range record -> Project range record field
       ]
     ]
 
@@ -167,21 +153,17 @@ pAtom =
 -- | pTuple parses traditional tuple syntax with parentheses
 -- > tuple = "(" expr ("," expr)* ")" | "(" ")"
 pTuple :: (Features :> es) => Parser es (Expr (Malgo Parse))
-pTuple = do
-  start <- getSourcePos
+pTuple = captureRange do
   exprs <- between (symbol "(") (symbol ")") (sepBy pExpr (symbol ","))
-  end <- getSourcePos
   case exprs of
-    [expr] -> pure $ Parens (Range start end) expr
-    _ -> pure $ Tuple (Range start end) exprs
+    [expr] -> pure $ \range -> Parens range expr
+    _ -> pure $ \range -> Tuple range exprs
 
 -- | pRecord parses record syntax (traditional)
 pRecord :: (Features :> es) => Parser es (Expr (Malgo Parse))
-pRecord = do
-  start <- getSourcePos
+pRecord = captureRange do
   fields <- between (symbol "{") (symbol "}") $ sepEndBy1 pField (symbol ",")
-  end <- getSourcePos
-  pure $ Record (Range start end) fields
+  pure $ \range -> Record range fields
   where
     pField = label "record field" do
       field <- ident
@@ -191,21 +173,17 @@ pRecord = do
 
 -- | pFn parses function syntax without C-style clauses
 pFn :: (Features :> es) => Parser es (Expr (Malgo Parse))
-pFn = do
-  start <- getSourcePos
+pFn = captureRange do
   clauses <- between (symbol "{") (symbol "}") $ sepEndBy1 pClause (symbol ",")
-  end <- getSourcePos
-  pure $ Fn (Range start end) $ NonEmpty.fromList clauses
+  pure $ \range -> Fn range $ NonEmpty.fromList clauses
 
 -- | pClause parses traditional clauses without parentheses
 -- > clause = pattern+ "->" stmts
 pClause :: (Features :> es) => Parser es (Clause (Malgo Parse))
-pClause = do
-  start <- getSourcePos
+pClause = captureRange do
   patterns <- try (some pAtomPat <* reservedOperator "->") <|> pure []
   body <- pStmts
-  end <- getSourcePos
-  pure $ Clause (Range start end) patterns body
+  pure $ \range -> Clause range patterns body
 
 -- | pAtomPat parses atomic patterns
 pAtomPat :: (Features :> es) => Parser es (Pat (Malgo Parse))
@@ -220,13 +198,11 @@ pAtomPat =
 
 -- | pTupleP parses traditional tuple patterns with parentheses
 pTupleP :: (Features :> es) => Parser es (Pat (Malgo Parse))
-pTupleP = do
-  start <- getSourcePos
+pTupleP = captureRange do
   patterns <- between (symbol "(") (symbol ")") (sepBy pPat (symbol ","))
-  end <- getSourcePos
   case patterns of
-    [pattern] -> pure pattern -- Just return the single pattern, no ParenP wrapper
-    _ -> pure $ TupleP (Range start end) patterns
+    [pattern] -> pure $ const pattern -- Just return the single pattern, no ParenP wrapper
+    _ -> pure $ \range -> TupleP range patterns
 
 -- | pPat parses patterns
 pPat :: (Features :> es) => Parser es (Pat (Malgo Parse))
@@ -234,20 +210,16 @@ pPat = try pConP <|> pAtomPat
 
 -- | pConP parses constructor patterns
 pConP :: (Features :> es) => Parser es (Pat (Malgo Parse))
-pConP = do
-  start <- getSourcePos
+pConP = captureRange do
   constructor <- ident
   patterns <- some pAtomPat
-  end <- getSourcePos
-  pure $ ConP (Range start end) constructor patterns
+  pure $ \range -> ConP range constructor patterns
 
 -- | pStmts parses statements using regular syntax
 pStmts :: (Features :> es) => Parser es (Expr (Malgo Parse))
-pStmts = do
-  start <- getSourcePos
+pStmts = captureRange do
   stmts <- sepEndBy1 pStmt (symbol ";")
-  end <- getSourcePos
-  pure $ Seq (Range start end) $ NonEmpty.fromList stmts
+  pure $ \range -> Seq range $ NonEmpty.fromList stmts
 
 -- | pStmt parses statements using regular syntax
 pStmt :: (Features :> es) => Parser es (Stmt (Malgo Parse))
@@ -255,40 +227,33 @@ pStmt = pLet <|> pWith <|> pNoBind
 
 -- | pLet parses let statements using regular syntax
 pLet :: (Features :> es) => Parser es (Stmt (Malgo Parse))
-pLet = do
-  start <- getSourcePos
+pLet = captureRange do
   reserved "let"
   name <- ident
   reservedOperator "="
   body <- pExpr
-  end <- getSourcePos
-  pure $ Let (Range start end) name body
+  pure $ \range -> Let range name body
 
 -- | pWith parses with statements using regular syntax
 pWith :: (Features :> es) => Parser es (Stmt (Malgo Parse))
-pWith = do
-  start <- getSourcePos
+pWith = captureRange do
   reserved "with"
   choice
     [ try do
         name <- ident
         reservedOperator "="
         body <- pExpr
-        end <- getSourcePos
-        pure $ With (Range start end) (Just name) body,
+        pure $ \range -> With range (Just name) body,
       do
         body <- pExpr
-        end <- getSourcePos
-        pure $ With (Range start end) Nothing body
+        pure $ \range -> With range Nothing body
     ]
 
 -- | pNoBind parses no-bind statements using regular syntax
 pNoBind :: (Features :> es) => Parser es (Stmt (Malgo Parse))
-pNoBind = do
-  start <- getSourcePos
+pNoBind = captureRange do
   body <- pExpr
-  end <- getSourcePos
-  pure $ NoBind (Range start end) body
+  pure $ \range -> NoBind range body
 
 -- | pSeq parses parenthesized sequences using regular syntax
 pSeq :: (Features :> es) => Parser es (Expr (Malgo Parse))
@@ -297,18 +262,15 @@ pSeq = between (symbol "(") (symbol ")") pStmts
 -- | pList parses list literals using regular syntax
 pList :: (Features :> es) => Parser es (Expr (Malgo Parse))
 pList = between (symbol "[") (symbol "]") do
-  start <- getSourcePos
-  elements <- sepEndBy pExpr (symbol ",")
-  end <- getSourcePos
-  pure $ List (Range start end) elements
+  captureRange do
+    elements <- sepEndBy pExpr (symbol ",")
+    pure $ \range -> List range elements
 
 -- | pRecordP parses record patterns using regular syntax
 pRecordP :: (Features :> es) => Parser es (Pat (Malgo Parse))
-pRecordP = do
-  start <- getSourcePos
+pRecordP = captureRange do
   fields <- between (symbol "{") (symbol "}") $ sepEndBy1 pField (symbol ",")
-  end <- getSourcePos
-  pure $ RecordP (Range start end) fields
+  pure $ \range -> RecordP range fields
   where
     pField = do
       field <- ident
@@ -318,8 +280,6 @@ pRecordP = do
 
 -- | pListP parses list patterns using regular syntax
 pListP :: (Features :> es) => Parser es (Pat (Malgo Parse))
-pListP = do
-  start <- getSourcePos
+pListP = captureRange do
   pats <- between (symbol "[") (symbol "]") $ sepEndBy pPat (symbol ",")
-  end <- getSourcePos
-  pure $ ListP (Range start end) pats
+  pure $ \range -> ListP range pats

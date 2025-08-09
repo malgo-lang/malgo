@@ -1,4 +1,4 @@
-{-# LANGUAGE NoMonomorphismRestriction #-}
+{-# HLINT ignore "Use <$>" #-}
 
 module Malgo.Parser.Core
   ( -- * Parser Type and Effects
@@ -54,6 +54,7 @@ module Malgo.Parser.Core
     -- * Combinators
     optional,
     manyUnaryOp,
+    captureRange,
   )
 where
 
@@ -84,42 +85,36 @@ skipPragma = lexeme do
 --
 -- > infix = "infixl" decimal operator | "infixr" decimal operator | "infix" decimal operator ;
 pInfix :: Parser es (Decl (Malgo Parse))
-pInfix = do
-  start <- getSourcePos
+pInfix = captureRange do
   choice
     [ do
         reserved "infixl"
         precedence <- decimal
         operator <- between (symbol "(") (symbol ")") operator
-        end <- getSourcePos
-        pure $ Infix (Range start end) LeftA precedence operator,
+        pure $ \range -> Infix range LeftA precedence operator,
       do
         reserved "infixr"
         precedence <- decimal
         operator <- between (symbol "(") (symbol ")") operator
-        end <- getSourcePos
-        pure $ Infix (Range start end) RightA precedence operator,
+        pure $ \range -> Infix range RightA precedence operator,
       do
         reserved "infix"
         precedence <- decimal
         operator <- between (symbol "(") (symbol ")") operator
-        end <- getSourcePos
-        pure $ Infix (Range start end) NeutralA precedence operator
+        pure $ \range -> Infix range NeutralA precedence operator
     ]
 
 -- | pForeign parses a foreign declaration.
 --
 -- > foreign = "foreign" "import" ident ":" type ;
 pForeign :: Parser es (Decl (Malgo Parse))
-pForeign = do
-  start <- getSourcePos
+pForeign = captureRange do
   reserved "foreign"
   reserved "import"
   name <- ident
   reservedOperator ":"
   ty <- pType
-  end <- getSourcePos
-  pure $ Foreign (Range start end) name ty
+  pure $ \range -> Foreign range name ty
 
 -- | pImport parses an import declaration.
 --
@@ -129,15 +124,13 @@ pForeign = do
 -- >            | moduleName ;
 -- > importItem = ident | "(" operator ")" ;
 pImport :: (IOE :> es, Workspace :> es) => Parser es (Decl (Malgo Parse))
-pImport = do
-  start <- getSourcePos
+pImport = captureRange do
   reserved "module"
   importList <- pImportList
   reservedOperator "="
   reserved "import"
   moduleName <- pModuleName
-  end <- getSourcePos
-  pure $ Import (Range start end) moduleName importList
+  pure $ \range -> Import range moduleName importList
   where
     pImportList = choice [try pAll, pSelected, pAs]
     pAll = between (symbol "{") (symbol "}") do
@@ -162,14 +155,12 @@ pImport = do
 --
 -- > scSig = "def" (ident | "(" operator")")":" type ;
 pScSig :: Parser es (Decl (Malgo Parse))
-pScSig = do
-  start <- getSourcePos
+pScSig = captureRange do
   reserved "def"
   name <- choice [ident, between (symbol "(") (symbol ")") operator]
   reservedOperator ":"
   ty <- pType
-  end <- getSourcePos
-  pure $ ScSig (Range start end) name ty
+  pure $ \range -> ScSig range name ty
 
 -- * Types
 
@@ -192,14 +183,12 @@ pType = makeExprParser pTyApp table
 --
 -- > tyapp = atomType atomType* ;
 pTyApp :: Parser es (Type (Malgo Parse))
-pTyApp = do
-  start <- getSourcePos
+pTyApp = captureRange do
   ty <- pAtomType
   tys <- many pAtomType
-  end <- getSourcePos
-  case tys of
-    [] -> pure ty
-    _ -> pure $ TyApp (Range start end) ty tys
+  pure $ \range -> case tys of
+    [] -> ty
+    _ -> TyApp range ty tys
 
 -- | pAtomType parses an atomic type.
 --
@@ -214,34 +203,28 @@ pAtomType = choice [pTyVar, pTyTuple, try pTyRecord, pTyBlock]
 --
 -- > tyVar = ident ;
 pTyVar :: Parser es (Type (Malgo Parse))
-pTyVar = do
-  start <- getSourcePos
+pTyVar = captureRange do
   name <- ident
-  end <- getSourcePos
-  pure $ TyVar (Range start end) name
+  pure $ \range -> TyVar range name
 
 -- | pTyTuple parses a tuple type or parenthesized type.
 --
 -- > tyTuple = "(" type ("," type)* ")"
 -- >         | "(" ")" ;
 pTyTuple :: Parser es (Type (Malgo Parse))
-pTyTuple = do
-  start <- getSourcePos
+pTyTuple = captureRange do
   tys <- between (symbol "(") (symbol ")") (sepBy pType (symbol ","))
-  end <- getSourcePos
-  case tys of
-    [ty] -> pure ty
-    _ -> pure $ TyTuple (Range start end) tys
+  pure $ \range -> case tys of
+    [ty] -> ty
+    _ -> TyTuple range tys
 
 -- | pTyRecord parses a record type.
 --
 -- > tyRecord = "{" ident "=" type ("," ident "=" type)* "}" ;
 pTyRecord :: Parser es (Type (Malgo Parse))
-pTyRecord = do
-  start <- getSourcePos
+pTyRecord = captureRange do
   fields <- between (symbol "{") (symbol "}") $ sepEndBy1 pField (symbol ",")
-  end <- getSourcePos
-  pure $ TyRecord (Range start end) fields
+  pure $ \range -> TyRecord range fields
   where
     pField = do
       field <- ident
@@ -253,11 +236,9 @@ pTyRecord = do
 --
 -- > tyBlock = "{" type "}" ;
 pTyBlock :: Parser es (Type (Malgo Parse))
-pTyBlock = do
-  start <- getSourcePos
+pTyBlock = captureRange do
   ty <- between (symbol "{") (symbol "}") pType
-  end <- getSourcePos
-  pure $ TyBlock (Range start end) ty
+  pure $ \range -> TyBlock range ty
 
 -- * Literals
 
@@ -266,14 +247,12 @@ pTyBlock = do
 -- > literal = boxed ["#"] ;
 -- > boxed = double | float | int | long | char | string ;
 pLiteral :: Parser es (Expr (Malgo Parse))
-pLiteral = do
-  start <- getSourcePos
+pLiteral = captureRange do
   boxed <- pBoxed
   sharp <- optional (symbol "#")
-  end <- getSourcePos
-  case sharp of
-    Just _ -> pure $ Unboxed (Range start end) $ coerce boxed
-    Nothing -> pure $ Boxed (Range start end) boxed
+  pure $ \range -> case sharp of
+    Just _ -> Unboxed range $ coerce boxed
+    Nothing -> Boxed range boxed
 
 pBoxed :: Parser es (Literal Boxed)
 pBoxed = choice [try pReal, pInt, pChar, pString]
@@ -330,11 +309,9 @@ pStringLiteral = lexeme do
 --
 -- > variable = ident ;
 pVariable :: Parser es (Expr (Malgo Parse))
-pVariable = do
-  start <- getSourcePos
+pVariable = captureRange do
   name <- ident
-  end <- getSourcePos
-  pure $ Var (Range start end) name
+  pure $ \range -> Var range name
 
 -- * Patterns
 
@@ -342,22 +319,18 @@ pVariable = do
 --
 -- > varPat = ident ;
 pVarP :: Parser es (Pat (Malgo Parse))
-pVarP = do
-  start <- getSourcePos
+pVarP = captureRange do
   name <- ident
-  end <- getSourcePos
-  pure $ VarP (Range start end) name
+  pure $ \range -> VarP range name
 
 -- | pLiteralP parses a literal pattern.
 pLiteralP :: Parser es (Pat (Malgo Parse))
-pLiteralP = do
-  start <- getSourcePos
+pLiteralP = captureRange do
   boxed <- pBoxed
   sharp <- optional (symbol "#")
-  end <- getSourcePos
-  case sharp of
-    Just _ -> pure $ UnboxedP (Range start end) $ coerce boxed
-    Nothing -> pure $ BoxedP (Range start end) boxed
+  pure $ \range -> case sharp of
+    Just _ -> UnboxedP range $ coerce boxed
+    Nothing -> BoxedP range boxed
 
 -- * Lexical Analysis
 
@@ -447,6 +420,10 @@ optional p = try (fmap Just p) <|> pure Nothing
 manyUnaryOp :: (MonadPlus f) => f (c -> c) -> f (c -> c)
 manyUnaryOp singleUnaryOp = foldr1 (>>>) <$> some singleUnaryOp
 
--- Note: Functions that depend on specific parser implementations (pExpr, pPat)
--- have been moved to the individual parser modules (Regular.hs, CStyle.hs)
--- since they cannot be truly shared across different syntax styles.
+-- | captureRange captures the source range of the parsed text.
+captureRange :: (MonadParsec e s m, TraversableStream s) => m (Range -> b) -> m b
+captureRange action = do
+  start <- getSourcePos
+  result <- action
+  end <- getSourcePos
+  pure $ result (Range start end)
