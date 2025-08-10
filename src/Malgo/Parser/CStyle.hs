@@ -77,12 +77,12 @@ pDataDef = captureRange do
   name <- ident
   parameters <- pParameterList
   reservedOperator "="
-  constructors <- sepBy1 pCStyleConstructor (reservedOperator "|")
+  constructors <- sepBy1 pConstructor (reservedOperator "|")
   pure $ \range -> DataDef range name parameters constructors
   where
-    pCStyleConstructor = captureRange do
+    pConstructor = captureRange do
       name <- ident
-      parameters <- pConstructorParams
+      parameters <- between (symbol "(") (symbol ")") (sepBy pType (symbol ","))
       pure (,name,parameters)
 
 -- | pTypeSynonym parses C-style type synonyms with parenthesized parameters
@@ -95,6 +95,14 @@ pTypeSynonym = captureRange do
   reservedOperator "="
   ty <- pType
   pure $ \range -> TypeSynonym range name parameters ty
+
+-- | pParameterList parses comma-separated parameters in parentheses
+pParameterList :: Parser es [(Range, Text)]
+pParameterList = between (symbol "(") (symbol ")") (sepBy pParameter (symbol ","))
+  where
+    pParameter = captureRange do
+      param <- ident
+      pure (,param)
 
 -- | pScSig parses a value signature.
 --
@@ -185,20 +193,6 @@ pImport = captureRange do
       sourcePath <- lift $ parseArtifactPath pwd sourcePath
       path' <- lift $ parseArtifactPath sourcePath path
       pure $ Artifact path'
-
--- * C-Style Specific Helpers
-
--- | pParameterList parses comma-separated parameters in parentheses
-pParameterList :: Parser es [(Range, Text)]
-pParameterList = between (symbol "(") (symbol ")") (sepBy pParameter (symbol ","))
-  where
-    pParameter = captureRange do
-      param <- ident
-      pure (,param)
-
--- | pConstructorParams parses comma-separated types in parentheses
-pConstructorParams :: Parser es [Type (Malgo Parse)]
-pConstructorParams = between (symbol "(") (symbol ")") (sepBy pType (symbol ","))
 
 -- * Type Parsers
 
