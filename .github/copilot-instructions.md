@@ -19,14 +19,9 @@ Malgo is a statically-typed functional language compiler written in Haskell. The
 # Essential commands (never use plain cabal/ghc directly)
 mise run build    # Format + compile (uses ormolu, hpack)
 mise run test     # Run full test suite
-mise run test --match="Parser"  # Run specific tests
 
 # Reset golden files when test outputs change
 mise run reset
-
-# Running the compiler
-malgo eval examples/malgo/Hello.mlg
-malgo eval --debug-mode --no-opt examples/malgo/Hello.mlg  # See all IR stages
 ```
 
 ## Critical Conventions
