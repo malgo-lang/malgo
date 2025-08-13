@@ -1,0 +1,1185 @@
+Module
+ { moduleName = Artifact
+  ( ArtifactPath "test/testcases/malgo/FibCopattern.mlg" )
+ , moduleDefinition = ParsedDefinitions
+  [ Import
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+     , sourceLine = Pos 2
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+     , sourceLine = Pos 3
+     , sourceColumn = Pos 1
+     }
+    }
+   )
+   ( Artifact
+    ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+   ) All
+  , Import
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+     , sourceLine = Pos 3
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+     , sourceLine = Pos 5
+     , sourceColumn = Pos 1
+     }
+    }
+   )
+   ( Artifact
+    ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+   ) All
+  , TypeSynonym
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+     , sourceLine = Pos 5
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+     , sourceLine = Pos 7
+     , sourceColumn = Pos 1
+     }
+    }
+   ) "Stream" [ "a" ]
+   ( TyRecord
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+      , sourceLine = Pos 5
+      , sourceColumn = Pos 18
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+      , sourceLine = Pos 7
+      , sourceColumn = Pos 1
+      }
+     }
+    )
+    [
+     ( "head"
+     , TyVar
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+        , sourceLine = Pos 5
+        , sourceColumn = Pos 26
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+        , sourceLine = Pos 5
+        , sourceColumn = Pos 27
+        }
+       }
+      ) "a"
+     )
+    ,
+     ( "tail"
+     , TyApp
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+        , sourceLine = Pos 5
+        , sourceColumn = Pos 35
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+        , sourceLine = Pos 5
+        , sourceColumn = Pos 45
+        }
+       }
+      )
+      ( TyVar
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+         , sourceLine = Pos 5
+         , sourceColumn = Pos 35
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+         , sourceLine = Pos 5
+         , sourceColumn = Pos 41
+         }
+        }
+       ) "Stream"
+      )
+      [ TyVar
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+         , sourceLine = Pos 5
+         , sourceColumn = Pos 42
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+         , sourceLine = Pos 5
+         , sourceColumn = Pos 43
+         }
+        }
+       ) "a"
+      ]
+     )
+    ]
+   )
+  , ScDef
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+     , sourceLine = Pos 7
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+     , sourceLine = Pos 12
+     , sourceColumn = Pos 1
+     }
+    }
+   ) "zipWith"
+   ( Codata
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+      , sourceLine = Pos 7
+      , sourceColumn = Pos 15
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+      , sourceLine = Pos 12
+      , sourceColumn = Pos 1
+      }
+     }
+    )
+    [
+     ( ProjectP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+        , sourceLine = Pos 8
+        , sourceColumn = Pos 3
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+        , sourceLine = Pos 8
+        , sourceColumn = Pos 21
+        }
+       }
+      )
+      ( ApplyP
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+         , sourceLine = Pos 8
+         , sourceColumn = Pos 3
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+         , sourceLine = Pos 8
+         , sourceColumn = Pos 21
+         }
+        }
+       )
+       ( ApplyP
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+          , sourceLine = Pos 8
+          , sourceColumn = Pos 3
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+          , sourceLine = Pos 8
+          , sourceColumn = Pos 21
+          }
+         }
+        )
+        ( ApplyP
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+           , sourceLine = Pos 8
+           , sourceColumn = Pos 3
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+           , sourceLine = Pos 8
+           , sourceColumn = Pos 21
+           }
+          }
+         )
+         ( HoleP
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+            , sourceLine = Pos 8
+            , sourceColumn = Pos 3
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+            , sourceLine = Pos 8
+            , sourceColumn = Pos 21
+            }
+           }
+          )
+         )
+         ( VarP
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+            , sourceLine = Pos 8
+            , sourceColumn = Pos 5
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+            , sourceLine = Pos 8
+            , sourceColumn = Pos 6
+            }
+           }
+          ) "f"
+         )
+        )
+        ( VarP
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+           , sourceLine = Pos 8
+           , sourceColumn = Pos 8
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+           , sourceLine = Pos 8
+           , sourceColumn = Pos 10
+           }
+          }
+         ) "xs"
+        )
+       )
+       ( VarP
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+          , sourceLine = Pos 8
+          , sourceColumn = Pos 12
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+          , sourceLine = Pos 8
+          , sourceColumn = Pos 14
+          }
+         }
+        ) "ys"
+       )
+      ) "head"
+     , Apply
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+        , sourceLine = Pos 8
+        , sourceColumn = Pos 25
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+        , sourceLine = Pos 8
+        , sourceColumn = Pos 43
+        }
+       }
+      )
+      ( Apply
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+         , sourceLine = Pos 8
+         , sourceColumn = Pos 25
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+         , sourceLine = Pos 8
+         , sourceColumn = Pos 43
+         }
+        }
+       )
+       ( Var
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+          , sourceLine = Pos 8
+          , sourceColumn = Pos 24
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+          , sourceLine = Pos 8
+          , sourceColumn = Pos 25
+          }
+         }
+        ) "f"
+       )
+       ( Project
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+          , sourceLine = Pos 8
+          , sourceColumn = Pos 28
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+          , sourceLine = Pos 8
+          , sourceColumn = Pos 33
+          }
+         }
+        )
+        ( Var
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+           , sourceLine = Pos 8
+           , sourceColumn = Pos 26
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+           , sourceLine = Pos 8
+           , sourceColumn = Pos 28
+           }
+          }
+         ) "xs"
+        ) "head"
+       )
+      )
+      ( Project
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+         , sourceLine = Pos 8
+         , sourceColumn = Pos 37
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+         , sourceLine = Pos 8
+         , sourceColumn = Pos 42
+         }
+        }
+       )
+       ( Var
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+          , sourceLine = Pos 8
+          , sourceColumn = Pos 35
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+          , sourceLine = Pos 8
+          , sourceColumn = Pos 37
+          }
+         }
+        ) "ys"
+       ) "head"
+      )
+     )
+    ,
+     ( ProjectP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+        , sourceLine = Pos 9
+        , sourceColumn = Pos 3
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+        , sourceLine = Pos 9
+        , sourceColumn = Pos 21
+        }
+       }
+      )
+      ( ApplyP
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+         , sourceLine = Pos 9
+         , sourceColumn = Pos 3
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+         , sourceLine = Pos 9
+         , sourceColumn = Pos 21
+         }
+        }
+       )
+       ( ApplyP
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+          , sourceLine = Pos 9
+          , sourceColumn = Pos 3
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+          , sourceLine = Pos 9
+          , sourceColumn = Pos 21
+          }
+         }
+        )
+        ( ApplyP
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+           , sourceLine = Pos 9
+           , sourceColumn = Pos 3
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+           , sourceLine = Pos 9
+           , sourceColumn = Pos 21
+           }
+          }
+         )
+         ( HoleP
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+            , sourceLine = Pos 9
+            , sourceColumn = Pos 3
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+            , sourceLine = Pos 9
+            , sourceColumn = Pos 21
+            }
+           }
+          )
+         )
+         ( VarP
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+            , sourceLine = Pos 9
+            , sourceColumn = Pos 5
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+            , sourceLine = Pos 9
+            , sourceColumn = Pos 6
+            }
+           }
+          ) "f"
+         )
+        )
+        ( VarP
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+           , sourceLine = Pos 9
+           , sourceColumn = Pos 8
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+           , sourceLine = Pos 9
+           , sourceColumn = Pos 10
+           }
+          }
+         ) "xs"
+        )
+       )
+       ( VarP
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+          , sourceLine = Pos 9
+          , sourceColumn = Pos 12
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+          , sourceLine = Pos 9
+          , sourceColumn = Pos 14
+          }
+         }
+        ) "ys"
+       )
+      ) "tail"
+     , Apply
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+        , sourceLine = Pos 9
+        , sourceColumn = Pos 31
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+        , sourceLine = Pos 10
+        , sourceColumn = Pos 1
+        }
+       }
+      )
+      ( Apply
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+         , sourceLine = Pos 9
+         , sourceColumn = Pos 31
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+         , sourceLine = Pos 10
+         , sourceColumn = Pos 1
+         }
+        }
+       )
+       ( Apply
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+          , sourceLine = Pos 9
+          , sourceColumn = Pos 31
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+          , sourceLine = Pos 10
+          , sourceColumn = Pos 1
+          }
+         }
+        )
+        ( Var
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+           , sourceLine = Pos 9
+           , sourceColumn = Pos 24
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+           , sourceLine = Pos 9
+           , sourceColumn = Pos 31
+           }
+          }
+         ) "zipWith"
+        )
+        ( Var
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+           , sourceLine = Pos 9
+           , sourceColumn = Pos 32
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+           , sourceLine = Pos 9
+           , sourceColumn = Pos 33
+           }
+          }
+         ) "f"
+        )
+       )
+       ( Project
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+          , sourceLine = Pos 9
+          , sourceColumn = Pos 37
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+          , sourceLine = Pos 9
+          , sourceColumn = Pos 42
+          }
+         }
+        )
+        ( Var
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+           , sourceLine = Pos 9
+           , sourceColumn = Pos 35
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+           , sourceLine = Pos 9
+           , sourceColumn = Pos 37
+           }
+          }
+         ) "xs"
+        ) "tail"
+       )
+      )
+      ( Project
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+         , sourceLine = Pos 9
+         , sourceColumn = Pos 46
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+         , sourceLine = Pos 9
+         , sourceColumn = Pos 51
+         }
+        }
+       )
+       ( Var
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+          , sourceLine = Pos 9
+          , sourceColumn = Pos 44
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+          , sourceLine = Pos 9
+          , sourceColumn = Pos 46
+          }
+         }
+        ) "ys"
+       ) "tail"
+      )
+     )
+    ]
+   )
+  , ScDef
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+     , sourceLine = Pos 12
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+     , sourceLine = Pos 18
+     , sourceColumn = Pos 1
+     }
+    }
+   ) "fib"
+   ( Codata
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+      , sourceLine = Pos 12
+      , sourceColumn = Pos 11
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+      , sourceLine = Pos 18
+      , sourceColumn = Pos 1
+      }
+     }
+    )
+    [
+     ( ProjectP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+        , sourceLine = Pos 13
+        , sourceColumn = Pos 3
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+        , sourceLine = Pos 13
+        , sourceColumn = Pos 10
+        }
+       }
+      )
+      ( HoleP
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+         , sourceLine = Pos 13
+         , sourceColumn = Pos 3
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+         , sourceLine = Pos 13
+         , sourceColumn = Pos 10
+         }
+        }
+       )
+      ) "head"
+     , Boxed
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+        , sourceLine = Pos 13
+        , sourceColumn = Pos 13
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+        , sourceLine = Pos 13
+        , sourceColumn = Pos 15
+        }
+       }
+      )
+      ( Int64 1 )
+     )
+    ,
+     ( ProjectP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+        , sourceLine = Pos 14
+        , sourceColumn = Pos 3
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+        , sourceLine = Pos 14
+        , sourceColumn = Pos 15
+        }
+       }
+      )
+      ( ProjectP
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+         , sourceLine = Pos 14
+         , sourceColumn = Pos 3
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+         , sourceLine = Pos 14
+         , sourceColumn = Pos 15
+         }
+        }
+       )
+       ( HoleP
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+          , sourceLine = Pos 14
+          , sourceColumn = Pos 3
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+          , sourceLine = Pos 14
+          , sourceColumn = Pos 15
+          }
+         }
+        )
+       ) "tail"
+      ) "head"
+     , Boxed
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+        , sourceLine = Pos 14
+        , sourceColumn = Pos 18
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+        , sourceLine = Pos 14
+        , sourceColumn = Pos 20
+        }
+       }
+      )
+      ( Int64 1 )
+     )
+    ,
+     ( ProjectP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+        , sourceLine = Pos 15
+        , sourceColumn = Pos 3
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+        , sourceLine = Pos 15
+        , sourceColumn = Pos 15
+        }
+       }
+      )
+      ( ProjectP
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+         , sourceLine = Pos 15
+         , sourceColumn = Pos 3
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+         , sourceLine = Pos 15
+         , sourceColumn = Pos 15
+         }
+        }
+       )
+       ( HoleP
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+          , sourceLine = Pos 15
+          , sourceColumn = Pos 3
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+          , sourceLine = Pos 15
+          , sourceColumn = Pos 15
+          }
+         }
+        )
+       ) "tail"
+      ) "tail"
+     , Apply
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+        , sourceLine = Pos 15
+        , sourceColumn = Pos 25
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+        , sourceLine = Pos 16
+        , sourceColumn = Pos 1
+        }
+       }
+      )
+      ( Apply
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+         , sourceLine = Pos 15
+         , sourceColumn = Pos 25
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+         , sourceLine = Pos 16
+         , sourceColumn = Pos 1
+         }
+        }
+       )
+       ( Apply
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+          , sourceLine = Pos 15
+          , sourceColumn = Pos 25
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+          , sourceLine = Pos 16
+          , sourceColumn = Pos 1
+          }
+         }
+        )
+        ( Var
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+           , sourceLine = Pos 15
+           , sourceColumn = Pos 18
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+           , sourceLine = Pos 15
+           , sourceColumn = Pos 25
+           }
+          }
+         ) "zipWith"
+        )
+        ( Var
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+           , sourceLine = Pos 15
+           , sourceColumn = Pos 26
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+           , sourceLine = Pos 15
+           , sourceColumn = Pos 34
+           }
+          }
+         ) "addInt64"
+        )
+       )
+       ( Var
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+          , sourceLine = Pos 15
+          , sourceColumn = Pos 36
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+          , sourceLine = Pos 15
+          , sourceColumn = Pos 39
+          }
+         }
+        ) "fib"
+       )
+      )
+      ( Project
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+         , sourceLine = Pos 15
+         , sourceColumn = Pos 44
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+         , sourceLine = Pos 15
+         , sourceColumn = Pos 49
+         }
+        }
+       )
+       ( Var
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+          , sourceLine = Pos 15
+          , sourceColumn = Pos 41
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+          , sourceLine = Pos 15
+          , sourceColumn = Pos 44
+          }
+         }
+        ) "fib"
+       ) "tail"
+      )
+     )
+    ]
+   )
+  , ScDef
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+     , sourceLine = Pos 18
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+     , sourceLine = Pos 20
+     , sourceColumn = Pos 2
+     }
+    }
+   ) "main"
+   ( Fn
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+      , sourceLine = Pos 18
+      , sourceColumn = Pos 12
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+      , sourceLine = Pos 20
+      , sourceColumn = Pos 2
+      }
+     }
+    )
+    ( Clause
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+       , sourceLine = Pos 19
+       , sourceColumn = Pos 3
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+       , sourceLine = Pos 20
+       , sourceColumn = Pos 1
+       }
+      }
+     ) []
+     ( Seq
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+        , sourceLine = Pos 19
+        , sourceColumn = Pos 3
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+        , sourceLine = Pos 20
+        , sourceColumn = Pos 1
+        }
+       }
+      )
+      ( NoBind
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+         , sourceLine = Pos 19
+         , sourceColumn = Pos 3
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+         , sourceLine = Pos 20
+         , sourceColumn = Pos 1
+         }
+        }
+       )
+       ( Apply
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+          , sourceLine = Pos 19
+          , sourceColumn = Pos 15
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+          , sourceLine = Pos 20
+          , sourceColumn = Pos 1
+          }
+         }
+        )
+        ( Var
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+           , sourceLine = Pos 19
+           , sourceColumn = Pos 3
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+           , sourceLine = Pos 19
+           , sourceColumn = Pos 15
+           }
+          }
+         ) "printString"
+        )
+        ( Apply
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+           , sourceLine = Pos 19
+           , sourceColumn = Pos 30
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+           , sourceLine = Pos 19
+           , sourceColumn = Pos 65
+           }
+          }
+         )
+         ( Var
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+            , sourceLine = Pos 19
+            , sourceColumn = Pos 16
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+            , sourceLine = Pos 19
+            , sourceColumn = Pos 30
+            }
+           }
+          ) "toStringInt64"
+         )
+         ( Project
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+            , sourceLine = Pos 19
+            , sourceColumn = Pos 59
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+            , sourceLine = Pos 19
+            , sourceColumn = Pos 64
+            }
+           }
+          )
+          ( Project
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+             , sourceLine = Pos 19
+             , sourceColumn = Pos 54
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+             , sourceLine = Pos 19
+             , sourceColumn = Pos 59
+             }
+            }
+           )
+           ( Project
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+              , sourceLine = Pos 19
+              , sourceColumn = Pos 49
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+              , sourceLine = Pos 19
+              , sourceColumn = Pos 54
+              }
+             }
+            )
+            ( Project
+             ( Range
+              { _start = SourcePos
+               { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+               , sourceLine = Pos 19
+               , sourceColumn = Pos 44
+               }
+              , _end = SourcePos
+               { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+               , sourceLine = Pos 19
+               , sourceColumn = Pos 49
+               }
+              }
+             )
+             ( Project
+              ( Range
+               { _start = SourcePos
+                { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+                , sourceLine = Pos 19
+                , sourceColumn = Pos 39
+                }
+               , _end = SourcePos
+                { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+                , sourceLine = Pos 19
+                , sourceColumn = Pos 44
+                }
+               }
+              )
+              ( Project
+               ( Range
+                { _start = SourcePos
+                 { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+                 , sourceLine = Pos 19
+                 , sourceColumn = Pos 34
+                 }
+                , _end = SourcePos
+                 { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+                 , sourceLine = Pos 19
+                 , sourceColumn = Pos 39
+                 }
+                }
+               )
+               ( Var
+                ( Range
+                 { _start = SourcePos
+                  { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+                  , sourceLine = Pos 19
+                  , sourceColumn = Pos 31
+                  }
+                 , _end = SourcePos
+                  { sourceName = "./test/testcases/malgo/FibCopattern.mlg"
+                  , sourceLine = Pos 19
+                  , sourceColumn = Pos 34
+                  }
+                 }
+                ) "fib"
+               ) "tail"
+              ) "tail"
+             ) "tail"
+            ) "tail"
+           ) "tail"
+          ) "head"
+         )
+        )
+       ) :| []
+      )
+     ) :| []
+    )
+   )
+  ]
+ }
