@@ -1,0 +1,12 @@
+module {..} = import "../../../runtime/malgo/Builtin.mlg"
+module {..} = import "../../../runtime/malgo/Prelude.mlg"
+
+def ones = {
+  #.head -> 1,
+  #.tail -> ones
+}
+
+def fib = {
+  #.head -> 1,
+  #.tail -> ones
+}

@@ -328,7 +328,7 @@ pAtom =
       pVariable,
       try pTuple,
       try pRecord,
-      pFn,
+      pBrace,
       pList,
       pSeq
     ]
@@ -354,11 +354,54 @@ pRecord = captureRange do
       value <- pExpr
       pure (field, value)
 
--- | pFn parses function syntax without C-style clauses
-pFn :: (Features :> es) => Parser es (Expr (Malgo Parse))
-pFn = captureRange do
-  clauses <- between (symbol "{") (symbol "}") $ sepEndBy1 pClause (symbol ",")
-  pure $ \range -> Fn range $ NonEmpty.fromList clauses
+-- | pBrace parses function or copatterns
+pBrace :: (Features :> es) => Parser es (Expr (Malgo Parse))
+pBrace = captureRange do
+  content <-
+    between (symbol "{") (symbol "}")
+      $ choice
+        [ try pCodata,
+          pFn
+        ]
+  pure $ \range -> content range
+  where
+    pFn = do
+      clauses <- sepEndBy1 pClause (symbol ",")
+      pure $ \range -> Fn range $ NonEmpty.fromList clauses
+
+-- | pCodata parses codata expressions
+pCodata :: (Features :> es) => Parser es (Range -> Expr (Malgo Parse))
+pCodata = do
+  clauses <- sepEndBy1 pCodataClause (symbol ",")
+  pure $ \range -> Codata range clauses
+  where
+    pCodataClause = do
+      cp <- pCopattern
+      reservedOperator "->"
+      e <- pExpr
+      pure (cp, e)
+
+-- | pCopattern parses copatterns starting with #
+pCopattern :: (Features :> es) => Parser es (CoPat (Malgo Parse))
+pCopattern = captureRange do
+  symbol "#"
+  pCopatternSuffix HoleP
+
+-- | pCopatternSuffix parses copattern suffixes (projections and applications)
+pCopatternSuffix :: (Features :> es) => (Range -> CoPat (Malgo Parse)) -> Parser es (Range -> CoPat (Malgo Parse))
+pCopatternSuffix cp =
+  choice
+    [ try do
+        reservedOperator "."
+        field <- ident
+        pCopatternSuffix (\range -> ProjectP range (cp range) field),
+      try do
+        symbol "("
+        pat <- pPat
+        symbol ")"
+        pCopatternSuffix (\range -> ApplyP range (cp range) pat),
+      pure cp
+    ]
 
 -- | pList parses list literals using regular syntax
 pList :: (Features :> es) => Parser es (Expr (Malgo Parse))

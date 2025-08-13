@@ -1,0 +1,282 @@
+Module
+ { moduleName = Artifact
+  ( ArtifactPath "test/testcases/malgo/CopatternBasic.mlg" )
+ , moduleDefinition = ParsedDefinitions
+  [ Import
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+     , sourceLine = Pos 1
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+     , sourceLine = Pos 2
+     , sourceColumn = Pos 1
+     }
+    }
+   )
+   ( Artifact
+    ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+   ) All
+  , Import
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+     , sourceLine = Pos 2
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+     , sourceLine = Pos 4
+     , sourceColumn = Pos 1
+     }
+    }
+   )
+   ( Artifact
+    ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+   ) All
+  , ScDef
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+     , sourceLine = Pos 4
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+     , sourceLine = Pos 9
+     , sourceColumn = Pos 1
+     }
+    }
+   ) "ones"
+   ( Codata
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+      , sourceLine = Pos 4
+      , sourceColumn = Pos 12
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+      , sourceLine = Pos 9
+      , sourceColumn = Pos 1
+      }
+     }
+    )
+    [
+     ( ProjectP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+        , sourceLine = Pos 5
+        , sourceColumn = Pos 3
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+        , sourceLine = Pos 5
+        , sourceColumn = Pos 10
+        }
+       }
+      )
+      ( HoleP
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+         , sourceLine = Pos 5
+         , sourceColumn = Pos 3
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+         , sourceLine = Pos 5
+         , sourceColumn = Pos 10
+         }
+        }
+       )
+      ) "head"
+     , Boxed
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+        , sourceLine = Pos 5
+        , sourceColumn = Pos 13
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+        , sourceLine = Pos 5
+        , sourceColumn = Pos 14
+        }
+       }
+      )
+      ( Int32 1 )
+     )
+    ,
+     ( ProjectP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+        , sourceLine = Pos 6
+        , sourceColumn = Pos 3
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+        , sourceLine = Pos 6
+        , sourceColumn = Pos 10
+        }
+       }
+      )
+      ( HoleP
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+         , sourceLine = Pos 6
+         , sourceColumn = Pos 3
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+         , sourceLine = Pos 6
+         , sourceColumn = Pos 10
+         }
+        }
+       )
+      ) "tail"
+     , Var
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+        , sourceLine = Pos 6
+        , sourceColumn = Pos 13
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+        , sourceLine = Pos 7
+        , sourceColumn = Pos 1
+        }
+       }
+      ) "ones"
+     )
+    ]
+   )
+  , ScDef
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+     , sourceLine = Pos 9
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+     , sourceLine = Pos 13
+     , sourceColumn = Pos 1
+     }
+    }
+   ) "fib"
+   ( Codata
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+      , sourceLine = Pos 9
+      , sourceColumn = Pos 11
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+      , sourceLine = Pos 13
+      , sourceColumn = Pos 1
+      }
+     }
+    )
+    [
+     ( ProjectP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+        , sourceLine = Pos 10
+        , sourceColumn = Pos 3
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+        , sourceLine = Pos 10
+        , sourceColumn = Pos 10
+        }
+       }
+      )
+      ( HoleP
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+         , sourceLine = Pos 10
+         , sourceColumn = Pos 3
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+         , sourceLine = Pos 10
+         , sourceColumn = Pos 10
+         }
+        }
+       )
+      ) "head"
+     , Boxed
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+        , sourceLine = Pos 10
+        , sourceColumn = Pos 13
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+        , sourceLine = Pos 10
+        , sourceColumn = Pos 14
+        }
+       }
+      )
+      ( Int32 1 )
+     )
+    ,
+     ( ProjectP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+        , sourceLine = Pos 11
+        , sourceColumn = Pos 3
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+        , sourceLine = Pos 11
+        , sourceColumn = Pos 10
+        }
+       }
+      )
+      ( HoleP
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+         , sourceLine = Pos 11
+         , sourceColumn = Pos 3
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+         , sourceLine = Pos 11
+         , sourceColumn = Pos 10
+         }
+        }
+       )
+      ) "tail"
+     , Var
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+        , sourceLine = Pos 11
+        , sourceColumn = Pos 13
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+        , sourceLine = Pos 12
+        , sourceColumn = Pos 1
+        }
+       }
+      ) "ones"
+     )
+    ]
+   )
+  ]
+ }

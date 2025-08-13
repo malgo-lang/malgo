@@ -9,6 +9,7 @@ module Malgo.Syntax
     Stmt (..),
     Clause (..),
     Pat (..),
+    CoPat (..),
     _VarP,
     _ConP,
     _TupleP,
@@ -75,6 +76,27 @@ instance Pretty (Literal x) where
 toUnboxed :: Literal Boxed -> Literal Unboxed
 toUnboxed = coerce
 
+-- * Copattern
+
+data CoPat x
+  = HoleP (XHoleP x)
+  | ApplyP (XApplyP x) (CoPat x) (Pat x)
+  | ProjectP (XProjectP x) (CoPat x) Text
+
+deriving stock instance (ForallCoPatX Eq x, ForallPatX Eq x, Eq (XId x)) => Eq (CoPat x)
+
+deriving stock instance (ForallCoPatX Show x, ForallPatX Show x, Show (XId x)) => Show (CoPat x)
+
+instance (ToSExpr (XId x)) => ToSExpr (CoPat x) where
+  toSExpr (HoleP _) = S.A $ S.Symbol "#"
+  toSExpr (ApplyP _ cp p) = S.L ["apply", toSExpr cp, toSExpr p]
+  toSExpr (ProjectP _ cp field) = S.L ["project", toSExpr cp, S.A $ S.String field]
+
+instance (Pretty (XId x)) => Pretty (CoPat x) where
+  pretty (HoleP _) = "#"
+  pretty (ApplyP _ cp p) = sexpr ["apply", pretty cp, pretty p]
+  pretty (ProjectP _ cp field) = sexpr ["project", pretty cp, pretty field]
+
 -- * Type
 
 data Type x
@@ -124,10 +146,11 @@ data Expr x
   | Ann (XAnn x) (Expr x) (Type x)
   | Seq (XSeq x) (NonEmpty (Stmt x))
   | Parens (XParens x) (Expr x)
+  | Codata (XCodata x) [(CoPat x, Expr x)]
 
-deriving stock instance (ForallExpX Eq x, ForallClauseX Eq x, ForallPatX Eq x, ForallStmtX Eq x, ForallTypeX Eq x, Eq (XId x)) => Eq (Expr x)
+deriving stock instance (ForallExpX Eq x, ForallClauseX Eq x, ForallPatX Eq x, ForallCoPatX Eq x, ForallStmtX Eq x, ForallTypeX Eq x, Eq (XId x)) => Eq (Expr x)
 
-deriving stock instance (ForallExpX Show x, ForallClauseX Show x, ForallPatX Show x, ForallStmtX Show x, ForallTypeX Show x, Show (XId x)) => Show (Expr x)
+deriving stock instance (ForallExpX Show x, ForallClauseX Show x, ForallPatX Show x, ForallCoPatX Show x, ForallStmtX Show x, ForallTypeX Show x, Show (XId x)) => Show (Expr x)
 
 instance (ToSExpr (XId x)) => ToSExpr (Expr x) where
   toSExpr (Var _ id) = toSExpr id
@@ -143,6 +166,7 @@ instance (ToSExpr (XId x)) => ToSExpr (Expr x) where
   toSExpr (Ann _ e t) = S.L ["ann", toSExpr e, toSExpr t]
   toSExpr (Seq _ ss) = S.L $ "seq" : map toSExpr (NE.toList ss)
   toSExpr (Parens _ e) = S.L ["parens", toSExpr e]
+  toSExpr (Codata _ clauses) = S.L $ "codata" : map (\(cp, e) -> S.L [toSExpr cp, toSExpr e]) clauses
 
 instance (Pretty (XId x)) => Pretty (Expr x) where
   pretty (Var _ id) = pretty id
@@ -158,6 +182,7 @@ instance (Pretty (XId x)) => Pretty (Expr x) where
   pretty (Ann _ e t) = sexpr ["ann", pretty e, pretty t]
   pretty (Seq _ ss) = sexpr $ "seq" : map pretty (toList ss)
   pretty (Parens _ e) = sexpr ["parens", pretty e]
+  pretty (Codata _ clauses) = sexpr $ "codata" : map (\(cp, e) -> sexpr [pretty cp, pretty e]) clauses
 
 instance (ForallExpX HasRange x) => HasRange (Expr x) where
   range (Var x _) = range x
@@ -173,6 +198,7 @@ instance (ForallExpX HasRange x) => HasRange (Expr x) where
   range (Ann x _ _) = range x
   range (Seq x _) = range x
   range (Parens x _) = range x
+  range (Codata x _) = range x
 
 freevars :: (Ord (XId x)) => Expr x -> Set (XId x)
 freevars (Var _ v) = Set.singleton v
@@ -205,6 +231,10 @@ freevars (Seq _ ss) = freevarsStmts ss
     freevarsStmts' [] = mempty
     freevarsStmts' (s : ss) = freevarsStmts (s :| ss)
 freevars (Parens _ e) = freevars e
+freevars (Codata _ clauses) = foldMap freevarsClause clauses
+  where
+    freevarsClause :: (Ord (XId x)) => (CoPat x, Expr x) -> Set (XId x)
+    freevarsClause (_, e) = freevars e
 
 -- * Stmt
 
@@ -213,9 +243,9 @@ data Stmt x
   | With (XWith x) (Maybe (XId x)) (Expr x)
   | NoBind (XNoBind x) (Expr x)
 
-deriving stock instance (ForallClauseX Eq x, ForallPatX Eq x, ForallExpX Eq x, ForallStmtX Eq x, ForallTypeX Eq x, Eq (XId x)) => Eq (Stmt x)
+deriving stock instance (ForallClauseX Eq x, ForallPatX Eq x, ForallCoPatX Eq x, ForallExpX Eq x, ForallStmtX Eq x, ForallTypeX Eq x, Eq (XId x)) => Eq (Stmt x)
 
-deriving stock instance (ForallClauseX Show x, ForallPatX Show x, ForallExpX Show x, ForallStmtX Show x, ForallTypeX Show x, Show (XId x)) => Show (Stmt x)
+deriving stock instance (ForallClauseX Show x, ForallPatX Show x, ForallCoPatX Show x, ForallExpX Show x, ForallStmtX Show x, ForallTypeX Show x, Show (XId x)) => Show (Stmt x)
 
 instance (ToSExpr (XId x)) => (ToSExpr (Stmt x)) where
   toSExpr (Let _ id e) = S.L ["let", toSExpr id, toSExpr e]
@@ -233,11 +263,11 @@ instance (Pretty (XId x)) => Pretty (Stmt x) where
 
 data Clause x = Clause (XClause x) [Pat x] (Expr x)
 
-deriving stock instance (ForallClauseX Eq x, ForallExpX Eq x, ForallPatX Eq x, ForallStmtX Eq x, ForallTypeX Eq x, Eq (XId x)) => Eq (Clause x)
+deriving stock instance (ForallClauseX Eq x, ForallExpX Eq x, ForallPatX Eq x, ForallCoPatX Eq x, ForallStmtX Eq x, ForallTypeX Eq x, Eq (XId x)) => Eq (Clause x)
 
-deriving stock instance (ForallClauseX Show x, ForallExpX Show x, ForallPatX Show x, ForallStmtX Show x, ForallTypeX Show x, Show (XId x)) => Show (Clause x)
+deriving stock instance (ForallClauseX Show x, ForallExpX Show x, ForallPatX Show x, ForallCoPatX Show x, ForallStmtX Show x, ForallTypeX Show x, Show (XId x)) => Show (Clause x)
 
-instance (ForallClauseX Eq x, ForallExpX Eq x, ForallPatX Eq x, Ord (XId x), ForallPatX Ord x, ForallStmtX Ord x, ForallTypeX Ord x) => Ord (Clause x) where
+instance (ForallClauseX Eq x, ForallExpX Eq x, ForallPatX Eq x, ForallCoPatX Eq x, Ord (XId x), ForallPatX Ord x, ForallCoPatX Ord x, ForallStmtX Ord x, ForallTypeX Ord x) => Ord (Clause x) where
   (Clause _ ps1 _) `compare` (Clause _ ps2 _) = ps1 `compare` ps2
 
 instance (ToSExpr (XId x)) => ToSExpr (Clause x) where
