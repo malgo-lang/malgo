@@ -18,6 +18,7 @@ module Malgo.Rename.RnEnv
   )
 where
 
+import Control.Exception (Exception)
 import Data.Map.Strict qualified as Map
 import Data.Set qualified as Set
 import Effectful (Eff, (:>))
@@ -86,6 +87,8 @@ instance Pretty RenameError where
 
 instance Show RenameError where
   show = show . pretty
+
+instance Exception RenameError
 
 -- | Resolved identifier
 type Resolved = Qualified RnId

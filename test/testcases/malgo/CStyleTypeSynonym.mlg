@@ -13,4 +13,4 @@ type Function(a, b) = a -> b
 -- C-style type synonym with complex type expression
 type Callback(a, b, c) = a -> b -> c
 
-def main = { 42 }
+def main = { (_) -> 42 }

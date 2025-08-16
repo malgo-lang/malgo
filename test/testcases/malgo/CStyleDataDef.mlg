@@ -10,4 +10,4 @@ data Map(k, v) = Entry(k, v) | Empty()
 -- C-style data definition with simple constructor
 data Tree(a) = Node(a, Tree(a), Tree(a)) | Leaf()
 
-def main = { 42 }
+def main = { (_) -> 42 }
