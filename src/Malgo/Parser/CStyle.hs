@@ -298,28 +298,25 @@ pOpApp = makeExprParser pApply table
         ]
       ]
 
--- | pApply parses C-style function application with parentheses
+-- | pApply parses C-style function application and field projection with chaining
 pApply :: (Features :> es) => Parser es (Expr (Malgo Parse))
 pApply =
   makeExprParser
-    pProject
-    [ [ Postfix $ manyUnaryOp do
-          captureRange do
-            args <- between (symbol "(") (symbol ")") (sepBy pExpr (symbol ","))
-            pure $ \range fn -> foldl (Apply range) fn args
-      ]
-    ]
-
--- | pProject parses field projection
-pProject :: (Features :> es) => Parser es (Expr (Malgo Parse))
-pProject =
-  makeExprParser
     pAtom
     [ [ Postfix $ manyUnaryOp do
-          captureRange do
-            reservedOperator "."
-            field <- ident
-            pure $ \range record -> Project range record field
+          choice
+            [ -- Function application: expr(arg1, arg2, ...)
+              -- TODO: Support empty argument list
+              captureRange do
+                args <- between (symbol "(") (symbol ")") (sepBy pExpr (symbol ","))
+                when (null args) $ fail "c-style function application must have at least one argument"
+                pure $ \range fn -> foldl (Apply range) fn args,
+              -- Field projection: expr.field
+              captureRange do
+                reservedOperator "."
+                field <- ident
+                pure $ \range record -> Project range record field
+            ]
       ]
     ]
 
@@ -331,7 +328,7 @@ pAtom =
       pVariable,
       try pTuple,
       try pRecord,
-      pFn,
+      pBrace,
       pList,
       pSeq
     ]
@@ -357,11 +354,62 @@ pRecord = captureRange do
       value <- pExpr
       pure (field, value)
 
--- | pFn parses function syntax with C-style clauses
-pFn :: (Features :> es) => Parser es (Expr (Malgo Parse))
-pFn = captureRange do
-  clauses <- between (symbol "{") (symbol "}") $ sepEndBy1 pClause (symbol ",")
-  pure $ \range -> Fn range $ NonEmpty.fromList clauses
+-- | pBrace parses function syntax with C-style clauses or copatterns
+pBrace :: (Features :> es) => Parser es (Expr (Malgo Parse))
+pBrace = captureRange do
+  content <-
+    between (symbol "{") (symbol "}")
+      $ choice
+        [ try pCodata,
+          pFn
+        ]
+  pure $ \range -> content range
+  where
+    pFn = do
+      clauses <- sepEndBy1 pClause (symbol ",")
+      pure $ \range -> Fn range $ NonEmpty.fromList clauses
+
+-- | pCodata parses codata expressions using C-style syntax
+pCodata :: (Features :> es) => Parser es (Range -> Expr (Malgo Parse))
+pCodata = do
+  clauses <- sepEndBy1 pCodataClause (symbol ",")
+  pure $ \range -> Codata range clauses
+  where
+    pCodataClause = do
+      cp <- pCopattern
+      reservedOperator "->"
+      e <- pExpr
+      pure (cp, e)
+
+-- | pCopattern parses copatterns starting with # using C-style syntax
+pCopattern :: (Features :> es) => Parser es (CoPat (Malgo Parse))
+pCopattern = captureRange do
+  symbol "#"
+  pCopatternSuffix HoleP
+
+-- | pCopatternSuffix parses copattern suffixes (projections and applications) using C-style syntax
+pCopatternSuffix :: (Features :> es) => (Range -> CoPat (Malgo Parse)) -> Parser es (Range -> CoPat (Malgo Parse))
+pCopatternSuffix cp =
+  choice
+    [ try do
+        reservedOperator "."
+        field <- ident
+        pCopatternSuffix (\range -> ProjectP range (cp range) field),
+      try do
+        symbol "("
+        -- Parse C-style pattern arguments (comma-separated in parentheses)
+        -- TODO: Support empty argument list
+        pats <- sepBy pPat (symbol ",")
+        when (null pats) $ fail "c-style copattern application must have at least one argument"
+        symbol ")"
+        -- For C-style, we need to handle multiple patterns differently
+        -- Apply each pattern as a separate ApplyP
+        let applyPats pat_list copat = case pat_list of
+              [] -> copat
+              (p : ps) -> applyPats ps (\range -> ApplyP range (copat range) p)
+        pCopatternSuffix (applyPats pats cp),
+      pure cp
+    ]
 
 -- | pList parses list literals using C-style syntax
 pList :: (Features :> es) => Parser es (Expr (Malgo Parse))
@@ -560,12 +608,11 @@ pVariable = captureRange do
 
 -- | pClause parses C-style clauses with optional parentheses
 -- > clause = "(" pattern ("," pattern)* ")" "->" stmts
--- >        | pattern+ "->" stmts
 pClause :: (Features :> es) => Parser es (Clause (Malgo Parse))
 pClause = captureRange do
   patterns <-
-    try (between (symbol "(") (symbol ")") (sepEndBy pAtomPat (symbol ",")) <* reservedOperator "->")
-      <|> try (some pAtomPat <* reservedOperator "->")
-      <|> pure []
+    between (symbol "(") (symbol ")") (sepEndBy pAtomPat (symbol ",")) <* reservedOperator "->"
+  -- TODO: Support empty argument list
+  when (null patterns) $ fail "c-style clause must have at least one pattern"
   body <- pStmts
   pure $ \range -> Clause range patterns body
