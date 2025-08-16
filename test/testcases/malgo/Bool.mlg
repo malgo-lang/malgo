@@ -2,11 +2,11 @@
 module {..} = import "../../../runtime/malgo/Builtin.mlg"
 module {..} = import "../../../runtime/malgo/Prelude.mlg"
 
-def if = {
-  #(False).then(_).else(e) -> e(),
-  #(True).then(t).else(_) -> t(),
+def ifChain = {
+  #(False).then(_).else(e) -> e({}),
+  #(True).then(t).else(_) -> t({}),
 }
 
-def main = {
-  if(True).then({ putStrLn("True") }).else({ putStrLn("False") })
+def main = { (_) ->
+  ifChain(True).then({ (_) -> putStrLn("True") }).else({ (_) -> putStrLn("False") })
 }

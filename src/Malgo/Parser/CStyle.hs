@@ -306,8 +306,10 @@ pApply =
     [ [ Postfix $ manyUnaryOp do
           choice
             [ -- Function application: expr(arg1, arg2, ...)
+              -- TODO: Support empty argument list
               captureRange do
                 args <- between (symbol "(") (symbol ")") (sepBy pExpr (symbol ","))
+                when (null args) $ fail "c-style function application must have at least one argument"
                 pure $ \range fn -> foldl (Apply range) fn args,
               -- Field projection: expr.field
               captureRange do
@@ -396,7 +398,9 @@ pCopatternSuffix cp =
       try do
         symbol "("
         -- Parse C-style pattern arguments (comma-separated in parentheses)
+        -- TODO: Support empty argument list
         pats <- sepBy pPat (symbol ",")
+        when (null pats) $ fail "c-style copattern application must have at least one argument"
         symbol ")"
         -- For C-style, we need to handle multiple patterns differently
         -- Apply each pattern as a separate ApplyP
@@ -604,12 +608,11 @@ pVariable = captureRange do
 
 -- | pClause parses C-style clauses with optional parentheses
 -- > clause = "(" pattern ("," pattern)* ")" "->" stmts
--- >        | pattern+ "->" stmts
 pClause :: (Features :> es) => Parser es (Clause (Malgo Parse))
 pClause = captureRange do
   patterns <-
-    try (between (symbol "(") (symbol ")") (sepEndBy pAtomPat (symbol ",")) <* reservedOperator "->")
-      <|> try (some pAtomPat <* reservedOperator "->")
-      <|> pure []
+    between (symbol "(") (symbol ")") (sepEndBy pAtomPat (symbol ",")) <* reservedOperator "->"
+  -- TODO: Support empty argument list
+  when (null patterns) $ fail "c-style clause must have at least one pattern"
   body <- pStmts
   pure $ \range -> Clause range patterns body

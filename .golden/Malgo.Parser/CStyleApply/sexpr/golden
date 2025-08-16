@@ -21,10 +21,10 @@
                       (apply
                          (apply
                             (apply if (opapp == n (int64 0)))
-                            (fn ((clause () (seq (do acc))))))
+                            (fn ((clause (_) (seq (do acc))))))
                          (fn
                             ((clause
-                                ()
+                                (_)
                                 (seq
                                    (do
                                       (apply
@@ -36,7 +36,7 @@
          main
          (fn
             ((clause
-                ()
+                (_)
                 (seq
                    (do
                       (opapp
