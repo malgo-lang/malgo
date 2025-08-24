@@ -97,6 +97,11 @@ instance (Pretty (XId x)) => Pretty (CoPat x) where
   pretty (ApplyP _ cp p) = sexpr ["apply", pretty cp, pretty p]
   pretty (ProjectP _ cp field) = sexpr ["project", pretty cp, pretty field]
 
+instance (ForallCoPatX HasRange x) => HasRange (CoPat x) where
+  range (HoleP x) = range x
+  range (ApplyP x _ _) = range x
+  range (ProjectP x _ _) = range x
+
 -- * Type
 
 data Type x
