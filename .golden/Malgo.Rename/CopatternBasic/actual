@@ -1,0 +1,392 @@
+Module
+ { moduleName = Artifact
+  ( ArtifactPath "test/testcases/malgo/CopatternBasic.mlg" )
+ , moduleDefinition = BindGroup
+  { _scDefs =
+   [
+    [
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+       , sourceLine = Pos 4
+       , sourceColumn = Pos 1
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+       , sourceLine = Pos 9
+       , sourceColumn = Pos 1
+       }
+      }
+     , Id
+      { name = "ones"
+      , moduleName = Artifact
+       ( ArtifactPath "test/testcases/malgo/CopatternBasic.mlg" )
+      , sort = External
+      }
+     , Codata
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+        , sourceLine = Pos 4
+        , sourceColumn = Pos 12
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+        , sourceLine = Pos 9
+        , sourceColumn = Pos 1
+        }
+       }
+      )
+      [
+       ( ProjectP
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+          , sourceLine = Pos 5
+          , sourceColumn = Pos 3
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+          , sourceLine = Pos 5
+          , sourceColumn = Pos 10
+          }
+         }
+        )
+        ( HoleP
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+           , sourceLine = Pos 5
+           , sourceColumn = Pos 3
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+           , sourceLine = Pos 5
+           , sourceColumn = Pos 10
+           }
+          }
+         )
+        ) "head"
+       , Apply
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+          , sourceLine = Pos 5
+          , sourceColumn = Pos 13
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+          , sourceLine = Pos 5
+          , sourceColumn = Pos 14
+          }
+         }
+        )
+        ( Var
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+           , sourceLine = Pos 5
+           , sourceColumn = Pos 13
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+           , sourceLine = Pos 5
+           , sourceColumn = Pos 14
+           }
+          }
+         )
+         ( Id
+          { name = "Int32#"
+          , moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+          , sort = External
+          }
+         )
+        )
+        ( Unboxed
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+           , sourceLine = Pos 5
+           , sourceColumn = Pos 13
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+           , sourceLine = Pos 5
+           , sourceColumn = Pos 14
+           }
+          }
+         )
+         ( Int32 1 )
+        )
+       )
+      ,
+       ( ProjectP
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+          , sourceLine = Pos 6
+          , sourceColumn = Pos 3
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+          , sourceLine = Pos 6
+          , sourceColumn = Pos 10
+          }
+         }
+        )
+        ( HoleP
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+           , sourceLine = Pos 6
+           , sourceColumn = Pos 3
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+           , sourceLine = Pos 6
+           , sourceColumn = Pos 10
+           }
+          }
+         )
+        ) "tail"
+       , Var
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+          , sourceLine = Pos 6
+          , sourceColumn = Pos 13
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+          , sourceLine = Pos 7
+          , sourceColumn = Pos 1
+          }
+         }
+        )
+        ( Id
+         { name = "ones"
+         , moduleName = Artifact
+          ( ArtifactPath "test/testcases/malgo/CopatternBasic.mlg" )
+         , sort = External
+         }
+        )
+       )
+      ]
+     )
+    ]
+   ,
+    [
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+       , sourceLine = Pos 9
+       , sourceColumn = Pos 1
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+       , sourceLine = Pos 13
+       , sourceColumn = Pos 1
+       }
+      }
+     , Id
+      { name = "fib"
+      , moduleName = Artifact
+       ( ArtifactPath "test/testcases/malgo/CopatternBasic.mlg" )
+      , sort = External
+      }
+     , Codata
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+        , sourceLine = Pos 9
+        , sourceColumn = Pos 11
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+        , sourceLine = Pos 13
+        , sourceColumn = Pos 1
+        }
+       }
+      )
+      [
+       ( ProjectP
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+          , sourceLine = Pos 10
+          , sourceColumn = Pos 3
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+          , sourceLine = Pos 10
+          , sourceColumn = Pos 10
+          }
+         }
+        )
+        ( HoleP
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+           , sourceLine = Pos 10
+           , sourceColumn = Pos 3
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+           , sourceLine = Pos 10
+           , sourceColumn = Pos 10
+           }
+          }
+         )
+        ) "head"
+       , Apply
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+          , sourceLine = Pos 10
+          , sourceColumn = Pos 13
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+          , sourceLine = Pos 10
+          , sourceColumn = Pos 14
+          }
+         }
+        )
+        ( Var
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+           , sourceLine = Pos 10
+           , sourceColumn = Pos 13
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+           , sourceLine = Pos 10
+           , sourceColumn = Pos 14
+           }
+          }
+         )
+         ( Id
+          { name = "Int32#"
+          , moduleName = Artifact
+           ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+          , sort = External
+          }
+         )
+        )
+        ( Unboxed
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+           , sourceLine = Pos 10
+           , sourceColumn = Pos 13
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+           , sourceLine = Pos 10
+           , sourceColumn = Pos 14
+           }
+          }
+         )
+         ( Int32 1 )
+        )
+       )
+      ,
+       ( ProjectP
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+          , sourceLine = Pos 11
+          , sourceColumn = Pos 3
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+          , sourceLine = Pos 11
+          , sourceColumn = Pos 10
+          }
+         }
+        )
+        ( HoleP
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+           , sourceLine = Pos 11
+           , sourceColumn = Pos 3
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+           , sourceLine = Pos 11
+           , sourceColumn = Pos 10
+           }
+          }
+         )
+        ) "tail"
+       , Var
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+          , sourceLine = Pos 11
+          , sourceColumn = Pos 13
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+          , sourceLine = Pos 12
+          , sourceColumn = Pos 1
+          }
+         }
+        )
+        ( Id
+         { name = "ones"
+         , moduleName = Artifact
+          ( ArtifactPath "test/testcases/malgo/CopatternBasic.mlg" )
+         , sort = External
+         }
+        )
+       )
+      ]
+     )
+    ]
+   ]
+  , _scSigs = []
+  , _dataDefs = []
+  , _typeSynonyms = []
+  , _foreigns = []
+  , _imports =
+   [
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+      , sourceLine = Pos 1
+      , sourceColumn = Pos 1
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+      , sourceLine = Pos 2
+      , sourceColumn = Pos 1
+      }
+     }
+    , Artifact
+     ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+    , All
+    )
+   ,
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+      , sourceLine = Pos 2
+      , sourceColumn = Pos 1
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/CopatternBasic.mlg"
+      , sourceLine = Pos 4
+      , sourceColumn = Pos 1
+      }
+     }
+    , Artifact
+     ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+    , All
+    )
+   ]
+  }
+ }
