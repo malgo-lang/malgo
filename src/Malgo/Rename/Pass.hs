@@ -210,6 +210,7 @@ rnExpr (List pos es) = do
 rnExpr (Ann pos e t) = Ann pos <$> rnExpr e <*> rnType t
 rnExpr (Seq pos ss) = Seq pos <$> rnStmts ss
 rnExpr (Parens pos e) = Parens pos <$> rnExpr e
+rnExpr (Codata pos clauses) = Codata pos <$> traverse rnCoClause clauses
 
 -- | Renamed identifier corresponding Boxed literals.
 lookupBox :: (Reader RnEnv :> es, Error RenameError :> es) => Range -> Literal x -> Eff es Id
@@ -251,33 +252,34 @@ rnClause (Clause pos ps e) = do
   when (anySame $ filter (/= "_") vars) $ errorOn pos "Same variables occurs in a pattern"
   vm <- zip vars . map (Qualified Implicit) <$> traverse resolveName vars
   local (insertVarIdent vm) $ Clause pos <$> traverse rnPat ps <*> rnExpr e
-  where
-    resolveConP :: Pat (Malgo Parse) -> Eff es (Pat (Malgo Parse))
-    resolveConP (VarP pos name)
-      | isUpper (T.head name) = pure $ ConP pos name []
-      | otherwise = pure $ VarP pos name
-    resolveConP (ConP pos name parameters) = do
-      parameters' <- traverse resolveConP parameters
-      pure $ ConP pos name parameters'
-    resolveConP (TupleP pos parameters) = do
-      parameters' <- traverse resolveConP parameters
-      pure $ TupleP pos parameters'
-    resolveConP (RecordP pos kvs) = do
-      kvs' <- traverse (bitraverse pure resolveConP) kvs
-      pure $ RecordP pos kvs'
-    resolveConP (ListP pos parameters) = do
-      parameters' <- traverse resolveConP parameters
-      pure $ ListP pos parameters'
-    resolveConP (UnboxedP pos x) = pure $ UnboxedP pos x
-    resolveConP (BoxedP pos x) = pure $ BoxedP pos x
 
-    patVars (VarP _ x) = [x]
-    patVars (ConP _ _ xs) = concatMap patVars xs
-    patVars (TupleP _ xs) = concatMap patVars xs
-    patVars (RecordP _ kvs) = concatMap (patVars . snd) kvs
-    patVars (ListP _ xs) = concatMap patVars xs
-    patVars UnboxedP {} = []
-    patVars BoxedP {} = []
+resolveConP :: Pat (Malgo Parse) -> Eff es (Pat (Malgo Parse))
+resolveConP (VarP pos name)
+  | isUpper (T.head name) = pure $ ConP pos name []
+  | otherwise = pure $ VarP pos name
+resolveConP (ConP pos name parameters) = do
+  parameters' <- traverse resolveConP parameters
+  pure $ ConP pos name parameters'
+resolveConP (TupleP pos parameters) = do
+  parameters' <- traverse resolveConP parameters
+  pure $ TupleP pos parameters'
+resolveConP (RecordP pos kvs) = do
+  kvs' <- traverse (bitraverse pure resolveConP) kvs
+  pure $ RecordP pos kvs'
+resolveConP (ListP pos parameters) = do
+  parameters' <- traverse resolveConP parameters
+  pure $ ListP pos parameters'
+resolveConP (UnboxedP pos x) = pure $ UnboxedP pos x
+resolveConP (BoxedP pos x) = pure $ BoxedP pos x
+
+patVars :: Pat x -> [XId x]
+patVars (VarP _ x) = [x]
+patVars (ConP _ _ xs) = concatMap patVars xs
+patVars (TupleP _ xs) = concatMap patVars xs
+patVars (RecordP _ kvs) = concatMap (patVars . snd) kvs
+patVars (ListP _ xs) = concatMap patVars xs
+patVars UnboxedP {} = []
+patVars BoxedP {} = []
 
 -- | Rename a pattern.
 rnPat :: (Reader RnEnv :> es, IOE :> es, Reader Flag :> es, Error RenameError :> es) => Pat (Malgo Parse) -> Eff es (Pat (Malgo Rename))
@@ -293,6 +295,40 @@ rnPat (UnboxedP pos (String _)) = errorOn pos "String literal pattern is not sup
 rnPat (BoxedP pos (String _)) = errorOn pos "String literal pattern is not supported"
 rnPat (UnboxedP pos x) = pure $ UnboxedP pos x
 rnPat (BoxedP pos x) = ConP pos <$> lookupBox pos x <*> pure [UnboxedP pos (coerce x)]
+
+rnCoClause ::
+  ( Reader RnEnv :> es,
+    IOE :> es,
+    Reader Flag :> es,
+    Error RenameError :> es,
+    State RnState :> es,
+    State Uniq :> es,
+    Reader ModuleName :> es
+  ) =>
+  (CoPat (Malgo Parse), Expr (Malgo Parse)) -> Eff es (CoPat (Malgo Rename), Expr (Malgo Rename))
+rnCoClause (copat, expr) = do
+  copat <- resolveConP' copat
+  let vars = coPatVars copat
+  -- パターンが束縛する変数に重複がないことを確認する
+  -- TODO: throwError に置き換える
+  when (anySame $ filter (/= "_") vars) $ errorOn (range copat) "Same variables occurs in a pattern"
+  vm <- zip vars . map (Qualified Implicit) <$> traverse resolveName vars
+  local (insertVarIdent vm) do
+    copat <- rnCoPat copat
+    expr <- rnExpr expr
+    pure (copat, expr)
+  where
+    resolveConP' :: CoPat (Malgo Parse) -> Eff es (CoPat (Malgo Parse))
+    resolveConP' (HoleP x) = pure $ HoleP x
+    resolveConP' (ApplyP x copat pat) = ApplyP x <$> resolveConP' copat <*> resolveConP pat
+    resolveConP' (ProjectP x copat field) = ProjectP x <$> resolveConP' copat <*> pure field
+    coPatVars :: CoPat x -> [XId x]
+    coPatVars (HoleP _) = []
+    coPatVars (ApplyP _ copat pat) = coPatVars copat <> patVars pat
+    coPatVars (ProjectP _ copat _) = coPatVars copat
+    rnCoPat (HoleP x) = pure $ HoleP x
+    rnCoPat (ApplyP x copat pat) = ApplyP x <$> rnCoPat copat <*> rnPat pat
+    rnCoPat (ProjectP x copat field) = ProjectP x <$> rnCoPat copat <*> pure field
 
 -- | Rename statements in {}.
 rnStmts ::

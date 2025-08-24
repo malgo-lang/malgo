@@ -1,0 +1,12 @@
+#c-style-apply
+module {..} = import "../../../runtime/malgo/Builtin.mlg"
+module {..} = import "../../../runtime/malgo/Prelude.mlg"
+
+def ifChain = {
+  #(False).then(_).else(e) -> e({}),
+  #(True).then(t).else(_) -> t({}),
+}
+
+def main = { (_) ->
+  ifChain(True).then({ (_) -> putStrLn("True") }).else({ (_) -> putStrLn("False") })
+}
