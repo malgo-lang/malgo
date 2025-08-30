@@ -2,29 +2,30 @@
 -- It allows for the registration and execution of various compiler passes, such as renaming, type inference, and refinement in a modular way.
 module Malgo.Pass (Pass (..), CompileError (..), runCompileError) where
 
+import Control.Exception (Exception (displayException))
 import Effectful
 import Effectful.Error.Static (CallStack, Error, prettyCallStack, runError, runErrorNoCallStackWith, throwError)
 import Malgo.Prelude
 
 -- | CompileError wraps any error with its call stack for uniform error handling.
-data CompileError = forall e. (Show e) => CompileError {callStack :: CallStack, compileError :: e}
+data CompileError = forall e. (Exception e) => CompileError {callStack :: CallStack, compileError :: e}
 
 instance Show CompileError where
   show (CompileError {callStack, compileError}) =
-    prettyCallStack callStack <> "\n" <> show compileError
+    prettyCallStack callStack <> "\n" <> displayException compileError
 
 runCompileError :: Eff (Error CompileError : es) a -> Eff es a
 runCompileError = runErrorNoCallStackWith @CompileError (error . show)
 
 -- | wrapCompileError runs an Eff computation that may throw an compile error, and wraps it as CompileError.
-wrapCompileError :: (Show e, Error CompileError :> es) => Eff (Error e : es) a -> Eff es a
+wrapCompileError :: (Exception e, Error CompileError :> es) => Eff (Error e : es) a -> Eff es a
 wrapCompileError m = do
   result <- runError m
   case result of
     Left (callStack, error) -> throwError (CompileError {callStack, compileError = error})
     Right x -> pure x
 
-class (Show (ErrorType pass)) => Pass pass where
+class (Exception (ErrorType pass)) => Pass pass where
   type Input pass
   type Output pass
 

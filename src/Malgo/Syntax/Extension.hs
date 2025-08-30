@@ -31,6 +31,7 @@ module Malgo.Syntax.Extension
     XAnn,
     XSeq,
     XParens,
+    XCodata,
     ForallExpX,
     XClause,
     ForallClauseX,
@@ -46,6 +47,10 @@ module Malgo.Syntax.Extension
     XUnboxedP,
     XBoxedP,
     ForallPatX,
+    XHoleP,
+    XApplyP,
+    XProjectP,
+    ForallCoPatX,
     XTyApp,
     XTyVar,
     XTyCon,
@@ -207,6 +212,9 @@ type family XParens x where
   XParens (Malgo Rename) = SimpleX Rename
   XParens (Malgo _) = Void
 
+type family XCodata x where
+  XCodata (Malgo x) = SimpleX x
+
 type ForallExpX (c :: K.Type -> Constraint) x =
   ( c (XVar x),
     c (XCon x),
@@ -222,7 +230,8 @@ type ForallExpX (c :: K.Type -> Constraint) x =
     c (XRecordAccess x),
     c (XAnn x),
     c (XSeq x),
-    c (XParens x)
+    c (XParens x),
+    c (XCodata x)
   )
 
 -- * Clause Extensions
@@ -272,6 +281,19 @@ type family XBoxedP x where
   XBoxedP (Malgo _) = Void
 
 type ForallPatX (c :: K.Type -> Constraint) x = (c (XVarP x), c (XConP x), c (XTupleP x), c (XRecordP x), c (XListP x), c (XUnboxedP x), c (XBoxedP x))
+
+-- * CoPat Extensions
+
+type family XHoleP x where
+  XHoleP (Malgo x) = SimpleX x
+
+type family XApplyP x where
+  XApplyP (Malgo x) = SimpleX x
+
+type family XProjectP x where
+  XProjectP (Malgo x) = SimpleX x
+
+type ForallCoPatX (c :: K.Type -> Constraint) x = (c (XHoleP x), c (XApplyP x), c (XProjectP x))
 
 -- * Type Extensions
 
@@ -350,6 +372,7 @@ type ForallDeclX (c :: K.Type -> Constraint) x =
     ForallClauseX c x,
     ForallStmtX c x,
     ForallPatX c x,
+    ForallCoPatX c x,
     ForallTypeX c x
   )
 

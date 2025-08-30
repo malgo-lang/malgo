@@ -8,7 +8,7 @@ import Malgo.Pass
 import Malgo.Prelude
 import Malgo.Rename
 import Malgo.SExpr (sShow)
-import Malgo.Sequent.ToFun (toFun)
+import Malgo.Sequent.ToFun (ToFunPass (..))
 import Malgo.Syntax (Module (..))
 import Malgo.TestUtils
 import System.Directory
@@ -36,5 +36,5 @@ driveToFun srcPath = do
     parsed <- runPass ParserPass (srcPath, src)
     rnEnv <- genBuiltinRnEnv
     (renamed, _) <- runPass RenamePass (parsed, rnEnv)
-    program <- runReader renamed.moduleName $ toFun renamed.moduleDefinition
+    program <- runReader renamed.moduleName $ runPass ToFunPass renamed.moduleDefinition
     pure $ sShow program

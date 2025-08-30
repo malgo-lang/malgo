@@ -15,7 +15,7 @@ import Malgo.Sequent.Core.Flat (flatProgram)
 import Malgo.Sequent.Core.Join
 import Malgo.Sequent.Eval (EvalError, Handlers (..), evalProgram)
 import Malgo.Sequent.ToCore (toCore)
-import Malgo.Sequent.ToFun (toFun)
+import Malgo.Sequent.ToFun (ToFunPass (..))
 import Malgo.Syntax (Module (..))
 import Malgo.TestUtils hiding (setupBuiltin, setupPrelude)
 import System.Directory
@@ -42,7 +42,8 @@ setupBuiltin = do
     parsed <- runPass ParserPass (builtinPath, src)
     rnEnv <- genBuiltinRnEnv
     (renamed, _) <- runPass RenamePass (parsed, rnEnv)
-    program <- runReader renamed.moduleName $ toFun renamed.moduleDefinition >>= toCore >>= flatProgram >>= joinProgram
+    fun <- runReader renamed.moduleName $ runPass ToFunPass renamed.moduleDefinition
+    program <- runReader renamed.moduleName $ toCore fun >>= flatProgram >>= joinProgram
     saveCore renamed.moduleName program
     getModulePath renamed.moduleName
 
@@ -53,7 +54,8 @@ setupPrelude = do
     parsed <- runPass ParserPass (preludePath, src)
     rnEnv <- genBuiltinRnEnv
     (renamed, _) <- runPass RenamePass (parsed, rnEnv)
-    program <- runReader renamed.moduleName $ toFun renamed.moduleDefinition >>= toCore >>= flatProgram >>= joinProgram
+    fun <- runReader renamed.moduleName $ runPass ToFunPass renamed.moduleDefinition
+    program <- runReader renamed.moduleName $ toCore fun >>= flatProgram >>= joinProgram
     saveCore renamed.moduleName program
     getModulePath renamed.moduleName
 
@@ -67,7 +69,8 @@ driveEval builtinName preludeName srcPath = do
         Right parsed -> pure parsed
     rnEnv <- RnEnv.genBuiltinRnEnv
     (renamed, _) <- runPass RenamePass (parsed, rnEnv)
-    Program {definitions = program} <- runReader renamed.moduleName $ toFun renamed.moduleDefinition >>= toCore >>= flatProgram >>= joinProgram
+    fun <- runReader renamed.moduleName $ runPass ToFunPass renamed.moduleDefinition
+    Program {definitions = program} <- runReader renamed.moduleName $ toCore fun >>= flatProgram >>= joinProgram
 
     Program {definitions = builtin} <- load builtinName ".sqt"
     Program {definitions = prelude} <- load preludeName ".sqt"

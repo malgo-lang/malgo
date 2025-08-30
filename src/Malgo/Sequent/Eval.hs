@@ -3,6 +3,7 @@
 
 module Malgo.Sequent.Eval (Value (..), EvalError (..), Env (..), emptyEnv, Handlers (..), evalProgram, EvalPass (..)) where
 
+import Control.Exception (Exception)
 import Data.Map qualified as Map
 import Data.Maybe (fromJust, isJust)
 import Data.Text qualified as T
@@ -87,6 +88,8 @@ instance Show EvalError where
   show (NoMatch range value) = show $ pretty range <> ": No match for " <> pretty value
   show (PrimitiveNotImplemented range name values) = show $ pretty range <> ": Primitive " <> pretty name <> " is not implemented for " <> pretty values
   show (InvalidArguments range name values) = show $ pretty range <> ": Invalid arguments for " <> pretty name <> ": " <> pretty values
+
+instance Exception EvalError
 
 type Toplevels = Map Name (Name, Statement)
 

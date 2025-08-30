@@ -1,0 +1,11 @@
+module {..} = import "../../../runtime/malgo/Builtin.mlg"
+module {..} = import "../../../runtime/malgo/Prelude.mlg"
+
+def ones = {
+  #.head -> 1,
+  #.tail -> ones
+}
+
+def main = { (_) ->
+  printString(toStringInt32(ones.tail.tail.tail.tail.tail.head))
+}

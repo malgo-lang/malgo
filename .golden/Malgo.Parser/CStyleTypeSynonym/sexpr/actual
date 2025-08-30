@@ -5,4 +5,4 @@
       (type Optional (a) a)
       (type Function (a b) (-> a b))
       (type Callback (a b c) (-> a (-> b c)))
-      (def main (fn ((clause () (seq (do (int32 42)))))))))
+      (def main (fn ((clause (_) (seq (do (int32 42)))))))))
