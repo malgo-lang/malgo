@@ -1,9 +1,10 @@
+#c-style-apply
 module {..} = import "../../../runtime/malgo/Builtin.mlg"
 module {..} = import "../../../runtime/malgo/Prelude.mlg"
 
 def f : a -> a
-def f = { x -> { x } () }
+def f = { (x) -> { (_) -> x }({}) }
 
-def main = {
-  putStrLn (f "Hello")
+def main = { (_) ->
+  putStrLn(f("Hello"))
 }

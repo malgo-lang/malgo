@@ -8,10 +8,8 @@
          (fn
             ((clause
                 (x)
-                (seq (do (apply (fn ((clause () (seq (do x))))) (tuple))))))))
+                (seq (do (apply (fn ((clause (_) (seq (do x))))) (tuple))))))))
       (def
          main
          (fn
-            ((clause
-                ()
-                (seq (do (apply putStrLn (parens (apply f (string "Hello"))))))))))))
+            ((clause (_) (seq (do (apply putStrLn (apply f (string "Hello")))))))))))
