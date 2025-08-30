@@ -10,8 +10,8 @@ def zipWith = { f xs ys ->
 }
 
 def fib = {
-  head = 1L,
-  tail = { head = 1L, tail = zipWith addInt64 fib fib.tail }
+  head = 1i64,
+  tail = { head = 1i64, tail = zipWith addInt64 fib fib.tail }
 }
 
 def main = {

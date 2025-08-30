@@ -7,10 +7,10 @@ def (+#) = {x y -> addInt64# x y}
 def sum =
   { (Cons (Int64# x) xs) ->
       sum xs |> {(Int64# s) -> Int64# (x +# s)},
-    Nil -> Int64# 0L#
+    Nil -> Int64# 0i64#
   }
 
 def main = {
-  sum (Cons (Int64# 1L#) (Cons (Int64# 2L#) Nil))
+  sum (Cons (Int64# 1i64#) (Cons (Int64# 2i64#) Nil))
     |> {i -> printInt64 i}
 }

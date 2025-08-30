@@ -20,8 +20,8 @@ def readVector = { (Int64# index) (Vector (Int64# length) ptr) ->
 }
 
 def main = {
-  let vec = newVector 10L 5;
-  let val = readVector 2L vec;
+  let vec = newVector 10i64 5;
+  let val = readVector 2i64 vec;
   val |> { Nothing -> putStrLn "ERROR",
            Just x -> putStrLn (toStringInt32 x) }
 }

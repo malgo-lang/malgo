@@ -64,7 +64,7 @@ def headString : String -> Maybe Char
 def headString = { str ->
   if (eqString str "")
     { Nothing }
-    { Just (atString 0L str) }
+    { Just (atString 0i64 str) }
 }
 
 -- trim the first character of string
@@ -72,7 +72,7 @@ def tailString : String -> String
 def tailString = { str ->
   if (eqString str "")
     { str }
-    { substring str 1L (lengthString str) }
+    { substring str 1i64 (lengthString str) }
 }
 
 -- return the longest prefix of `str` of that satisfy `pred`

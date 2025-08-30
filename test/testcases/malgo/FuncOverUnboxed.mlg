@@ -1,11 +1,11 @@
 module { toStringInt64#, printString# } = import "../../../runtime/malgo/Builtin.mlg"
 
 def f =
-  { 0L# -> printString# (toStringInt64# 1L#),
-    1L# -> printString# (toStringInt64# 1L#),
-    _ -> printString# (toStringInt64# 0L#),
+  { 0i64# -> printString# (toStringInt64# 1i64#),
+    1i64# -> printString# (toStringInt64# 1i64#),
+    _ -> printString# (toStringInt64# 0i64#),
   }
 
 def main = {
-  f 0L#
+  f 0i64#
 }

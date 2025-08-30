@@ -11,10 +11,10 @@ def (-) = { (x, y) -> subInt64(x, y) }
 infixl 7 (*)
 def (*) = { (x, y) -> mulInt64(x, y) }
 
-def fact = { (n) -> factAcc({n, 1L}) }
+def fact = { (n) -> factAcc({n, 1i64}) }
 
-def factAcc = { ({n, acc}) -> if(n == 0L, { (_) -> acc }, { (_) -> factAcc({n - 1L, n * acc}) }) }
+def factAcc = { ({n, acc}) -> if(n == 0i64, { (_) -> acc }, { (_) -> factAcc({n - 1i64, n * acc}) }) }
 
 def main = { (_) ->
-  fact(5L) |> toStringInt64 |> putStrLn
+  fact(5i64) |> toStringInt64 |> putStrLn
 }

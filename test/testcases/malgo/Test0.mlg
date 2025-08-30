@@ -7,4 +7,4 @@ def (|>) = { x f -> f x }
 infixl 6 (+#)
 def (+#) = {x y -> addInt64# x y}
 
-def main = { Int64# 1L# |> {(Int64# i) -> printString# (toStringInt64# i)} }
+def main = { Int64# 1i64# |> {(Int64# i) -> printString# (toStringInt64# i)} }

@@ -16,6 +16,6 @@ def (/>) = {f y -> {x -> f x y}}
 def printInt = { x -> x |> toStringInt64 |> printString }
 
 def main = {
-  printInt (1L <\addInt64\> 2L);
-  printInt (1L </addInt64/> 2L)
+  printInt (1i64 <\addInt64\> 2i64);
+  printInt (1i64 </addInt64/> 2i64)
 }

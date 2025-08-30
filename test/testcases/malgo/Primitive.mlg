@@ -1,2 +1,2 @@
 module {..} = import "../../../runtime/malgo/Builtin.mlg"
-def main = { printString# (toStringInt64# (addInt64# 40L# 2L#)) }
+def main = { printString# (toStringInt64# (addInt64# 40i64# 2i64#)) }

@@ -14,12 +14,12 @@ data List a = Nil | Cons a (List a)
 def sum =
   { Cons Int# x xs -> -- Error: invalid pattern
       sum xs |> {(Int# s) -> Int# (x +# s)},
-    Nil -> Int# 0L#
+    Nil -> Int# 0i64#
   }
 
 foreign import print_int : Int64# -> ()
 
 def main = {
-  let x = sum (Cons (Int# 1L#) (Cons (Int# 2L#) Nil));
+  let x = sum (Cons (Int# 1i64#) (Cons (Int# 2i64#) Nil));
   ()
 }

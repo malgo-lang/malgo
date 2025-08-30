@@ -10,8 +10,8 @@ def zipWith = {
 }
 
 def fib = {
-  #.head -> 1L,
-  #.tail.head -> 1L,
+  #.head -> 1i64,
+  #.tail.head -> 1i64,
   #.tail.tail -> zipWith(addInt64, fib, fib.tail)
 }
 

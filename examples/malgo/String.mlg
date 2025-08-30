@@ -4,6 +4,6 @@ module {..} = import "../../runtime/malgo/Prelude.mlg"
 def main = {
   let str1 = "Hello";
   let str2 = "world";
-  printChar <| atString 0L str1;
+  printChar <| atString 0i64 str1;
   putStrLn <| appendString str1 <| appendString " " str2
 }
