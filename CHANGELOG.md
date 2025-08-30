@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.1.0](https://github.com/malgo-lang/malgo/compare/v2.0.0...v2.1.0) (2025-08-30)
+
+
+### Features
+
+* **parser:** update float parsing to use f32 and f64 suffixes ([8ee2315](https://github.com/malgo-lang/malgo/commit/8ee2315ed45af7bf52fbb37dc7d39acb614590c3))
+* **parser:** update integer parsing to support i32 and i64 suffixes ([fe65f1b](https://github.com/malgo-lang/malgo/commit/fe65f1bde23f108a80da77a1ac5b6446cacd8c8b))
+
 ## [2.0.0](https://github.com/malgo-lang/malgo/compare/v1.0.0...v2.0.0) (2025-08-30)
 
 
