@@ -11,7 +11,7 @@ import Malgo.SExpr (sShow)
 import Malgo.Sequent.Core.Flat (flatProgram)
 import Malgo.Sequent.Core.Join (joinProgram)
 import Malgo.Sequent.ToCore (toCore)
-import Malgo.Sequent.ToFun (toFun)
+import Malgo.Sequent.ToFun (ToFunPass (..))
 import Malgo.Syntax (Module (..))
 import Malgo.TestUtils
 import System.Directory
@@ -45,7 +45,8 @@ driveToCore srcPath = do
     parsed <- runPass ParserPass (srcPath, src)
     rnEnv <- genBuiltinRnEnv
     (renamed, _) <- runPass RenamePass (parsed, rnEnv)
-    program <- runReader renamed.moduleName $ toFun renamed.moduleDefinition >>= toCore
+    fun <- runReader renamed.moduleName $ runPass ToFunPass renamed.moduleDefinition
+    program <- runReader renamed.moduleName $ toCore fun
     pure $ sShow program
 
 driveFlat :: FilePath -> IO String
@@ -55,7 +56,8 @@ driveFlat srcPath = do
     parsed <- runPass ParserPass (srcPath, src)
     rnEnv <- genBuiltinRnEnv
     (renamed, _) <- runPass RenamePass (parsed, rnEnv)
-    program <- runReader renamed.moduleName $ toFun renamed.moduleDefinition >>= toCore >>= flatProgram
+    fun <- runReader renamed.moduleName $ runPass ToFunPass renamed.moduleDefinition
+    program <- runReader renamed.moduleName $ toCore fun >>= flatProgram
     pure $ sShow program
 
 driveJoin :: FilePath -> IO String
@@ -65,5 +67,6 @@ driveJoin srcPath = do
     parsed <- runPass ParserPass (srcPath, src)
     rnEnv <- genBuiltinRnEnv
     (renamed, _) <- runPass RenamePass (parsed, rnEnv)
-    program <- runReader renamed.moduleName $ toFun renamed.moduleDefinition >>= toCore >>= flatProgram >>= joinProgram
+    fun <- runReader renamed.moduleName $ runPass ToFunPass renamed.moduleDefinition
+    program <- runReader renamed.moduleName $ toCore fun >>= flatProgram >>= joinProgram
     pure $ sShow program

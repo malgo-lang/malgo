@@ -1,6 +1,0 @@
-(module
-   "test/testcases/malgo/CopatternBasic.mlg"
-   ((import "runtime/malgo/Builtin.mlg" all)
-      (import "runtime/malgo/Prelude.mlg" all)
-      (def ones (codata ((project # "head") (int32 1)) ((project # "tail") ones)))
-      (def fib (codata ((project # "head") (int32 1)) ((project # "tail") ones)))))

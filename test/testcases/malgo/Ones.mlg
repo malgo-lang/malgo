@@ -6,7 +6,6 @@ def ones = {
   #.tail -> ones
 }
 
-def fib = {
-  #.head -> 1,
-  #.tail -> ones
+def main = { (_) ->
+  printString(toStringInt32(ones.tail.tail.tail.tail.tail.head))
 }

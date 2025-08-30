@@ -10,6 +10,7 @@ module Malgo.Syntax
     Clause (..),
     Pat (..),
     CoPat (..),
+    CoClause,
     _VarP,
     _ConP,
     _TupleP,
@@ -263,6 +264,10 @@ instance (Pretty (XId x)) => Pretty (Stmt x) where
   pretty (With _ Nothing body) = sexpr ["with", pretty body]
   pretty (With _ (Just var) body) = sexpr ["with", pretty var, pretty body]
   pretty (NoBind _ body) = sexpr ["do", pretty body]
+
+-- * CoClause
+
+type CoClause x = (CoPat x, Expr x)
 
 -- * Clause
 

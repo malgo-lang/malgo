@@ -1,8 +1,14 @@
+{-# LANGUAGE TypeAbstractions #-}
+
 module Malgo.Sequent.ToFun (toFun, ToFunPass (..)) where
 
+import Control.Exception
 import Control.Lens (traverseOf, _2)
+import Data.List (partition)
 import Data.Map qualified as Map
+import Data.Traversable (for)
 import Effectful
+import Effectful.Error.Static (Error, throwError)
 import Effectful.Reader.Static (Reader)
 import Effectful.State.Static.Local (State)
 import Malgo.Id
@@ -11,19 +17,20 @@ import Malgo.Pass
 import Malgo.Prelude
 import Malgo.Sequent.Fun as F
 import Malgo.Syntax as S
-import Malgo.Syntax.Extension as S
+import Malgo.Syntax.Extension as S hiding (Field)
+import Prettyprinter ((<+>))
 
 data ToFunPass = ToFunPass
 
 instance Pass ToFunPass where
   type Input ToFunPass = BindGroup (Malgo Rename)
   type Output ToFunPass = Program
-  type ErrorType ToFunPass = Void
+  type ErrorType ToFunPass = ToFunError
   type Effects ToFunPass es = (State Uniq :> es, Reader ModuleName :> es)
 
   runPassImpl _ = toFun
 
-toFun :: (State Uniq :> es, Reader ModuleName :> es) => XModule (Malgo Rename) -> Eff es Program
+toFun :: (State Uniq :> es, Reader ModuleName :> es, Error ToFunError :> es) => XModule (Malgo Rename) -> Eff es Program
 toFun BindGroup {..} = do
   scDefs <- foldMap (traverse fromScDef) _scDefs
   dataDefs <- concat <$> traverse fromDataDef _dataDefs
@@ -37,7 +44,7 @@ toFun BindGroup {..} = do
   where
     getModuleName (_, name, _) = pure name
 
-fromScDef :: (State Uniq :> es, Reader ModuleName :> es) => (Range, Id, S.Expr (Malgo Rename)) -> Eff es (Range, Name, F.Expr)
+fromScDef :: (State Uniq :> es, Reader ModuleName :> es, Error ToFunError :> es) => (Range, Id, S.Expr (Malgo Rename)) -> Eff es (Range, Name, F.Expr)
 fromScDef (range, name, expr) = do
   expr <- fromExpr expr
   pure (range, name, expr)
@@ -65,7 +72,7 @@ fromForeign ((range, _), name, typ) = do
     aux (TyArr _ _ t) = 1 + aux t
     aux _ = 0
 
-fromExpr :: (State Uniq :> es, Reader ModuleName :> es) => S.Expr (Malgo Rename) -> Eff es F.Expr
+fromExpr :: (State Uniq :> es, Reader ModuleName :> es, Error ToFunError :> es) => S.Expr (Malgo Rename) -> Eff es F.Expr
 fromExpr (S.Var range name) | idIsExternal name = pure $ F.Invoke range name
 fromExpr (S.Var range name) = pure $ F.Var range name
 fromExpr (S.Unboxed range literal) = pure $ F.Literal range $ fromLiteral literal
@@ -98,8 +105,9 @@ fromExpr (S.Record range fields) = do
 fromExpr (S.Ann _ expr _) = fromExpr expr
 fromExpr (S.Seq _ stmts) = fromStmts stmts
 fromExpr (S.Parens _ expr) = fromExpr expr
+fromExpr (S.Codata range coclauses) = fromCoClauses range coclauses
 
-fromStmts :: (State Uniq :> es, Reader ModuleName :> es) => NonEmpty (S.Stmt (Malgo Rename)) -> Eff es F.Expr
+fromStmts :: (State Uniq :> es, Reader ModuleName :> es, Error ToFunError :> es) => NonEmpty (S.Stmt (Malgo Rename)) -> Eff es F.Expr
 fromStmts (NoBind _ expr :| []) = fromExpr expr
 fromStmts (NoBind range value :| stmt : stmts) = do
   tmp <- newTemporalId "tmp"
@@ -120,13 +128,13 @@ fromLiteral (S.Double n) = F.Double n
 fromLiteral (S.Char c) = F.Char c
 fromLiteral (S.String t) = F.String t
 
-fromClauses :: (State Uniq :> es, Reader ModuleName :> es) => Range -> [Name] -> NonEmpty (Clause (Malgo Rename)) -> Eff es F.Expr
+fromClauses :: (State Uniq :> es, Reader ModuleName :> es, Error ToFunError :> es) => Range -> [Name] -> NonEmpty (Clause (Malgo Rename)) -> Eff es F.Expr
 fromClauses range [parameter] clauses = do
   Select range (F.Var range parameter) <$> traverse fromClause (toList clauses)
 fromClauses range parameters clauses = do
   Select range (Construct range F.Tuple (F.Var range <$> parameters)) <$> traverse fromClause (toList clauses)
 
-fromClause :: (State Uniq :> es, Reader ModuleName :> es) => Clause (Malgo Rename) -> Eff es F.Branch
+fromClause :: (State Uniq :> es, Reader ModuleName :> es, Error ToFunError :> es) => Clause (Malgo Rename) -> Eff es F.Branch
 fromClause (Clause range [pattern] body) = do
   pattern <- fromPattern pattern
   body <- fromExpr body
@@ -153,3 +161,106 @@ fromPattern (RecordP range fields) = do
   fields <- traverseOf (traverse . _2) fromPattern fields
   pure $ Expand range $ Map.fromList fields
 fromPattern (UnboxedP range literal) = pure $ PLiteral range $ fromLiteral literal
+
+fromCoClauses ::
+  (State Uniq :> es, Reader ModuleName :> es, Error ToFunError :> es) =>
+  Range -> [S.CoClause (Malgo Rename)] -> Eff es F.Expr
+fromCoClauses range coclauses = do
+  -- convert to CoClause'
+  coclauses' <- traverse toCoClause' coclauses
+  build [] range coclauses'
+
+build :: (Error ToFunError :> es, State Uniq :> es, Reader ModuleName :> es) => Scrutinees -> Range -> [CoClause' es] -> Eff es F.Expr
+build scrutinees range clauses@(classify -> Case) = buildCase scrutinees range clauses
+build scrutinees range clauses@(classify -> Field) = buildObject scrutinees range clauses
+build scrutinees range clauses@(classify -> Function) = buildLambda scrutinees range clauses
+build _ range (classify -> Mismatch) = do
+  throwError (MismatchCopatterns range)
+build _ _ _ = error "impossible"
+
+buildCase :: (State Uniq :> es, Reader ModuleName :> es, Error ToFunError :> es) => Scrutinees -> Range -> [CoClause' es] -> Eff es F.Expr
+buildCase [] _ (CoClause' _ _ body : _) = body -- If there is no scrutinees, just return the body of the first clause.
+buildCase scrutinees range clauses = do
+  let (noCoPatsClauses, restClauses) = partition (\(CoClause' copats _ _) -> null copats) clauses
+  branches <- for noCoPatsClauses \(CoClause' _ pats body) -> do
+    Branch range (Destruct range F.Tuple pats) <$> body
+  restBody <- build scrutinees range restClauses
+  rest <- do
+    anyPatterns <- traverse (\_ -> PVar range <$> newTemporalId "_") scrutinees
+    pure $ Branch range (Destruct range F.Tuple anyPatterns) restBody
+  pure $ F.Select range (F.Construct range F.Tuple (F.Var range <$> scrutinees)) (branches <> [rest])
+
+buildLambda :: (State Uniq :> es, Reader ModuleName :> es, Error ToFunError :> es) => Scrutinees -> Range -> [CoClause' es] -> Eff es F.Expr
+buildLambda scrutinees range clauses = do
+  clauses' <- for clauses \case
+    CoClause' (ApplyP' _ pat : copats) pats body -> do
+      pat' <- fromPattern pat
+      pure $ CoClause' copats (pats <> [pat']) body
+    _ -> error "invalid function clauses"
+  param <- newTemporalId "param"
+  body <- build (scrutinees <> [param]) range clauses'
+  pure $ F.Lambda range [param] body
+
+buildObject :: (Error ToFunError :> es, State Uniq :> es, Reader ModuleName :> es) => Scrutinees -> Range -> [CoClause' es] -> Eff es F.Expr
+buildObject scrutinees range clauses = do
+  clauses' <-
+    traverse (build scrutinees range)
+      $ Map.unionsWith (<>)
+      $ map
+        ( \case
+            CoClause' (ProjectP' _ field : copats) pats body ->
+              Map.singleton field [CoClause' copats pats body]
+            _ -> error "invalid object clauses"
+        )
+        clauses
+  pure $ F.Object range clauses'
+
+data ToFunError
+  = EmptyCoClauses Range
+  | MismatchCopatterns Range
+  deriving stock (Eq)
+
+instance Show ToFunError where
+  show = show . pretty
+
+instance Pretty ToFunError where
+  pretty (EmptyCoClauses range) =
+    pretty range <> ":" <+> "empty coclauses"
+  pretty (MismatchCopatterns range) =
+    pretty range <> ":" <+> "mismatch copatterns"
+
+instance Exception ToFunError
+
+type Scrutinees = [Name]
+
+data CoClause' es = CoClause' [CoPat'] [Pattern] (Eff es F.Expr)
+
+toCoClause' :: (State Uniq :> es, Reader ModuleName :> es, Error ToFunError :> es) => S.CoClause (Malgo Rename) -> Eff es (CoClause' es)
+toCoClause' (copat, body) =
+  pure $ CoClause' (makeCoPatList copat) [] $ fromExpr body
+
+data CoPat'
+  = ApplyP' Range (S.Pat (Malgo Rename))
+  | ProjectP' Range Text
+
+-- makeCoPatList splits a copattern into its constituent parts
+makeCoPatList :: S.CoPat (Malgo Rename) -> [CoPat']
+makeCoPatList (S.HoleP _) = []
+makeCoPatList (S.ApplyP x copat arg) = makeCoPatList copat <> [ApplyP' x arg]
+makeCoPatList (S.ProjectP x copat field) = makeCoPatList copat <> [ProjectP' x field]
+
+data CoClauseKind = Case | Field | Function | Mismatch
+  deriving stock (Eq, Show)
+
+classify :: [CoClause' es] -> CoClauseKind
+classify clauses
+  | any isEmpty clauses = Case
+  | all isField clauses = Field
+  | all isFunction clauses = Function
+  | otherwise = Mismatch
+  where
+    isEmpty (CoClause' copats _ _) = null copats
+    isField (CoClause' (ProjectP' _ _ : _) _ _) = True
+    isField _ = False
+    isFunction (CoClause' (ApplyP' _ _ : _) _ _) = True
+    isFunction _ = False
