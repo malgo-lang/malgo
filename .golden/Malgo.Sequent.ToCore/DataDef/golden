@@ -6,14 +6,14 @@
           (cut
              $DataDef.param_3
              (select
-                (#DataDef.$__2
+                (#DataDef.__1
                    (cut
                       (lambda
                          ($DataDef.param_4 $DataDef.return_13)
                          (cut
                             $DataDef.param_4
                             (select
-                               ((Int# (#DataDef.x_1))
+                               ((Int# (#DataDef.x_2))
                                   (invoke
                                      malgo_print_string
                                      (apply
@@ -22,7 +22,7 @@
                                             (invoke
                                                malgo_int64_t_to_string
                                                (apply
-                                                  (#DataDef.x_1)
+                                                  (#DataDef.x_2)
                                                   ($DataDef.return_14)))))
                                         ($DataDef.return_13)))))))
                       (apply

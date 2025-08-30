@@ -8,7 +8,7 @@
          main
          (fn
             ((clause
-                ()
+                (_)
                 (seq
                    (do
                       (apply
@@ -19,6 +19,5 @@
                                    (do
                                       (apply
                                          malgo_print_string
-                                         (parens
-                                            (apply malgo_int64_t_to_string x))))))))
-                         (parens (apply Int# (int64 1))))))))))))
+                                         (apply malgo_int64_t_to_string x)))))))
+                         (apply Int# (int64 1)))))))))))

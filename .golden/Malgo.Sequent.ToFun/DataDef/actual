@@ -4,18 +4,18 @@
           ($DataDef.param_3)
           (select
              $DataDef.param_3
-             ((#DataDef.$__2
+             ((#DataDef.__1
                  (apply
                     (lambda
                        ($DataDef.param_4)
                        (select
                           $DataDef.param_4
-                          (((Int# (#DataDef.x_1))
+                          (((Int# (#DataDef.x_2))
                               (apply
                                  (invoke malgo_print_string)
                                  ((apply
                                      (invoke malgo_int64_t_to_string)
-                                     (#DataDef.x_1))))))))
+                                     (#DataDef.x_2))))))))
                     ((apply (invoke Int#) (1_i64)))))))))
       (Int# (lambda ($DataDef.constructor_5) (Int# ($DataDef.constructor_5))))
       (Nil (Nil ()))

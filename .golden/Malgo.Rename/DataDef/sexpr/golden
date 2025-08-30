@@ -4,22 +4,21 @@
          main
          (fn
             ((clause
-                (#DataDef.$__2)
+                (#DataDef.__1)
                 (seq
                    (do
                       (apply
                          (fn
                             ((clause
-                                ((con Int# (#DataDef.x_1)))
+                                ((con Int# (#DataDef.x_2)))
                                 (seq
                                    (do
                                       (apply
                                          malgo_print_string
-                                         (parens
-                                            (apply
-                                               malgo_int64_t_to_string
-                                               #DataDef.x_1))))))))
-                         (parens (apply Int# (int64 1))))))))))))
+                                         (apply
+                                            malgo_int64_t_to_string
+                                            #DataDef.x_2)))))))
+                         (apply Int# (int64 1)))))))))))
       ()
       ((data Int () ((Int# (Int64#))))
          (data
