@@ -543,15 +543,15 @@ pBoxed = choice [try pReal, pInt, pChar, pString]
 -- | pReal parses a real number.
 --
 -- > real = double | float ;
--- > double = FLOAT ;
--- > float = FLOAT "f" | FLOAT "F" ;
+-- > double = FLOAT | FLOAT "f64" ;
+-- > float = FLOAT "f32" ;
 pReal :: Parser es (Literal Boxed)
 pReal = lexeme do
   f <- L.float
-  tail <- optional (char 'f' <|> char 'F')
+  tail <- optional (string "f32" <|> string "f64")
   case tail of
-    Just _ -> pure $ Float (realToFrac f)
-    Nothing -> pure $ Double f
+    Just "f32" -> pure $ Float (realToFrac f)
+    _ -> pure $ Double f
 
 -- | pInt parses an integer.
 --
