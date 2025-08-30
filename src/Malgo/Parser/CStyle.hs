@@ -564,15 +564,15 @@ pReal = lexeme do
 -- | pInt parses an integer.
 --
 -- > int = int32| int64 ;
--- > int32 = DECIMAL ;
--- > int64 = DECIMAL "l" | DECIMAL "L" ;
+-- > int32 = DECIMAL | DECIMAL "i32" ;
+-- > int64 = DECIMAL "i64" ;
 pInt :: Parser es (Literal Boxed)
 pInt = lexeme do
   i <- L.decimal
-  tail <- optional (char 'l' <|> char 'L')
+  tail <- optional (string "i32" <|> string "i64")
   case tail of
-    Just _ -> pure $ Int64 i
-    Nothing -> pure $ Int32 (fromIntegral i)
+    Just "i64" -> pure $ Int64 i
+    _ -> pure $ Int32 (fromIntegral i)
 
 -- | pChar parses a character.
 --
