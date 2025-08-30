@@ -485,7 +485,7 @@ pAtomPat =
 pConP :: (Features :> es) => Parser es (Pat (Malgo Parse))
 pConP = captureRange do
   constructor <- ident
-  patterns <- some pAtomPat
+  patterns <- between (symbol "(") (symbol ")") (sepEndBy1 pPat (symbol ","))
   pure $ \range -> ConP range constructor patterns
 
 -- | pTupleP parses C-style tuple patterns with braces
@@ -610,9 +610,7 @@ pVariable = captureRange do
 -- > clause = "(" pattern ("," pattern)* ")" "->" stmts
 pClause :: (Features :> es) => Parser es (Clause (Malgo Parse))
 pClause = captureRange do
-  patterns <-
-    between (symbol "(") (symbol ")") (sepEndBy pAtomPat (symbol ",")) <* reservedOperator "->"
   -- TODO: Support empty argument list
-  when (null patterns) $ fail "c-style clause must have at least one pattern"
+  patterns <- between (symbol "(") (symbol ")") (sepEndBy1 pPat (symbol ",")) <* reservedOperator "->"
   body <- pStmts
   pure $ \range -> Clause range patterns body
