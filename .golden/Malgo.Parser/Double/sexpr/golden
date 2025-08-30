@@ -6,9 +6,5 @@
          main
          (fn
             ((clause
-                ()
-                (seq
-                   (do
-                      (apply
-                         putStr
-                         (parens (apply toStringDouble (double 3.14_f64))))))))))))
+                (_)
+                (seq (do (apply putStr (apply toStringDouble (double 3.14_f64)))))))))))

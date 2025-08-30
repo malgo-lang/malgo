@@ -4,8 +4,8 @@
          main
          (fn
             ((clause
-                (#Echo.$__0)
-                (seq (do (apply putStr (parens (apply getContents (tuple))))))))))))
+                (#Echo.__0)
+                (seq (do (apply putStr (apply getContents (tuple)))))))))))
       ()
       ()
       ()

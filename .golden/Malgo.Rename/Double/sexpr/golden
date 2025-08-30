@@ -4,15 +4,12 @@
          main
          (fn
             ((clause
-                (#Double.$__0)
+                (#Double.__0)
                 (seq
                    (do
                       (apply
                          putStr
-                         (parens
-                            (apply
-                               toStringDouble
-                               (apply Double# (double 3.14_f64)))))))))))))
+                         (apply toStringDouble (apply Double# (double 3.14_f64))))))))))))
       ()
       ()
       ()
