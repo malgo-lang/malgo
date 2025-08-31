@@ -21,6 +21,7 @@ module Malgo.Syntax.Extension
     XUnboxed,
     XBoxed,
     XApply,
+    XApply0,
     XOpApp,
     XProject,
     XFn,
@@ -49,6 +50,7 @@ module Malgo.Syntax.Extension
     ForallPatX,
     XHoleP,
     XApplyP,
+    XApply0P,
     XProjectP,
     ForallCoPatX,
     XTyApp,
@@ -174,6 +176,9 @@ type family XBoxed x where
 type family XApply x where
   XApply (Malgo x) = SimpleX x
 
+type family XApply0 x where
+  XApply0 (Malgo x) = SimpleX x
+
 type family XOpApp x
 
 type instance XOpApp (Malgo Parse) = SimpleX Parse
@@ -221,6 +226,7 @@ type ForallExpX (c :: K.Type -> Constraint) x =
     c (XUnboxed x),
     c (XBoxed x),
     c (XApply x),
+    c (XApply0 x),
     c (XOpApp x),
     c (XProject x),
     c (XFn x),
@@ -290,10 +296,13 @@ type family XHoleP x where
 type family XApplyP x where
   XApplyP (Malgo x) = SimpleX x
 
+type family XApply0P x where
+  XApply0P (Malgo x) = SimpleX x
+
 type family XProjectP x where
   XProjectP (Malgo x) = SimpleX x
 
-type ForallCoPatX (c :: K.Type -> Constraint) x = (c (XHoleP x), c (XApplyP x), c (XProjectP x))
+type ForallCoPatX (c :: K.Type -> Constraint) x = (c (XHoleP x), c (XApplyP x), c (XApply0P x), c (XProjectP x))
 
 -- * Type Extensions
 

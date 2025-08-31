@@ -306,11 +306,11 @@ pApply =
     [ [ Postfix $ manyUnaryOp do
           choice
             [ -- Function application: expr(arg1, arg2, ...)
-              -- TODO: Support empty argument list
               captureRange do
                 args <- between (symbol "(") (symbol ")") (sepBy pExpr (symbol ","))
-                when (null args) $ fail "c-style function application must have at least one argument"
-                pure $ \range fn -> foldl (Apply range) fn args,
+                case args of
+                  [] -> pure Apply0
+                  _ -> pure $ \range fn -> foldl (Apply range) fn args,
               -- Field projection: expr.field
               captureRange do
                 reservedOperator "."
@@ -381,35 +381,31 @@ pCodata = do
       e <- pExpr
       pure (cp, e)
 
--- | pCopattern parses copatterns starting with # using C-style syntax
 pCopattern :: (Features :> es) => Parser es (CoPat (Malgo Parse))
-pCopattern = captureRange do
-  symbol "#"
-  pCopatternSuffix HoleP
-
--- | pCopatternSuffix parses copattern suffixes (projections and applications) using C-style syntax
-pCopatternSuffix :: (Features :> es) => (Range -> CoPat (Malgo Parse)) -> Parser es (Range -> CoPat (Malgo Parse))
-pCopatternSuffix cp =
-  choice
-    [ try do
-        reservedOperator "."
-        field <- ident
-        pCopatternSuffix (\range -> ProjectP range (cp range) field),
-      try do
-        symbol "("
-        -- Parse C-style pattern arguments (comma-separated in parentheses)
-        -- TODO: Support empty argument list
-        pats <- sepBy pPat (symbol ",")
-        when (null pats) $ fail "c-style copattern application must have at least one argument"
-        symbol ")"
-        -- For C-style, we need to handle multiple patterns differently
-        -- Apply each pattern as a separate ApplyP
-        let applyPats pat_list copat = case pat_list of
-              [] -> copat
-              (p : ps) -> applyPats ps (\range -> ApplyP range (copat range) p)
-        pCopatternSuffix (applyPats pats cp),
-      pure cp
+pCopattern =
+  makeExprParser
+    pHoleP
+    [ [ Postfix $ manyUnaryOp do
+          choice
+            [ -- Field projection: copat.field
+              captureRange do
+                reservedOperator "."
+                field <- ident
+                pure $ \range cp -> ProjectP range cp field,
+              -- Function application: copat(arg1, arg2, ...)
+              captureRange do
+                args <- between (symbol "(") (symbol ")") (sepBy pPat (symbol ","))
+                case args of
+                  [] -> pure Apply0P
+                  _ -> pure $ \range cp -> foldl (ApplyP range) cp args
+            ]
+      ]
     ]
+  where
+    pHoleP :: Parser es (CoPat (Malgo Parse))
+    pHoleP = captureRange do
+      symbol "#"
+      pure HoleP
 
 -- | pList parses list literals using C-style syntax
 pList :: (Features :> es) => Parser es (Expr (Malgo Parse))

@@ -82,6 +82,7 @@ toUnboxed = coerce
 data CoPat x
   = HoleP (XHoleP x)
   | ApplyP (XApplyP x) (CoPat x) (Pat x)
+  | Apply0P (XApply0P x) (CoPat x)
   | ProjectP (XProjectP x) (CoPat x) Text
 
 deriving stock instance (ForallCoPatX Eq x, ForallPatX Eq x, Eq (XId x)) => Eq (CoPat x)
@@ -91,16 +92,19 @@ deriving stock instance (ForallCoPatX Show x, ForallPatX Show x, Show (XId x)) =
 instance (ToSExpr (XId x)) => ToSExpr (CoPat x) where
   toSExpr (HoleP _) = S.A $ S.Symbol "#"
   toSExpr (ApplyP _ cp p) = S.L ["apply", toSExpr cp, toSExpr p]
+  toSExpr (Apply0P _ cp) = S.L ["apply0", toSExpr cp]
   toSExpr (ProjectP _ cp field) = S.L ["project", toSExpr cp, S.A $ S.String field]
 
 instance (Pretty (XId x)) => Pretty (CoPat x) where
   pretty (HoleP _) = "#"
   pretty (ApplyP _ cp p) = sexpr ["apply", pretty cp, pretty p]
+  pretty (Apply0P _ cp) = sexpr ["apply0", pretty cp]
   pretty (ProjectP _ cp field) = sexpr ["project", pretty cp, pretty field]
 
 instance (ForallCoPatX HasRange x) => HasRange (CoPat x) where
   range (HoleP x) = range x
   range (ApplyP x _ _) = range x
+  range (Apply0P x _) = range x
   range (ProjectP x _ _) = range x
 
 -- * Type
@@ -143,6 +147,7 @@ data Expr x
   | Unboxed (XUnboxed x) (Literal Unboxed)
   | Boxed (XBoxed x) (Literal Boxed)
   | Apply (XApply x) (Expr x) (Expr x)
+  | Apply0 (XApply0 x) (Expr x)
   | OpApp (XOpApp x) (XId x) (Expr x) (Expr x)
   | Project (XProject x) (Expr x) Text
   | Fn (XFn x) (NonEmpty (Clause x))
@@ -163,6 +168,7 @@ instance (ToSExpr (XId x)) => ToSExpr (Expr x) where
   toSExpr (Unboxed _ l) = toSExpr l
   toSExpr (Boxed _ l) = toSExpr l
   toSExpr (Apply _ e1 e2) = S.L ["apply", toSExpr e1, toSExpr e2]
+  toSExpr (Apply0 _ e) = S.L ["apply0", toSExpr e]
   toSExpr (OpApp _ op e1 e2) = S.L ["opapp", toSExpr op, toSExpr e1, toSExpr e2]
   toSExpr (Project _ e k) = S.L ["project", toSExpr e, S.A $ S.String k]
   toSExpr (Fn _ cs) = S.L ["fn", S.L $ map toSExpr $ NE.toList cs]
@@ -179,6 +185,7 @@ instance (Pretty (XId x)) => Pretty (Expr x) where
   pretty (Unboxed _ l) = sexpr ["unboxed", pretty l]
   pretty (Boxed _ l) = sexpr ["boxed", pretty l]
   pretty (Apply _ e1 e2) = sexpr ["apply", pretty e1, pretty e2]
+  pretty (Apply0 _ e) = sexpr ["apply0", pretty e]
   pretty (OpApp _ op e1 e2) = sexpr ["opapp", pretty op, pretty e1, pretty e2]
   pretty (Project _ e k) = sexpr ["project", pretty e, pretty k]
   pretty (Fn _ cs) = sexpr ["fn", sexpr $ map pretty (toList cs)]
@@ -195,6 +202,7 @@ instance (ForallExpX HasRange x) => HasRange (Expr x) where
   range (Unboxed x _) = range x
   range (Boxed x _) = range x
   range (Apply x _ _) = range x
+  range (Apply0 x _) = range x
   range (OpApp x _ _ _) = range x
   range (Project x _ _) = range x
   range (Fn x _) = range x
@@ -211,6 +219,7 @@ freevars (Var _ v) = Set.singleton v
 freevars (Unboxed _ _) = mempty
 freevars (Boxed _ _) = mempty
 freevars (Apply _ e1 e2) = freevars e1 <> freevars e2
+freevars (Apply0 _ e) = freevars e
 freevars (OpApp _ op e1 e2) = Set.insert op $ freevars e1 <> freevars e2
 freevars (Project _ e _) = freevars e
 freevars (Fn _ cs) = foldMap freevarsClause cs
