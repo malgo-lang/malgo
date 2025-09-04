@@ -1,0 +1,18 @@
+(program
+   ((getMessage
+       (lambda
+          ()
+          (select
+             (tuple ())
+             (((tuple ()) (apply (invoke String#) ("Hello, World!")))))))
+      (main
+         (lambda
+            ($EmptyArguments.param_2)
+            (select
+               $EmptyArguments.param_2
+               ((#EmptyArguments.__0
+                   (let
+                      #EmptyArguments.msg_1
+                      (apply (invoke getMessage) ())
+                      (apply (invoke putStrLn) (#EmptyArguments.msg_1)))))))))
+   ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

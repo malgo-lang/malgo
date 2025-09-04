@@ -1,0 +1,403 @@
+Module
+ { moduleName = Artifact
+  ( ArtifactPath "test/testcases/malgo/EmptyArguments.mlg" )
+ , moduleDefinition = BindGroup
+  { _scDefs =
+   [
+    [
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+       , sourceLine = Pos 6
+       , sourceColumn = Pos 1
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+       , sourceLine = Pos 9
+       , sourceColumn = Pos 1
+       }
+      }
+     , Id
+      { name = "getMessage"
+      , moduleName = Artifact
+       ( ArtifactPath "test/testcases/malgo/EmptyArguments.mlg" )
+      , sort = External
+      }
+     , Fn
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+        , sourceLine = Pos 6
+        , sourceColumn = Pos 18
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+        , sourceLine = Pos 9
+        , sourceColumn = Pos 1
+        }
+       }
+      )
+      ( Clause
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+         , sourceLine = Pos 6
+         , sourceColumn = Pos 20
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+         , sourceLine = Pos 6
+         , sourceColumn = Pos 42
+         }
+        }
+       ) []
+       ( Seq
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+          , sourceLine = Pos 6
+          , sourceColumn = Pos 26
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+          , sourceLine = Pos 6
+          , sourceColumn = Pos 42
+          }
+         }
+        )
+        ( NoBind
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+           , sourceLine = Pos 6
+           , sourceColumn = Pos 26
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+           , sourceLine = Pos 6
+           , sourceColumn = Pos 42
+           }
+          }
+         )
+         ( Apply
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+            , sourceLine = Pos 6
+            , sourceColumn = Pos 26
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+            , sourceLine = Pos 6
+            , sourceColumn = Pos 42
+            }
+           }
+          )
+          ( Var
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+             , sourceLine = Pos 6
+             , sourceColumn = Pos 26
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+             , sourceLine = Pos 6
+             , sourceColumn = Pos 42
+             }
+            }
+           )
+           ( Id
+            { name = "String#"
+            , moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+            , sort = External
+            }
+           )
+          )
+          ( Unboxed
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+             , sourceLine = Pos 6
+             , sourceColumn = Pos 26
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+             , sourceLine = Pos 6
+             , sourceColumn = Pos 42
+             }
+            }
+           )
+           ( String "Hello, World!" )
+          )
+         ) :| []
+        )
+       ) :| []
+      )
+     )
+    ]
+   ,
+    [
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+       , sourceLine = Pos 9
+       , sourceColumn = Pos 1
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+       , sourceLine = Pos 12
+       , sourceColumn = Pos 2
+       }
+      }
+     , Id
+      { name = "main"
+      , moduleName = Artifact
+       ( ArtifactPath "test/testcases/malgo/EmptyArguments.mlg" )
+      , sort = External
+      }
+     , Fn
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+        , sourceLine = Pos 9
+        , sourceColumn = Pos 12
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+        , sourceLine = Pos 12
+        , sourceColumn = Pos 2
+        }
+       }
+      )
+      ( Clause
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+         , sourceLine = Pos 9
+         , sourceColumn = Pos 14
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+         , sourceLine = Pos 12
+         , sourceColumn = Pos 1
+         }
+        }
+       )
+       [ VarP
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+          , sourceLine = Pos 9
+          , sourceColumn = Pos 15
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+          , sourceLine = Pos 9
+          , sourceColumn = Pos 16
+          }
+         }
+        )
+        ( Id
+         { name = "_"
+         , moduleName = Artifact
+          ( ArtifactPath "test/testcases/malgo/EmptyArguments.mlg" )
+         , sort = Internal 0
+         }
+        )
+       ]
+       ( Seq
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+          , sourceLine = Pos 10
+          , sourceColumn = Pos 3
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+          , sourceLine = Pos 12
+          , sourceColumn = Pos 1
+          }
+         }
+        )
+        ( Let
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+           , sourceLine = Pos 10
+           , sourceColumn = Pos 3
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+           , sourceLine = Pos 10
+           , sourceColumn = Pos 25
+           }
+          }
+         )
+         ( Id
+          { name = "msg"
+          , moduleName = Artifact
+           ( ArtifactPath "test/testcases/malgo/EmptyArguments.mlg" )
+          , sort = Internal 1
+          }
+         )
+         ( Apply0
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+            , sourceLine = Pos 10
+            , sourceColumn = Pos 23
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+            , sourceLine = Pos 10
+            , sourceColumn = Pos 25
+            }
+           }
+          )
+          ( Var
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+             , sourceLine = Pos 10
+             , sourceColumn = Pos 13
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+             , sourceLine = Pos 10
+             , sourceColumn = Pos 23
+             }
+            }
+           )
+           ( Id
+            { name = "getMessage"
+            , moduleName = Artifact
+             ( ArtifactPath "test/testcases/malgo/EmptyArguments.mlg" )
+            , sort = External
+            }
+           )
+          )
+         ) :|
+         [ NoBind
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+            , sourceLine = Pos 11
+            , sourceColumn = Pos 3
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+            , sourceLine = Pos 12
+            , sourceColumn = Pos 1
+            }
+           }
+          )
+          ( Apply
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+             , sourceLine = Pos 11
+             , sourceColumn = Pos 11
+             }
+            , _end = SourcePos
+             { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+             , sourceLine = Pos 12
+             , sourceColumn = Pos 1
+             }
+            }
+           )
+           ( Var
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+              , sourceLine = Pos 11
+              , sourceColumn = Pos 3
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+              , sourceLine = Pos 11
+              , sourceColumn = Pos 11
+              }
+             }
+            )
+            ( Id
+             { name = "putStrLn"
+             , moduleName = Artifact
+              ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+             , sort = External
+             }
+            )
+           )
+           ( Var
+            ( Range
+             { _start = SourcePos
+              { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+              , sourceLine = Pos 11
+              , sourceColumn = Pos 12
+              }
+             , _end = SourcePos
+              { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+              , sourceLine = Pos 11
+              , sourceColumn = Pos 15
+              }
+             }
+            )
+            ( Id
+             { name = "msg"
+             , moduleName = Artifact
+              ( ArtifactPath "test/testcases/malgo/EmptyArguments.mlg" )
+             , sort = Internal 1
+             }
+            )
+           )
+          )
+         ]
+        )
+       ) :| []
+      )
+     )
+    ]
+   ]
+  , _scSigs = []
+  , _dataDefs = []
+  , _typeSynonyms = []
+  , _foreigns = []
+  , _imports =
+   [
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+      , sourceLine = Pos 2
+      , sourceColumn = Pos 1
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+      , sourceLine = Pos 3
+      , sourceColumn = Pos 1
+      }
+     }
+    , Artifact
+     ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+    , All
+    )
+   ,
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+      , sourceLine = Pos 3
+      , sourceColumn = Pos 1
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+      , sourceLine = Pos 6
+      , sourceColumn = Pos 1
+      }
+     }
+    , Artifact
+     ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+    , All
+    )
+   ]
+  }
+ }

@@ -51,7 +51,8 @@ compileToCore ::
     IOE :> es,
     State (Map ModuleName Interface) :> es,
     State Uniq :> es,
-    Workspace :> es
+    Workspace :> es,
+    Features :> es
   ) =>
   ArtifactPath ->
   Syntax.Module (Malgo Parse) ->
@@ -77,7 +78,8 @@ generateSequent ::
   ( IOE :> es,
     State Uniq :> es,
     Workspace :> es,
-    Error CompileError :> es
+    Error CompileError :> es,
+    Features :> es
   ) =>
   ArtifactPath ->
   RnState ->
@@ -114,7 +116,8 @@ compileFromAST ::
     IOE :> es,
     State (Map ModuleName Interface) :> es,
     State Uniq :> es,
-    Workspace :> es
+    Workspace :> es,
+    Features :> es
   ) =>
   ArtifactPath ->
   Syntax.Module (Malgo Parse) ->

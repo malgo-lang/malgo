@@ -1,0 +1,12 @@
+#c-style-apply
+module {..} = import "../../../runtime/malgo/Builtin.mlg"
+module {..} = import "../../../runtime/malgo/Prelude.mlg"
+
+-- Function that takes no arguments and returns a string
+def getMessage = { () -> "Hello, World!" }
+
+-- Function that calls other functions with empty arguments
+def main = { (_) ->
+  let msg = getMessage();
+  putStrLn(msg)
+}

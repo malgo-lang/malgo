@@ -1,0 +1,35 @@
+((getMessage
+    $EmptyArguments.return_3
+    (cut
+       (lambda
+          ($EmptyArguments.return_4)
+          (cut
+             (construct tuple () ())
+             (select
+                ((tuple ())
+                   (invoke
+                      String#
+                      (apply ("Hello, World!") ($EmptyArguments.return_4)))))))
+       $EmptyArguments.return_3))
+   (main
+      $EmptyArguments.return_5
+      (cut
+         (lambda
+            ($EmptyArguments.param_2 $EmptyArguments.return_6)
+            (cut
+               $EmptyArguments.param_2
+               (select
+                  (#EmptyArguments.__0
+                     (invoke
+                        getMessage
+                        (apply
+                           ()
+                           ((then
+                               #EmptyArguments.msg_1
+                               (invoke
+                                  putStrLn
+                                  (apply
+                                     (#EmptyArguments.msg_1)
+                                     ($EmptyArguments.return_6)))))))))))
+         $EmptyArguments.return_5))
+   ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

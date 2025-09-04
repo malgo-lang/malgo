@@ -11,6 +11,7 @@ import Effectful
 import Effectful.Error.Static (Error, throwError)
 import Effectful.Reader.Static (Reader)
 import Effectful.State.Static.Local (State)
+import Malgo.Features (Feature (CStyleApply), Features, hasFeature)
 import Malgo.Id
 import Malgo.Module
 import Malgo.Pass
@@ -26,11 +27,11 @@ instance Pass ToFunPass where
   type Input ToFunPass = BindGroup (Malgo Rename)
   type Output ToFunPass = Program
   type ErrorType ToFunPass = ToFunError
-  type Effects ToFunPass es = (State Uniq :> es, Reader ModuleName :> es)
+  type Effects ToFunPass es = (State Uniq :> es, Reader ModuleName :> es, Features :> es)
 
   runPassImpl _ = toFun
 
-toFun :: (State Uniq :> es, Reader ModuleName :> es, Error ToFunError :> es) => XModule (Malgo Rename) -> Eff es Program
+toFun :: (State Uniq :> es, Reader ModuleName :> es, Error ToFunError :> es, Features :> es) => XModule (Malgo Rename) -> Eff es Program
 toFun BindGroup {..} = do
   scDefs <- foldMap (traverse fromScDef) _scDefs
   dataDefs <- concat <$> traverse fromDataDef _dataDefs
@@ -44,7 +45,7 @@ toFun BindGroup {..} = do
   where
     getModuleName (_, name, _) = pure name
 
-fromScDef :: (State Uniq :> es, Reader ModuleName :> es, Error ToFunError :> es) => (Range, Id, S.Expr (Malgo Rename)) -> Eff es (Range, Name, F.Expr)
+fromScDef :: (State Uniq :> es, Reader ModuleName :> es, Error ToFunError :> es, Features :> es) => (Range, Id, S.Expr (Malgo Rename)) -> Eff es (Range, Name, F.Expr)
 fromScDef (range, name, expr) = do
   expr <- fromExpr expr
   pure (range, name, expr)
@@ -72,7 +73,7 @@ fromForeign ((range, _), name, typ) = do
     aux (TyArr _ _ t) = 1 + aux t
     aux _ = 0
 
-fromExpr :: (State Uniq :> es, Reader ModuleName :> es, Error ToFunError :> es) => S.Expr (Malgo Rename) -> Eff es F.Expr
+fromExpr :: (State Uniq :> es, Reader ModuleName :> es, Error ToFunError :> es, Features :> es) => S.Expr (Malgo Rename) -> Eff es F.Expr
 fromExpr (S.Var range name) | idIsExternal name = pure $ F.Invoke range name
 fromExpr (S.Var range name) = pure $ F.Var range name
 fromExpr (S.Unboxed range literal) = pure $ F.Literal range $ fromLiteral literal
@@ -80,6 +81,9 @@ fromExpr (S.Apply range f x) = do
   f <- fromExpr f
   x <- fromExpr x
   pure $ F.Apply range f [x]
+fromExpr (S.Apply0 range f) = do
+  f <- fromExpr f
+  pure $ F.Apply range f []
 fromExpr (S.OpApp (range, _) op x y) = do
   let f = if idIsExternal op then F.Invoke range op else F.Var range op
   x <- fromExpr x
@@ -91,7 +95,13 @@ fromExpr (S.Project range expr field) = do
 fromExpr (S.Fn range clauses@(head :| _)) = do
   parameters <- createParameters head
   body <- fromClauses range parameters clauses
-  pure $ go parameters body
+  case parameters of
+    [] -> do
+      isCStyleApply <- hasFeature CStyleApply
+      if isCStyleApply
+        then pure $ F.Lambda range [] body
+        else pure $ go parameters body
+    _ -> pure $ go parameters body
   where
     createParameters (Clause _ patterns _) = replicateM (length patterns) $ newTemporalId "param"
     go [] body = body
@@ -107,7 +117,7 @@ fromExpr (S.Seq _ stmts) = fromStmts stmts
 fromExpr (S.Parens _ expr) = fromExpr expr
 fromExpr (S.Codata range coclauses) = fromCoClauses range coclauses
 
-fromStmts :: (State Uniq :> es, Reader ModuleName :> es, Error ToFunError :> es) => NonEmpty (S.Stmt (Malgo Rename)) -> Eff es F.Expr
+fromStmts :: (State Uniq :> es, Reader ModuleName :> es, Error ToFunError :> es, Features :> es) => NonEmpty (S.Stmt (Malgo Rename)) -> Eff es F.Expr
 fromStmts (NoBind _ expr :| []) = fromExpr expr
 fromStmts (NoBind range value :| stmt : stmts) = do
   tmp <- newTemporalId "tmp"
@@ -128,13 +138,13 @@ fromLiteral (S.Double n) = F.Double n
 fromLiteral (S.Char c) = F.Char c
 fromLiteral (S.String t) = F.String t
 
-fromClauses :: (State Uniq :> es, Reader ModuleName :> es, Error ToFunError :> es) => Range -> [Name] -> NonEmpty (Clause (Malgo Rename)) -> Eff es F.Expr
+fromClauses :: (State Uniq :> es, Reader ModuleName :> es, Error ToFunError :> es, Features :> es) => Range -> [Name] -> NonEmpty (Clause (Malgo Rename)) -> Eff es F.Expr
 fromClauses range [parameter] clauses = do
   Select range (F.Var range parameter) <$> traverse fromClause (toList clauses)
 fromClauses range parameters clauses = do
   Select range (Construct range F.Tuple (F.Var range <$> parameters)) <$> traverse fromClause (toList clauses)
 
-fromClause :: (State Uniq :> es, Reader ModuleName :> es, Error ToFunError :> es) => Clause (Malgo Rename) -> Eff es F.Branch
+fromClause :: (State Uniq :> es, Reader ModuleName :> es, Error ToFunError :> es, Features :> es) => Clause (Malgo Rename) -> Eff es F.Branch
 fromClause (Clause range [pattern] body) = do
   pattern <- fromPattern pattern
   body <- fromExpr body
@@ -163,7 +173,7 @@ fromPattern (RecordP range fields) = do
 fromPattern (UnboxedP range literal) = pure $ PLiteral range $ fromLiteral literal
 
 fromCoClauses ::
-  (State Uniq :> es, Reader ModuleName :> es, Error ToFunError :> es) =>
+  (State Uniq :> es, Reader ModuleName :> es, Error ToFunError :> es, Features :> es) =>
   Range -> [S.CoClause (Malgo Rename)] -> Eff es F.Expr
 fromCoClauses range coclauses = do
   -- convert to CoClause'
@@ -235,18 +245,20 @@ type Scrutinees = [Name]
 
 data CoClause' es = CoClause' [CoPat'] [Pattern] (Eff es F.Expr)
 
-toCoClause' :: (State Uniq :> es, Reader ModuleName :> es, Error ToFunError :> es) => S.CoClause (Malgo Rename) -> Eff es (CoClause' es)
+toCoClause' :: (State Uniq :> es, Reader ModuleName :> es, Error ToFunError :> es, Features :> es) => S.CoClause (Malgo Rename) -> Eff es (CoClause' es)
 toCoClause' (copat, body) =
   pure $ CoClause' (makeCoPatList copat) [] $ fromExpr body
 
 data CoPat'
   = ApplyP' Range (S.Pat (Malgo Rename))
+  | Apply0P' Range
   | ProjectP' Range Text
 
 -- makeCoPatList splits a copattern into its constituent parts
 makeCoPatList :: S.CoPat (Malgo Rename) -> [CoPat']
 makeCoPatList (S.HoleP _) = []
 makeCoPatList (S.ApplyP x copat arg) = makeCoPatList copat <> [ApplyP' x arg]
+makeCoPatList (S.Apply0P x copat) = makeCoPatList copat <> [Apply0P' x]
 makeCoPatList (S.ProjectP x copat field) = makeCoPatList copat <> [ProjectP' x field]
 
 data CoClauseKind = Case | Field | Function | Mismatch
@@ -263,4 +275,5 @@ classify clauses
     isField (CoClause' (ProjectP' _ _ : _) _ _) = True
     isField _ = False
     isFunction (CoClause' (ApplyP' _ _ : _) _ _) = True
+    isFunction (CoClause' (Apply0P' _ : _) _ _) = True
     isFunction _ = False

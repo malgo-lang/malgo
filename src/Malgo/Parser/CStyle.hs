@@ -606,7 +606,6 @@ pVariable = captureRange do
 -- > clause = "(" pattern ("," pattern)* ")" "->" stmts
 pClause :: (Features :> es) => Parser es (Clause (Malgo Parse))
 pClause = captureRange do
-  -- TODO: Support empty argument list
-  patterns <- between (symbol "(") (symbol ")") (sepEndBy1 pPat (symbol ",")) <* reservedOperator "->"
+  patterns <- between (symbol "(") (symbol ")") (sepEndBy pPat (symbol ",")) <* reservedOperator "->"
   body <- pStmts
   pure $ \range -> Clause range patterns body

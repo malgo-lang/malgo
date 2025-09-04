@@ -1,0 +1,309 @@
+Module
+ { moduleName = Artifact
+  ( ArtifactPath "test/testcases/malgo/EmptyArguments.mlg" )
+ , moduleDefinition = ParsedDefinitions
+  [ Import
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+     , sourceLine = Pos 2
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+     , sourceLine = Pos 3
+     , sourceColumn = Pos 1
+     }
+    }
+   )
+   ( Artifact
+    ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+   ) All
+  , Import
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+     , sourceLine = Pos 3
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+     , sourceLine = Pos 6
+     , sourceColumn = Pos 1
+     }
+    }
+   )
+   ( Artifact
+    ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+   ) All
+  , ScDef
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+     , sourceLine = Pos 6
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+     , sourceLine = Pos 9
+     , sourceColumn = Pos 1
+     }
+    }
+   ) "getMessage"
+   ( Fn
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+      , sourceLine = Pos 6
+      , sourceColumn = Pos 18
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+      , sourceLine = Pos 9
+      , sourceColumn = Pos 1
+      }
+     }
+    )
+    ( Clause
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+       , sourceLine = Pos 6
+       , sourceColumn = Pos 20
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+       , sourceLine = Pos 6
+       , sourceColumn = Pos 42
+       }
+      }
+     ) []
+     ( Seq
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+        , sourceLine = Pos 6
+        , sourceColumn = Pos 26
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+        , sourceLine = Pos 6
+        , sourceColumn = Pos 42
+        }
+       }
+      )
+      ( NoBind
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+         , sourceLine = Pos 6
+         , sourceColumn = Pos 26
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+         , sourceLine = Pos 6
+         , sourceColumn = Pos 42
+         }
+        }
+       )
+       ( Boxed
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+          , sourceLine = Pos 6
+          , sourceColumn = Pos 26
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+          , sourceLine = Pos 6
+          , sourceColumn = Pos 42
+          }
+         }
+        )
+        ( String "Hello, World!" )
+       ) :| []
+      )
+     ) :| []
+    )
+   )
+  , ScDef
+   ( Range
+    { _start = SourcePos
+     { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+     , sourceLine = Pos 9
+     , sourceColumn = Pos 1
+     }
+    , _end = SourcePos
+     { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+     , sourceLine = Pos 12
+     , sourceColumn = Pos 2
+     }
+    }
+   ) "main"
+   ( Fn
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+      , sourceLine = Pos 9
+      , sourceColumn = Pos 12
+      }
+     , _end = SourcePos
+      { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+      , sourceLine = Pos 12
+      , sourceColumn = Pos 2
+      }
+     }
+    )
+    ( Clause
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+       , sourceLine = Pos 9
+       , sourceColumn = Pos 14
+       }
+      , _end = SourcePos
+       { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+       , sourceLine = Pos 12
+       , sourceColumn = Pos 1
+       }
+      }
+     )
+     [ VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+        , sourceLine = Pos 9
+        , sourceColumn = Pos 15
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+        , sourceLine = Pos 9
+        , sourceColumn = Pos 16
+        }
+       }
+      ) "_"
+     ]
+     ( Seq
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+        , sourceLine = Pos 10
+        , sourceColumn = Pos 3
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+        , sourceLine = Pos 12
+        , sourceColumn = Pos 1
+        }
+       }
+      )
+      ( Let
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+         , sourceLine = Pos 10
+         , sourceColumn = Pos 3
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+         , sourceLine = Pos 10
+         , sourceColumn = Pos 25
+         }
+        }
+       ) "msg"
+       ( Apply0
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+          , sourceLine = Pos 10
+          , sourceColumn = Pos 23
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+          , sourceLine = Pos 10
+          , sourceColumn = Pos 25
+          }
+         }
+        )
+        ( Var
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+           , sourceLine = Pos 10
+           , sourceColumn = Pos 13
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+           , sourceLine = Pos 10
+           , sourceColumn = Pos 23
+           }
+          }
+         ) "getMessage"
+        )
+       ) :|
+       [ NoBind
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+          , sourceLine = Pos 11
+          , sourceColumn = Pos 3
+          }
+         , _end = SourcePos
+          { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+          , sourceLine = Pos 12
+          , sourceColumn = Pos 1
+          }
+         }
+        )
+        ( Apply
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+           , sourceLine = Pos 11
+           , sourceColumn = Pos 11
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+           , sourceLine = Pos 12
+           , sourceColumn = Pos 1
+           }
+          }
+         )
+         ( Var
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+            , sourceLine = Pos 11
+            , sourceColumn = Pos 3
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+            , sourceLine = Pos 11
+            , sourceColumn = Pos 11
+            }
+           }
+          ) "putStrLn"
+         )
+         ( Var
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+            , sourceLine = Pos 11
+            , sourceColumn = Pos 12
+            }
+           , _end = SourcePos
+            { sourceName = "./test/testcases/malgo/EmptyArguments.mlg"
+            , sourceLine = Pos 11
+            , sourceColumn = Pos 15
+            }
+           }
+          ) "msg"
+         )
+        )
+       ]
+      )
+     ) :| []
+    )
+   )
+  ]
+ }

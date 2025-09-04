@@ -11,6 +11,7 @@ import Effectful (Eff, IOE, (:>))
 import Effectful.Error.Static
 import Effectful.Reader.Static (Reader, ask, asks, local, runReader)
 import Effectful.State.Static.Local (State, execState, get, gets, modify, put, runState)
+import Malgo.Features
 import Malgo.Id
 import Malgo.Interface
 import Malgo.Module
@@ -34,7 +35,8 @@ instance Pass RenamePass where
         State Uniq :> es,
         IOE :> es,
         Reader Flag :> es,
-        Workspace :> es
+        Workspace :> es,
+        Features :> es
       )
 
   runPassImpl _ (Module modName (ParsedDefinitions ds), builtinEnv) = do
@@ -51,7 +53,8 @@ rnDecls ::
     IOE :> es,
     Reader Flag :> es,
     Workspace :> es,
-    Error RenameError :> es
+    Error RenameError :> es,
+    Features :> es
   ) =>
   [Decl (Malgo Parse)] ->
   Eff es [Decl (Malgo Rename)]
@@ -76,7 +79,8 @@ rnDecl ::
     IOE :> es,
     Reader Flag :> es,
     Workspace :> es,
-    Error RenameError :> es
+    Error RenameError :> es,
+    Features :> es
   ) =>
   Decl (Malgo Parse) ->
   Eff es (Decl (Malgo Rename))
@@ -160,7 +164,8 @@ rnExpr ::
     Reader ModuleName :> es,
     IOE :> es,
     Reader Flag :> es,
-    Error RenameError :> es
+    Error RenameError :> es,
+    Features :> es
   ) =>
   Expr (Malgo Parse) ->
   Eff es (Expr (Malgo Rename))
@@ -187,10 +192,14 @@ rnExpr (Project range expr field) =
         then Var range <$> lookupQualifiedVarName range (ModuleName name) field
         else Project range <$> rnExpr (Var vRange name) <*> pure field
     _ -> Project range <$> rnExpr expr <*> pure field
-rnExpr (Fn pos (Clause x [] e :| _)) = do
-  e' <- rnExpr e
-  hole <- newInternalId "$_"
-  pure $ Fn pos (Clause x [VarP x hole] e' :| [])
+rnExpr (Fn pos cs@(Clause x [] e :| _)) = do
+  isCStyleApply <- hasFeature CStyleApply
+  if isCStyleApply
+    then Fn pos <$> traverse rnClause cs
+    else do
+      e' <- rnExpr e
+      hole <- newInternalId "$_"
+      pure $ Fn pos (Clause x [VarP x hole] e' :| [])
 rnExpr (Fn pos cs) = Fn pos <$> traverse rnClause cs
 rnExpr (Tuple pos es) = Tuple pos <$> traverse rnExpr es
 rnExpr (Record pos kvs) =
@@ -241,7 +250,8 @@ rnClause ::
     Reader ModuleName :> es,
     IOE :> es,
     Reader Flag :> es,
-    Error RenameError :> es
+    Error RenameError :> es,
+    Features :> es
   ) =>
   Clause (Malgo Parse) ->
   Eff es (Clause (Malgo Rename))
@@ -304,7 +314,8 @@ rnCoClause ::
     Error RenameError :> es,
     State RnState :> es,
     State Uniq :> es,
-    Reader ModuleName :> es
+    Reader ModuleName :> es,
+    Features :> es
   ) =>
   (CoPat (Malgo Parse), Expr (Malgo Parse)) -> Eff es (CoPat (Malgo Rename), Expr (Malgo Rename))
 rnCoClause (copat, expr) = do
@@ -342,7 +353,8 @@ rnStmts ::
     Reader ModuleName :> es,
     IOE :> es,
     Reader Flag :> es,
-    Error RenameError :> es
+    Error RenameError :> es,
+    Features :> es
   ) =>
   NonEmpty (Stmt (Malgo Parse)) ->
   Eff es (NonEmpty (Stmt (Malgo Rename)))
