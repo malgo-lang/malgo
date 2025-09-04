@@ -170,6 +170,7 @@ rnExpr (Boxed pos val) = do
   f <- lookupBox pos val
   pure $ Apply pos (Var pos f) (Unboxed pos $ toUnboxed val)
 rnExpr (Apply pos e1 e2) = Apply pos <$> rnExpr e1 <*> rnExpr e2
+rnExpr (Apply0 pos e) = Apply0 pos <$> rnExpr e
 rnExpr (OpApp pos op e1 e2) = do
   op' <- lookupVarName pos op
   e1' <- rnExpr e1
@@ -321,13 +322,16 @@ rnCoClause (copat, expr) = do
     resolveConP' :: CoPat (Malgo Parse) -> Eff es (CoPat (Malgo Parse))
     resolveConP' (HoleP x) = pure $ HoleP x
     resolveConP' (ApplyP x copat pat) = ApplyP x <$> resolveConP' copat <*> resolveConP pat
+    resolveConP' (Apply0P x copat) = Apply0P x <$> resolveConP' copat
     resolveConP' (ProjectP x copat field) = ProjectP x <$> resolveConP' copat <*> pure field
     coPatVars :: CoPat x -> [XId x]
     coPatVars (HoleP _) = []
     coPatVars (ApplyP _ copat pat) = coPatVars copat <> patVars pat
+    coPatVars (Apply0P _ copat) = coPatVars copat
     coPatVars (ProjectP _ copat _) = coPatVars copat
     rnCoPat (HoleP x) = pure $ HoleP x
     rnCoPat (ApplyP x copat pat) = ApplyP x <$> rnCoPat copat <*> rnPat pat
+    rnCoPat (Apply0P x copat) = Apply0P x <$> rnCoPat copat
     rnCoPat (ProjectP x copat field) = ProjectP x <$> rnCoPat copat <*> pure field
 
 -- | Rename statements in {}.
