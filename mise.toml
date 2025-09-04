@@ -65,3 +65,29 @@ run = [
     "zsh -c 'grep '^import' src/Malgo/**/*.hs | grep -v Malgo.Prelude | grep -v Malgo.Id | grep -v Malgo.SExpr | sort | uniq | python graph.py > dependencies.dot'",
     "dot -Tsvg dependencies.dot -o dependencies.svg",
 ]
+
+[tasks.wiki]
+description = "Create a new wiki file with date prefix"
+run = """
+    TITLE='{{option(name="title")}}'
+    if [ -z "$TITLE" ]; then
+        echo "Error: Please provide a title with --option title=\"your-title\""
+        exit 1
+    fi
+    DATE=$(date +%Y-%m-%d)
+    FILENAME="wiki/${DATE}-${TITLE}.md"
+
+    if [ -f "$FILENAME" ]; then
+        echo "File $FILENAME already exists!"
+        exit 1
+    fi
+
+    cat > "$FILENAME" << EOF
+# $TITLE
+
+Created: $DATE
+
+EOF
+
+    echo "Created: $FILENAME"
+"""
