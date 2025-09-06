@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/malgo-lang/malgo/compare/v2.1.0...v2.1.1) (2025-09-06)
+
+
+### Bug Fixes
+
+* **parser:** update pattern parsing in C-style syntax ([0fe33ec](https://github.com/malgo-lang/malgo/commit/0fe33ec72dec37803c259d5fbcc4c92d10c7068c))
+
 ## [2.1.0](https://github.com/malgo-lang/malgo/compare/v2.0.0...v2.1.0) (2025-08-30)
 
 
