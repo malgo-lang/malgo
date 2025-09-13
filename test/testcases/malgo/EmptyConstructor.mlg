@@ -1,0 +1,16 @@
+#c-style-apply
+module {..} = import "../../../runtime/malgo/Builtin.mlg"
+module {..} = import "../../../runtime/malgo/Prelude.mlg"
+
+-- Constructor that takes no arguments
+data Empty = Empty
+
+-- Constructor that takes unit
+data Unit = Unit({})
+
+def main = { () ->
+  let x = Empty;
+  let y = Unit();
+  print(x);
+  print(y)
+}

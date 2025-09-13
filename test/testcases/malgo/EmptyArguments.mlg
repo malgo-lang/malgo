@@ -1,0 +1,16 @@
+#c-style-apply
+module {..} = import "../../../runtime/malgo/Builtin.mlg"
+module {..} = import "../../../runtime/malgo/Prelude.mlg"
+
+-- Function that takes no arguments
+def empty = { () -> 0 }
+
+-- Function that takes unit
+def unit = { ({}) -> 1 }
+
+def main = { () ->
+  let x = empty();
+  let y = unit();
+  printInt64(x);
+  printInt64(y);
+}
