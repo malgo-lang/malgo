@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mise run build:*)",
+      "Bash(mise run test:*)"
+    ],
+    "deny": [
+      "Edit(test/testcases/malgo/**)",
+      "Edit(.golden/**)"
+    ]
+  }
+}
