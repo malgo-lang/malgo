@@ -135,14 +135,14 @@ fromClauses range parameters clauses = do
   Select range (Construct range F.Tuple (F.Var range <$> parameters)) <$> traverse fromClause (toList clauses)
 
 fromClause :: (State Uniq :> es, Reader ModuleName :> es, Error ToFunError :> es) => Clause (Malgo Rename) -> Eff es F.Branch
-fromClause (Clause range [pattern] body) = do
+fromClause (Clause range (pattern :| []) body) = do
   pattern <- fromPattern pattern
   body <- fromExpr body
   pure $ Branch range pattern body
 fromClause (Clause range patterns body) = do
   patterns <- traverse fromPattern patterns
   body <- fromExpr body
-  pure $ Branch range (Destruct range F.Tuple patterns) body
+  pure $ Branch range (Destruct range F.Tuple $ toList patterns) body
 
 fromPattern :: (State Uniq :> es, Reader ModuleName :> es) => S.Pat (Malgo Rename) -> Eff es F.Pattern
 fromPattern (VarP range name) = pure $ PVar range name

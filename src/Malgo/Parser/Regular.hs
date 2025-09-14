@@ -2,6 +2,7 @@ module Malgo.Parser.Regular (parseRegular) where
 
 import Control.Monad.Combinators.Expr (Operator (..), makeExprParser)
 import Control.Monad.Trans (lift)
+import Data.List.NonEmpty qualified as NE
 import Data.List.NonEmpty qualified as NonEmpty
 import Data.Text.Lazy qualified as TL
 import Effectful (Eff, IOE, type (:>))
@@ -604,4 +605,6 @@ pClause :: (Features :> es) => Parser es (Clause (Malgo Parse))
 pClause = captureRange do
   patterns <- try (some pAtomPat <* reservedOperator "->") <|> pure []
   body <- pStmts
-  pure $ \range -> Clause range patterns body
+  pure $ \range -> case patterns of
+    [] -> Clause range (NE.singleton (VarP range "_")) body
+    _ -> Clause range (NE.fromList patterns) body

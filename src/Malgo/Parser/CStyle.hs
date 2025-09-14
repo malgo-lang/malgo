@@ -2,6 +2,7 @@ module Malgo.Parser.CStyle (parseCStyle) where
 
 import Control.Monad.Combinators.Expr (Operator (..), makeExprParser)
 import Control.Monad.Trans (lift)
+import Data.List.NonEmpty qualified as NE
 import Data.List.NonEmpty qualified as NonEmpty
 import Data.Text.Lazy qualified as TL
 import Effectful (Eff, IOE, type (:>))
@@ -610,7 +611,8 @@ pVariable = captureRange do
 -- > clause = "(" pattern ("," pattern)* ")" "->" stmts
 pClause :: (Features :> es) => Parser es (Clause (Malgo Parse))
 pClause = captureRange do
-  -- TODO: Support empty argument list
-  patterns <- between (symbol "(") (symbol ")") (sepEndBy1 pPat (symbol ",")) <* reservedOperator "->"
+  patterns <- between (symbol "(") (symbol ")") (sepEndBy pPat (symbol ",")) <* reservedOperator "->"
   body <- pStmts
-  pure $ \range -> Clause range patterns body
+  pure $ \range -> case patterns of
+    [] -> Clause range (NE.singleton (VarP range "_")) body
+    _ -> Clause range (NE.fromList patterns) body
