@@ -307,11 +307,12 @@ pApply =
     [ [ Postfix $ manyUnaryOp do
           choice
             [ -- Function application: expr(arg1, arg2, ...)
-              -- TODO: Support empty argument list
+              -- Empty argument list () is treated as ({})
               captureRange do
                 args <- between (symbol "(") (symbol ")") (sepBy pExpr (symbol ","))
-                when (null args) $ fail "c-style function application must have at least one argument"
-                pure $ \range fn -> foldl (Apply range) fn args,
+                pure $ \range fn ->
+                  let actualArgs = if null args then [Tuple range []] else args
+                   in foldl (Apply range) fn actualArgs,
               -- Field projection: expr.field
               captureRange do
                 reservedOperator "."
@@ -397,18 +398,22 @@ pCopatternSuffix cp =
         field <- ident
         pCopatternSuffix (\range -> ProjectP range (cp range) field),
       try do
+        parenStart <- getSourcePos
         symbol "("
         -- Parse C-style pattern arguments (comma-separated in parentheses)
-        -- TODO: Support empty argument list
+        -- Empty argument list () is treated as ({})
         pats <- sepBy pPat (symbol ",")
-        when (null pats) $ fail "c-style copattern application must have at least one argument"
         symbol ")"
+        parenEnd <- getSourcePos
         -- For C-style, we need to handle multiple patterns differently
         -- Apply each pattern as a separate ApplyP
-        let applyPats pat_list copat = case pat_list of
+        -- Empty pattern list () is treated as ({})
+        let parenRange = Range parenStart parenEnd
+            actualPats = if null pats then [TupleP parenRange []] else pats
+            applyPats pat_list copat = case pat_list of
               [] -> copat
               (p : ps) -> applyPats ps (\range -> ApplyP range (copat range) p)
-        pCopatternSuffix (applyPats pats cp),
+        pCopatternSuffix (applyPats actualPats cp),
       pure cp
     ]
 
