@@ -2,15 +2,16 @@
 module {..} = import "../../../runtime/malgo/Builtin.mlg"
 module {..} = import "../../../runtime/malgo/Prelude.mlg"
 
--- Function that takes no arguments
+-- Function that takes no arguments.
+-- It actually takes a unit argument internally.
 def empty = { () -> 0 }
 
--- Function that takes unit
+-- Function that takes unit.
 def unit = { ({}) -> 1 }
 
 def main = { () ->
-  let x = empty();
-  let y = unit();
+  let x = empty(); -- This is actually empty({})
+  let y = unit(); -- This is actually unit({})
   printInt32(x);
   printInt32(y);
 }
