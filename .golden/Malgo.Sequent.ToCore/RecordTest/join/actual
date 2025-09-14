@@ -30,11 +30,11 @@
             (join
                $RecordTest.select_53
                (select
-                  (#RecordTest.$__8
+                  (#RecordTest.__5
                      (join
                         $RecordTest.then_52
                         (then
-                           #RecordTest.x_5
+                           #RecordTest.x_6
                            (join
                               $RecordTest.then_51
                               (then
@@ -94,7 +94,7 @@
                                                                   (join
                                                                      $RecordTest.apply_43
                                                                      (apply
-                                                                        (#RecordTest.x_5)
+                                                                        (#RecordTest.x_6)
                                                                         ($RecordTest.return_22))
                                                                      (cut
                                                                         (lambda
@@ -105,11 +105,11 @@
                                                                               (select
                                                                                  ((expand
                                                                                      ((a
-                                                                                         #RecordTest.__6)
+                                                                                         #RecordTest.__7)
                                                                                         (b
-                                                                                           #RecordTest.b_7)))
+                                                                                           #RecordTest.b_8)))
                                                                                     (cut
-                                                                                       #RecordTest.b_7
+                                                                                       #RecordTest.b_8
                                                                                        $RecordTest.return_23)))
                                                                               (cut
                                                                                  $RecordTest.param_12
@@ -126,7 +126,7 @@
                                                       (join
                                                          $RecordTest.apply_41
                                                          (apply
-                                                            (#RecordTest.x_5)
+                                                            (#RecordTest.x_6)
                                                             ($RecordTest.return_24))
                                                          (invoke
                                                             f

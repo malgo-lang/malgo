@@ -15,26 +15,28 @@
                       x
                       (opapp
                          <|>
-                         (tuple True (fn ((clause () (seq (do (int32 1)))))))
+                         (tuple True (fn ((clause (_) (seq (do (int32 1)))))))
                          (parens
                             (opapp
                                <|>
                                (tuple
                                   True
-                                  (fn ((clause () (seq (do (int32 2)))))))
+                                  (fn ((clause (_) (seq (do (int32 2)))))))
                                (parens
                                   (opapp
                                      <|>
                                      (tuple
                                         True
-                                        (fn ((clause () (seq (do (int32 3)))))))
+                                        (fn ((clause (_) (seq (do (int32 3)))))))
                                      (parens
                                         (opapp
                                            <|>
                                            (tuple
                                               True
                                               (fn
-                                                 ((clause () (seq (do (int32 4)))))))
+                                                 ((clause
+                                                     (_)
+                                                     (seq (do (int32 4)))))))
                                            Nil))))))))
                    (let
                       y
@@ -48,14 +50,14 @@
                                   <|>
                                   (tuple
                                      True
-                                     (fn ((clause () (seq (do (int32 1)))))))
+                                     (fn ((clause (_) (seq (do (int32 1)))))))
                                   (tuple
                                      True
-                                     (fn ((clause () (seq (do (int32 2))))))))
+                                     (fn ((clause (_) (seq (do (int32 2))))))))
                                (tuple
                                   True
-                                  (fn ((clause () (seq (do (int32 3))))))))
-                            (tuple True (fn ((clause () (seq (do (int32 4))))))))
+                                  (fn ((clause (_) (seq (do (int32 3))))))))
+                            (tuple True (fn ((clause (_) (seq (do (int32 4))))))))
                          Nil))
                    (do y))))))
       (sig main (block (tuple)))
@@ -63,7 +65,7 @@
          main
          (fn
             ((clause
-                ()
+                (_)
                 (seq
                    (let x (apply f (int32 4)))
                    (do (apply printString (string "OK"))))))))))

@@ -51,7 +51,7 @@ Module
          }
         }
        )
-       [ VarP
+       ( VarP
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
@@ -66,13 +66,13 @@ Module
          }
         )
         ( Id
-         { name = "$_"
+         { name = "_"
          , moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
-         , sort = Internal 3
+         , sort = Internal 0
          }
-        )
-       ]
+        ) :| []
+       )
        ( Seq
         ( Range
          { _start = SourcePos
@@ -212,7 +212,7 @@ Module
               }
              }
             )
-            [ TupleP
+            ( TupleP
              ( Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
@@ -265,11 +265,11 @@ Module
                { name = "rest"
                , moduleName = Artifact
                 ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
-               , sort = Internal 0
+               , sort = Internal 1
                }
               )
-             ]
-            ]
+             ] :| []
+            )
             ( Seq
              ( Range
               { _start = SourcePos
@@ -404,7 +404,7 @@ Module
                }
               }
              )
-             [ TupleP
+             ( TupleP
               ( Range
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
@@ -457,11 +457,11 @@ Module
                 { name = "rest"
                 , moduleName = Artifact
                  ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
-                , sort = Internal 1
+                , sort = Internal 2
                 }
                )
-              ]
-             ]
+              ] :| []
+             )
              ( Seq
               ( Range
                { _start = SourcePos
@@ -521,7 +521,7 @@ Module
                }
               }
              )
-             [ TupleP
+             ( TupleP
               ( Range
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
@@ -574,11 +574,11 @@ Module
                 { name = "rest"
                 , moduleName = Artifact
                  ( ArtifactPath "test/testcases/malgo/TuplePattern.mlg" )
-                , sort = Internal 2
+                , sort = Internal 3
                 }
                )
-              ]
-             ]
+              ] :| []
+             )
              ( Seq
               ( Range
                { _start = SourcePos

@@ -400,7 +400,7 @@ Module
          }
         }
        )
-       [ RecordP
+       ( RecordP
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/FieldPrefix.mlg"
@@ -462,8 +462,8 @@ Module
            }
           )
          )
-        ]
-       ]
+        ] :| []
+       )
        ( Seq
         ( Range
          { _start = SourcePos
@@ -567,7 +567,7 @@ Module
          }
         }
        )
-       [ RecordP
+       ( RecordP
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/FieldPrefix.mlg"
@@ -629,8 +629,8 @@ Module
            }
           )
          )
-        ]
-       ]
+        ] :| []
+       )
        ( Seq
         ( Range
          { _start = SourcePos
@@ -734,7 +734,7 @@ Module
          }
         }
        )
-       [ RecordP
+       ( RecordP
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/FieldPrefix.mlg"
@@ -796,8 +796,8 @@ Module
            }
           )
          )
-        ]
-       ]
+        ] :| []
+       )
        ( Seq
         ( Range
          { _start = SourcePos
@@ -1220,7 +1220,7 @@ Module
          }
         }
        )
-       [ VarP
+       ( VarP
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/FieldPrefix.mlg"
@@ -1235,13 +1235,13 @@ Module
          }
         )
         ( Id
-         { name = "$_"
+         { name = "_"
          , moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/FieldPrefix.mlg" )
          , sort = Internal 6
          }
-        )
-       ]
+        ) :| []
+       )
        ( Seq
         ( Range
          { _start = SourcePos

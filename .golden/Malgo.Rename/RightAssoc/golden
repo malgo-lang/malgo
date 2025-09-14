@@ -94,7 +94,7 @@ Module
          }
         }
        )
-       [ VarP
+       ( VarP
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
@@ -114,8 +114,8 @@ Module
           ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
          , sort = Internal 1
          }
-        )
-       ]
+        ) :| []
+       )
        ( Seq
         ( Range
          { _start = SourcePos
@@ -239,7 +239,7 @@ Module
                }
               }
              )
-             [ VarP
+             ( VarP
               ( Range
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
@@ -254,13 +254,13 @@ Module
                }
               )
               ( Id
-               { name = "$_"
+               { name = "_"
                , moduleName = Artifact
                 ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
                , sort = Internal 2
                }
-              )
-             ]
+              ) :| []
+             )
              ( Seq
               ( Range
                { _start = SourcePos
@@ -449,7 +449,7 @@ Module
                  }
                 }
                )
-               [ VarP
+               ( VarP
                 ( Range
                  { _start = SourcePos
                   { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
@@ -464,13 +464,13 @@ Module
                  }
                 )
                 ( Id
-                 { name = "$_"
+                 { name = "_"
                  , moduleName = Artifact
                   ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
                  , sort = Internal 3
                  }
-                )
-               ]
+                ) :| []
+               )
                ( Seq
                 ( Range
                  { _start = SourcePos
@@ -659,7 +659,7 @@ Module
                    }
                   }
                  )
-                 [ VarP
+                 ( VarP
                   ( Range
                    { _start = SourcePos
                     { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
@@ -674,13 +674,13 @@ Module
                    }
                   )
                   ( Id
-                   { name = "$_"
+                   { name = "_"
                    , moduleName = Artifact
                     ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
                    , sort = Internal 4
                    }
-                  )
-                 ]
+                  ) :| []
+                 )
                  ( Seq
                   ( Range
                    { _start = SourcePos
@@ -869,7 +869,7 @@ Module
                      }
                     }
                    )
-                   [ VarP
+                   ( VarP
                     ( Range
                      { _start = SourcePos
                       { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
@@ -884,13 +884,13 @@ Module
                      }
                     )
                     ( Id
-                     { name = "$_"
+                     { name = "_"
                      , moduleName = Artifact
                       ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
                      , sort = Internal 5
                      }
-                    )
-                   ]
+                    ) :| []
+                   )
                    ( Seq
                     ( Range
                      { _start = SourcePos
@@ -1115,7 +1115,7 @@ Module
                 }
                }
               )
-              [ VarP
+              ( VarP
                ( Range
                 { _start = SourcePos
                  { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
@@ -1130,13 +1130,13 @@ Module
                 }
                )
                ( Id
-                { name = "$_"
+                { name = "_"
                 , moduleName = Artifact
                  ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
                 , sort = Internal 7
                 }
-               )
-              ]
+               ) :| []
+              )
               ( Seq
                ( Range
                 { _start = SourcePos
@@ -1311,7 +1311,7 @@ Module
                  }
                 }
                )
-               [ VarP
+               ( VarP
                 ( Range
                  { _start = SourcePos
                   { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
@@ -1326,13 +1326,13 @@ Module
                  }
                 )
                 ( Id
-                 { name = "$_"
+                 { name = "_"
                  , moduleName = Artifact
                   ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
                  , sort = Internal 8
                  }
-                )
-               ]
+                ) :| []
+               )
                ( Seq
                 ( Range
                  { _start = SourcePos
@@ -1507,7 +1507,7 @@ Module
                   }
                  }
                 )
-                [ VarP
+                ( VarP
                  ( Range
                   { _start = SourcePos
                    { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
@@ -1522,13 +1522,13 @@ Module
                   }
                  )
                  ( Id
-                  { name = "$_"
+                  { name = "_"
                   , moduleName = Artifact
                    ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
                   , sort = Internal 9
                   }
-                 )
-                ]
+                 ) :| []
+                )
                 ( Seq
                  ( Range
                   { _start = SourcePos
@@ -1703,7 +1703,7 @@ Module
                    }
                   }
                  )
-                 [ VarP
+                 ( VarP
                   ( Range
                    { _start = SourcePos
                     { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
@@ -1718,13 +1718,13 @@ Module
                    }
                   )
                   ( Id
-                   { name = "$_"
+                   { name = "_"
                    , moduleName = Artifact
                     ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
                    , sort = Internal 10
                    }
-                  )
-                 ]
+                  ) :| []
+                 )
                  ( Seq
                   ( Range
                    { _start = SourcePos
@@ -1927,7 +1927,7 @@ Module
          }
         }
        )
-       [ VarP
+       ( VarP
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/RightAssoc.mlg"
@@ -1942,13 +1942,13 @@ Module
          }
         )
         ( Id
-         { name = "$_"
+         { name = "_"
          , moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-         , sort = Internal 13
+         , sort = Internal 12
          }
-        )
-       ]
+        ) :| []
+       )
        ( Seq
         ( Range
          { _start = SourcePos
@@ -1981,7 +1981,7 @@ Module
           { name = "x"
           , moduleName = Artifact
            ( ArtifactPath "test/testcases/malgo/RightAssoc.mlg" )
-          , sort = Internal 12
+          , sort = Internal 13
           }
          )
          ( Apply

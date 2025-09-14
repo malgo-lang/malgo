@@ -17,7 +17,7 @@
             (cut
                $Test2.param_4
                (select
-                  (#Test2.$__2
+                  (#Test2.__1
                      (cut
                         (lambda
                            ($Test2.param_5 $Test2.return_13)
@@ -28,7 +28,7 @@
                                     (invoke
                                        malgo_print_string
                                        (apply ("OK") ($Test2.return_13))))
-                                 (#Test2.__1
+                                 (#Test2.__2
                                     (invoke
                                        malgo_print_string
                                        (apply ("WRONG") ($Test2.return_13)))))))

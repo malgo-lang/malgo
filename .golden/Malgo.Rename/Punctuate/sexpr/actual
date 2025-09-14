@@ -45,10 +45,10 @@
            main
            (fn
               ((clause
-                  (#Punctuate.$__4)
+                  (#Punctuate.__3)
                   (seq
                      (let
-                        #Punctuate.x_3
+                        #Punctuate.x_4
                         (apply
                            SList
                            (apply
@@ -82,7 +82,7 @@
                                                       Nil)))
                                              Nil))))
                                  Nil))))
-                     (do (apply putStrLn (parens (apply show #Punctuate.x_3)))))))))))
+                     (do (apply putStrLn (parens (apply show #Punctuate.x_4)))))))))))
       ((sig <> (-> String (-> String String))) (sig show (-> SExpr String)))
       ((data
           SExpr

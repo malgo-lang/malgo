@@ -51,7 +51,7 @@ Module
          }
         }
        )
-       [ VarP
+       ( VarP
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/Pattern.mlg"
@@ -66,13 +66,13 @@ Module
          }
         )
         ( Id
-         { name = "$_"
+         { name = "_"
          , moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/Pattern.mlg" )
          , sort = Internal 1
          }
-        )
-       ]
+        ) :| []
+       )
        ( Seq
         ( Range
          { _start = SourcePos
@@ -244,7 +244,7 @@ Module
          }
         }
        )
-       [ ConP
+       ( ConP
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/Pattern.mlg"
@@ -264,8 +264,8 @@ Module
           ( ArtifactPath "runtime/malgo/Prelude.mlg" )
          , sort = External
          }
-        ) []
-       ]
+        ) [] :| []
+       )
        ( Seq
         ( Range
          { _start = SourcePos
@@ -332,7 +332,7 @@ Module
           }
          }
         )
-        [ VarP
+        ( VarP
          ( Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/Pattern.mlg"
@@ -352,8 +352,8 @@ Module
            ( ArtifactPath "test/testcases/malgo/Pattern.mlg" )
           , sort = Internal 0
           }
-         )
-        ]
+         ) :| []
+        )
         ( Seq
          ( Range
           { _start = SourcePos

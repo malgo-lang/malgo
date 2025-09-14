@@ -51,7 +51,7 @@ Module
          }
         }
        )
-       [ ConP
+       ( ConP
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/RecordTest.mlg"
@@ -135,8 +135,8 @@ Module
            )
           )
          ]
-        ]
-       ]
+        ] :| []
+       )
        ( Seq
         ( Range
          { _start = SourcePos
@@ -240,7 +240,7 @@ Module
          }
         }
        )
-       [ RecordP
+       ( RecordP
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/RecordTest.mlg"
@@ -302,8 +302,8 @@ Module
            }
           )
          )
-        ]
-       ]
+        ] :| []
+       )
        ( Seq
         ( Range
          { _start = SourcePos
@@ -407,7 +407,7 @@ Module
          }
         }
        )
-       [ VarP
+       ( VarP
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/RecordTest.mlg"
@@ -422,13 +422,13 @@ Module
          }
         )
         ( Id
-         { name = "$_"
+         { name = "_"
          , moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/RecordTest.mlg" )
-         , sort = Internal 8
+         , sort = Internal 5
          }
-        )
-       ]
+        ) :| []
+       )
        ( Seq
         ( Range
          { _start = SourcePos
@@ -461,7 +461,7 @@ Module
           { name = "x"
           , moduleName = Artifact
            ( ArtifactPath "test/testcases/malgo/RecordTest.mlg" )
-          , sort = Internal 5
+          , sort = Internal 6
           }
          )
          ( Record
@@ -822,7 +822,7 @@ Module
                     { name = "x"
                     , moduleName = Artifact
                      ( ArtifactPath "test/testcases/malgo/RecordTest.mlg" )
-                    , sort = Internal 5
+                    , sort = Internal 6
                     }
                    )
                   )
@@ -885,7 +885,7 @@ Module
                      }
                     }
                    )
-                   [ RecordP
+                   ( RecordP
                     ( Range
                      { _start = SourcePos
                       { sourceName = "./test/testcases/malgo/RecordTest.mlg"
@@ -919,7 +919,7 @@ Module
                        { name = "_"
                        , moduleName = Artifact
                         ( ArtifactPath "test/testcases/malgo/RecordTest.mlg" )
-                       , sort = Internal 6
+                       , sort = Internal 7
                        }
                       )
                      )
@@ -943,12 +943,12 @@ Module
                        { name = "b"
                        , moduleName = Artifact
                         ( ArtifactPath "test/testcases/malgo/RecordTest.mlg" )
-                       , sort = Internal 7
+                       , sort = Internal 8
                        }
                       )
                      )
-                    ]
-                   ]
+                    ] :| []
+                   )
                    ( Seq
                     ( Range
                      { _start = SourcePos
@@ -995,7 +995,7 @@ Module
                        { name = "b"
                        , moduleName = Artifact
                         ( ArtifactPath "test/testcases/malgo/RecordTest.mlg" )
-                       , sort = Internal 7
+                       , sort = Internal 8
                        }
                       )
                      ) :| []
@@ -1021,7 +1021,7 @@ Module
                    { name = "x"
                    , moduleName = Artifact
                     ( ArtifactPath "test/testcases/malgo/RecordTest.mlg" )
-                   , sort = Internal 5
+                   , sort = Internal 6
                    }
                   )
                  )

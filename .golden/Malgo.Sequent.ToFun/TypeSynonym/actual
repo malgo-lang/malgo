@@ -12,14 +12,14 @@
             ($TypeSynonym.param_6)
             (select
                $TypeSynonym.param_6
-               ((#TypeSynonym.$__4
+               ((#TypeSynonym.__2
                    (apply
                       (apply (invoke |>) ((invoke hello)))
                       ((lambda
                           ($TypeSynonym.param_7)
                           (select
                              $TypeSynonym.param_7
-                             (((tuple (#TypeSynonym.h_2 #TypeSynonym.w_3))
+                             (((tuple (#TypeSynonym.h_3 #TypeSynonym.w_4))
                                  (apply
                                     (lambda
                                        ($TypeSynonym.tmp_8)
@@ -28,10 +28,10 @@
                                              ($TypeSynonym.tmp_9)
                                              (apply
                                                 (invoke putStrLn)
-                                                (#TypeSynonym.w_3)))
+                                                (#TypeSynonym.w_4)))
                                           ((apply
                                               (invoke putStr)
                                               ((apply (invoke String#) (" ")))))))
-                                    ((apply (invoke putStr) (#TypeSynonym.h_2)))))))))))))))
+                                    ((apply (invoke putStr) (#TypeSynonym.h_3)))))))))))))))
       (TCon (TCon ())))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

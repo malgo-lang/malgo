@@ -184,7 +184,22 @@ Module
        , sourceColumn = Pos 1
        }
       }
-     ) []
+     )
+     ( VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+        , sourceLine = Pos 8
+        , sourceColumn = Pos 3
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
+        , sourceLine = Pos 13
+        , sourceColumn = Pos 1
+        }
+       }
+      ) "_" :| []
+     )
      ( Seq
       ( Range
        { _start = SourcePos
@@ -299,7 +314,7 @@ Module
             }
            }
           )
-          [ TupleP
+          ( TupleP
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
@@ -341,8 +356,8 @@ Module
               }
              }
             ) "rest"
-           ]
-          ]
+           ] :| []
+          )
           ( Seq
            ( Range
             { _start = SourcePos
@@ -433,7 +448,7 @@ Module
              }
             }
            )
-           [ TupleP
+           ( TupleP
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
@@ -475,8 +490,8 @@ Module
                }
               }
              ) "rest"
-            ]
-           ]
+            ] :| []
+           )
            ( Seq
             ( Range
              { _start = SourcePos
@@ -536,7 +551,7 @@ Module
              }
             }
            )
-           [ TupleP
+           ( TupleP
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/TuplePattern.mlg"
@@ -578,8 +593,8 @@ Module
                }
               }
              ) "rest"
-            ]
-           ]
+            ] :| []
+           )
            ( Seq
             ( Range
              { _start = SourcePos

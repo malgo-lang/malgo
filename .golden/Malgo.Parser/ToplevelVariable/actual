@@ -299,7 +299,7 @@ Module
         }
        }
       )
-      [ VarP
+      ( VarP
        ( Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
@@ -312,8 +312,8 @@ Module
          , sourceColumn = Pos 13
          }
         }
-       ) "Nothing"
-      ]
+       ) "Nothing" :| []
+      )
       ( Seq
        ( Range
         { _start = SourcePos
@@ -373,7 +373,7 @@ Module
          }
         }
        )
-       [ ConP
+       ( ConP
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
@@ -401,8 +401,8 @@ Module
            }
           }
          ) "x"
-        ]
-       ]
+        ] :| []
+       )
        ( Seq
         ( Range
          { _start = SourcePos
@@ -553,7 +553,22 @@ Module
        , sourceColumn = Pos 1
        }
       }
-     ) []
+     )
+     ( VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+        , sourceLine = Pos 17
+        , sourceColumn = Pos 3
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
+        , sourceLine = Pos 21
+        , sourceColumn = Pos 1
+        }
+       }
+      ) "_" :| []
+     )
      ( Seq
       ( Range
        { _start = SourcePos
@@ -624,7 +639,7 @@ Module
             }
            }
           )
-          [ VarP
+          ( VarP
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
@@ -637,8 +652,8 @@ Module
              , sourceColumn = Pos 13
              }
             }
-           ) "Nothing"
-          ]
+           ) "Nothing" :| []
+          )
           ( Seq
            ( Range
             { _start = SourcePos
@@ -729,7 +744,7 @@ Module
              }
             }
            )
-           [ ConP
+           ( ConP
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/ToplevelVariable.mlg"
@@ -757,8 +772,8 @@ Module
                }
               }
              ) "_"
-            ]
-           ]
+            ] :| []
+           )
            ( Seq
             ( Range
              { _start = SourcePos

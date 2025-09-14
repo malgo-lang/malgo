@@ -51,7 +51,7 @@ Module
          }
         }
        )
-       [ VarP
+       ( VarP
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
@@ -71,8 +71,8 @@ Module
           ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" )
          , sort = Internal 1
          }
-        )
-       ]
+        ) :| []
+       )
        ( Seq
         ( Range
          { _start = SourcePos
@@ -317,7 +317,7 @@ Module
          }
         }
        )
-       [ VarP
+       ( VarP
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
@@ -332,13 +332,13 @@ Module
          }
         )
         ( Id
-         { name = "$_"
+         { name = "_"
          , moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" )
-         , sort = Internal 4
+         , sort = Internal 2
          }
-        )
-       ]
+        ) :| []
+       )
        ( Seq
         ( Range
          { _start = SourcePos
@@ -442,7 +442,7 @@ Module
               }
              }
             )
-            [ TupleP
+            ( TupleP
              ( Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/TypeSynonym.mlg"
@@ -474,7 +474,7 @@ Module
                { name = "h"
                , moduleName = Artifact
                 ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" )
-               , sort = Internal 2
+               , sort = Internal 3
                }
               )
              , VarP
@@ -495,11 +495,11 @@ Module
                { name = "w"
                , moduleName = Artifact
                 ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" )
-               , sort = Internal 3
+               , sort = Internal 4
                }
               )
-             ]
-            ]
+             ] :| []
+            )
             ( Seq
              ( Range
               { _start = SourcePos
@@ -582,7 +582,7 @@ Module
                  { name = "h"
                  , moduleName = Artifact
                   ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" )
-                 , sort = Internal 2
+                 , sort = Internal 3
                  }
                 )
                )
@@ -759,7 +759,7 @@ Module
                   { name = "w"
                   , moduleName = Artifact
                    ( ArtifactPath "test/testcases/malgo/TypeSynonym.mlg" )
-                  , sort = Internal 3
+                  , sort = Internal 4
                   }
                  )
                 )

@@ -51,7 +51,7 @@ Module
          }
         }
        )
-       [ VarP
+       ( VarP
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
@@ -66,13 +66,13 @@ Module
          }
         )
         ( Id
-         { name = "$_"
+         { name = "_"
          , moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" )
-         , sort = Internal 4
+         , sort = Internal 0
          }
-        )
-       ]
+        ) :| []
+       )
        ( Seq
         ( Range
          { _start = SourcePos
@@ -105,7 +105,7 @@ Module
           { name = "f"
           , moduleName = Artifact
            ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" )
-          , sort = Internal 3
+          , sort = Internal 4
           }
          )
          ( Fn
@@ -136,7 +136,7 @@ Module
              }
             }
            )
-           [ VarP
+           ( VarP
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
@@ -151,13 +151,13 @@ Module
              }
             )
             ( Id
-             { name = "$_"
+             { name = "_"
              , moduleName = Artifact
               ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" )
-             , sort = Internal 2
+             , sort = Internal 1
              }
-            )
-           ]
+            ) :| []
+           )
            ( Seq
             ( Range
              { _start = SourcePos
@@ -190,7 +190,7 @@ Module
               { name = "y"
               , moduleName = Artifact
                ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" )
-              , sort = Internal 1
+              , sort = Internal 3
               }
              )
              ( Apply
@@ -235,7 +235,7 @@ Module
                   }
                  }
                 )
-                [ VarP
+                ( VarP
                  ( Range
                   { _start = SourcePos
                    { sourceName = "./test/testcases/malgo/TestNestedLetFunc.mlg"
@@ -253,10 +253,10 @@ Module
                   { name = "a"
                   , moduleName = Artifact
                    ( ArtifactPath "test/testcases/malgo/TestNestedLetFunc.mlg" )
-                  , sort = Internal 0
+                  , sort = Internal 2
                   }
-                 )
-                ]
+                 ) :| []
+                )
                 ( Seq
                  ( Range
                   { _start = SourcePos

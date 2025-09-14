@@ -25,4 +25,4 @@
                         (apply
                            printString#
                            (parens (apply toStringInt64# (int64 0))))))))))
-      (def main (fn ((clause () (seq (do (apply f (int64 0))))))))))
+      (def main (fn ((clause (_) (seq (do (apply f (int64 0))))))))))

@@ -6,11 +6,11 @@
           (join
              $TestNestedLetFunc.select_20
              (select
-                (#TestNestedLetFunc.$__4
+                (#TestNestedLetFunc.__0
                    (join
                       $TestNestedLetFunc.then_19
                       (then
-                         #TestNestedLetFunc.f_3
+                         #TestNestedLetFunc.f_4
                          (join
                             $TestNestedLetFunc.apply_18
                             (apply ("PASS") ($TestNestedLetFunc.return_10))
@@ -24,7 +24,7 @@
                             (join
                                $TestNestedLetFunc.select_17
                                (select
-                                  (#TestNestedLetFunc.$__2
+                                  (#TestNestedLetFunc.__1
                                      (join
                                         $TestNestedLetFunc.apply_16
                                         (apply
@@ -37,7 +37,7 @@
                                               (join
                                                  $TestNestedLetFunc.select_15
                                                  (select
-                                                    (#TestNestedLetFunc.a_0
+                                                    (#TestNestedLetFunc.a_2
                                                        (cut
                                                           (construct tuple () ())
                                                           $TestNestedLetFunc.return_12)))

@@ -10,7 +10,7 @@
            main
            (fn
               ((clause
-                  (#TypeSynonym.$__4)
+                  (#TypeSynonym.__2)
                   (seq
                      (do
                         (opapp
@@ -18,14 +18,14 @@
                            hello
                            (fn
                               ((clause
-                                  ((tuple #TypeSynonym.h_2 #TypeSynonym.w_3))
+                                  ((tuple #TypeSynonym.h_3 #TypeSynonym.w_4))
                                   (seq
-                                     (do (apply putStr #TypeSynonym.h_2))
+                                     (do (apply putStr #TypeSynonym.h_3))
                                      (do
                                         (apply
                                            putStr
                                            (apply String# (string " "))))
-                                     (do (apply putStrLn #TypeSynonym.w_3)))))))))))))))
+                                     (do (apply putStrLn #TypeSynonym.w_4)))))))))))))))
       ((sig hello (app MyTuple (MyString)))
          (sig idOverS (-> S T))
          (sig main (-> (tuple) (tuple))))

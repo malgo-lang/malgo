@@ -252,7 +252,7 @@ Module
        }
       }
      )
-     [ RecordP
+     ( RecordP
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/RecordTest.mlg"
@@ -300,8 +300,8 @@ Module
          }
         ) "_"
        )
-      ]
-     ]
+      ] :| []
+     )
      ( Seq
       ( Range
        { _start = SourcePos
@@ -391,7 +391,7 @@ Module
        }
       }
      )
-     [ ConP
+     ( ConP
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/RecordTest.mlg"
@@ -454,8 +454,8 @@ Module
          ) "_"
         )
        ]
-      ]
-     ]
+      ] :| []
+     )
      ( Seq
       ( Range
        { _start = SourcePos
@@ -544,7 +544,22 @@ Module
        , sourceColumn = Pos 1
        }
       }
-     ) []
+     )
+     ( VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/RecordTest.mlg"
+        , sourceLine = Pos 15
+        , sourceColumn = Pos 3
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/RecordTest.mlg"
+        , sourceLine = Pos 17
+        , sourceColumn = Pos 1
+        }
+       }
+      ) "_" :| []
+     )
      ( Seq
       ( Range
        { _start = SourcePos
@@ -885,7 +900,7 @@ Module
                    }
                   }
                  )
-                 [ RecordP
+                 ( RecordP
                   ( Range
                    { _start = SourcePos
                     { sourceName = "./test/testcases/malgo/RecordTest.mlg"
@@ -933,8 +948,8 @@ Module
                      }
                     ) "b"
                    )
-                  ]
-                 ]
+                  ] :| []
+                 )
                  ( Seq
                   ( Range
                    { _start = SourcePos

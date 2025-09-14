@@ -13,34 +13,34 @@
             ($TestLet.param_11)
             (select
                $TestLet.param_11
-               ((#TestLet.$__8
+               ((#TestLet.__4
                    (let
-                      #TestLet.x_4
+                      #TestLet.x_5
                       (apply (apply (invoke addInt32#) (1_i32)) (2_i32))
                       (apply
                          (lambda
                             ($TestLet.tmp_12)
                             (let
-                               #TestLet.x_5
+                               #TestLet.x_6
                                (apply
                                   (invoke Int32#)
                                   ((apply
                                       (apply (invoke addInt32#) (1_i32))
                                       (2_i32))))
                                (let
-                                  #TestLet.printInt32_7
+                                  #TestLet.printInt32_8
                                   (lambda
                                      ($TestLet.param_13)
                                      (select
                                         $TestLet.param_13
-                                        (((Int32# (#TestLet.x_6))
+                                        (((Int32# (#TestLet.x_7))
                                             (apply
                                                (invoke printString#)
                                                ((apply
                                                    (invoke toStringInt32#)
-                                                   (#TestLet.x_6))))))))
-                                  (apply #TestLet.printInt32_7 (#TestLet.x_5)))))
+                                                   (#TestLet.x_7))))))))
+                                  (apply #TestLet.printInt32_8 (#TestLet.x_6)))))
                          ((apply
                              (invoke printString#)
-                             ((apply (invoke toStringInt32#) (#TestLet.x_4)))))))))))))
+                             ((apply (invoke toStringInt32#) (#TestLet.x_5)))))))))))))
    ("runtime/malgo/Builtin.mlg"))

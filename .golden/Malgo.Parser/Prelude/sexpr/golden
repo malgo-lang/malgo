@@ -74,10 +74,10 @@
                             (apply
                                if
                                (parens (apply (apply eqString str) (string ""))))
-                            (fn ((clause () (seq (do Nothing))))))
+                            (fn ((clause (_) (seq (do Nothing))))))
                          (fn
                             ((clause
-                                ()
+                                (_)
                                 (seq
                                    (do
                                       (apply
@@ -97,10 +97,10 @@
                             (apply
                                if
                                (parens (apply (apply eqString str) (string ""))))
-                            (fn ((clause () (seq (do str))))))
+                            (fn ((clause (_) (seq (do str))))))
                          (fn
                             ((clause
-                                ()
+                                (_)
                                 (seq
                                    (do
                                       (apply
@@ -126,7 +126,7 @@
                                               (apply if (parens (apply pred c)))
                                               (fn
                                                  ((clause
-                                                     ()
+                                                     (_)
                                                      (seq
                                                         (do
                                                            (apply
@@ -141,7 +141,7 @@
                                                                           tailString
                                                                           str)))))))))))
                                            (fn
-                                              ((clause () (seq (do (string "")))))))))))))))))))
+                                              ((clause (_) (seq (do (string "")))))))))))))))))))
       (def
          dropWhileString
          (fn
@@ -162,7 +162,7 @@
                                               (apply if (parens (apply pred c)))
                                               (fn
                                                  ((clause
-                                                     ()
+                                                     (_)
                                                      (seq
                                                         (do
                                                            (apply
@@ -173,7 +173,7 @@
                                                                  (apply
                                                                     tailString
                                                                     str)))))))))
-                                           (fn ((clause () (seq (do str))))))))))))))))))
+                                           (fn ((clause (_) (seq (do str))))))))))))))))))
       (sig concatString (-> (app List (String)) String))
       (def
          concatString
@@ -245,7 +245,9 @@
                 (seq
                    (do
                       (apply
-                         (apply (apply if c) (fn ((clause () (seq (do tValue))))))
+                         (apply
+                            (apply if c)
+                            (fn ((clause (_) (seq (do tValue))))))
                          f)))))))
       (sig cond (-> (app List ((tuple Bool (block a)))) a))
       (def

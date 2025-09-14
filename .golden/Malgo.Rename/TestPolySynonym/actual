@@ -51,7 +51,7 @@ Module
          }
         }
        )
-       [ RecordP
+       ( RecordP
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/TestPolySynonym.mlg"
@@ -113,8 +113,8 @@ Module
            }
           )
          )
-        ]
-       ]
+        ] :| []
+       )
        ( Seq
         ( Range
          { _start = SourcePos
@@ -218,7 +218,7 @@ Module
          }
         }
        )
-       [ VarP
+       ( VarP
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/TestPolySynonym.mlg"
@@ -233,13 +233,13 @@ Module
          }
         )
         ( Id
-         { name = "$_"
+         { name = "_"
          , moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" )
-         , sort = Internal 8
+         , sort = Internal 7
          }
-        )
-       ]
+        ) :| []
+       )
        ( Seq
         ( Range
          { _start = SourcePos
@@ -272,7 +272,7 @@ Module
           { name = "x"
           , moduleName = Artifact
            ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" )
-          , sort = Internal 7
+          , sort = Internal 8
           }
          )
          ( Record
@@ -494,7 +494,7 @@ Module
               { name = "x"
               , moduleName = Artifact
                ( ArtifactPath "test/testcases/malgo/TestPolySynonym.mlg" )
-              , sort = Internal 7
+              , sort = Internal 8
               }
              )
             )

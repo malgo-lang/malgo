@@ -172,7 +172,7 @@ Module
        }
       }
      )
-     [ VarP
+     ( VarP
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Fib.mlg"
@@ -185,36 +185,37 @@ Module
         , sourceColumn = Pos 19
         }
        }
-      ) "f"
-     , VarP
-      ( Range
-       { _start = SourcePos
-        { sourceName = "./test/testcases/malgo/Fib.mlg"
-        , sourceLine = Pos 6
-        , sourceColumn = Pos 19
+      ) "f" :|
+      [ VarP
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/Fib.mlg"
+         , sourceLine = Pos 6
+         , sourceColumn = Pos 19
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/Fib.mlg"
+         , sourceLine = Pos 6
+         , sourceColumn = Pos 22
+         }
         }
-       , _end = SourcePos
-        { sourceName = "./test/testcases/malgo/Fib.mlg"
-        , sourceLine = Pos 6
-        , sourceColumn = Pos 22
+       ) "xs"
+      , VarP
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/Fib.mlg"
+         , sourceLine = Pos 6
+         , sourceColumn = Pos 22
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/Fib.mlg"
+         , sourceLine = Pos 6
+         , sourceColumn = Pos 25
+         }
         }
-       }
-      ) "xs"
-     , VarP
-      ( Range
-       { _start = SourcePos
-        { sourceName = "./test/testcases/malgo/Fib.mlg"
-        , sourceLine = Pos 6
-        , sourceColumn = Pos 22
-        }
-       , _end = SourcePos
-        { sourceName = "./test/testcases/malgo/Fib.mlg"
-        , sourceLine = Pos 6
-        , sourceColumn = Pos 25
-        }
-       }
-      ) "ys"
-     ]
+       ) "ys"
+      ]
+     )
      ( Seq
       ( Range
        { _start = SourcePos
@@ -754,7 +755,22 @@ Module
        , sourceColumn = Pos 1
        }
       }
-     ) []
+     )
+     ( VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/Fib.mlg"
+        , sourceLine = Pos 18
+        , sourceColumn = Pos 3
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/Fib.mlg"
+        , sourceLine = Pos 19
+        , sourceColumn = Pos 1
+        }
+       }
+      ) "_" :| []
+     )
      ( Seq
       ( Range
        { _start = SourcePos

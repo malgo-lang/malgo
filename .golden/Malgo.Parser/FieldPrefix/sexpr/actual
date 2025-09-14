@@ -23,4 +23,4 @@
       (def
          zero3D
          (record (x (float 0.0_f32)) (y (float 0.0_f32)) (z (float 0.0_f32))))
-      (def main (fn ((clause () (seq (do (apply print2D zero2D)))))))))
+      (def main (fn ((clause (_) (seq (do (apply print2D zero2D)))))))))

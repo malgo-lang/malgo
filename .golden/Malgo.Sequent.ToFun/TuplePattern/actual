@@ -4,19 +4,19 @@
           ($TuplePattern.param_4)
           (select
              $TuplePattern.param_4
-             ((#TuplePattern.$__3
+             ((#TuplePattern.__0
                  (apply
                     (apply (invoke |>) ((tuple ((invoke A) (invoke B)))))
                     ((lambda
                         ($TuplePattern.param_5)
                         (select
                            $TuplePattern.param_5
-                           (((tuple ((A ()) #TuplePattern.rest_0))
+                           (((tuple ((A ()) #TuplePattern.rest_1))
                                (apply
                                   (invoke printString)
                                   ((apply (invoke String#) ("A")))))
-                              ((tuple ((B ()) #TuplePattern.rest_1)) (tuple ()))
-                              ((tuple ((C ()) #TuplePattern.rest_2)) (tuple ()))))))))))))
+                              ((tuple ((B ()) #TuplePattern.rest_2)) (tuple ()))
+                              ((tuple ((C ()) #TuplePattern.rest_3)) (tuple ()))))))))))))
       (A (A ()))
       (B (B ()))
       (C (C ())))

@@ -51,7 +51,7 @@ Module
          }
         }
        )
-       [ VarP
+       ( VarP
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
@@ -71,8 +71,8 @@ Module
           ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
          , sort = Internal 1
          }
-        )
-       ]
+        ) :| []
+       )
        ( Seq
         ( Range
          { _start = SourcePos
@@ -143,7 +143,7 @@ Module
               }
              }
             )
-            [ VarP
+            ( VarP
              ( Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
@@ -163,8 +163,8 @@ Module
                ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
               , sort = Internal 2
               }
-             )
-            ]
+             ) :| []
+            )
             ( Seq
              ( Range
               { _start = SourcePos
@@ -288,7 +288,7 @@ Module
          }
         }
        )
-       [ VarP
+       ( VarP
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/DeferLaw.mlg"
@@ -308,8 +308,8 @@ Module
           ( ArtifactPath "test/testcases/malgo/DeferLaw.mlg" )
          , sort = Internal 3
          }
-        )
-       ]
+        ) :| []
+       )
        ( Seq
         ( Range
          { _start = SourcePos

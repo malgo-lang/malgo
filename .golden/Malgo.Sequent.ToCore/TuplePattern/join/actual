@@ -6,7 +6,7 @@
           (join
              $TuplePattern.select_30
              (select
-                (#TuplePattern.$__3
+                (#TuplePattern.__0
                    (join
                       $TuplePattern.then_29
                       (then
@@ -25,7 +25,7 @@
                                             $TuplePattern.select_26
                                             (select
                                                ((tuple
-                                                   ((A ()) #TuplePattern.rest_0))
+                                                   ((A ()) #TuplePattern.rest_1))
                                                   (join
                                                      $TuplePattern.then_25
                                                      (then
@@ -54,12 +54,12 @@
                                                         printString
                                                         $TuplePattern.then_25)))
                                                ((tuple
-                                                   ((B ()) #TuplePattern.rest_1))
+                                                   ((B ()) #TuplePattern.rest_2))
                                                   (cut
                                                      (construct tuple () ())
                                                      $TuplePattern.return_8))
                                                ((tuple
-                                                   ((C ()) #TuplePattern.rest_2))
+                                                   ((C ()) #TuplePattern.rest_3))
                                                   (cut
                                                      (construct tuple () ())
                                                      $TuplePattern.return_8)))

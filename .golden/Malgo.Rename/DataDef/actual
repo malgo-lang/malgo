@@ -51,7 +51,7 @@ Module
          }
         }
        )
-       [ VarP
+       ( VarP
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/DataDef.mlg"
@@ -71,8 +71,8 @@ Module
           ( ArtifactPath "test/testcases/malgo/DataDef.mlg" )
          , sort = Internal 1
          }
-        )
-       ]
+        ) :| []
+       )
        ( Seq
         ( Range
          { _start = SourcePos
@@ -143,7 +143,7 @@ Module
               }
              }
             )
-            [ ConP
+            ( ConP
              ( Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/DataDef.mlg"
@@ -185,8 +185,8 @@ Module
                , sort = Internal 2
                }
               )
-             ]
-            ]
+             ] :| []
+            )
             ( Seq
              ( Range
               { _start = SourcePos

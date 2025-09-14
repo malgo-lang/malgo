@@ -6,7 +6,7 @@
           (cut
              $ZeroArgs.param_6
              (select
-                (#ZeroArgs.$__0
+                (#ZeroArgs.__0
                    (invoke Int32# (apply (1_i32) ($ZeroArgs.return_12)))))))
        (apply ((construct tuple () ())) ($ZeroArgs.return_11))))
    (id
@@ -24,7 +24,7 @@
                            (cut
                               $ZeroArgs.param_8
                               (select
-                                 (#ZeroArgs.$__3
+                                 (#ZeroArgs.__3
                                     (cut #ZeroArgs.x_2 $ZeroArgs.return_15)))))
                         (apply ((construct tuple () ())) ($ZeroArgs.return_14)))))))
          $ZeroArgs.return_13))
@@ -36,14 +36,14 @@
             (cut
                $ZeroArgs.param_9
                (select
-                  (#ZeroArgs.$__5
+                  (#ZeroArgs.__4
                      (cut
                         (lambda
                            ($ZeroArgs.param_10 $ZeroArgs.return_18)
                            (cut
                               $ZeroArgs.param_10
                               (select
-                                 (#ZeroArgs.$__4
+                                 (#ZeroArgs.__5
                                     (invoke
                                        printString
                                        (apply

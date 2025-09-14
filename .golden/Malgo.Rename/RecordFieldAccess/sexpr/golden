@@ -17,10 +17,10 @@
            main
            (fn
               ((clause
-                  (#RecordFieldAccess.$__5)
+                  (#RecordFieldAccess.__4)
                   (seq
                      (let
-                        #RecordFieldAccess.x_4
+                        #RecordFieldAccess.x_5
                         (record
                            (a (apply Int32# (int32 32)))
                            (b (apply Int32# (int32 10)))))
@@ -35,8 +35,8 @@
                                        (apply
                                           addInt32
                                           (parens
-                                             (apply f #RecordFieldAccess.x_4)))
-                                       (project #RecordFieldAccess.x_4 "b"))))))))))))))
+                                             (apply f #RecordFieldAccess.x_5)))
+                                       (project #RecordFieldAccess.x_5 "b"))))))))))))))
       ()
       ((data B () ((B ((record (a Int32) (b Int32)))))))
       ()

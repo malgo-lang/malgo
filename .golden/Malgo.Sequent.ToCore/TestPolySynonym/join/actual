@@ -18,11 +18,11 @@
             (join
                $TestPolySynonym.select_32
                (select
-                  (#TestPolySynonym.$__8
+                  (#TestPolySynonym.__7
                      (join
                         $TestPolySynonym.then_31
                         (then
-                           #TestPolySynonym.x_7
+                           #TestPolySynonym.x_8
                            (join
                               $TestPolySynonym.then_30
                               (then
@@ -61,7 +61,7 @@
                                     (join
                                        $TestPolySynonym.apply_26
                                        (apply
-                                          (#TestPolySynonym.x_7)
+                                          (#TestPolySynonym.x_8)
                                           ($TestPolySynonym.return_16))
                                        (invoke first $TestPolySynonym.apply_26))))
                               (invoke |> $TestPolySynonym.then_30)))

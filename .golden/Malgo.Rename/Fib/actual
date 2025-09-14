@@ -51,7 +51,7 @@ Module
          }
         }
        )
-       [ VarP
+       ( VarP
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/Fib.mlg"
@@ -71,50 +71,51 @@ Module
           ( ArtifactPath "test/testcases/malgo/Fib.mlg" )
          , sort = Internal 1
          }
-        )
-       , VarP
-        ( Range
-         { _start = SourcePos
-          { sourceName = "./test/testcases/malgo/Fib.mlg"
-          , sourceLine = Pos 6
-          , sourceColumn = Pos 19
+        ) :|
+        [ VarP
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/Fib.mlg"
+           , sourceLine = Pos 6
+           , sourceColumn = Pos 19
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/Fib.mlg"
+           , sourceLine = Pos 6
+           , sourceColumn = Pos 22
+           }
           }
-         , _end = SourcePos
-          { sourceName = "./test/testcases/malgo/Fib.mlg"
-          , sourceLine = Pos 6
-          , sourceColumn = Pos 22
+         )
+         ( Id
+          { name = "xs"
+          , moduleName = Artifact
+           ( ArtifactPath "test/testcases/malgo/Fib.mlg" )
+          , sort = Internal 2
           }
-         }
-        )
-        ( Id
-         { name = "xs"
-         , moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Fib.mlg" )
-         , sort = Internal 2
-         }
-        )
-       , VarP
-        ( Range
-         { _start = SourcePos
-          { sourceName = "./test/testcases/malgo/Fib.mlg"
-          , sourceLine = Pos 6
-          , sourceColumn = Pos 22
+         )
+        , VarP
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./test/testcases/malgo/Fib.mlg"
+           , sourceLine = Pos 6
+           , sourceColumn = Pos 22
+           }
+          , _end = SourcePos
+           { sourceName = "./test/testcases/malgo/Fib.mlg"
+           , sourceLine = Pos 6
+           , sourceColumn = Pos 25
+           }
           }
-         , _end = SourcePos
-          { sourceName = "./test/testcases/malgo/Fib.mlg"
-          , sourceLine = Pos 6
-          , sourceColumn = Pos 25
+         )
+         ( Id
+          { name = "ys"
+          , moduleName = Artifact
+           ( ArtifactPath "test/testcases/malgo/Fib.mlg" )
+          , sort = Internal 3
           }
-         }
-        )
-        ( Id
-         { name = "ys"
-         , moduleName = Artifact
-          ( ArtifactPath "test/testcases/malgo/Fib.mlg" )
-         , sort = Internal 3
-         }
-        )
-       ]
+         )
+        ]
+       )
        ( Seq
         ( Range
          { _start = SourcePos
@@ -820,7 +821,7 @@ Module
          }
         }
        )
-       [ VarP
+       ( VarP
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/Fib.mlg"
@@ -835,13 +836,13 @@ Module
          }
         )
         ( Id
-         { name = "$_"
+         { name = "_"
          , moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/Fib.mlg" )
          , sort = Internal 4
          }
-        )
-       ]
+        ) :| []
+       )
        ( Seq
         ( Range
          { _start = SourcePos

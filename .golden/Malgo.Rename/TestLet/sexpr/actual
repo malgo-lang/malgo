@@ -10,32 +10,32 @@
            main
            (fn
               ((clause
-                  (#TestLet.$__8)
+                  (#TestLet.__4)
                   (seq
                      (let
-                        #TestLet.x_4
+                        #TestLet.x_5
                         (apply (apply addInt32# (int32 1)) (int32 2)))
                      (do
                         (apply
                            printString#
-                           (parens (apply toStringInt32# #TestLet.x_4))))
+                           (parens (apply toStringInt32# #TestLet.x_5))))
                      (let
-                        #TestLet.x_5
+                        #TestLet.x_6
                         (apply
                            Int32#
                            (parens (apply (apply addInt32# (int32 1)) (int32 2)))))
                      (let
-                        #TestLet.printInt32_7
+                        #TestLet.printInt32_8
                         (fn
                            ((clause
-                               ((con Int32# (#TestLet.x_6)))
+                               ((con Int32# (#TestLet.x_7)))
                                (seq
                                   (do
                                      (apply
                                         printString#
                                         (parens
-                                           (apply toStringInt32# #TestLet.x_6)))))))))
-                     (do (apply #TestLet.printInt32_7 #TestLet.x_5)))))))))
+                                           (apply toStringInt32# #TestLet.x_7)))))))))
+                     (do (apply #TestLet.printInt32_8 #TestLet.x_6)))))))))
       ((sig |> (-> #TestLet.a_0 (-> (-> #TestLet.a_0 #TestLet.b_1) #TestLet.b_1))))
       ()
       ()

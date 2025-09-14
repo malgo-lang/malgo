@@ -6,14 +6,14 @@
           (cut
              $TestNestedLetFunc.param_5
              (select
-                (#TestNestedLetFunc.$__4
+                (#TestNestedLetFunc.__0
                    (cut
                       (lambda
                          ($TestNestedLetFunc.param_6 $TestNestedLetFunc.return_11)
                          (cut
                             $TestNestedLetFunc.param_6
                             (select
-                               (#TestNestedLetFunc.$__2
+                               (#TestNestedLetFunc.__1
                                   (cut
                                      (lambda
                                         ($TestNestedLetFunc.param_7
@@ -21,7 +21,7 @@
                                         (cut
                                            $TestNestedLetFunc.param_7
                                            (select
-                                              (#TestNestedLetFunc.a_0
+                                              (#TestNestedLetFunc.a_2
                                                  (cut
                                                     (construct tuple () ())
                                                     $TestNestedLetFunc.return_12)))))
@@ -29,7 +29,7 @@
                                         ((construct tuple () ()))
                                         ($TestNestedLetFunc.return_11)))))))
                       (then
-                         #TestNestedLetFunc.f_3
+                         #TestNestedLetFunc.f_4
                          (invoke
                             malgo_print_string
                             (apply ("PASS") ($TestNestedLetFunc.return_10)))))))))

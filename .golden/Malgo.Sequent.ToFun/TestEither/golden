@@ -19,12 +19,12 @@
             ($TestEither.param_20)
             (select
                $TestEither.param_20
-               ((#TestEither.$__16
+               ((#TestEither.__7
                    (apply
                       (lambda
                          ($TestEither.tmp_21)
                          (let
-                            #TestEither.x_9
+                            #TestEither.x_10
                             (apply
                                (invoke Right)
                                ((apply (invoke Int32#) (1_i32))))
@@ -40,14 +40,14 @@
                                                ((apply
                                                    (apply
                                                       (invoke |>)
-                                                      (#TestEither.x_9))
+                                                      (#TestEither.x_10))
                                                    ((apply
                                                        (invoke andThen)
                                                        ((lambda
                                                            ($TestEither.param_26)
                                                            (select
                                                               $TestEither.param_26
-                                                              ((#TestEither.__12
+                                                              ((#TestEither.__13
                                                                   (apply
                                                                      (invoke Left)
                                                                      ((apply
@@ -60,14 +60,14 @@
                                                     ($TestEither.param_27)
                                                     (select
                                                        $TestEither.param_27
-                                                       ((#TestEither.x_13
+                                                       ((#TestEither.x_14
                                                            (apply
                                                               (invoke Right)
                                                               ((apply
                                                                   (apply
                                                                      (invoke
                                                                         addInt32)
-                                                                     (#TestEither.x_13))
+                                                                     (#TestEither.x_14))
                                                                   ((apply
                                                                       (invoke
                                                                          Int32#)
@@ -76,18 +76,18 @@
                                          ($TestEither.param_28)
                                          (select
                                             $TestEither.param_28
-                                            (((Left (#TestEither.err_14))
+                                            (((Left (#TestEither.err_15))
                                                 (apply
                                                    (invoke putStrLn)
-                                                   (#TestEither.err_14)))
-                                               ((Right (#TestEither.x_15))
+                                                   (#TestEither.err_15)))
+                                               ((Right (#TestEither.x_16))
                                                   (apply
                                                      (apply
                                                         (invoke |>)
                                                         ((apply
                                                             (apply
                                                                (invoke |>)
-                                                               (#TestEither.x_15))
+                                                               (#TestEither.x_16))
                                                             ((invoke
                                                                 toStringInt32)))))
                                                      ((invoke putStrLn))))))))))
@@ -95,21 +95,21 @@
                                    (apply
                                       (invoke |>)
                                       ((apply
-                                          (apply (invoke |>) (#TestEither.x_9))
+                                          (apply (invoke |>) (#TestEither.x_10))
                                           ((apply
                                               (invoke andThen)
                                               ((lambda
                                                   ($TestEither.param_24)
                                                   (select
                                                      $TestEither.param_24
-                                                     ((#TestEither.x_10
+                                                     ((#TestEither.x_11
                                                          (apply
                                                             (invoke Right)
                                                             ((apply
                                                                 (apply
                                                                    (invoke
                                                                       addInt32)
-                                                                   (#TestEither.x_10))
+                                                                   (#TestEither.x_11))
                                                                 ((apply
                                                                     (invoke
                                                                        Int32#)
@@ -120,7 +120,7 @@
                                            ($TestEither.param_25)
                                            (select
                                               $TestEither.param_25
-                                              ((#TestEither.y_11
+                                              ((#TestEither.y_12
                                                   (apply
                                                      (apply
                                                         (invoke |>)
@@ -130,7 +130,7 @@
                                                                ((apply
                                                                    (apply
                                                                       (invoke |>)
-                                                                      (#TestEither.y_11))
+                                                                      (#TestEither.y_12))
                                                                    ((invoke
                                                                        toStringInt32)))))
                                                             ((invoke putStr)))))
@@ -145,13 +145,13 @@
                               ($TestEither.param_22)
                               (select
                                  $TestEither.param_22
-                                 (((Right (#TestEither.x_7))
+                                 (((Right (#TestEither.x_8))
                                      (apply
                                         (invoke putStr)
                                         ((apply
                                             (invoke toStringInt32)
-                                            (#TestEither.x_7)))))
-                                    (#TestEither.__8
+                                            (#TestEither.x_8)))))
+                                    (#TestEither.__9
                                        (apply
                                           (invoke putStrLn)
                                           ((apply

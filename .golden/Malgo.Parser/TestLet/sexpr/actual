@@ -8,7 +8,7 @@
          main
          (fn
             ((clause
-                ()
+                (_)
                 (seq
                    (let x (apply (apply addInt32# (int32 1)) (int32 2)))
                    (do (apply printString# (parens (apply toStringInt32# x))))

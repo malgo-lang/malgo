@@ -5,7 +5,7 @@
              ($ZeroArgs.param_6)
              (select
                 $ZeroArgs.param_6
-                ((#ZeroArgs.$__0 (apply (invoke Int32#) (1_i32))))))
+                ((#ZeroArgs.__0 (apply (invoke Int32#) (1_i32))))))
           ((tuple ()))))
       (id
          (lambda
@@ -18,7 +18,7 @@
                          ($ZeroArgs.param_8)
                          (select
                             $ZeroArgs.param_8
-                            ((#ZeroArgs.$__3 #ZeroArgs.x_2))))
+                            ((#ZeroArgs.__3 #ZeroArgs.x_2))))
                       ((tuple ()))))))))
       (main
          (apply
@@ -26,12 +26,12 @@
                ($ZeroArgs.param_9)
                (select
                   $ZeroArgs.param_9
-                  ((#ZeroArgs.$__5
+                  ((#ZeroArgs.__4
                       (lambda
                          ($ZeroArgs.param_10)
                          (select
                             $ZeroArgs.param_10
-                            ((#ZeroArgs.$__4
+                            ((#ZeroArgs.__5
                                 (apply
                                    (invoke printString)
                                    ((apply

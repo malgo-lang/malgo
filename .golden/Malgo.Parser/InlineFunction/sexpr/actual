@@ -16,7 +16,7 @@
          main
          (fn
             ((clause
-                ()
+                (_)
                 (seq
                    (let
                       fib
@@ -33,10 +33,10 @@
                                                if
                                                (parens (opapp <= n (int32 1))))
                                             (fn
-                                               ((clause () (seq (do (int32 1)))))))
+                                               ((clause (_) (seq (do (int32 1)))))))
                                          (fn
                                             ((clause
-                                                ()
+                                                (_)
                                                 (seq
                                                    (do
                                                       (opapp

@@ -181,7 +181,7 @@ Module
        }
       }
      )
-     [ VarP
+     ( VarP
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Show.mlg"
@@ -194,22 +194,23 @@ Module
         , sourceColumn = Pos 16
         }
        }
-      ) "x"
-     , VarP
-      ( Range
-       { _start = SourcePos
-        { sourceName = "./test/testcases/malgo/Show.mlg"
-        , sourceLine = Pos 6
-        , sourceColumn = Pos 16
+      ) "x" :|
+      [ VarP
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/Show.mlg"
+         , sourceLine = Pos 6
+         , sourceColumn = Pos 16
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/Show.mlg"
+         , sourceLine = Pos 6
+         , sourceColumn = Pos 18
+         }
         }
-       , _end = SourcePos
-        { sourceName = "./test/testcases/malgo/Show.mlg"
-        , sourceLine = Pos 6
-        , sourceColumn = Pos 18
-        }
-       }
-      ) "y"
-     ]
+       ) "y"
+      ]
+     )
      ( Seq
       ( Range
        { _start = SourcePos
@@ -511,7 +512,7 @@ Module
          }
         }
        )
-       [ VarP
+       ( VarP
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/Show.mlg"
@@ -524,8 +525,8 @@ Module
           , sourceColumn = Pos 14
           }
          }
-        ) "x"
-       ]
+        ) "x" :| []
+       )
        ( Seq
         ( Range
          { _start = SourcePos
@@ -766,7 +767,7 @@ Module
        }
       }
      )
-     [ RecordP
+     ( RecordP
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Show.mlg"
@@ -797,8 +798,8 @@ Module
          }
         ) "show"
        )
-      ]
-     ]
+      ] :| []
+     )
      ( Seq
       ( Range
        { _start = SourcePos
@@ -1096,7 +1097,7 @@ Module
        }
       }
      )
-     [ VarP
+     ( VarP
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Show.mlg"
@@ -1109,22 +1110,23 @@ Module
         , sourceColumn = Pos 13
         }
        }
-      ) "showDictA"
-     , VarP
-      ( Range
-       { _start = SourcePos
-        { sourceName = "./test/testcases/malgo/Show.mlg"
-        , sourceLine = Pos 22
-        , sourceColumn = Pos 13
+      ) "showDictA" :|
+      [ VarP
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/Show.mlg"
+         , sourceLine = Pos 22
+         , sourceColumn = Pos 13
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/Show.mlg"
+         , sourceLine = Pos 22
+         , sourceColumn = Pos 23
+         }
         }
-       , _end = SourcePos
-        { sourceName = "./test/testcases/malgo/Show.mlg"
-        , sourceLine = Pos 22
-        , sourceColumn = Pos 23
-        }
-       }
-      ) "showDictB"
-     ]
+       ) "showDictB"
+      ]
+     )
      ( Seq
       ( Range
        { _start = SourcePos
@@ -1197,7 +1199,7 @@ Module
              }
             }
            )
-           [ TupleP
+           ( TupleP
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/Show.mlg"
@@ -1239,8 +1241,8 @@ Module
                }
               }
              ) "b"
-            ]
-           ]
+            ] :| []
+           )
            ( Seq
             ( Range
              { _start = SourcePos
@@ -1698,7 +1700,7 @@ Module
        }
       }
      )
-     [ VarP
+     ( VarP
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Show.mlg"
@@ -1711,22 +1713,23 @@ Module
         , sourceColumn = Pos 24
         }
        }
-      ) "showDict"
-     , VarP
-      ( Range
-       { _start = SourcePos
-        { sourceName = "./test/testcases/malgo/Show.mlg"
-        , sourceLine = Pos 30
-        , sourceColumn = Pos 24
+      ) "showDict" :|
+      [ VarP
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/Show.mlg"
+         , sourceLine = Pos 30
+         , sourceColumn = Pos 24
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/Show.mlg"
+         , sourceLine = Pos 30
+         , sourceColumn = Pos 26
+         }
         }
-       , _end = SourcePos
-        { sourceName = "./test/testcases/malgo/Show.mlg"
-        , sourceLine = Pos 30
-        , sourceColumn = Pos 26
-        }
-       }
-      ) "x"
-     ]
+       ) "x"
+      ]
+     )
      ( Seq
       ( Range
        { _start = SourcePos
@@ -1920,7 +1923,22 @@ Module
        , sourceColumn = Pos 60
        }
       }
-     ) []
+     )
+     ( VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/Show.mlg"
+        , sourceLine = Pos 32
+        , sourceColumn = Pos 14
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/Show.mlg"
+        , sourceLine = Pos 32
+        , sourceColumn = Pos 60
+        }
+       }
+      ) "_" :| []
+     )
      ( Seq
       ( Range
        { _start = SourcePos
