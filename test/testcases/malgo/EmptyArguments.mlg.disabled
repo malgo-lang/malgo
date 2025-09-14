@@ -11,6 +11,6 @@ def unit = { ({}) -> 1 }
 def main = { () ->
   let x = empty();
   let y = unit();
-  printInt64(x);
-  printInt64(y);
+  printInt32(x);
+  printInt32(y);
 }
