@@ -249,6 +249,22 @@ match (Expand _ patterns) (Record env fields) = local (const env) do
     else pure Nothing
 match _ _ = pure Nothing
 
+-- | Convert any Value to a Text representation for printing
+valueToText :: Value -> Text
+valueToText (Immediate (Int32 n)) = convertString (show n)
+valueToText (Immediate (Int64 n)) = convertString (show n)
+valueToText (Immediate (Float f)) = convertString (show f)
+valueToText (Immediate (Double d)) = convertString (show d)
+valueToText (Immediate (Char c)) = T.singleton c
+valueToText (Immediate (String s)) = s
+valueToText (Struct Tuple []) = "{}"
+valueToText (Struct Tuple values) = "{" <> T.intercalate ", " (map valueToText values) <> "}"
+valueToText (Struct (Tag name) []) = name
+valueToText (Struct (Tag name) values) = name <> "(" <> T.intercalate ", " (map valueToText values) <> ")"
+valueToText (Function {}) = "<function>"
+valueToText (Record {}) = "<record>"
+valueToText (Consumer _) = "<consumer>"
+
 fetchPrimitive :: (Error EvalError :> es, Reader Handlers :> es, IOE :> es) => Text -> Range -> [Value] -> Eff es Value
 fetchPrimitive "malgo_unsafe_cast" = \cases
   _ [value] -> pure value
@@ -279,6 +295,13 @@ fetchPrimitive "malgo_get_contents" = \_ _ -> do
 fetchPrimitive "malgo_string_append" = \cases
   _ [Immediate (String a), Immediate (String b)] -> pure $ Immediate $ String $ a <> b
   range values -> throwError $ InvalidArguments range "malgo_string_append" values
+fetchPrimitive "malgo_print" = \cases
+  _ [value] -> do
+    Handlers {stdout} <- ask @Handlers
+    let text = valueToText value
+    putTextTo stdout text
+    pure $ Struct Tuple []
+  range values -> throwError $ InvalidArguments range "malgo_print" values
 fetchPrimitive name = \range values -> throwError $ PrimitiveNotImplemented range name values
 
 getContents :: (IOE :> es, Reader Handlers :> es) => Eff es Text

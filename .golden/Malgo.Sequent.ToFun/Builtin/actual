@@ -2,102 +2,85 @@
    ((undefined (apply (invoke malgo_unsafe_cast) ((tuple ()))))
       (toStringInt64#
          (lambda
-            ($Builtin.param_276)
+            ($Builtin.param_279)
             (select
-               $Builtin.param_276
+               $Builtin.param_279
                ((#Builtin.x_257
                    (apply (invoke malgo_int64_t_to_string) (#Builtin.x_257)))))))
       (toStringInt64
          (lambda
-            ($Builtin.param_277)
+            ($Builtin.param_280)
             (select
-               $Builtin.param_277
+               $Builtin.param_280
                (((Int64# (#Builtin.x_258))
                    (apply
                       (invoke String#)
                       ((apply (invoke toStringInt64#) (#Builtin.x_258)))))))))
       (toStringInt32#
          (lambda
-            ($Builtin.param_278)
+            ($Builtin.param_281)
             (select
-               $Builtin.param_278
+               $Builtin.param_281
                ((#Builtin.x_255
                    (apply (invoke malgo_int32_t_to_string) (#Builtin.x_255)))))))
       (toStringInt32
          (lambda
-            ($Builtin.param_279)
+            ($Builtin.param_282)
             (select
-               $Builtin.param_279
+               $Builtin.param_282
                (((Int32# (#Builtin.x_256))
                    (apply
                       (invoke String#)
                       ((apply (invoke toStringInt32#) (#Builtin.x_256)))))))))
       (toStringFloat#
          (lambda
-            ($Builtin.param_280)
+            ($Builtin.param_283)
             (select
-               $Builtin.param_280
+               $Builtin.param_283
                ((#Builtin.x_259
                    (apply (invoke malgo_float_to_string) (#Builtin.x_259)))))))
       (toStringFloat
          (lambda
-            ($Builtin.param_281)
+            ($Builtin.param_284)
             (select
-               $Builtin.param_281
+               $Builtin.param_284
                (((Float# (#Builtin.x_260))
                    (apply
                       (invoke String#)
                       ((apply (invoke toStringFloat#) (#Builtin.x_260)))))))))
       (toStringDouble#
          (lambda
-            ($Builtin.param_282)
+            ($Builtin.param_285)
             (select
-               $Builtin.param_282
+               $Builtin.param_285
                ((#Builtin.x_261
                    (apply (invoke malgo_double_to_string) (#Builtin.x_261)))))))
       (toStringDouble
          (lambda
-            ($Builtin.param_283)
+            ($Builtin.param_286)
             (select
-               $Builtin.param_283
+               $Builtin.param_286
                (((Double# (#Builtin.x_262))
                    (apply
                       (invoke String#)
                       ((apply (invoke toStringDouble#) (#Builtin.x_262)))))))))
       (toStringChar#
          (lambda
-            ($Builtin.param_284)
+            ($Builtin.param_287)
             (select
-               $Builtin.param_284
+               $Builtin.param_287
                ((#Builtin.x_263
                    (apply (invoke malgo_char_to_string) (#Builtin.x_263)))))))
       (toStringChar
          (lambda
-            ($Builtin.param_285)
+            ($Builtin.param_288)
             (select
-               $Builtin.param_285
+               $Builtin.param_288
                (((Char# (#Builtin.x_264))
                    (apply
                       (invoke String#)
                       ((apply (invoke toStringChar#) (#Builtin.x_264)))))))))
       (substring#
-         (lambda
-            ($Builtin.param_286)
-            (lambda
-               ($Builtin.param_287)
-               (lambda
-                  ($Builtin.param_288)
-                  (select
-                     (tuple
-                        ($Builtin.param_286 $Builtin.param_287 $Builtin.param_288))
-                     (((tuple
-                          (#Builtin.str_249 #Builtin.start_250 #Builtin.end_251))
-                         (apply
-                            (apply
-                               (apply (invoke malgo_substring) (#Builtin.str_249))
-                               (#Builtin.start_250))
-                            (#Builtin.end_251)))))))))
-      (substring
          (lambda
             ($Builtin.param_289)
             (lambda
@@ -107,6 +90,23 @@
                   (select
                      (tuple
                         ($Builtin.param_289 $Builtin.param_290 $Builtin.param_291))
+                     (((tuple
+                          (#Builtin.str_249 #Builtin.start_250 #Builtin.end_251))
+                         (apply
+                            (apply
+                               (apply (invoke malgo_substring) (#Builtin.str_249))
+                               (#Builtin.start_250))
+                            (#Builtin.end_251)))))))))
+      (substring
+         (lambda
+            ($Builtin.param_292)
+            (lambda
+               ($Builtin.param_293)
+               (lambda
+                  ($Builtin.param_294)
+                  (select
+                     (tuple
+                        ($Builtin.param_292 $Builtin.param_293 $Builtin.param_294))
                      (((tuple
                           ((String# (#Builtin.str_252))
                              (Int64# (#Builtin.start_253))
@@ -120,22 +120,22 @@
                                 (#Builtin.end_254)))))))))))
       (subInt64#
          (lambda
-            ($Builtin.param_292)
+            ($Builtin.param_295)
             (lambda
-               ($Builtin.param_293)
+               ($Builtin.param_296)
                (select
-                  (tuple ($Builtin.param_292 $Builtin.param_293))
+                  (tuple ($Builtin.param_295 $Builtin.param_296))
                   (((tuple (#Builtin.x_32 #Builtin.y_33))
                       (apply
                          (apply (invoke malgo_sub_int64_t) (#Builtin.x_32))
                          (#Builtin.y_33))))))))
       (subInt64
          (lambda
-            ($Builtin.param_294)
+            ($Builtin.param_297)
             (lambda
-               ($Builtin.param_295)
+               ($Builtin.param_298)
                (select
-                  (tuple ($Builtin.param_294 $Builtin.param_295))
+                  (tuple ($Builtin.param_297 $Builtin.param_298))
                   (((tuple ((Int64# (#Builtin.x_34)) (Int64# (#Builtin.y_35))))
                       (apply
                          (invoke Int64#)
@@ -144,22 +144,22 @@
                              (#Builtin.y_35))))))))))
       (subInt32#
          (lambda
-            ($Builtin.param_296)
+            ($Builtin.param_299)
             (lambda
-               ($Builtin.param_297)
+               ($Builtin.param_300)
                (select
-                  (tuple ($Builtin.param_296 $Builtin.param_297))
+                  (tuple ($Builtin.param_299 $Builtin.param_300))
                   (((tuple (#Builtin.x_16 #Builtin.y_17))
                       (apply
                          (apply (invoke malgo_sub_int32_t) (#Builtin.x_16))
                          (#Builtin.y_17))))))))
       (subInt32
          (lambda
-            ($Builtin.param_298)
+            ($Builtin.param_301)
             (lambda
-               ($Builtin.param_299)
+               ($Builtin.param_302)
                (select
-                  (tuple ($Builtin.param_298 $Builtin.param_299))
+                  (tuple ($Builtin.param_301 $Builtin.param_302))
                   (((tuple ((Int32# (#Builtin.x_18)) (Int32# (#Builtin.y_19))))
                       (apply
                          (invoke Int32#)
@@ -168,22 +168,22 @@
                              (#Builtin.y_19))))))))))
       (subFloat#
          (lambda
-            ($Builtin.param_300)
+            ($Builtin.param_303)
             (lambda
-               ($Builtin.param_301)
+               ($Builtin.param_304)
                (select
-                  (tuple ($Builtin.param_300 $Builtin.param_301))
+                  (tuple ($Builtin.param_303 $Builtin.param_304))
                   (((tuple (#Builtin.x_48 #Builtin.y_49))
                       (apply
                          (apply (invoke malgo_sub_float) (#Builtin.x_48))
                          (#Builtin.y_49))))))))
       (subFloat
          (lambda
-            ($Builtin.param_302)
+            ($Builtin.param_305)
             (lambda
-               ($Builtin.param_303)
+               ($Builtin.param_306)
                (select
-                  (tuple ($Builtin.param_302 $Builtin.param_303))
+                  (tuple ($Builtin.param_305 $Builtin.param_306))
                   (((tuple ((Float# (#Builtin.x_50)) (Float# (#Builtin.y_51))))
                       (apply
                          (invoke Float#)
@@ -192,22 +192,22 @@
                              (#Builtin.y_51))))))))))
       (subDouble#
          (lambda
-            ($Builtin.param_304)
+            ($Builtin.param_307)
             (lambda
-               ($Builtin.param_305)
+               ($Builtin.param_308)
                (select
-                  (tuple ($Builtin.param_304 $Builtin.param_305))
+                  (tuple ($Builtin.param_307 $Builtin.param_308))
                   (((tuple (#Builtin.x_64 #Builtin.y_65))
                       (apply
                          (apply (invoke malgo_sub_double) (#Builtin.x_64))
                          (#Builtin.y_65))))))))
       (subDouble
          (lambda
-            ($Builtin.param_306)
+            ($Builtin.param_309)
             (lambda
-               ($Builtin.param_307)
+               ($Builtin.param_310)
                (select
-                  (tuple ($Builtin.param_306 $Builtin.param_307))
+                  (tuple ($Builtin.param_309 $Builtin.param_310))
                   (((tuple ((Double# (#Builtin.x_66)) (Double# (#Builtin.y_67))))
                       (apply
                          (invoke Double#)
@@ -216,186 +216,192 @@
                              (#Builtin.y_67))))))))))
       (string#
          (lambda
-            ($Builtin.param_308)
+            ($Builtin.param_311)
             (select
-               $Builtin.param_308
+               $Builtin.param_311
                ((#Builtin.x_5 (apply (invoke String#) (#Builtin.x_5)))))))
       (sqrtFloat#
          (lambda
-            ($Builtin.param_309)
+            ($Builtin.param_312)
             (select
-               $Builtin.param_309
+               $Builtin.param_312
                ((#Builtin.x_76 (apply (invoke sqrtf) (#Builtin.x_76)))))))
       (sqrtFloat
          (lambda
-            ($Builtin.param_310)
+            ($Builtin.param_313)
             (select
-               $Builtin.param_310
+               $Builtin.param_313
                (((Float# (#Builtin.x_77))
                    (apply
                       (invoke Float#)
                       ((apply (invoke sqrtFloat#) (#Builtin.x_77)))))))))
       (sqrtDouble#
          (lambda
-            ($Builtin.param_311)
+            ($Builtin.param_314)
             (select
-               $Builtin.param_311
+               $Builtin.param_314
                ((#Builtin.x_78 (apply (invoke sqrt) (#Builtin.x_78)))))))
       (sqrtDouble
          (lambda
-            ($Builtin.param_312)
+            ($Builtin.param_315)
             (select
-               $Builtin.param_312
+               $Builtin.param_315
                (((Double# (#Builtin.x_79))
                    (apply
                       (invoke Double#)
                       ((apply (invoke sqrtDouble#) (#Builtin.x_79)))))))))
       (printString#
          (lambda
-            ($Builtin.param_313)
+            ($Builtin.param_316)
             (select
-               $Builtin.param_313
+               $Builtin.param_316
                ((#Builtin.x_271
                    (apply (invoke malgo_print_string) (#Builtin.x_271)))))))
       (printString
          (lambda
-            ($Builtin.param_314)
+            ($Builtin.param_317)
             (select
-               $Builtin.param_314
+               $Builtin.param_317
                (((String# (#Builtin.x_272))
                    (apply (invoke printString#) (#Builtin.x_272)))))))
       (printChar#
          (lambda
-            ($Builtin.param_315)
+            ($Builtin.param_318)
             (select
-               $Builtin.param_315
+               $Builtin.param_318
                ((#Builtin.x_269
                    (apply (invoke malgo_print_char) (#Builtin.x_269)))))))
       (printChar
          (lambda
-            ($Builtin.param_316)
+            ($Builtin.param_319)
             (select
-               $Builtin.param_316
+               $Builtin.param_319
                (((Char# (#Builtin.x_270))
                    (apply (invoke printChar#) (#Builtin.x_270)))))))
+      (print
+         (lambda
+            ($Builtin.param_320)
+            (select
+               $Builtin.param_320
+               ((#Builtin.x_275 (apply (invoke malgo_print) (#Builtin.x_275)))))))
       (panic
          (lambda
-            ($Builtin.param_317)
+            ($Builtin.param_321)
             (select
-               $Builtin.param_317
+               $Builtin.param_321
                (((String# (#Builtin.message_8))
                    (apply (invoke malgo_panic) (#Builtin.message_8)))))))
       (ordChar#
          (lambda
-            ($Builtin.param_318)
+            ($Builtin.param_322)
             (select
-               $Builtin.param_318
+               $Builtin.param_322
                ((#Builtin.x_225 (apply (invoke malgo_char_ord) (#Builtin.x_225)))))))
       (ordChar
          (lambda
-            ($Builtin.param_319)
+            ($Builtin.param_323)
             (select
-               $Builtin.param_319
+               $Builtin.param_323
                (((Char# (#Builtin.chr_226))
                    (apply
                       (invoke Int32#)
                       ((apply (invoke ordChar#) (#Builtin.chr_226)))))))))
       (not
          (lambda
-            ($Builtin.param_320)
+            ($Builtin.param_324)
             (select
-               $Builtin.param_320
+               $Builtin.param_324
                (((True ()) (invoke False)) ((False ()) (invoke True))))))
       (newline
          (lambda
-            ($Builtin.param_321)
+            ($Builtin.param_325)
             (select
-               $Builtin.param_321
+               $Builtin.param_325
                ((#Builtin.__268 (apply (invoke malgo_newline) ((tuple ()))))))))
       (neString#
-         (lambda
-            ($Builtin.param_322)
-            (lambda
-               ($Builtin.param_323)
-               (select
-                  (tuple ($Builtin.param_322 $Builtin.param_323))
-                  (((tuple (#Builtin.x_205 #Builtin.y_206))
-                      (apply
-                         (apply (invoke malgo_ne_string) (#Builtin.x_205))
-                         (#Builtin.y_206))))))))
-      (neInt64#
-         (lambda
-            ($Builtin.param_324)
-            (lambda
-               ($Builtin.param_325)
-               (select
-                  (tuple ($Builtin.param_324 $Builtin.param_325))
-                  (((tuple (#Builtin.x_109 #Builtin.y_110))
-                      (apply
-                         (apply (invoke malgo_ne_int64_t) (#Builtin.x_109))
-                         (#Builtin.y_110))))))))
-      (neInt32#
          (lambda
             ($Builtin.param_326)
             (lambda
                ($Builtin.param_327)
                (select
                   (tuple ($Builtin.param_326 $Builtin.param_327))
-                  (((tuple (#Builtin.x_85 #Builtin.y_86))
+                  (((tuple (#Builtin.x_205 #Builtin.y_206))
                       (apply
-                         (apply (invoke malgo_ne_int32_t) (#Builtin.x_85))
-                         (#Builtin.y_86))))))))
-      (neFloat#
+                         (apply (invoke malgo_ne_string) (#Builtin.x_205))
+                         (#Builtin.y_206))))))))
+      (neInt64#
          (lambda
             ($Builtin.param_328)
             (lambda
                ($Builtin.param_329)
                (select
                   (tuple ($Builtin.param_328 $Builtin.param_329))
-                  (((tuple (#Builtin.x_133 #Builtin.y_134))
+                  (((tuple (#Builtin.x_109 #Builtin.y_110))
                       (apply
-                         (apply (invoke malgo_ne_float) (#Builtin.x_133))
-                         (#Builtin.y_134))))))))
-      (neDouble#
+                         (apply (invoke malgo_ne_int64_t) (#Builtin.x_109))
+                         (#Builtin.y_110))))))))
+      (neInt32#
          (lambda
             ($Builtin.param_330)
             (lambda
                ($Builtin.param_331)
                (select
                   (tuple ($Builtin.param_330 $Builtin.param_331))
-                  (((tuple (#Builtin.x_157 #Builtin.y_158))
+                  (((tuple (#Builtin.x_85 #Builtin.y_86))
                       (apply
-                         (apply (invoke malgo_ne_double) (#Builtin.x_157))
-                         (#Builtin.y_158))))))))
-      (neChar#
+                         (apply (invoke malgo_ne_int32_t) (#Builtin.x_85))
+                         (#Builtin.y_86))))))))
+      (neFloat#
          (lambda
             ($Builtin.param_332)
             (lambda
                ($Builtin.param_333)
                (select
                   (tuple ($Builtin.param_332 $Builtin.param_333))
-                  (((tuple (#Builtin.x_181 #Builtin.y_182))
+                  (((tuple (#Builtin.x_133 #Builtin.y_134))
                       (apply
-                         (apply (invoke malgo_ne_char) (#Builtin.x_181))
-                         (#Builtin.y_182))))))))
-      (mulInt64#
+                         (apply (invoke malgo_ne_float) (#Builtin.x_133))
+                         (#Builtin.y_134))))))))
+      (neDouble#
          (lambda
             ($Builtin.param_334)
             (lambda
                ($Builtin.param_335)
                (select
                   (tuple ($Builtin.param_334 $Builtin.param_335))
-                  (((tuple (#Builtin.x_36 #Builtin.y_37))
+                  (((tuple (#Builtin.x_157 #Builtin.y_158))
                       (apply
-                         (apply (invoke malgo_mul_int64_t) (#Builtin.x_36))
-                         (#Builtin.y_37))))))))
-      (mulInt64
+                         (apply (invoke malgo_ne_double) (#Builtin.x_157))
+                         (#Builtin.y_158))))))))
+      (neChar#
          (lambda
             ($Builtin.param_336)
             (lambda
                ($Builtin.param_337)
                (select
                   (tuple ($Builtin.param_336 $Builtin.param_337))
+                  (((tuple (#Builtin.x_181 #Builtin.y_182))
+                      (apply
+                         (apply (invoke malgo_ne_char) (#Builtin.x_181))
+                         (#Builtin.y_182))))))))
+      (mulInt64#
+         (lambda
+            ($Builtin.param_338)
+            (lambda
+               ($Builtin.param_339)
+               (select
+                  (tuple ($Builtin.param_338 $Builtin.param_339))
+                  (((tuple (#Builtin.x_36 #Builtin.y_37))
+                      (apply
+                         (apply (invoke malgo_mul_int64_t) (#Builtin.x_36))
+                         (#Builtin.y_37))))))))
+      (mulInt64
+         (lambda
+            ($Builtin.param_340)
+            (lambda
+               ($Builtin.param_341)
+               (select
+                  (tuple ($Builtin.param_340 $Builtin.param_341))
                   (((tuple ((Int64# (#Builtin.x_38)) (Int64# (#Builtin.y_39))))
                       (apply
                          (invoke Int64#)
@@ -404,22 +410,22 @@
                              (#Builtin.y_39))))))))))
       (mulInt32#
          (lambda
-            ($Builtin.param_338)
+            ($Builtin.param_342)
             (lambda
-               ($Builtin.param_339)
+               ($Builtin.param_343)
                (select
-                  (tuple ($Builtin.param_338 $Builtin.param_339))
+                  (tuple ($Builtin.param_342 $Builtin.param_343))
                   (((tuple (#Builtin.x_20 #Builtin.y_21))
                       (apply
                          (apply (invoke malgo_mul_int32_t) (#Builtin.x_20))
                          (#Builtin.y_21))))))))
       (mulInt32
          (lambda
-            ($Builtin.param_340)
+            ($Builtin.param_344)
             (lambda
-               ($Builtin.param_341)
+               ($Builtin.param_345)
                (select
-                  (tuple ($Builtin.param_340 $Builtin.param_341))
+                  (tuple ($Builtin.param_344 $Builtin.param_345))
                   (((tuple ((Int32# (#Builtin.x_22)) (Int32# (#Builtin.y_23))))
                       (apply
                          (invoke Int32#)
@@ -428,22 +434,22 @@
                              (#Builtin.y_23))))))))))
       (mulFloat#
          (lambda
-            ($Builtin.param_342)
+            ($Builtin.param_346)
             (lambda
-               ($Builtin.param_343)
+               ($Builtin.param_347)
                (select
-                  (tuple ($Builtin.param_342 $Builtin.param_343))
+                  (tuple ($Builtin.param_346 $Builtin.param_347))
                   (((tuple (#Builtin.x_52 #Builtin.y_53))
                       (apply
                          (apply (invoke malgo_mul_float) (#Builtin.x_52))
                          (#Builtin.y_53))))))))
       (mulFloat
          (lambda
-            ($Builtin.param_344)
+            ($Builtin.param_348)
             (lambda
-               ($Builtin.param_345)
+               ($Builtin.param_349)
                (select
-                  (tuple ($Builtin.param_344 $Builtin.param_345))
+                  (tuple ($Builtin.param_348 $Builtin.param_349))
                   (((tuple ((Float# (#Builtin.x_54)) (Float# (#Builtin.y_55))))
                       (apply
                          (invoke Float#)
@@ -452,22 +458,22 @@
                              (#Builtin.y_55))))))))))
       (mulDouble#
          (lambda
-            ($Builtin.param_346)
+            ($Builtin.param_350)
             (lambda
-               ($Builtin.param_347)
+               ($Builtin.param_351)
                (select
-                  (tuple ($Builtin.param_346 $Builtin.param_347))
+                  (tuple ($Builtin.param_350 $Builtin.param_351))
                   (((tuple (#Builtin.x_68 #Builtin.y_69))
                       (apply
                          (apply (invoke malgo_mul_double) (#Builtin.x_68))
                          (#Builtin.y_69))))))))
       (mulDouble
          (lambda
-            ($Builtin.param_348)
+            ($Builtin.param_352)
             (lambda
-               ($Builtin.param_349)
+               ($Builtin.param_353)
                (select
-                  (tuple ($Builtin.param_348 $Builtin.param_349))
+                  (tuple ($Builtin.param_352 $Builtin.param_353))
                   (((tuple ((Double# (#Builtin.x_70)) (Double# (#Builtin.y_71))))
                       (apply
                          (invoke Double#)
@@ -476,180 +482,180 @@
                              (#Builtin.y_71))))))))))
       (ltString#
          (lambda
-            ($Builtin.param_350)
+            ($Builtin.param_354)
             (lambda
-               ($Builtin.param_351)
+               ($Builtin.param_355)
                (select
-                  (tuple ($Builtin.param_350 $Builtin.param_351))
+                  (tuple ($Builtin.param_354 $Builtin.param_355))
                   (((tuple (#Builtin.x_209 #Builtin.y_210))
                       (apply
                          (apply (invoke malgo_lt_string) (#Builtin.x_209))
                          (#Builtin.y_210))))))))
       (ltInt64#
          (lambda
-            ($Builtin.param_352)
+            ($Builtin.param_356)
             (lambda
-               ($Builtin.param_353)
+               ($Builtin.param_357)
                (select
-                  (tuple ($Builtin.param_352 $Builtin.param_353))
+                  (tuple ($Builtin.param_356 $Builtin.param_357))
                   (((tuple (#Builtin.x_113 #Builtin.y_114))
                       (apply
                          (apply (invoke malgo_lt_int64_t) (#Builtin.x_113))
                          (#Builtin.y_114))))))))
       (ltInt32#
          (lambda
-            ($Builtin.param_354)
+            ($Builtin.param_358)
             (lambda
-               ($Builtin.param_355)
+               ($Builtin.param_359)
                (select
-                  (tuple ($Builtin.param_354 $Builtin.param_355))
+                  (tuple ($Builtin.param_358 $Builtin.param_359))
                   (((tuple (#Builtin.x_89 #Builtin.y_90))
                       (apply
                          (apply (invoke malgo_lt_int32_t) (#Builtin.x_89))
                          (#Builtin.y_90))))))))
       (ltFloat#
          (lambda
-            ($Builtin.param_356)
+            ($Builtin.param_360)
             (lambda
-               ($Builtin.param_357)
+               ($Builtin.param_361)
                (select
-                  (tuple ($Builtin.param_356 $Builtin.param_357))
+                  (tuple ($Builtin.param_360 $Builtin.param_361))
                   (((tuple (#Builtin.x_137 #Builtin.y_138))
                       (apply
                          (apply (invoke malgo_lt_float) (#Builtin.x_137))
                          (#Builtin.y_138))))))))
       (ltDouble#
          (lambda
-            ($Builtin.param_358)
+            ($Builtin.param_362)
             (lambda
-               ($Builtin.param_359)
+               ($Builtin.param_363)
                (select
-                  (tuple ($Builtin.param_358 $Builtin.param_359))
+                  (tuple ($Builtin.param_362 $Builtin.param_363))
                   (((tuple (#Builtin.x_161 #Builtin.y_162))
                       (apply
                          (apply (invoke malgo_lt_double) (#Builtin.x_161))
                          (#Builtin.y_162))))))))
       (ltChar#
          (lambda
-            ($Builtin.param_360)
+            ($Builtin.param_364)
             (lambda
-               ($Builtin.param_361)
+               ($Builtin.param_365)
                (select
-                  (tuple ($Builtin.param_360 $Builtin.param_361))
+                  (tuple ($Builtin.param_364 $Builtin.param_365))
                   (((tuple (#Builtin.x_185 #Builtin.y_186))
                       (apply
                          (apply (invoke malgo_lt_char) (#Builtin.x_185))
                          (#Builtin.y_186))))))))
       (lengthString#
          (lambda
-            ($Builtin.param_362)
+            ($Builtin.param_366)
             (select
-               $Builtin.param_362
+               $Builtin.param_366
                ((#Builtin.x_235
                    (apply (invoke malgo_string_length) (#Builtin.x_235)))))))
       (lengthString
          (lambda
-            ($Builtin.param_363)
+            ($Builtin.param_367)
             (select
-               $Builtin.param_363
+               $Builtin.param_367
                (((String# (#Builtin.str_236))
                    (apply
                       (invoke Int64#)
                       ((apply (invoke lengthString#) (#Builtin.str_236)))))))))
       (leString#
          (lambda
-            ($Builtin.param_364)
+            ($Builtin.param_368)
             (lambda
-               ($Builtin.param_365)
+               ($Builtin.param_369)
                (select
-                  (tuple ($Builtin.param_364 $Builtin.param_365))
+                  (tuple ($Builtin.param_368 $Builtin.param_369))
                   (((tuple (#Builtin.x_217 #Builtin.y_218))
                       (apply
                          (apply (invoke malgo_le_string) (#Builtin.x_217))
                          (#Builtin.y_218))))))))
       (leInt64#
          (lambda
-            ($Builtin.param_366)
+            ($Builtin.param_370)
             (lambda
-               ($Builtin.param_367)
+               ($Builtin.param_371)
                (select
-                  (tuple ($Builtin.param_366 $Builtin.param_367))
+                  (tuple ($Builtin.param_370 $Builtin.param_371))
                   (((tuple (#Builtin.x_121 #Builtin.y_122))
                       (apply
                          (apply (invoke malgo_le_int64_t) (#Builtin.x_121))
                          (#Builtin.y_122))))))))
       (leInt32#
          (lambda
-            ($Builtin.param_368)
+            ($Builtin.param_372)
             (lambda
-               ($Builtin.param_369)
+               ($Builtin.param_373)
                (select
-                  (tuple ($Builtin.param_368 $Builtin.param_369))
+                  (tuple ($Builtin.param_372 $Builtin.param_373))
                   (((tuple (#Builtin.x_97 #Builtin.y_98))
                       (apply
                          (apply (invoke malgo_le_int32_t) (#Builtin.x_97))
                          (#Builtin.y_98))))))))
       (leFloat#
          (lambda
-            ($Builtin.param_370)
+            ($Builtin.param_374)
             (lambda
-               ($Builtin.param_371)
+               ($Builtin.param_375)
                (select
-                  (tuple ($Builtin.param_370 $Builtin.param_371))
+                  (tuple ($Builtin.param_374 $Builtin.param_375))
                   (((tuple (#Builtin.x_145 #Builtin.y_146))
                       (apply
                          (apply (invoke malgo_le_float) (#Builtin.x_145))
                          (#Builtin.y_146))))))))
       (leDouble#
          (lambda
-            ($Builtin.param_372)
+            ($Builtin.param_376)
             (lambda
-               ($Builtin.param_373)
+               ($Builtin.param_377)
                (select
-                  (tuple ($Builtin.param_372 $Builtin.param_373))
+                  (tuple ($Builtin.param_376 $Builtin.param_377))
                   (((tuple (#Builtin.x_169 #Builtin.y_170))
                       (apply
                          (apply (invoke malgo_le_double) (#Builtin.x_169))
                          (#Builtin.y_170))))))))
       (leChar#
          (lambda
-            ($Builtin.param_374)
+            ($Builtin.param_378)
             (lambda
-               ($Builtin.param_375)
+               ($Builtin.param_379)
                (select
-                  (tuple ($Builtin.param_374 $Builtin.param_375))
+                  (tuple ($Builtin.param_378 $Builtin.param_379))
                   (((tuple (#Builtin.x_193 #Builtin.y_194))
                       (apply
                          (apply (invoke malgo_le_char) (#Builtin.x_193))
                          (#Builtin.y_194))))))))
       (isUpper#
          (lambda
-            ($Builtin.param_376)
+            ($Builtin.param_380)
             (select
-               $Builtin.param_376
+               $Builtin.param_380
                ((#Builtin.x_231 (apply (invoke malgo_is_upper) (#Builtin.x_231)))))))
       (isTrue#
          (lambda
-            ($Builtin.param_377)
+            ($Builtin.param_381)
             (select
-               $Builtin.param_377
+               $Builtin.param_381
                ((1_i32 (invoke True)) (#Builtin.__80 (invoke False))))))
       (isUpper
          (lambda
-            ($Builtin.param_378)
+            ($Builtin.param_382)
             (select
-               $Builtin.param_378
+               $Builtin.param_382
                (((Char# (#Builtin.x_232))
                    (apply
                       (invoke isTrue#)
                       ((apply (invoke isUpper#) (#Builtin.x_232)))))))))
       (leChar
          (lambda
-            ($Builtin.param_379)
+            ($Builtin.param_383)
             (lambda
-               ($Builtin.param_380)
+               ($Builtin.param_384)
                (select
-                  (tuple ($Builtin.param_379 $Builtin.param_380))
+                  (tuple ($Builtin.param_383 $Builtin.param_384))
                   (((tuple ((Char# (#Builtin.x_195)) (Char# (#Builtin.y_196))))
                       (apply
                          (invoke isTrue#)
@@ -658,11 +664,11 @@
                              (#Builtin.y_196))))))))))
       (leDouble
          (lambda
-            ($Builtin.param_381)
+            ($Builtin.param_385)
             (lambda
-               ($Builtin.param_382)
+               ($Builtin.param_386)
                (select
-                  (tuple ($Builtin.param_381 $Builtin.param_382))
+                  (tuple ($Builtin.param_385 $Builtin.param_386))
                   (((tuple
                        ((Double# (#Builtin.x_171)) (Double# (#Builtin.y_172))))
                       (apply
@@ -672,11 +678,11 @@
                              (#Builtin.y_172))))))))))
       (leFloat
          (lambda
-            ($Builtin.param_383)
+            ($Builtin.param_387)
             (lambda
-               ($Builtin.param_384)
+               ($Builtin.param_388)
                (select
-                  (tuple ($Builtin.param_383 $Builtin.param_384))
+                  (tuple ($Builtin.param_387 $Builtin.param_388))
                   (((tuple ((Float# (#Builtin.x_147)) (Float# (#Builtin.y_148))))
                       (apply
                          (invoke isTrue#)
@@ -685,11 +691,11 @@
                              (#Builtin.y_148))))))))))
       (leInt32
          (lambda
-            ($Builtin.param_385)
+            ($Builtin.param_389)
             (lambda
-               ($Builtin.param_386)
+               ($Builtin.param_390)
                (select
-                  (tuple ($Builtin.param_385 $Builtin.param_386))
+                  (tuple ($Builtin.param_389 $Builtin.param_390))
                   (((tuple ((Int32# (#Builtin.x_99)) (Int32# (#Builtin.y_100))))
                       (apply
                          (invoke isTrue#)
@@ -698,11 +704,11 @@
                              (#Builtin.y_100))))))))))
       (leInt64
          (lambda
-            ($Builtin.param_387)
+            ($Builtin.param_391)
             (lambda
-               ($Builtin.param_388)
+               ($Builtin.param_392)
                (select
-                  (tuple ($Builtin.param_387 $Builtin.param_388))
+                  (tuple ($Builtin.param_391 $Builtin.param_392))
                   (((tuple ((Int64# (#Builtin.x_123)) (Int64# (#Builtin.y_124))))
                       (apply
                          (invoke isTrue#)
@@ -711,11 +717,11 @@
                              (#Builtin.y_124))))))))))
       (leString
          (lambda
-            ($Builtin.param_389)
+            ($Builtin.param_393)
             (lambda
-               ($Builtin.param_390)
+               ($Builtin.param_394)
                (select
-                  (tuple ($Builtin.param_389 $Builtin.param_390))
+                  (tuple ($Builtin.param_393 $Builtin.param_394))
                   (((tuple
                        ((String# (#Builtin.x_219)) (String# (#Builtin.y_220))))
                       (apply
@@ -725,11 +731,11 @@
                              (#Builtin.y_220))))))))))
       (ltChar
          (lambda
-            ($Builtin.param_391)
+            ($Builtin.param_395)
             (lambda
-               ($Builtin.param_392)
+               ($Builtin.param_396)
                (select
-                  (tuple ($Builtin.param_391 $Builtin.param_392))
+                  (tuple ($Builtin.param_395 $Builtin.param_396))
                   (((tuple ((Char# (#Builtin.x_187)) (Char# (#Builtin.y_188))))
                       (apply
                          (invoke isTrue#)
@@ -738,11 +744,11 @@
                              (#Builtin.y_188))))))))))
       (ltDouble
          (lambda
-            ($Builtin.param_393)
+            ($Builtin.param_397)
             (lambda
-               ($Builtin.param_394)
+               ($Builtin.param_398)
                (select
-                  (tuple ($Builtin.param_393 $Builtin.param_394))
+                  (tuple ($Builtin.param_397 $Builtin.param_398))
                   (((tuple
                        ((Double# (#Builtin.x_163)) (Double# (#Builtin.y_164))))
                       (apply
@@ -752,11 +758,11 @@
                              (#Builtin.y_164))))))))))
       (ltFloat
          (lambda
-            ($Builtin.param_395)
+            ($Builtin.param_399)
             (lambda
-               ($Builtin.param_396)
+               ($Builtin.param_400)
                (select
-                  (tuple ($Builtin.param_395 $Builtin.param_396))
+                  (tuple ($Builtin.param_399 $Builtin.param_400))
                   (((tuple ((Float# (#Builtin.x_139)) (Float# (#Builtin.y_140))))
                       (apply
                          (invoke isTrue#)
@@ -765,11 +771,11 @@
                              (#Builtin.y_140))))))))))
       (ltInt32
          (lambda
-            ($Builtin.param_397)
+            ($Builtin.param_401)
             (lambda
-               ($Builtin.param_398)
+               ($Builtin.param_402)
                (select
-                  (tuple ($Builtin.param_397 $Builtin.param_398))
+                  (tuple ($Builtin.param_401 $Builtin.param_402))
                   (((tuple ((Int32# (#Builtin.x_91)) (Int32# (#Builtin.y_92))))
                       (apply
                          (invoke isTrue#)
@@ -778,11 +784,11 @@
                              (#Builtin.y_92))))))))))
       (ltInt64
          (lambda
-            ($Builtin.param_399)
+            ($Builtin.param_403)
             (lambda
-               ($Builtin.param_400)
+               ($Builtin.param_404)
                (select
-                  (tuple ($Builtin.param_399 $Builtin.param_400))
+                  (tuple ($Builtin.param_403 $Builtin.param_404))
                   (((tuple ((Int64# (#Builtin.x_115)) (Int64# (#Builtin.y_116))))
                       (apply
                          (invoke isTrue#)
@@ -791,11 +797,11 @@
                              (#Builtin.y_116))))))))))
       (ltString
          (lambda
-            ($Builtin.param_401)
+            ($Builtin.param_405)
             (lambda
-               ($Builtin.param_402)
+               ($Builtin.param_406)
                (select
-                  (tuple ($Builtin.param_401 $Builtin.param_402))
+                  (tuple ($Builtin.param_405 $Builtin.param_406))
                   (((tuple
                        ((String# (#Builtin.x_211)) (String# (#Builtin.y_212))))
                       (apply
@@ -805,11 +811,11 @@
                              (#Builtin.y_212))))))))))
       (neChar
          (lambda
-            ($Builtin.param_403)
+            ($Builtin.param_407)
             (lambda
-               ($Builtin.param_404)
+               ($Builtin.param_408)
                (select
-                  (tuple ($Builtin.param_403 $Builtin.param_404))
+                  (tuple ($Builtin.param_407 $Builtin.param_408))
                   (((tuple ((Char# (#Builtin.x_183)) (Char# (#Builtin.y_184))))
                       (apply
                          (invoke isTrue#)
@@ -818,11 +824,11 @@
                              (#Builtin.y_184))))))))))
       (neDouble
          (lambda
-            ($Builtin.param_405)
+            ($Builtin.param_409)
             (lambda
-               ($Builtin.param_406)
+               ($Builtin.param_410)
                (select
-                  (tuple ($Builtin.param_405 $Builtin.param_406))
+                  (tuple ($Builtin.param_409 $Builtin.param_410))
                   (((tuple
                        ((Double# (#Builtin.x_159)) (Double# (#Builtin.y_160))))
                       (apply
@@ -832,11 +838,11 @@
                              (#Builtin.y_160))))))))))
       (neFloat
          (lambda
-            ($Builtin.param_407)
+            ($Builtin.param_411)
             (lambda
-               ($Builtin.param_408)
+               ($Builtin.param_412)
                (select
-                  (tuple ($Builtin.param_407 $Builtin.param_408))
+                  (tuple ($Builtin.param_411 $Builtin.param_412))
                   (((tuple ((Float# (#Builtin.x_135)) (Float# (#Builtin.y_136))))
                       (apply
                          (invoke isTrue#)
@@ -845,11 +851,11 @@
                              (#Builtin.y_136))))))))))
       (neInt32
          (lambda
-            ($Builtin.param_409)
+            ($Builtin.param_413)
             (lambda
-               ($Builtin.param_410)
+               ($Builtin.param_414)
                (select
-                  (tuple ($Builtin.param_409 $Builtin.param_410))
+                  (tuple ($Builtin.param_413 $Builtin.param_414))
                   (((tuple ((Int32# (#Builtin.x_87)) (Int32# (#Builtin.y_88))))
                       (apply
                          (invoke isTrue#)
@@ -858,11 +864,11 @@
                              (#Builtin.y_88))))))))))
       (neInt64
          (lambda
-            ($Builtin.param_411)
+            ($Builtin.param_415)
             (lambda
-               ($Builtin.param_412)
+               ($Builtin.param_416)
                (select
-                  (tuple ($Builtin.param_411 $Builtin.param_412))
+                  (tuple ($Builtin.param_415 $Builtin.param_416))
                   (((tuple ((Int64# (#Builtin.x_111)) (Int64# (#Builtin.y_112))))
                       (apply
                          (invoke isTrue#)
@@ -871,11 +877,11 @@
                              (#Builtin.y_112))))))))))
       (neString
          (lambda
-            ($Builtin.param_413)
+            ($Builtin.param_417)
             (lambda
-               ($Builtin.param_414)
+               ($Builtin.param_418)
                (select
-                  (tuple ($Builtin.param_413 $Builtin.param_414))
+                  (tuple ($Builtin.param_417 $Builtin.param_418))
                   (((tuple
                        ((String# (#Builtin.x_207)) (String# (#Builtin.y_208))))
                       (apply
@@ -885,80 +891,80 @@
                              (#Builtin.y_208))))))))))
       (isLower#
          (lambda
-            ($Builtin.param_415)
+            ($Builtin.param_419)
             (select
-               $Builtin.param_415
+               $Builtin.param_419
                ((#Builtin.x_229 (apply (invoke malgo_is_lower) (#Builtin.x_229)))))))
       (isLower
          (lambda
-            ($Builtin.param_416)
+            ($Builtin.param_420)
             (select
-               $Builtin.param_416
+               $Builtin.param_420
                (((Char# (#Builtin.x_230))
                    (apply
                       (invoke isTrue#)
                       ((apply (invoke isLower#) (#Builtin.x_230)))))))))
       (isDigit#
          (lambda
-            ($Builtin.param_417)
+            ($Builtin.param_421)
             (select
-               $Builtin.param_417
+               $Builtin.param_421
                ((#Builtin.x_227 (apply (invoke malgo_is_digit) (#Builtin.x_227)))))))
       (isDigit
          (lambda
-            ($Builtin.param_418)
+            ($Builtin.param_422)
             (select
-               $Builtin.param_418
+               $Builtin.param_422
                (((Char# (#Builtin.x_228))
                    (apply
                       (invoke isTrue#)
                       ((apply (invoke isDigit#) (#Builtin.x_228)))))))))
       (isAlphanum#
          (lambda
-            ($Builtin.param_419)
+            ($Builtin.param_423)
             (select
-               $Builtin.param_419
+               $Builtin.param_423
                ((#Builtin.x_233
                    (apply (invoke malgo_is_alphanum) (#Builtin.x_233)))))))
       (isAlphanum
          (lambda
-            ($Builtin.param_420)
+            ($Builtin.param_424)
             (select
-               $Builtin.param_420
+               $Builtin.param_424
                (((Char# (#Builtin.x_234))
                    (apply
                       (invoke isTrue#)
                       ((apply (invoke isAlphanum#) (#Builtin.x_234)))))))))
       (int64#
          (lambda
-            ($Builtin.param_421)
+            ($Builtin.param_425)
             (select
-               $Builtin.param_421
+               $Builtin.param_425
                ((#Builtin.x_1 (apply (invoke Int64#) (#Builtin.x_1)))))))
       (int32#
          (lambda
-            ($Builtin.param_422)
+            ($Builtin.param_426)
             (select
-               $Builtin.param_422
+               $Builtin.param_426
                ((#Builtin.x_0 (apply (invoke Int32#) (#Builtin.x_0)))))))
       (gtString#
          (lambda
-            ($Builtin.param_423)
+            ($Builtin.param_427)
             (lambda
-               ($Builtin.param_424)
+               ($Builtin.param_428)
                (select
-                  (tuple ($Builtin.param_423 $Builtin.param_424))
+                  (tuple ($Builtin.param_427 $Builtin.param_428))
                   (((tuple (#Builtin.x_213 #Builtin.y_214))
                       (apply
                          (apply (invoke malgo_gt_string) (#Builtin.x_213))
                          (#Builtin.y_214))))))))
       (gtString
          (lambda
-            ($Builtin.param_425)
+            ($Builtin.param_429)
             (lambda
-               ($Builtin.param_426)
+               ($Builtin.param_430)
                (select
-                  (tuple ($Builtin.param_425 $Builtin.param_426))
+                  (tuple ($Builtin.param_429 $Builtin.param_430))
                   (((tuple
                        ((String# (#Builtin.x_215)) (String# (#Builtin.y_216))))
                       (apply
@@ -968,22 +974,22 @@
                              (#Builtin.y_216))))))))))
       (gtInt64#
          (lambda
-            ($Builtin.param_427)
+            ($Builtin.param_431)
             (lambda
-               ($Builtin.param_428)
+               ($Builtin.param_432)
                (select
-                  (tuple ($Builtin.param_427 $Builtin.param_428))
+                  (tuple ($Builtin.param_431 $Builtin.param_432))
                   (((tuple (#Builtin.x_117 #Builtin.y_118))
                       (apply
                          (apply (invoke malgo_gt_int64_t) (#Builtin.x_117))
                          (#Builtin.y_118))))))))
       (gtInt64
          (lambda
-            ($Builtin.param_429)
+            ($Builtin.param_433)
             (lambda
-               ($Builtin.param_430)
+               ($Builtin.param_434)
                (select
-                  (tuple ($Builtin.param_429 $Builtin.param_430))
+                  (tuple ($Builtin.param_433 $Builtin.param_434))
                   (((tuple ((Int64# (#Builtin.x_119)) (Int64# (#Builtin.y_120))))
                       (apply
                          (invoke isTrue#)
@@ -992,22 +998,22 @@
                              (#Builtin.y_120))))))))))
       (gtInt32#
          (lambda
-            ($Builtin.param_431)
+            ($Builtin.param_435)
             (lambda
-               ($Builtin.param_432)
+               ($Builtin.param_436)
                (select
-                  (tuple ($Builtin.param_431 $Builtin.param_432))
+                  (tuple ($Builtin.param_435 $Builtin.param_436))
                   (((tuple (#Builtin.x_93 #Builtin.y_94))
                       (apply
                          (apply (invoke malgo_gt_int32_t) (#Builtin.x_93))
                          (#Builtin.y_94))))))))
       (gtInt32
          (lambda
-            ($Builtin.param_433)
+            ($Builtin.param_437)
             (lambda
-               ($Builtin.param_434)
+               ($Builtin.param_438)
                (select
-                  (tuple ($Builtin.param_433 $Builtin.param_434))
+                  (tuple ($Builtin.param_437 $Builtin.param_438))
                   (((tuple ((Int32# (#Builtin.x_95)) (Int32# (#Builtin.y_96))))
                       (apply
                          (invoke isTrue#)
@@ -1016,22 +1022,22 @@
                              (#Builtin.y_96))))))))))
       (gtFloat#
          (lambda
-            ($Builtin.param_435)
+            ($Builtin.param_439)
             (lambda
-               ($Builtin.param_436)
+               ($Builtin.param_440)
                (select
-                  (tuple ($Builtin.param_435 $Builtin.param_436))
+                  (tuple ($Builtin.param_439 $Builtin.param_440))
                   (((tuple (#Builtin.x_141 #Builtin.y_142))
                       (apply
                          (apply (invoke malgo_gt_float) (#Builtin.x_141))
                          (#Builtin.y_142))))))))
       (gtFloat
          (lambda
-            ($Builtin.param_437)
+            ($Builtin.param_441)
             (lambda
-               ($Builtin.param_438)
+               ($Builtin.param_442)
                (select
-                  (tuple ($Builtin.param_437 $Builtin.param_438))
+                  (tuple ($Builtin.param_441 $Builtin.param_442))
                   (((tuple ((Float# (#Builtin.x_143)) (Float# (#Builtin.y_144))))
                       (apply
                          (invoke isTrue#)
@@ -1040,22 +1046,22 @@
                              (#Builtin.y_144))))))))))
       (gtDouble#
          (lambda
-            ($Builtin.param_439)
+            ($Builtin.param_443)
             (lambda
-               ($Builtin.param_440)
+               ($Builtin.param_444)
                (select
-                  (tuple ($Builtin.param_439 $Builtin.param_440))
+                  (tuple ($Builtin.param_443 $Builtin.param_444))
                   (((tuple (#Builtin.x_165 #Builtin.y_166))
                       (apply
                          (apply (invoke malgo_gt_double) (#Builtin.x_165))
                          (#Builtin.y_166))))))))
       (gtDouble
          (lambda
-            ($Builtin.param_441)
+            ($Builtin.param_445)
             (lambda
-               ($Builtin.param_442)
+               ($Builtin.param_446)
                (select
-                  (tuple ($Builtin.param_441 $Builtin.param_442))
+                  (tuple ($Builtin.param_445 $Builtin.param_446))
                   (((tuple
                        ((Double# (#Builtin.x_167)) (Double# (#Builtin.y_168))))
                       (apply
@@ -1065,22 +1071,22 @@
                              (#Builtin.y_168))))))))))
       (gtChar#
          (lambda
-            ($Builtin.param_443)
+            ($Builtin.param_447)
             (lambda
-               ($Builtin.param_444)
+               ($Builtin.param_448)
                (select
-                  (tuple ($Builtin.param_443 $Builtin.param_444))
+                  (tuple ($Builtin.param_447 $Builtin.param_448))
                   (((tuple (#Builtin.x_189 #Builtin.y_190))
                       (apply
                          (apply (invoke malgo_gt_char) (#Builtin.x_189))
                          (#Builtin.y_190))))))))
       (gtChar
          (lambda
-            ($Builtin.param_445)
+            ($Builtin.param_449)
             (lambda
-               ($Builtin.param_446)
+               ($Builtin.param_450)
                (select
-                  (tuple ($Builtin.param_445 $Builtin.param_446))
+                  (tuple ($Builtin.param_449 $Builtin.param_450))
                   (((tuple ((Char# (#Builtin.x_191)) (Char# (#Builtin.y_192))))
                       (apply
                          (invoke isTrue#)
@@ -1089,40 +1095,40 @@
                              (#Builtin.y_192))))))))))
       (getContents
          (lambda
-            ($Builtin.param_447)
+            ($Builtin.param_451)
             (select
-               $Builtin.param_447
-               ((#Builtin.__275
+               $Builtin.param_451
+               ((#Builtin.__278
                    (apply
                       (invoke String#)
                       ((apply (invoke malgo_get_contents) ((tuple ()))))))))))
       (getChar
          (lambda
-            ($Builtin.param_448)
+            ($Builtin.param_452)
             (select
-               $Builtin.param_448
-               ((#Builtin.__274
+               $Builtin.param_452
+               ((#Builtin.__277
                    (apply
                       (invoke Char#)
                       ((apply (invoke malgo_get_char) ((tuple ()))))))))))
       (geString#
          (lambda
-            ($Builtin.param_449)
+            ($Builtin.param_453)
             (lambda
-               ($Builtin.param_450)
+               ($Builtin.param_454)
                (select
-                  (tuple ($Builtin.param_449 $Builtin.param_450))
+                  (tuple ($Builtin.param_453 $Builtin.param_454))
                   (((tuple (#Builtin.x_221 #Builtin.y_222))
                       (apply
                          (apply (invoke malgo_ge_string) (#Builtin.x_221))
                          (#Builtin.y_222))))))))
       (geString
          (lambda
-            ($Builtin.param_451)
+            ($Builtin.param_455)
             (lambda
-               ($Builtin.param_452)
+               ($Builtin.param_456)
                (select
-                  (tuple ($Builtin.param_451 $Builtin.param_452))
+                  (tuple ($Builtin.param_455 $Builtin.param_456))
                   (((tuple
                        ((String# (#Builtin.x_223)) (String# (#Builtin.y_224))))
                       (apply
@@ -1132,22 +1138,22 @@
                              (#Builtin.y_224))))))))))
       (geInt64#
          (lambda
-            ($Builtin.param_453)
+            ($Builtin.param_457)
             (lambda
-               ($Builtin.param_454)
+               ($Builtin.param_458)
                (select
-                  (tuple ($Builtin.param_453 $Builtin.param_454))
+                  (tuple ($Builtin.param_457 $Builtin.param_458))
                   (((tuple (#Builtin.x_125 #Builtin.y_126))
                       (apply
                          (apply (invoke malgo_ge_int64_t) (#Builtin.x_125))
                          (#Builtin.y_126))))))))
       (geInt64
          (lambda
-            ($Builtin.param_455)
+            ($Builtin.param_459)
             (lambda
-               ($Builtin.param_456)
+               ($Builtin.param_460)
                (select
-                  (tuple ($Builtin.param_455 $Builtin.param_456))
+                  (tuple ($Builtin.param_459 $Builtin.param_460))
                   (((tuple ((Int64# (#Builtin.x_127)) (Int64# (#Builtin.y_128))))
                       (apply
                          (invoke isTrue#)
@@ -1156,22 +1162,22 @@
                              (#Builtin.y_128))))))))))
       (geInt32#
          (lambda
-            ($Builtin.param_457)
+            ($Builtin.param_461)
             (lambda
-               ($Builtin.param_458)
+               ($Builtin.param_462)
                (select
-                  (tuple ($Builtin.param_457 $Builtin.param_458))
+                  (tuple ($Builtin.param_461 $Builtin.param_462))
                   (((tuple (#Builtin.x_101 #Builtin.y_102))
                       (apply
                          (apply (invoke malgo_ge_int32_t) (#Builtin.x_101))
                          (#Builtin.y_102))))))))
       (geInt32
          (lambda
-            ($Builtin.param_459)
+            ($Builtin.param_463)
             (lambda
-               ($Builtin.param_460)
+               ($Builtin.param_464)
                (select
-                  (tuple ($Builtin.param_459 $Builtin.param_460))
+                  (tuple ($Builtin.param_463 $Builtin.param_464))
                   (((tuple ((Int32# (#Builtin.x_103)) (Int32# (#Builtin.y_104))))
                       (apply
                          (invoke isTrue#)
@@ -1180,22 +1186,22 @@
                              (#Builtin.y_104))))))))))
       (geFloat#
          (lambda
-            ($Builtin.param_461)
+            ($Builtin.param_465)
             (lambda
-               ($Builtin.param_462)
+               ($Builtin.param_466)
                (select
-                  (tuple ($Builtin.param_461 $Builtin.param_462))
+                  (tuple ($Builtin.param_465 $Builtin.param_466))
                   (((tuple (#Builtin.x_149 #Builtin.y_150))
                       (apply
                          (apply (invoke malgo_ge_float) (#Builtin.x_149))
                          (#Builtin.y_150))))))))
       (geFloat
          (lambda
-            ($Builtin.param_463)
+            ($Builtin.param_467)
             (lambda
-               ($Builtin.param_464)
+               ($Builtin.param_468)
                (select
-                  (tuple ($Builtin.param_463 $Builtin.param_464))
+                  (tuple ($Builtin.param_467 $Builtin.param_468))
                   (((tuple ((Float# (#Builtin.x_151)) (Float# (#Builtin.y_152))))
                       (apply
                          (invoke isTrue#)
@@ -1204,22 +1210,22 @@
                              (#Builtin.y_152))))))))))
       (geDouble#
          (lambda
-            ($Builtin.param_465)
+            ($Builtin.param_469)
             (lambda
-               ($Builtin.param_466)
+               ($Builtin.param_470)
                (select
-                  (tuple ($Builtin.param_465 $Builtin.param_466))
+                  (tuple ($Builtin.param_469 $Builtin.param_470))
                   (((tuple (#Builtin.x_173 #Builtin.y_174))
                       (apply
                          (apply (invoke malgo_ge_double) (#Builtin.x_173))
                          (#Builtin.y_174))))))))
       (geDouble
          (lambda
-            ($Builtin.param_467)
+            ($Builtin.param_471)
             (lambda
-               ($Builtin.param_468)
+               ($Builtin.param_472)
                (select
-                  (tuple ($Builtin.param_467 $Builtin.param_468))
+                  (tuple ($Builtin.param_471 $Builtin.param_472))
                   (((tuple
                        ((Double# (#Builtin.x_175)) (Double# (#Builtin.y_176))))
                       (apply
@@ -1229,22 +1235,22 @@
                              (#Builtin.y_176))))))))))
       (geChar#
          (lambda
-            ($Builtin.param_469)
+            ($Builtin.param_473)
             (lambda
-               ($Builtin.param_470)
+               ($Builtin.param_474)
                (select
-                  (tuple ($Builtin.param_469 $Builtin.param_470))
+                  (tuple ($Builtin.param_473 $Builtin.param_474))
                   (((tuple (#Builtin.x_197 #Builtin.y_198))
                       (apply
                          (apply (invoke malgo_ge_char) (#Builtin.x_197))
                          (#Builtin.y_198))))))))
       (geChar
          (lambda
-            ($Builtin.param_471)
+            ($Builtin.param_475)
             (lambda
-               ($Builtin.param_472)
+               ($Builtin.param_476)
                (select
-                  (tuple ($Builtin.param_471 $Builtin.param_472))
+                  (tuple ($Builtin.param_475 $Builtin.param_476))
                   (((tuple ((Char# (#Builtin.x_199)) (Char# (#Builtin.y_200))))
                       (apply
                          (invoke isTrue#)
@@ -1253,40 +1259,40 @@
                              (#Builtin.y_200))))))))))
       (flush
          (lambda
-            ($Builtin.param_473)
+            ($Builtin.param_477)
             (select
-               $Builtin.param_473
-               ((#Builtin.__273 (apply (invoke malgo_flush) ((tuple ()))))))))
+               $Builtin.param_477
+               ((#Builtin.__276 (apply (invoke malgo_flush) ((tuple ()))))))))
       (float#
          (lambda
-            ($Builtin.param_474)
+            ($Builtin.param_478)
             (select
-               $Builtin.param_474
+               $Builtin.param_478
                ((#Builtin.x_2 (apply (invoke Float#) (#Builtin.x_2)))))))
       (exitFailure
          (lambda
-            ($Builtin.param_475)
+            ($Builtin.param_479)
             (select
-               $Builtin.param_475
+               $Builtin.param_479
                ((#Builtin.__267 (apply (invoke malgo_exit_failure) ((tuple ()))))))))
       (eqString#
          (lambda
-            ($Builtin.param_476)
+            ($Builtin.param_480)
             (lambda
-               ($Builtin.param_477)
+               ($Builtin.param_481)
                (select
-                  (tuple ($Builtin.param_476 $Builtin.param_477))
+                  (tuple ($Builtin.param_480 $Builtin.param_481))
                   (((tuple (#Builtin.x_201 #Builtin.y_202))
                       (apply
                          (apply (invoke malgo_eq_string) (#Builtin.x_201))
                          (#Builtin.y_202))))))))
       (eqString
          (lambda
-            ($Builtin.param_478)
+            ($Builtin.param_482)
             (lambda
-               ($Builtin.param_479)
+               ($Builtin.param_483)
                (select
-                  (tuple ($Builtin.param_478 $Builtin.param_479))
+                  (tuple ($Builtin.param_482 $Builtin.param_483))
                   (((tuple
                        ((String# (#Builtin.x_203)) (String# (#Builtin.y_204))))
                       (apply
@@ -1296,22 +1302,22 @@
                              (#Builtin.y_204))))))))))
       (eqInt64#
          (lambda
-            ($Builtin.param_480)
+            ($Builtin.param_484)
             (lambda
-               ($Builtin.param_481)
+               ($Builtin.param_485)
                (select
-                  (tuple ($Builtin.param_480 $Builtin.param_481))
+                  (tuple ($Builtin.param_484 $Builtin.param_485))
                   (((tuple (#Builtin.x_105 #Builtin.y_106))
                       (apply
                          (apply (invoke malgo_eq_int64_t) (#Builtin.x_105))
                          (#Builtin.y_106))))))))
       (eqInt64
          (lambda
-            ($Builtin.param_482)
+            ($Builtin.param_486)
             (lambda
-               ($Builtin.param_483)
+               ($Builtin.param_487)
                (select
-                  (tuple ($Builtin.param_482 $Builtin.param_483))
+                  (tuple ($Builtin.param_486 $Builtin.param_487))
                   (((tuple ((Int64# (#Builtin.x_107)) (Int64# (#Builtin.y_108))))
                       (apply
                          (invoke isTrue#)
@@ -1320,22 +1326,22 @@
                              (#Builtin.y_108))))))))))
       (eqInt32#
          (lambda
-            ($Builtin.param_484)
+            ($Builtin.param_488)
             (lambda
-               ($Builtin.param_485)
+               ($Builtin.param_489)
                (select
-                  (tuple ($Builtin.param_484 $Builtin.param_485))
+                  (tuple ($Builtin.param_488 $Builtin.param_489))
                   (((tuple (#Builtin.x_81 #Builtin.y_82))
                       (apply
                          (apply (invoke malgo_eq_int32_t) (#Builtin.x_81))
                          (#Builtin.y_82))))))))
       (eqInt32
          (lambda
-            ($Builtin.param_486)
+            ($Builtin.param_490)
             (lambda
-               ($Builtin.param_487)
+               ($Builtin.param_491)
                (select
-                  (tuple ($Builtin.param_486 $Builtin.param_487))
+                  (tuple ($Builtin.param_490 $Builtin.param_491))
                   (((tuple ((Int32# (#Builtin.x_83)) (Int32# (#Builtin.y_84))))
                       (apply
                          (invoke isTrue#)
@@ -1344,22 +1350,22 @@
                              (#Builtin.y_84))))))))))
       (eqFloat#
          (lambda
-            ($Builtin.param_488)
+            ($Builtin.param_492)
             (lambda
-               ($Builtin.param_489)
+               ($Builtin.param_493)
                (select
-                  (tuple ($Builtin.param_488 $Builtin.param_489))
+                  (tuple ($Builtin.param_492 $Builtin.param_493))
                   (((tuple (#Builtin.x_129 #Builtin.y_130))
                       (apply
                          (apply (invoke malgo_eq_float) (#Builtin.x_129))
                          (#Builtin.y_130))))))))
       (eqFloat
          (lambda
-            ($Builtin.param_490)
+            ($Builtin.param_494)
             (lambda
-               ($Builtin.param_491)
+               ($Builtin.param_495)
                (select
-                  (tuple ($Builtin.param_490 $Builtin.param_491))
+                  (tuple ($Builtin.param_494 $Builtin.param_495))
                   (((tuple ((Float# (#Builtin.x_131)) (Float# (#Builtin.y_132))))
                       (apply
                          (invoke isTrue#)
@@ -1368,22 +1374,22 @@
                              (#Builtin.y_132))))))))))
       (eqDouble#
          (lambda
-            ($Builtin.param_492)
+            ($Builtin.param_496)
             (lambda
-               ($Builtin.param_493)
+               ($Builtin.param_497)
                (select
-                  (tuple ($Builtin.param_492 $Builtin.param_493))
+                  (tuple ($Builtin.param_496 $Builtin.param_497))
                   (((tuple (#Builtin.x_153 #Builtin.y_154))
                       (apply
                          (apply (invoke malgo_eq_double) (#Builtin.x_153))
                          (#Builtin.y_154))))))))
       (eqDouble
          (lambda
-            ($Builtin.param_494)
+            ($Builtin.param_498)
             (lambda
-               ($Builtin.param_495)
+               ($Builtin.param_499)
                (select
-                  (tuple ($Builtin.param_494 $Builtin.param_495))
+                  (tuple ($Builtin.param_498 $Builtin.param_499))
                   (((tuple
                        ((Double# (#Builtin.x_155)) (Double# (#Builtin.y_156))))
                       (apply
@@ -1393,22 +1399,22 @@
                              (#Builtin.y_156))))))))))
       (eqChar#
          (lambda
-            ($Builtin.param_496)
+            ($Builtin.param_500)
             (lambda
-               ($Builtin.param_497)
+               ($Builtin.param_501)
                (select
-                  (tuple ($Builtin.param_496 $Builtin.param_497))
+                  (tuple ($Builtin.param_500 $Builtin.param_501))
                   (((tuple (#Builtin.x_177 #Builtin.y_178))
                       (apply
                          (apply (invoke malgo_eq_char) (#Builtin.x_177))
                          (#Builtin.y_178))))))))
       (eqChar
          (lambda
-            ($Builtin.param_498)
+            ($Builtin.param_502)
             (lambda
-               ($Builtin.param_499)
+               ($Builtin.param_503)
                (select
-                  (tuple ($Builtin.param_498 $Builtin.param_499))
+                  (tuple ($Builtin.param_502 $Builtin.param_503))
                   (((tuple ((Char# (#Builtin.x_179)) (Char# (#Builtin.y_180))))
                       (apply
                          (invoke isTrue#)
@@ -1417,28 +1423,28 @@
                              (#Builtin.y_180))))))))))
       (double#
          (lambda
-            ($Builtin.param_500)
+            ($Builtin.param_504)
             (select
-               $Builtin.param_500
+               $Builtin.param_504
                ((#Builtin.x_3 (apply (invoke Double#) (#Builtin.x_3)))))))
       (divInt64#
          (lambda
-            ($Builtin.param_501)
+            ($Builtin.param_505)
             (lambda
-               ($Builtin.param_502)
+               ($Builtin.param_506)
                (select
-                  (tuple ($Builtin.param_501 $Builtin.param_502))
+                  (tuple ($Builtin.param_505 $Builtin.param_506))
                   (((tuple (#Builtin.x_40 #Builtin.y_41))
                       (apply
                          (apply (invoke malgo_div_int64_t) (#Builtin.x_40))
                          (#Builtin.y_41))))))))
       (divInt64
          (lambda
-            ($Builtin.param_503)
+            ($Builtin.param_507)
             (lambda
-               ($Builtin.param_504)
+               ($Builtin.param_508)
                (select
-                  (tuple ($Builtin.param_503 $Builtin.param_504))
+                  (tuple ($Builtin.param_507 $Builtin.param_508))
                   (((tuple ((Int64# (#Builtin.x_42)) (Int64# (#Builtin.y_43))))
                       (apply
                          (invoke Int64#)
@@ -1447,22 +1453,22 @@
                              (#Builtin.y_43))))))))))
       (divInt32#
          (lambda
-            ($Builtin.param_505)
+            ($Builtin.param_509)
             (lambda
-               ($Builtin.param_506)
+               ($Builtin.param_510)
                (select
-                  (tuple ($Builtin.param_505 $Builtin.param_506))
+                  (tuple ($Builtin.param_509 $Builtin.param_510))
                   (((tuple (#Builtin.x_24 #Builtin.y_25))
                       (apply
                          (apply (invoke malgo_div_int32_t) (#Builtin.x_24))
                          (#Builtin.y_25))))))))
       (divInt32
          (lambda
-            ($Builtin.param_507)
+            ($Builtin.param_511)
             (lambda
-               ($Builtin.param_508)
+               ($Builtin.param_512)
                (select
-                  (tuple ($Builtin.param_507 $Builtin.param_508))
+                  (tuple ($Builtin.param_511 $Builtin.param_512))
                   (((tuple ((Int32# (#Builtin.x_26)) (Int32# (#Builtin.y_27))))
                       (apply
                          (invoke Int32#)
@@ -1471,22 +1477,22 @@
                              (#Builtin.y_27))))))))))
       (divFloat#
          (lambda
-            ($Builtin.param_509)
+            ($Builtin.param_513)
             (lambda
-               ($Builtin.param_510)
+               ($Builtin.param_514)
                (select
-                  (tuple ($Builtin.param_509 $Builtin.param_510))
+                  (tuple ($Builtin.param_513 $Builtin.param_514))
                   (((tuple (#Builtin.x_56 #Builtin.y_57))
                       (apply
                          (apply (invoke malgo_div_float) (#Builtin.x_56))
                          (#Builtin.y_57))))))))
       (divFloat
          (lambda
-            ($Builtin.param_511)
+            ($Builtin.param_515)
             (lambda
-               ($Builtin.param_512)
+               ($Builtin.param_516)
                (select
-                  (tuple ($Builtin.param_511 $Builtin.param_512))
+                  (tuple ($Builtin.param_515 $Builtin.param_516))
                   (((tuple ((Float# (#Builtin.x_58)) (Float# (#Builtin.y_59))))
                       (apply
                          (invoke Float#)
@@ -1495,22 +1501,22 @@
                              (#Builtin.y_59))))))))))
       (divDouble#
          (lambda
-            ($Builtin.param_513)
+            ($Builtin.param_517)
             (lambda
-               ($Builtin.param_514)
+               ($Builtin.param_518)
                (select
-                  (tuple ($Builtin.param_513 $Builtin.param_514))
+                  (tuple ($Builtin.param_517 $Builtin.param_518))
                   (((tuple (#Builtin.x_72 #Builtin.y_73))
                       (apply
                          (apply (invoke malgo_div_double) (#Builtin.x_72))
                          (#Builtin.y_73))))))))
       (divDouble
          (lambda
-            ($Builtin.param_515)
+            ($Builtin.param_519)
             (lambda
-               ($Builtin.param_516)
+               ($Builtin.param_520)
                (select
-                  (tuple ($Builtin.param_515 $Builtin.param_516))
+                  (tuple ($Builtin.param_519 $Builtin.param_520))
                   (((tuple ((Double# (#Builtin.x_74)) (Double# (#Builtin.y_75))))
                       (apply
                          (invoke Double#)
@@ -1519,22 +1525,22 @@
                              (#Builtin.y_75))))))))))
       (consString#
          (lambda
-            ($Builtin.param_517)
+            ($Builtin.param_521)
             (lambda
-               ($Builtin.param_518)
+               ($Builtin.param_522)
                (select
-                  (tuple ($Builtin.param_517 $Builtin.param_518))
+                  (tuple ($Builtin.param_521 $Builtin.param_522))
                   (((tuple (#Builtin.c_241 #Builtin.cs_242))
                       (apply
                          (apply (invoke malgo_string_cons) (#Builtin.c_241))
                          (#Builtin.cs_242))))))))
       (consString
          (lambda
-            ($Builtin.param_519)
+            ($Builtin.param_523)
             (lambda
-               ($Builtin.param_520)
+               ($Builtin.param_524)
                (select
-                  (tuple ($Builtin.param_519 $Builtin.param_520))
+                  (tuple ($Builtin.param_523 $Builtin.param_524))
                   (((tuple ((Char# (#Builtin.c_243)) (String# (#Builtin.cs_244))))
                       (apply
                          (invoke String#)
@@ -1543,28 +1549,28 @@
                              (#Builtin.cs_244))))))))))
       (char#
          (lambda
-            ($Builtin.param_521)
+            ($Builtin.param_525)
             (select
-               $Builtin.param_521
+               $Builtin.param_525
                ((#Builtin.x_4 (apply (invoke Char#) (#Builtin.x_4)))))))
       (atString#
          (lambda
-            ($Builtin.param_522)
+            ($Builtin.param_526)
             (lambda
-               ($Builtin.param_523)
+               ($Builtin.param_527)
                (select
-                  (tuple ($Builtin.param_522 $Builtin.param_523))
+                  (tuple ($Builtin.param_526 $Builtin.param_527))
                   (((tuple (#Builtin.i_237 #Builtin.x_238))
                       (apply
                          (apply (invoke malgo_string_at) (#Builtin.i_237))
                          (#Builtin.x_238))))))))
       (atString
          (lambda
-            ($Builtin.param_524)
+            ($Builtin.param_528)
             (lambda
-               ($Builtin.param_525)
+               ($Builtin.param_529)
                (select
-                  (tuple ($Builtin.param_524 $Builtin.param_525))
+                  (tuple ($Builtin.param_528 $Builtin.param_529))
                   (((tuple ((Int64# (#Builtin.i_239)) (String# (#Builtin.x_240))))
                       (apply
                          (invoke Char#)
@@ -1573,22 +1579,22 @@
                              (#Builtin.x_240))))))))))
       (appendString#
          (lambda
-            ($Builtin.param_526)
+            ($Builtin.param_530)
             (lambda
-               ($Builtin.param_527)
+               ($Builtin.param_531)
                (select
-                  (tuple ($Builtin.param_526 $Builtin.param_527))
+                  (tuple ($Builtin.param_530 $Builtin.param_531))
                   (((tuple (#Builtin.x_245 #Builtin.y_246))
                       (apply
                          (apply (invoke malgo_string_append) (#Builtin.x_245))
                          (#Builtin.y_246))))))))
       (appendString
          (lambda
-            ($Builtin.param_528)
+            ($Builtin.param_532)
             (lambda
-               ($Builtin.param_529)
+               ($Builtin.param_533)
                (select
-                  (tuple ($Builtin.param_528 $Builtin.param_529))
+                  (tuple ($Builtin.param_532 $Builtin.param_533))
                   (((tuple
                        ((String# (#Builtin.x_247)) (String# (#Builtin.y_248))))
                       (apply
@@ -1598,22 +1604,22 @@
                              (#Builtin.y_248))))))))))
       (addInt64#
          (lambda
-            ($Builtin.param_530)
+            ($Builtin.param_534)
             (lambda
-               ($Builtin.param_531)
+               ($Builtin.param_535)
                (select
-                  (tuple ($Builtin.param_530 $Builtin.param_531))
+                  (tuple ($Builtin.param_534 $Builtin.param_535))
                   (((tuple (#Builtin.x_28 #Builtin.y_29))
                       (apply
                          (apply (invoke malgo_add_int64_t) (#Builtin.x_28))
                          (#Builtin.y_29))))))))
       (addInt64
          (lambda
-            ($Builtin.param_532)
+            ($Builtin.param_536)
             (lambda
-               ($Builtin.param_533)
+               ($Builtin.param_537)
                (select
-                  (tuple ($Builtin.param_532 $Builtin.param_533))
+                  (tuple ($Builtin.param_536 $Builtin.param_537))
                   (((tuple ((Int64# (#Builtin.x_30)) (Int64# (#Builtin.y_31))))
                       (apply
                          (invoke Int64#)
@@ -1622,22 +1628,22 @@
                              (#Builtin.y_31))))))))))
       (addInt32#
          (lambda
-            ($Builtin.param_534)
+            ($Builtin.param_538)
             (lambda
-               ($Builtin.param_535)
+               ($Builtin.param_539)
                (select
-                  (tuple ($Builtin.param_534 $Builtin.param_535))
+                  (tuple ($Builtin.param_538 $Builtin.param_539))
                   (((tuple (#Builtin.x_12 #Builtin.y_13))
                       (apply
                          (apply (invoke malgo_add_int32_t) (#Builtin.x_12))
                          (#Builtin.y_13))))))))
       (addInt32
          (lambda
-            ($Builtin.param_536)
+            ($Builtin.param_540)
             (lambda
-               ($Builtin.param_537)
+               ($Builtin.param_541)
                (select
-                  (tuple ($Builtin.param_536 $Builtin.param_537))
+                  (tuple ($Builtin.param_540 $Builtin.param_541))
                   (((tuple ((Int32# (#Builtin.x_14)) (Int32# (#Builtin.y_15))))
                       (apply
                          (invoke Int32#)
@@ -1646,22 +1652,22 @@
                              (#Builtin.y_15))))))))))
       (addFloat#
          (lambda
-            ($Builtin.param_538)
+            ($Builtin.param_542)
             (lambda
-               ($Builtin.param_539)
+               ($Builtin.param_543)
                (select
-                  (tuple ($Builtin.param_538 $Builtin.param_539))
+                  (tuple ($Builtin.param_542 $Builtin.param_543))
                   (((tuple (#Builtin.x_44 #Builtin.y_45))
                       (apply
                          (apply (invoke malgo_add_float) (#Builtin.x_44))
                          (#Builtin.y_45))))))))
       (addFloat
          (lambda
-            ($Builtin.param_540)
+            ($Builtin.param_544)
             (lambda
-               ($Builtin.param_541)
+               ($Builtin.param_545)
                (select
-                  (tuple ($Builtin.param_540 $Builtin.param_541))
+                  (tuple ($Builtin.param_544 $Builtin.param_545))
                   (((tuple ((Float# (#Builtin.x_46)) (Float# (#Builtin.y_47))))
                       (apply
                          (invoke Float#)
@@ -1670,22 +1676,22 @@
                              (#Builtin.y_47))))))))))
       (addDouble#
          (lambda
-            ($Builtin.param_542)
+            ($Builtin.param_546)
             (lambda
-               ($Builtin.param_543)
+               ($Builtin.param_547)
                (select
-                  (tuple ($Builtin.param_542 $Builtin.param_543))
+                  (tuple ($Builtin.param_546 $Builtin.param_547))
                   (((tuple (#Builtin.x_60 #Builtin.y_61))
                       (apply
                          (apply (invoke malgo_add_double) (#Builtin.x_60))
                          (#Builtin.y_61))))))))
       (addDouble
          (lambda
-            ($Builtin.param_544)
+            ($Builtin.param_548)
             (lambda
-               ($Builtin.param_545)
+               ($Builtin.param_549)
                (select
-                  (tuple ($Builtin.param_544 $Builtin.param_545))
+                  (tuple ($Builtin.param_548 $Builtin.param_549))
                   (((tuple ((Double# (#Builtin.x_62)) (Double# (#Builtin.y_63))))
                       (apply
                          (invoke Double#)
@@ -1693,557 +1699,561 @@
                              (apply (invoke addDouble#) (#Builtin.x_62))
                              (#Builtin.y_63))))))))))
       (Int32#
-         (lambda ($Builtin.constructor_546) (Int32# ($Builtin.constructor_546))))
+         (lambda ($Builtin.constructor_550) (Int32# ($Builtin.constructor_550))))
       (Int64#
-         (lambda ($Builtin.constructor_547) (Int64# ($Builtin.constructor_547))))
+         (lambda ($Builtin.constructor_551) (Int64# ($Builtin.constructor_551))))
       (Float#
-         (lambda ($Builtin.constructor_548) (Float# ($Builtin.constructor_548))))
+         (lambda ($Builtin.constructor_552) (Float# ($Builtin.constructor_552))))
       (Double#
-         (lambda ($Builtin.constructor_549) (Double# ($Builtin.constructor_549))))
+         (lambda ($Builtin.constructor_553) (Double# ($Builtin.constructor_553))))
       (Char#
-         (lambda ($Builtin.constructor_550) (Char# ($Builtin.constructor_550))))
+         (lambda ($Builtin.constructor_554) (Char# ($Builtin.constructor_554))))
       (String#
-         (lambda ($Builtin.constructor_551) (String# ($Builtin.constructor_551))))
+         (lambda ($Builtin.constructor_555) (String# ($Builtin.constructor_555))))
       (False (False ()))
       (True (True ()))
       (malgo_panic
          (lambda
-            ($Builtin.primitive_552)
-            (primitive malgo_panic ($Builtin.primitive_552))))
+            ($Builtin.primitive_556)
+            (primitive malgo_panic ($Builtin.primitive_556))))
       (malgo_unsafe_cast
          (lambda
-            ($Builtin.primitive_553)
-            (primitive malgo_unsafe_cast ($Builtin.primitive_553))))
+            ($Builtin.primitive_557)
+            (primitive malgo_unsafe_cast ($Builtin.primitive_557))))
       (malgo_add_int32_t
-         (lambda
-            ($Builtin.primitive_554)
-            (lambda
-               ($Builtin.primitive_555)
-               (primitive
-                  malgo_add_int32_t
-                  ($Builtin.primitive_554 $Builtin.primitive_555)))))
-      (malgo_sub_int32_t
-         (lambda
-            ($Builtin.primitive_556)
-            (lambda
-               ($Builtin.primitive_557)
-               (primitive
-                  malgo_sub_int32_t
-                  ($Builtin.primitive_556 $Builtin.primitive_557)))))
-      (malgo_mul_int32_t
          (lambda
             ($Builtin.primitive_558)
             (lambda
                ($Builtin.primitive_559)
                (primitive
-                  malgo_mul_int32_t
+                  malgo_add_int32_t
                   ($Builtin.primitive_558 $Builtin.primitive_559)))))
-      (malgo_div_int32_t
+      (malgo_sub_int32_t
          (lambda
             ($Builtin.primitive_560)
             (lambda
                ($Builtin.primitive_561)
                (primitive
-                  malgo_div_int32_t
+                  malgo_sub_int32_t
                   ($Builtin.primitive_560 $Builtin.primitive_561)))))
-      (malgo_add_int64_t
+      (malgo_mul_int32_t
          (lambda
             ($Builtin.primitive_562)
             (lambda
                ($Builtin.primitive_563)
                (primitive
-                  malgo_add_int64_t
+                  malgo_mul_int32_t
                   ($Builtin.primitive_562 $Builtin.primitive_563)))))
-      (malgo_sub_int64_t
+      (malgo_div_int32_t
          (lambda
             ($Builtin.primitive_564)
             (lambda
                ($Builtin.primitive_565)
                (primitive
-                  malgo_sub_int64_t
+                  malgo_div_int32_t
                   ($Builtin.primitive_564 $Builtin.primitive_565)))))
-      (malgo_mul_int64_t
+      (malgo_add_int64_t
          (lambda
             ($Builtin.primitive_566)
             (lambda
                ($Builtin.primitive_567)
                (primitive
-                  malgo_mul_int64_t
+                  malgo_add_int64_t
                   ($Builtin.primitive_566 $Builtin.primitive_567)))))
-      (malgo_div_int64_t
+      (malgo_sub_int64_t
          (lambda
             ($Builtin.primitive_568)
             (lambda
                ($Builtin.primitive_569)
                (primitive
-                  malgo_div_int64_t
+                  malgo_sub_int64_t
                   ($Builtin.primitive_568 $Builtin.primitive_569)))))
-      (malgo_add_float
+      (malgo_mul_int64_t
          (lambda
             ($Builtin.primitive_570)
             (lambda
                ($Builtin.primitive_571)
                (primitive
-                  malgo_add_float
+                  malgo_mul_int64_t
                   ($Builtin.primitive_570 $Builtin.primitive_571)))))
-      (malgo_sub_float
+      (malgo_div_int64_t
          (lambda
             ($Builtin.primitive_572)
             (lambda
                ($Builtin.primitive_573)
                (primitive
-                  malgo_sub_float
+                  malgo_div_int64_t
                   ($Builtin.primitive_572 $Builtin.primitive_573)))))
-      (malgo_mul_float
+      (malgo_add_float
          (lambda
             ($Builtin.primitive_574)
             (lambda
                ($Builtin.primitive_575)
                (primitive
-                  malgo_mul_float
+                  malgo_add_float
                   ($Builtin.primitive_574 $Builtin.primitive_575)))))
-      (malgo_div_float
+      (malgo_sub_float
          (lambda
             ($Builtin.primitive_576)
             (lambda
                ($Builtin.primitive_577)
                (primitive
-                  malgo_div_float
+                  malgo_sub_float
                   ($Builtin.primitive_576 $Builtin.primitive_577)))))
-      (malgo_add_double
+      (malgo_mul_float
          (lambda
             ($Builtin.primitive_578)
             (lambda
                ($Builtin.primitive_579)
                (primitive
-                  malgo_add_double
+                  malgo_mul_float
                   ($Builtin.primitive_578 $Builtin.primitive_579)))))
-      (malgo_sub_double
+      (malgo_div_float
          (lambda
             ($Builtin.primitive_580)
             (lambda
                ($Builtin.primitive_581)
                (primitive
-                  malgo_sub_double
+                  malgo_div_float
                   ($Builtin.primitive_580 $Builtin.primitive_581)))))
-      (malgo_mul_double
+      (malgo_add_double
          (lambda
             ($Builtin.primitive_582)
             (lambda
                ($Builtin.primitive_583)
                (primitive
-                  malgo_mul_double
+                  malgo_add_double
                   ($Builtin.primitive_582 $Builtin.primitive_583)))))
-      (malgo_div_double
+      (malgo_sub_double
          (lambda
             ($Builtin.primitive_584)
             (lambda
                ($Builtin.primitive_585)
                (primitive
-                  malgo_div_double
+                  malgo_sub_double
                   ($Builtin.primitive_584 $Builtin.primitive_585)))))
-      (sqrtf
+      (malgo_mul_double
          (lambda
             ($Builtin.primitive_586)
-            (primitive sqrtf ($Builtin.primitive_586))))
-      (sqrt
-         (lambda
-            ($Builtin.primitive_587)
-            (primitive sqrt ($Builtin.primitive_587))))
-      (malgo_eq_int32_t
+            (lambda
+               ($Builtin.primitive_587)
+               (primitive
+                  malgo_mul_double
+                  ($Builtin.primitive_586 $Builtin.primitive_587)))))
+      (malgo_div_double
          (lambda
             ($Builtin.primitive_588)
             (lambda
                ($Builtin.primitive_589)
                (primitive
-                  malgo_eq_int32_t
+                  malgo_div_double
                   ($Builtin.primitive_588 $Builtin.primitive_589)))))
-      (malgo_ne_int32_t
+      (sqrtf
          (lambda
             ($Builtin.primitive_590)
-            (lambda
-               ($Builtin.primitive_591)
-               (primitive
-                  malgo_ne_int32_t
-                  ($Builtin.primitive_590 $Builtin.primitive_591)))))
-      (malgo_lt_int32_t
+            (primitive sqrtf ($Builtin.primitive_590))))
+      (sqrt
+         (lambda
+            ($Builtin.primitive_591)
+            (primitive sqrt ($Builtin.primitive_591))))
+      (malgo_eq_int32_t
          (lambda
             ($Builtin.primitive_592)
             (lambda
                ($Builtin.primitive_593)
                (primitive
-                  malgo_lt_int32_t
+                  malgo_eq_int32_t
                   ($Builtin.primitive_592 $Builtin.primitive_593)))))
-      (malgo_gt_int32_t
+      (malgo_ne_int32_t
          (lambda
             ($Builtin.primitive_594)
             (lambda
                ($Builtin.primitive_595)
                (primitive
-                  malgo_gt_int32_t
+                  malgo_ne_int32_t
                   ($Builtin.primitive_594 $Builtin.primitive_595)))))
-      (malgo_le_int32_t
+      (malgo_lt_int32_t
          (lambda
             ($Builtin.primitive_596)
             (lambda
                ($Builtin.primitive_597)
                (primitive
-                  malgo_le_int32_t
+                  malgo_lt_int32_t
                   ($Builtin.primitive_596 $Builtin.primitive_597)))))
-      (malgo_ge_int32_t
+      (malgo_gt_int32_t
          (lambda
             ($Builtin.primitive_598)
             (lambda
                ($Builtin.primitive_599)
                (primitive
-                  malgo_ge_int32_t
+                  malgo_gt_int32_t
                   ($Builtin.primitive_598 $Builtin.primitive_599)))))
-      (malgo_eq_int64_t
+      (malgo_le_int32_t
          (lambda
             ($Builtin.primitive_600)
             (lambda
                ($Builtin.primitive_601)
                (primitive
-                  malgo_eq_int64_t
+                  malgo_le_int32_t
                   ($Builtin.primitive_600 $Builtin.primitive_601)))))
-      (malgo_ne_int64_t
+      (malgo_ge_int32_t
          (lambda
             ($Builtin.primitive_602)
             (lambda
                ($Builtin.primitive_603)
                (primitive
-                  malgo_ne_int64_t
+                  malgo_ge_int32_t
                   ($Builtin.primitive_602 $Builtin.primitive_603)))))
-      (malgo_lt_int64_t
+      (malgo_eq_int64_t
          (lambda
             ($Builtin.primitive_604)
             (lambda
                ($Builtin.primitive_605)
                (primitive
-                  malgo_lt_int64_t
+                  malgo_eq_int64_t
                   ($Builtin.primitive_604 $Builtin.primitive_605)))))
-      (malgo_gt_int64_t
+      (malgo_ne_int64_t
          (lambda
             ($Builtin.primitive_606)
             (lambda
                ($Builtin.primitive_607)
                (primitive
-                  malgo_gt_int64_t
+                  malgo_ne_int64_t
                   ($Builtin.primitive_606 $Builtin.primitive_607)))))
-      (malgo_le_int64_t
+      (malgo_lt_int64_t
          (lambda
             ($Builtin.primitive_608)
             (lambda
                ($Builtin.primitive_609)
                (primitive
-                  malgo_le_int64_t
+                  malgo_lt_int64_t
                   ($Builtin.primitive_608 $Builtin.primitive_609)))))
-      (malgo_ge_int64_t
+      (malgo_gt_int64_t
          (lambda
             ($Builtin.primitive_610)
             (lambda
                ($Builtin.primitive_611)
                (primitive
-                  malgo_ge_int64_t
+                  malgo_gt_int64_t
                   ($Builtin.primitive_610 $Builtin.primitive_611)))))
-      (malgo_eq_float
+      (malgo_le_int64_t
          (lambda
             ($Builtin.primitive_612)
             (lambda
                ($Builtin.primitive_613)
                (primitive
-                  malgo_eq_float
+                  malgo_le_int64_t
                   ($Builtin.primitive_612 $Builtin.primitive_613)))))
-      (malgo_ne_float
+      (malgo_ge_int64_t
          (lambda
             ($Builtin.primitive_614)
             (lambda
                ($Builtin.primitive_615)
                (primitive
-                  malgo_ne_float
+                  malgo_ge_int64_t
                   ($Builtin.primitive_614 $Builtin.primitive_615)))))
-      (malgo_lt_float
+      (malgo_eq_float
          (lambda
             ($Builtin.primitive_616)
             (lambda
                ($Builtin.primitive_617)
                (primitive
-                  malgo_lt_float
+                  malgo_eq_float
                   ($Builtin.primitive_616 $Builtin.primitive_617)))))
-      (malgo_gt_float
+      (malgo_ne_float
          (lambda
             ($Builtin.primitive_618)
             (lambda
                ($Builtin.primitive_619)
                (primitive
-                  malgo_gt_float
+                  malgo_ne_float
                   ($Builtin.primitive_618 $Builtin.primitive_619)))))
-      (malgo_le_float
+      (malgo_lt_float
          (lambda
             ($Builtin.primitive_620)
             (lambda
                ($Builtin.primitive_621)
                (primitive
-                  malgo_le_float
+                  malgo_lt_float
                   ($Builtin.primitive_620 $Builtin.primitive_621)))))
-      (malgo_ge_float
+      (malgo_gt_float
          (lambda
             ($Builtin.primitive_622)
             (lambda
                ($Builtin.primitive_623)
                (primitive
-                  malgo_ge_float
+                  malgo_gt_float
                   ($Builtin.primitive_622 $Builtin.primitive_623)))))
-      (malgo_eq_double
+      (malgo_le_float
          (lambda
             ($Builtin.primitive_624)
             (lambda
                ($Builtin.primitive_625)
                (primitive
-                  malgo_eq_double
+                  malgo_le_float
                   ($Builtin.primitive_624 $Builtin.primitive_625)))))
-      (malgo_ne_double
+      (malgo_ge_float
          (lambda
             ($Builtin.primitive_626)
             (lambda
                ($Builtin.primitive_627)
                (primitive
-                  malgo_ne_double
+                  malgo_ge_float
                   ($Builtin.primitive_626 $Builtin.primitive_627)))))
-      (malgo_lt_double
+      (malgo_eq_double
          (lambda
             ($Builtin.primitive_628)
             (lambda
                ($Builtin.primitive_629)
                (primitive
-                  malgo_lt_double
+                  malgo_eq_double
                   ($Builtin.primitive_628 $Builtin.primitive_629)))))
-      (malgo_gt_double
+      (malgo_ne_double
          (lambda
             ($Builtin.primitive_630)
             (lambda
                ($Builtin.primitive_631)
                (primitive
-                  malgo_gt_double
+                  malgo_ne_double
                   ($Builtin.primitive_630 $Builtin.primitive_631)))))
-      (malgo_le_double
+      (malgo_lt_double
          (lambda
             ($Builtin.primitive_632)
             (lambda
                ($Builtin.primitive_633)
                (primitive
-                  malgo_le_double
+                  malgo_lt_double
                   ($Builtin.primitive_632 $Builtin.primitive_633)))))
-      (malgo_ge_double
+      (malgo_gt_double
          (lambda
             ($Builtin.primitive_634)
             (lambda
                ($Builtin.primitive_635)
                (primitive
-                  malgo_ge_double
+                  malgo_gt_double
                   ($Builtin.primitive_634 $Builtin.primitive_635)))))
-      (malgo_eq_char
+      (malgo_le_double
          (lambda
             ($Builtin.primitive_636)
             (lambda
                ($Builtin.primitive_637)
                (primitive
-                  malgo_eq_char
+                  malgo_le_double
                   ($Builtin.primitive_636 $Builtin.primitive_637)))))
-      (malgo_ne_char
+      (malgo_ge_double
          (lambda
             ($Builtin.primitive_638)
             (lambda
                ($Builtin.primitive_639)
                (primitive
-                  malgo_ne_char
+                  malgo_ge_double
                   ($Builtin.primitive_638 $Builtin.primitive_639)))))
-      (malgo_lt_char
+      (malgo_eq_char
          (lambda
             ($Builtin.primitive_640)
             (lambda
                ($Builtin.primitive_641)
                (primitive
-                  malgo_lt_char
+                  malgo_eq_char
                   ($Builtin.primitive_640 $Builtin.primitive_641)))))
-      (malgo_gt_char
+      (malgo_ne_char
          (lambda
             ($Builtin.primitive_642)
             (lambda
                ($Builtin.primitive_643)
                (primitive
-                  malgo_gt_char
+                  malgo_ne_char
                   ($Builtin.primitive_642 $Builtin.primitive_643)))))
-      (malgo_le_char
+      (malgo_lt_char
          (lambda
             ($Builtin.primitive_644)
             (lambda
                ($Builtin.primitive_645)
                (primitive
-                  malgo_le_char
+                  malgo_lt_char
                   ($Builtin.primitive_644 $Builtin.primitive_645)))))
-      (malgo_ge_char
+      (malgo_gt_char
          (lambda
             ($Builtin.primitive_646)
             (lambda
                ($Builtin.primitive_647)
                (primitive
-                  malgo_ge_char
+                  malgo_gt_char
                   ($Builtin.primitive_646 $Builtin.primitive_647)))))
-      (malgo_eq_string
+      (malgo_le_char
          (lambda
             ($Builtin.primitive_648)
             (lambda
                ($Builtin.primitive_649)
                (primitive
-                  malgo_eq_string
+                  malgo_le_char
                   ($Builtin.primitive_648 $Builtin.primitive_649)))))
-      (malgo_ne_string
+      (malgo_ge_char
          (lambda
             ($Builtin.primitive_650)
             (lambda
                ($Builtin.primitive_651)
                (primitive
-                  malgo_ne_string
+                  malgo_ge_char
                   ($Builtin.primitive_650 $Builtin.primitive_651)))))
-      (malgo_lt_string
+      (malgo_eq_string
          (lambda
             ($Builtin.primitive_652)
             (lambda
                ($Builtin.primitive_653)
                (primitive
-                  malgo_lt_string
+                  malgo_eq_string
                   ($Builtin.primitive_652 $Builtin.primitive_653)))))
-      (malgo_gt_string
+      (malgo_ne_string
          (lambda
             ($Builtin.primitive_654)
             (lambda
                ($Builtin.primitive_655)
                (primitive
-                  malgo_gt_string
+                  malgo_ne_string
                   ($Builtin.primitive_654 $Builtin.primitive_655)))))
-      (malgo_le_string
+      (malgo_lt_string
          (lambda
             ($Builtin.primitive_656)
             (lambda
                ($Builtin.primitive_657)
                (primitive
-                  malgo_le_string
+                  malgo_lt_string
                   ($Builtin.primitive_656 $Builtin.primitive_657)))))
-      (malgo_ge_string
+      (malgo_gt_string
          (lambda
             ($Builtin.primitive_658)
             (lambda
                ($Builtin.primitive_659)
                (primitive
-                  malgo_ge_string
+                  malgo_gt_string
                   ($Builtin.primitive_658 $Builtin.primitive_659)))))
-      (malgo_char_ord
+      (malgo_le_string
          (lambda
             ($Builtin.primitive_660)
-            (primitive malgo_char_ord ($Builtin.primitive_660))))
-      (malgo_is_digit
-         (lambda
-            ($Builtin.primitive_661)
-            (primitive malgo_is_digit ($Builtin.primitive_661))))
-      (malgo_is_lower
+            (lambda
+               ($Builtin.primitive_661)
+               (primitive
+                  malgo_le_string
+                  ($Builtin.primitive_660 $Builtin.primitive_661)))))
+      (malgo_ge_string
          (lambda
             ($Builtin.primitive_662)
-            (primitive malgo_is_lower ($Builtin.primitive_662))))
-      (malgo_is_upper
-         (lambda
-            ($Builtin.primitive_663)
-            (primitive malgo_is_upper ($Builtin.primitive_663))))
-      (malgo_is_alphanum
+            (lambda
+               ($Builtin.primitive_663)
+               (primitive
+                  malgo_ge_string
+                  ($Builtin.primitive_662 $Builtin.primitive_663)))))
+      (malgo_char_ord
          (lambda
             ($Builtin.primitive_664)
-            (primitive malgo_is_alphanum ($Builtin.primitive_664))))
-      (malgo_string_length
+            (primitive malgo_char_ord ($Builtin.primitive_664))))
+      (malgo_is_digit
          (lambda
             ($Builtin.primitive_665)
-            (primitive malgo_string_length ($Builtin.primitive_665))))
-      (malgo_string_at
+            (primitive malgo_is_digit ($Builtin.primitive_665))))
+      (malgo_is_lower
          (lambda
             ($Builtin.primitive_666)
-            (lambda
-               ($Builtin.primitive_667)
-               (primitive
-                  malgo_string_at
-                  ($Builtin.primitive_666 $Builtin.primitive_667)))))
-      (malgo_string_cons
+            (primitive malgo_is_lower ($Builtin.primitive_666))))
+      (malgo_is_upper
+         (lambda
+            ($Builtin.primitive_667)
+            (primitive malgo_is_upper ($Builtin.primitive_667))))
+      (malgo_is_alphanum
          (lambda
             ($Builtin.primitive_668)
-            (lambda
-               ($Builtin.primitive_669)
-               (primitive
-                  malgo_string_cons
-                  ($Builtin.primitive_668 $Builtin.primitive_669)))))
-      (malgo_string_append
+            (primitive malgo_is_alphanum ($Builtin.primitive_668))))
+      (malgo_string_length
+         (lambda
+            ($Builtin.primitive_669)
+            (primitive malgo_string_length ($Builtin.primitive_669))))
+      (malgo_string_at
          (lambda
             ($Builtin.primitive_670)
             (lambda
                ($Builtin.primitive_671)
                (primitive
-                  malgo_string_append
+                  malgo_string_at
                   ($Builtin.primitive_670 $Builtin.primitive_671)))))
-      (malgo_substring
+      (malgo_string_cons
          (lambda
             ($Builtin.primitive_672)
             (lambda
                ($Builtin.primitive_673)
-               (lambda
-                  ($Builtin.primitive_674)
-                  (primitive
-                     malgo_substring
-                     ($Builtin.primitive_672
-                        $Builtin.primitive_673
-                        $Builtin.primitive_674))))))
-      (malgo_int32_t_to_string
+               (primitive
+                  malgo_string_cons
+                  ($Builtin.primitive_672 $Builtin.primitive_673)))))
+      (malgo_string_append
          (lambda
-            ($Builtin.primitive_675)
-            (primitive malgo_int32_t_to_string ($Builtin.primitive_675))))
-      (malgo_int64_t_to_string
+            ($Builtin.primitive_674)
+            (lambda
+               ($Builtin.primitive_675)
+               (primitive
+                  malgo_string_append
+                  ($Builtin.primitive_674 $Builtin.primitive_675)))))
+      (malgo_substring
          (lambda
             ($Builtin.primitive_676)
-            (primitive malgo_int64_t_to_string ($Builtin.primitive_676))))
-      (malgo_float_to_string
-         (lambda
-            ($Builtin.primitive_677)
-            (primitive malgo_float_to_string ($Builtin.primitive_677))))
-      (malgo_double_to_string
-         (lambda
-            ($Builtin.primitive_678)
-            (primitive malgo_double_to_string ($Builtin.primitive_678))))
-      (malgo_char_to_string
+            (lambda
+               ($Builtin.primitive_677)
+               (lambda
+                  ($Builtin.primitive_678)
+                  (primitive
+                     malgo_substring
+                     ($Builtin.primitive_676
+                        $Builtin.primitive_677
+                        $Builtin.primitive_678))))))
+      (malgo_int32_t_to_string
          (lambda
             ($Builtin.primitive_679)
-            (primitive malgo_char_to_string ($Builtin.primitive_679))))
-      (malgo_exit_failure
+            (primitive malgo_int32_t_to_string ($Builtin.primitive_679))))
+      (malgo_int64_t_to_string
          (lambda
             ($Builtin.primitive_680)
-            (primitive malgo_exit_failure ($Builtin.primitive_680))))
-      (malgo_newline
+            (primitive malgo_int64_t_to_string ($Builtin.primitive_680))))
+      (malgo_float_to_string
          (lambda
             ($Builtin.primitive_681)
-            (primitive malgo_newline ($Builtin.primitive_681))))
-      (malgo_print_char
+            (primitive malgo_float_to_string ($Builtin.primitive_681))))
+      (malgo_double_to_string
          (lambda
             ($Builtin.primitive_682)
-            (primitive malgo_print_char ($Builtin.primitive_682))))
-      (malgo_print_string
+            (primitive malgo_double_to_string ($Builtin.primitive_682))))
+      (malgo_char_to_string
          (lambda
             ($Builtin.primitive_683)
-            (primitive malgo_print_string ($Builtin.primitive_683))))
-      (malgo_flush
+            (primitive malgo_char_to_string ($Builtin.primitive_683))))
+      (malgo_exit_failure
          (lambda
             ($Builtin.primitive_684)
-            (primitive malgo_flush ($Builtin.primitive_684))))
-      (malgo_get_char
+            (primitive malgo_exit_failure ($Builtin.primitive_684))))
+      (malgo_newline
          (lambda
             ($Builtin.primitive_685)
-            (primitive malgo_get_char ($Builtin.primitive_685))))
-      (malgo_get_contents
+            (primitive malgo_newline ($Builtin.primitive_685))))
+      (malgo_print_char
          (lambda
             ($Builtin.primitive_686)
-            (primitive malgo_get_contents ($Builtin.primitive_686)))))
+            (primitive malgo_print_char ($Builtin.primitive_686))))
+      (malgo_print_string
+         (lambda
+            ($Builtin.primitive_687)
+            (primitive malgo_print_string ($Builtin.primitive_687))))
+      (malgo_print
+         (lambda
+            ($Builtin.primitive_688)
+            (primitive malgo_print ($Builtin.primitive_688))))
+      (malgo_flush
+         (lambda
+            ($Builtin.primitive_689)
+            (primitive malgo_flush ($Builtin.primitive_689))))
+      (malgo_get_char
+         (lambda
+            ($Builtin.primitive_690)
+            (primitive malgo_get_char ($Builtin.primitive_690))))
+      (malgo_get_contents
+         (lambda
+            ($Builtin.primitive_691)
+            (primitive malgo_get_contents ($Builtin.primitive_691)))))
    ())

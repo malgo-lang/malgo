@@ -1,0 +1,28 @@
+(program
+   ((main
+       (lambda
+          ($EmptyConstructor.param_3)
+          (select
+             $EmptyConstructor.param_3
+             ((#EmptyConstructor.__0
+                 (let
+                    #EmptyConstructor.x_1
+                    (invoke Empty)
+                    (let
+                       #EmptyConstructor.y_2
+                       (apply (invoke Unit) ((tuple ())))
+                       (apply
+                          (lambda
+                             ($EmptyConstructor.tmp_4)
+                             (apply
+                                (invoke printInt32)
+                                ((apply (invoke Int32#) (43_i32)))))
+                          ((apply
+                              (invoke printInt32)
+                              ((apply (invoke Int32#) (42_i32)))))))))))))
+      (Empty (Empty ()))
+      (Unit
+         (lambda
+            ($EmptyConstructor.constructor_5)
+            (Unit ($EmptyConstructor.constructor_5)))))
+   ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

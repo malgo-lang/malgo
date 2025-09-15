@@ -1,0 +1,114 @@
+((main
+    $EmptyConstructor.return_6
+    (cut
+       (lambda
+          ($EmptyConstructor.param_3 $EmptyConstructor.return_7)
+          (join
+             $EmptyConstructor.select_32
+             (select
+                (#EmptyConstructor.__0
+                   (join
+                      $EmptyConstructor.then_31
+                      (then
+                         #EmptyConstructor.x_1
+                         (join
+                            $EmptyConstructor.then_29
+                            (then
+                               #EmptyConstructor.y_2
+                               (join
+                                  $EmptyConstructor.then_28
+                                  (then
+                                     $EmptyConstructor.outer_17
+                                     (join
+                                        $EmptyConstructor.return_8
+                                        (then
+                                           $EmptyConstructor.inner_18
+                                           (join
+                                              $EmptyConstructor.apply_27
+                                              (apply
+                                                 ($EmptyConstructor.inner_18)
+                                                 ($EmptyConstructor.return_7))
+                                              (cut
+                                                 $EmptyConstructor.outer_17
+                                                 $EmptyConstructor.apply_27)))
+                                        (join
+                                           $EmptyConstructor.then_26
+                                           (then
+                                              $EmptyConstructor.outer_19
+                                              (join
+                                                 $EmptyConstructor.return_9
+                                                 (then
+                                                    $EmptyConstructor.inner_20
+                                                    (join
+                                                       $EmptyConstructor.apply_25
+                                                       (apply
+                                                          ($EmptyConstructor.inner_20)
+                                                          ($EmptyConstructor.return_8))
+                                                       (cut
+                                                          $EmptyConstructor.outer_19
+                                                          $EmptyConstructor.apply_25)))
+                                                 (join
+                                                    $EmptyConstructor.apply_24
+                                                    (apply
+                                                       (42_i32)
+                                                       ($EmptyConstructor.return_9))
+                                                    (invoke
+                                                       Int32#
+                                                       $EmptyConstructor.apply_24))))
+                                           (invoke
+                                              printInt32
+                                              $EmptyConstructor.then_26))))
+                                  (cut
+                                     (lambda
+                                        ($EmptyConstructor.tmp_4
+                                           $EmptyConstructor.return_10)
+                                        (join
+                                           $EmptyConstructor.then_23
+                                           (then
+                                              $EmptyConstructor.outer_15
+                                              (join
+                                                 $EmptyConstructor.return_11
+                                                 (then
+                                                    $EmptyConstructor.inner_16
+                                                    (join
+                                                       $EmptyConstructor.apply_22
+                                                       (apply
+                                                          ($EmptyConstructor.inner_16)
+                                                          ($EmptyConstructor.return_10))
+                                                       (cut
+                                                          $EmptyConstructor.outer_15
+                                                          $EmptyConstructor.apply_22)))
+                                                 (join
+                                                    $EmptyConstructor.apply_21
+                                                    (apply
+                                                       (43_i32)
+                                                       ($EmptyConstructor.return_11))
+                                                    (invoke
+                                                       Int32#
+                                                       $EmptyConstructor.apply_21))))
+                                           (invoke
+                                              printInt32
+                                              $EmptyConstructor.then_23)))
+                                     $EmptyConstructor.then_28)))
+                            (join
+                               $EmptyConstructor.apply_30
+                               (apply
+                                  ((construct tuple () ()))
+                                  ($EmptyConstructor.then_29))
+                               (invoke Unit $EmptyConstructor.apply_30))))
+                      (invoke Empty $EmptyConstructor.then_31))))
+             (cut $EmptyConstructor.param_3 $EmptyConstructor.select_32)))
+       $EmptyConstructor.return_6))
+   (Empty
+      $EmptyConstructor.return_12
+      (cut (construct Empty () ()) $EmptyConstructor.return_12))
+   (Unit
+      $EmptyConstructor.return_13
+      (cut
+         (lambda
+            ($EmptyConstructor.constructor_5 $EmptyConstructor.return_14)
+            (cut
+               (construct Unit ($EmptyConstructor.constructor_5) ())
+               $EmptyConstructor.return_14))
+         $EmptyConstructor.return_13))
+   ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

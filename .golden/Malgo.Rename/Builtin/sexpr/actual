@@ -251,6 +251,12 @@
                   ((con Char# (#Builtin.x_270)))
                   (seq (do (apply printChar# #Builtin.x_270))))))))
        ((def
+           print
+           (fn
+              ((clause
+                  (#Builtin.x_275)
+                  (seq (do (apply malgo_print #Builtin.x_275))))))))
+       ((def
            panic
            (fn
               ((clause
@@ -1003,7 +1009,7 @@
            getContents
            (fn
               ((clause
-                  (#Builtin.__275)
+                  (#Builtin.__278)
                   (seq
                      (do
                         (apply
@@ -1013,7 +1019,7 @@
            getChar
            (fn
               ((clause
-                  (#Builtin.__274)
+                  (#Builtin.__277)
                   (seq (do (apply Char# (parens (apply malgo_get_char (tuple)))))))))))
        ((def
            geString#
@@ -1155,7 +1161,7 @@
                                  #Builtin.y_200))))))))))
        ((def
            flush
-           (fn ((clause (#Builtin.__273) (seq (do (apply malgo_flush (tuple)))))))))
+           (fn ((clause (#Builtin.__276) (seq (do (apply malgo_flush (tuple)))))))))
        ((def
            float#
            (fn ((clause (#Builtin.x_2) (seq (do (apply Float# #Builtin.x_2))))))))
@@ -1712,7 +1718,8 @@
          (sig printChar# (-> Char# (tuple)))
          (sig printChar (-> Char (tuple)))
          (sig printString# (-> String# (tuple)))
-         (sig printString (-> String (tuple))))
+         (sig printString (-> String (tuple)))
+         (sig print (-> #Builtin.a_274 (tuple))))
       ((data Int32 () ((Int32# (Int32#))))
          (data Int64 () ((Int64# (Int64#))))
          (data Float () ((Float# (Float#))))
@@ -1796,6 +1803,7 @@
          (foreign malgo_newline (-> (tuple) (tuple)))
          (foreign malgo_print_char (-> Char# (tuple)))
          (foreign malgo_print_string (-> String# (tuple)))
+         (foreign malgo_print (-> #Builtin.a_273 (tuple)))
          (foreign malgo_flush (-> (tuple) (tuple)))
          (foreign malgo_get_char (-> (tuple) Char#))
          (foreign malgo_get_contents (-> (tuple) String#)))
