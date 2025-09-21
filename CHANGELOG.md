@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.2.0](https://github.com/malgo-lang/malgo/compare/v2.1.0...v2.2.0) (2025-09-21)
+
+
+### Features
+
+* implement empty function calls and non-empty clause patterns ([#243](https://github.com/malgo-lang/malgo/issues/243)) ([75c32c1](https://github.com/malgo-lang/malgo/commit/75c32c1db478d16086bf53b40cca4623baf4f42e))
+
+
+### Bug Fixes
+
+* **parser:** update pattern parsing in C-style syntax ([0fe33ec](https://github.com/malgo-lang/malgo/commit/0fe33ec72dec37803c259d5fbcc4c92d10c7068c))
+
 ## [2.1.0](https://github.com/malgo-lang/malgo/compare/v2.0.0...v2.1.0) (2025-08-30)
 
 
