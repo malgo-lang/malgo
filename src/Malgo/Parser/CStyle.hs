@@ -4,7 +4,6 @@ import Control.Monad.Combinators.Expr (Operator (..), makeExprParser)
 import Control.Monad.Trans (lift)
 import Data.List.NonEmpty qualified as NE
 import Data.List.NonEmpty qualified as NonEmpty
-import Data.Maybe (fromMaybe)
 import Data.Text.Lazy qualified as TL
 import Effectful (Eff, IOE, type (:>))
 import Malgo.Features (Features)
