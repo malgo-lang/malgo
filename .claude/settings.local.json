@@ -1,0 +1,34 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:github.com)",
+      "Bash(mise run build:*)",
+      "Bash(rg:*)",
+      "Bash(mise run test:*)",
+      "mcp__ide__getDiagnostics",
+      "Bash(cabal test:*)",
+      "Bash(cabal run malgo:*)",
+      "Bash(malgo eval:*)",
+      "Bash(find:*)",
+      "Bash(../../dist-newstyle/build/aarch64-osx/ghc-9.12.2/malgo-2.0.0/x/malgo/noopt/build/malgo/malgo eval Hello.mlg)",
+      "Bash(dist-newstyle/build/aarch64-osx/ghc-9.12.2/malgo-2.0.0/x/malgo/noopt/build/malgo/malgo eval examples/malgo/Hello.mlg)",
+      "Bash(mise run exec:*)",
+      "Bash(cabal exec malgo:*)",
+      "Bash(hpack:*)",
+      "Bash(grep:*)",
+      "Bash(ls:*)",
+      "Bash(cabal list-bin:*)",
+      "Bash(gh issue:*)",
+      "Bash(mkdir:*)",
+      "Bash(cabal build:*)",
+      "Bash(timeout 30 cabal build)",
+      "Bash(cabal clean:*)",
+      "Bash(diff:*)"
+    ],
+    "deny": []
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "deepwiki"
+  ]
+}

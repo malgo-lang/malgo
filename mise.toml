@@ -1,7 +1,6 @@
 [tools]
-go = "latest"
 watchexec = "latest"
-ghcup = "latest"
+ghcup = "0.1.50.2"
 [env]
 _.path = [
     "~/.ghcup/bin",
@@ -16,10 +15,9 @@ run = [
     "ghcup set ghc 9.12.2",
     "ghcup install cabal latest",
     "ghcup set cabal latest",
-    "go install github.com/git-chglog/git-chglog/cmd/git-chglog@latest",
     "cabal update",
-    "cabal install hpack --ignore-project --overwrite-policy=always",
-    "cabal install ormolu --ignore-project --overwrite-policy=always"
+    "cabal install hpack --overwrite-policy=always",
+    "cabal install ormolu --overwrite-policy=always"
 ]
 
 [tasks.setup-hls]
