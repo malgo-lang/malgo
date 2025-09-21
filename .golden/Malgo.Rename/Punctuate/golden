@@ -94,7 +94,7 @@ Module
          }
         }
        )
-       [ ConP
+       ( ConP
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/Punctuate.mlg"
@@ -136,8 +136,8 @@ Module
           , sort = Internal 0
           }
          )
-        ]
-       ]
+        ] :| []
+       )
        ( Seq
         ( Range
          { _start = SourcePos
@@ -283,7 +283,7 @@ Module
           }
          }
         )
-        [ ConP
+        ( ConP
          ( Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/Punctuate.mlg"
@@ -325,8 +325,8 @@ Module
            , sort = Internal 1
            }
           )
-         ]
-        ]
+         ] :| []
+        )
         ( Seq
          ( Range
           { _start = SourcePos
@@ -509,7 +509,7 @@ Module
           }
          }
         )
-        [ ConP
+        ( ConP
          ( Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/Punctuate.mlg"
@@ -551,8 +551,8 @@ Module
            , sort = Internal 2
            }
           )
-         ]
-        ]
+         ] :| []
+        )
         ( Seq
          ( Range
           { _start = SourcePos
@@ -1061,7 +1061,7 @@ Module
          }
         }
        )
-       [ VarP
+       ( VarP
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/Punctuate.mlg"
@@ -1076,13 +1076,13 @@ Module
          }
         )
         ( Id
-         { name = "$_"
+         { name = "_"
          , moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" )
-         , sort = Internal 4
+         , sort = Internal 3
          }
-        )
-       ]
+        ) :| []
+       )
        ( Seq
         ( Range
          { _start = SourcePos
@@ -1115,7 +1115,7 @@ Module
           { name = "x"
           , moduleName = Artifact
            ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" )
-          , sort = Internal 3
+          , sort = Internal 4
           }
          )
          ( Apply
@@ -1943,7 +1943,7 @@ Module
                { name = "x"
                , moduleName = Artifact
                 ( ArtifactPath "test/testcases/malgo/Punctuate.mlg" )
-               , sort = Internal 3
+               , sort = Internal 4
                }
               )
              )

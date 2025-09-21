@@ -51,7 +51,7 @@ Module
          }
         }
        )
-       [ VarP
+       ( VarP
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
@@ -66,13 +66,13 @@ Module
          }
         )
         ( Id
-         { name = "$_"
+         { name = "_"
          , moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
          , sort = Internal 1
          }
-        )
-       ]
+        ) :| []
+       )
        ( Seq
         ( Range
          { _start = SourcePos
@@ -143,7 +143,7 @@ Module
               }
              }
             )
-            [ ConP
+            ( ConP
              ( Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
@@ -163,8 +163,8 @@ Module
                ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
               , sort = External
               }
-             ) []
-            ]
+             ) [] :| []
+            )
             ( Seq
              ( Range
               { _start = SourcePos
@@ -262,7 +262,7 @@ Module
                }
               }
              )
-             [ ConP
+             ( ConP
               ( Range
                { _start = SourcePos
                 { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
@@ -282,8 +282,8 @@ Module
                 ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
                , sort = External
                }
-              ) []
-             ]
+              ) [] :| []
+             )
              ( Seq
               ( Range
                { _start = SourcePos
@@ -425,7 +425,7 @@ Module
                 }
                }
               )
-              [ ConP
+              ( ConP
                ( Range
                 { _start = SourcePos
                  { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
@@ -445,8 +445,8 @@ Module
                  ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
                 , sort = External
                 }
-               ) []
-              ]
+               ) [] :| []
+              )
               ( Seq
                ( Range
                 { _start = SourcePos
@@ -513,7 +513,7 @@ Module
                  }
                 }
                )
-               [ ConP
+               ( ConP
                 ( Range
                  { _start = SourcePos
                   { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
@@ -533,8 +533,8 @@ Module
                   ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
                  , sort = External
                  }
-                ) []
-               ]
+                ) [] :| []
+               )
                ( Seq
                 ( Range
                  { _start = SourcePos
@@ -646,7 +646,7 @@ Module
                   }
                  }
                 )
-                [ ConP
+                ( ConP
                  ( Range
                   { _start = SourcePos
                    { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
@@ -666,8 +666,8 @@ Module
                    ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
                   , sort = External
                   }
-                 ) []
-                ]
+                 ) [] :| []
+                )
                 ( Seq
                  ( Range
                   { _start = SourcePos
@@ -734,7 +734,7 @@ Module
                    }
                   }
                  )
-                 [ ConP
+                 ( ConP
                   ( Range
                    { _start = SourcePos
                     { sourceName = "./test/testcases/malgo/NestedMatch.mlg"
@@ -754,8 +754,8 @@ Module
                     ( ArtifactPath "test/testcases/malgo/NestedMatch.mlg" )
                    , sort = External
                    }
-                  ) []
-                 ]
+                  ) [] :| []
+                 )
                  ( Seq
                   ( Range
                    { _start = SourcePos

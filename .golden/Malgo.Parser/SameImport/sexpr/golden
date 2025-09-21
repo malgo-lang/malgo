@@ -7,5 +7,5 @@
          main
          (fn
             ((clause
-                ()
+                (_)
                 (seq (do (apply putStr (parens (apply getContents (tuple))))))))))))

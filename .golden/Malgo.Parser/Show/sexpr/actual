@@ -44,9 +44,9 @@
                                                   (string ", "))
                                                (apply (apply show showDictB) b))
                                             (string ")")))))))))))))))
-      (sig print (-> (app Show (a)) (-> a (tuple))))
+      (sig printShow (-> (app Show (a)) (-> a (tuple))))
       (def
-         print
+         printShow
          (fn
             ((clause
                 (showDict x)
@@ -57,12 +57,12 @@
          main
          (fn
             ((clause
-                ()
+                (_)
                 (seq
                    (do
                       (apply
                          (apply
-                            print
+                            printShow
                             (parens
                                (apply (apply showTuple2 showInt32) showInt32)))
                          (tuple (int32 1) (int32 2)))))))))))

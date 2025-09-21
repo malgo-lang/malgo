@@ -20,7 +20,7 @@
             (cut
                $Test6.param_5
                (select
-                  (#Test6.$__3
+                  (#Test6.__2
                      (cut
                         (lambda
                            ($Test6.param_6 $Test6.return_15)
@@ -31,7 +31,7 @@
                                     (invoke
                                        malgo_print_string
                                        (apply ("OK") ($Test6.return_15))))
-                                 (#Test6.__2
+                                 (#Test6.__3
                                     (invoke
                                        malgo_print_string
                                        (apply ("WRONG") ($Test6.return_15)))))))

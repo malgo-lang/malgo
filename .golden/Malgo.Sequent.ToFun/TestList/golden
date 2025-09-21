@@ -4,9 +4,9 @@
           ($TestList.param_3)
           (select
              $TestList.param_3
-             ((#TestList.$__2
+             ((#TestList.__0
                  (let
-                    #TestList.xs_0
+                    #TestList.xs_1
                     (apply
                        (apply (invoke Cons) ((apply (invoke Int32#) (1_i32))))
                        ((apply
@@ -17,11 +17,11 @@
                                   ((apply (invoke Int32#) (3_i32))))
                                ((invoke Nil)))))))
                     (let
-                       #TestList.nil_1
+                       #TestList.nil_2
                        (invoke Nil)
                        (apply
                           (invoke putStrLn)
                           ((apply
                               (invoke toStringInt32)
-                              ((apply (invoke head) (#TestList.xs_0))))))))))))))
+                              ((apply (invoke head) (#TestList.xs_1))))))))))))))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

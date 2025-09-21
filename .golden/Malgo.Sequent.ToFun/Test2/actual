@@ -8,14 +8,14 @@
             ($Test2.param_4)
             (select
                $Test2.param_4
-               ((#Test2.$__2
+               ((#Test2.__1
                    (apply
                       (lambda
                          ($Test2.param_5)
                          (select
                             $Test2.param_5
                             (((B ()) (apply (invoke malgo_print_string) ("OK")))
-                               (#Test2.__1
+                               (#Test2.__2
                                   (apply (invoke malgo_print_string) ("WRONG"))))))
                       ((apply (invoke rtob) ((invoke R))))))))))
       (R (R ()))

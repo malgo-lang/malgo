@@ -78,7 +78,7 @@ Module
        }
       }
      )
-     [ VarP
+     ( VarP
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Double.mlg"
@@ -91,8 +91,8 @@ Module
         , sourceColumn = Pos 16
         }
        }
-      ) "_"
-     ]
+      ) "_" :| []
+     )
      ( Seq
       ( Range
        { _start = SourcePos

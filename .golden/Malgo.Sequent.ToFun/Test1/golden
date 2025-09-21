@@ -17,7 +17,7 @@
             ($Test1.param_10)
             (select
                $Test1.param_10
-               ((#Test1.$__6
+               ((#Test1.__4
                    (apply
                       (apply
                          (apply (invoke if) ((invoke True)))
@@ -25,13 +25,13 @@
                              ($Test1.param_11)
                              (select
                                 $Test1.param_11
-                                ((#Test1.$__4
+                                ((#Test1.__5
                                     (apply (invoke malgo_print_string) ("True"))))))))
                       ((lambda
                           ($Test1.param_12)
                           (select
                              $Test1.param_12
-                             ((#Test1.$__5
+                             ((#Test1.__6
                                  (apply (invoke malgo_print_string) ("False")))))))))))))
       (True (True ()))
       (False (False ()))

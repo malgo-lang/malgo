@@ -4,6 +4,7 @@ module Malgo.Rename.Pass (RenamePass (..)) where
 import Control.Lens (view, _2)
 import Data.List (intersect)
 import Data.List.Extra (anySame, disjoint)
+import Data.List.NonEmpty qualified as NE
 import Data.Map.Strict qualified as Map
 import Data.Set qualified as Set
 import Data.Text qualified as T
@@ -186,10 +187,6 @@ rnExpr (Project range expr field) =
         then Var range <$> lookupQualifiedVarName range (ModuleName name) field
         else Project range <$> rnExpr (Var vRange name) <*> pure field
     _ -> Project range <$> rnExpr expr <*> pure field
-rnExpr (Fn pos (Clause x [] e :| _)) = do
-  e' <- rnExpr e
-  hole <- newInternalId "$_"
-  pure $ Fn pos (Clause x [VarP x hole] e' :| [])
 rnExpr (Fn pos cs) = Fn pos <$> traverse rnClause cs
 rnExpr (Tuple pos es) = Tuple pos <$> traverse rnExpr es
 rnExpr (Record pos kvs) =
@@ -361,11 +358,11 @@ rnStmts (Let x v e :| s : ss) = do
     pure $ Let x v' e' :| s' : ss'
 rnStmts (With x (Just v) e :| s : ss) = do
   e <- rnExpr e
-  ss <- rnExpr (Fn x $ Clause x [VarP x v] (Seq x $ s :| ss) :| [])
+  ss <- rnExpr (Fn x $ Clause x (NE.singleton (VarP x v)) (Seq x $ s :| ss) :| [])
   pure $ NoBind x (Apply x e ss) :| []
 rnStmts (With x Nothing e :| s : ss) = do
   e <- rnExpr e
-  ss <- rnExpr (Fn x $ Clause x [] (Seq x $ s :| ss) :| [])
+  ss <- rnExpr (Fn x $ Clause x (NE.singleton (VarP x "_")) (Seq x $ s :| ss) :| [])
   pure $ NoBind x (Apply x e ss) :| []
 rnStmts (With x _ _ :| []) = errorOn x "`with` statement cannnot appear in the last line of the sequence expression."
 

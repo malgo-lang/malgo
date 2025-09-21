@@ -163,3 +163,6 @@ def printInt32 = { i -> printString (toStringInt32 i) }
 
 def printInt64 : Int64 -> ()
 def printInt64 = { i -> printString (toStringInt64 i) }
+
+def print : a -> ()
+def print = { x -> malgo_print x }

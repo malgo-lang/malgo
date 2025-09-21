@@ -11,7 +11,7 @@
          main
          (fn
             ((clause
-                ()
+                (_)
                 (seq
                    (do
                       (apply
@@ -19,7 +19,7 @@
                             (apply if True)
                             (fn
                                ((clause
-                                   ()
+                                   (_)
                                    (seq
                                       (do
                                          (apply
@@ -27,7 +27,7 @@
                                             (string "True"))))))))
                          (fn
                             ((clause
-                                ()
+                                (_)
                                 (seq
                                    (do
                                       (apply malgo_print_string (string "False"))))))))))))))))

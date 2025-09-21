@@ -29,7 +29,7 @@
                              NotYetDone
                              (fn
                                 ((clause
-                                    (#Eventually.$__11)
+                                    (#Eventually.__11)
                                     (seq
                                        (do
                                           (apply
@@ -57,7 +57,7 @@
                        NotYetDone
                        (fn
                           ((clause
-                              (#Eventually.$__22)
+                              (#Eventually.__22)
                               (seq
                                  (do
                                     (apply
@@ -79,7 +79,7 @@
                                        NotYetDone
                                        (fn
                                           ((clause
-                                              (#Eventually.$__24)
+                                              (#Eventually.__24)
                                               (seq
                                                  (do
                                                     (apply
@@ -102,7 +102,7 @@
            main
            (fn
               ((clause
-                  (#Eventually.$__28)
+                  (#Eventually.__26)
                   (seq
                      (do (opapp |> comp step))
                      (do
@@ -111,7 +111,7 @@
                            (opapp |> (opapp |> (opapp |> comp step) step) step)
                            (fn
                               ((clause
-                                  ((con Done (#Eventually.x_26)))
+                                  ((con Done (#Eventually.x_27)))
                                   (seq
                                      (do
                                         (apply
@@ -119,9 +119,9 @@
                                            (parens
                                               (apply
                                                  toStringInt32
-                                                 #Eventually.x_26))))))
+                                                 #Eventually.x_27))))))
                                  (clause
-                                    ((con NotYetDone (#Eventually.__27)))
+                                    ((con NotYetDone (#Eventually.__28)))
                                     (seq
                                        (do
                                           (apply

@@ -17,7 +17,7 @@
             (cut
                $TestPolySynonym.param_10
                (select
-                  (#TestPolySynonym.$__8
+                  (#TestPolySynonym.__7
                      (cut
                         ((fst
                             ($TestPolySynonym.return_17
@@ -30,7 +30,7 @@
                                     String#
                                     (apply ("hoge") ($TestPolySynonym.return_18))))))
                         (then
-                           #TestPolySynonym.x_7
+                           #TestPolySynonym.x_8
                            (invoke
                               |>
                               (then
@@ -60,7 +60,7 @@
                                     (invoke
                                        first
                                        (apply
-                                          (#TestPolySynonym.x_7)
+                                          (#TestPolySynonym.x_8)
                                           ($TestPolySynonym.return_16))))))))))))
          $TestPolySynonym.return_13))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

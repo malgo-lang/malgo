@@ -6,7 +6,7 @@
           (join
              $TestList.select_52
              (select
-                (#TestList.$__2
+                (#TestList.__0
                    (join
                       $TestList.then_51
                       (then
@@ -26,11 +26,11 @@
                                            (join
                                               $TestList.then_47
                                               (then
-                                                 #TestList.xs_0
+                                                 #TestList.xs_1
                                                  (join
                                                     $TestList.then_46
                                                     (then
-                                                       #TestList.nil_1
+                                                       #TestList.nil_2
                                                        (join
                                                           $TestList.then_45
                                                           (then
@@ -66,7 +66,7 @@
                                                                          (join
                                                                             $TestList.apply_41
                                                                             (apply
-                                                                               (#TestList.xs_0)
+                                                                               (#TestList.xs_1)
                                                                                ($TestList.return_7))
                                                                             (invoke
                                                                                head

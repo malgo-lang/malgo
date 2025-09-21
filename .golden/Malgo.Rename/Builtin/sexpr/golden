@@ -1003,7 +1003,7 @@
            getContents
            (fn
               ((clause
-                  (#Builtin.__275)
+                  (#Builtin.__276)
                   (seq
                      (do
                         (apply
@@ -1013,7 +1013,7 @@
            getChar
            (fn
               ((clause
-                  (#Builtin.__274)
+                  (#Builtin.__275)
                   (seq (do (apply Char# (parens (apply malgo_get_char (tuple)))))))))))
        ((def
            geString#
@@ -1155,7 +1155,7 @@
                                  #Builtin.y_200))))))))))
        ((def
            flush
-           (fn ((clause (#Builtin.__273) (seq (do (apply malgo_flush (tuple)))))))))
+           (fn ((clause (#Builtin.__274) (seq (do (apply malgo_flush (tuple)))))))))
        ((def
            float#
            (fn ((clause (#Builtin.x_2) (seq (do (apply Float# #Builtin.x_2))))))))
@@ -1796,6 +1796,7 @@
          (foreign malgo_newline (-> (tuple) (tuple)))
          (foreign malgo_print_char (-> Char# (tuple)))
          (foreign malgo_print_string (-> String# (tuple)))
+         (foreign malgo_print (-> #Builtin.a_273 (tuple)))
          (foreign malgo_flush (-> (tuple) (tuple)))
          (foreign malgo_get_char (-> (tuple) Char#))
          (foreign malgo_get_contents (-> (tuple) String#)))

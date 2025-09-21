@@ -468,7 +468,7 @@ Module
        }
       }
      )
-     [ VarP
+     ( VarP
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Bool.mlg"
@@ -481,8 +481,8 @@ Module
         , sourceColumn = Pos 16
         }
        }
-      ) "_"
-     ]
+      ) "_" :| []
+     )
      ( Seq
       ( Range
        { _start = SourcePos
@@ -641,7 +641,7 @@ Module
               }
              }
             )
-            [ VarP
+            ( VarP
              ( Range
               { _start = SourcePos
                { sourceName = "./test/testcases/malgo/Bool.mlg"
@@ -654,8 +654,8 @@ Module
                , sourceColumn = Pos 26
                }
               }
-             ) "_"
-            ]
+             ) "_" :| []
+            )
             ( Seq
              ( Range
               { _start = SourcePos
@@ -764,7 +764,7 @@ Module
             }
            }
           )
-          [ VarP
+          ( VarP
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/Bool.mlg"
@@ -777,8 +777,8 @@ Module
              , sourceColumn = Pos 60
              }
             }
-           ) "_"
-          ]
+           ) "_" :| []
+          )
           ( Seq
            ( Range
             { _start = SourcePos

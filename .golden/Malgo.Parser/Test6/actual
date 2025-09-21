@@ -166,7 +166,7 @@ Module
        }
       }
      )
-     [ VarP
+     ( VarP
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/Test6.mlg"
@@ -179,8 +179,8 @@ Module
         , sourceColumn = Pos 15
         }
        }
-      ) "R"
-     ]
+      ) "R" :| []
+     )
      ( Seq
       ( Range
        { _start = SourcePos
@@ -240,7 +240,7 @@ Module
         }
        }
       )
-      [ VarP
+      ( VarP
        ( Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/Test6.mlg"
@@ -253,8 +253,8 @@ Module
          , sourceColumn = Pos 23
          }
         }
-       ) "_"
-      ]
+       ) "_" :| []
+      )
       ( Seq
        ( Range
         { _start = SourcePos
@@ -433,7 +433,22 @@ Module
        , sourceColumn = Pos 91
        }
       }
-     ) []
+     )
+     ( VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/Test6.mlg"
+        , sourceLine = Pos 9
+        , sourceColumn = Pos 14
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/Test6.mlg"
+        , sourceLine = Pos 9
+        , sourceColumn = Pos 91
+        }
+       }
+      ) "_" :| []
+     )
      ( Seq
       ( Range
        { _start = SourcePos
@@ -504,7 +519,7 @@ Module
             }
            }
           )
-          [ VarP
+          ( VarP
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/Test6.mlg"
@@ -517,8 +532,8 @@ Module
              , sourceColumn = Pos 17
              }
             }
-           ) "B"
-          ]
+           ) "B" :| []
+          )
           ( Seq
            ( Range
             { _start = SourcePos
@@ -609,7 +624,7 @@ Module
              }
             }
            )
-           [ VarP
+           ( VarP
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/Test6.mlg"
@@ -622,8 +637,8 @@ Module
               , sourceColumn = Pos 49
               }
              }
-            ) "_"
-           ]
+            ) "_" :| []
+           )
            ( Seq
             ( Range
              { _start = SourcePos

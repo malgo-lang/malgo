@@ -15,7 +15,7 @@
            main
            (fn
               ((clause
-                  (#Pragma.$__2)
+                  (#Pragma.__2)
                   (seq
                      (do (apply putStrLn (apply String# (string "Hello, world")))))))))))
       ((sig putStrLn (-> String (tuple))) (sig string# (-> String# String)))

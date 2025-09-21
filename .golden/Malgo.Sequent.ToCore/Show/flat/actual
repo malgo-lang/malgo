@@ -26,7 +26,7 @@
                   ((expand ((show #Show.show_5)))
                      (cut #Show.show_5 $Show.return_30)))))
          $Show.return_29))
-   (print
+   (printShow
       $Show.return_31
       (cut
          (lambda
@@ -232,9 +232,9 @@
             (cut
                $Show.param_25
                (select
-                  (#Show.$__15
+                  (#Show.__15
                      (invoke
-                        print
+                        printShow
                         (then
                            $Show.outer_76
                            (join

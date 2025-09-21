@@ -16,4 +16,4 @@
       (def string# (fn ((clause (x) (seq (do (apply String# x)))))))
       (def
          main
-         (fn ((clause () (seq (do (apply putStrLn (string "Hello, world"))))))))))
+         (fn ((clause (_) (seq (do (apply putStrLn (string "Hello, world"))))))))))

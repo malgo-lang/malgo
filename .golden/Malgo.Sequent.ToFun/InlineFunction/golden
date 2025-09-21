@@ -50,9 +50,9 @@
             ($InlineFunction.param_22)
             (select
                $InlineFunction.param_22
-               ((#InlineFunction.$__13
+               ((#InlineFunction.__8
                    (let
-                      #InlineFunction.fib_12
+                      #InlineFunction.fib_13
                       (apply
                          (invoke fix)
                          ((lambda
@@ -64,7 +64,7 @@
                                       ($InlineFunction.param_23
                                          $InlineFunction.param_24))
                                    (((tuple
-                                        (#InlineFunction.f_8 #InlineFunction.n_9))
+                                        (#InlineFunction.f_9 #InlineFunction.n_10))
                                        (apply
                                           (apply
                                              (apply
@@ -72,7 +72,7 @@
                                                 ((apply
                                                     (apply
                                                        (invoke <=)
-                                                       (#InlineFunction.n_9))
+                                                       (#InlineFunction.n_10))
                                                     ((apply
                                                         (invoke Int32#)
                                                         (1_i32))))))
@@ -80,7 +80,7 @@
                                                  ($InlineFunction.param_25)
                                                  (select
                                                     $InlineFunction.param_25
-                                                    ((#InlineFunction.$__10
+                                                    ((#InlineFunction.__11
                                                         (apply
                                                            (invoke Int32#)
                                                            (1_i32))))))))
@@ -88,26 +88,26 @@
                                               ($InlineFunction.param_26)
                                               (select
                                                  $InlineFunction.param_26
-                                                 ((#InlineFunction.$__11
+                                                 ((#InlineFunction.__12
                                                      (apply
                                                         (apply
                                                            (invoke +)
                                                            ((apply
-                                                               #InlineFunction.f_8
+                                                               #InlineFunction.f_9
                                                                ((apply
                                                                    (apply
                                                                       (invoke -)
-                                                                      (#InlineFunction.n_9))
+                                                                      (#InlineFunction.n_10))
                                                                    ((apply
                                                                        (invoke
                                                                           Int32#)
                                                                        (1_i32))))))))
                                                         ((apply
-                                                            #InlineFunction.f_8
+                                                            #InlineFunction.f_9
                                                             ((apply
                                                                 (apply
                                                                    (invoke -)
-                                                                   (#InlineFunction.n_9))
+                                                                   (#InlineFunction.n_10))
                                                                 ((apply
                                                                     (invoke
                                                                        Int32#)
@@ -119,7 +119,7 @@
                                 (apply
                                    (invoke |>)
                                    ((apply
-                                       #InlineFunction.fib_12
+                                       #InlineFunction.fib_13
                                        ((apply (invoke Int32#) (5_i32))))))
                                 ((invoke toStringInt32)))))
                          ((invoke putStrLn))))))))))

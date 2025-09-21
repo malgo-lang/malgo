@@ -4,20 +4,20 @@
           ($TestNestedLetFunc.param_5)
           (select
              $TestNestedLetFunc.param_5
-             ((#TestNestedLetFunc.$__4
+             ((#TestNestedLetFunc.__0
                  (let
-                    #TestNestedLetFunc.f_3
+                    #TestNestedLetFunc.f_4
                     (lambda
                        ($TestNestedLetFunc.param_6)
                        (select
                           $TestNestedLetFunc.param_6
-                          ((#TestNestedLetFunc.$__2
+                          ((#TestNestedLetFunc.__1
                               (apply
                                  (lambda
                                     ($TestNestedLetFunc.param_7)
                                     (select
                                        $TestNestedLetFunc.param_7
-                                       ((#TestNestedLetFunc.a_0 (tuple ())))))
+                                       ((#TestNestedLetFunc.a_2 (tuple ())))))
                                  ((tuple ())))))))
                     (apply (invoke malgo_print_string) ("PASS"))))))))
       (malgo_print_string

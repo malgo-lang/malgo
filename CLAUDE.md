@@ -162,3 +162,4 @@ def main = {
 - Check `.malgo-works/` for cached module interfaces
 - IR dumps are available via `withDump` in Driver.hs
 - S-expression output available for ASTs and IRs
+- DO NOT EDIT test/testcases/**.mlg

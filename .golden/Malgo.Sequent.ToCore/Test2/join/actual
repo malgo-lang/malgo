@@ -18,7 +18,7 @@
             (join
                $Test2.select_31
                (select
-                  (#Test2.$__2
+                  (#Test2.__1
                      (join
                         $Test2.then_30
                         (then
@@ -60,7 +60,7 @@
                                           (invoke
                                              malgo_print_string
                                              $Test2.apply_24)))
-                                    (#Test2.__1
+                                    (#Test2.__2
                                        (join
                                           $Test2.apply_25
                                           (apply ("WRONG") ($Test2.return_13))

@@ -4,7 +4,7 @@
           ($HelloImport.param_2)
           (select
              $HelloImport.param_2
-             ((#HelloImport.$__1
+             ((#HelloImport.__0
                  (apply
                     (lambda
                        ($HelloImport.tmp_3)
@@ -14,9 +14,9 @@
                               ($HelloImport.param_4)
                               (select
                                  $HelloImport.param_4
-                                 ((#HelloImport.f_0
+                                 ((#HelloImport.f_1
                                      (apply
-                                        #HelloImport.f_0
+                                        #HelloImport.f_1
                                         ((apply (invoke String#) (" world")))))))))))
                     ((apply (invoke putStr) ((apply (invoke String#) ("hello"))))))))))))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

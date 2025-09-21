@@ -216,7 +216,7 @@ freevars (Project _ e _) = freevars e
 freevars (Fn _ cs) = foldMap freevarsClause cs
   where
     freevarsClause :: (Ord (XId x)) => Clause x -> Set (XId x)
-    freevarsClause (Clause _ pats e) = Set.difference (freevars e) (mconcat (map bindVars pats))
+    freevarsClause (Clause _ pats e) = Set.difference (freevars e) (foldMap bindVars pats)
     bindVars (VarP _ x) = Set.singleton x
     bindVars (ConP _ _ ps) = mconcat $ map bindVars ps
     bindVars (TupleP _ ps) = mconcat $ map bindVars ps
@@ -271,7 +271,7 @@ type CoClause x = (CoPat x, Expr x)
 
 -- * Clause
 
-data Clause x = Clause (XClause x) [Pat x] (Expr x)
+data Clause x = Clause (XClause x) (NonEmpty (Pat x)) (Expr x)
 
 deriving stock instance (ForallClauseX Eq x, ForallExpX Eq x, ForallPatX Eq x, ForallCoPatX Eq x, ForallStmtX Eq x, ForallTypeX Eq x, Eq (XId x)) => Eq (Clause x)
 
@@ -281,10 +281,10 @@ instance (ForallClauseX Eq x, ForallExpX Eq x, ForallPatX Eq x, ForallCoPatX Eq 
   (Clause _ ps1 _) `compare` (Clause _ ps2 _) = ps1 `compare` ps2
 
 instance (ToSExpr (XId x)) => ToSExpr (Clause x) where
-  toSExpr (Clause _ pats body) = S.L ["clause", S.L $ map toSExpr pats, toSExpr body]
+  toSExpr (Clause _ pats body) = S.L ["clause", S.L $ toList $ fmap toSExpr pats, toSExpr body]
 
 instance (Pretty (XId x)) => Pretty (Clause x) where
-  pretty (Clause _ pats body) = sexpr ["clause", sexpr $ map pretty pats, pretty body]
+  pretty (Clause _ pats body) = sexpr ["clause", sexpr $ toList $ fmap pretty pats, pretty body]
 
 -- * Pattern
 

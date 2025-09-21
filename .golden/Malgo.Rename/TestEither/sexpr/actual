@@ -14,7 +14,7 @@
            main
            (fn
               ((clause
-                  (#TestEither.$__16)
+                  (#TestEither.__7)
                   (seq
                      (do
                         (opapp
@@ -22,7 +22,7 @@
                            (apply Right (apply Int32# (int32 1)))
                            (fn
                               ((clause
-                                  ((con Right (#TestEither.x_7)))
+                                  ((con Right (#TestEither.x_8)))
                                   (seq
                                      (do
                                         (apply
@@ -30,9 +30,9 @@
                                            (parens
                                               (apply
                                                  toStringInt32
-                                                 #TestEither.x_7))))))
+                                                 #TestEither.x_8))))))
                                  (clause
-                                    (#TestEither.__8)
+                                    (#TestEither.__9)
                                     (seq
                                        (do
                                           (apply
@@ -40,18 +40,18 @@
                                              (apply
                                                 String#
                                                 (string "unreachable"))))))))))
-                     (let #TestEither.x_9 (apply Right (apply Int32# (int32 1))))
+                     (let #TestEither.x_10 (apply Right (apply Int32# (int32 1))))
                      (do
                         (opapp
                            |>
                            (opapp
                               |>
-                              #TestEither.x_9
+                              #TestEither.x_10
                               (apply
                                  andThen
                                  (fn
                                     ((clause
-                                        (#TestEither.x_10)
+                                        (#TestEither.x_11)
                                         (seq
                                            (do
                                               (apply
@@ -60,13 +60,13 @@
                                                     (apply
                                                        (apply
                                                           addInt32
-                                                          #TestEither.x_10)
+                                                          #TestEither.x_11)
                                                        (apply Int32# (int32 1))))))))))))
                            (apply
                               andThen
                               (fn
                                  ((clause
-                                     (#TestEither.y_11)
+                                     (#TestEither.y_12)
                                      (seq
                                         (do
                                            (opapp
@@ -75,7 +75,7 @@
                                                  |>
                                                  (opapp
                                                     |>
-                                                    #TestEither.y_11
+                                                    #TestEither.y_12
                                                     toStringInt32)
                                                  putStr)
                                               Right)))))))))
@@ -86,12 +86,12 @@
                               |>
                               (opapp
                                  |>
-                                 #TestEither.x_9
+                                 #TestEither.x_10
                                  (apply
                                     andThen
                                     (fn
                                        ((clause
-                                           (#TestEither.__12)
+                                           (#TestEither.__13)
                                            (seq
                                               (do
                                                  (apply
@@ -103,7 +103,7 @@
                                  andThen
                                  (fn
                                     ((clause
-                                        (#TestEither.x_13)
+                                        (#TestEither.x_14)
                                         (seq
                                            (do
                                               (apply
@@ -112,21 +112,21 @@
                                                     (apply
                                                        (apply
                                                           addInt32
-                                                          #TestEither.x_13)
+                                                          #TestEither.x_14)
                                                        (apply Int32# (int32 1))))))))))))
                            (fn
                               ((clause
-                                  ((con Left (#TestEither.err_14)))
-                                  (seq (do (apply putStrLn #TestEither.err_14))))
+                                  ((con Left (#TestEither.err_15)))
+                                  (seq (do (apply putStrLn #TestEither.err_15))))
                                  (clause
-                                    ((con Right (#TestEither.x_15)))
+                                    ((con Right (#TestEither.x_16)))
                                     (seq
                                        (do
                                           (opapp
                                              |>
                                              (opapp
                                                 |>
-                                                #TestEither.x_15
+                                                #TestEither.x_16
                                                 toStringInt32)
                                              putStrLn)))))))))))))))
       ()

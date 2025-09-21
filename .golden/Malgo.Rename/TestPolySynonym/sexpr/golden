@@ -10,14 +10,14 @@
            main
            (fn
               ((clause
-                  (#TestPolySynonym.$__8)
+                  (#TestPolySynonym.__7)
                   (seq
                      (let
-                        #TestPolySynonym.x_7
+                        #TestPolySynonym.x_8
                         (record
                            (fst (apply Int32# (int32 1)))
                            (snd (apply String# (string "hoge")))))
-                     (do (opapp |> (apply first #TestPolySynonym.x_7) printInt32)))))))))
+                     (do (opapp |> (apply first #TestPolySynonym.x_8) printInt32)))))))))
       ((sig
           first
           (->

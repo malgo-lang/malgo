@@ -6,7 +6,7 @@
           (cut
              $TuplePattern.param_4
              (select
-                (#TuplePattern.$__3
+                (#TuplePattern.__0
                    (invoke
                       |>
                       (then
@@ -28,7 +28,7 @@
                                                 (select
                                                    ((tuple
                                                        ((A ())
-                                                          #TuplePattern.rest_0))
+                                                          #TuplePattern.rest_1))
                                                       (invoke
                                                          printString
                                                          (then
@@ -49,13 +49,13 @@
                                                                      ($TuplePattern.return_9)))))))
                                                    ((tuple
                                                        ((B ())
-                                                          #TuplePattern.rest_1))
+                                                          #TuplePattern.rest_2))
                                                       (cut
                                                          (construct tuple () ())
                                                          $TuplePattern.return_8))
                                                    ((tuple
                                                        ((C ())
-                                                          #TuplePattern.rest_2))
+                                                          #TuplePattern.rest_3))
                                                       (cut
                                                          (construct tuple () ())
                                                          $TuplePattern.return_8))))))

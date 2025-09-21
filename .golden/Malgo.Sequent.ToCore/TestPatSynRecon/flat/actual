@@ -89,7 +89,7 @@
             (cut
                $TestPatSynRecon.param_11
                (select
-                  (#TestPatSynRecon.$__6
+                  (#TestPatSynRecon.__5
                      (invoke
                         |>
                         (then
@@ -109,11 +109,11 @@
                                                (cut
                                                   $TestPatSynRecon.param_12
                                                   (select
-                                                     (#TestPatSynRecon.i_5
+                                                     (#TestPatSynRecon.i_6
                                                         (invoke
                                                            printInt64
                                                            (apply
-                                                              (#TestPatSynRecon.i_5)
+                                                              (#TestPatSynRecon.i_6)
                                                               ($TestPatSynRecon.return_23))))))))
                                            ($TestPatSynRecon.return_22))))))
                               (invoke

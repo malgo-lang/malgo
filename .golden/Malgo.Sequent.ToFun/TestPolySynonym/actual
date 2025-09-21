@@ -11,15 +11,15 @@
             ($TestPolySynonym.param_10)
             (select
                $TestPolySynonym.param_10
-               ((#TestPolySynonym.$__8
+               ((#TestPolySynonym.__7
                    (let
-                      #TestPolySynonym.x_7
+                      #TestPolySynonym.x_8
                       (object
                          ((fst (apply (invoke Int32#) (1_i32)))
                             (snd (apply (invoke String#) ("hoge")))))
                       (apply
                          (apply
                             (invoke |>)
-                            ((apply (invoke first) (#TestPolySynonym.x_7))))
+                            ((apply (invoke first) (#TestPolySynonym.x_8))))
                          ((invoke printInt32))))))))))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

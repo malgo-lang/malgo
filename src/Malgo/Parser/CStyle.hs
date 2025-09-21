@@ -2,6 +2,7 @@ module Malgo.Parser.CStyle (parseCStyle) where
 
 import Control.Monad.Combinators.Expr (Operator (..), makeExprParser)
 import Control.Monad.Trans (lift)
+import Data.List.NonEmpty qualified as NE
 import Data.List.NonEmpty qualified as NonEmpty
 import Data.Text.Lazy qualified as TL
 import Effectful (Eff, IOE, type (:>))
@@ -75,14 +76,14 @@ pDataDef :: Parser es (Decl (Malgo Parse))
 pDataDef = captureRange do
   reserved "data"
   name <- ident
-  parameters <- pParameterList
+  parameters <- fromMaybe [] <$> optional pParameterList
   reservedOperator "="
   constructors <- sepBy1 pConstructor (reservedOperator "|")
   pure $ \range -> DataDef range name parameters constructors
   where
     pConstructor = captureRange do
       name <- ident
-      parameters <- between (symbol "(") (symbol ")") (sepBy pType (symbol ","))
+      parameters <- fromMaybe [] <$> optional (try $ between (symbol "(") (symbol ")") (sepBy pType (symbol ",")))
       pure (,name,parameters)
 
 -- | pTypeSynonym parses C-style type synonyms with parenthesized parameters
@@ -229,7 +230,7 @@ pTyApp = captureRange do
 -- >          | tyRecord
 -- >          | tyBlock
 pAtomType :: Parser es (Type (Malgo Parse))
-pAtomType = choice [pTyVar, pTyTuple, try pTyRecord, pTyBlock]
+pAtomType = choice [pTyVar, pTyTuple, try pTyRecord, try pTyBlock, pTyCStyleTuple]
 
 -- | pTyVar parses a type variable.
 --
@@ -263,6 +264,16 @@ pTyRecord = captureRange do
       reservedOperator ":"
       value <- pType
       pure (field, value)
+
+-- | pTyCStyleTuple parses C-style tuple types with braces
+-- > tyCStyleTuple = "{" type ("," type)* "}"
+-- >               | "{" "}" ;
+pTyCStyleTuple :: Parser es (Type (Malgo Parse))
+pTyCStyleTuple = captureRange do
+  tys <- between (symbol "{") (symbol "}") (sepBy pType (symbol ","))
+  pure $ \range -> case tys of
+    [ty] -> ty
+    _ -> TyTuple range tys
 
 -- | pTyBlock parses a block type.
 --
@@ -306,11 +317,12 @@ pApply =
     [ [ Postfix $ manyUnaryOp do
           choice
             [ -- Function application: expr(arg1, arg2, ...)
-              -- TODO: Support empty argument list
+              -- Empty argument list () is treated as ({})
               captureRange do
                 args <- between (symbol "(") (symbol ")") (sepBy pExpr (symbol ","))
-                when (null args) $ fail "c-style function application must have at least one argument"
-                pure $ \range fn -> foldl (Apply range) fn args,
+                pure $ \range fn ->
+                  let actualArgs = if null args then [Tuple range []] else args
+                   in foldl (Apply range) fn actualArgs,
               -- Field projection: expr.field
               captureRange do
                 reservedOperator "."
@@ -396,18 +408,22 @@ pCopatternSuffix cp =
         field <- ident
         pCopatternSuffix (\range -> ProjectP range (cp range) field),
       try do
+        parenStart <- getSourcePos
         symbol "("
         -- Parse C-style pattern arguments (comma-separated in parentheses)
-        -- TODO: Support empty argument list
+        -- Empty argument list () is treated as ({})
         pats <- sepBy pPat (symbol ",")
-        when (null pats) $ fail "c-style copattern application must have at least one argument"
         symbol ")"
+        parenEnd <- getSourcePos
         -- For C-style, we need to handle multiple patterns differently
         -- Apply each pattern as a separate ApplyP
-        let applyPats pat_list copat = case pat_list of
+        -- Empty pattern list () is treated as ({})
+        let parenRange = Range parenStart parenEnd
+            actualPats = if null pats then [TupleP parenRange []] else pats
+            applyPats pat_list copat = case pat_list of
               [] -> copat
               (p : ps) -> applyPats ps (\range -> ApplyP range (copat range) p)
-        pCopatternSuffix (applyPats pats cp),
+        pCopatternSuffix (applyPats actualPats cp),
       pure cp
     ]
 
@@ -610,7 +626,8 @@ pVariable = captureRange do
 -- > clause = "(" pattern ("," pattern)* ")" "->" stmts
 pClause :: (Features :> es) => Parser es (Clause (Malgo Parse))
 pClause = captureRange do
-  -- TODO: Support empty argument list
-  patterns <- between (symbol "(") (symbol ")") (sepEndBy1 pPat (symbol ",")) <* reservedOperator "->"
+  patterns <- between (symbol "(") (symbol ")") (sepEndBy pPat (symbol ",")) <* reservedOperator "->"
   body <- pStmts
-  pure $ \range -> Clause range patterns body
+  pure $ \range -> case patterns of
+    [] -> Clause range (NE.singleton (VarP range "_")) body
+    _ -> Clause range (NE.fromList patterns) body

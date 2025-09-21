@@ -92,7 +92,7 @@ Module
        }
       }
      )
-     [ VarP
+     ( VarP
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/CStyleApply.mlg"
@@ -105,22 +105,23 @@ Module
         , sourceColumn = Pos 16
         }
        }
-      ) "x"
-     , VarP
-      ( Range
-       { _start = SourcePos
-        { sourceName = "./test/testcases/malgo/CStyleApply.mlg"
-        , sourceLine = Pos 6
-        , sourceColumn = Pos 18
+      ) "x" :|
+      [ VarP
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/CStyleApply.mlg"
+         , sourceLine = Pos 6
+         , sourceColumn = Pos 18
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/CStyleApply.mlg"
+         , sourceLine = Pos 6
+         , sourceColumn = Pos 19
+         }
         }
-       , _end = SourcePos
-        { sourceName = "./test/testcases/malgo/CStyleApply.mlg"
-        , sourceLine = Pos 6
-        , sourceColumn = Pos 19
-        }
-       }
-      ) "y"
-     ]
+       ) "y"
+      ]
+     )
      ( Seq
       ( Range
        { _start = SourcePos
@@ -284,7 +285,7 @@ Module
        }
       }
      )
-     [ VarP
+     ( VarP
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/CStyleApply.mlg"
@@ -297,22 +298,23 @@ Module
         , sourceColumn = Pos 15
         }
        }
-      ) "x"
-     , VarP
-      ( Range
-       { _start = SourcePos
-        { sourceName = "./test/testcases/malgo/CStyleApply.mlg"
-        , sourceLine = Pos 9
-        , sourceColumn = Pos 17
+      ) "x" :|
+      [ VarP
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/CStyleApply.mlg"
+         , sourceLine = Pos 9
+         , sourceColumn = Pos 17
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/CStyleApply.mlg"
+         , sourceLine = Pos 9
+         , sourceColumn = Pos 18
+         }
         }
-       , _end = SourcePos
-        { sourceName = "./test/testcases/malgo/CStyleApply.mlg"
-        , sourceLine = Pos 9
-        , sourceColumn = Pos 18
-        }
-       }
-      ) "y"
-     ]
+       ) "y"
+      ]
+     )
      ( Seq
       ( Range
        { _start = SourcePos
@@ -476,7 +478,7 @@ Module
        }
       }
      )
-     [ VarP
+     ( VarP
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/CStyleApply.mlg"
@@ -489,22 +491,23 @@ Module
         , sourceColumn = Pos 15
         }
        }
-      ) "x"
-     , VarP
-      ( Range
-       { _start = SourcePos
-        { sourceName = "./test/testcases/malgo/CStyleApply.mlg"
-        , sourceLine = Pos 12
-        , sourceColumn = Pos 17
+      ) "x" :|
+      [ VarP
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./test/testcases/malgo/CStyleApply.mlg"
+         , sourceLine = Pos 12
+         , sourceColumn = Pos 17
+         }
+        , _end = SourcePos
+         { sourceName = "./test/testcases/malgo/CStyleApply.mlg"
+         , sourceLine = Pos 12
+         , sourceColumn = Pos 18
+         }
         }
-       , _end = SourcePos
-        { sourceName = "./test/testcases/malgo/CStyleApply.mlg"
-        , sourceLine = Pos 12
-        , sourceColumn = Pos 18
-        }
-       }
-      ) "y"
-     ]
+       ) "y"
+      ]
+     )
      ( Seq
       ( Range
        { _start = SourcePos
@@ -654,7 +657,7 @@ Module
        }
       }
      )
-     [ VarP
+     ( VarP
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/CStyleApply.mlg"
@@ -667,8 +670,8 @@ Module
         , sourceColumn = Pos 16
         }
        }
-      ) "n"
-     ]
+      ) "n" :| []
+     )
      ( Seq
       ( Range
        { _start = SourcePos
@@ -818,7 +821,7 @@ Module
        }
       }
      )
-     [ TupleP
+     ( TupleP
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/CStyleApply.mlg"
@@ -860,8 +863,8 @@ Module
          }
         }
        ) "acc"
-      ]
-     ]
+      ] :| []
+     )
      ( Seq
       ( Range
        { _start = SourcePos
@@ -1022,7 +1025,7 @@ Module
              }
             }
            )
-           [ VarP
+           ( VarP
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/CStyleApply.mlg"
@@ -1035,8 +1038,8 @@ Module
               , sourceColumn = Pos 49
               }
              }
-            ) "_"
-           ]
+            ) "_" :| []
+           )
            ( Seq
             ( Range
              { _start = SourcePos
@@ -1113,7 +1116,7 @@ Module
             }
            }
           )
-          [ VarP
+          ( VarP
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/CStyleApply.mlg"
@@ -1126,8 +1129,8 @@ Module
              , sourceColumn = Pos 65
              }
             }
-           ) "_"
-          ]
+           ) "_" :| []
+          )
           ( Seq
            ( Range
             { _start = SourcePos
@@ -1342,7 +1345,7 @@ Module
        }
       }
      )
-     [ VarP
+     ( VarP
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/CStyleApply.mlg"
@@ -1355,8 +1358,8 @@ Module
         , sourceColumn = Pos 16
         }
        }
-      ) "_"
-     ]
+      ) "_" :| []
+     )
      ( Seq
       ( Range
        { _start = SourcePos

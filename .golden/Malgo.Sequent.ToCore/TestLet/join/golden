@@ -27,11 +27,11 @@
             (join
                $TestLet.select_54
                (select
-                  (#TestLet.$__8
+                  (#TestLet.__4
                      (join
                         $TestLet.then_51
                         (then
-                           #TestLet.x_4
+                           #TestLet.x_5
                            (join
                               $TestLet.then_50
                               (then
@@ -67,7 +67,7 @@
                                              (join
                                                 $TestLet.apply_46
                                                 (apply
-                                                   (#TestLet.x_4)
+                                                   (#TestLet.x_5)
                                                    ($TestLet.return_20))
                                                 (invoke
                                                    toStringInt32#
@@ -87,18 +87,18 @@
                                                 (join
                                                    $TestLet.then_43
                                                    (then
-                                                      #TestLet.x_5
+                                                      #TestLet.x_6
                                                       (join
                                                          $TestLet.then_42
                                                          (then
-                                                            #TestLet.printInt32_7
+                                                            #TestLet.printInt32_8
                                                             (join
                                                                $TestLet.apply_41
                                                                (apply
-                                                                  (#TestLet.x_5)
+                                                                  (#TestLet.x_6)
                                                                   ($TestLet.return_21))
                                                                (cut
-                                                                  #TestLet.printInt32_7
+                                                                  #TestLet.printInt32_8
                                                                   $TestLet.apply_41)))
                                                          (cut
                                                             (lambda
@@ -108,7 +108,7 @@
                                                                   $TestLet.select_40
                                                                   (select
                                                                      ((Int32#
-                                                                         (#TestLet.x_6))
+                                                                         (#TestLet.x_7))
                                                                         (join
                                                                            $TestLet.then_39
                                                                            (then
@@ -128,7 +128,7 @@
                                                                                  (join
                                                                                     $TestLet.apply_37
                                                                                     (apply
-                                                                                       (#TestLet.x_6)
+                                                                                       (#TestLet.x_7)
                                                                                        ($TestLet.return_23))
                                                                                     (invoke
                                                                                        toStringInt32#

@@ -886,6 +886,7 @@
       (def
          printString
          (fn ((clause ((con String# (x))) (seq (do (apply printString# x)))))))
+      (foreign malgo_print (-> a (tuple)))
       (foreign malgo_flush (-> (tuple) (tuple)))
       (def flush (fn ((clause (_) (seq (do (apply malgo_flush (tuple))))))))
       (foreign malgo_get_char (-> (tuple) Char#))

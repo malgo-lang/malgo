@@ -6,7 +6,7 @@
           (cut
              $TestList.param_3
              (select
-                (#TestList.$__2
+                (#TestList.__0
                    (invoke
                       Cons
                       (apply
@@ -48,11 +48,11 @@
                                                          ($TestList.return_9)))))))
                                            ($TestList.return_8)))))))
                              ((then
-                                 #TestList.xs_0
+                                 #TestList.xs_1
                                  (invoke
                                     Nil
                                     (then
-                                       #TestList.nil_1
+                                       #TestList.nil_2
                                        (invoke
                                           putStrLn
                                           (apply
@@ -66,7 +66,7 @@
                                                            (invoke
                                                               head
                                                               (apply
-                                                                 (#TestList.xs_0)
+                                                                 (#TestList.xs_1)
                                                                  ($TestList.return_7)))))
                                                        ($TestList.return_6)))))
                                              ($TestList.return_5)))))))))))))))

@@ -31,7 +31,7 @@
                                ($Eventually.param_33)
                                (select
                                   $Eventually.param_33
-                                  ((#Eventually.$__11
+                                  ((#Eventually.__11
                                       (apply
                                          (apply
                                             (invoke eventuallyBind)
@@ -58,7 +58,7 @@
                        ($Eventually.param_35)
                        (select
                           $Eventually.param_35
-                          ((#Eventually.$__22
+                          ((#Eventually.__22
                               (apply
                                  (invoke Done)
                                  ((apply
@@ -78,7 +78,7 @@
                                      ($Eventually.param_37)
                                      (select
                                         $Eventually.param_37
-                                        ((#Eventually.$__24
+                                        ((#Eventually.__24
                                             (apply
                                                (invoke Done)
                                                ((apply
@@ -99,7 +99,7 @@
             ($Eventually.param_39)
             (select
                $Eventually.param_39
-               ((#Eventually.$__28
+               ((#Eventually.__26
                    (apply
                       (lambda
                          ($Eventually.tmp_40)
@@ -123,13 +123,13 @@
                                 ($Eventually.param_41)
                                 (select
                                    $Eventually.param_41
-                                   (((Done (#Eventually.x_26))
+                                   (((Done (#Eventually.x_27))
                                        (apply
                                           (invoke printString)
                                           ((apply
                                               (invoke toStringInt32)
-                                              (#Eventually.x_26)))))
-                                      ((NotYetDone (#Eventually.__27))
+                                              (#Eventually.x_27)))))
+                                      ((NotYetDone (#Eventually.__28))
                                          (apply
                                             (invoke printString)
                                             ((apply (invoke String#) ("not yet")))))))))))

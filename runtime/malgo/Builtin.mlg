@@ -487,6 +487,8 @@ def printString# = { x -> malgo_print_string x }
 def printString : String -> ()
 def printString = { (String# x) -> printString# x }
 
+foreign import malgo_print : a -> ()
+
 foreign import malgo_flush : () -> ()
 def flush = { _ -> malgo_flush () }
 

@@ -78,7 +78,7 @@ Module
        }
       }
      )
-     [ BoxedP
+     ( BoxedP
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
@@ -92,8 +92,8 @@ Module
         }
        }
       )
-      ( Int32 0 )
-     ]
+      ( Int32 0 ) :| []
+     )
      ( Seq
       ( Range
        { _start = SourcePos
@@ -153,7 +153,7 @@ Module
         }
        }
       )
-      [ VarP
+      ( VarP
        ( Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
@@ -166,8 +166,8 @@ Module
          , sourceColumn = Pos 5
          }
         }
-       ) "n"
-      ]
+       ) "n" :| []
+      )
       ( Seq
        ( Range
         { _start = SourcePos
@@ -364,7 +364,7 @@ Module
        }
       }
      )
-     [ BoxedP
+     ( BoxedP
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
@@ -378,8 +378,8 @@ Module
         }
        }
       )
-      ( Int32 0 )
-     ]
+      ( Int32 0 ) :| []
+     )
      ( Seq
       ( Range
        { _start = SourcePos
@@ -439,7 +439,7 @@ Module
         }
        }
       )
-      [ VarP
+      ( VarP
        ( Range
         { _start = SourcePos
          { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
@@ -452,8 +452,8 @@ Module
          , sourceColumn = Pos 5
          }
         }
-       ) "n"
-      ]
+       ) "n" :| []
+      )
       ( Seq
        ( Range
         { _start = SourcePos
@@ -649,7 +649,22 @@ Module
        , sourceColumn = Pos 43
        }
       }
-     ) []
+     )
+     ( VarP
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+        , sourceLine = Pos 15
+        , sourceColumn = Pos 5
+        }
+       , _end = SourcePos
+        { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
+        , sourceLine = Pos 16
+        , sourceColumn = Pos 43
+        }
+       }
+      ) "_" :| []
+     )
      ( Seq
       ( Range
        { _start = SourcePos
@@ -720,7 +735,7 @@ Module
             }
            }
           )
-          [ VarP
+          ( VarP
            ( Range
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
@@ -733,8 +748,8 @@ Module
              , sourceColumn = Pos 13
              }
             }
-           ) "False"
-          ]
+           ) "False" :| []
+          )
           ( Seq
            ( Range
             { _start = SourcePos
@@ -825,7 +840,7 @@ Module
              }
             }
            )
-           [ VarP
+           ( VarP
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/EvenOdd.mlg"
@@ -838,8 +853,8 @@ Module
               , sourceColumn = Pos 12
               }
              }
-            ) "True"
-           ]
+            ) "True" :| []
+           )
            ( Seq
             ( Range
              { _start = SourcePos

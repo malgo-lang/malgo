@@ -34,7 +34,7 @@
                            NotYetDone
                            (fn
                               ((clause
-                                  ()
+                                  (_)
                                   (seq
                                      (do
                                         (apply
@@ -70,7 +70,7 @@
                      NotYetDone
                      (fn
                         ((clause
-                            ()
+                            (_)
                             (seq
                                (do
                                   (apply
@@ -89,7 +89,7 @@
                                      NotYetDone
                                      (fn
                                         ((clause
-                                            ()
+                                            (_)
                                             (seq
                                                (do
                                                   (apply
@@ -111,7 +111,7 @@
          main
          (fn
             ((clause
-                ()
+                (_)
                 (seq
                    (do (opapp |> comp step))
                    (do

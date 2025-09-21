@@ -15,7 +15,7 @@
                               True
                               (fn
                                  ((clause
-                                     (#RightAssoc.$__2)
+                                     (#RightAssoc.__2)
                                      (seq (do (apply Int32# (int32 1))))))))
                            (parens
                               (opapp
@@ -24,7 +24,7 @@
                                     True
                                     (fn
                                        ((clause
-                                           (#RightAssoc.$__3)
+                                           (#RightAssoc.__3)
                                            (seq (do (apply Int32# (int32 2))))))))
                                  (parens
                                     (opapp
@@ -33,7 +33,7 @@
                                           True
                                           (fn
                                              ((clause
-                                                 (#RightAssoc.$__4)
+                                                 (#RightAssoc.__4)
                                                  (seq
                                                     (do (apply Int32# (int32 3))))))))
                                        (parens
@@ -43,7 +43,7 @@
                                                 True
                                                 (fn
                                                    ((clause
-                                                       (#RightAssoc.$__5)
+                                                       (#RightAssoc.__5)
                                                        (seq
                                                           (do
                                                              (apply
@@ -58,7 +58,7 @@
                               True
                               (fn
                                  ((clause
-                                     (#RightAssoc.$__7)
+                                     (#RightAssoc.__7)
                                      (seq (do (apply Int32# (int32 1))))))))
                            (opapp
                               <|>
@@ -66,7 +66,7 @@
                                  True
                                  (fn
                                     ((clause
-                                        (#RightAssoc.$__8)
+                                        (#RightAssoc.__8)
                                         (seq (do (apply Int32# (int32 2))))))))
                               (opapp
                                  <|>
@@ -74,7 +74,7 @@
                                     True
                                     (fn
                                        ((clause
-                                           (#RightAssoc.$__9)
+                                           (#RightAssoc.__9)
                                            (seq (do (apply Int32# (int32 3))))))))
                                  (opapp
                                     <|>
@@ -82,7 +82,7 @@
                                        True
                                        (fn
                                           ((clause
-                                              (#RightAssoc.$__10)
+                                              (#RightAssoc.__10)
                                               (seq (do (apply Int32# (int32 4))))))))
                                     Nil)))))
                      (do #RightAssoc.y_11)))))))
@@ -90,9 +90,9 @@
            main
            (fn
               ((clause
-                  (#RightAssoc.$__13)
+                  (#RightAssoc.__12)
                   (seq
-                     (let #RightAssoc.x_12 (apply f (apply Int32# (int32 4))))
+                     (let #RightAssoc.x_13 (apply f (apply Int32# (int32 4))))
                      (do (apply printString (apply String# (string "OK")))))))))))
       ((sig
           <|>

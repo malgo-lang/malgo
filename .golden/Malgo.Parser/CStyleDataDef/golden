@@ -456,7 +456,7 @@ Module
        }
       }
      )
-     [ VarP
+     ( VarP
       ( Range
        { _start = SourcePos
         { sourceName = "./test/testcases/malgo/CStyleDataDef.mlg"
@@ -469,8 +469,8 @@ Module
         , sourceColumn = Pos 16
         }
        }
-      ) "_"
-     ]
+      ) "_" :| []
+     )
      ( Seq
       ( Range
        { _start = SourcePos

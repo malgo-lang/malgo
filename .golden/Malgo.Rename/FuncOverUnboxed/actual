@@ -51,7 +51,7 @@ Module
          }
         }
        )
-       [ UnboxedP
+       ( UnboxedP
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
@@ -65,8 +65,8 @@ Module
           }
          }
         )
-        ( Int64 0 )
-       ]
+        ( Int64 0 ) :| []
+       )
        ( Seq
         ( Range
          { _start = SourcePos
@@ -216,7 +216,7 @@ Module
           }
          }
         )
-        [ UnboxedP
+        ( UnboxedP
          ( Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
@@ -230,8 +230,8 @@ Module
            }
           }
          )
-         ( Int64 1 )
-        ]
+         ( Int64 1 ) :| []
+        )
         ( Seq
          ( Range
           { _start = SourcePos
@@ -381,7 +381,7 @@ Module
           }
          }
         )
-        [ VarP
+        ( VarP
          ( Range
           { _start = SourcePos
            { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
@@ -401,8 +401,8 @@ Module
            ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" )
           , sort = Internal 0
           }
-         )
-        ]
+         ) :| []
+        )
         ( Seq
          ( Range
           { _start = SourcePos
@@ -590,7 +590,7 @@ Module
          }
         }
        )
-       [ VarP
+       ( VarP
         ( Range
          { _start = SourcePos
           { sourceName = "./test/testcases/malgo/FuncOverUnboxed.mlg"
@@ -605,13 +605,13 @@ Module
          }
         )
         ( Id
-         { name = "$_"
+         { name = "_"
          , moduleName = Artifact
           ( ArtifactPath "test/testcases/malgo/FuncOverUnboxed.mlg" )
          , sort = Internal 1
          }
-        )
-       ]
+        ) :| []
+       )
        ( Seq
         ( Range
          { _start = SourcePos

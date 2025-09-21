@@ -16,10 +16,10 @@
            main
            (fn
               ((clause
-                  (#RecordTest.$__8)
+                  (#RecordTest.__5)
                   (seq
                      (let
-                        #RecordTest.x_5
+                        #RecordTest.x_6
                         (record
                            (a (apply Int32# (int32 32)))
                            (b (apply Int32# (int32 10)))))
@@ -33,16 +33,16 @@
                                     (apply
                                        (apply
                                           addInt32
-                                          (parens (apply f #RecordTest.x_5)))
+                                          (parens (apply f #RecordTest.x_6)))
                                        (parens
                                           (apply
                                              (fn
                                                 ((clause
                                                     ((record
-                                                        (a #RecordTest.__6)
-                                                        (b #RecordTest.b_7)))
-                                                    (seq (do #RecordTest.b_7)))))
-                                             #RecordTest.x_5)))))))))))))))
+                                                        (a #RecordTest.__7)
+                                                        (b #RecordTest.b_8)))
+                                                    (seq (do #RecordTest.b_8)))))
+                                             #RecordTest.x_6)))))))))))))))
       ()
       ((data B () ((B (A)))))
       ((type A () (record (a Int32) (b Int32)))
