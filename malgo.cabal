@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.38.1.
+-- This file has been generated from package.yaml by hpack version 0.38.2.
 --
 -- see: https://github.com/sol/hpack
 
@@ -72,6 +72,11 @@ library
       TypeData
       Strict
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path -fplugin=Effectful.Plugin
+  build-tools:
+      happy ==2.1.5
+  build-tool-depends:
+      hpack:hpack
+    , ormolu:ormolu
   build-depends:
       Glob
     , aeson
@@ -130,6 +135,11 @@ executable malgo
       TypeData
       Strict
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path -fplugin=Effectful.Plugin -threaded -rtsopts -with-rtsopts=-N
+  build-tools:
+      happy ==2.1.5
+  build-tool-depends:
+      hpack:hpack
+    , ormolu:ormolu
   build-depends:
       Glob
     , aeson
@@ -200,6 +210,8 @@ test-suite malgo-test
       TypeData
       Strict
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-name-shadowing -Wmissing-deriving-strategies -Wmissing-export-lists -optP-Wno-nonportable-include-path -fplugin=Effectful.Plugin
+  build-tools:
+      happy ==2.1.5
   build-depends:
       Glob
     , aeson

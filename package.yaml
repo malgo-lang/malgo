@@ -41,6 +41,11 @@ dependencies:
   - unordered-containers
   - witherable
 
+build-tools:
+  - ormolu
+  - hpack
+  - happy == 2.1.5
+
 ghc-options:
   - -Wall
   - -Wcompat
