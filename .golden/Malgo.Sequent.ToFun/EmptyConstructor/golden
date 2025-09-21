@@ -14,12 +14,8 @@
                        (apply
                           (lambda
                              ($EmptyConstructor.tmp_4)
-                             (apply
-                                (invoke printInt32)
-                                ((apply (invoke Int32#) (43_i32)))))
-                          ((apply
-                              (invoke printInt32)
-                              ((apply (invoke Int32#) (42_i32)))))))))))))
+                             (apply (invoke print) (#EmptyConstructor.y_2)))
+                          ((apply (invoke print) (#EmptyConstructor.x_1)))))))))))
       (Empty (Empty ()))
       (Unit
          (lambda

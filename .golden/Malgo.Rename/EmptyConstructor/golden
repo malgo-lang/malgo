@@ -213,7 +213,7 @@ Module
            , _end = SourcePos
             { sourceName = "./test/testcases/malgo/EmptyConstructor.mlg"
             , sourceLine = Pos 14
-            , sourceColumn = Pos 17
+            , sourceColumn = Pos 11
             }
            }
           )
@@ -222,12 +222,12 @@ Module
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/EmptyConstructor.mlg"
              , sourceLine = Pos 14
-             , sourceColumn = Pos 13
+             , sourceColumn = Pos 8
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/EmptyConstructor.mlg"
              , sourceLine = Pos 14
-             , sourceColumn = Pos 17
+             , sourceColumn = Pos 11
              }
             }
            )
@@ -241,69 +241,38 @@ Module
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/EmptyConstructor.mlg"
               , sourceLine = Pos 14
-              , sourceColumn = Pos 13
+              , sourceColumn = Pos 8
               }
              }
             )
             ( Id
-             { name = "printInt32"
+             { name = "print"
              , moduleName = Artifact
               ( ArtifactPath "runtime/malgo/Prelude.mlg" )
              , sort = External
              }
             )
            )
-           ( Apply
+           ( Var
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/EmptyConstructor.mlg"
               , sourceLine = Pos 14
-              , sourceColumn = Pos 14
+              , sourceColumn = Pos 9
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/EmptyConstructor.mlg"
               , sourceLine = Pos 14
-              , sourceColumn = Pos 16
+              , sourceColumn = Pos 10
               }
              }
             )
-            ( Var
-             ( Range
-              { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/EmptyConstructor.mlg"
-               , sourceLine = Pos 14
-               , sourceColumn = Pos 14
-               }
-              , _end = SourcePos
-               { sourceName = "./test/testcases/malgo/EmptyConstructor.mlg"
-               , sourceLine = Pos 14
-               , sourceColumn = Pos 16
-               }
-              }
-             )
-             ( Id
-              { name = "Int32#"
-              , moduleName = Artifact
-               ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-              , sort = External
-              }
-             )
-            )
-            ( Unboxed
-             ( Range
-              { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/EmptyConstructor.mlg"
-               , sourceLine = Pos 14
-               , sourceColumn = Pos 14
-               }
-              , _end = SourcePos
-               { sourceName = "./test/testcases/malgo/EmptyConstructor.mlg"
-               , sourceLine = Pos 14
-               , sourceColumn = Pos 16
-               }
-              }
-             )
-             ( Int32 42 )
+            ( Id
+             { name = "x"
+             , moduleName = Artifact
+              ( ArtifactPath "test/testcases/malgo/EmptyConstructor.mlg" )
+             , sort = Internal 1
+             }
             )
            )
           )
@@ -326,7 +295,7 @@ Module
             { _start = SourcePos
              { sourceName = "./test/testcases/malgo/EmptyConstructor.mlg"
              , sourceLine = Pos 15
-             , sourceColumn = Pos 13
+             , sourceColumn = Pos 8
              }
             , _end = SourcePos
              { sourceName = "./test/testcases/malgo/EmptyConstructor.mlg"
@@ -345,69 +314,38 @@ Module
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/EmptyConstructor.mlg"
               , sourceLine = Pos 15
-              , sourceColumn = Pos 13
+              , sourceColumn = Pos 8
               }
              }
             )
             ( Id
-             { name = "printInt32"
+             { name = "print"
              , moduleName = Artifact
               ( ArtifactPath "runtime/malgo/Prelude.mlg" )
              , sort = External
              }
             )
            )
-           ( Apply
+           ( Var
             ( Range
              { _start = SourcePos
               { sourceName = "./test/testcases/malgo/EmptyConstructor.mlg"
               , sourceLine = Pos 15
-              , sourceColumn = Pos 14
+              , sourceColumn = Pos 9
               }
              , _end = SourcePos
               { sourceName = "./test/testcases/malgo/EmptyConstructor.mlg"
               , sourceLine = Pos 15
-              , sourceColumn = Pos 16
+              , sourceColumn = Pos 10
               }
              }
             )
-            ( Var
-             ( Range
-              { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/EmptyConstructor.mlg"
-               , sourceLine = Pos 15
-               , sourceColumn = Pos 14
-               }
-              , _end = SourcePos
-               { sourceName = "./test/testcases/malgo/EmptyConstructor.mlg"
-               , sourceLine = Pos 15
-               , sourceColumn = Pos 16
-               }
-              }
-             )
-             ( Id
-              { name = "Int32#"
-              , moduleName = Artifact
-               ( ArtifactPath "runtime/malgo/Builtin.mlg" )
-              , sort = External
-              }
-             )
-            )
-            ( Unboxed
-             ( Range
-              { _start = SourcePos
-               { sourceName = "./test/testcases/malgo/EmptyConstructor.mlg"
-               , sourceLine = Pos 15
-               , sourceColumn = Pos 14
-               }
-              , _end = SourcePos
-               { sourceName = "./test/testcases/malgo/EmptyConstructor.mlg"
-               , sourceLine = Pos 15
-               , sourceColumn = Pos 16
-               }
-              }
-             )
-             ( Int32 43 )
+            ( Id
+             { name = "y"
+             , moduleName = Artifact
+              ( ArtifactPath "test/testcases/malgo/EmptyConstructor.mlg" )
+             , sort = Internal 2
+             }
             )
            )
           )

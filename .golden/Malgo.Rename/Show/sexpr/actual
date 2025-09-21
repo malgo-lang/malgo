@@ -10,7 +10,7 @@
            show
            (fn ((clause ((record (show #Show.show_5))) (seq (do #Show.show_5)))))))
        ((def
-           print
+           printShow
            (fn
               ((clause
                   (#Show.showDict_13 #Show.x_14)
@@ -70,7 +70,7 @@
                      (do
                         (apply
                            (apply
-                              print
+                              printShow
                               (parens
                                  (apply (apply showTuple2 showInt32) showInt32)))
                            (tuple
@@ -86,7 +86,7 @@
                (->
                   (app Show (#Show.b_7))
                   (app Show ((tuple #Show.a_6 #Show.b_7))))))
-         (sig print (-> (app Show (#Show.a_12)) (-> #Show.a_12 (tuple)))))
+         (sig printShow (-> (app Show (#Show.a_12)) (-> #Show.a_12 (tuple)))))
       ()
       ((type Show (#Show.a_2) (record (show (-> #Show.a_2 String)))))
       ()

@@ -74,6 +74,12 @@
                            printString
                            (parens (apply toStringInt32 #Prelude.i_101))))))))))
        ((def
+           print
+           (fn
+              ((clause
+                  (#Prelude.x_104)
+                  (seq (do (apply malgo_print #Prelude.x_104))))))))
+       ((def
            mapList
            (fn
               ((clause (#Prelude.__38 (con Nil ())) (seq (do Nil)))
@@ -442,7 +448,8 @@
          (sig putStr (-> String (tuple)))
          (sig putStrLn (-> String (tuple)))
          (sig printInt32 (-> Int32 (tuple)))
-         (sig printInt64 (-> Int64 (tuple))))
+         (sig printInt64 (-> Int64 (tuple)))
+         (sig print (-> #Prelude.a_103 (tuple))))
       ((data Maybe (#Prelude.a_18) ((Nothing ()) (Just (#Prelude.a_18))))
          (data
             List

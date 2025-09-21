@@ -20,65 +20,39 @@
                                    (cut
                                       (lambda
                                          ($EmptyConstructor.tmp_4
-                                            $EmptyConstructor.return_10)
+                                            $EmptyConstructor.return_9)
                                          (invoke
-                                            printInt32
-                                            (then
-                                               $EmptyConstructor.outer_15
-                                               (join
-                                                  $EmptyConstructor.return_11
-                                                  (then
-                                                     $EmptyConstructor.inner_16
-                                                     (cut
-                                                        $EmptyConstructor.outer_15
-                                                        (apply
-                                                           ($EmptyConstructor.inner_16)
-                                                           ($EmptyConstructor.return_10))))
-                                                  (invoke
-                                                     Int32#
-                                                     (apply
-                                                        (43_i32)
-                                                        ($EmptyConstructor.return_11)))))))
+                                            print
+                                            (apply
+                                               (#EmptyConstructor.y_2)
+                                               ($EmptyConstructor.return_9))))
                                       (then
-                                         $EmptyConstructor.outer_17
+                                         $EmptyConstructor.outer_13
                                          (join
                                             $EmptyConstructor.return_8
                                             (then
-                                               $EmptyConstructor.inner_18
+                                               $EmptyConstructor.inner_14
                                                (cut
-                                                  $EmptyConstructor.outer_17
+                                                  $EmptyConstructor.outer_13
                                                   (apply
-                                                     ($EmptyConstructor.inner_18)
+                                                     ($EmptyConstructor.inner_14)
                                                      ($EmptyConstructor.return_7))))
                                             (invoke
-                                               printInt32
-                                               (then
-                                                  $EmptyConstructor.outer_19
-                                                  (join
-                                                     $EmptyConstructor.return_9
-                                                     (then
-                                                        $EmptyConstructor.inner_20
-                                                        (cut
-                                                           $EmptyConstructor.outer_19
-                                                           (apply
-                                                              ($EmptyConstructor.inner_20)
-                                                              ($EmptyConstructor.return_8))))
-                                                     (invoke
-                                                        Int32#
-                                                        (apply
-                                                           (42_i32)
-                                                           ($EmptyConstructor.return_9)))))))))))))))))))
+                                               print
+                                               (apply
+                                                  (#EmptyConstructor.x_1)
+                                                  ($EmptyConstructor.return_8))))))))))))))))
        $EmptyConstructor.return_6))
    (Empty
-      $EmptyConstructor.return_12
-      (cut (construct Empty () ()) $EmptyConstructor.return_12))
+      $EmptyConstructor.return_10
+      (cut (construct Empty () ()) $EmptyConstructor.return_10))
    (Unit
-      $EmptyConstructor.return_13
+      $EmptyConstructor.return_11
       (cut
          (lambda
-            ($EmptyConstructor.constructor_5 $EmptyConstructor.return_14)
+            ($EmptyConstructor.constructor_5 $EmptyConstructor.return_12)
             (cut
                (construct Unit ($EmptyConstructor.constructor_5) ())
-               $EmptyConstructor.return_14))
-         $EmptyConstructor.return_13))
+               $EmptyConstructor.return_12))
+         $EmptyConstructor.return_11))
    ("runtime/malgo/Builtin.mlg" "runtime/malgo/Prelude.mlg"))

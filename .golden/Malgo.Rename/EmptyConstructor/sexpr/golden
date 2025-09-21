@@ -8,8 +8,8 @@
                 (seq
                    (let #EmptyConstructor.x_1 Empty)
                    (let #EmptyConstructor.y_2 (apply Unit (tuple)))
-                   (do (apply printInt32 (apply Int32# (int32 42))))
-                   (do (apply printInt32 (apply Int32# (int32 43)))))))))))
+                   (do (apply print #EmptyConstructor.x_1))
+                   (do (apply print #EmptyConstructor.y_2)))))))))
       ()
       ((data Empty () ((Empty ()))) (data Unit () ((Unit ((tuple))))))
       ()

@@ -1816,8 +1816,8 @@ Module
        }
       , _end = SourcePos
        { sourceName = "./runtime/malgo/Prelude.mlg"
-       , sourceLine = Pos 165
-       , sourceColumn = Pos 56
+       , sourceLine = Pos 167
+       , sourceColumn = Pos 1
        }
       }
      , Id
@@ -1835,8 +1835,8 @@ Module
         }
        , _end = SourcePos
         { sourceName = "./runtime/malgo/Prelude.mlg"
-        , sourceLine = Pos 165
-        , sourceColumn = Pos 56
+        , sourceLine = Pos 167
+        , sourceColumn = Pos 1
         }
        }
       )
@@ -2226,6 +2226,168 @@ Module
               }
              )
             )
+           )
+          )
+         ) :| []
+        )
+       ) :| []
+      )
+     )
+    ]
+   ,
+    [
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./runtime/malgo/Prelude.mlg"
+       , sourceLine = Pos 168
+       , sourceColumn = Pos 1
+       }
+      , _end = SourcePos
+       { sourceName = "./runtime/malgo/Prelude.mlg"
+       , sourceLine = Pos 168
+       , sourceColumn = Pos 35
+       }
+      }
+     , Id
+      { name = "print"
+      , moduleName = Artifact
+       ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+      , sort = External
+      }
+     , Fn
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./runtime/malgo/Prelude.mlg"
+        , sourceLine = Pos 168
+        , sourceColumn = Pos 13
+        }
+       , _end = SourcePos
+        { sourceName = "./runtime/malgo/Prelude.mlg"
+        , sourceLine = Pos 168
+        , sourceColumn = Pos 35
+        }
+       }
+      )
+      ( Clause
+       ( Range
+        { _start = SourcePos
+         { sourceName = "./runtime/malgo/Prelude.mlg"
+         , sourceLine = Pos 168
+         , sourceColumn = Pos 15
+         }
+        , _end = SourcePos
+         { sourceName = "./runtime/malgo/Prelude.mlg"
+         , sourceLine = Pos 168
+         , sourceColumn = Pos 34
+         }
+        }
+       )
+       ( VarP
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./runtime/malgo/Prelude.mlg"
+          , sourceLine = Pos 168
+          , sourceColumn = Pos 15
+          }
+         , _end = SourcePos
+          { sourceName = "./runtime/malgo/Prelude.mlg"
+          , sourceLine = Pos 168
+          , sourceColumn = Pos 17
+          }
+         }
+        )
+        ( Id
+         { name = "x"
+         , moduleName = Artifact
+          ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+         , sort = Internal 104
+         }
+        ) :| []
+       )
+       ( Seq
+        ( Range
+         { _start = SourcePos
+          { sourceName = "./runtime/malgo/Prelude.mlg"
+          , sourceLine = Pos 168
+          , sourceColumn = Pos 20
+          }
+         , _end = SourcePos
+          { sourceName = "./runtime/malgo/Prelude.mlg"
+          , sourceLine = Pos 168
+          , sourceColumn = Pos 34
+          }
+         }
+        )
+        ( NoBind
+         ( Range
+          { _start = SourcePos
+           { sourceName = "./runtime/malgo/Prelude.mlg"
+           , sourceLine = Pos 168
+           , sourceColumn = Pos 20
+           }
+          , _end = SourcePos
+           { sourceName = "./runtime/malgo/Prelude.mlg"
+           , sourceLine = Pos 168
+           , sourceColumn = Pos 34
+           }
+          }
+         )
+         ( Apply
+          ( Range
+           { _start = SourcePos
+            { sourceName = "./runtime/malgo/Prelude.mlg"
+            , sourceLine = Pos 168
+            , sourceColumn = Pos 32
+            }
+           , _end = SourcePos
+            { sourceName = "./runtime/malgo/Prelude.mlg"
+            , sourceLine = Pos 168
+            , sourceColumn = Pos 34
+            }
+           }
+          )
+          ( Var
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./runtime/malgo/Prelude.mlg"
+             , sourceLine = Pos 168
+             , sourceColumn = Pos 20
+             }
+            , _end = SourcePos
+             { sourceName = "./runtime/malgo/Prelude.mlg"
+             , sourceLine = Pos 168
+             , sourceColumn = Pos 32
+             }
+            }
+           )
+           ( Id
+            { name = "malgo_print"
+            , moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Builtin.mlg" )
+            , sort = External
+            }
+           )
+          )
+          ( Var
+           ( Range
+            { _start = SourcePos
+             { sourceName = "./runtime/malgo/Prelude.mlg"
+             , sourceLine = Pos 168
+             , sourceColumn = Pos 32
+             }
+            , _end = SourcePos
+             { sourceName = "./runtime/malgo/Prelude.mlg"
+             , sourceLine = Pos 168
+             , sourceColumn = Pos 34
+             }
+            }
+           )
+           ( Id
+            { name = "x"
+            , moduleName = Artifact
+             ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+            , sort = Internal 104
+            }
            )
           )
          ) :| []
@@ -14138,6 +14300,77 @@ Module
        , _end = SourcePos
         { sourceName = "./runtime/malgo/Prelude.mlg"
         , sourceLine = Pos 165
+        , sourceColumn = Pos 1
+        }
+       }
+      ) []
+     )
+    )
+   ,
+    ( Range
+     { _start = SourcePos
+      { sourceName = "./runtime/malgo/Prelude.mlg"
+      , sourceLine = Pos 167
+      , sourceColumn = Pos 1
+      }
+     , _end = SourcePos
+      { sourceName = "./runtime/malgo/Prelude.mlg"
+      , sourceLine = Pos 168
+      , sourceColumn = Pos 1
+      }
+     }
+    , Id
+     { name = "print"
+     , moduleName = Artifact
+      ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+     , sort = External
+     }
+    , TyArr
+     ( Range
+      { _start = SourcePos
+       { sourceName = "./runtime/malgo/Prelude.mlg"
+       , sourceLine = Pos 167
+       , sourceColumn = Pos 15
+       }
+      , _end = SourcePos
+       { sourceName = "./runtime/malgo/Prelude.mlg"
+       , sourceLine = Pos 167
+       , sourceColumn = Pos 18
+       }
+      }
+     )
+     ( TyVar
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./runtime/malgo/Prelude.mlg"
+        , sourceLine = Pos 167
+        , sourceColumn = Pos 13
+        }
+       , _end = SourcePos
+        { sourceName = "./runtime/malgo/Prelude.mlg"
+        , sourceLine = Pos 167
+        , sourceColumn = Pos 15
+        }
+       }
+      )
+      ( Id
+       { name = "a"
+       , moduleName = Artifact
+        ( ArtifactPath "runtime/malgo/Prelude.mlg" )
+       , sort = Internal 103
+       }
+      )
+     )
+     ( TyTuple
+      ( Range
+       { _start = SourcePos
+        { sourceName = "./runtime/malgo/Prelude.mlg"
+        , sourceLine = Pos 167
+        , sourceColumn = Pos 18
+        }
+       , _end = SourcePos
+        { sourceName = "./runtime/malgo/Prelude.mlg"
+        , sourceLine = Pos 168
         , sourceColumn = Pos 1
         }
        }

@@ -282,4 +282,6 @@
          (fn
             ((clause
                 (i)
-                (seq (do (apply printString (parens (apply toStringInt64 i)))))))))))
+                (seq (do (apply printString (parens (apply toStringInt64 i)))))))))
+      (sig print (-> a (tuple)))
+      (def print (fn ((clause (x) (seq (do (apply malgo_print x)))))))))

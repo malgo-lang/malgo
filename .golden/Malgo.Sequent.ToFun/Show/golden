@@ -13,7 +13,7 @@
             (select
                $Show.param_17
                (((expand ((show #Show.show_5))) #Show.show_5)))))
-      (print
+      (printShow
          (lambda
             ($Show.param_18)
             (lambda
@@ -89,7 +89,7 @@
                ((#Show.__15
                    (apply
                       (apply
-                         (invoke print)
+                         (invoke printShow)
                          ((apply
                              (apply (invoke showTuple2) ((invoke showInt32)))
                              ((invoke showInt32)))))
