@@ -3,7 +3,7 @@ name: SBOM upload
 on:
   workflow_dispatch:
   push:
-    branches: ["main"]
+    branches: ["main", "master"]
 
 jobs:
   SBOM-upload:
