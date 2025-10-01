@@ -1,5 +1,30 @@
 # Changelog
 
+## [2.2.0](https://github.com/malgo-lang/malgo/compare/v2.1.0...v2.2.0) (2025-10-01)
+
+
+### Dependencies
+
+* update actions/cache action to v4.3.0 ([#248](https://github.com/malgo-lang/malgo/issues/248)) ([e4687fd](https://github.com/malgo-lang/malgo/commit/e4687fddf6e5572cb6d86601687493ef6c7911c1))
+* update cachix/install-nix-action digest to 9280e7a ([#246](https://github.com/malgo-lang/malgo/issues/246)) ([da1e8b1](https://github.com/malgo-lang/malgo/commit/da1e8b13c14ae081f9f925ff4849cfb3a8841cb9))
+
+
+### Documentation
+
+* add new wiki page on empty arguments ([bf1ad49](https://github.com/malgo-lang/malgo/commit/bf1ad4992db155fdc4bb6c4e1f8d9aece5c95523))
+* add new wiki page on empty arguments in Malgo ([a5f6437](https://github.com/malgo-lang/malgo/commit/a5f6437867601e15455a10ff76a14446b5d117d0))
+* correct test command option in CLAUDE.md ([2ccac37](https://github.com/malgo-lang/malgo/commit/2ccac3798ad56daf97a3fe72b56d669d6d35a639))
+
+
+### Features
+
+* implement empty function calls and non-empty clause patterns ([#243](https://github.com/malgo-lang/malgo/issues/243)) ([75c32c1](https://github.com/malgo-lang/malgo/commit/75c32c1db478d16086bf53b40cca4623baf4f42e))
+
+
+### Bug Fixes
+
+* **parser:** update pattern parsing in C-style syntax ([0fe33ec](https://github.com/malgo-lang/malgo/commit/0fe33ec72dec37803c259d5fbcc4c92d10c7068c))
+
 ## [2.1.0](https://github.com/malgo-lang/malgo/compare/v2.0.0...v2.1.0) (2025-08-30)
 
 
