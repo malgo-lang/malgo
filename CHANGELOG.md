@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.2.1](https://github.com/malgo-lang/malgo/compare/v2.2.0...v2.2.1) (2025-11-15)
+
+
+### Dependencies
+
+* update actions/upload-artifact action to v5 ([#256](https://github.com/malgo-lang/malgo/issues/256)) ([2bc1e97](https://github.com/malgo-lang/malgo/commit/2bc1e973637d9248c5995d2cd2d37f43bd338a7c))
+* update cachix/install-nix-action digest to 0b0e072 ([#254](https://github.com/malgo-lang/malgo/issues/254)) ([1884a82](https://github.com/malgo-lang/malgo/commit/1884a824292b8d922acd4763aa5c43c8fd5fe85e))
+* update googleapis/release-please-action action to v4.4.0 ([#255](https://github.com/malgo-lang/malgo/issues/255)) ([f046ad3](https://github.com/malgo-lang/malgo/commit/f046ad3125f0cdcbf2ad3961c7475f7eeaaeecd3))
+
 ## [2.2.0](https://github.com/malgo-lang/malgo/compare/v2.1.0...v2.2.0) (2025-10-01)
 
 
