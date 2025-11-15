@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     name: GHC ${{ matrix.ghc-version }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     strategy:
       fail-fast: false
       matrix:
