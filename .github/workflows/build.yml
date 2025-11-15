@@ -7,28 +7,17 @@ on:
 
 jobs:
   build:
-    name: GHC ${{ matrix.ghc-version }} on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+    name: GHC ${{ matrix.ghc-version }}
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
         ghc-version: ['9.12', '9.10', '9.8']
-
-        # include:
-        #   - os: windows-latest
-        #     ghc-version: '9.10'
-        #   - os: macos-latest
-        #     ghc-version: '9.10'
 
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - name: Remove cabal.project.freeze
         run: rm -f cabal.project.freeze
-        if: ${{ matrix.os != 'windows-latest' }}
-      - name: Remove cabal.project.freeze on Windows
-        run: del cabal.project.freeze
-        if: ${{ matrix.os == 'windows-latest' }}
 
       - name: Set up GHC ${{ matrix.ghc-version }}
         uses: haskell-actions/setup@82e8b5066385702e477d9dc98f287070493e8abd # v2.8.2
@@ -74,13 +63,3 @@ jobs:
 
       - name: Run tests
         run: cabal test all
-
-      # - name: Check cabal file
-      #   run: cabal check
-
-      # - name: Build documentation
-      #   run:
-      #     cabal haddock all --disable-documentation
-      #     # --disable-documentation disables building documentation for dependencies.
-      #     # The package's own documentation is still built,
-      #     # yet contains no links to the documentation of the dependencies.
