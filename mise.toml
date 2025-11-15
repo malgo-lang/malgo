@@ -2,11 +2,7 @@
 watchexec = "latest"
 ghcup = "0.1.50.2"
 [env]
-_.path = [
-    "~/.ghcup/bin",
-    "~/.local/bin",
-    "~/.cabal/bin"
-]
+_.path = ["~/.ghcup/bin", "~/.local/bin", "~/.cabal/bin"]
 
 [tasks.setup]
 description = "Setup tools"
@@ -17,12 +13,15 @@ run = [
     "ghcup set cabal latest",
     "cabal update",
     "cabal install hpack --overwrite-policy=always",
-    "cabal install ormolu --overwrite-policy=always"
+    "cabal install ormolu --overwrite-policy=always",
 ]
 
 [tasks.setup-hls]
 description = "Setup HLS"
-run = "ghcup compile hls -g 2.11.0.0 --ghc 9.12.2 --cabal-update"
+run = [
+    "ghcup install hls latest",
+    "ghcup set hls latest",
+] # run = "ghcup compile hls -g 2.12.0.0 --ghc 9.12.2 --cabal-update"
 
 [tasks.format]
 description = "Format the code"
