@@ -2,6 +2,7 @@ import Malgo.Prelude
 import Malgo.Monad
 import Malgo.Sequent.Core.Join
 import Malgo.Sequent.Core.Normalize
+import Malgo.Sequent.Core.Escape
 import Malgo.Sequent.Fun
 import Malgo.Backend.Go.Runtime
 
@@ -34,6 +35,7 @@ open Malgo.Sequent.Fun (Name Literal Tag Pattern)
 open Malgo.Sequent.Core
 open Malgo.Sequent.Core.Join
 open Malgo.Sequent.Core.Normalize (normalizeStatement)
+open Malgo.Sequent.Core.Escape (Ownership OwnershipMap LocalEnv classifyJoins classifyJoinsConsumer)
 
 /-! ## Mangling -/
 
@@ -147,12 +149,19 @@ mutual
 
 /-- A producer compiles to a Go *expression* of type `Value`. Producers that
 contain statements (a lambda's body, a record field's body) become function
-literals, so `ind` is the indentation those statements start at. -/
-partial def compileProducer (ind : String) : Producer → MalgoM String
+literals, so `ind` is the indentation those statements start at.
+
+A lambda body and a record field body are each their own function scope, so
+they start from a freshly computed `OwnershipMap` and an empty `LocalEnv`.
+Nothing is lost by dropping the enclosing env: `classifyJoins` marks any join
+free in a nested producer as `Escaping`, so no name in that env could have
+been `Local` here anyway. -/
+partial def compileProducer (ind : String) (ownership : OwnershipMap) (env : LocalEnv) :
+    Producer → MalgoM String
   | .var _ n => pure (mangleId n)
   | .literal _ lit => pure (compileLiteral lit)
   | .construct _ tag ps ks => do
-    let pargs ← ps.mapM (compileProducer ind)
+    let pargs ← ps.mapM (compileProducer ind ownership env)
     let kargs := ks.map mangleId
     let allArgs := pargs ++ kargs
     let suffix := if allArgs.isEmpty then "" else ", " ++ ", ".intercalate allArgs
@@ -161,7 +170,7 @@ partial def compileProducer (ind : String) : Producer → MalgoM String
     let inner := ind ++ "\t"
     let binds := String.join <| names.mapIdx fun i n =>
       s!"{inner}{mangleId n} := args[{i}]\n{inner}_ = {mangleId n}\n"
-    let body ← compileStatement inner stmt
+    let body ← compileStatement inner (classifyJoins stmt) {} stmt
     pure s!"Fn(func(args []Value) Action \{\n{binds}{body}{ind}})"
   | .object _ fields => do
     let inner := ind ++ "\t\t"
@@ -169,45 +178,60 @@ partial def compileProducer (ind : String) : Producer → MalgoM String
     -- `NamedField` slice. The runtime never iterates a map for this reason.
     let sorted := fields.toArray.qsort (fun a b => a.1 < b.1) |>.toList
     let entries ← sorted.mapM fun (fieldName, ret, stmt) => do
-      let body ← compileStatement inner stmt
+      let body ← compileStatement inner (classifyJoins stmt) {} stmt
       pure s!"{ind}\t\{Name: \"{escapeGoString fieldName}\", Code: Fn(func(args []Value) Action \{\n\
         {inner}{mangleId ret} := args[0]\n{inner}_ = {mangleId ret}\n{body}{ind}\t})},\n"
     pure s!"mkRecord([]NamedField\{\n{String.join entries}{ind}})"
   | .mu _ _ _ =>
     throw (err "Mu in producer position should have been eliminated by Normalize")
 
-/-- A consumer compiles to a Go expression of type `Value` holding an `Fn`. -/
+/-- Reify a consumer as a Go closure, for an `Escaping` join. The closure is
+its own function scope, so — like a lambda body — it reclassifies its own
+joins and starts with an empty `LocalEnv`. -/
 partial def compileConsumer (ind : String) : Consumer → MalgoM String
   | .label _ n => pure (mangleId n)
   | .finish _ => pure "identityKont"
-  | .apply _ ps ks => do
+  | c => do
     let inner := ind ++ "\t"
-    let pargs ← ps.mapM (compileProducer inner)
-    let kargs := ks.map mangleId
-    let call ← tailCall "asFn(args[0])" (pargs ++ kargs)
-    pure s!"Fn(func(args []Value) Action \{\n{inner}return {call}\n{ind}})"
-  | .project _ field ret => do
-    let inner := ind ++ "\t"
-    pure s!"Fn(func(args []Value) Action \{\n\
-      {inner}return projectField(args[0], \"{escapeGoString field}\", {mangleId ret})\n{ind}})"
-  | .«then» _ name stmt => do
-    let inner := ind ++ "\t"
-    let body ← compileStatement inner stmt
-    pure s!"Fn(func(args []Value) Action \{\n\
-      {inner}{mangleId name} := args[0]\n{inner}_ = {mangleId name}\n{body}{ind}})"
-  | .select _ branches => do
-    let inner := ind ++ "\t"
-    let arms ← branches.mapM (compileBranch inner)
-    -- Falling past every arm means no pattern matched. `malgoPanic` exits,
-    -- but Go's flow analysis does not know that, so the function still needs
-    -- a terminating statement after it.
-    pure s!"Fn(func(args []Value) Action \{\n{inner}scrut := args[0]\n{inner}_ = scrut\n\
-      {String.join arms}{inner}malgoPanic(\"no matching branch\")\n\
-      {inner}return Action\{}\n{ind}})"
+    let ownership := classifyJoinsConsumer c
+    let body ← applyConsumer inner ownership {} c "args[0]"
+    pure s!"Fn(func(args []Value) Action \{\n{body}{ind}})"
 
-partial def compileBranch (ind : String) : Branch → MalgoM String
+/-- Emit `consumer` applied to `value`, a Go expression already holding the
+produced value, as statements in the current scope. This is what replaces a
+`Local` join: instead of allocating a closure and bouncing the trampoline
+through it, the consumer's body lands here.
+
+Mirrors the Zig backend's `ClosureConv.convertApply`. `compileConsumer` also
+routes through it, so the two paths cannot drift. -/
+partial def applyConsumer (ind : String) (ownership : OwnershipMap) (env : LocalEnv)
+    (consumer : Consumer) (value : String) : MalgoM String :=
+  match consumer with
+  | .label _ n => pure s!"{ind}return applyCo({mangleId n}, {value})\n"
+  | .finish _ => pure s!"{ind}return done({value})\n"
+  | .apply _ ps ks => do
+    let pargs ← ps.mapM (compileProducer ind ownership env)
+    let kargs := ks.map mangleId
+    let call ← tailCall s!"asFn({value})" (pargs ++ kargs)
+    pure s!"{ind}return {call}\n"
+  | .project _ field ret =>
+    pure s!"{ind}return projectField({value}, \"{escapeGoString field}\", {mangleId ret})\n"
+  | .«then» _ name stmt => do
+    let body ← compileStatement ind ownership env stmt
+    pure s!"{ind}{mangleId name} := {value}\n{ind}_ = {mangleId name}\n{body}"
+  | .select _ branches => do
+    let arms ← branches.mapM (compileBranch ind ownership env value)
+    -- Falling past every arm means no pattern matched. `malgoPanic` exits,
+    -- but Go's flow analysis does not know that, so the enclosing function
+    -- still needs a terminating statement after it.
+    pure s!"{String.join arms}{ind}malgoPanic(\"no matching branch\")\n\
+      {ind}return Action\{}\n"
+
+partial def compileBranch (ind : String) (ownership : OwnershipMap) (env : LocalEnv)
+    (scrut : String) : Branch → MalgoM String
   | .branch _ pat stmt => do
-    let body ← compilePattern ind "b" "scrut" pat [] (fun ind' _ => compileStatement ind' stmt)
+    let body ← compilePattern ind "b" scrut pat []
+      (fun ind' _ => compileStatement ind' ownership env stmt)
     -- Each arm gets its own block so that one arm's bindings cannot collide
     -- with the next one's.
     pure s!"{ind}\{\n{body}{ind}}\n"
@@ -271,37 +295,63 @@ partial def compilePatternList (ind path : String) (idx : Nat)
       (fun ind' bound' => compilePatternList ind' path (idx + 1) ss ps bound' mkBody)
   | _, _ => mkBody ind bound
 
+/-- Hand `valueExpr` to the consumer named `k`. If `k` is a `Local` join its
+body is inlined here, which removes both the closure and the trampoline
+bounce; otherwise the value goes to the closure the usual way.
+
+The temporary is named after `k`, which cannot collide with any mangled
+identifier: `mangleText` escapes every `_`, so a mangled name never ends in
+a bare `_v`. -/
+partial def sendToConsumer (ind : String) (ownership : OwnershipMap) (env : LocalEnv)
+    (k : Name) (valueExpr : String) : MalgoM String :=
+  match env.get? k with
+  | none => pure s!"{ind}return applyCo({mangleId k}, {valueExpr})\n"
+  | some consumer => do
+    let tmp := s!"{mangleId k}_v"
+    let body ← applyConsumer ind ownership env consumer tmp
+    pure s!"{ind}{tmp} := {valueExpr}\n{ind}_ = {tmp}\n{body}"
+
 /-- A statement compiles to a Go statement sequence ending in a `return`. -/
-partial def compileStatement (ind : String) : Statement → MalgoM String
+partial def compileStatement (ind : String) (ownership : OwnershipMap) (env : LocalEnv) :
+    Statement → MalgoM String
   | .cut producer consumer => do
-    let p ← compileProducer ind producer
-    pure s!"{ind}return applyCo({mangleId consumer}, {p})\n"
-  | .join _ name consumer body => do
-    let c ← compileConsumer ind consumer
-    let rest ← compileStatement ind body
-    -- Declared before it is assigned so the consumer's own body may refer to
-    -- it: a join point that loops is bound to itself.
-    pure s!"{ind}var {mangleId name} Value\n{ind}{mangleId name} = {c}\n\
-      {ind}_ = {mangleId name}\n{rest}"
+    let p ← compileProducer ind ownership env producer
+    sendToConsumer ind ownership env consumer p
+  | .join _ name consumer body =>
+    match ownership.get? name with
+    | some .Local =>
+      -- Emit nothing: the consumer is recorded and lands at its use site.
+      -- Every `Local` join has exactly one use site, so this never
+      -- duplicates a body (see wiki/2026-09-12-go-backend-performance-
+      -- investigation.md for the corpus-wide count).
+      compileStatement ind ownership (env.insert name consumer) body
+    | _ => do
+      let c ← compileConsumer ind consumer
+      let rest ← compileStatement ind ownership env body
+      -- Declared before it is assigned so the consumer's own body may refer
+      -- to it: a join point that loops is bound to itself.
+      pure s!"{ind}var {mangleId name} Value\n{ind}{mangleId name} = {c}\n\
+        {ind}_ = {mangleId name}\n{rest}"
   | .primitive _ name producers consumer => do
-    let args ← producers.mapM (compileProducer ind)
-    pure s!"{ind}return applyCo({mangleId consumer}, {name}({", ".intercalate args}))\n"
+    let args ← producers.mapM (compileProducer ind ownership env)
+    sendToConsumer ind ownership env consumer s!"{name}({", ".intercalate args})"
   | .externalCall _ name producers consumer => do
-    let args ← producers.mapM (compileProducer ind)
-    pure s!"{ind}return applyCo({mangleId consumer}, {name}({", ".intercalate args}))\n"
+    let args ← producers.mapM (compileProducer ind ownership env)
+    sendToConsumer ind ownership env consumer s!"{name}({", ".intercalate args})"
   | .binOp _ op lhs rhs consumer => do
-    let l ← compileProducer ind lhs
-    let r ← compileProducer ind rhs
-    pure s!"{ind}return applyCo({mangleId consumer}, {op}({l}, {r}))\n"
+    let l ← compileProducer ind ownership env lhs
+    let r ← compileProducer ind ownership env rhs
+    sendToConsumer ind ownership env consumer s!"{op}({l}, {r})"
   | .invoke _ name consumer =>
     -- A top-level definition is a Go function, assignable to `Fn` directly;
-    -- it needs no `asFn`.
+    -- it needs no `asFn`. `invoke`'s consumer always escapes, so it is never
+    -- in `env`.
     pure s!"{ind}return tail1({mangleId name}, {mangleId consumer})\n"
   | .ifz _ cond thenS elseS => do
-    let c ← compileProducer ind cond
+    let c ← compileProducer ind ownership env cond
     let inner := ind ++ "\t"
-    let t ← compileStatement inner thenS
-    let e ← compileStatement inner elseS
+    let t ← compileStatement inner ownership env thenS
+    let e ← compileStatement inner ownership env elseS
     pure s!"{ind}if isZero({c}) \{\n{t}{ind}} else \{\n{e}{ind}}\n"
 
 end
@@ -309,7 +359,9 @@ end
 /-- One Go function per top-level definition. The single parameter is the
 definition's return continuation. -/
 def compileDefinition (d : Definition) : MalgoM String := do
-  let body ← compileStatement "\t" d.body
+  -- `d.body` is already normalized by `compileToGo`, which `classifyJoins`
+  -- requires: it assumes no `Consumer.label` in a join's consumer slot.
+  let body ← compileStatement "\t" (classifyJoins d.body) {} d.body
   pure s!"func {mangleId d.name}(args []Value) Action \{\n\
     \t{mangleId d.ret} := args[0]\n\t_ = {mangleId d.ret}\n{body}}\n"
 

@@ -29,7 +29,13 @@ Go は GC を持ち、末尾呼び出し保証を持たない。したがって 
 
 Go は現実的なワークロード（Level 1）では Zig と Chez の中間に入り、純粋な算術（fib-deep）では最下位である。前者が代表的であり、後者は interface boxing と GC が最も不利に出るケースである。fib-deep では Chez が Zig を上回っており、これは `l2_ratio` と同じ向きだが Level 1 とは逆向きである。つまり、どちらか一方の microbench だけで順位を語ることはできない。
 
-Level 1 の `dispatches` は Go が 11.3M、Zig が 9.0M である。差は非 escaping な join point に由来する——Zig の `ClosureConv.classifyJoins` が `Local` と判定して畳むものを、Go は毎回クロージャ化して dispatch している。v2 の最適化はここに効く。
+Level 1 の `dispatches` は Go が 11.3M、Zig が 9.0M である。差は非 escaping な join point に由来する——Zig の `ClosureConv.classifyJoins` が `Local` と判定して畳むものを、Go は毎回クロージャ化して dispatch している。
+
+### 追記（同日、改善後）
+
+`classifyJoins` を `Malgo.Sequent.Core.Escape` へ移して Go でも使い、`Str` にスカラのキャッシュを入れた結果、Level 1 は **0.41s → 0.30s（-27%）**、dispatch は **11,275,440 → 9,028,448** となり Zig の 9,028,449 とほぼ一致した。残る差は 1 dispatch あたりの単価で、Go の ABI が決めるため下げられない。
+
+効かなかった案（interface boxing の除去、`[]rune` キャッシュ、generics、リフレクション、トランポリンの形の変更）とその実測値は `wiki/2026-09-12-go-backend-performance-investigation.md` に記録した。
 
 ## 位置づけ
 
@@ -176,14 +182,13 @@ Producer（6種）: `var` / `literal` はそのまま、`construct` は `&Struct
 ### Go 固有の制約
 
 - **未使用ローカル変数はコンパイルエラー**である。Zig 側は `Ir.suffixFreeVars` で liveness を解いたが、Go では束縛ごとに `_ = x` を無条件に吐けばコンパイラが消す。liveness 解析の移植は不要
-- **未使用ラベルもエラー**である。join point を `goto` に落とす最適化（v2）でのみ問題になる
-- **文字列はコードポイント単位**でなければならない（Haskell `Text` 意味論。Zig の `utf8ByteOffsetOfScalar` 相当）。Go の `s[i]` はバイト添字なので、`malgo_string_length` / `_at` / `substring` / `_reverse` は `utf8.DecodeRuneInString` 走査か `[]rune` 変換を使う
+- **文字列はコードポイント単位**でなければならない（Haskell `Text` 意味論。Zig の `utf8ByteOffsetOfScalar` 相当）。Go の `s[i]` はバイト添字なので走査が要る。`Str` はコードポイント数と ASCII フラグをキャッシュして、ASCII ならバイト添字で済ませる。`[]rune` をキャッシュしてはいけない——実測で 2 倍遅くなる
 - **primitive 名は `malgo_*` のまま Go の関数名にする**。そうすれば `runtime.go` を grep するだけの coverage ゲートが書ける。Zig も Scheme も primitive 欠落は golden diff でしか分からないが、Go についてはその穴が最初から閉じる
 
 ### 最適化（v2、初版に含めない）
 
-- 非 escaping な join point を Go のラベルと `goto` に落とし、クロージャ確保を消す。`ClosureConv.classifyJoins` の `Local` / `Escaping` 判定を流用できる
-- `Peephole` 相当（節マッチが確保する scrutinee タプルの除去）
+- ~~非 escaping な join point のクロージャ確保を消す~~ — 実装済み。`goto` ではなく Zig と同じインライン展開を採った（上記の追記を参照）
+- `Peephole` 相当（節マッチが確保する scrutinee タプルの除去）。`Peephole.lean` 自体は ANF の `Ir.Path` / `Ir.Test` に依存していて流用できないので、Join IR 上の別パス（コンストラクタが静的に分かる `cut` で `select` を融合する）になる
 
 ---
 

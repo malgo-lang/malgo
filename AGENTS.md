@@ -168,7 +168,7 @@ intermediate IR and no closure conversion: `Malgo.Backend.Go.compileToGo`
 lowers Join IR straight to Go text, which is the whole backend.
 
 ```
-Join IR → Normalize (Mu/Label elimination) → Go text → go build
+Join IR → Normalize (Mu/Label elimination) → classifyJoins → Go text → go build
 ```
 
 Go has real closures and a GC, so everything the Zig backend needs in order
@@ -181,6 +181,14 @@ either, and this IR is CPS — plus `MAX_ARGS = 2` and the `dispatches` counter.
   `*Str`, `Fn`, …) so putting one into the interface never allocates; a bare
   `string` would be two words and allocate on every conversion. Small
   `int32`s (`-128..1024`) are interned, same range and reason as Zig's.
+- `Malgo.Sequent.Core.Escape.classifyJoins` (shared with the Zig backend)
+  splits join points into `Local` and `Escaping`. A `Local` join emits no
+  closure at all: its consumer is recorded and inlined at its single use
+  site, which removes both the allocation and a trampoline bounce. This is
+  what brings Go's dispatch count to parity with Zig's.
+- `Str` caches its codepoint length and an all-ASCII flag — two scalars, so
+  no extra allocation. Caching the decoded `[]rune` instead was measured at
+  twice the runtime.
 - **Record fields are an ascending `[]NamedField` slice, never a map.** Go
   randomizes map iteration order, so a map would make output nondeterministic.
 - `forceField` (a nested `run`) is the only place native stack grows with
@@ -203,19 +211,24 @@ either, and this IR is CPS — plus `MAX_ARGS = 2` and the `dispatches` counter.
   the test suite rather than only a golden diff. This works because the Go
   runtime names each function after the `foreign import` it serves.
 
-Measured 2026-09-12 on Darwin arm64, `--opt release-fast`:
+Measured 2026-09-12 on Darwin arm64, `--opt release-fast`, run from the repo
+root with a *relative* source path — path length changes the self-hosted
+evaluator's work by up to 3x, so measurements are only comparable at equal
+path length.
 
-| | `BenchFibDeep` | selfhost Level 1 (`Fib.mlg`) |
+| | selfhost Level 1 (`Fib.mlg`) | Level 1 `dispatches` |
 |---|---|---|
-| Zig | 0.31s | 0.24s |
-| Go | 0.46s | 0.41s |
-| Chez | 0.19s | 0.73s |
+| Zig | 0.23–0.27s | 9,028,449 |
+| Go | 0.30s | 9,028,448 |
+| Chez | 0.73s | — |
 
-Go sits between the two on the Level 1 workload and last on pure arithmetic.
-Its `dispatches` at Level 1 (11.3M) exceed Zig's (9.0M) because non-escaping
-join points are still real closure dispatches — Zig's
-`ClosureConv.classifyJoins` folds those away. That is the first optimization
-to reach for.
+Dispatch counts are now at parity with Zig. The remaining gap is per-dispatch
+cost, which Go's ABI fixes: there is no `musttail` and no way to pick a
+calling convention, so the ~5ns trampoline step cannot be removed — only the
+number of steps can, and that is already done.
+`wiki/2026-09-12-go-backend-performance-investigation.md` records what else
+was tried and measured (interface boxing, `[]rune` caching, generics,
+reflection, reshaping the trampoline — all rejected on measurement).
 
 ### Intermediate Representations
 
