@@ -43,20 +43,67 @@ type Str struct {
 	// Codepoint length, or -1 before the first scan.
 	nRunes int
 	ascii  bool
+	// Most recently resolved codepoint index and its byte offset, so a walk
+	// that moves forward -- which is what a lexer does -- resumes instead of
+	// restarting. lastIdx is -1 before the first resolution.
+	lastIdx int64
+	lastOff int
 }
 
-// scan fills both cached fields in one pass.
+// scan fills nRunes and ascii in one pass. The ASCII test is a byte loop
+// that stops at the first non-ASCII byte, and the count is left to
+// `utf8.RuneCountInString`, which has its own word-at-a-time fast path --
+// ranging over the string to count runes here instead was measurably slower,
+// since that decodes every character.
 func (x *Str) scan() {
-	n := 0
-	a := true
-	for _, r := range x.V {
-		n++
-		if r >= utf8.RuneSelf {
-			a = false
+	s := x.V
+	ascii := true
+	for i := 0; i < len(s); i++ {
+		if s[i] >= utf8.RuneSelf {
+			ascii = false
+			break
 		}
 	}
-	x.nRunes = n
-	x.ascii = a
+	x.ascii = ascii
+	if ascii {
+		x.nRunes = len(s)
+	} else {
+		x.nRunes = utf8.RuneCountInString(s)
+	}
+}
+
+// byteOffset maps a codepoint index to a byte offset.
+//
+// The ASCII case is the identity. Otherwise this resumes from the last index
+// resolved on this same string when the request is at or past it, which turns
+// a left-to-right walk from quadratic into linear. A single non-ASCII byte
+// anywhere -- one comment in the source being lexed is enough -- disables the
+// ASCII path for the whole string, so the cursor is what actually carries
+// this workload.
+func (x *Str) byteOffset(index int64) int {
+	if index < 0 {
+		malgoPanic("string index out of range")
+	}
+	if x.isASCII() {
+		if index > int64(len(x.V)) {
+			malgoPanic("string index out of range")
+		}
+		return int(index)
+	}
+	i, off := int64(0), 0
+	if x.lastIdx >= 0 && index >= x.lastIdx {
+		i, off = x.lastIdx, x.lastOff
+	}
+	for i < index && off < len(x.V) {
+		_, size := utf8.DecodeRuneInString(x.V[off:])
+		off += size
+		i++
+	}
+	if i != index {
+		malgoPanic("string index out of range")
+	}
+	x.lastIdx, x.lastOff = index, off
+	return off
 }
 
 func (x *Str) count() int {
@@ -145,7 +192,7 @@ func mkInt64(n int64) Value    { gTotalAllocs++; return &Int64{V: n} }
 func mkFloat(f float32) Value  { gTotalAllocs++; return &Float{V: f} }
 func mkDouble(f float64) Value { gTotalAllocs++; return &Double{V: f} }
 func mkChar(c rune) Value      { gTotalAllocs++; return &Char{V: c} }
-func mkString(s string) Value  { gTotalAllocs++; return &Str{V: s, nRunes: -1} }
+func mkString(s string) Value  { gTotalAllocs++; return &Str{V: s, nRunes: -1, lastIdx: -1} }
 
 func mkStruct(tag string, fields ...Value) Value {
 	gTotalAllocs++
@@ -476,29 +523,6 @@ func exitProcess(code int) {
 	os.Exit(code)
 }
 
-// ===== Codepoint-indexed string helpers =====
-//
-// Malgo strings are sequences of Unicode scalars, matching the Haskell
-// `Text` semantics the interpreter inherits. Go indexes bytes, so every
-// position-taking primitive converts or scans.
-
-func byteOffsetOfScalar(s string, index int64) int {
-	if index < 0 {
-		malgoPanic("string index out of range")
-	}
-	count := int64(0)
-	for off := range s {
-		if count == index {
-			return off
-		}
-		count++
-	}
-	if count == index {
-		return len(s)
-	}
-	malgoPanic("string index out of range")
-	return 0
-}
 
 // ===== Primitives =====
 //
@@ -674,16 +698,12 @@ func malgo_string_length(a0 Value) Value {
 
 func malgo_string_at(a0, a1 Value) Value {
 	x := asStrObj(a1)
-	i := asI64(a0)
-	if x.isASCII() {
-		if i < 0 || i >= int64(len(x.V)) {
-			malgoPanic("string index out of range")
-		}
-		return mkChar(rune(x.V[i]))
-	}
-	off := byteOffsetOfScalar(x.V, i)
+	off := x.byteOffset(asI64(a0))
 	if off >= len(x.V) {
 		malgoPanic("string index out of range")
+	}
+	if x.ascii {
+		return mkChar(rune(x.V[off]))
 	}
 	r, _ := utf8.DecodeRuneInString(x.V[off:])
 	return mkChar(r)
@@ -704,14 +724,8 @@ func malgo_substring(a0, a1, a2 Value) Value {
 	if end < start {
 		malgoPanic("substring: end before start")
 	}
-	if x.isASCII() {
-		if start < 0 || end > int64(len(x.V)) {
-			malgoPanic("string index out of range")
-		}
-		return mkString(x.V[start:end])
-	}
-	from := byteOffsetOfScalar(x.V, start)
-	to := byteOffsetOfScalar(x.V, end)
+	from := x.byteOffset(start)
+	to := x.byteOffset(end)
 	return mkString(x.V[from:to])
 }
 
