@@ -227,10 +227,19 @@ path length.
 | Chez | 0.71s | 0.19s | — |
 
 Dispatch counts are at parity with Zig, and Go is ahead of it on pure
-arithmetic. Chez still leads there; it has proper tail calls, so it pays no
-trampoline at all. Go's ABI fixes that cost: there is no `musttail` and no
-way to pick a calling convention, so the per-dispatch step cannot be removed
-— only the number of steps, which is already at Zig's count.
+arithmetic.
+
+Chez's column needs splitting to be read correctly: it compiles the script on
+every run, which is 0.15s for `BenchFibDeep` and 0.60s for the Level 1
+evaluator. Its *execution* is therefore 0.04s and 0.10s — 2.7x to 7x faster
+than Go's. That gap is structural and cannot be closed: Go's trampoline alone
+costs 0.068s on `BenchFibDeep`, more than Chez spends running the whole
+program, and there is no `musttail` and no way to pick a calling convention
+in Go. Only the number of dispatches can fall, and it is already at Zig's.
+
+End to end, which is what a script run pays, Go wins everywhere except long
+pure computation: 2.5x on Level 1 and ~15x on the short programs in
+`examples/malgo/` (0.01s against Chez's 0.16s of startup).
 `wiki/2026-09-12-go-backend-performance-investigation.md` records what else
 was tried and measured (interface boxing, `[]rune` caching, generics,
 reflection, reshaping the trampoline — all rejected on measurement).
