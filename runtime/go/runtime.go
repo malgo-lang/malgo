@@ -31,7 +31,51 @@ type Int64 struct{ V int64 }
 type Float struct{ V float32 }
 type Double struct{ V float64 }
 type Char struct{ V rune }
-type Str struct{ V string }
+
+// Str caches what a codepoint-indexed operation would otherwise rescan.
+// Both fields are scalars, so a Str still costs exactly one allocation --
+// caching the decoded `[]rune` instead was measured at twice the total
+// runtime, because the evaluator makes far more short-lived strings than it
+// indexes into, and 4 bytes per character is more work than the scan it
+// saves. See wiki/2026-09-12-go-backend-performance-investigation.md.
+type Str struct {
+	V string
+	// Codepoint length, or -1 before the first scan.
+	nRunes int
+	ascii  bool
+}
+
+// scan fills both cached fields in one pass.
+func (x *Str) scan() {
+	n := 0
+	a := true
+	for _, r := range x.V {
+		n++
+		if r >= utf8.RuneSelf {
+			a = false
+		}
+	}
+	x.nRunes = n
+	x.ascii = a
+}
+
+func (x *Str) count() int {
+	if x.nRunes < 0 {
+		x.scan()
+	}
+	return x.nRunes
+}
+
+// isASCII reports whether byte offsets and codepoint indices coincide, which
+// is what lets the indexing primitives skip their scan entirely. Malgo source
+// text and the tokens the self-hosted lexer cuts out of it are almost all
+// ASCII, so this is the common case rather than a lucky one.
+func (x *Str) isASCII() bool {
+	if x.nRunes < 0 {
+		x.scan()
+	}
+	return x.ascii
+}
 
 // Struct covers both tagged constructors and tuples; Tag == tupleTag means
 // a tuple. Unit is the empty tuple, matching Eval's `Value.struct .tuple []`.
@@ -101,7 +145,7 @@ func mkInt64(n int64) Value    { gTotalAllocs++; return &Int64{V: n} }
 func mkFloat(f float32) Value  { gTotalAllocs++; return &Float{V: f} }
 func mkDouble(f float64) Value { gTotalAllocs++; return &Double{V: f} }
 func mkChar(c rune) Value      { gTotalAllocs++; return &Char{V: c} }
-func mkString(s string) Value  { gTotalAllocs++; return &Str{V: s} }
+func mkString(s string) Value  { gTotalAllocs++; return &Str{V: s, nRunes: -1} }
 
 func mkStruct(tag string, fields ...Value) Value {
 	gTotalAllocs++
@@ -168,11 +212,16 @@ func asChar(v Value) rune {
 }
 
 func asStr(v Value) string {
+	return asStrObj(v).V
+}
+
+// asStrObj is asStr for the primitives that also want the cached fields.
+func asStrObj(v Value) *Str {
 	x, ok := v.(*Str)
 	if !ok {
 		malgoPanic("expected String")
 	}
-	return x.V
+	return x
 }
 
 func asFn(v Value) Fn {
@@ -633,16 +682,23 @@ func malgo_is_alphanum(a0 Value) Value {
 // --- String ---
 
 func malgo_string_length(a0 Value) Value {
-	return mkInt64(int64(utf8.RuneCountInString(asStr(a0))))
+	return mkInt64(int64(asStrObj(a0).count()))
 }
 
 func malgo_string_at(a0, a1 Value) Value {
-	s := asStr(a1)
-	off := byteOffsetOfScalar(s, asI64(a0))
-	if off >= len(s) {
+	x := asStrObj(a1)
+	i := asI64(a0)
+	if x.isASCII() {
+		if i < 0 || i >= int64(len(x.V)) {
+			malgoPanic("string index out of range")
+		}
+		return mkChar(rune(x.V[i]))
+	}
+	off := byteOffsetOfScalar(x.V, i)
+	if off >= len(x.V) {
 		malgoPanic("string index out of range")
 	}
-	r, _ := utf8.DecodeRuneInString(s[off:])
+	r, _ := utf8.DecodeRuneInString(x.V[off:])
 	return mkChar(r)
 }
 
@@ -655,15 +711,21 @@ func malgo_string_append(a0, a1 Value) Value {
 }
 
 func malgo_substring(a0, a1, a2 Value) Value {
-	s := asStr(a0)
+	x := asStrObj(a0)
 	start := asI64(a1)
 	end := asI64(a2)
 	if end < start {
 		malgoPanic("substring: end before start")
 	}
-	from := byteOffsetOfScalar(s, start)
-	to := byteOffsetOfScalar(s, end)
-	return mkString(s[from:to])
+	if x.isASCII() {
+		if start < 0 || end > int64(len(x.V)) {
+			malgoPanic("string index out of range")
+		}
+		return mkString(x.V[start:end])
+	}
+	from := byteOffsetOfScalar(x.V, start)
+	to := byteOffsetOfScalar(x.V, end)
+	return mkString(x.V[from:to])
 }
 
 func malgo_string_reverse(a0 Value) Value {
