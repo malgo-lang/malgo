@@ -42,7 +42,9 @@ ParserPass → RenamePass → [InferPass] → [RefinePass]
     ↓
 ToFunPass → ToCorePass → FlatPass → JoinPass
     ↓
-EvalPass (Interpreter) | SchemePass (--target scheme) | ZigPass (--target zig / malgo compile)
+EvalPass (Interpreter) | SchemePass (--target scheme)
+                       | ZigPass   (--target zig / malgo compile [--target zig])
+                       | GoPass    (--target go  / malgo compile --target go)
 ```
 
 **Note**: InferPass and RefinePass can be skipped for fast evaluation without type checking.
@@ -157,6 +159,63 @@ Join IR (already saturated — see SaturateCtor above) → Normalize (Mu/Label e
   `lean-zig-golden` and `lean-selfhost`.
 - The interpreter (`Malgo.Sequent.Eval`) is the semantic oracle: any observable
   divergence in the Zig backend is a bug, matched against `Eval.lean`.
+
+### Go Backend (native executables)
+
+`malgo compile --target go SOURCE [-o OUT] [--opt ...]` compiles via Go to a
+native executable (Go 0.26 era, pinned in `mise.toml`). There is no
+intermediate IR and no closure conversion: `Malgo.Backend.Go.compileToGo`
+lowers Join IR straight to Go text, which is the whole backend.
+
+```
+Join IR → Normalize (Mu/Label elimination) → Go text → go build
+```
+
+Go has real closures and a GC, so everything the Zig backend needs in order
+to survive without them is absent here: no ANF, no lambda lifting, no
+captures array, no self-passing convention, no Perceus/Reuse/RcCheck, no leak
+check. What survives is the trampoline — Go does not guarantee tail calls
+either, and this IR is CPS — plus `MAX_ARGS = 2` and the `dispatches` counter.
+
+- Values: every concrete type in a `Value` is one machine word (`*Int32`,
+  `*Str`, `Fn`, …) so putting one into the interface never allocates; a bare
+  `string` would be two words and allocate on every conversion. Small
+  `int32`s (`-128..1024`) are interned, same range and reason as Zig's.
+- **Record fields are an ascending `[]NamedField` slice, never a map.** Go
+  randomizes map iteration order, so a map would make output nondeterministic.
+- `forceField` (a nested `run`) is the only place native stack grows with
+  nesting. It is reached from `Pattern.expand` alone; `Consumer.project` is a
+  terminator and needs none. Measured `force_depth_max`: 0 without records,
+  1 with them.
+- Toolchain: `GOTOOLCHAIN=local` plus an old `go` directive in the generated
+  `go.mod`, so a build never downloads a toolchain; the program imports only
+  the standard library, so nothing is fetched. Both matter because the
+  development sandbox has no egress. The generated source is left at `OUT.go`
+  for inspection, as the Zig backend leaves `OUT.zig`.
+- Gates: `bash scripts/go-golden.sh` (86/86 plus a 3/3 panic gate) and
+  `bash scripts/go-deep-recursion.sh`. The latter's failure signature differs
+  from the Zig gate's — Go prints `fatal error: goroutine stack exceeds ...`
+  and exits 2 where Zig gets SIGSEGV.
+- **After editing `runtime/go/runtime.go`, run `mise run bust-runtime`** —
+  same `include_str` staleness as the Zig runtime.
+- Primitive coverage is checked mechanically: the `primitive-coverage` gate
+  greps the embedded runtime for `func <name>(`, so a missing primitive fails
+  the test suite rather than only a golden diff. This works because the Go
+  runtime names each function after the `foreign import` it serves.
+
+Measured 2026-09-12 on Darwin arm64, `--opt release-fast`:
+
+| | `BenchFibDeep` | selfhost Level 1 (`Fib.mlg`) |
+|---|---|---|
+| Zig | 0.31s | 0.24s |
+| Go | 0.46s | 0.41s |
+| Chez | 0.19s | 0.73s |
+
+Go sits between the two on the Level 1 workload and last on pure arithmetic.
+Its `dispatches` at Level 1 (11.3M) exceed Zig's (9.0M) because non-escaping
+join points are still real closure dispatches — Zig's
+`ClosureConv.classifyJoins` folds those away. That is the first optimization
+to reach for.
 
 ### Intermediate Representations
 

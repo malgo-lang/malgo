@@ -19,6 +19,18 @@ Go は GC を持ち、末尾呼び出し保証を持たない。したがって 
 
 生成バイナリのサイズは達成目標に含めない。Go は静的リンクで最小 1–2MB になり、Zig より大きくなる。
 
+### 実測結果（2026-09-12、Darwin arm64、`--opt release-fast`）
+
+| | `BenchFibDeep` | selfhost Level 1（`Fib.mlg`） | Level 1 評価器のバイナリ |
+|---|---|---|---|
+| Zig | 0.31s | 0.24s | 5.99 MB |
+| Go | 0.46s | 0.41s | 11.34 MB |
+| Chez | 0.19s | 0.73s | — |
+
+Go は現実的なワークロード（Level 1）では Zig と Chez の中間に入り、純粋な算術（fib-deep）では最下位である。前者が代表的であり、後者は interface boxing と GC が最も不利に出るケースである。fib-deep では Chez が Zig を上回っており、これは `l2_ratio` と同じ向きだが Level 1 とは逆向きである。つまり、どちらか一方の microbench だけで順位を語ることはできない。
+
+Level 1 の `dispatches` は Go が 11.3M、Zig が 9.0M である。差は非 escaping な join point に由来する——Zig の `ClosureConv.classifyJoins` が `Local` と判定して畳むものを、Go は毎回クロージャ化して dispatch している。v2 の最適化はここに効く。
+
 ## 位置づけ
 
 第3のバックエンドとして Zig・Scheme と併存する。メモリ管理は Go GC に全面委任する。
@@ -122,13 +134,13 @@ func Run(code Fn, args []Value) Value {
 
 `Action` は 4ワードの値型であり、Go 1.17 以降のレジスタ ABI（9ワードまで）に収まる。`self` が無いため Zig の 5ワードより小さい。`cur = c(...)` と直接書かず `next` を経由するのは Zig と同じ理由による——呼び出し先が `cur.Argv` を指したまま `cur` へ直接構築するエイリアシングを避ける。
 
-#### `Force` の入れ子は実装時に判定する
+#### `Force` の入れ子は `Pattern.expand` だけに残る
 
 Zig が `Force` を式にして入れ子 `Run` を必要としたのは ANF だからである。Go は Join IR から直接落とすので、`Consumer.project` は自然に終端（`return projectField(v, f, k)`）になり、そこでは入れ子が要らない。
 
-残る候補は `Pattern.expand` である。複数フィールドを束縛するためブロック中間でサンクを強制する必要があり、ここだけ入れ子 `Run`（identity 継続を渡して `done` まで回す）が残りうる。
+残るのは `Pattern.expand` だけである。複数フィールドを束縛するためブロック中間でサンクを強制する必要があり、ここは `forceField`（identity 継続を渡して `done` まで回す入れ子 `Run`）を使う。
 
-実装時に判定すること: 入れ子 `Run` を要求する箇所が `expand` だけか、0 箇所か。0 なら `force_depth_max` は常に 0 なので機構ごと持たず、ゲートからも外す。`expand` だけなら残す。baseline の 1 という値は Zig の `Force` 式に由来するので、Go の不変条件として引き継ぐ根拠は無い（#382 が依拠しているのは Zig 側の 1 である）。
+実測（2026-09-12）: レコードを使わない `BenchFibDeep` は `force_depth_max=0`、レコードを使う `RecordTest` / `RecordFieldAccess` / `TaggedRecordConstruct` / `TaggedRecordDiamondUse` はいずれも 1 である。ネイティブスタックが伸びるのはこの1箇所だけで、深さは reduction step 数ではなくレコード強制の入れ子段数で決まる。
 
 ### lowering
 
@@ -249,7 +261,7 @@ Go の最適化モードは `debug` / `release-safe` / `release-fast` を `go bu
 
 `bench/perf-baseline.json` に `go` の tier を追加する。ratchet ゲートにできるのは `dispatches`（および `Force` の入れ子が残った場合の `force_depth_max`）だけである。`runtime.ReadMemStats().Mallocs` は決定的でないので、記録はしてもゲートにはしない。
 
-`l2_ratio` に相当するローカル実測（Chez 対 Go の selfhost-l2 壁時計）を1回取り、「性能の基準線」節に対する答えを記録する。CI では走らせない。
+`l2_ratio` に相当する selfhost-l2 の実測は未取得である。Zig だけで16分かかるものを3バックエンド分走らせる価値は現時点では無い。Level 1 の実測（「性能の基準線」節）が代わりの答えになっている。L2 が必要になったときは `scripts/perf-baseline.sh` の `l2-ratio` tier が入口になる。
 
 ### Step 9: CI
 
