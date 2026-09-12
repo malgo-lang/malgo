@@ -21,6 +21,7 @@ import Malgo.Sequent.Core.Full
 import Malgo.Sequent.Core.Flat
 import Malgo.Sequent.Core.Join
 import Malgo.Sequent.Core.Normalize
+import Malgo.Sequent.Core.Escape
 import Malgo.Sequent.ToFun
 import Malgo.Sequent.SaturateCtor
 import Malgo.Sequent.ReuseSpecialize
