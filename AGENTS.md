@@ -189,6 +189,10 @@ either, and this IR is CPS — plus `MAX_ARGS = 2` and the `dispatches` counter.
 - `Str` caches its codepoint length and an all-ASCII flag — two scalars, so
   no extra allocation. Caching the decoded `[]rune` instead was measured at
   twice the runtime.
+- A generated function takes two positional `Value` parameters, not an
+  `args []Value` slice: no slice header per dispatch and no bounds check per
+  argument. `Action` carries the same two slots and no argument count, since
+  each function knows its own arity.
 - **Record fields are an ascending `[]NamedField` slice, never a map.** Go
   randomizes map iteration order, so a map would make output nondeterministic.
 - `forceField` (a nested `run`) is the only place native stack grows with
@@ -216,16 +220,17 @@ root with a *relative* source path — path length changes the self-hosted
 evaluator's work by up to 3x, so measurements are only comparable at equal
 path length.
 
-| | selfhost Level 1 (`Fib.mlg`) | Level 1 `dispatches` |
-|---|---|---|
-| Zig | 0.23–0.27s | 9,028,449 |
-| Go | 0.30s | 9,028,448 |
-| Chez | 0.73s | — |
+| | selfhost Level 1 | `BenchFibDeep` | Level 1 `dispatches` |
+|---|---|---|---|
+| Zig | 0.24s | 0.32s | 9,028,449 |
+| Go | 0.29s | 0.30s | 9,028,448 |
+| Chez | 0.71s | 0.19s | — |
 
-Dispatch counts are now at parity with Zig. The remaining gap is per-dispatch
-cost, which Go's ABI fixes: there is no `musttail` and no way to pick a
-calling convention, so the ~5ns trampoline step cannot be removed — only the
-number of steps can, and that is already done.
+Dispatch counts are at parity with Zig, and Go is ahead of it on pure
+arithmetic. Chez still leads there; it has proper tail calls, so it pays no
+trampoline at all. Go's ABI fixes that cost: there is no `musttail` and no
+way to pick a calling convention, so the per-dispatch step cannot be removed
+— only the number of steps, which is already at Zig's count.
 `wiki/2026-09-12-go-backend-performance-investigation.md` records what else
 was tried and measured (interface boxing, `[]rune` caching, generics,
 reflection, reshaping the trampoline — all rejected on measurement).

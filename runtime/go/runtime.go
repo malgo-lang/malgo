@@ -97,7 +97,7 @@ type Record struct{ Fields []NamedField }
 // Fn is both a Malgo closure and a continuation. Unlike the Zig runtime
 // there is no separate Closure object carrying a captures array: a Go
 // closure captures its environment directly, and the GC keeps it alive.
-type Fn func(args []Value) Action
+type Fn func(a, b Value) Action
 
 func (*Int32) malgoValue()  {}
 func (*Int64) malgoValue()  {}
@@ -240,59 +240,46 @@ func isZero(v Value) bool {
 
 // ===== Trampoline =====
 
-// maxArgs is 2 because the front end cannot produce more: ToFun builds
-// single-parameter lambdas and singleton applies, and ToCore appends
-// exactly one consumer. Raising it re-grows every dispatch copy, which
-// matters at selfhost-l2's 1.6e10 dispatches.
-const maxArgs = 2
-
 // Action names the call a generated function wants performed. Code == nil
-// means finished, with the result in Argv[0]. It is a plain value: four
-// words, returned in registers, never heap-allocated.
+// means finished, with the result in A. It is a plain value: five words,
+// returned in registers, never heap-allocated.
+//
+// Two argument slots, because the front end cannot produce more: ToFun
+// builds single-parameter lambdas and singleton applies, and ToCore appends
+// exactly one consumer. A generated function knows its own arity, so the
+// slot it does not use is simply nil -- no count travels with the Action.
+//
+// The slots are named parameters rather than a `[2]Value` array handed over
+// as a slice. That costs nothing to build (no slice header per dispatch) and
+// nothing to read (no bounds check per argument), which is worth about a
+// quarter of the dispatch cost.
 type Action struct {
 	Code Fn
-	Argv [maxArgs]Value
-	Argc int
+	A, B Value
 }
 
-func done(v Value) Action {
-	return Action{Argv: [maxArgs]Value{v}, Argc: 1}
-}
+func done(v Value) Action { return Action{A: v} }
 
-// tail1 and tail2 are the two call shapes the emitter produces. They exist
-// as separate functions rather than one variadic form so that no argument
-// slice is ever built.
-func tail1(f Fn, a Value) Action {
-	return Action{Code: f, Argv: [maxArgs]Value{a}, Argc: 1}
-}
+func tail0(f Fn) Action { return Action{Code: f} }
 
-func tail2(f Fn, a, b Value) Action {
-	return Action{Code: f, Argv: [maxArgs]Value{a, b}, Argc: 2}
-}
+func tail1(f Fn, a Value) Action { return Action{Code: f, A: a} }
 
-func tail0(f Fn) Action {
-	return Action{Code: f}
-}
+func tail2(f Fn, a, b Value) Action { return Action{Code: f, A: a, B: b} }
 
 // applyCo passes a value to a consumer. The consumer is a Value because
 // continuations flow through the same positions as data.
 func applyCo(k Value, v Value) Action { return tail1(asFn(k), v) }
 
-// run dispatches until an Action says it is finished. `next` is a separate
-// slot rather than `cur = cur.Code(...)`: Go's assignment would otherwise
-// let the callee build its result over the very `cur.Argv` the call is
-// still reading from.
-func run(code Fn, args []Value) Value {
-	var cur Action
-	cur.Code = code
-	copy(cur.Argv[:], args)
-	cur.Argc = len(args)
+// run dispatches until an Action says it is finished. Arguments are passed
+// by value, so the callee cannot observe `cur` while building its result --
+// which is what lets the loop assign straight back into `cur`.
+func run(code Fn, a, b Value) Value {
+	cur := Action{Code: code, A: a, B: b}
 	for cur.Code != nil {
-		next := cur.Code(cur.Argv[:cur.Argc])
-		cur = next
+		cur = cur.Code(cur.A, cur.B)
 		gDispatches++
 	}
-	return cur.Argv[0]
+	return cur.A
 }
 
 // ===== Records =====
@@ -332,12 +319,12 @@ func forceField(v Value, name string) Value {
 	if gForceDepth > gForceDepthMax {
 		gForceDepthMax = gForceDepth
 	}
-	result := run(fieldCode(v, name), []Value{identityKont})
+	result := run(fieldCode(v, name), identityKont, nil)
 	gForceDepth--
 	return result
 }
 
-var identityKont Fn = func(args []Value) Action { return done(args[0]) }
+var identityKont Fn = func(a, b Value) Action { return done(a) }
 
 // ===== Panic and exit =====
 

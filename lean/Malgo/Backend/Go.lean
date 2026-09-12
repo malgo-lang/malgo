@@ -133,9 +133,17 @@ private def litTest (scrut tmp : String) : Literal → String
 private def err (message : String) : CompileError :=
   { passName := "Go", message }
 
-/-- Call shapes the trampoline provides. More than `maxArgs` operands cannot
-occur: `ToFun` builds single-parameter lambdas and singleton applies, and
-`ToCore` appends exactly one consumer. Checked rather than assumed, so a
+/-- The trampoline's argument-slot count. The runtime's `Action` has exactly
+this many named slots, and a generated function has exactly this many
+parameters. -/
+private def maxCallArgs : Nat := 2
+
+/-- Positional parameter name for slot `i` of a generated function. -/
+private def argSlot (i : Nat) : String := s!"a{i}"
+
+/-- Call shapes the trampoline provides. More than `maxCallArgs` operands
+cannot occur: `ToFun` builds single-parameter lambdas and singleton applies,
+and `ToCore` appends exactly one consumer. Checked rather than assumed, so a
 front-end change that broke the assumption fails loudly here instead of
 silently truncating a call. -/
 private def tailCall (fn : String) (args : List String) : MalgoM String :=
@@ -143,7 +151,7 @@ private def tailCall (fn : String) (args : List String) : MalgoM String :=
   | [] => pure s!"tail0({fn})"
   | [a] => pure s!"tail1({fn}, {a})"
   | [a, b] => pure s!"tail2({fn}, {a}, {b})"
-  | _ => throw (err s!"call with {args.length} operands exceeds maxArgs (2)")
+  | _ => throw (err s!"call with {args.length} operands exceeds maxArgs ({maxCallArgs})")
 
 mutual
 
@@ -168,10 +176,12 @@ partial def compileProducer (ind : String) (ownership : OwnershipMap) (env : Loc
     pure s!"mkStruct({compileTag tag}{suffix})"
   | .lambda _ names stmt => do
     let inner := ind ++ "\t"
+    if names.length > maxCallArgs then
+      throw (err s!"lambda with {names.length} parameters exceeds maxArgs ({maxCallArgs})")
     let binds := String.join <| names.mapIdx fun i n =>
-      s!"{inner}{mangleId n} := args[{i}]\n{inner}_ = {mangleId n}\n"
+      s!"{inner}{mangleId n} := {argSlot i}\n{inner}_ = {mangleId n}\n"
     let body ← compileStatement inner (classifyJoins stmt) {} stmt
-    pure s!"Fn(func(args []Value) Action \{\n{binds}{body}{ind}})"
+    pure s!"Fn(func(a0, a1 Value) Action \{\n{binds}{body}{ind}})"
   | .object _ fields => do
     let inner := ind ++ "\t\t"
     -- Ascending field order, matching the interpreter and the Zig runtime's
@@ -179,8 +189,8 @@ partial def compileProducer (ind : String) (ownership : OwnershipMap) (env : Loc
     let sorted := fields.toArray.qsort (fun a b => a.1 < b.1) |>.toList
     let entries ← sorted.mapM fun (fieldName, ret, stmt) => do
       let body ← compileStatement inner (classifyJoins stmt) {} stmt
-      pure s!"{ind}\t\{Name: \"{escapeGoString fieldName}\", Code: Fn(func(args []Value) Action \{\n\
-        {inner}{mangleId ret} := args[0]\n{inner}_ = {mangleId ret}\n{body}{ind}\t})},\n"
+      pure s!"{ind}\t\{Name: \"{escapeGoString fieldName}\", Code: Fn(func(a0, a1 Value) Action \{\n\
+        {inner}{mangleId ret} := a0\n{inner}_ = {mangleId ret}\n{body}{ind}\t})},\n"
     pure s!"mkRecord([]NamedField\{\n{String.join entries}{ind}})"
   | .mu _ _ _ =>
     throw (err "Mu in producer position should have been eliminated by Normalize")
@@ -194,8 +204,8 @@ partial def compileConsumer (ind : String) : Consumer → MalgoM String
   | c => do
     let inner := ind ++ "\t"
     let ownership := classifyJoinsConsumer c
-    let body ← applyConsumer inner ownership {} c "args[0]"
-    pure s!"Fn(func(args []Value) Action \{\n{body}{ind}})"
+    let body ← applyConsumer inner ownership {} c "a0"
+    pure s!"Fn(func(a0, a1 Value) Action \{\n{body}{ind}})"
 
 /-- Emit `consumer` applied to `value`, a Go expression already holding the
 produced value, as statements in the current scope. This is what replaces a
@@ -362,8 +372,8 @@ def compileDefinition (d : Definition) : MalgoM String := do
   -- `d.body` is already normalized by `compileToGo`, which `classifyJoins`
   -- requires: it assumes no `Consumer.label` in a join's consumer slot.
   let body ← compileStatement "\t" (classifyJoins d.body) {} d.body
-  pure s!"func {mangleId d.name}(args []Value) Action \{\n\
-    \t{mangleId d.ret} := args[0]\n\t_ = {mangleId d.ret}\n{body}}\n"
+  pure s!"func {mangleId d.name}(a0, a1 Value) Action \{\n\
+    \t{mangleId d.ret} := a0\n\t_ = {mangleId d.ret}\n{body}}\n"
 
 private def goPrelude : String :=
   "package main\n\nimport (\n\t\"errors\"\n\t\"math\"\n\t\"os\"\n\t\"os/exec\"\n\
@@ -378,8 +388,8 @@ private def entryCall (moduleName : ModuleName) (program : Program) : String :=
   if program.definitions.any (fun d => d.name == mainId) then
     -- `main` is handed a consumer that receives the program's entry function
     -- and applies it to unit and the finishing continuation.
-    s!"\trun({mangleId mainId}, []Value\{Fn(func(args []Value) Action \{\n\
-      \t\treturn tail2(asFn(args[0]), unit(), identityKont)\n\t})})\n"
+    s!"\trun({mangleId mainId}, Fn(func(a0, a1 Value) Action \{\n\
+      \t\treturn tail2(asFn(a0), unit(), identityKont)\n\t}), nil)\n"
   else
     ""
 
