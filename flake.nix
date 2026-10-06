@@ -32,6 +32,35 @@
       ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
 
+      # Dev shell toolchain is separate from the packaged build in `mkMalgo`:
+      # `binary = true` fetches the pre-built Lean 4.32.0 release, so a
+      # developer's first `nix develop` does not pay the 45-60 minute
+      # from-source bootstrap that the package derivation needs (forced on
+      # aarch64-darwin by the rpath issue documented in `mkMalgo`). The two
+      # overlays stay independent: the dev shell must never pick up the
+      # package build's `binary = false` lean, and vice versa.
+      mkDevShell =
+        system:
+        let
+          devLeanOverlay = lean4-nix.readToolchainFile {
+            toolchain = ./lean/lean-toolchain;
+            binary = true;
+          };
+          devPkgs = import nixpkgs {
+            inherit system;
+            overlays = [ devLeanOverlay ];
+          };
+        in
+        devPkgs.mkShell {
+          packages = [
+            devPkgs.lean.lean-all # lean, lake, leanc, leanlsp, ...
+            devPkgs.zig_0_16 # malgo compile shells out to `zig build-exe`
+            devPkgs.gcc # lake build compiles the extracted C
+            devPkgs.gnumake
+            devPkgs.git
+          ];
+        };
+
       # Everything below was `system`-free before -- a single `let` binding
       # computed once for the hardcoded aarch64-darwin. Wrapped in a function
       # over `system` instead of switching to flake-utils: `genAttrs` above
@@ -159,5 +188,6 @@
     in
     {
       packages = forAllSystems (system: { default = mkMalgo system; });
+      devShells = forAllSystems (system: { default = mkDevShell system; });
     };
 }
